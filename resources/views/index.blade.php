@@ -1,0 +1,684 @@
+@extends('layouts.template')
+
+@section('content')
+<!--==========================Intro Section============================-->
+<section id="intro" class="clearfix">
+  <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="d-block w-100" src="{{asset('sources/waki-carousel1.jpg')}}" alt="First slide">
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="{{asset('sources/waki-carousel2.jpg')}}" alt="Second slide">
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="{{asset('sources/waki-carousel3.jpg')}}" alt="Third slide">
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+
+  <div class="container d-flex h-100">
+    <div class="col-lg-12 col-md-12">
+      <div class="intro-content">
+        <br>
+        <h2>Welcome to WAKi International Group</h2>
+        <p>Since 1995, Mr. Teo Choo Guan has established the “Metrowealth International Group”. Since then, the Company has rapidly expanded its international business network, and venturing into Asia Pacific countries and Europe countries. Started from year 1995, Mr. Teo Choo Guan has been serving as Group Executive Chairman.</p>
+        <p>In year 2008, in order to restrategize in global marketing, the Company has changed all products’ brand name to “WAKi”. Therefore, the Company renamed as “WAKi International Group”. Nowadays, “WAKi” has become a popular brand for health products. For expanding business blueprint, WAKi has established it’s branches and joint-venture companies in Malaysia, Indonesia, Philippines, Thailand, Singapore, Brunei, Vietnam, Cambodia, Myanmar, Hongkong, Japan, Korea and China. WAKi International Headquarter is located in WAKi Building, Kuala Lumpur, Malaysia.</p>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-4 col-lg-4 wow fadeInUp" data-wow-duration="1.4s">
+          <div class="box">
+            <div class="img-fluid">
+              <iframe class="responsive-iframe-media" position="relative" src="https://www.youtube.com/embed/YMVW9d8X86M" frameborder="0" allowfullscreen=""></iframe>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4 wow fadeInUp" data-wow-duration="1.4s">
+          <div class="box">
+            <img src="https://waki.asia/wp-content/uploads/2017/07/Malaysia-Therapy-Therapeutic-Equipment.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4 wow fadeInUp" data-wow-delay="0.1s" data-wow-duration="1.4s">
+          <div class="box">
+            <img src="https://waki.asia/wp-content/uploads/2017/07/Indonesia-Therapy-Therapeutic-Equipment.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section><!-- #intro -->
+
+<main id="main">
+  <!--==========================About Us Section============================-->
+  <section id="about" class="section-bg" style="position: relative; z-index: -1;">
+    <div class="container">
+      <div class="col-lg-12 col-md-12">
+        <div class="row">
+
+          <div class="col-lg-5 col-md-6">
+            <div class="about-img wow fadeInLeft">
+              <img src="{{asset('sources/waki-building.jpg')}}" alt="">
+            </div>
+          </div>
+
+          <div class="col-lg-7 col-md-6">
+            <div class="about-content">
+              <h2>About Us</h2>
+              <h3>WAKI INTERNATIONAL GROUP</h3>
+              <p>Since 1995, Mr. Teo Choo Guan has established the “Metrowealth International Group”. Since then, the Company has rapidly expanded its international business network, and venturing into Asia Pacific countries and Europe countries. Started from year 1995, Mr. Teo Choo Guan has been serving as Group Executive Chairman.
+                <br><br>
+                In year 2008, in order to restrategize in global marketing, the Company has changed all products’ brand name to “WAKi”. Therefore, the Company renamed as “WAKi International Group”. Nowadays, “WAKi” has become a popular brand for health products. For expanding business blueprint, WAKi has established it’s branches and joint-venture companies in Malaysia, Indonesia, Philippines, Thailand, Singapore, Brunei, Vietnam, Cambodia, Myanmar, Hongkong, Japan, Korea and China. WAKi International Headquarter is located in WAKi Building, Kuala Lumpur, Malaysia.</p>
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-12">
+            <div class="about-content" style="padding-bottom: 40px">
+              <h3>WAKI’S NATURE OF BUSINESS</h3>
+              <ul>
+                <li><i class="ion-android-checkmark-circle"></i> In ASEAN countries, marketing WAKi’s brand health care products through WAKi shops and WAKi exhibitions.</li>
+                <li><i class="ion-android-checkmark-circle"></i> In Hong Kong China, exporting household electrical devices to worldwide through Waki Trading Company.</li>
+                <li><i class="ion-android-checkmark-circle"></i> In South East Asia countries, investing commercial properties through WAKi Holdings company.</li>
+                <li><i class="ion-android-checkmark-circle"></i> In Malaysia, developing housing projects through WAKi construction Company.</li>
+                <li><i class="ion-android-checkmark-circle"></i> In Malaysia and China, investing in food & beverage industries through WAKi F&B company.</li>
+              </ul>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
+                <div class="box col-md-12">
+                  <div class="icon" style="background: #eafde7;"><h1 class="WAKI">W</h1></div>
+                  <h4 class="title" style="color: #00844a;font-weight: bolder;">Willingness</h4>
+                  <p class="description">We believe that willingness conquers everything.</p>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.1s" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
+                <div class="box col-md-12">
+                  <div class="icon" style="background: #eafde7;"><h1 class="WAKI">A</h1></div>
+                  <h4 class="title" style="color: #00844a;font-weight: bolder;">Action</h4>
+                  <p class="description">We believe that action is power.</p>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
+                <div class="box col-md-12">
+                  <div class="icon" style="background: #eafde7;"><h1 class="WAKI">K</h1></div>
+                  <h4 class="title" style="color: #00844a;font-weight: bolder;">Knowledge</h4>
+                  <p class="description">We believe that knowledge is the essential part of success.</p>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
+                <div class="box col-md-12">
+                  <div class="icon" style="background: #eafde7;"><h1 class="WAKI" style="color: #fcb813;">i</h1></div>
+                  <h4 class="title" style="color: #fcb813;font-weight: bolder;">Innovation</h4>
+                  <p class="description">We believe that innovation will bring about infinite opportunities to us.</p>
+                </div>
+              </div>
+            </div><!--row-->
+          </div>
+
+        </div><!--for row-->
+      </div><!--for div-->
+    </div>
+  </section><!-- #about -->
+
+  <!--==========================Why Us Section============================-->
+  <section id="why-us" class="wow fadeIn">
+    <div class="container">
+      <div class="container-fluid">
+
+        <header class="section-header">
+          <h3 style="margin-bottom: 10px;">WAKi Value</h3>
+          <h4 style="font-size: 16px;color: #555186; text-align: center; margin-bottom: 20px;">Not a promise, but sure!</h4>
+        </header>
+
+        <div class="col-lg-12 col-md-12">
+          <div class="row">
+
+            <div class="col-lg-5 col-md-6">
+              <div class="about-img wow fadeInLeft">
+                <img src="{{asset('sources/waki-tower.jpg')}}" alt="" class="img-fluid">
+              </div>
+            </div>
+
+            <div class="col-lg-7 col-md-6">
+              <div class="why-us-content">
+
+                <div class="features wow bounceInUp clearfix" style="margin-top:30px;">
+                  <i class="fa fa-diamond" style="color: #f058dc;"></i>
+                  <h4>WAKi's Vision</h4>
+                  <p>Conquer South East Asia, Think Globally; Promoting the WAKi’s excellent healthy devices to every family, towards a healthier life.</p>
+                </div>
+
+                <div class="features wow bounceInUp clearfix">
+                  <i class="fa fa-object-group" style="color: #ffb774;"></i>
+                  <h4>WAKi's Mission</h4>
+                  <p>Bringing WAKian and WAKi’s customers, towards a better life!</p>
+                </div>
+
+                <div class="features wow bounceInUp clearfix">
+                  <i class="fa fa-pie-chart" style="color: #589af1;"></i>
+                  <h4>WAKi's Objective</h4>
+                  <p>Continuously creating values for stakeholders.</p>
+                </div>
+
+                <div class="features wow bounceInUp clearfix">
+                  <i class="fa fa-arrows" style="color: #58f19c;"></i>
+                  <h4>WAKi's Positioning</h4>
+                  <p>WAKi = Brand of excellent healthy devices (including healthy potential devices, healthy air devices, healthy water devices, healthy massage devices and healthy electrical home appliances)</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row counters"></div>
+    </div>
+  </section>
+
+  <!--==========================Portfolio Section============================-->
+  <section id="portfolio" class="section-bg">
+    <div class="container">
+
+      <header class="section-header">
+        <h3 class="section-title">Our Gallery</h3>
+      </header>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <ul id="portfolio-flters">
+            <li data-filter=".filter-photo" class="filter-active">Photo</li>
+            <li data-filter=".filter-video" >Video</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row portfolio-container">
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo1.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 1</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo1.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo2.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 2</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo2.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo3.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 3</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo3.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo4.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 4</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo4.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo5.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 5</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo5.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo6.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 6</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo6.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo7.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 7</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo7.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo8.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 8</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo8.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo9.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 9</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo9.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo10.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 10</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo10.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo11.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 11</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo11.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo12.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 12</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo12.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo13.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 13</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo13.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo14.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 14</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo14.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo15.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 15</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo15.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo16.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 16</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo16.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo17.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 17</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo17.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo18.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 18</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo18.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo19.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 19</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo19.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo20.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 20</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo20.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo21.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 21</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo21.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo22.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 22</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo22.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo23.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 23</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo23.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo24.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 24</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo24.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo25.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 25</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo25.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo26.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 26</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo26.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo27.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 27</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo27.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo28.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 28</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo28.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/photo29.jpg')}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo 29</a></h4>
+              <p>App</p>
+              <div>
+                <a href="{{asset('sources/portfolio/photo29.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+          <div class="portfolio-wrap2">
+            <h5 class="portfolio-video-title">The Opening of WAKi Relic Museum</h5>
+            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/AlodzGToyG4" frameborder="0" allowfullscreen=""></iframe>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+          <div class="portfolio-wrap2">
+            <h5 class="portfolio-video-title">World Peace Awards 2019, Stockholm City Hall, Sweden</h5>
+            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/dDCFtdrinbk" frameborder="0" allowfullscreen=""></iframe>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+          <div class="portfolio-wrap2">
+            <h5 class="portfolio-video-title">WAKi Indonesia – Ramadhan Diary 2019</h5>
+            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/4w8Z1boMAKo" frameborder="0" allowfullscreen=""></iframe>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+          <div class="portfolio-wrap2">
+            <h5 class="portfolio-video-title">WAKi Indonesia Present – Mahakarya 2019</h5>
+            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/hoAchdTvpY8" frameborder="0" allowfullscreen=""></iframe>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+          <div class="portfolio-wrap2">
+            <h5 class="portfolio-video-title">Iftar with Anak Rumah Penyayang Ulin Nuha & Al Munirah</h5>
+            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/W-pbLd9KZtk" frameborder="0" allowfullscreen=""></iframe>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+          <div class="portfolio-wrap2">
+            <h5 class="portfolio-video-title">Iftar with Anak Rumah Amal Al Firdaus</h5>
+            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/hoeYyGmWnNc" frameborder="0" allowfullscreen=""></iframe>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+          <div class="portfolio-wrap2">
+            <h5 class="portfolio-video-title">Iftar & Teraweeh Prayers with Anak Madrasah Tahfiz Sg Buluh</h5>
+            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/BHNm9dl4f0Q" frameborder="0" allowfullscreen=""></iframe>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+          <div class="portfolio-wrap2">
+            <h5 class="portfolio-video-title">WAKi FOOT MASSAGE MASTER II</h5>
+            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/RwjWCVyT9-U" frameborder="0" allowfullscreen=""></iframe>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+          <div class="portfolio-wrap2">
+            <h5 class="portfolio-video-title">WAKi International Group Corporate Song</h5>
+            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/ZzKgr4_-BKw" frameborder="0" allowfullscreen=""></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section><!-- #portfolio -->
+
+  <!--==========================Team Section============================-->
+  <section id="team" class="section-bg">
+    <div class="container">
+      <div class="section-header">
+        <h3>World Peace</h3>
+      </div>
+
+      <div class="col-lg-12 col-md-12">
+
+        <div class="col-lg-12 col-md-12 wow fadeInUp" style="width: 60%; margin:auto;">
+          <div class="member">
+            <img src="{{asset('sources/Waki-Chairman.jpg')}}" class="img-fluid" alt="">
+            <div class="member-info">
+              <div class="member-info-content">
+                <h4>Teo Choo Guan</h4>
+                <span>Chairman of WAKi International Group</span>
+                <!-- <div class="social">
+                  <a href=""><i class="fa fa-twitter"></i></a>
+                  <a href=""><i class="fa fa-facebook"></i></a>
+                  <a href=""><i class="fa fa-google-plus"></i></a>
+                  <a href=""><i class="fa fa-linkedin"></i></a>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12">
+          <div class="section-header">
+            <h3>Thank You</h3>
+            <p style="text-align: justify; font-weight: normal; width: 80%;">First of all, I feel so thankful & grateful to be awarded the "Sweden World Peace Award 2019” in the Blue Hall of
+            Stockholm City Hall, Sweden. I just want to say thank you again for all the congratulations wishes and well-wishes
+            from my family members, relatives, friends as well as business partners, boards of directors, clients and all staffs
+            Waki International Group.
+            <br>
+            <br>
+            Next, I would like to thank the Malaysian media Sin Chew Daily, China Daily, New Straits Times, Berita Harian,
+            and a total of 2,745 newspapers reports and social medias worldwide covering this happy news. In addition, thanks to
+            a total of 1,051 social medias and video medias from worldwide publishing the news of congratulations especially on
+            the Nasdaq big screen in New York's Times Square. It shows the power of peace at the crossroads of the world.
+            <br>
+            <br>
+            Last but not least, I am indeed honoured to be a recipient of the "Sweden World Peace Prize 2019”, this marks a
+            new milestone of my life. I am ready to face more challenges and I will always work hard to make the rest of my life
+            more meaningful. Thank You.
+            <br>
+            <br>
+            May World Peace and Love prevail Around the World!
+          </p>
+          </div>
+        </div>
+
+
+      </div>
+
+    </div>
+  </section><!-- #team -->
+
+  <!--==========================Clients Section============================-->
+  <section id="clients" class="wow fadeInUp">
+    <div class="container">
+
+      <header class="section-header">
+        <h3>Our Awards</h3>
+        <img src="{{asset('sources/Awards_s.png')}}" alt="" class="img-fluid">
+      </header>
+
+    </div>
+  </section><!-- #clients -->
+</main>
+@endsection
