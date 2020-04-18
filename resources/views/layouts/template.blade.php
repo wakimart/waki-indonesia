@@ -127,6 +127,7 @@
 	              </li>
 	            </ul>
 	          </li>
+	          <li><a href="{{ route('') }}">Promo</a></li>
 	          <li><a href="#team">World Peace</a></li>
 	          <li><a href="#footer">Contact Us</a></li>
 	          <li><a href="#" class="searchtxtmob">Search</a>
