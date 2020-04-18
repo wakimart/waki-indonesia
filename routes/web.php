@@ -14,3 +14,26 @@
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product', 'ProductController@index')->name('single_product');
+
+
+Auth::routes(['verify' => true]);
+Route::group(['prefix' => 'cms-admin'], function () {
+	Route::get('/', function () {
+		dd(Auth::user());
+		if($this->guard()->check()){
+			return redirect()->route('dashboard');
+		}
+		else {
+			return redirect()->route('login');
+		}
+	});
+
+	//show login form
+	Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
+	//login cek nya
+    Route::post('/login', 'Auth\LoginController@login')->name('admin_login');
+    //logout usernya
+    Route::get('/logout', 'Auth\LoginController@logoutUser')->name('admin_logout');
+    //dashboard
+    Route::get('/dashboard', 'IndexController@index')->name('dashboard');
+});

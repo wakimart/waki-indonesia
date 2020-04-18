@@ -8,23 +8,14 @@ use Illuminate\Http\Request;
 class BannerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan semua banner list di Admin
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $banners = Banner::all();
+        return view('admin.listbanner', compact('banners'));
     }
 
     /**
@@ -35,7 +26,29 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if($request->hasFile('image')) {
+            
+            $namaGambar = [];
+            $i = 0;
+            foreach ($request->file('image') as $item) {
+
+                $filename = strtotime(date("Y-m-d H:i:s"))+$i;
+
+                //cek ada folder tidak
+                if (!is_dir("sources/banners/")) {
+                    File::makeDirectory("sources/banners/", $mode = 0777, true, true);
+                }
+
+                //storing gambar - gambar
+                $pathForImage = "sources/banners/";
+                $item->move($pathForImage, $filename);
+
+                $namaGambar[] = $filename;
+            }
+
+            $data = array('image' => json_encode($namaGambar));
+            
+        }
     }
 
     /**
