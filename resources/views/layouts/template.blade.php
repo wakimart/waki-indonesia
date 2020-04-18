@@ -67,10 +67,10 @@
 
 	      <nav class="main-nav float-right d-none d-lg-block">
 	        <ul>
-	          <li class="active"><a href="#intro">Home</a></li>
-	          <li><a href="#about">About Us</a></li>
-	          <li><a href="#portfolio">Gallery</a></li>
-	          <li class="drop-down"><a href="#product">Product</a>
+	          <li class="active"><a href="{{route('index')}}">Beranda</a></li>
+	          <li><a href="#about">Tentang Kami</a></li>
+	          <li><a href="#portfolio">Galeri</a></li>
+	          <li class="drop-down"><a href="#product">Produk</a>
 	            <ul>
 	              <li class="drop-down "><a href="#">WAKi High Potential Therapy</a>
 	                <ul>
@@ -129,8 +129,8 @@
 	          </li>
 	          <li><a href="{{ route('delivery_order') }}">Promo</a></li>
 	          <li><a href="#team">World Peace</a></li>
-	          <li><a href="#footer">Contact Us</a></li>
-	          <li><a href="#" class="searchtxtmob">Search</a>
+	          <li><a href="#footer">Kontak Kami</a></li>
+	          <li><a href="#" class="searchtxtmob">Chair</a>
 	            <div class="searchicon">
 	                <i id="searchicn" class="fa fa-search hidden-sm"></i>
 	              </div>
@@ -163,7 +163,7 @@
               			<div class="row">
                  			<div class="col-sm-12">
 			                    <div class="footer-newsletter">
-			                      <h4>WAKi Headquarter</h4>
+			                      <h4>Kantor Pusat WAKI</h4>
 			                      <p style="margin-bottom: 5px;"><strong>WAKi International Group</strong></p>
 			                      <p>WAKi Tower,
 			                      S-01-01, Block C, USJ ONE,
@@ -173,9 +173,9 @@
 			                    </div>
 
 			                    <div class="footer-links">
-			                      <h4>Contact Us</h4>
+			                      <h4>Kontak Kami</h4>
 			                      <p>
-			                        <strong>Phone:</strong>
+			                        <strong>Telepon:</strong>
 			                        <br>Malaysia : +60 10 239 3899
 			                        <br>Indonesia : +62 811 8683 899
 			                        <br>Philippines: +63 998 988 8899
@@ -187,7 +187,7 @@
 			                    </div>
 
 			                    <div class="social-links">
-			                      <h4>Follow Us</h4>
+			                      <h4>Ikuti Kami</h4>
 			                      <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
 			                      <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
 			                      <a href="#" class="youtube"><i class="fa fa-youtube"></i></a>
@@ -198,29 +198,29 @@
 
 		            <div class="col-lg-6">
 		              	<div class="form">
-		                <h4>Send us a message</h4>
+		                <h4>Kirim Pesan</h4>
 		                <form action="" method="post" role="form" class="contactForm">
 		                  	<div class="form-group">
-		                    	<input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+		                    	<input type="text" name="name" class="form-control" id="name" placeholder="Nama Lengkap" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
 		                    	<div class="validation"></div>
 		                  	</div>
 		                  	<div class="form-group">
-		                    	<input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+		                    	<input type="email" class="form-control" name="email" id="email" placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
 		                    	<div class="validation"></div>
 		                  	</div>
 		                  	<div class="form-group">
-		                    	<input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+		                    	<input type="text" class="form-control" name="subject" id="subject" placeholder="Subyek" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
 		                    	<div class="validation"></div>
 		                  	</div>
 		                  	<div class="form-group">
-		                    	<textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+		                    	<textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Pesan"></textarea>
 		                    	<div class="validation"></div>
 		                  	</div>
 
-		                  	<div id="sendmessage">Your message has been sent. Thank you!</div>
+		                  	<div id="sendmessage">Pesan Anda telah terkirim. Terima Kasih!</div>
 		                  	<div id="errormessage"></div>
 
-		                  	<div class="text-center"><button type="submit" title="Send Message">Send Message</button></div>
+		                  	<div class="text-center"><button type="submit" title="Send Message">Kirim Pesan</button></div>
 		                </form>
 		              </div>
 		            </div>
