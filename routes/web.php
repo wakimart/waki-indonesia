@@ -14,12 +14,13 @@
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product', 'ProductController@index')->name('single_product');
+Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
+Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
+Route::get('/successorder', 'DeliveryOrderController@successorder')->name('successorder');
 
-
-Auth::routes(['verify' => true]);
+// Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {
 	Route::get('/', function () {
-		dd(Auth::user());
 		if($this->guard()->check()){
 			return redirect()->route('dashboard');
 		}
