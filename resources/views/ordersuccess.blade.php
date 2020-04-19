@@ -30,6 +30,7 @@
     }
     .pInTable{
         margin-bottom: 6pt !important;
+        font-size: 10pt;
     }
 </style>
 
@@ -70,6 +71,14 @@
                         <td>Alamat : </td>
                         <td>{{ $deliveryOrder['address'] }}</td>
                     </tr>
+                    <tr>
+                        <td>Cabang Pembelian : </td>
+                        <td>{{  $deliveryOrder->cso->branch['code'] }} - {{  $deliveryOrder->cso->branch['name'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Kode CSO : </td>
+                        <td>{{ $deliveryOrder->cso['code'] }} - {{ $deliveryOrder->cso['name'] }}</td>
+                    </tr>
                 </table>
                 <table class="col-md-12">
                     <thead>
@@ -82,7 +91,7 @@
 
                     @foreach(json_decode($deliveryOrder['arr_product']) as $promo)
                         <tr>
-                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }}</td>
+                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
                             <td>{{ $promo->qty }}</td>
                         </tr>
                     @endforeach
@@ -94,14 +103,16 @@
                     </thead>
                     <tr>
                         <td>
-                            <p class="pInTable">1. Form pemesanan ini hanya berlaku selama 7 hari setelah form ini diterbitkan.</p>
-                            <p class="pInTable">2. Saya asdl akdlfkasldf.</p>
-                            <p class="pInTable">3. Sadgbhdtyya dtgybdtyh rtghdrftghrtghbdtyg.</p>
+                            <p class="pInTable">1. Form registrasi ini hanya berlaku selama 1 bulan setelah form ini diterbitkan.</p>
+                            <p class="pInTable">2. Saya telah menyetujui untuk membayar 10% dari nilai paket sebagai ongkos registrasi serta menerima barang yang tercantum diatas dan bersedia melunasi sisa pembayaran pada waktu penerimaan barang. (Khusus luar kota barang dikirim setelah pelunasan bank)</p>
+                            <p class="pInTable">3. Selain harga tersebut diatas, tidak ada perjanjian diluar surat pesanan ini.</p>
+                            <p class="pInTable">4. Selepas pembatalan, uang muka registerasi ini dapat ditarik kembali dalam 7 hari kerja.</p>
+                            <p class="pInTable">5. WAKi berhak merubah syarat dan ketentuan tanpa memberikan notis.</p>
                         </td>
                     </tr>
                 </table>
 
-                <a href="whatsapp://send?text={{ Route('successorder') }}" data-action="share/whatsapp/share">Bagikan melalui Whatsapp</a>
+                <a href="whatsapp://send?text={{ Route('successorder') }}?code={{ $deliveryOrder['code'] }}" data-action="share/whatsapp/share">Bagikan melalui Whatsapp</a>
             </div>
         </div>
     </section>

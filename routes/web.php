@@ -17,6 +17,7 @@ Route::get('/single_product', 'ProductController@index')->name('single_product')
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
 Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
 Route::get('/successorder', 'DeliveryOrderController@successorder')->name('successorder');
+Route::get('/fetchCso', 'DeliveryOrderController@fetchCso')->name('fetchCso');
 
 // Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {
