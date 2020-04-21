@@ -33,96 +33,58 @@
         font-size: 10pt;
     }
 </style>
-
-@if( $deliveryOrder['code'] != null)
     <section id="intro" class="clearfix">
         <div class="container">
             <div class="row justify-content-center">
-                <h2>REGISTRATION SUCCESS</h2>
+                <h2>LIST REGISTRATION</h2>
+            </div>
+            <div class="row justify-content-left">
+                <h5 style="margin-bottom: 0.5em;">Total : {{ sizeof($deliveryOrders) }} data</h5>
             </div>
             <div class="row justify-content-center">
                 <table class="col-md-12">
                     <thead>
-                        <td>Order Code</td>
-                        <td>Order Date</td>
+                        <td>Code Order</td>
+                        <td>Tangal Order</td>
+                        <td>Name</td>
+                        <td colspan="2">Product</td>
+                        <td>Branch</td>
+                        <td>CSO</td>
                     </thead>
-                    <tr>
-                        <td>{{ $deliveryOrder['code'] }}</td>
-                        <td class="right">{{ date("d/m/Y H:i:s", strtotime($deliveryOrder['created_at'])) }}</td>
-                    </tr>
-                </table>
-                <table class="col-md-12">
-                    <thead>
-                        <td colspan="2">Customer Data</td>
-                    </thead>
-                    <tr>
-                        <td>Member Code : </td>
-                        <td>{{ $deliveryOrder['no_member'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Name : </td>
-                        <td>{{ $deliveryOrder['name'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Phone Number : </td>
-                        <td>{{ $deliveryOrder['phone'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Address : </td>
-                        <td>{{ $deliveryOrder['address'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>Registration Branch : </td>
-                        <td>{{  $deliveryOrder->cso->branch['code'] }} - {{  $deliveryOrder->cso->branch['name'] }}</td>
-                    </tr>
-                    <tr>
-                        <td>CSO Code : </td>
-                        <td>{{ $deliveryOrder->cso['code'] }} - {{ $deliveryOrder->cso['name'] }}</td>
-                    </tr>
-                </table>
-                <table class="col-md-12">
-                    <thead>
-                        <td colspan="2">Detail Order</td>
-                    </thead>
-                    <thead style="background-color: #80808012 !important">
-                        <td>Product Name</td>
-                        <td>Quantity</td>
-                    </thead>
-
-                    @foreach(json_decode($deliveryOrder['arr_product']) as $promo)
+                    @foreach($deliveryOrders as $deliveryOrder)
+                        @php 
+                            $ProductPromos = json_decode($deliveryOrder['arr_product'], true);
+                            $totalProduct = count($ProductPromos);
+                        @endphp
                         <tr>
-                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
-                            <td>{{ $promo->qty }}</td>
+                            <td rowspan="{{ $totalProduct }}"><a href="{{ Route('successorder') }}?code={{ $deliveryOrder['code'] }}">{{ $deliveryOrder['code'] }}</a></td>
+                            <td rowspan="{{ $totalProduct }}">{{ date("d/m/Y", strtotime($deliveryOrder['created_at'])) }}</td>
+                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder['name'] }}</td>
+
+                            @foreach($ProductPromos as $ProductPromo)
+                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
+                                <td>{{ $ProductPromo['qty'] }}</td>
+                                @php break; @endphp
+                            @endforeach
+                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder->branch['code'] }} - {{ $deliveryOrder->branch['name'] }}</td>
+                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder->cso['code'] }} - {{ $deliveryOrder->cso['name'] }}</td>
                         </tr>
+                        @php $first = true; @endphp
+                        @foreach($ProductPromos as $ProductPromo)
+                            @php
+                                if($first){
+                                    $first = false;
+                                    continue;
+                                }
+                            @endphp
+                            <tr>
+                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
+                                <td>{{ $ProductPromo['qty'] }}</td>
+                            </tr>
+                        @endforeach
                     @endforeach
                 </table>
-
-                <table class="col-md-12">
-                    <thead>
-                        <td colspan="2">Terms and Conditions</td>
-                    </thead>
-                    <tr>
-                        <td>
-                            <p class="pInTable">1. This registration form is only valid for 1 month after this form is published.</p>
-                            <p class="pInTable">2. I have agreed to pay 10% of the value of the package as a registration fee and receive the items listed above and am willing to pay the remaining payment at the time of receipt of goods. (For out of city shipments, items will be shipped after payment)</p>
-                            <p class="pInTable">3. Other than the above prices, there are no agreements outside this order letter.</p>
-                            <p class="pInTable">4. After cancellation, the registration down payment can be withdrawn within 7 working days.</p>
-                            <p class="pInTable">5. WAKi has the right to change the terms and conditions without giving notice.</p>
-                        </td>
-                    </tr>
-                </table>
-
-                <a href="whatsapp://send?text={{ Route('successorder') }}?code={{ $deliveryOrder['code'] }}" data-action="share/whatsapp/share">Share to Whatsapp</a>
             </div>
         </div>
     </section>
-@else
-    <section id="intro" class="clearfix">
-        <div class="container">
-            <div class="row justify-content-center">
-                <h2>CANNOT FIND REGISTRATION</h2>
-            </div>
-        </div>
-    </section>
-@endif
 @endsection

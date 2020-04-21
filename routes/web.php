@@ -18,6 +18,7 @@ Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_or
 Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
 Route::get('/successorder', 'DeliveryOrderController@successorder')->name('successorder');
 Route::get('/fetchCso', 'DeliveryOrderController@fetchCso')->name('fetchCso');
+Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
 // Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {

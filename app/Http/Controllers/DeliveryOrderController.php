@@ -55,4 +55,9 @@ class DeliveryOrderController extends Controller
     	}
     	return $result;
     }
+
+    public function listDeliveryOrder(Request $request){
+        $deliveryOrders = DeliveryOrder::all();
+        return view('templistregwaki1995', compact('deliveryOrders'));
+    }
 }
