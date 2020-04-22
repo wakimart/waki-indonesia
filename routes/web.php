@@ -20,10 +20,10 @@ Route::get('/successorder', 'DeliveryOrderController@successorder')->name('succe
 Route::get('/fetchCso', 'DeliveryOrderController@fetchCso')->name('fetchCso');
 Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
-// Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {
 	Route::get('/', function () {
-		if($this->guard()->check()){
+		if(Auth::guard()->check()){
 			return redirect()->route('dashboard');
 		}
 		else {
@@ -40,3 +40,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //dashboard
     Route::get('/dashboard', 'IndexController@index')->name('dashboard');
 });
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
