@@ -38,7 +38,7 @@
     <section id="intro" class="clearfix">
         <div class="container">
             <div class="row justify-content-center">
-                <h2>PEMESANAN BERHASIL</h2>
+                <h2>REGISTRASI BERHASIL</h2>
             </div>
             <div class="row justify-content-center">
                 <table class="col-md-12">
@@ -104,10 +104,9 @@
                     <tr>
                         <td>
                             <p class="pInTable">1. Form registrasi ini hanya berlaku selama 1 bulan setelah form ini diterbitkan.</p>
-                            <p class="pInTable">2. Saya telah menyetujui untuk membayar 10% dari nilai paket sebagai ongkos registrasi serta menerima barang yang tercantum diatas dan bersedia melunasi sisa pembayaran pada waktu penerimaan barang. (Khusus luar kota barang dikirim setelah pelunasan bank)</p>
-                            <p class="pInTable">3. Selain harga tersebut diatas, tidak ada perjanjian diluar surat pesanan ini.</p>
-                            <p class="pInTable">4. Selepas pembatalan, uang muka registerasi ini dapat ditarik kembali dalam 7 hari kerja.</p>
-                            <p class="pInTable">5. WAKi berhak merubah syarat dan ketentuan tanpa memberikan notis.</p>
+                            <p class="pInTable">2. Selain harga tersebut diatas, tidak ada perjanjian diluar surat pesanan ini.</p>
+                            <p class="pInTable">3. Selepas pembatalan, uang muka registerasi ini dapat ditarik kembali dalam 7 hari kerja.</p>
+                            <p class="pInTable">4. WAKi berhak merubah syarat dan ketentuan tanpa memberikan notis.</p>
                         </td>
                     </tr>
                 </table>

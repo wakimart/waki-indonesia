@@ -127,7 +127,8 @@
 	              </li>
 	            </ul>
 	          </li>
-	          <li><a href="{{ route('delivery_order') }}">Promo</a></li>
+	          <li><a href="{{ route('delivery_order') }}">REGISTRASI</a></li>
+	          <li><a href="{{ route('add_order') }}">ORDER</a></li>
 	          <li><a href="#team">World Peace</a></li>
 	          <li><a href="#footer">Kontak Kami</a></li>
 	          <li><a href="#" class="searchtxtmob">Chair</a>
