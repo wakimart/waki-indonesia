@@ -26,29 +26,53 @@ class BannerController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->hasFile('image')) {
-            
-            $namaGambar = [];
-            $i = 0;
-            foreach ($request->file('image') as $item) {
+        $data = Banner::all();
 
-                $filename = strtotime(date("Y-m-d H:i:s"))+$i;
+        $hasBanner = false;
+        
+        for ($i=0; $i < 6; $i++) {
 
-                //cek ada folder tidak
-                if (!is_dir("sources/banners/")) {
-                    File::makeDirectory("sources/banners/", $mode = 0777, true, true);
+            if($request->input('url_banner'.$i) != null && $request->hasfile('arr_image'.$i)){
+                // return response()->json(['success' => [$request->input('url_banner'.$i), $request->hasfile('arr_image'.$i)]]);
+                if($bannerImg[$i] != []){
+                    if(File::exists("sources/banner/". $bannerImg[$i]->img)){
+                        File::delete("sources/banner/" . $bannerImg[$i]->img);
+                    }
                 }
 
-                //storing gambar - gambar
-                $pathForImage = "sources/banners/";
-                $item->move($pathForImage, $filename);
+                $bannerImg[$i] = [];
+                $hasBanner = true;
 
-                $namaGambar[] = $filename;
+                $file = $request->file('arr_image'.$i);
+                $filename = $file->getClientOriginalName();
+                $image_resize = Image::make($file->getRealPath());
+                $image_resize->resize(720, 720);
+                $file->move("sources/banner/", $filename);
+                $bannerImg[$i]['img'] = $filename;
+                $bannerImg[$i]['url'] = $request->input('url_banner'.$i);
             }
-
-            $data = array('image' => json_encode($namaGambar));
-            
+            elseif($request->input('url_banner'.$i) != null && !$request->hasfile('arr_image'.$i)){
+                // return response()->json(['success' => $request->input('url_banner1')]);
+                $bannerImg[$i]->url = $request->input('url_banner'.$i);
+            }
+            elseif($request->input('url_banner'.$i) == null && !$request->hasfile('arr_image'.$i) && $bannerImg[$i] != []) {
+                // return response()->json(['success' => [$i, $request->input('url_banner'.$i), $request->hasfile('arr_image'.$i), $bannerImg[$i]->img]]);
+                // if($i==1){
+                //     return response()->json(['success' => [$bannerImg[$i], $bannerImg[$i]->img]]);
+                // }
+                if(File::exists("sources/banner/". $bannerImg[$i]->img)){
+                    File::delete("sources/banner/" . $bannerImg[$i]->img);
+                    $bannerImg[$i] = [];
+                    // return response()->json(['success' => [$bannerImg[$i]]]);
+                }
+            }            
         }
+
+        $data['banner_index'] = json_encode($bannerImg, true);
+        $data['best_seller'] = json_encode($arr_bestAll, true);
+        $data->save();
+
+        return response()->json(['success' => "Berhasil!!!"]);
     }
 
     /**
