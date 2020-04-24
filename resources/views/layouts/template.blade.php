@@ -67,7 +67,7 @@
 
 	      <nav class="main-nav float-right d-none d-lg-block">
 	        <ul>
-	          <li class="active"><a href="{{route('index')}}">Beranda</a></li>
+	          <li class="active"><a href="#intro">Beranda</a></li>
 	          <li><a href="#about">Tentang Kami</a></li>
 	          <li><a href="#portfolio">Galeri</a></li>
 	          <li class="drop-down"><a href="#product">Produk</a>
@@ -175,7 +175,7 @@
 			                    <div class="footer-links">
 			                      <h4>Kontak Kami</h4>
 			                      <p>
-			                        <strong>Telepon:</strong>
+			                        <strong>Phone:</strong>
 			                        <br>Malaysia : +60 10 239 3899
 			                        <br>Indonesia : +62 811 8683 899
 			                        <br>Philippines: +63 998 988 8899
@@ -217,7 +217,7 @@
 		                    	<div class="validation"></div>
 		                  	</div>
 
-		                  	<div id="sendmessage">Pesan Anda telah terkirim. Terima Kasih!</div>
+		                  	<div id="sendmessage">Pesan Anda telah terkirim. Thank you!</div>
 		                  	<div id="errormessage"></div>
 
 		                  	<div class="text-center"><button type="submit" title="Send Message">Kirim Pesan</button></div>
