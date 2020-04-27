@@ -46,7 +46,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //logout usernya
     Route::get('/logout', 'Auth\LoginController@logoutUser')->name('admin_logout');
     //dashboard
-    Route::get('/dashboard', 'IndexController@index')->name('dashboard');
+    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 });
 Auth::routes();
 

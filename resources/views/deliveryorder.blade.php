@@ -45,6 +45,10 @@
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
+                    <input type="text" class="form-control" name="city" id="name" placeholder="Kota" required data-msg="Mohon Isi Kota" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
                     <textarea class="form-control" name="address" rows="5" required data-msg="Mohon Isi Alamat" placeholder="Alamat"></textarea>
                     <div class="validation"></div>
                 </div>
