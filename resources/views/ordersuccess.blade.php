@@ -73,7 +73,7 @@
                     </tr>
                     <tr>
                         <td>Cabang Pembelian : </td>
-                        <td>{{  $deliveryOrder->cso->branch['code'] }} - {{  $deliveryOrder->cso->branch['name'] }}</td>
+                        <td>{{  $deliveryOrder->branch['code'] }} - {{  $deliveryOrder->branch['name'] }}</td>
                     </tr>
                     <tr>
                         <td>Kode CSO : </td>
