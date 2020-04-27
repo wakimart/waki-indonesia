@@ -45,7 +45,7 @@
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="city" id="name" placeholder="Kota" required data-msg="Mohon Isi Kota" />
+                    <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" />
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">

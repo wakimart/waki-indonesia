@@ -16,7 +16,7 @@ class DeliveryOrder extends Model
 						];
 
     protected $fillable = [
-        'code', 'no_member', 'name', 'address', 'phone', 'arr_product', 'cso_id', 'branch_id',
+        'code', 'no_member', 'name', 'address', 'phone', 'arr_product', 'cso_id', 'branch_id', 'city', 
     ];
 
     public function cso()
