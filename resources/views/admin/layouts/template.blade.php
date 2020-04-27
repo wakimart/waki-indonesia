@@ -77,13 +77,17 @@
                 </div>
             </nav>
 
-            @include("admin.layouts.navigation")
+            <div class="container-fluid page-body-wrapper">
+                @include("admin.layouts.navigation")
 
-            <div id="home">
-                <div class="animated fadeIn">
-                    @yield('content')
-                </div><!-- .animated -->
-            </div><!-- .content -->
+                @yield('content')
+            </div>
+
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                  <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2020 <a href="#" target="_blank">WAKi International Group</a>. All rights reserved.</span>
+                </div>
+            </footer>
         </div>
     </div>
 
