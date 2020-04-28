@@ -133,6 +133,7 @@
 
                 <div id="tambahan_bank"></div>
                 {{-- ++++++++ ==== ++++++++ --}}
+                
                 <div class="form-group">
                     <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Harga" required data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
                     <div class="validation"></div>
