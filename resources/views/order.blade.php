@@ -63,39 +63,41 @@
                     <div class="validation"></div>
                 </div>
 
-                {{-- ++++++++++++++ Product ++++++++++++++ --}}
-                <div class="form-group" style="width: 72%; display: inline-block;">
-                    <select class="form-control" name="product_0" data-msg="Mohon Pilih Product" required="">
-                        <option selected disabled value="">Pilihan Product</option>
+                <div id="container-cashupgrade" style="display: none;">
+                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
+                    <div class="form-group" style="width: 72%; display: inline-block;">
+                        <select class="form-control" name="product_0" data-msg="Mohon Pilih Product" required="">
+                            <option selected disabled value="">Pilihan Product</option>
 
-                        @foreach($promos as $key=>$promo)
-                            <option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
-                        @endforeach
-                    </select>
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group" style="width: 16%; display: inline-block;">
-                    <select class="form-control" name="qty_0" data-msg="Mohon Pilih Jumlah" required="">
-                        <option selected value="1">1</option>
+                            @foreach($promos as $key=>$promo)
+                                <option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
+                            @endforeach
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group" style="width: 16%; display: inline-block;">
+                        <select class="form-control" name="qty_0" data-msg="Mohon Pilih Jumlah" required="">
+                            <option selected value="1">1</option>
 
-                        @for($i=2; $i<=10;$i++)
-                            <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
-                    <div class="validation"></div>
-                </div>
-                <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+                            @for($i=2; $i<=10;$i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
 
-                <div id="tambahan_product"></div>
-                {{-- ++++++++++++++ ======== ++++++++++++++ --}}
+                    <div id="tambahan_product"></div>
+                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 
-                <div class="form-group" style="display: none">
-                    <input type="text" class="form-control" name="old_product" id="old_product" placeholder="Product Lama" data-msg="Mohon Isi Produk Lama" style="text-transform:uppercase"/>
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="prize" id="prize" placeholder="Product Hadiah" data-msg="Mohon Isi Hadiah" style="text-transform:uppercase"/>
-                    <div class="validation"></div>
+                    <div class="form-group" style="display: none">
+                        <input type="text" class="form-control" name="old_product" id="old_product" placeholder="Product Lama" data-msg="Mohon Isi Produk Lama" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="prize" id="prize" placeholder="Product Hadiah" data-msg="Mohon Isi Hadiah" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
                 </div>
                 <br>
 
@@ -109,42 +111,43 @@
                     </select>
                     <div class="validation"></div>
                 </div>
-                {{-- ++++++++ BANK ++++++++ --}}
-                <div class="form-group bank_select" style="width: 62%; display: inline-block;">
-                    <select class="form-control bank_name" name="bank_0" data-msg="Mohon Pilih Bank">
-                        <option selected disabled value="">Pilihan Bank</option>
+                <div id="container-jenispembayaran" style="display: none;">
+                    {{-- ++++++++ BANK ++++++++ --}}
+                    <div class="form-group bank_select" style="width: 62%; display: inline-block;">
+                        <select class="form-control bank_name" name="bank_0" data-msg="Mohon Pilih Bank">
+                            <option selected disabled value="">Pilihan Bank</option>
 
-                        @foreach($banks as $key=>$bank)
-                            <option value="{{ $key }}">{{ $bank }}</option>
-                        @endforeach
-                    </select>
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group bank_select" style="width: 26%; display: inline-block;">
-                    <select class="form-control bank_cicilan" name="cicilan_0" data-msg="Mohon Pilih Jumlah Cicilan">
-                        <option selected value="1">1X</option>
-                        @for($i=2; $i<=12;$i+=2)
-                            <option value="{{ $i }}">{{ $i }}X</option>
-                        @endfor
-                    </select>
-                    <div class="validation"></div>
-                </div>
-                <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_bank" title="Tambah Bank" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+                            @foreach($banks as $key=>$bank)
+                                <option value="{{ $key }}">{{ $bank }}</option>
+                            @endforeach
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group bank_select" style="width: 26%; display: inline-block;">
+                        <select class="form-control bank_cicilan" name="cicilan_0" data-msg="Mohon Pilih Jumlah Cicilan">
+                            <option selected value="1">1X</option>
+                            @for($i=2; $i<=12;$i+=2)
+                                <option class="other_valCicilan" value="{{ $i }}">{{ $i }}X</option>
+                            @endfor
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_bank" title="Tambah Bank" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
 
-                <div id="tambahan_bank"></div>
-                {{-- ++++++++ ==== ++++++++ --}}
-                
-                <div class="form-group">
-                    <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Harga" required data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group">
-                    <input type="number" class="form-control" name="down_payment" id="down_payment" placeholder="Down Payment(DP)" required data-msg="Mohon Isi Down Payment(DP)" style="text-transform:uppercase"/>
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group">
-                    <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" placeholder="Sisa Pembayaran" required data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
-                    <div class="validation"></div>
+                    <div id="tambahan_bank"></div>
+                    {{-- ++++++++ ==== ++++++++ --}}
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Harga" required data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="down_payment" id="down_payment" placeholder="Down Payment(DP)" required data-msg="Mohon Isi Down Payment(DP)" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" placeholder="Sisa Pembayaran" required data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
                 </div>
                 <br>
 
@@ -158,17 +161,19 @@
                     </select>
                     <div class="validation"></div>
                 </div>
-                <div class="form-group">
-                    <input type="text" class="form-control cso" name="cso_id" id="cso" placeholder="Kode Sales" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" placeholder="Kode Sales 30%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" placeholder="Kode Sales 70%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-                    <div class="validation"></div>
+                <div id="container-Cabang" style="display: none;">
+                    <div class="form-group">
+                        <input type="text" class="form-control cso" name="cso_id" id="cso" placeholder="Kode Sales" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" placeholder="Kode Sales 30%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" placeholder="Kode Sales 70%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
                 </div>
                 <br>
 
@@ -235,8 +240,18 @@
         $("#tambah_bank").click(function(e){
             e.preventDefault();
             total_bank++;
-            strIsi = "<div class=\"form-group bank_select\" style=\"width: 62%; display: inline-block;\" id=\"bank_"+total_bank+"\"><select class=\"form-control bank_name\" name=\"bank_"+total_bank+"\" data-msg=\"Mohon Pilih Bank\"><option selected disabled value=\"\">Pilihan Bank</option> @foreach($banks as $key=>$bank) <option value=\"{{ $key }}\">{{ $bank }}</option> @endforeach </select><div class=\"validation\"></div></div><div class=\"form-group bank_select\" style=\"width: 26%; display: inline-block;\" id=\"cicilan_"+total_bank+"\"><select class=\"form-control bank_cicilan\" name=\"cicilan_"+total_bank+"\" data-msg=\"Mohon Pilih Jumlah Cicilan\"><option selected value=\"1\">1X</option> @for($i=2; $i<=12;$i+=2) <option value=\"{{ $i }}\">{{ $i }}X</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_bank\" value=\""+total_bank+"\" title=\"Hapus Bank\" style=\"padding: 0.4em 0.7em; background-color: red\"><i class=\"fas fa-minus\"></i></button></div>";
+            strIsi = "<div class=\"form-group bank_select\" style=\"width: 62%; display: inline-block;\" id=\"bank_"+total_bank+"\"><select class=\"form-control bank_name\" name=\"bank_"+total_bank+"\" data-msg=\"Mohon Pilih Bank\"><option selected disabled value=\"\">Pilihan Bank</option> @foreach($banks as $key=>$bank) <option value=\"{{ $key }}\">{{ $bank }}</option> @endforeach </select><div class=\"validation\"></div></div><div class=\"form-group bank_select\" style=\"width: 26%; display: inline-block;\" id=\"cicilan_"+total_bank+"\"><select class=\"form-control bank_cicilan\" name=\"cicilan_"+total_bank+"\" data-msg=\"Mohon Pilih Jumlah Cicilan\"><option selected value=\"1\">1X</option> @for($i=2; $i<=12;$i+=2) <option class=\"other_valCicilan\" value=\"{{ $i }}\">{{ $i }}X</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_bank\" value=\""+total_bank+"\" title=\"Hapus Bank\" style=\"padding: 0.4em 0.7em; background-color: red\"><i class=\"fas fa-minus\"></i></button></div>";
             $('#tambahan_bank').html($('#tambahan_bank').html()+strIsi);
+
+
+            if($("#payment_type").val() == 1){
+                $(".other_valCicilan").attr('disabled', "");
+                $(".other_valCicilan").hide();
+            }
+            else{
+                $(".other_valCicilan").removeAttr('disabled');
+                $(".other_valCicilan").show();
+            }
         });
         $(document).on("click",".hapus_bank", function(e){
             e.preventDefault();
@@ -261,6 +276,7 @@
         });
 
         $("#cash_upgarde").change( function(e){
+            $("#container-cashupgrade").show();
             if($(this).val() == 2){
                 $("#old_product").parent().show();
                 $("#old_product").attr('required', "");
@@ -269,6 +285,24 @@
                 $("#old_product").parent().hide();
                 $("#old_product").removeAttr('required');
             }
+        });
+
+        $(document).on("change", "#payment_type", function(e){
+            $("#container-jenispembayaran").show();
+            $(".other_valCicilan").parent().val('1');
+            $('#tambahan_bank').html("");
+            if($(this).val() == 1){
+                $(".other_valCicilan").attr('disabled', "");
+                $(".other_valCicilan").hide();
+            }
+            else{
+                $(".other_valCicilan").removeAttr('disabled');
+                $(".other_valCicilan").show();
+            }
+        });
+
+         $("#branch").change( function(e){
+            $("#container-Cabang").show();
         });
     });
 </script>
