@@ -60,6 +60,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    //List DO
 	    Route::get('/list', 'DeliveryOrderController@admin_ListDeliveryOrder')
 	    	->name('list_deliveryorder');
+	    //Detail DO
+	    Route::get('/detail', 'DeliveryOrderController@admin_DetailDeliveryOrder')
+	    	->name('detail_deliveryorder');
 	    //Edit DO
 	    Route::get('/edit/', 'DeliveryOrderController@edit')
 	    	->name('edit_deliveryorder');
@@ -78,15 +81,84 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    //Create Order
 	    Route::post('/', 'OrderController@admin_StoreOrder')
 	    	->name('admin_store_order');
-	    //List DO
+	    //List Order
 	    Route::get('/list', 'OrderController@admin_ListOrder')
 	    	->name('admin_list_order');
-	    //Edit DO
+	    //Detail Order
+	    Route::get('/detail', 'OrderController@admin_DetailOrder')
+	    	->name('detail_order');
+	    //Edit Order
 	    Route::get('/edit/', 'OrderController@edit')
 	    	->name('edit_order');
-	    //Delete DO
+	    //Update Order
+	    Route::post('/update/', 'OrderController@update')
+	    	->name('update_order');
+	    //Delete Order
 	    Route::post('/{OrderNya}', 'OrderController@delete')
 	    	->name('delete_order');
+    });
+
+    Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
+    	//Add Form CSO
+    	Route::get('/', 'CsoController@create')
+	    	->name('add_cso');
+	    //Create CSO
+	    Route::post('/', 'CsoController@store')
+	    	->name('store_cso');
+	    //List CSO
+	    Route::get('/list', 'CsoController@index')
+	    	->name('list_cso');
+	    //Edit CSO
+	    Route::get('/edit/', 'CsoController@edit')
+	    	->name('edit_cso');
+	    //Update CSO
+	    Route::post('/update/', 'CsoController@update')
+	    	->name('update_cso');
+	    //Delete CSO
+	    Route::post('/{OrderNya}', 'CsoController@delete')
+	    	->name('delete_cso');
+    });
+
+    Route::group(['prefix' => 'branch', 'middleware' => 'auth'], function(){
+    	//Add Form Branch
+    	Route::get('/', 'BranchController@create')
+	    	->name('add_branch');
+	    //Create Branch
+	    Route::post('/', 'BranchController@store')
+	    	->name('store_branch');
+	    //List Branch
+	    Route::get('/list', 'BranchController@index')
+	    	->name('list_branch');
+	    //Edit Branch
+	    Route::get('/edit/', 'BranchController@edit')
+	    	->name('edit_branch');
+	    //Update Branch
+	    Route::post('/update/', 'BranchController@update')
+	    	->name('update_branch');
+	    //Delete Branch
+	    Route::post('/{BranchNya}', 'BranchController@delete')
+	    	->name('delete_branch');
+    });
+
+    Route::group(['prefix' => 'category_products', 'middleware' => 'auth'], function(){
+    	//Add Form CategoryProduct
+    	Route::get('/', 'CategoryProductController@create')
+	    	->name('add_category');
+	    //Create CategoryProduct
+	    Route::post('/', 'CategoryProductController@store')
+	    	->name('store_category');
+	    //List CategoryProduct
+	    Route::get('/list', 'CategoryProductController@admin_ListCategoryProduct')
+	    	->name('list_category');
+	    //Edit CategoryProduct
+	    Route::get('/edit/', 'CategoryProductController@edit')
+	    	->name('edit_category');
+	    //Update CategoryProduct
+	    Route::post('/update/', 'CategoryProductController@update')
+	    	->name('update_category');
+	    //Delete CategoryProduct
+	    Route::post('/{CategoryProductNya}', 'CategoryProductController@delete')
+	    	->name('delete_category');
     });
     
 

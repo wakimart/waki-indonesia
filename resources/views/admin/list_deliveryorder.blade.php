@@ -40,7 +40,7 @@
 				                        @endphp
 				                        <tr>
 				                        	<td rowspan="{{ $totalProduct }}">{{$key+1}}</td>
-				                            <td rowspan="{{ $totalProduct }}"><a href="{{ Route('successorder') }}?code={{ $deliveryOrder['code'] }}">{{ $deliveryOrder['code'] }}</a></td>
+				                            <td rowspan="{{ $totalProduct }}"><a href="{{ route('detail_deliveryorder') }}?code={{ $deliveryOrder['code'] }}">{{ $deliveryOrder['code'] }}</a></td>
 				                            <td rowspan="{{ $totalProduct }}">{{ date("d/m/Y", strtotime($deliveryOrder['created_at'])) }}</td>
 				                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder['name'] }}</td>
 

@@ -60,8 +60,8 @@
       </a>
       <div class="collapse" id="cso-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_cso.html">Add CSO</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_cso.html">List CSO</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('add_cso')}}">Add CSO</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('list_cso')}}">List CSO</a></li>
         </ul>
       </div>
     </li>
@@ -73,8 +73,8 @@
       </a>
       <div class="collapse" id="branch-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_branch.html">Add Branch</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_branch.html">List Branch</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('add_branch')}}">Add Branch</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('list_branch')}}">List Branch</a></li>
         </ul>
       </div>
     </li>
@@ -86,8 +86,8 @@
       </a>
       <div class="collapse" id="kategori-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_kategori.html">Add Kategori</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_kategori.html">List Kategori</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('add_category')}}">Add Kategori</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('add_category')}}">List Kategori</a></li>
         </ul>
       </div>
     <li class="nav-item">

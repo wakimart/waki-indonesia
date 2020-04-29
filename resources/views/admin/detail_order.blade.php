@@ -1,5 +1,4 @@
-@extends('layouts.template')
-
+@extends('admin.layouts.template')
 @section('content')
 <style type="text/css">
     #intro {
@@ -174,7 +173,7 @@
                     </table>
                 @endif
 
-                <a href="whatsapp://send?text={{ route('detail_order') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share">Bagikan melalui Whatsapp</a>
+                <a href="whatsapp://send?text={{ Route('successorder') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share">Bagikan melalui Whatsapp</a>
             </div>
         </div>
     </section>

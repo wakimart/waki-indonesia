@@ -97,6 +97,11 @@ class DeliveryOrderController extends Controller
         return view('admin.list_deliveryorder', compact('deliveryOrders'));
     }
 
+    public function admin_DetailDeliveryOrder(Request $request){
+        $deliveryOrder = DeliveryOrder::where('code', $request['code'])->first();
+        return view('admin.detail_deliveryorder', compact('deliveryOrder'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
