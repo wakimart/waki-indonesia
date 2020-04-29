@@ -8,20 +8,20 @@
       			<!--change to offline or busy as needed-->
         </div>
         <div class="nav-profile-text d-flex flex-column">
-          	<span class="font-weight-bold mb-2">Jatmiko Gunawan</span>
-          	<span class="text-secondary text-small">Front-End Developer</span>
+          	<span class="font-weight-bold mb-2">{{ Auth::user()->name }}</span>
+          	<span class="text-secondary text-small">Admin WAKI Indonesia</span>
         </div>
         <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
       </a>
     </li>
   	<li class="nav-item">
-  		<a class="nav-link" href="index.html">
+  		<a class="nav-link" href="{{ route('dashboard')}}">
     		<span class="menu-title">Dashboard</span>
     		<i class="mdi mdi-home menu-icon"></i>
   		</a>
   	</li>
   	<li class="nav-item">
-  		<a class="nav-link" href="frontcms.html">
+  		<a class="nav-link" href="{{  route('frontend_cms') }}">
     		<span class="menu-title">Front-End CMS</span>
     		<i class="mdi mdi-format-float-left menu-icon"></i>
   		</a>
@@ -34,8 +34,21 @@
       </a>
       <div class="collapse" id="deliveryorder-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_do.html">Tambah DO</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_do.html">Daftar DO</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{ route('add_deliveryorder')}}">Add Delivery Order</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{  route('list_deliveryorder') }}">List Delivery Order</a></li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#order-dd" aria-expanded="false" aria-controls="order-dd">
+        <span class="menu-title">Order</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-calendar-text menu-icon"></i>
+      </a>
+      <div class="collapse" id="order-dd">
+        <ul class="nav flex-column sub-menu">
+          <li class="nav-item"> <a class="nav-link" href="{{ route('admin_add_order')}}">Add Order</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{  route('admin_list_order') }}">List Order</a></li>
         </ul>
       </div>
     </li>
@@ -47,8 +60,8 @@
       </a>
       <div class="collapse" id="cso-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_cso.html">Tambah CSO</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_cso.html">Daftar CSO</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('add_cso')}}">Add CSO</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('list_cso')}}">List CSO</a></li>
         </ul>
       </div>
     </li>
@@ -60,8 +73,8 @@
       </a>
       <div class="collapse" id="branch-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_branch.html">Tambah Branch</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_branch.html">Daftar Branch</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('add_branch')}}">Add Branch</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('list_branch')}}">List Branch</a></li>
         </ul>
       </div>
     </li>
@@ -73,20 +86,20 @@
       </a>
       <div class="collapse" id="kategori-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_kategori.html">Tambah Kategori</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_kategori.html">Daftar Kategori</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('add_category')}}">Add Kategori</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('add_category')}}">List Kategori</a></li>
         </ul>
       </div>
     <li class="nav-item">
       <a class="nav-link" data-toggle="collapse" href="#produk-dd" aria-expanded="false" aria-controls="produk-dd">
-        <span class="menu-title">Produk</span>
+        <span class="menu-title">Product</span>
         <i class="menu-arrow"></i>
         <i class="mdi mdi-package menu-icon"></i>
       </a>
       <div class="collapse" id="produk-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_produk.html">Tambah Produk</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_produk.html">Daftar Produk</a></li>
+          <li class="nav-item"> <a class="nav-link" href="add_produk.html">Add Product</a></li>
+          <li class="nav-item"> <a class="nav-link" href="list_produk.html">List Product</a></li>
         </ul>
       </div>
     </li>
@@ -98,8 +111,8 @@
       </a>
       <div class="collapse" id="promo-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_promo.html">Tambah Promo</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_promo.html">Daftar Promo</a></li>
+          <li class="nav-item"> <a class="nav-link" href="add_promo.html">Add Promo</a></li>
+          <li class="nav-item"> <a class="nav-link" href="list_promo.html">List Promo</a></li>
         </ul>
       </div>
     </li>
@@ -125,8 +138,8 @@
       </a>
       <div class="collapse" id="admin-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_admin.html">Tambah Admin</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_admin.html">Daftar Admin</a></li>
+          <li class="nav-item"> <a class="nav-link" href="add_admin.html">Add Admin</a></li>
+          <li class="nav-item"> <a class="nav-link" href="list_admin.html">List Admin</a></li>
         </ul>
       </div>
     </li>

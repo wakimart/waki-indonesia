@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -92,7 +93,7 @@
     </div>
 
     <script src="{{ asset('css/vendors/js/vendor.bundle.base.js') }}"></script>
-    <script src="{{ asset('vendors/chart.js/Chart.min.js') }}"></script>
+    <script src="{{ asset('css/vendors/chart.js/Chart.min.js') }}"></script>
 
     <script src="{{ asset('js/off-canvas.js') }}"></script>
     <script src="{{ asset('js/hoverable-collapse.js') }}"></script>
@@ -100,5 +101,8 @@
 
     <script src="{{ asset('js/dashboard.js') }}"></script>
     <script src="{{ asset('js/todolist.js') }}"></script>
+
+    <script src="{{asset('js/file-upload.js')}}"></script>
+    @yield('script')
 </body>
 </html>
