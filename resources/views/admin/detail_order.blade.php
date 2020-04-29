@@ -1,5 +1,6 @@
 @extends('admin.layouts.template')
-@section('content')
+
+@section('style')
 <style type="text/css">
     #intro {
         padding-top: 2em;
@@ -32,12 +33,14 @@
         font-size: 10pt;
     }
 </style>
+@endsection
 
+@section('content')
 @if( $order['code'] != null)
     <section id="intro" class="clearfix">
         <div class="container">
             <div class="row justify-content-center">
-                <h2>PEMESANAN BERHASIL</h2>
+                <h2>DETAIL ORDER</h2>
             </div>
             <div class="row justify-content-center">
                 <table class="col-md-12">
@@ -132,7 +135,7 @@
                     </tr>
                 </table>
 
-                <table class="col-md-12">
+                <table class="col-md-12 d-none">
                     <thead>
                         <td colspan="2">Syarat dan Ketentuan</td>
                     </thead>
