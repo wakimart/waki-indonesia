@@ -68,6 +68,10 @@
                         <td>{{ $deliveryOrder['phone'] }}</td>
                     </tr>
                     <tr>
+                        <td>Kota : </td>
+                        <td>{{ $deliveryOrder['city'] }}</td>
+                    </tr>
+                    <tr>
                         <td>Alamat : </td>
                         <td>{{ $deliveryOrder['address'] }}</td>
                     </tr>

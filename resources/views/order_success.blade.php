@@ -68,6 +68,10 @@
                         <td>{{ $order['phone'] }}</td>
                     </tr>
                     <tr>
+                        <td>Kota : </td>
+                        <td>{{ $order['city'] }}</td>
+                    </tr>
+                    <tr>
                         <td>Alamat : </td>
                         <td>{{ $order['address'] }}</td>
                     </tr>

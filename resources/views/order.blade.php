@@ -47,6 +47,10 @@
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
+                    <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
                     <textarea class="form-control" name="address" rows="5" required data-msg="Mohon Isi Alamat" placeholder="Alamat"></textarea>
                     <div class="validation"></div>
                 </div>
@@ -179,7 +183,7 @@
 
 
                 <div class="form-group">
-                    <input type="text" class="form-control" name="customer_type" id="customer_type" placeholder="Tipe Customer" required data-msg="Mohon Isi Tipe Customer" />
+                    <input type="text" class="form-control" name="customer_type" id="customer_type" placeholder="Tipe Customer" data-msg="Mohon Isi Tipe Customer" />
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
@@ -284,6 +288,7 @@
             else{
                 $("#old_product").parent().hide();
                 $("#old_product").removeAttr('required');
+                $("#old_product").val("");
             }
         });
 
