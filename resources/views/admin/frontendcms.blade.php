@@ -1,29 +1,32 @@
 @extends('admin.layouts.template')
-@section('content')
-<style type="text/css">
-	.imagePreview {
-	    width: 100%;
-	    height: 150px;
-	    background-position: center center;
-	    background-color: #fff;
-	    background-size: cover;
-	    background-repeat: no-repeat;
-	    display: inline-block;
-	 }
-	 
-	.del {
-	    position: absolute;
-	    top: 0px;
-	    right: 10px;
-	    width: 30px;
-	    height: 30px;
-	    text-align: center;
-	    line-height: 30px;
-	    background-color: rgba(255,255,255,0.6);
-	    cursor: pointer;
-	}
-</style>
 
+@section('style')
+<style type="text/css">
+  .imagePreview {
+      width: 100%;
+      height: 150px;
+      background-position: center center;
+      background-color: #fff;
+      background-size: cover;
+      background-repeat: no-repeat;
+      display: inline-block;
+   }
+   
+  .del {
+      position: absolute;
+      top: 0px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      background-color: rgba(255,255,255,0.6);
+      cursor: pointer;
+  }
+</style>
+@endsection
+
+@section('content')
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">

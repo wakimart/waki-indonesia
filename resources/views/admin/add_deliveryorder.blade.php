@@ -1,5 +1,31 @@
 @extends('admin.layouts.template')
 
+@section('style')
+<style type="text/css">
+    #intro {
+        padding-top: 2em;
+    }
+    button{
+        background: #1bb1dc;
+        border: 0;
+        border-radius: 3px;
+        padding: 8px 30px;
+        color: #fff;
+        transition: 0.3s;
+    }
+    .validation{
+        color: red;
+        font-size: 9pt;
+    }
+    input, select, textarea{
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        border: 1px solid #dce1ec !important;
+        font-size: 14px !important;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="main-panel">
   	<div class="content-wrapper">
@@ -7,7 +33,7 @@
       		<h3 class="page-title">Add Delivery Order</h3>
       		<nav aria-label="breadcrumb">
 	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="false" aria-controls="deliveryorder-dd">DO</a></li>
+	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">DO</a></li>
 	          		<li class="breadcrumb-item active" aria-current="page">Add DO</li>
 	        	</ol>
       		</nav>
@@ -48,7 +74,7 @@
 	              			<div class="form-group">
 	                			<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
 	                  				<div class="col-xs-10 col-sm-10" style="padding: 0;display: inline-block;">
-					                    <label for="">Pilihan Promo</label>
+					                    <label for="">Pilihan Promo {{$j+1}}</label>
 					                    <select class="form-control" name="product_{{ $j }}" data-msg="Mohon Pilih Promo" {{ $j>0 ? "":"required"}}>
 					                    	<option selected disabled value="">Pilihan Promo{{ $j>0 ? " (optional)":""}}</option>
 					                      	@foreach($promos as $key=>$promo)

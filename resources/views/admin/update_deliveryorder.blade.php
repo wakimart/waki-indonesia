@@ -14,7 +14,7 @@
 	            			{{ csrf_field() }}
 	            			<div class="form-group">
 	                			<label for="">Order Code</label>
-	                			<input type="text" class="form-control" id="code" name="code" value="{{$deliveryOrders['code']}}" disabled="true">
+	                			<input type="text" class="form-control" id="code" name="code" value="{{$deliveryOrders['code']}}" readonly="">
 	                			<div class="validation"></div>
 	              			</div>
 	            			<div class="form-group">

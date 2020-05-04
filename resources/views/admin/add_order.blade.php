@@ -1,5 +1,6 @@
 @extends('admin.layouts.template')
-@section('content')
+
+@section('style')
 <style type="text/css">
     #intro {
         padding-top: 2em;
@@ -23,7 +24,9 @@
         font-size: 14px !important;
     }
 </style>
+@endsection
 
+@section('content')
 <div class="main-panel">
   	<div class="content-wrapper">
     	<div class="page-header">

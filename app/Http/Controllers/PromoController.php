@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
-use App\CategoryProduct;
 use Illuminate\Http\Request;
+use App\Promo;
+use App\Product;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
-class ProductController extends Controller
+class PromoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('single_product');
+        $promos = Promo::all();
+        $products = Product::all();
+        return view('admin.list_promo', compact('promos', 'products'));
     }
 
     /**
@@ -29,8 +31,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = CategoryProduct::all();
-        return view('admin.add_product', compact('categories'));
+        $products = Product::all();
+        return view('admin.add_promo', compact('products'));
     }
 
     /**
@@ -40,17 +42,33 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         $data = $request->all();
         $data['code'] = strtoupper($request->input('code'));
+
+        //pembentukan array product
+        $index = 0;
+        $data['arr_product'] = [];
+        foreach ($data as $key => $value) {
+            $arrKey = explode("_", $key);
+            if($arrKey[0] == 'product'){
+                if(isset($data['qty_'.$arrKey[1]])){
+                    $data['arr_product'][$index] = [];
+                    $data['arr_product'][$index]['id'] = $value;
+                    $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
+                    $index++;
+                }
+            }
+        }
+        $data['product'] = json_encode($data['arr_product']);
 
         //arr_image
         $namaGambar = [];
         $codePath = strtolower($request->input('code'));
+        
         for ($i = 0; $i < 3; $i++) {
-
             if ($request->hasFile('images' . $i)) {
-                $path = "public/product_images/" . $codePath;
+                $path = "public/promo_images/" . $codePath;
                 $path = str_replace("\\", "", $path);
                 $file = $request->file('images' . $i);
                 $filename = $file->getClientOriginalName();
@@ -59,34 +77,30 @@ class ProductController extends Controller
                 // $image_resize->resize(720, 720);
 
                 //cek ada folder tidak
-                if (!is_dir("sources/product_images/" . $codePath)) {
-                    File::makeDirectory("sources/product_images/" . $codePath, $mode = 0777, true, true);
+                if (!is_dir("sources/promo_images/" . $codePath)) {
+                    File::makeDirectory("sources/promo_images/" . $codePath, $mode = 0777, true, true);
                 }
 
                 //storing gambar - gambar
-                $pathForImage = "sources/product_images/" . $codePath;
+                $pathForImage = "sources/promo_images/" . $codePath;
                 $file->move($pathForImage, $filename);
                 //$image_resize->save(public_path($pathForImage.'/'.$filename));
                 $namaGambar[$i] = $filename;
             }
         }
         $data['image'] = json_encode($namaGambar);
-        $product = Product::create($data);
-        return response()->json(['success' => 'Berhasil']);  
-    }
-
-    public function admin_ListProduct(){
-        $products = Product::all();
-        return view('admin.list_product', compact('products'));
+        $promo = Promo::create($data);
+        return response()->json(['success' => 'Berhasil']);
+        //return response()->json(['success' => $data]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Product  $product
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($id)
     {
         //
     }
@@ -94,15 +108,15 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Product  $product
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit(Request $request)
     {
         if($request->has('id')){
-            $products = Product::find($request->get('id'));
-            $categories = CategoryProduct::all();
-            return view('admin.update_product', compact('products','categories'));
+            $promos = Promo::find($request->get('id'));
+            $products = Product::all();
+            return view('admin.update_promo', compact('promos','products'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -112,23 +126,33 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Product  $product
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
-        $products = Product::find($request->input('idProduct'));
-        $products->name = $request->input('name');
-        $products->price = $request->input('price');
-        $products->video = $request->input('video');
-        $products->category_id = $request->input('category_id');
-        $products->description = $request->input('description');
-        $products->quick_desc = $request->input('quick_desc');
+        $data = $request->all();
+        $promos = Promo::find($request->input('idPromo'));
 
+        //pembentukan array product
+        $index = 0;
+        $data['arr_product'] = [];
+        foreach ($data as $key => $value) {
+            $arrKey = explode("_", $key);
+            if($arrKey[0] == 'product'){
+                if(isset($data['qty_'.$arrKey[1]])){
+                    $data['arr_product'][$index] = [];
+                    $data['arr_product'][$index]['id'] = $value;
+                    $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
+                    $index++;
+                }
+            }
+        }
+        $promos->product = json_encode($data['arr_product']);
 
         //restore image
         $codePath = strtolower($request->input('code'));
-        $arr_image_before = json_decode($products->image, true);
+        $arr_image_before = json_decode($promos->image, true);
         $namaGambar = [];
         $namaGambar = array_values($arr_image_before);
 
@@ -136,18 +160,19 @@ class ProductController extends Controller
         if ($request->hasFile('images0') || $request->hasFile('images1') || $request->hasFile('images2')){
             
             //store image
+            $codePath = strtolower($request->input('code'));
 
             for ($i = 0; $i < $request->total_images; $i++) {
                
                 if ($request->hasFile('images' . $i)) {
                     if(array_key_exists($i, $arr_image_before)){
-                        if(File::exists("sources/product_images/" . $codePath . "/" . $arr_image_before[$i]))
+                        if(File::exists("sources/promo_images/" . $codePath . "/" . $arr_image_before[$i]))
                         {
-                            File::delete("sources/product_images/" . $codePath . "/" . $arr_image_before[$i]);
+                            File::delete("sources/promo_images/" . $codePath . "/" . $arr_image_before[$i]);
                         }
                     }  
                     //return response()->json(['success' => $request->dlt_img ]);
-                    $path = "public/product_images/" . $codePath;
+                    $path = "public/promo_images/" . $codePath;
                     $path = str_replace("\\", "", $path);
                     $file = $request->file('images' . $i);
                     $filename = $file->getClientOriginalName();
@@ -156,7 +181,7 @@ class ProductController extends Controller
                     // $image_resize->resize(720, 720);
 
                     //storing gambar - gambar
-                    $pathForImage = "sources/product_images/" . $codePath;
+                    $pathForImage = "sources/promo_images/" . $codePath;
                     $file->move($pathForImage, $filename);
                     //$image_resize->save(public_path($pathForImage.'/'.$filename));
                     $namaGambar[$i] = $filename;
@@ -168,18 +193,19 @@ class ProductController extends Controller
                 }
             }  
         }
-        // return response()->json(['success' => $request->dlt_img ]);
+
         if($request->dlt_img!="")
         {
             $deletes = explode(",", $request->dlt_img);
+
             foreach ($deletes as $value) {
                 if(array_key_exists($value, $namaGambar))
                 {
-                    if(File::exists("sources/product_images/" . $codePath . "/" . $namaGambar[$value]))
+                    if(File::exists("sources/promo_images/" . $codePath . "/" . $namaGambar[$value]))
                     {
-                        File::delete("sources/product_images/" . $codePath . "/" . $namaGambar[$value]);
+                        File::delete("sources/promo_images/" . $codePath . "/" . $namaGambar[$value]);
                     }
-                   // return response()->json(['success' => $value ]);
+                   
                     unset($namaGambar[$value]);
                 }
                
@@ -208,18 +234,20 @@ class ProductController extends Controller
             
         }
         $namaGambarFix.="]";
-        $products->image = $namaGambarFix;
-        $products->save();
-        return response()->json(['success' => 'Berhasil']);
+        $promos->image = $namaGambarFix;
+        $promos->price = $request->input('price');
+        $promos->save();
+        return response()->json(['result' => 'Berhasil!']);
+        
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Product  $product
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
         //
     }

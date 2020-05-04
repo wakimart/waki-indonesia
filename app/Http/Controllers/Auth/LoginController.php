@@ -43,7 +43,7 @@ class LoginController extends Controller
     public function logoutUser()
     {
         Auth::guard('web')->logout(); //default - web. Users table
-        return redirect('/admin');
+        return redirect('/login');
     }
 
     public function username()

@@ -4,11 +4,11 @@
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="page-header">
-  			<h3 class="page-title">List Delivery Order</h3>
+  			<h3 class="page-title">List Promo</h3>
   			<nav aria-label="breadcrumb">
     			<ol class="breadcrumb">
-      				<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">DO</a></li>
-      				<li class="breadcrumb-item active" aria-current="page">List DO</li>
+      				<li class="breadcrumb-item"><a data-toggle="collapse" href="#order-dd" aria-expanded="false" aria-controls="order-dd">Promo</a></li>
+      				<li class="breadcrumb-item active" aria-current="page">List Promo</li>
     			</ol>
   			</nav>
 		</div>
@@ -17,42 +17,49 @@
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
-      					<h5 style="margin-bottom: 0.5em;">Total : {{ sizeof($deliveryOrders) }} data</h5>
+      					<h5 style="margin-bottom: 0.5em;">Total : {{ sizeof($promos) }} data</h5>
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
         					<table class="table table-bordered">
           						<thead>
 						            <tr>
 						              	<th> No. </th>
-						              	<th> Order Code </th>
-						              	<th> Order Date </th>
-						              	<th> Member Name </th>
-						              	<th colspan="2"> Product </th>
-						              	<th> Branch </th>
-						              	<th> CSO </th>
+						              	<th> Code </th>
+			                            <th> Image </th>
+			                            <th colspan="2"> Product </th>
+			                            <th> Price </th>
 						              	<th colspan="2"> Edit / Delete </th>
 						            </tr>
           						</thead>
           						<tbody>
-          							@foreach($deliveryOrders as $key => $deliveryOrder)
-				                        @php 
-				                            $ProductPromos = json_decode($deliveryOrder['arr_product'], true);
+          							@foreach($promos as $key => $promo)
+          								@php 
+				                            $ProductPromos = json_decode($promo['product'], true);
 				                            $totalProduct = count($ProductPromos);
 				                        @endphp
 				                        <tr>
 				                        	<td rowspan="{{ $totalProduct }}">{{$key+1}}</td>
-				                            <td rowspan="{{ $totalProduct }}"><a href="{{ route('detail_deliveryorder') }}?code={{ $deliveryOrder['code'] }}">{{ $deliveryOrder['code'] }}</a></td>
-				                            <td rowspan="{{ $totalProduct }}">{{ date("d/m/Y", strtotime($deliveryOrder['created_at'])) }}</td>
-				                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder['name'] }}</td>
-
-				                            @foreach($ProductPromos as $ProductPromo)
-				                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
+				                        	<td rowspan="{{ $totalProduct }}">{{$promo['code']}}</td>
+				                            <td rowspan="{{ $totalProduct }}">
+				                            	<div class="product-thumbnail product__image center-block">
+                                          			<div class="product-thumbnail__wrapper">
+                                              			@php
+                                                  			$img = json_decode($promo->image);
+                                                  			$defaultImg = asset('sources/promo_images/').'/'.strtolower($promo['code']).'/'.$img[0];
+                                              			@endphp
+                                              			<img alt="#" class="product-thumbnail__image" src="{{$defaultImg}}">
+                                          			</div>
+                                      			</div>
+				                            </td>
+				                            
+				                            @foreach($ProductPromos as $key => $ProductPromo)
+				                                <td>{{ $promo->product_list()[$key]['name']}}</td>
 				                                <td>{{ $ProductPromo['qty'] }}</td>
 				                                @php break; @endphp
 				                            @endforeach
-				                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder->branch['code'] }} - {{ $deliveryOrder->branch['name'] }}</td>
-				                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder->cso['code'] }} - {{ $deliveryOrder->cso['name'] }}</td>
-				                            <td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('edit_deliveryorder', ['id' => $deliveryOrder['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
-                          					<td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('delete_deliveryorder', ['id' => $deliveryOrder['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+
+				                            <td rowspan="{{ $totalProduct }}">Rp. {{number_format($promo['price'])}}</td>
+				                            <td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('edit_promo', ['id' => $promo['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+                          					<td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('delete_promo', ['id' => $promo['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
 				                        </tr>
 				                        @php $first = true; @endphp
 				                        @foreach($ProductPromos as $ProductPromo)
@@ -63,7 +70,7 @@
 				                                }
 				                            @endphp
 				                            <tr>
-				                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
+				                                <td>{{ $promo->product_list()[$key]['name']}}</td>
 				                                <td>{{ $ProductPromo['qty'] }}</td>
 				                            </tr>
 				                        @endforeach
@@ -101,12 +108,4 @@
     </div>
     <!-- End Modal Delete -->
 </div>
-@endsection
-
-@section('script')
-<script type="text/javascript">
-	$(".btn-delete").click(function(e) {
-        $("#frmDelete").attr("action",  $(this).val());
-    });
-</script>
 @endsection

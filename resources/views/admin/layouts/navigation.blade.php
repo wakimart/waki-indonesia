@@ -3,7 +3,7 @@
 		<li class="nav-item nav-profile">
       <a href="#" class="nav-link">
         <div class="nav-profile-image">
-          <img src="{{asset('sources/testface1.jpg')}}" alt="profile">
+          <img src="{{asset('sources/favicon.png')}}" alt="profile">
       			<span class="login-status online"></span>
       			<!--change to offline or busy as needed-->
         </div>
@@ -87,7 +87,7 @@
       <div class="collapse" id="kategori-dd">
         <ul class="nav flex-column sub-menu">
           <li class="nav-item"> <a class="nav-link" href="{{route('add_category')}}">Add Kategori</a></li>
-          <li class="nav-item"> <a class="nav-link" href="{{route('add_category')}}">List Kategori</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('list_category')}}">List Kategori</a></li>
         </ul>
       </div>
     <li class="nav-item">
@@ -98,8 +98,8 @@
       </a>
       <div class="collapse" id="produk-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_produk.html">Add Product</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_produk.html">List Product</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('add_product')}}">Add Product</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('list_product')}}">List Product</a></li>
         </ul>
       </div>
     </li>
@@ -111,8 +111,8 @@
       </a>
       <div class="collapse" id="promo-dd">
         <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link" href="add_promo.html">Add Promo</a></li>
-          <li class="nav-item"> <a class="nav-link" href="list_promo.html">List Promo</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('add_promo')}}">Add Promo</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{route('list_promo')}}">List Promo</a></li>
         </ul>
       </div>
     </li>

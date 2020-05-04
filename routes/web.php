@@ -160,6 +160,48 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    Route::post('/{CategoryProductNya}', 'CategoryProductController@delete')
 	    	->name('delete_category');
     });
+
+    Route::group(['prefix' => 'product', 'middleware' => 'auth'], function(){
+    	//Add Form Product
+    	Route::get('/', 'ProductController@create')
+	    	->name('add_product');
+	    //Create Product
+	    Route::post('/', 'ProductController@store')
+	    	->name('store_product');
+	    //List Product
+	    Route::get('/list', 'ProductController@admin_ListProduct')
+	    	->name('list_product');
+	    //Edit Product
+	    Route::get('/edit/', 'ProductController@edit')
+	    	->name('edit_product');
+	    //Update Product
+	    Route::post('/update/', 'ProductController@update')
+	    	->name('update_product');
+	    //Delete Product
+	    Route::post('/{ProductNya}', 'ProductController@delete')
+	    	->name('delete_product');
+    });
+
+    Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){
+    	//Add Form Promo
+    	Route::get('/', 'PromoController@create')
+	    	->name('add_promo');
+	    //Create Promo
+	    Route::post('/', 'PromoController@store')
+	    	->name('store_promo');
+	    //List Promo
+	    Route::get('/list', 'PromoController@index')
+	    	->name('list_promo');
+	    //Edit Promo
+	    Route::get('/edit/', 'PromoController@edit')
+	    	->name('edit_promo');
+	    //Update Promo
+	    Route::post('/update/', 'PromoController@update')
+	    	->name('update_promo');
+	    //Delete Promo
+	    Route::post('/{PromoNya}', 'PromoController@delete')
+	    	->name('delete_promo');
+    });
     
 
 });

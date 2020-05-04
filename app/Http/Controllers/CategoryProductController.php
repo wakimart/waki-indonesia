@@ -17,6 +17,11 @@ class CategoryProductController extends Controller
         return view('product_category');
     }
 
+    public function admin_ListCategoryProduct(){
+        $categories = CategoryProduct::all();
+        return view('admin.list_categoryproduct', compact('categories'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -24,7 +29,7 @@ class CategoryProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.add_categoryproduct');
     }
 
     /**
@@ -35,7 +40,9 @@ class CategoryProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $category = CategoryProduct::create($data);
+        return response()->json(['success' => 'Berhasil']);
     }
 
     /**
@@ -55,9 +62,14 @@ class CategoryProductController extends Controller
      * @param  \App\CategoryProduct  $categoryProduct
      * @return \Illuminate\Http\Response
      */
-    public function edit(CategoryProduct $categoryProduct)
+    public function edit(Request $request)
     {
-        //
+        if($request->has('id')){
+            $categories = CategoryProduct::find($request->get('id'));
+            return view('admin.update_categoryproduct', compact('categories'));
+        }else{
+            return response()->json(['result' => 'Gagal!!']);
+        }
     }
 
     /**
@@ -67,9 +79,13 @@ class CategoryProductController extends Controller
      * @param  \App\CategoryProduct  $categoryProduct
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CategoryProduct $categoryProduct)
+    public function update(Request $request)
     {
-        //
+        $categories = CategoryProduct::find($request->input('idCategory'));
+        $categories->name = $request->input('name');
+        $categories->save();
+
+        return response()->json(['success' => 'Berhasil']);
     }
 
     /**

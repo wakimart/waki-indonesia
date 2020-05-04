@@ -1,8 +1,35 @@
 @extends('admin.layouts.template')
 @section('content')
 <style type="text/css">
-    #intro {
+    .imagePreview {
+	    width: 100%;
+	    height: 150px;
+	    background-position: center center;
+	    background-color: #fff;
+	    background-size: cover;
+	    background-repeat: no-repeat;
+	    display: inline-block;
+	}
+   
+  	.del {
+      position: absolute;
+      top: 0px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      background-color: rgba(255,255,255,0.6);
+      cursor: pointer;
+  	}
+
+  	#intro {
         padding-top: 2em;
+    }
+    
+    .validation{
+        color: red;
+        font-size: 9pt;
     }
     button{
         background: #1bb1dc;
@@ -12,10 +39,7 @@
         color: #fff;
         transition: 0.3s;
     }
-    .validation{
-        color: red;
-        font-size: 9pt;
-    }
+
     input, select, textarea{
         border-radius: 0 !important;
         box-shadow: none !important;
@@ -43,7 +67,7 @@
 	            			{{ csrf_field() }}
 	            			<div class="form-group">
 				                <label for="">Order Code</label>
-				                <input type="text" class="form-control" id="name" name="name" value="{{$orders['code']}}" disabled="true">
+				                <input type="text" class="form-control" id="name" name="name" value="{{$orders['code']}}" readonly="">
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
@@ -90,15 +114,21 @@
 			                </div>
 
 			                @if($orders['cash_upgrade'] == 1 || $orders['cash_upgrade'] == 2)
-			                @php 
-	                            $ProductPromos = json_decode($orders['product'], true);
-	                            $totalProduct = count($ProductPromos);
-	                        @endphp
 			                <div id="container-cashupgrade">
+			                	@php 
+		                            $ProductPromos = json_decode($orders['product'], true);
+		                            $totalProduct = count($ProductPromos);
+
+		                            $total_product = -1;
+		                        @endphp
+
 			                	@foreach($ProductPromos as $ProductPromo)
+			                		@php
+										$total_product++;
+									@endphp
 			                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
-			                    <div class="form-group" style="width: 72%; display: inline-block;">
-			                        <select class="form-control" name="product_0" data-msg="Mohon Pilih Product" required="">
+			                    <div id="product_{{$total_product}}" class="form-group" style="width: 72%; display: inline-block;">
+			                        <select class="form-control" name="product_{{$total_product}}" data-msg="Mohon Pilih Product" required="">
 			                            <option selected disabled value="">Pilihan Product</option>
 
 			                            @foreach($promos as $key=>$promo)
@@ -111,8 +141,8 @@
 			                        </select>
 			                        <div class="validation"></div>
 			                    </div>
-			                    <div class="form-group" style="width: 16%; display: inline-block;">
-			                        <select class="form-control" name="qty_0" data-msg="Mohon Pilih Jumlah" required="">
+			                    <div id="qty_{{$total_product}}" class="form-group" style="width: 16%; display: inline-block;">
+			                        <select class="form-control" name="qty_{{$total_product}}" data-msg="Mohon Pilih Jumlah" required="">
 			                            <option selected value="1">1</option>
 
 			                            @for($i=2; $i<=10;$i++)
@@ -125,9 +155,14 @@
 			                        </select>
 			                        <div class="validation"></div>
 			                    </div>
-			                    @endforeach
+			                    
+			                    @if($total_product == 0)
 			                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+			                    @else
+			                    <div class="text-center" style="display: inline-block; float: right;"><button class="hapus_product" value="{{$total_product}}" title="Hapus Product" style="padding: 0.4em 0.7em; background-color: red;"><i class="fas fa-minus"></i></button></div>
+			                    @endif
 
+			                    @endforeach
 			                    <div id="tambahan_product"></div>
 			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 
@@ -273,6 +308,7 @@
 	              				<input type="hidden" name="idCSO" value="{{$orders['cso_id']}}">
 	              				<input type="hidden" name="idCSO30" value="{{$orders['30_cso_id']}}">
 	              				<input type="hidden" name="idCSO70" value="{{$orders['70_cso_id']}}">
+	              				<input type="hidden" id="lastTotalProduct" value="{{$total_product}}">
 	              				<button id="updateOrder" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
 	              				<button class="btn btn-light">Batal</button>	
 	              			</div>
@@ -356,7 +392,8 @@
 </script>
 <script>
     var total_bank = 0;
-    var total_product = 0;
+    var total_product = $('#lastTotalProduct').val();
+    var count = 0;
     var arrBooleanCso = [ 'false', 'false', 'false' ];
 
     $(document).ready(function(){
@@ -423,12 +460,14 @@
         $("#tambah_product").click(function(e){
             e.preventDefault();
             total_product++;
+            count = total_product + 1;
+
             strIsi = "<div id=\"product_"+total_product+"\" class=\"form-group\" style=\"width: 72%; display: inline-block;\"><select class=\"form-control\" name=\"product_"+total_product+"\" data-msg=\"Mohon Pilih Product\" required=\"\"><option selected disabled value=\"\">Pilihan Product</option> @foreach($promos as $key=>$promo) <option value=\"{{ $key }}\">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option> @endforeach </select><div class=\"validation\"></div></div><div id=\"qty_"+total_product+"\" class=\"form-group\" style=\"width: 16%; display: inline-block;\"><select class=\"form-control\" name=\"qty_"+total_product+"\" data-msg=\"Mohon Pilih Jumlah\" required=\"\"><option selected value=\"1\">1</option> @for($i=2; $i<=10;$i++) <option value=\"{{ $i }}\">{{ $i }}</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_product\" value=\""+total_product+"\" title=\"Tambah Product\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
             $('#tambahan_product').html($('#tambahan_product').html()+strIsi);
         });
         $(document).on("click",".hapus_product", function(e){
             e.preventDefault();
-            total_product--;
+            //total_product--;
             $('#product_'+$(this).val()).remove();
             $('#qty_'+$(this).val()).remove();
             $(this).remove();
