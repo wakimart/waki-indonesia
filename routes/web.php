@@ -22,11 +22,14 @@ Route::get('/register-success', 'DeliveryOrderController@successorder')->name('s
 Route::get('/fetchCso', 'DeliveryOrderController@fetchCso')->name('fetchCso');
 Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
-//Order 
+//Order
 Route::get('/order', 'OrderController@index')->name('add_order');
 Route::post('/order', 'OrderController@store')->name('store_order');
 Route::get('/order-success', 'OrderController@successorder')->name('order_success');
 //Route::get('/templistorderwaki1995', 'OrderController@listOrder')->name('list_order');
+
+//Home service
+Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeServices');
 
 Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {
@@ -202,7 +205,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    Route::post('/{PromoNya}', 'PromoController@delete')
 	    	->name('delete_promo');
     });
-    
+
 
 });
 Auth::routes();

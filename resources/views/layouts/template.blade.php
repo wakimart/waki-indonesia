@@ -127,8 +127,15 @@
 	              </li>
 	            </ul>
 	          </li>
-	          <li><a href="{{ route('delivery_order') }}">REGISTRASI</a></li>
-	          <li><a href="{{ route('add_order') }}">ORDER</a></li>
+						<li class="drop-down"><a href="#product">Form</a>
+	            <ul>
+	              <li><a href="{{ route('delivery_order') }}">REGISTRASI</a></li>
+								<li><a href="{{ route('add_order') }}">ORDER</a></li>
+								<li><a href="{{ route('add_homeServices') }}">HOME SERVICE</a></li>
+								<li><a href="{{ route('order_success') }}">HOME SERVICE success</a></li>
+							</ul>
+						</li>
+
 	          <li><a href="#team">World Peace</a></li>
 	          <li><a href="#footer">Kontak Kami</a></li>
 	          <li><a href="#" class="searchtxtmob">Chair</a>
