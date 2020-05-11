@@ -55,12 +55,18 @@
 
                 @for($j=0;$j<2;$j++)
                     <div class="form-group" style="width: 82%; display: inline-block;">
-                        <select class="form-control" name="product_{{ $j }}" data-msg="Mohon Pilih Promo" {{ $j>0 ? "":"required"}}>
+                        <select class="form-control pilihan-product" name="product_{{ $j }}" data-msg="Mohon Pilih Promo" {{ $j>0 ? "":"required"}}>
                             <option selected disabled value="">Pilihan Promo{{ $j>0 ? " (optional)":""}}</option>
 
                             @foreach($promos as $key=>$promo)
                                 <option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
                             @endforeach
+
+                            {{-- KHUSUS Philiphin --}}
+                            @if(true)
+                                <option value="other">OTHER</option>
+                            @endif
+
                         </select>
                         <div class="validation"></div>
                     </div>
@@ -74,6 +80,14 @@
                         </select>
                         <div class="validation"></div>
                     </div>
+
+                    {{-- KHUSUS Philiphin --}}
+                    @if(true)
+                        <div class="form-group d-none">
+                            <input type="text" class="form-control" name="product_other_{{ $j }}" placeholder="Product Name" data-msg="Please fill in the product" />
+                            <div class="validation"></div>
+                        </div>
+                    @endif
                 @endfor
 
                 <div class="form-group">
@@ -105,7 +119,6 @@
             var txtCso = $(this).val();
             $.get( '{{route("fetchCso")}}', { txt: txtCso })
             .done(function( result ) {
-                console.log(result);
                 if (result == 'true'){
                     $('#validation_cso').html('Kode CSO Benar');
                     $('#validation_cso').css('color', 'green');
@@ -118,6 +131,20 @@
                 }
             });
         });
+
+        {{-- KHUSUS Philiphin --}}
+        @if(true)
+            $(".pilihan-product").change( function(e){
+                if($(this).val() == 'other'){
+                    $(this).parent().next().next().removeClass("d-none");
+                    $(this).parent().next().next().children().attr('required', '');
+                }
+                else{
+                    $(this).parent().next().next().addClass("d-none");
+                    $(this).parent().next().next().children().removeAttr('required', '');
+                }
+            });
+        @endif
     });
 </script>
 @endsection

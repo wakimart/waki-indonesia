@@ -126,41 +126,64 @@
 			                		@php
 										$total_product++;
 									@endphp
-			                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
-			                    <div id="product_{{$total_product}}" class="form-group" style="width: 72%; display: inline-block;">
-			                        <select class="form-control" name="product_{{$total_product}}" data-msg="Mohon Pilih Product" required="">
-			                            <option selected disabled value="">Pilihan Product</option>
 
-			                            @foreach($promos as $key=>$promo)
-			                            	@if(App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] == $promo['code'])
-			                                	<option value="{{ $key }}" selected="true">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
-			                                @else
-			                                	<option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
-			                                @endif
-			                            @endforeach
-			                        </select>
-			                        <div class="validation"></div>
-			                    </div>
-			                    <div id="qty_{{$total_product}}" class="form-group" style="width: 16%; display: inline-block;">
-			                        <select class="form-control" name="qty_{{$total_product}}" data-msg="Mohon Pilih Jumlah" required="">
-			                            <option selected value="1">1</option>
+				                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
+				                    <div id="product_{{$total_product}}" class="form-group" style="width: 72%; display: inline-block;">
+				                        <select class="form-control pilihan-product" name="product_{{$total_product}}" data-msg="Mohon Pilih Product" required="">
+				                            <option selected disabled value="">Pilihan Product</option>
 
-			                            @for($i=2; $i<=10;$i++)
-			                            	@if($ProductPromo['qty'] == $i)
-			                                	<option value="{{ $i }}" selected="true">{{ $i }}</option>
-			                                @else
-			                                	<option value="{{ $i }}">{{ $i }}</option>
+				                            @if(is_numeric($ProductPromo['id']))
+					                            @foreach($promos as $key=>$promo)
+					                            	@if(App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] == $promo['code'])
+					                                	<option value="{{ $key }}" selected="true">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
+					                                @else
+					                                	<option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
+					                                @endif
+					                            @endforeach
+											@endif
+
+			                                @if(true)
+			                                	@if(!is_numeric($ProductPromo['id']))
+				                                	@foreach($promos as $key=>$promo)
+					                                	<option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
+						                            @endforeach
+
+					                                <option value="other" selected>OTHER</option>
+			                                	@endif
 			                                @endif
-			                            @endfor
-			                        </select>
-			                        <div class="validation"></div>
-			                    </div>
-			                    
-			                    @if($total_product == 0)
-			                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
-			                    @else
-			                    <div class="text-center" style="display: inline-block; float: right;"><button class="hapus_product" value="{{$total_product}}" title="Hapus Product" style="padding: 0.4em 0.7em; background-color: red;"><i class="fas fa-minus"></i></button></div>
-			                    @endif
+				                        </select>
+				                        <div class="validation"></div>
+				                    </div>
+				                    <div id="qty_{{$total_product}}" class="form-group" style="width: 16%; display: inline-block;">
+				                        <select class="form-control" name="qty_{{$total_product}}" data-msg="Mohon Pilih Jumlah" required="">
+				                            <option selected value="1">1</option>
+
+				                            @for($i=2; $i<=10;$i++)
+				                            	@if($ProductPromo['qty'] == $i)
+				                                	<option value="{{ $i }}" selected="true">{{ $i }}</option>
+				                                @else
+				                                	<option value="{{ $i }}">{{ $i }}</option>
+				                                @endif
+				                            @endfor
+				                        </select>
+				                        <div class="validation"></div>
+				                    </div>
+				                    
+				                    @if($total_product == 0)
+					                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+				                    @else
+					                    <div class="text-center" style="display: inline-block; float: right;"><button class="hapus_product" value="{{$total_product}}" title="Hapus Product" style="padding: 0.4em 0.7em; background-color: red;"><i class="fas fa-minus"></i></button></div>
+				                    @endif
+
+				                    {{-- KHUSUS Philiphin --}}
+				                    @if(true)
+					                    @if(!is_numeric($ProductPromo['id']))
+					                        <div class="form-group">
+					                            <input type="text" class="form-control" name="product_other_{{ $total_product }}" placeholder="Product Name" data-msg="Please fill in the product" value="{{ $ProductPromo['id'] }}" />
+					                            <div class="validation"></div>
+					                        </div>
+				                        @endif
+				                    @endif
 
 			                    @endforeach
 			                    <div id="tambahan_product"></div>
@@ -503,6 +526,20 @@
          $("#branch").change( function(e){
             $("#container-Cabang").show();
         });
+
+	    {{-- KHUSUS Philiphin --}}
+        @if(true)
+            $(".pilihan-product").change( function(e){
+                if($(this).val() == 'other'){
+                    $(this).parent().next().next().removeClass("d-none");
+                    $(this).parent().next().next().children().attr('required', '');
+                }
+                else{
+                    $(this).parent().next().next().addClass("d-none");
+                    $(this).parent().next().next().children().removeAttr('required', '');
+                }
+            });
+        @endif
     });
 </script>
 <script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
