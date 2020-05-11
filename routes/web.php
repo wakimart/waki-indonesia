@@ -11,6 +11,8 @@
 |
 */
 
+Auth::routes(['verify' => true]);
+
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product', 'ProductController@index')->name('single_product');
@@ -28,7 +30,6 @@ Route::post('/order', 'OrderController@store')->name('store_order');
 Route::get('/order-success', 'OrderController@successorder')->name('order_success');
 //Route::get('/templistorderwaki1995', 'OrderController@listOrder')->name('list_order');
 
-Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {
 	Route::get('/', function () {
 		if(Auth::guard()->check()){
@@ -46,29 +47,73 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //logout usernya
     Route::get('/logout', 'Auth\LoginController@logoutUser')->name('admin_logout');
     //dashboard
-    Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+    Route::get('/dashboard', 'DashboardController@index')
+    	->name('dashboard');
     //frontendcms
-    Route::get('/frontend-cms', 'FrontendCmsController@index')->name('frontend_cms');
+    Route::get('/frontend-cms', 'FrontendCmsController@index')
+    	->name('index_frontendcms')
+    	->middleware('can:browse-frontendcms');
+    //add frontendcms
+    Route::post('/frontend-cms', 'FrontendCmsController@store')
+	    	->name('store_frontendcms');
+    //update frontendcms
+    Route::post('/frontend-cms/update', 'FrontendCmsController@update')
+	    	->name('update_frontendcms');
+
+	Route::group(['prefix' => 'useradmin', 'middleware' => 'auth'], function(){
+		//Add Form UserAdmin
+		Route::get('/', 'UserAdminController@create')
+	    	->name('add_useradmin')
+	    	->middleware('can:add-user');
+	    //Add Form UserAdmin
+		Route::post('/', 'UserAdminController@store')
+	    	->name('store_useradmin')
+	    	->middleware('can:add-user');
+	    //List UserAdmin
+	    Route::get('/list', 'UserAdminController@index')
+	    	->name('list_useradmin')
+	    	->middleware('can:browse-user');
+	    //Edit UserAdmin
+	    Route::get('/edit', 'UserAdminController@edit')
+	    	->name('edit_useradmin')
+	    	->middleware('can:edit-user');
+	    //Update UserAdmin
+	    Route::post('/update', 'UserAdminController@update')
+	    	->name('update_useradmin')
+	    	->middleware('can:edit-user');
+	    //Delete UserAdmin
+	    Route::post('/{userAdminNya}', 'UserAdminController@delete')
+	    	->name('delete_useradmin');
+	    //get user image
+        Route::get('file/{file}', 'UserAdminController@serveImages')
+                ->name('avatar_useradmin');
+	});
 
     Route::group(['prefix' => 'delivery_order', 'middleware' => 'auth'], function(){
     	//Add Form DO
 	    Route::get('/', 'DeliveryOrderController@admin_AddDeliveryOrder')
-	    	->name('add_deliveryorder');
+	    	->name('add_deliveryorder')
+	    	->middleware('can:add-deliveryorder');
 	    //Create DO
 	    Route::post('/', 'DeliveryOrderController@admin_StoreDeliveryOrder')
-	    	->name('store_deliveryorder');
+	    	->name('store_deliveryorder')
+	    	->middleware('can:add-deliveryorder');
 	    //List DO
 	    Route::get('/list', 'DeliveryOrderController@admin_ListDeliveryOrder')
-	    	->name('list_deliveryorder');
+	    	->name('list_deliveryorder')
+	    	->middleware('can:browse-deliveryorder');
 	    //Detail DO
 	    Route::get('/detail', 'DeliveryOrderController@admin_DetailDeliveryOrder')
-	    	->name('detail_deliveryorder');
+	    	->name('detail_deliveryorder')
+	    	->middleware('can:detail-deliveryorder');
 	    //Edit DO
 	    Route::get('/edit/', 'DeliveryOrderController@edit')
-	    	->name('edit_deliveryorder');
+	    	->name('edit_deliveryorder')
+	    	->middleware('can:edit-deliveryorder');
 	    //Update DO
 	    Route::post('/update/', 'DeliveryOrderController@update')
-	    	->name('update_deliveryorder');
+	    	->name('update_deliveryorder')
+	    	->middleware('can:edit-deliveryorder');
 	   	//Delete DO
 	    Route::post('/{deliveryOrderNya}', 'DeliveryOrderController@delete')
 	    	->name('delete_deliveryorder');
@@ -77,22 +122,28 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::group(['prefix' => 'order', 'middleware' => 'auth'], function(){
     	//Add Form Order
     	Route::get('/', 'OrderController@admin_AddOrder')
-	    	->name('admin_add_order');
+	    	->name('admin_add_order')
+	    	->middleware('can:add-order');
 	    //Create Order
 	    Route::post('/', 'OrderController@admin_StoreOrder')
-	    	->name('admin_store_order');
+	    	->name('admin_store_order')
+	    	->middleware('can:add-order');
 	    //List Order
 	    Route::get('/list', 'OrderController@admin_ListOrder')
-	    	->name('admin_list_order');
+	    	->name('admin_list_order')
+	    	->middleware('can:browse-order');
 	    //Detail Order
 	    Route::get('/detail', 'OrderController@admin_DetailOrder')
-	    	->name('detail_order');
+	    	->name('detail_order')
+	    	->middleware('can:detail-order');
 	    //Edit Order
 	    Route::get('/edit/', 'OrderController@edit')
-	    	->name('edit_order');
+	    	->name('edit_order')
+	    	->middleware('can:edit-order');
 	    //Update Order
 	    Route::post('/update/', 'OrderController@update')
-	    	->name('update_order');
+	    	->name('update_order')
+	    	->middleware('can:edit-order');
 	    //Delete Order
 	    Route::post('/{OrderNya}', 'OrderController@delete')
 	    	->name('delete_order');
@@ -101,19 +152,24 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
     	//Add Form CSO
     	Route::get('/', 'CsoController@create')
-	    	->name('add_cso');
+	    	->name('add_cso')
+	    	->middleware('can:add-cso');
 	    //Create CSO
 	    Route::post('/', 'CsoController@store')
-	    	->name('store_cso');
+	    	->name('store_cso')
+	    	->middleware('can:add-cso');
 	    //List CSO
 	    Route::get('/list', 'CsoController@index')
-	    	->name('list_cso');
+	    	->name('list_cso')
+	    	->middleware('can:browse-cso');
 	    //Edit CSO
 	    Route::get('/edit/', 'CsoController@edit')
-	    	->name('edit_cso');
+	    	->name('edit_cso')
+	    	->middleware('can:edit-cso');
 	    //Update CSO
 	    Route::post('/update/', 'CsoController@update')
-	    	->name('update_cso');
+	    	->name('update_cso')
+	    	->middleware('can:edit-cso');
 	    //Delete CSO
 	    Route::post('/{OrderNya}', 'CsoController@delete')
 	    	->name('delete_cso');
@@ -122,19 +178,24 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::group(['prefix' => 'branch', 'middleware' => 'auth'], function(){
     	//Add Form Branch
     	Route::get('/', 'BranchController@create')
-	    	->name('add_branch');
+	    	->name('add_branch')
+	    	->middleware('can:add-branch');
 	    //Create Branch
 	    Route::post('/', 'BranchController@store')
-	    	->name('store_branch');
+	    	->name('store_branch')
+	    	->middleware('can:add-branch');
 	    //List Branch
 	    Route::get('/list', 'BranchController@index')
-	    	->name('list_branch');
+	    	->name('list_branch')
+	    	->middleware('can:browse-branch');
 	    //Edit Branch
 	    Route::get('/edit/', 'BranchController@edit')
-	    	->name('edit_branch');
+	    	->name('edit_branch')
+	    	->middleware('can:edit-branch');
 	    //Update Branch
 	    Route::post('/update/', 'BranchController@update')
-	    	->name('update_branch');
+	    	->name('update_branch')
+	    	->middleware('can:edit-branch');
 	    //Delete Branch
 	    Route::post('/{BranchNya}', 'BranchController@delete')
 	    	->name('delete_branch');
@@ -143,19 +204,24 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::group(['prefix' => 'category_products', 'middleware' => 'auth'], function(){
     	//Add Form CategoryProduct
     	Route::get('/', 'CategoryProductController@create')
-	    	->name('add_category');
+	    	->name('add_category')
+	    	->middleware('can:add-category');
 	    //Create CategoryProduct
 	    Route::post('/', 'CategoryProductController@store')
-	    	->name('store_category');
+	    	->name('store_category')
+	    	->middleware('can:add-category');
 	    //List CategoryProduct
 	    Route::get('/list', 'CategoryProductController@admin_ListCategoryProduct')
-	    	->name('list_category');
+	    	->name('list_category')
+	    	->middleware('can:browse-category');
 	    //Edit CategoryProduct
 	    Route::get('/edit/', 'CategoryProductController@edit')
-	    	->name('edit_category');
+	    	->name('edit_category')
+	    	->middleware('can:edit-category');
 	    //Update CategoryProduct
 	    Route::post('/update/', 'CategoryProductController@update')
-	    	->name('update_category');
+	    	->name('update_category')
+	    	->middleware('can:edit-category');
 	    //Delete CategoryProduct
 	    Route::post('/{CategoryProductNya}', 'CategoryProductController@delete')
 	    	->name('delete_category');
@@ -164,19 +230,24 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::group(['prefix' => 'product', 'middleware' => 'auth'], function(){
     	//Add Form Product
     	Route::get('/', 'ProductController@create')
-	    	->name('add_product');
+	    	->name('add_product')
+	    	->middleware('can:add-product');
 	    //Create Product
 	    Route::post('/', 'ProductController@store')
-	    	->name('store_product');
+	    	->name('store_product')
+	    	->middleware('can:add-product');
 	    //List Product
 	    Route::get('/list', 'ProductController@admin_ListProduct')
-	    	->name('list_product');
+	    	->name('list_product')
+	    	->middleware('can:browse-product');
 	    //Edit Product
 	    Route::get('/edit/', 'ProductController@edit')
-	    	->name('edit_product');
+	    	->name('edit_product')
+	    	->middleware('can:edit-product');
 	    //Update Product
 	    Route::post('/update/', 'ProductController@update')
-	    	->name('update_product');
+	    	->name('update_product')
+	    	->middleware('can:edit-product');
 	    //Delete Product
 	    Route::post('/{ProductNya}', 'ProductController@delete')
 	    	->name('delete_product');
@@ -185,26 +256,30 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){
     	//Add Form Promo
     	Route::get('/', 'PromoController@create')
-	    	->name('add_promo');
+	    	->name('add_promo')
+	    	->middleware('can:add-promo');
 	    //Create Promo
 	    Route::post('/', 'PromoController@store')
-	    	->name('store_promo');
+	    	->name('store_promo')
+	    	->middleware('can:add-promo');
 	    //List Promo
 	    Route::get('/list', 'PromoController@index')
-	    	->name('list_promo');
+	    	->name('list_promo')
+	    	->middleware('can:browse-promo');
 	    //Edit Promo
 	    Route::get('/edit/', 'PromoController@edit')
-	    	->name('edit_promo');
+	    	->name('edit_promo')
+	    	->middleware('can:edit-promo');
 	    //Update Promo
 	    Route::post('/update/', 'PromoController@update')
-	    	->name('update_promo');
+	    	->name('update_promo')
+	    	->middleware('can:edit-promo');
 	    //Delete Promo
 	    Route::post('/{PromoNya}', 'PromoController@delete')
 	    	->name('delete_promo');
     });
-    
-
 });
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

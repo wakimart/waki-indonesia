@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "cso";
+?>
 @extends('admin.layouts.template')
 @section('content')
 <div class="main-panel">

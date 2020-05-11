@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "cso";
+?>
 @extends('admin.layouts.template')
 @section('content')
 <div class="main-panel">
@@ -16,6 +19,7 @@
     			<div class="card">
       				<div class="card-body">
         					<form id="actionAdd" class="forms-sample" method="POST" action="{{route('store_cso')}}">
+                    {{ csrf_field() }}
           						<div class="form-group d-none">
             						<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
               							<div class="col-xs-4 col-sm-4" style="padding-left: 0;">

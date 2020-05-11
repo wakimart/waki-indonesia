@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "order";
+?>
 @extends('admin.layouts.template')
 
 @section('style')
@@ -33,7 +36,7 @@
       		<h3 class="page-title">Add Order</h3>
       		<nav aria-label="breadcrumb">
 	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="false" aria-controls="deliveryorder-dd">Order</a></li>
+	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#order-dd" aria-expanded="false" aria-controls="order-dd">Order</a></li>
 	          		<li class="breadcrumb-item active" aria-current="page">Add Order</li>
 	        	</ol>
       		</nav>

@@ -67,9 +67,25 @@
 
 	      <nav class="main-nav float-right d-none d-lg-block">
 	        <ul>
+	          @if(Utils::$lang=='id')
 	          <li class="active"><a href="#intro">Beranda</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li class="active"><a href="#intro">Home</a></li>
+	          @endif
+	          
+	          @if(Utils::$lang=='id')
 	          <li><a href="#about">Tentang Kami</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="#about">About Us</a></li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
 	          <li><a href="#portfolio">Galeri</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="#portfolio">Gallery</a></li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
 	          <li class="drop-down"><a href="#product">Produk</a>
 	            <ul>
 	              <li class="drop-down "><a href="#">WAKi High Potential Therapy</a>
@@ -127,10 +143,91 @@
 	              </li>
 	            </ul>
 	          </li>
+	          @elseif(Utils::$lang=='eng')
+	          <li class="drop-down"><a href="#product">Product</a>
+	            <ul>
+	              <li class="drop-down "><a href="#">WAKi High Potential Therapy</a>
+	                <ul>
+	                  <li><a href="{{route('product_category')}}">WKT2080</a></li>
+	                  <li><a href="#">WK2076i </a></li>
+	                  <li><a href="#">WK2076H</a></li>
+	                  <li><a href="#">WK2079</a></li>
+	                </ul>
+	              </li>
+	              <li class="drop-down"><a href="#">WAKi Air Humidifier</a>
+	                <ul>
+	                  <li><a href="#">WKA2025 – Super HEPA Air Purifier</a></li>
+	                  <li><a href="#">WKA2024 – HEPA Power Air Purifier</a></li>
+	                  <li><a href="#">WKA2023 – Ion Air Humidifier</a></li>
+	                  <li><a href="#">WKA2100 – All-Climate Humidity Regulator</a></li>
+	                </ul>
+	              </li>
+	              <li class="drop-down"><a href="#">WAKi Bio Energy</a>
+	                <ul>
+	                  <li><a href="#">WKB8001 – Bio Energy – π Water System</a></li>
+	                  <li><a href="#">WKB8002 – Bio Energy Water System</a></li>
+	                  <li><a href="#">WKB999 – Hydrogen Alkaline Bio Energy – π Water System II</a></li>
+	                </ul>
+	              </li>
+	              <li class="drop-down"><a href="#">WAKi Massager</a>
+	                <ul style="max-width:220px;">
+	                  <li><a href="#">WKM2034 – Foot Massage Master II</a></li>
+	                  <li><a href="#">WKM1320 – The Boss Massage Chair III</a></li>
+	                  <li><a href="#">WKM1233 – Shiatsu Massage Chair V</a></li>
+	                  <li><a href="#">WKM1328 – Super Massage Master II</a></li>
+	                  <li><a href="#">WHM004 – Low/Medium Frequency Foot & Body Therapeutic Equipment</a></li>
+	                  <li><a href="#">WKM1188 – Fit Massage</a></li>
+	                  <li><a href="#">WKM1232 – Flexi Massager Chair</a></li>
+	                  <li><a href="#">WKM1327 – Super Massage Master</a></li>
+	                  <li><a href="#">WKM2027 – Massage Belt</a></li>
+	                  <li><a href="#">WKM2030 – Foot Massage Master</a></li>
+	                  <li><a href="#">WKM2032 – Butterfly Massager</a></li>
+	                </ul>
+	              </li>
+	              <li class="drop-down"><a href="#">WAKi Household</a>
+	                <ul>
+	                  <li><a href="#">WKE1015 – Dishwasher</a></li>
+	                  <li><a href="#">WKE5039 – Multi-Cooker</a></li>
+	                  <li><a href="#">WKE6000 – Hand Blender</a></li>
+	                  <li><a href="#">WKE6001 – Slow Juicer</a></li>
+	                </ul>
+	              </li>
+	              <li class="drop-down"><a href="#">WAKi Others</a>
+	                <ul>
+	                  <li class="break"><a href="#">WHN001 – Negative Ion Far Infra Red Bedsheet</a></li>
+	                  <li><a href="#">WHT005 – Health Pen</a></li>
+	                  <li><a href="#">WKB9002 – Far Infrared Medical Lamp</a></li>
+	                </ul>
+	              </li>
+	            </ul>
+	          </li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
 	          <li><a href="{{ route('delivery_order') }}">REGISTRASI</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="{{ route('delivery_order') }}">REGISTRATION</a></li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
 	          <li><a href="{{ route('add_order') }}">ORDER</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="{{ route('add_order') }}">ORDER</a></li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
 	          <li><a href="#team">World Peace</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="#team">World Peace</a></li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
 	          <li><a href="#footer">Kontak Kami</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="#footer">Contact Us</a></li>
+	          @endif
+
+
 	          <li><a href="#" class="searchtxtmob">Chair</a>
 	            <div class="searchicon">
 	                <i id="searchicn" class="fa fa-search hidden-sm"></i>

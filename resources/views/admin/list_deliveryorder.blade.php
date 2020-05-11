@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "deliveryorder";
+?>
 @extends('admin.layouts.template')
 
 @section('content')
