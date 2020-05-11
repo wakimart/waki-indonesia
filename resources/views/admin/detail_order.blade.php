@@ -88,7 +88,13 @@
 
                     @foreach(json_decode($order['product']) as $promo)
                         <tr>
-                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
+                            {{-- khusus Philipin --}}
+                            @if(is_numeric($promo->id))
+                                <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
+                            @else
+                                <td>{{ $promo->id }}</td>
+                            @endif
+
                             <td>{{ $promo->qty }}</td>
                         </tr>
                     @endforeach
@@ -137,26 +143,6 @@
                         </td>
                     </tr>
                 </table>
-
-                <table class="col-md-12 d-none">
-                    <thead>
-                        <td colspan="2">Syarat dan Ketentuan</td>
-                    </thead>
-                    <tr>
-                        <td>
-                            <p class="pInTable">1. Saya telah membaca surat pesanan ini dan menyetujui untuk membeli serta menerima barang yang tercantum diatas dan bersedia melunasi sisa pembayaran pada waktu penerimaan barang.<br>(Khusus luar kota, barang dikirim setelah pelunasan bank)</p>
-                            <p class="pInTable">2. Saya maklumi barang-barang ini tidak dijual dengan percobaan.</p>
-                            <p class="pInTable">3. Surat pesanan/pengiriman juga berlaku sebagai kuitansi yang sah</p>
-                            <p class="pInTable">4. Selain harga tersebut diatas, tidak ada perjanjian lain diluar surat pesanan ini.</p>
-                            <p class="pInTable">5. Uang muka yang sudah dibayar tidak dapat ditarik kembali.</p>
-                            <p class="pInTable">6. Barang yang sudah dibeli tidak dapat ditukar kembali.</p>
-                            <p class="pInTable">7. Barang pesanan selama tiga bulan tidak diambil berarti dibatalkan.</p>
-                            <p class="pInTable">8. Ongkos kirim berlaku bagi customer.</p>
-                            <p class="pInTable">9. Ongkos kirim berlaku bagi member untuk pembelanjaan dibawah 500.000.</p>
-                        </td>
-                    </tr>
-                </table>
-
                 <table class="col-md-12">
                     <thead>
                         <td>Cabang Sales</td>

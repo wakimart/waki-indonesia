@@ -24,7 +24,6 @@ class OrderController extends Controller
 
     public function store(Request $request){
   	   	$data = $request->all();
-  	   	// dd($data);
     	$data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
     	$data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
     	$data['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
@@ -39,6 +38,13 @@ class OrderController extends Controller
     			if(isset($data['qty_'.$arrKey[1]])){
     				$data['arr_product'][$index] = [];
     				$data['arr_product'][$index]['id'] = $value;
+
+                    // {{-- KHUSUS Philiphin --}}
+                    if($value == 'other'){
+                        $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
+                    }
+                    //===========================
+
     				$data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
     				$index++;
     			}
@@ -62,6 +68,21 @@ class OrderController extends Controller
     	}
     	$data['bank'] = json_encode($data['arr_bank']);
     	$order = Order::create($data);
+
+        if(isset($data['name-2'])){
+            $order2 = $order->replicate();
+            if(isset($data['name-2'])){
+                $order->code .= "/1";
+                $order->save();
+                $order2->code .= "/2";
+            }
+            $order2->no_member = $data['no_member-2'];
+            $order2->name = $data['name-2'];
+            $order2->address = $data['address-2'];
+            $order2->phone = $data['phone-2'];
+            $order2->city = $data['city-2'];
+            $order2->save();
+        }
 
     	return redirect()->route('order_success', ['code'=>$order['code']]);
     }
