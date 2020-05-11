@@ -67,9 +67,25 @@
 
 	      <nav class="main-nav float-right d-none d-lg-block">
 	        <ul>
+	          @if(Utils::$lang=='id')
 	          <li class="active"><a href="#intro">Beranda</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li class="active"><a href="#intro">Home</a></li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
 	          <li><a href="#about">Tentang Kami</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="#about">About Us</a></li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
 	          <li><a href="#portfolio">Galeri</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="#portfolio">Gallery</a></li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
 	          <li class="drop-down"><a href="#product">Produk</a>
 	            <ul>
 	              <li class="drop-down "><a href="#">WAKi High Potential Therapy</a>
@@ -137,7 +153,17 @@
 						</li>
 
 	          <li><a href="#team">World Peace</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="#team">World Peace</a></li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
 	          <li><a href="#footer">Kontak Kami</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="#footer">Contact Us</a></li>
+	          @endif
+
+
 	          <li><a href="#" class="searchtxtmob">Chair</a>
 	            <div class="searchicon">
 	                <i id="searchicn" class="fa fa-search hidden-sm"></i>

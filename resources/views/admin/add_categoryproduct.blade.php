@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "category";
+?>
 @extends('admin.layouts.template')
 
 @section('content')
@@ -17,6 +20,7 @@
 			<div class="card">
 				<div class="card-body">
 					<form id="actionAdd" class="forms-sample" action="{{route('store_category')}}" method="POST">
+						{{ csrf_field() }}
 						<div class="form-group">
 							<label for="">Nama Kategori</label>
 							<input type="text" class="form-control" name="name" placeholder="Nama Kategori" required>

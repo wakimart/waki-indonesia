@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "branch";
+?>
 @extends('admin.layouts.template')
 
 @section('content')
@@ -17,6 +20,7 @@
 				<div class="card">
 				  	<div class="card-body">
 					    <form id="actionAdd" class="forms-sample" method="POST" action="{{route('store_branch')}}">
+					    	{{ csrf_field() }}
 					      	<div class="form-group">
 					        	<label for="">Kode</label>
 					        	<input type="text" class="form-control" name="code" placeholder="Kode Branch" required>

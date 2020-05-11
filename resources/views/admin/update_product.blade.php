@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "product";
+?>
 @extends('admin.layouts.template')
 
 @section('style')

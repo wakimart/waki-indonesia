@@ -31,6 +31,13 @@ class DeliveryOrderController extends Controller
     			if(isset($data['qty_'.$arrKey[1]])){
     				$data['arr_product'][$key] = [];
     				$data['arr_product'][$key]['id'] = $value;
+
+                    // {{-- KHUSUS Philiphin --}}
+                    if($value == 'other'){
+                        $data['arr_product'][$key]['id'] = $data['product_other_'.$arrKey[1]];
+                    }
+                    //===========================
+
     				$data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
     			}
     		}

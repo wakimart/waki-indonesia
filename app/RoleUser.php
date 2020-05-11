@@ -3,11 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 
-class Banner extends Model
+class RoleUser extends Model
 {
     protected $fillable = [
-        'image'
+        'user_id', 'user_category_id',
     ];
 }

@@ -1,5 +1,5 @@
 <?php
-    $menu_item_page = "product";
+    $menu_item_page = "user";
 ?>
 @extends('admin.layouts.template')
 
@@ -28,88 +28,68 @@
   }
 </style>
 @endsection
+
 @section('content')
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="page-header">
-			<h3 class="page-title">Add Product</h3>
-			<nav aria-label="breadcrumb">
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a data-toggle="collapse" href="#produk-dd" aria-expanded="false" aria-controls="produk-dd">Product</a></li>
-				<li class="breadcrumb-item active" aria-current="page">Add Product</li>
-			</ol>
+			<h3 class="page-title">Add Admin</h3>
+				<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a data-toggle="collapse" href="#admin-dd" aria-expanded="false" aria-controls="admin-dd">Admin</a></li>
+					<li class="breadcrumb-item active" aria-current="page">Add Admin</li>
+				</ol>
 			</nav>
 		</div>
-
 		<div class="row">
 			<div class="col-12 grid-margin stretch-card">
 				<div class="card">
 					<div class="card-body">
-						<form id="actionAdd" class="forms-sample" method="POST" action="{{route('store_product')}}">
+						<form id="actionAdd" class="forms-sample" action="{{route('store_useradmin')}}" method="POST">
 							{{ csrf_field() }}
 							<div class="form-group">
-								<label for="">Kode Produk</label>
-								<input type="text" class="form-control" name="code" id="exampleInputName1" placeholder="Kode" required>
+					            <span>ADMIN ROLE</span>
+					            <select style="margin-top: 0.5em;" id="role" class="form-control" style="height: auto;" name="role" required>
+					                @foreach ($roles as $role)
+					                    <option value="{{$role->id}}">{{$role->name}}</option>
+					                @endforeach
+					            </select>
+					            <span class="invalid-feedback">
+					                <strong></strong>
+					            </span>
+					        </div>
+							<div class="form-group">
+								<label for="">USERNAME ADMIN</label>
+								<input type="text" class="form-control" name="username" placeholder="Username Admin" required>
 							</div>
 							<div class="form-group">
-								<label for="">Nama Produk</label>
-								<input type="text" class="form-control" name="name" id="exampleInputName1" placeholder="Nama" required>
+								<label for="">ADMIN'S NAME</label>
+								<input type="text" class="form-control" name="name" placeholder="Nama Admin" required>
 							</div>
 							<div class="form-group">
-								<label for="">Kategori Produk</label>
-								<select class="form-control" id="exampleSelectGender" name="category_id" required>
-									<option selected disabled value="">Pilihan Kategori</option>
-									@foreach($categories as $category)
-										<option value="{{$category['id']}}">{{$category['name']}}</option>
-									@endforeach
-								</select>
-							</div>
-							<div class="form-group d-none">
-								<label for="">Berat Produk (KG)</label>
-								<input type="text" class="form-control" id="exampleInputName1" placeholder="Berat (Kg)">
-							</div>
-							<div class="form-group d-none">
-								<label for="">Jumlah Produk</label>
-								<input type="text" class="form-control" id="exampleInputName1" placeholder="Jumlah">
+								<label for="">PASSWORD</label>
+								<input type="password" name="password" class="form-control" required>
 							</div>
 							<div class="form-group">
-								<label for="">Harga Produk (Rp.)</label>
-								<input type="number" class="form-control" id="exampleInputName1" placeholder="Harga (Rp)" name="price" required>
+								<label for="">RE-ENTER PASSWORD</label>
+								<input type="password" class="form-control" name="password_confirmation" required>
 							</div>
-
-
 							<div class="form-group">
 								<div class="col-xs-12">
-									<label>Gambar Produk (720x720 pixel)</label><span style="float: right;">min. 1 picture</span>
+									<label>PROFILE IMAGE (750x750 pixel)</label>
 								</div>
-								@for($i=0;$i<3;$i++)
-								<div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp" style="padding: 15px; float: left;">
-	                          		<label>Image {{$i+1}}</label>
-	                          		<div class="imagePreview" style="background-image: url({{asset('sources/dashboard/no-img-banner.jpg')}});"></div>
-	                          		<label class="file-upload-browse btn btn-gradient-primary" style="margin-top: 15px;">Upload
-	                              		<input name="images{{$i}}" id="productimg-{{$i}}" type="file" accept=".jpg,.jpeg,.png" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">
-	                          		</label>
-	                          		<i class="mdi mdi-window-close del"></i>
-	                      		</div>
-								@endfor
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 row productimg" style="border: 1px solid rgb(221, 221, 221, 0.5); border-radius: 4px; box-shadow: none; margin: 0;">
+									<div class="col-xs-12 col-sm-6 imgUp" style="padding: 15px; float: left; text-align: center;">
+										<div class="imagePreview" style="background-image: url({{asset('sources/dashboard/no-img-banner.jpg')}});"></div>
+										<label class="file-upload-browse btn btn-gradient-primary" style="margin: 15px 0 0; text-align: center;">Upload
+										<input name="user_image" type="file" accept=".jpg,.jpeg,.png" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">
+										</label>
+										<i class="mdi mdi-window-close del"></i>
+									</div>
+								</div>
 							</div>
 
-							<div class="form-group">
-								<label for="">URL Video</label>
-								<input type="text" class="form-control" id="exampleInputName1" placeholder="URL" name="video" required>
-							</div>
-
-							<div class="form-group">
-								<label for="">Quick Description</label>
-								<textarea id="edit_description" name="quick_desc" class="form-control form-control-sm"  rows="4" placeholder="Deskripsi Produk" required></textarea>
-							</div>
-
-							<div class="form-group">
-								<label for="">Deskripsi Produk</label>
-								<textarea id="edit_description" name="description" class="form-control form-control-sm"  rows="4" placeholder="Deskripsi Produk" required></textarea>
-							</div>
-
-							<button id="addProduct" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
+							<button id="addUserAdmin" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
 							<button class="btn btn-light">Batal</button>
 						</form>
 					</div>
@@ -117,7 +97,6 @@
 			</div>
 		</div>
 	</div>
-<!-- partial -->
 </div>
 @endsection
 
@@ -144,7 +123,7 @@
 	        ajax.send(frmAdd);
 	    });
 	    function progressHandler(event){
-	        document.getElementById("addProduct").innerHTML = "UPLOADING...";
+	        document.getElementById("addUserAdmin").innerHTML = "UPLOADING...";
 	    }
 	    function completeHandler(event){
 	        var hasil = JSON.parse(event.target.responseText);
@@ -182,10 +161,10 @@
 	            window.location.reload()
 	        }
 
-	        document.getElementById("addProduct").innerHTML = "SAVE";
+	        document.getElementById("addUserAdmin").innerHTML = "SAVE";
 	    }
 	    function errorHandler(event){
-	        document.getElementById("addProduct").innerHTML = "SAVE";
+	        document.getElementById("addUserAdmin").innerHTML = "SAVE";
 	    }
     });
 </script>

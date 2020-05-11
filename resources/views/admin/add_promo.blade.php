@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "promo";
+?>
 @extends('admin.layouts.template')
 
 @section('style')
@@ -68,6 +71,7 @@
 				<div class="card">
 					<div class="card-body">
 						<form id="actionAdd" class="forms-sample" method="POST" action="{{route('store_promo')}}">
+							{{ csrf_field() }}
 							<div class="form-group">
 								<label for="">Kode</label>
 								<input type="text" class="form-control" id="exampleInputName1" placeholder="Kode" name="code" required="">

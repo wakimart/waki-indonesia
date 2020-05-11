@@ -34,6 +34,7 @@
         <div class="row justify-content-center">
             <form action="{{ Route('store_order') }}" method="post" role="form" class="contactForm col-md-9">
                 @csrf
+                <h5 class="add-customer d-none">Customer 1</h5>
                 <div class="form-group">
                     <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
                     <div class="validation"></div>
@@ -55,6 +56,29 @@
                     <div class="validation"></div>
                 </div>
                 <br>
+                <h5 class="add-customer d-none">Customer 2</h5>
+                <div class="form-group add-customer d-none">
+                    <input type="text" name="no_member-2" class="form-control" id="no_member-2" placeholder="No. Member (optional)"/>
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group add-customer d-none">
+                    <input type="text" class="form-control cust-2" name="name-2" id="name-2" placeholder="Nama" data-msg="Mohon Isi Nama" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group add-customer d-none">
+                    <input type="text" class="form-control cust-2" name="phone-2" id="phone-2" placeholder="No. Telepon" data-msg="Mohon Isi Nomor Telepon" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group add-customer d-none">
+                    <input type="text" class="form-control cust-2" name="city-2" id="city-2" placeholder="Kota" data-msg="Mohon Isi Kota" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group add-customer d-none">
+                    <textarea class="form-control cust-2" name="address-2" id="address-2" rows="5" data-msg="Mohon Isi Alamat" placeholder="Alamat"></textarea>
+                    <div class="validation"></div>
+                </div>
+                <div class="text-center"><button id="tambah_member" type="button" style="background: #4caf3ab3">Tambah Pembeli</button></div>
+                <br>
 
                 <div class="form-group">
                     <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Mohon Pilih Tipe" required>
@@ -70,12 +94,18 @@
                 <div id="container-cashupgrade" style="display: none;">
                     {{-- ++++++++++++++ Product ++++++++++++++ --}}
                     <div class="form-group" style="width: 72%; display: inline-block;">
-                        <select class="form-control" name="product_0" data-msg="Mohon Pilih Product" required="">
+                        <select class="form-control pilihan-product" name="product_0" data-msg="Mohon Pilih Product" required="">
                             <option selected disabled value="">Pilihan Product</option>
 
                             @foreach($promos as $key=>$promo)
                                 <option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
                             @endforeach
+
+                            {{-- KHUSUS Philiphin --}}
+                            @if(true)
+                                <option value="other">OTHER</option>
+                            @endif
+
                         </select>
                         <div class="validation"></div>
                     </div>
@@ -90,6 +120,13 @@
                         <div class="validation"></div>
                     </div>
                     <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+                    {{-- KHUSUS Philiphin --}}
+                    @if(true)
+                        <div class="form-group d-none">
+                            <input type="text" class="form-control" name="product_other_0" placeholder="Product Name" data-msg="Please fill in the product" />
+                            <div class="validation"></div>
+                        </div>
+                    @endif
 
                     <div id="tambahan_product"></div>
                     {{-- ++++++++++++++ ======== ++++++++++++++ --}}
@@ -130,7 +167,8 @@
                     <div class="form-group bank_select" style="width: 26%; display: inline-block;">
                         <select class="form-control bank_cicilan" name="cicilan_0" data-msg="Mohon Pilih Jumlah Cicilan">
                             <option selected value="1">1X</option>
-                            @for($i=2; $i<=12;$i+=2)
+                            <option class="other_valCicilan" value="3">3X</option>
+                            @for($i=6; $i<=24;$i+=6)
                                 <option class="other_valCicilan" value="{{ $i }}">{{ $i }}X</option>
                             @endfor
                         </select>
@@ -268,7 +306,12 @@
         $("#tambah_product").click(function(e){
             e.preventDefault();
             total_product++;
-            strIsi = "<div id=\"product_"+total_product+"\" class=\"form-group\" style=\"width: 72%; display: inline-block;\"><select class=\"form-control\" name=\"product_"+total_product+"\" data-msg=\"Mohon Pilih Product\" required=\"\"><option selected disabled value=\"\">Pilihan Product</option> @foreach($promos as $key=>$promo) <option value=\"{{ $key }}\">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option> @endforeach </select><div class=\"validation\"></div></div><div id=\"qty_"+total_product+"\" class=\"form-group\" style=\"width: 16%; display: inline-block;\"><select class=\"form-control\" name=\"qty_"+total_product+"\" data-msg=\"Mohon Pilih Jumlah\" required=\"\"><option selected value=\"1\">1</option> @for($i=2; $i<=10;$i++) <option value=\"{{ $i }}\">{{ $i }}</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_product\" value=\""+total_product+"\" title=\"Tambah Product\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
+            strIsi = "<div id=\"product_"+total_product+"\" class=\"form-group\" style=\"width: 72%; display: inline-block;\"><select class=\"form-control pilihan-product\" name=\"product_"+total_product+"\" data-msg=\"Mohon Pilih Product\" required=\"\"><option selected disabled value=\"\">Pilihan Product</option> @foreach($promos as $key=>$promo) <option value=\"{{ $key }}\">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option> @endforeach {!! true ? "<option value="."other".">OTHER</option>" : "" !!} </select><div class=\"validation\"></div></div><div id=\"qty_"+total_product+"\" class=\"form-group\" style=\"width: 16%; display: inline-block;\"><select class=\"form-control\" name=\"qty_"+total_product+"\" data-msg=\"Mohon Pilih Jumlah\" required=\"\"><option selected value=\"1\">1</option> @for($i=2; $i<=10;$i++) <option value=\"{{ $i }}\">{{ $i }}</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_product\" value=\""+total_product+"\" title=\"Tambah Product\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
+
+            @if(true)
+                strIsi += "<div class=\"form-group d-none\"><input type=\"text\" class=\"form-control\" name=\"product_other_"+total_product+"\" placeholder=\"Product Name\" data-msg=\"Please fill in the product\" /><div class=\"validation\"></div></div>";
+            @endif
+
             $('#tambahan_product').html($('#tambahan_product').html()+strIsi);
         });
         $(document).on("click",".hapus_product", function(e){
@@ -308,6 +351,27 @@
 
          $("#branch").change( function(e){
             $("#container-Cabang").show();
+        });
+
+        {{-- KHUSUS Philiphin --}}
+        @if(true)
+            $(document).on("change", ".pilihan-product", function(e){
+                if($(this).val() == 'other'){
+                    $(this).parent().next().next().next().removeClass("d-none");
+                    $(this).parent().next().next().next().children().attr('required', '');
+                }
+                else{
+                    $(this).parent().next().next().next().addClass("d-none");
+                    $(this).parent().next().next().next().children().removeAttr('required', '');
+                }
+            });
+        @endif 
+
+        //KHUSUS Untuk tambah customer indo
+        $("#tambah_member").click(function(e){
+            $(".add-customer").removeClass("d-none");
+            $(".cust-2").attr('required', '');
+            $(this).hide();
         });
     });
 </script>

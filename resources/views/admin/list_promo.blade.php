@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "promo";
+?>
 @extends('admin.layouts.template')
 
 @section('content')

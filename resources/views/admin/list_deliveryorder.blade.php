@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "deliveryorder";
+?>
 @extends('admin.layouts.template')
 
 @section('content')
@@ -45,7 +48,12 @@
 				                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder['name'] }}</td>
 
 				                            @foreach($ProductPromos as $ProductPromo)
-				                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
+				                                @if(is_numeric($ProductPromo['id']))
+					                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
+					                            @else
+					                                <td>{{ $ProductPromo['id'] }}</td>
+					                            @endif
+
 				                                <td>{{ $ProductPromo['qty'] }}</td>
 				                                @php break; @endphp
 				                            @endforeach
@@ -63,7 +71,12 @@
 				                                }
 				                            @endphp
 				                            <tr>
-				                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
+				                               @if(is_numeric($ProductPromo['id']))
+					                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
+					                            @else
+					                                <td>{{ $ProductPromo['id'] }}</td>
+					                            @endif
+					                            
 				                                <td>{{ $ProductPromo['qty'] }}</td>
 				                            </tr>
 				                        @endforeach

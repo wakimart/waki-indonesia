@@ -1,3 +1,6 @@
+<?php
+    $menu_item_page = "cso";
+?>
 @extends('admin.layouts.template')
 
 @section('content')
@@ -7,7 +10,7 @@
   			<h3 class="page-title">List CSO</h3>
   			<nav aria-label="breadcrumb">
     			<ol class="breadcrumb">
-      				<li class="breadcrumb-item"><a data-toggle="collapse" href="#order-dd" aria-expanded="false" aria-controls="order-dd">CSO</a></li>
+      				<li class="breadcrumb-item"><a data-toggle="collapse" href="#cso-dd" aria-expanded="false" aria-controls="cso-dd">CSO</a></li>
       				<li class="breadcrumb-item active" aria-current="page">List CSO</li>
     			</ol>
   			</nav>

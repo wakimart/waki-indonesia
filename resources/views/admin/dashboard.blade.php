@@ -1,6 +1,7 @@
 @extends('admin.layouts.template')
 
 @section('content')
+@can('show-dashboard')
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
@@ -71,4 +72,5 @@
         </div>
     </div>
 </div>
+@endcan
 @endsection
