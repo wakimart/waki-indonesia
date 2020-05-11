@@ -61,7 +61,7 @@
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a data-toggle="collapse" href="#promo-dd" aria-expanded="false" aria-controls="promo-dd">Promo</a></li>
-					<li class="breadcrumb-item active" aria-current="page">Tambah Promo</li>
+					<li class="breadcrumb-item active" aria-current="page">Add Promo</li>
 				</ol>
 			</nav>
 		</div>
@@ -73,15 +73,15 @@
 						<form id="actionAdd" class="forms-sample" method="POST" action="{{route('store_promo')}}">
 							{{ csrf_field() }}
 							<div class="form-group">
-								<label for="">Kode</label>
-								<input type="text" class="form-control" id="exampleInputName1" placeholder="Kode" name="code" required="">
+								<label for="">Code</label>
+								<input type="text" class="form-control" id="exampleInputName1" placeholder="Promo Code" name="code" required="">
 							</div>
 							<div class="form-group">
 								<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
 	                  				<div class="form-group" style="width: 72%; display: inline-block;">
 					                    <label for="">Product</label>
 					                    <select class="form-control" name="product_0" data-msg="Mohon Pilih Product" required="">
-			                            <option selected disabled value="">Pilihan Product</option>
+			                            <option selected disabled value="">Choose Product</option>
 
 			                            @foreach($products as $key=>$product)
 			                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
@@ -90,7 +90,7 @@
 	                    				<div class="validation"></div>
 	                  				</div>
 	                  				<div class="form-group" style="width: 16%; display: inline-block;">
-	                    				<label for="">Jumlah</label>
+	                    				<label for="">Qty</label>
 		                					<select class="form-control" name="qty_0" data-msg="Mohon Pilih Jumlah" required="">
 				                            <option selected value="1">1</option>
 
@@ -116,14 +116,14 @@
 								<input type="text" class="form-control" id="exampleInputName1" placeholder="Jumlah">
 							</div>
 							<div class="form-group">
-								<label for="">Harga (Rp.)</label>
-								<input type="number" class="form-control" id="exampleInputName1" placeholder="Harga (Rp)" name="price" required="">
+								<label for="">Price (Rp.)</label>
+								<input type="number" class="form-control" id="exampleInputName1" placeholder="Promo Price (Rp)" name="price" required="">
 							</div>
 
 
 							<div class="form-group">
 								<div class="col-xs-12">
-									<label>Gambar Promo (720x720 pixel)</label><span style="float: right;">min. 1 picture</span>
+									<label>Promo Price (720x720 pixel)</label><span style="float: right;">min. 1 picture</span>
 								</div>
 								@for($i=0;$i<3;$i++)
 								<div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp" style="padding: 15px; float: left;">
@@ -145,8 +145,8 @@
 								</select>
 							</div>
 
-							<button id="addPromo" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-							<button class="btn btn-light">Batal</button>
+							<button id="addPromo" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+							<button class="btn btn-light">Cancel</button>
 						</form>
 					</div>
 				</div>

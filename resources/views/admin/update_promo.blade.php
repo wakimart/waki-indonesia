@@ -57,11 +57,11 @@
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="page-header">
-			<h3 class="page-title">Update Promo</h3>
+			<h3 class="page-title">Edit Promo</h3>
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a data-toggle="collapse" href="#promo-dd" aria-expanded="false" aria-controls="promo-dd">Promo</a></li>
-					<li class="breadcrumb-item active" aria-current="page">Update Promo</li>
+					<li class="breadcrumb-item active" aria-current="page">Edit Promo</li>
 				</ol>
 			</nav>
 		</div>
@@ -72,7 +72,7 @@
 					<div class="card-body">
 						<form id="actionUpdate" class="forms-sample" method="POST" action="{{route('update_promo')}}">
 							<div class="form-group">
-								<label for="">Kode</label>
+								<label for="">Code</label>
 								<input type="text" class="form-control" id="exampleInputName1" value="{{$promos['code']}}" name="code" readonly>
 							</div>
 
@@ -93,7 +93,7 @@
 			                    <div id="product_{{$total_product}}" class="form-group" style="width: 72%; display: inline-block;">
 			                    	<label for="">Product {{$key_p+1}} </label>
 			                        <select class="form-control" name="product_{{$total_product}}" data-msg="Mohon Pilih Product" required="">
-			                            <option selected disabled value="">Pilihan Product</option>
+			                            <option selected disabled value="">Choose Product</option>
 			                            
 			                            @foreach($products as $key => $product)
 			                            	
@@ -141,7 +141,7 @@
 								<input type="text" class="form-control" id="exampleInputName1" placeholder="Jumlah">
 							</div>
 							<div class="form-group">
-								<label for="">Harga (Rp.)</label>
+								<label for="">Price (Rp.)</label>
 								<input type="number" class="form-control" id="exampleInputName1" value="{{$promos['price']}}" name="price">
 							</div>
 
@@ -152,7 +152,7 @@
 					                $defaultImg = asset('sources/promo_images/').'/'.strtolower($promos['code']);
 					            @endphp
 								<div class="col-xs-12">
-									<label>Gambar Promo (720x720 pixel)</label>
+									<label>Promo Image (720x720 pixel)</label>
 								</div>
 								@for($i=0;$i<3;$i++)
 
@@ -181,8 +181,8 @@
 
 							<input type="hidden" name="idPromo" value="{{$promos['id']}}">
 							<input type="hidden" id="lastTotalProduct" value="{{$total_product}}">
-							<button id="updatePromo" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-							<button class="btn btn-light">Batal</button>
+							<button id="updatePromo" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+							<button class="btn btn-light">Cancel</button>
 						</form>
 					</div>
 				</div>
@@ -326,7 +326,7 @@
 	        total_product++;
 	        count = total_product + 1;
 
-	        strIsi = "<div id=\"product_"+total_product+"\" class=\"form-group\" style=\"width: 72%; display: inline-block;\"><label>Product "+count+" </label><select class=\"form-control\" name=\"product_"+total_product+"\" data-msg=\"Mohon Pilih Product\" required=\"\"><option selected disabled value=\"\">Pilihan Product</option> @foreach($products as $key=>$product) <option value=\"{{ $product['id'] }}\">{{ $product['code'] }} - {{ $product['name'] }}</option> @endforeach </select><div class=\"validation\"></div></div><div id=\"qty_"+total_product+"\" class=\"form-group\" style=\"width: 16%; display: inline-block;\"><select class=\"form-control\" name=\"qty_"+total_product+"\" data-msg=\"Mohon Pilih Jumlah\" required=\"\"><option selected value=\"1\">1</option> @for($i=2; $i<=10;$i++) <option value=\"{{ $i }}\">{{ $i }}</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_product\" value=\""+total_product+"\" title=\"Tambah Product\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
+	        strIsi = "<div id=\"product_"+total_product+"\" class=\"form-group\" style=\"width: 72%; display: inline-block;\"><label>Product "+count+" </label><select class=\"form-control\" name=\"product_"+total_product+"\" data-msg=\"Mohon Pilih Product\" required=\"\"><option selected disabled value=\"\">Choose Product</option> @foreach($products as $key=>$product) <option value=\"{{ $product['id'] }}\">{{ $product['code'] }} - {{ $product['name'] }}</option> @endforeach </select><div class=\"validation\"></div></div><div id=\"qty_"+total_product+"\" class=\"form-group\" style=\"width: 16%; display: inline-block;\"><select class=\"form-control\" name=\"qty_"+total_product+"\" data-msg=\"Mohon Pilih Jumlah\" required=\"\"><option selected value=\"1\">1</option> @for($i=2; $i<=10;$i++) <option value=\"{{ $i }}\">{{ $i }}</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_product\" value=\""+total_product+"\" title=\"Tambah Product\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
 	        $('#tambahan_product').html($('#tambahan_product').html()+strIsi);
 	    });
 

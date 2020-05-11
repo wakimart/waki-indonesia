@@ -43,13 +43,13 @@
     <section id="intro" class="clearfix">
         <div class="container">
             <div class="row justify-content-center">
-                <h2>DETAIL ORDER</h2>
+                <h2>ORDER SUCCESS</h2>
             </div>
             <div class="row justify-content-center">
                 <table class="col-md-12">
                     <thead>
-                        <td>Kode Pesanan</td>
-                        <td>Tanggal Pesanan</td>
+                        <td>Order Code</td>
+                        <td>Order Date</td>
                     </thead>
                     <tr>
                         <td>{{ $order['code'] }}</td>
@@ -58,49 +58,47 @@
                 </table>
                 <table class="col-md-12">
                     <thead>
-                        <td colspan="2">Data Pemesan</td>
+                        <td colspan="2">Customer Data</td>
                     </thead>
                     <tr>
-                        <td>No. Member : </td>
+                        <td>Member Code : </td>
                         <td>{{ $order['no_member'] }}</td>
                     </tr>
                     <tr>
-                        <td>Nama : </td>
+                        <td>Name : </td>
                         <td>{{ $order['name'] }}</td>
                     </tr>
                     <tr>
-                        <td>No. Telp : </td>
+                        <td>Phone Number : </td>
                         <td>{{ $order['phone'] }}</td>
                     </tr>
                     <tr>
-                        <td>Alamat : </td>
+                        <td>City : </td>
+                        <td>{{ $order['city'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Address : </td>
                         <td>{{ $order['address'] }}</td>
                     </tr>
                 </table>
                 <table class="col-md-12">
                     <thead>
-                        <td colspan="2">Detail Pesanan</td>
+                        <td colspan="2">Detail Order</td>
                     </thead>
                     <thead style="background-color: #80808012 !important">
-                        <td>Jenis Barang</td>
-                        <td>Jumlah</td>
+                        <td>Product Name</td>
+                        <td>Quantity</td>
                     </thead>
 
                     @foreach(json_decode($order['product']) as $promo)
                         <tr>
-                            {{-- khusus Philipin --}}
-                            @if(is_numeric($promo->id))
-                                <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
-                            @else
-                                <td>{{ $promo->id }}</td>
-                            @endif
-
+                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
                             <td>{{ $promo->qty }}</td>
                         </tr>
                     @endforeach
                     @if($order['old_product'] != null)
                         <thead style="background-color: #80808012 !important">
-                            <td colspan="2">Barang Lama</td>
+                            <td colspan="2">Old Product</td>
                         </thead>
                         <tr>
                             <td colspan="2">{{$order['old_product']}}</td>
@@ -108,7 +106,7 @@
                     @endif
                     @if($order['prize'] != null)
                         <thead style="background-color: #80808012 !important">
-                            <td colspan="2">Barang Hadiah</td>
+                            <td colspan="2">Prize Product</td>
                         </thead>
                         <tr>
                             <td colspan="2">{{$order['prize']}}</td>
@@ -119,45 +117,64 @@
 
                 <table class="col-md-12">
                     <thead>
-                        <td colspan="2">Detail Pembayaran</td>
+                        <td colspan="2">Payment Detail</td>
                     </thead>
                     <tr>
-                        <td>TOTAL PEMBELIAN : </td>
+                        <td>Total Payment : </td>
                         <td>Rp. {{ number_format($order['total_payment']) }}</td>
                     </tr>
                     <tr>
-                        <td>UANG MUKA : </td>
-                        <td>Rp. {{ number_format($order['down_payment']) }} (LUNAS)</td>
+                        <td>Down Payment : </td>
+                        <td>Rp. {{ number_format($order['down_payment']) }} (PAID OFF)</td>
                     </tr>
                     <tr>
-                        <td>SISA PEMBAYARAN : </td>
+                        <td>Remaining Payment : </td>
                         <td>Rp. {{ number_format($order['remaining_payment']) }}</td>
                     </tr>
                     <tr>
-                        <td>BANK : </td>
+                        <td>Bank : </td>
                         <td>
                             @foreach(json_decode($order['bank']) as $key=>$bank)
-                                {{ App\Order::$Banks[$bank->id] }} ({{ $bank->cicilan }}X)
+                                {{ $bank->id }} ({{ $bank->cicilan }}X)
                                 @if(sizeof(json_decode($order['bank'], true)) > $key+1) +  @endif
                             @endforeach
                         </td>
                     </tr>
                 </table>
+
+                <table class="col-md-12 d-none">
+                    <thead>
+                        <td colspan="2">Terms and Condition</td>
+                    </thead>
+                    <tr>
+                        <td>
+                            <p class="pInTable">1. I have read this order letter and agree to buy and accept the items listed above and am willing to pay off the remaining payment at the time of receipt of the goods.<br>(Especially out of town, the goods are sent after the bank's repayment)</p>
+                            <p class="pInTable">2. I understand these items are not sold by trial.</p>
+                            <p class="pInTable">3. Order / delivery letters also act as valid receipts.</p>
+                            <p class="pInTable">4. Other than the above prices, there is no other agreement outside this order letter.</p><p class = "pInTable"> 5. Advances that have been paid cannot be withdrawn.</p>
+                            <p class="pInTable">6. Items that have been purchased cannot be exchanged.</p>
+                            <p class="pInTable">7. Goods ordered for three months are not taken means canceled.</p>
+                            <p class="pInTable">8. Shipping costs apply to customers.</p>
+                            <p class="pInTable">9. Shipping costs apply to members for purchases under 500,000.</p>
+                        </td>
+                    </tr>
+                </table>
+
                 <table class="col-md-12">
                     <thead>
-                        <td>Cabang Sales</td>
-                        <td>Kode Sales</td>
+                        <td>Sales Branch</td>
+                        <td>Sales Code</td>
                     </thead>
                     <tr>
                         <td style="width:50%; text-align: center">{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
-                        <td style="width:50%; text-align: center">{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
+                        <td style="width:50%; text-align: center">{{ $order->cso['code'] }}</td>
                     </tr>
                 </table>
 
                 @if($order['description'] != null)
                     <table class="col-md-12">
                         <thead>
-                            <td>Keterangan</td>
+                            <td>Description</td>
                         </thead>
                         <tr>
                             <td>{{ $order['description'] }}</td>
@@ -165,7 +182,7 @@
                     </table>
                 @endif
 
-                <a href="whatsapp://send?text={{ Route('successorder') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share">Bagikan melalui Whatsapp</a>
+                <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share">Share to Whatsapp</a>
             </div>
         </div>
     </section>
@@ -173,7 +190,7 @@
     <section id="intro" class="clearfix">
         <div class="container">
             <div class="row justify-content-center">
-                <h2>PESANAN TIDAK DITEMUKAN</h2>
+                <h2>CANNOT FIND ORDER</h2>
             </div>
         </div>
     </section>

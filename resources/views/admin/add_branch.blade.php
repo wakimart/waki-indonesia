@@ -22,16 +22,16 @@
 					    <form id="actionAdd" class="forms-sample" method="POST" action="{{route('store_branch')}}">
 					    	{{ csrf_field() }}
 					      	<div class="form-group">
-					        	<label for="">Kode</label>
-					        	<input type="text" class="form-control" name="code" placeholder="Kode Branch" required>
+					        	<label for="">Code</label>
+					        	<input type="text" class="form-control" name="code" placeholder="Branch Code" required>
 					      	</div>
 					      	<div class="form-group">
-					        	<label for="">Nama Branch</label>
-					        	<input type="text" class="form-control" name="name" placeholder="Nama Branch" required="">
+					        	<label for="">Name</label>
+					        	<input type="text" class="form-control" name="name" placeholder="Branch Name" required="">
 					      	</div>
 
-					      	<button id="addBranch" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-					      	<button class="btn btn-light">Batal</button>
+					      	<button id="addBranch" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+					      	<button class="btn btn-light">Cancel</button>
 					    </form>
 				  	</div>
 				</div>

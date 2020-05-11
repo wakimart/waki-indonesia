@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Utils extends Model
 {
-    public static $lang = "id";
+    public static $lang = "eng";
 }

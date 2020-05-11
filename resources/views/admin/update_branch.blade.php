@@ -7,11 +7,11 @@
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="page-header">
-      <h3 class="page-title">Update Branch</h3>
+      <h3 class="page-title">Edit Branch</h3>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a data-toggle="collapse" href="#branch-dd" aria-expanded="false" aria-controls="branch-dd">Branch</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Update Branch</li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Branch</li>
         </ol>
       </nav>
     </div>
@@ -21,17 +21,17 @@
             <div class="card-body">
               <form id="actionUpdate" class="forms-sample" method="POST" action="{{route('update_branch')}}">
                   <div class="form-group">
-                    <label for="">Kode</label>
+                    <label for="">Code</label>
                     <input type="text" class="form-control" name="code" value="{{$branches['code']}}">
                   </div>
                   <div class="form-group">
-                    <label for="">Nama Branch</label>
+                    <label for="">Branch</label>
                     <input type="text" class="form-control" name="name" value="{{$branches['name']}}">
                   </div>
 
                   <input type="hidden" name="idBranch" value="{{$branches['id']}}">
-                  <button id="updateBranch" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-                  <button class="btn btn-light">Batal</button>
+                  <button id="updateBranch" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+                  <button class="btn btn-light">Cancel</button>
               </form>
             </div>
         </div>

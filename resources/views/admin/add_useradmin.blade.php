@@ -89,8 +89,8 @@
 								</div>
 							</div>
 
-							<button id="addUserAdmin" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-							<button class="btn btn-light">Batal</button>
+							<button id="addUserAdmin" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+							<button class="btn btn-light">Cancel</button>
 						</form>
 					</div>
 				</div>

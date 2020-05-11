@@ -7,11 +7,11 @@
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="page-header">
-			<h3 class="page-title">Update Category Product</h3>
+			<h3 class="page-title">Edit Category Product</h3>
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb">
 					<li class="breadcrumb-item"><a data-toggle="collapse" href="#kategori-dd" aria-expanded="false" aria-controls="kategori-dd">Category Product</a></li>
-					<li class="breadcrumb-item active" aria-current="page">Update Category Product</li>
+					<li class="breadcrumb-item active" aria-current="page">Edit Category Product</li>
 				</ol>
 			</nav>
 		</div>
@@ -21,7 +21,7 @@
 				<div class="card-body">
 					<form id="actionUpdate" class="forms-sample" action="{{route('update_category')}}" method="POST">
 						<div class="form-group">
-							<label for="">Nama Kategori</label>
+							<label for="">Category</label>
 							<input type="text" class="form-control" name="name" value="{{$categories['name']}}" required>
 						</div>
 						<div class="form-group d-none">
@@ -48,8 +48,8 @@
 						</div>
 
 						<input type="hidden" name="idCategory" value="{{$categories['id']}}">
-						<button id="updateCategory" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-						<button class="btn btn-light">Batal</button>
+						<button id="updateCategory" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+						<button class="btn btn-light">Cancel</button>
 					</form>
 				</div>
 			</div>
