@@ -33,11 +33,11 @@
 <div class="main-panel">
   	<div class="content-wrapper">
     	<div class="page-header">
-      		<h3 class="page-title">Add Delivery Order</h3>
+      		<h3 class="page-title">Add Registration</h3>
       		<nav aria-label="breadcrumb">
 	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">DO</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Add DO</li>
+	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">Registration</a></li>
+	          		<li class="breadcrumb-item active" aria-current="page">Add Registration</li>
 	        	</ol>
       		</nav>
     	</div>

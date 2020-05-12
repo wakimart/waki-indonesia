@@ -33,17 +33,17 @@
     @if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
     <li class="{{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'active': '' }} nav-item">
       <a class="nav-link" data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="false" aria-controls="deliveryorder-dd">
-        <span class="menu-title">Delivery Order (DO)</span>
+        <span class="menu-title">Registration</span>
         <i class="menu-arrow"></i>
         <i class="mdi mdi-calendar-text menu-icon"></i>
       </a>
       <div class="collapse" id="deliveryorder-dd">
         <ul class="nav flex-column sub-menu">
           @if(Gate::check('add-deliveryorder'))
-          <li class="nav-item"> <a class="nav-link" href="{{ route('add_deliveryorder')}}">Add Delivery Order</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{ route('add_deliveryorder')}}">Add Registration</a></li>
           @endif
           @if(Gate::check('browse-deliveryorder'))
-          <li class="nav-item"> <a class="nav-link" href="{{  route('list_deliveryorder') }}">List Delivery Order</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{{  route('list_deliveryorder') }}">List Registration</a></li>
           @endif
         </ul>
       </div>

@@ -7,7 +7,7 @@
 <div class="main-panel">
   	<div class="content-wrapper">
     	<div class="page-header">
-      		<h3 class="page-title">Edit Delivery Order</h3>
+      		<h3 class="page-title">Edit Registration</h3>
     	</div>
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
@@ -16,7 +16,7 @@
 	            		<form id="actionUpdate" class="forms-sample" method="POST" action="{{ route('update_deliveryorder') }}">
 	            			{{ csrf_field() }}
 	            			<div class="form-group">
-	                			<label for="">Order Code</label>
+	                			<label for="">Registration Code</label>
 	                			<input type="text" class="form-control" id="code" name="code" value="{{$deliveryOrders['code']}}" readonly="">
 	                			<div class="validation"></div>
 	              			</div>
