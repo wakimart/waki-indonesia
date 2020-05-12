@@ -48,17 +48,17 @@
 						<form id="actionAdd" class="forms-sample" method="POST" action="{{route('store_product')}}">
 							{{ csrf_field() }}
 							<div class="form-group">
-								<label for="">Kode Produk</label>
-								<input type="text" class="form-control" name="code" id="exampleInputName1" placeholder="Kode" required>
+								<label for="">Code</label>
+								<input type="text" class="form-control" name="code" id="exampleInputName1" placeholder="Code" required>
 							</div>
 							<div class="form-group">
-								<label for="">Nama Produk</label>
-								<input type="text" class="form-control" name="name" id="exampleInputName1" placeholder="Nama" required>
+								<label for="">Name</label>
+								<input type="text" class="form-control" name="name" id="exampleInputName1" placeholder="Name" required>
 							</div>
 							<div class="form-group">
-								<label for="">Kategori Produk</label>
+								<label for="">Product Category</label>
 								<select class="form-control" id="exampleSelectGender" name="category_id" required>
-									<option selected disabled value="">Pilihan Kategori</option>
+									<option selected disabled value="">Choose Category</option>
 									@foreach($categories as $category)
 										<option value="{{$category['id']}}">{{$category['name']}}</option>
 									@endforeach
@@ -73,14 +73,14 @@
 								<input type="text" class="form-control" id="exampleInputName1" placeholder="Jumlah">
 							</div>
 							<div class="form-group">
-								<label for="">Harga Produk (Rp.)</label>
-								<input type="number" class="form-control" id="exampleInputName1" placeholder="Harga (Rp)" name="price" required>
+								<label for="">Price (Rp.)</label>
+								<input type="number" class="form-control" id="exampleInputName1" placeholder="Product Price (Rp)" name="price" required>
 							</div>
 
 
 							<div class="form-group">
 								<div class="col-xs-12">
-									<label>Gambar Produk (720x720 pixel)</label><span style="float: right;">min. 1 picture</span>
+									<label>Product Image (720x720 pixel)</label><span style="float: right;">min. 1 picture</span>
 								</div>
 								@for($i=0;$i<3;$i++)
 								<div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp" style="padding: 15px; float: left;">
@@ -105,12 +105,12 @@
 							</div>
 
 							<div class="form-group">
-								<label for="">Deskripsi Produk</label>
-								<textarea id="edit_description" name="description" class="form-control form-control-sm"  rows="4" placeholder="Deskripsi Produk" required></textarea>
+								<label for="">Description</label>
+								<textarea id="edit_description" name="description" class="form-control form-control-sm"  rows="4" placeholder="Description" required></textarea>
 							</div>
 
-							<button id="addProduct" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-							<button class="btn btn-light">Batal</button>
+							<button id="addProduct" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+							<button class="btn btn-light">Cancel</button>
 						</form>
 					</div>
 				</div>

@@ -53,13 +53,13 @@
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-				                <label for="">Nama</label>
-				                <input type="text" class="form-control" id="name" name="name" placeholder="Nama">
+				                <label for="">Name</label>
+				                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-				                <label for="">No. Telepon</label>
-				                <input type="number" class="form-control" id="phone" name="phone" placeholder="No. Telepon">
+				                <label for="">Phone Number</label>
+				                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number">
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
@@ -68,16 +68,16 @@
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-				                <label for="exampleTextarea1">Alamat</label>
-				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Alamat Lengkap"></textarea>
+				                <label for="exampleTextarea1">Address</label>
+				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address"></textarea>
 				                <div class="validation"></div>
 	              			</div>
 	              			<br>
 
 	              			<div class="form-group">
-	              				<label for="">Pilihan CASH/UPGRADE</label>
+	              				<label for="">CASH/UPGRADE</label>
 			                    <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Mohon Pilih Tipe" required>
-			                        <option selected disabled value="">Pilihan CASH/UPGRADE</option>
+			                        <option selected disabled value="">Choose CASH/UPGRADE</option>
 
 			                        @foreach($cashUpgrades as $key=>$cashUpgrade)
 			                            <option value="{{ $key }}">{{ strtoupper($cashUpgrade) }}</option>
@@ -90,7 +90,7 @@
 			                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
 			                    <div class="form-group" style="width: 72%; display: inline-block;">
 			                        <select class="form-control" name="product_0" data-msg="Mohon Pilih Product" required="">
-			                            <option selected disabled value="">Pilihan Product</option>
+			                            <option selected disabled value="">Choose Product</option>
 
 			                            @foreach($promos as $key=>$promo)
 			                                <option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
@@ -114,20 +114,20 @@
 			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 
 			                    <div class="form-group" style="display: none">
-			                        <input type="text" class="form-control" name="old_product" id="old_product" placeholder="Product Lama" data-msg="Mohon Isi Produk Lama" style="text-transform:uppercase"/>
+			                        <input type="text" class="form-control" name="old_product" id="old_product" placeholder="Old Product" data-msg="Mohon Isi Produk Lama" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
-			                        <input type="text" class="form-control" name="prize" id="prize" placeholder="Product Hadiah" data-msg="Mohon Isi Hadiah" style="text-transform:uppercase"/>
+			                        <input type="text" class="form-control" name="prize" id="prize" placeholder="Prize Product" data-msg="Mohon Isi Hadiah" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                </div>
 			                <br>
 
 			                <div class="form-group">
-			                	<label for="">Pilihan Jenis Pembayaran</label>
+			                	<label for="">Payment Method</label>
 			                    <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe" required>
-			                        <option selected disabled value="">Pilihan Jenis Pembayaran</option>
+			                        <option selected disabled value="">Choose Payment Method</option>
 
 			                        @foreach($paymentTypes as $key=>$paymentType)
 			                            <option value="{{ $key }}">{{ strtoupper($paymentType) }}</option>
@@ -139,7 +139,7 @@
 			                    {{-- ++++++++ BANK ++++++++ --}}
 			                    <div class="form-group bank_select" style="width: 62%; display: inline-block;">
 			                        <select class="form-control bank_name" name="bank_0" data-msg="Mohon Pilih Bank">
-			                            <option selected disabled value="">Pilihan Bank</option>
+			                            <option selected disabled value="">Choose Bank</option>
 
 			                            @foreach($banks as $key=>$bank)
 			                                <option value="{{ $key }}">{{ $bank }}</option>
@@ -161,7 +161,7 @@
 			                    <div id="tambahan_bank"></div>
 			                    {{-- ++++++++ ==== ++++++++ --}}
 			                    <div class="form-group">
-			                        <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Harga" required data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
+			                        <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Payment" required data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
@@ -169,16 +169,16 @@
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
-			                        <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" placeholder="Sisa Pembayaran" required data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
+			                        <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" placeholder="Remaining Payment" required data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                </div>
 			                <br>
 
 			                <div class="form-group">
-			                	<label for="">Pilihan Cabang</label>
+			                	<label for="">Branch</label>
 			                    <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-			                        <option selected disabled value="">Pilihan Cabang</option>
+			                        <option selected disabled value="">Choose Branch</option>
 
 			                        @foreach($branches as $branch)
 			                            <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
@@ -188,18 +188,18 @@
 			                </div>
 			                <div id="container-Cabang" style="display: none;">
 			                    <div class="form-group">
-			                    	<label for="">Kode Sales</label>
-			                        <input type="text" class="form-control cso" name="cso_id" id="cso" placeholder="Kode Sales" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+			                    	<label for="">CSO Code</label>
+			                        <input type="text" class="form-control cso" name="cso_id" id="cso" placeholder="CSO Code" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
-			                    	<label for="">Kode Sales 30%</label>
-			                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" placeholder="Kode Sales 30%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+			                    	<label for="">CSO Code 30%</label>
+			                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" placeholder="CSO Code 30%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
-			                    	<label for="">Kode Sales 70%</label>
-			                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" placeholder="Kode Sales 70%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+			                    	<label for="">CSO Code 70%</label>
+			                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" placeholder="CSO Code 70%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                </div>
@@ -207,21 +207,21 @@
 
 
 			                <div class="form-group">
-			                	<label for="">Tipe Customer</label>
-			                    <input type="text" class="form-control" name="customer_type" id="customer_type" placeholder="Tipe Customer" required data-msg="Mohon Isi Tipe Customer" />
+			                	<label for="">Customer Type</label>
+			                    <input type="text" class="form-control" name="customer_type" id="customer_type" placeholder="Customer Type" required data-msg="Mohon Isi Tipe Customer" />
 			                    <div class="validation"></div>
 			                </div>
 			                <div class="form-group">
-			                	<label for="">Keterangan</label>
-			                    <textarea class="form-control" name="description" rows="5" data-msg="Mohon Isi Keterangan" placeholder="Keterangan"></textarea>
+			                	<label for="">Description</label>
+			                    <textarea class="form-control" name="description" rows="5" data-msg="Mohon Isi Description" placeholder="Description"></textarea>
 			                    <div class="validation"></div>
 			                </div>
 
 	              			<div id="errormessage"></div>
 
 	              			<div class="form-group">
-	              				<button id="addOrder" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-	              				<button class="btn btn-light">Batal</button>	
+	              				<button id="addOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+	              				<button class="btn btn-light">Cancel</button>	
 	              			</div>
 	            		</form>
 

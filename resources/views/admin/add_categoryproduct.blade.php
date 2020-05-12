@@ -22,8 +22,8 @@
 					<form id="actionAdd" class="forms-sample" action="{{route('store_category')}}" method="POST">
 						{{ csrf_field() }}
 						<div class="form-group">
-							<label for="">Nama Kategori</label>
-							<input type="text" class="form-control" name="name" placeholder="Nama Kategori" required>
+							<label for="">Name</label>
+							<input type="text" class="form-control" name="name" placeholder="Category Name" required>
 						</div>
 						<div class="form-group d-none">
 							<label for="">Kategori Produk</label>
@@ -48,8 +48,8 @@
 							</div>
 						</div>
 
-						<button id="addCategory" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-						<button class="btn btn-light">Batal</button>
+						<button id="addCategory" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+						<button class="btn btn-light">Cancel</button>
 					</form>
 				</div>
 			</div>

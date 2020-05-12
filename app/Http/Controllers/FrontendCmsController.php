@@ -24,7 +24,7 @@ class FrontendCmsController extends Controller
         if($banners == null){
             $data = array(
                         "id" => "1",
-                        "image" => "[[],[],[],[],[],[]]",
+                        "image" => "[]",
                     );
             $banners = Banner::create($data);
         }
@@ -84,54 +84,99 @@ class FrontendCmsController extends Controller
     public function update(Request $request)
     {
         $data = Banner::all()[0];
-        $bannerImg = json_decode($data['image']);
-        $hasBanner = false;
+        
+        //restore image
+        $arr_image_before = json_decode($data['image']);
+        $namaGambar = [];
+        $namaGambar = array_values($arr_image_before);
 
+        if ($request->hasFile('images0') || $request->hasFile('images1') || $request->hasFile('images2') || $request->hasFile('images3') || $request->hasFile('images4') || $request->hasFile('images5')){
+            
+            //store image
 
-        for ($i=0; $i < $request->total_images; $i++) {
-            if($request->input('url_banner'.$i) != null && $request->hasfile('arr_image'.$i)){
-                // return response()->json(['success' => [$request->input('url_banner'.$i), $request->hasfile('arr_image'.$i)]]);
-                if($bannerImg[$i] != []){
-                    if(File::exists("sources/banners/". $bannerImg[$i]->img)){
-                        
-                        File::delete("sources/banners/" . $bannerImg[$i]->img);
+            for ($i = 0; $i < $request->total_images; $i++) {   
+                if ($request->hasFile('images' . $i)) {
+                    if(array_key_exists($i, $arr_image_before)){
+                        if(File::exists("sources/banners/" . $arr_image_before[$i]->img))
+                        {
+                            File::delete("sources/banners/" . $arr_image_before[$i]->img);
+                        }
+                    }  
+                    //return response()->json(['success' => $request->dlt_img ]);
+                    // $path = "public/banners/" . $codePath;
+                    // $path = str_replace("\\", "", $path);
+                    $file = $request->file('images' . $i);
+                    $filename = $file->getClientOriginalName();
+
+                    // $image_resize = Image::make($file->getRealPath());
+                    // $image_resize->resize(720, 720);
+
+                    //storing gambar - gambar
+                    //$pathForImage = "sources/banners/" . $codePath;
+                    $file->move("sources/banners/", $filename);
+                    //$image_resize->save(public_path($pathForImage.'/'.$filename));
+
+                    if(array_key_exists($i, $arr_image_before)){
+                        $arr_image_before[$i]->img = $filename;
+                        $arr_image_before[$i]->url = $request->input('url_banner'.$i);
+                        //return response()->json(['test' => "WOY"]);
+                    }else{
+                        $json =array(
+                            "img" => $filename,
+                            "url" => $request->input('url_banner'.$i),
+                        );
+                        array_push($arr_image_before, $json);    
+                    }                    
+                }
+
+                else{
+                    if(array_key_exists($i, $arr_image_before)){
+                        $arr_image_before[$i] = $namaGambar[$i];
                     }
                 }
-
-                $bannerImg[$i] = [];
-                $hasBanner = true;
-
-
-                $file = $request->file('arr_image'.$i);
-                $filename = $file->getClientOriginalName();
-                // $image_resize = Image::make($file->getRealPath());
-                // $image_resize->resize(720, 720);
-                $file->move("sources/banners/", $filename);
-                $bannerImg[$i]['img'] = $filename;
-                $bannerImg[$i]['url'] = $request->input('url_banner'.$i);
             }
-            elseif($request->input('url_banner'.$i) != null && !$request->hasfile('arr_image'.$i)){
-                // return response()->json(['success' => $request->input('url_banner1')]);
-                //return response()->json(['testing' => "hey4"]);
-                $bannerImg[$i]->url = $request->input('url_banner'.$i);
-            }
-            elseif($request->input('url_banner'.$i) == null && !$request->hasfile('arr_image'.$i) && $bannerImg[$i] != []) {
-                // return response()->json(['success' => [$i, $request->input('url_banner'.$i), $request->hasfile('arr_image'.$i), $bannerImg[$i]->img]]);
-                // if($i==1){
-                //     return response()->json(['success' => [$bannerImg[$i], $bannerImg[$i]->img]]);
-                // }
-                
-                if(File::exists("sources/banners/". $bannerImg[$i]->img)){
-                    File::delete("sources/banners/" . $bannerImg[$i]->img);
-                    $bannerImg[$i] = [];
-                    // return response()->json(['success' => [$bannerImg[$i]]]);
+
+
+            if($request->dlt_img!="")
+            {
+                $deletes = explode(",", $request->dlt_img);
+                foreach ($deletes as $key =>  $value) {
+                    if(array_key_exists($value, $namaGambar))
+                    {
+                        if(File::exists("sources/banners/" . $namaGambar[$value]))
+                        {
+                            File::delete("sources/banners/" . $namaGambar[$value]);
+                        }
+                       // return response()->json(['success' => $value ]);
+                        //unset($namaGambar[$value]);
+                        unset($arr_image_before[$value]);
+                    }
+                   
                 }
-            }            
+            }  
         }
-        return response()->json(['testing' => $bannerImg]);
-        $data['image'] = json_encode($bannerImg);
-        //$data->save();
-        return response()->json(['success' => "Berhasil!!!"]);
+
+        if($request->dlt_img!="")
+        {
+            $deletes = explode(",", $request->dlt_img);
+            foreach ($deletes as $key =>  $value) {
+                if(array_key_exists($value, $namaGambar))
+                {
+                    if(File::exists("sources/banners/" . $namaGambar[$value]->img))
+                    {
+                        File::delete("sources/banners/" . $namaGambar[$value]->img);
+                    }
+                   // return response()->json(['success' => $value ]);
+                    unset($arr_image_before[$value]);
+                }
+               
+            }
+        }
+
+        $data['image'] = json_encode($arr_image_before);
+        $data->save();
+        return response()->json(['success' => 'Berhasil!']);
+        
     }
 
     /**

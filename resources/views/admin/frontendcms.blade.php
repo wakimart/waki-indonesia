@@ -59,7 +59,7 @@
                               <input type="text" name="url_banner{{$i}}" class="text-uppercase form-control" placeholder="URL BANNER" value="{{$img[$i]->url}}" style="margin: 5px 0px;">
 
                               <label class="file-upload-browse btn btn-gradient-primary" style="margin-top: 15px;">Upload
-                                  <input name="arr_image{{$i}}" id="bannerimg-{{$i}}" type="file" accept=".jpg,.jpeg,.png" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">
+                                  <input name="image_{{$i}}" id="gambars-{{$i}}" type="file" accept=".jpg,.jpeg,.png" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">
                               </label>
                               <i class="mdi mdi-window-close del"></i>
 
@@ -70,15 +70,15 @@
                               <input type="text" name="url_banner{{$i}}" class="text-uppercase form-control" placeholder="URL BANNER" value="" style="margin: 5px 0px;">
 
                               <label class="file-upload-browse btn btn-gradient-primary" style="margin-top: 15px;">Upload
-                                  <input name="arr_image{{$i}}" id="bannerimg-{{$i}}" type="file" accept=".jpg,.jpeg,.png" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">
+                                  <input name="image_{{$i}}" id="gambars-{{$i}}" type="file" accept=".jpg,.jpeg,.png" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">
                               </label>
                               <i class="mdi mdi-window-close del"></i>
                               @endif
                       		</div>
                           @endfor
 
-                      		<button id="updateBanner" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-                      		<button class="btn btn-light">Batal</button>
+                      		<button id="updateBanner" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+                      		<button class="btn btn-light">Cancel</button>
                     	</form>
 
                   	</div>
@@ -100,7 +100,7 @@
           //console.log("test: " + banner[j]['url']);
           if(banner[j]['url'] != null){
               var namaGambar = banner[j]['img'].replace(new RegExp(' ', 'g'), "%20");
-              $("#bannerimg-"+j).closest(".imgUp").find('.imagePreview').css("background-image", "url("+urlNya+"/"+namaGambar+")");
+              $("#gambars-"+j).closest(".imgUp").find('.imagePreview').css("background-image", "url("+urlNya+"/"+namaGambar+")");
               console.log(namaGambar);
           }
       }
@@ -117,12 +117,12 @@
 
           for (var i = 0; i < 6; i++)
           {
-              frmUpdate.append('arr_image'+i, $("#bannerimg-"+i)[0].files[0]);
-              if($("#bannerimg-"+i)[0].files[0]!=null)
+              frmUpdate.append('images'+i, $("#gambars-"+i)[0].files[0]);
+              if($("#gambars-"+i)[0].files[0]!=null)
               {
                   for(var j=0; j<deleted_img.length;j++)
                   {
-                      //console.log()
+                      console.log()
                       if(deleted_img[j]==i)
                       {
                           deleted_img.splice(j,1);
@@ -153,51 +153,36 @@
           var hasil = JSON.parse(event.target.responseText);
           console.log(hasil);
 
-          $("#actionAdd").find('input[name^="url_banner"]').each(function() {
-              $(this).removeClass("is-invalid");
-              $(this).next().find("strong").text("");
-          });
+          for (var key of frmUpdate.keys()) {
+              $("#actionUpdate").find("input[name="+key.name+"]").removeClass("is-invalid");
+              $("#actionUpdate").find("select[name="+key.name+"]").removeClass("is-invalid");
+              $("#actionUpdate").find("textarea[name="+key.name+"]").removeClass("is-invalid");
 
-          if(hasil['errors'] != null){
-              var temp = hasil['errors'];
-              for(var i=0; i<Object.keys(hasil['errors']).length; i++){
-                  $('[name="'+Object.keys(temp)[i]+'"]').addClass("is-invalid");
-                  $('[name="'+Object.keys(temp)[i]+'"]').next().find("strong").text(temp[Object.keys(temp)[i]]);
-              }
-
-              alert("Input Error !!!");
+              $("#actionUpdate").find("input[name="+key.name+"]").next().find("strong").text("");
+              $("#actionUpdate").find("select[name="+key.name+"]").next().find("strong").text("");
+              $("#actionUpdate").find("textarea[name="+key.name+"]").next().find("strong").text("");
           }
 
-          // for (var key of frmUpdate.keys()) {
-          //     $("#actionUpdate").find("input[name="+key.name+"]").removeClass("is-invalid");
-          //     $("#actionUpdate").find("select[name="+key.name+"]").removeClass("is-invalid");
-          //     $("#actionUpdate").find("textarea[name="+key.name+"]").removeClass("is-invalid");
-
-          //     $("#actionUpdate").find("input[name="+key.name+"]").next().find("strong").text("");
-          //     $("#actionUpdate").find("select[name="+key.name+"]").next().find("strong").text("");
-          //     $("#actionUpdate").find("textarea[name="+key.name+"]").next().find("strong").text("");
-          // }
-
-          // if(hasil['errors'] != null){
-          //     for (var key of frmUpdate.keys()) {
-          //         if(typeof hasil['errors'][key] === 'undefined') {
+          if(hasil['errors'] != null){
+              for (var key of frmUpdate.keys()) {
+                  if(typeof hasil['errors'][key] === 'undefined') {
                       
-          //         }
-          //         else {
-          //             $("#actionUpdate").find("input[name="+key+"]").addClass("is-invalid");
-          //             $("#actionUpdate").find("select[name="+key+"]").addClass("is-invalid");
-          //             $("#actionUpdate").find("textarea[name="+key+"]").addClass("is-invalid");
+                  }
+                  else {
+                      $("#actionUpdate").find("input[name="+key+"]").addClass("is-invalid");
+                      $("#actionUpdate").find("select[name="+key+"]").addClass("is-invalid");
+                      $("#actionUpdate").find("textarea[name="+key+"]").addClass("is-invalid");
 
-          //             $("#actionUpdate").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-          //             $("#actionUpdate").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-          //             $("#actionUpdate").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-          //         }
-          //     }
-          //     alert("Input Error !!!");
-          // }
+                      $("#actionUpdate").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                      $("#actionUpdate").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                      $("#actionUpdate").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                  }
+              }
+              alert("Input Error !!!");
+          }
           else{
-              // alert("Input Success !!!");
-              // window.location.reload()
+              alert("Input Success !!!");
+              window.location.reload()
           }
 
           document.getElementById("updateBanner").innerHTML = "SAVE";

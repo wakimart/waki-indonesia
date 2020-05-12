@@ -26,12 +26,12 @@
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-				                <label for="">Nama</label>
+				                <label for="">Name</label>
 				                <input type="text" class="form-control" id="name" name="name" value="{{$deliveryOrders['name']}}">
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-				                <label for="">No. Telepon</label>
+				                <label for="">Phone Number</label>
 				                <input type="number" class="form-control" id="phone" name="phone" value="{{$deliveryOrders['phone']}}">
 				                <div class="validation"></div>
 	              			</div>
@@ -41,7 +41,7 @@
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-				                <label for="exampleTextarea1">Alamat</label>
+				                <label for="exampleTextarea1">Address</label>
 				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Alamat Lengkap">{{$deliveryOrders['address']}}</textarea>
 				                <div class="validation"></div>
 	              			</div>
@@ -57,9 +57,9 @@
 		              			<div class="form-group">
 		                			<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
 		                  				<div class="col-xs-10 col-sm-10" style="padding: 0;display: inline-block;">
-						                    <label for="">Pilihan Promo</label>
+						                    <label for="">Promo</label>
 						                    <select class="form-control pilihan-product" name="product_{{ $j }}" data-msg="Mohon Pilih Promo" {{ $j>0 ? "":"required"}}>
-						                    	<option selected disabled value="">Pilihan Promo{{ $j>0 ? " (optional)":""}}</option>
+						                    	<option selected disabled value="">Choose Promo{{ $j>0 ? " (optional)":""}}</option>
 
 					                            @if(is_numeric($ProductPromo['id']))
 						                            @foreach($promos as $key=>$promo)
@@ -85,7 +85,7 @@
 		                    				<div class="validation"></div>
 		                  				</div>
 		                  				<div class="col-xs-2 col-sm-2" style="padding-right: 0;display: inline-block;">
-		                    				<label for="">Jumlah</label>
+		                    				<label for="">Qty</label>
 		                					<select class="form-control" name="qty_{{ $j }}" data-msg="Mohon Pilih Jumlah" {{ $j>0 ? "":"required"}}>
 		                  						<option selected value="1">1</option>
 
@@ -115,9 +115,9 @@
 	              			@endforeach
 	              			
 	              			<div class="form-group">
-				                <label for="">Pilihan Cabang</label>
+				                <label for="">Branch</label>
 				                <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-				                  	<option selected disabled value="">Pilihan Cabang</option>
+				                  	<option selected disabled value="">Choose Branch</option>
 
 			                        @foreach($branches as $branch)
 			                        	@if($deliveryOrders['branch_id'] == $branch['id'])
@@ -130,7 +130,7 @@
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-	                			<label for="">Kode CSO</label>
+	                			<label for="">CSO Code</label>
 	               			 	<input type="text" class="form-control" name="cso_id" id="cso" value="{{$deliveryOrders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
                     			<div class="validation" id="validation_cso"></div>
 	              			</div>
@@ -140,8 +140,8 @@
 	              			<div class="form-group">
 	              				<input type="hidden" name="idCSO" value="{{$deliveryOrders['cso_id']}}">
 	              				<input type="hidden" name="idDeliveryOrder" value="{{$deliveryOrders['id']}}">
-	              				<button id="updateDeliveryOrder" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-	              				<button class="btn btn-light">Batal</button>	
+	              				<button id="updateDeliveryOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+	              				<button class="btn btn-light">Cancel</button>	
 	              			</div>
 	            		</form>
 

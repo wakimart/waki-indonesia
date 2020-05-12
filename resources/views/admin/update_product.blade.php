@@ -32,11 +32,11 @@
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="page-header">
-			<h3 class="page-title">Update Product</h3>
+			<h3 class="page-title">Edit Product</h3>
 			<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a data-toggle="collapse" href="#produk-dd" aria-expanded="false" aria-controls="produk-dd">Product</a></li>
-				<li class="breadcrumb-item active" aria-current="page">Update Product</li>
+				<li class="breadcrumb-item active" aria-current="page">Edit Product</li>
 			</ol>
 			</nav>
 		</div>
@@ -47,17 +47,17 @@
 					<div class="card-body">
 						<form id="actionUpdate" class="forms-sample" method="POST" action="{{route('update_product')}}">
 							<div class="form-group">
-								<label for="">Kode Produk</label>
+								<label for="">Code</label>
 								<input type="text" class="form-control" name="code" id="exampleInputName1" value="{{$products['code']}}" readonly>
 							</div>
 							<div class="form-group">
-								<label for="">Nama Produk</label>
+								<label for="">Name</label>
 								<input type="text" class="form-control" name="name" id="exampleInputName1" value="{{$products['name']}}" required>
 							</div>
 							<div class="form-group">
-								<label for="">Kategori Produk</label>
+								<label for="">Category</label>
 								<select class="form-control" id="exampleSelectGender" name="category_id" required>
-									<option selected disabled value="">Pilihan Kategori</option>
+									<option selected disabled value="">Choose Category</option>
 									@foreach($categories as $category)
 										@if($products['category_id'] == $category['id'])
 											<option value="{{$category['id']}}" selected="true">{{$category['name']}}</option>
@@ -76,7 +76,7 @@
 								<input type="text" class="form-control" id="exampleInputName1" placeholder="Jumlah">
 							</div>
 							<div class="form-group">
-								<label for="">Harga Produk (Rp.)</label>
+								<label for="">Price (Rp.)</label>
 								<input type="number" class="form-control" id="exampleInputName1" value="{{$products['price']}}" name="price" required>
 							</div>
 
@@ -87,7 +87,7 @@
 					                $defaultImg = asset('sources/product_images/').'/'.strtolower($products['code']);
 					            @endphp
 								<div class="col-xs-12">
-									<label>Gambar Produk (720x720 pixel)</label>
+									<label>Product Image (720x720 pixel)</label>
 								</div>
 								@for($i=0;$i<3;$i++)
 								<div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp" style="padding: 15px; float: left;">
@@ -116,13 +116,13 @@
 							</div>
 
 							<div class="form-group">
-								<label for="">Deskripsi Produk</label>
+								<label for="">Description</label>
 								<textarea id="edit_description" name="description" class="form-control form-control-sm"  rows="4" value="{{$products['description']}}" required>{{$products['description']}}</textarea>
 							</div>
 
 							<input type="hidden" name="idProduct" value="{{$products['id']}}">
-							<button id="updateProduct" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-							<button class="btn btn-light">Batal</button>
+							<button id="updateProduct" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+							<button class="btn btn-light">Cancel</button>
 						</form>
 					</div>
 				</div>

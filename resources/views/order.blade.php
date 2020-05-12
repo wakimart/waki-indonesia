@@ -28,6 +28,7 @@
 
 <section id="intro" class="clearfix">
     <div class="container">
+        @if(Utils::$lang=='id')
         <div class="row justify-content-center">
             <h2>FORM ORDER</h2>
         </div>
@@ -233,6 +234,169 @@
                 <div class="text-center"><button id="submit" type="submit" title="Send Message" disabled="">Simpan Form Order</button></div>
             </form>
         </div>
+        @elseif(Utils::$lang=='eng')
+        <div class="row justify-content-center">
+            <h2>FORM ORDER</h2>
+        </div>
+        <div class="row justify-content-center">
+            <form action="{{ Route('store_order') }}" method="post" role="form" class="contactForm col-md-9">
+                @csrf
+                <div class="form-group">
+                    <input type="text" name="no_member" class="form-control" id="no_member" placeholder="Member Code (optional)"/>
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Name" required data-msg="Please Fill the Name" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone Number" required data-msg="Please Fill the Phone Number" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="city" id="city" placeholder="City" required data-msg="Please Fill the City" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" name="address" rows="5" required data-msg="Please Fill the Address" placeholder="Address"></textarea>
+                    <div class="validation"></div>
+                </div>
+                <br>
+
+                <div class="form-group">
+                    <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Please Choose the Type" required>
+                        <option selected disabled value="">Choose CASH/UPGRADE</option>
+
+                        @foreach($cashUpgrades as $key=>$cashUpgrade)
+                            <option value="{{ $key }}">{{ strtoupper($cashUpgrade) }}</option>
+                        @endforeach
+                    </select>
+                    <div class="validation"></div>
+                </div>
+
+                <div id="container-cashupgrade" style="display: none;">
+                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
+                    <div class="form-group" style="width: 72%; display: inline-block;">
+                        <select class="form-control" name="product_0" data-msg="Please Choose the Product" required="">
+                            <option selected disabled value="">Choose Product</option>
+
+                            @foreach($promos as $key=>$promo)
+                                <option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
+                            @endforeach
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group" style="width: 16%; display: inline-block;">
+                        <select class="form-control" name="qty_0" data-msg="Please Choose the Quantity" required="">
+                            <option selected value="1">1</option>
+
+                            @for($i=2; $i<=10;$i++)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+
+                    <div id="tambahan_product"></div>
+                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
+
+                    <div class="form-group" style="display: none">
+                        <input type="text" class="form-control" name="old_product" id="old_product" placeholder="Old Product" data-msg="Please Fill the Old Product" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="prize" id="prize" placeholder="Product Prize" data-msg="Please Fill the Price" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="form-group">
+                    <select class="form-control" id="payment_type" name="payment_type" data-msg="Please Choose the Type" required>
+                        <option selected disabled value="">Choose Payment Method</option>
+
+                        @foreach($paymentTypes as $key=>$paymentType)
+                            <option value="{{ $key }}">{{ strtoupper($paymentType) }}</option>
+                        @endforeach
+                    </select>
+                    <div class="validation"></div>
+                </div>
+                <div id="container-jenispembayaran" style="display: none;">
+                    {{-- ++++++++ BANK ++++++++ --}}
+                    <div class="form-group bank_select" style="width: 62%; display: inline-block;">
+                        <input type="text" class="form-control bank_name" name="bank_0" id="bank_0" placeholder="Bank" data-msg="Please Fill the Bank" required/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group bank_select" style="width: 26%; display: inline-block;">
+                        <select class="form-control bank_cicilan" name="cicilan_0" data-msg="Please Choose the Amount of Installments">
+                            <option selected value="1">1X</option>
+                            @for($i=2; $i<=12;$i+=2)
+                                <option class="other_valCicilan" value="{{ $i }}">{{ $i }}X</option>
+                            @endfor
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_bank" title="Tambah Bank" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+
+                    <div id="tambahan_bank"></div>
+                    {{-- ++++++++ ==== ++++++++ --}}
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Payment" required data-msg="Please Fill the Total Payment" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="down_payment" id="down_payment" placeholder="Down Payment(DP)" required data-msg="Please Fill the Down Payment" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" placeholder="Remaining Payment" required data-msg="Please Fill the Remaining Payment" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="form-group">
+                    <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
+                        <option selected disabled value="">Choose Branch</option>
+
+                        @foreach($branches as $branch)
+                            <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                        @endforeach
+                    </select>
+                    <div class="validation"></div>
+                </div>
+                <div id="container-Cabang" style="display: none;">
+                    <div class="form-group">
+                        <input type="text" class="form-control cso" name="cso" id="cso" placeholder="Sales Code" required data-msg="Please Fill in The CSO Code" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control cso" name="30_cso" id="30_cso" placeholder="Sales Code 30%" required data-msg="Please Fill in The CSO Code" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control cso" name="70_cso" id="70_cso" placeholder="Sales Code 70%" required data-msg="Please Fill in The CSO Code" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                    </div>
+                </div>
+                <br>
+
+
+                <div class="form-group">
+                    <input type="text" class="form-control" name="customer_type" id="customer_type" placeholder="Customer Type" data-msg="Please Choose the Customer Type" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" name="description" rows="5" data-msg="Please Fill the Description" placeholder="Description"></textarea>
+                    <div class="validation"></div>
+                </div>
+
+                <div id="errormessage"></div>
+                <div class="text-center"><button id="submit" type="submit" title="Send Message">Save Order Form</button></div>
+            </form>
+        </div>
+        @endif
     </div>
 </section>
 

@@ -58,7 +58,7 @@
       		<nav aria-label="breadcrumb">
 	        	<ol class="breadcrumb">
 	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="false" aria-controls="deliveryorder-dd">Order</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Add Order</li>
+	          		<li class="breadcrumb-item active" aria-current="page">Edit Order</li>
 	        	</ol>
       		</nav>
     	</div>
@@ -79,12 +79,12 @@
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-				                <label for="">Nama</label>
+				                <label for="">Name</label>
 				                <input type="text" class="form-control" id="name" name="name" value="{{$orders['name']}}">
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-				                <label for="">No. Telepon</label>
+				                <label for="">Phone Number</label>
 				                <input type="number" class="form-control" id="phone" name="phone" value="{{$orders['phone']}}">
 				                <div class="validation"></div>
 	              			</div>
@@ -94,16 +94,16 @@
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-				                <label for="exampleTextarea1">Alamat</label>
+				                <label for="exampleTextarea1">Address</label>
 				                <textarea class="form-control" id="address" name="address" rows="4">{{$orders['address']}}</textarea>
 				                <div class="validation"></div>
 	              			</div>
 	              			<br>
 
 	              			<div class="form-group">
-	              				<label for="">Pilihan CASH/UPGRADE</label>
+	              				<label for="">CASH/UPGRADE</label>
 			                    <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Mohon Pilih Tipe" required>
-			                        <option selected disabled value="">Pilihan CASH/UPGRADE</option>
+			                        <option selected disabled value="">Choose CASH/UPGRADE</option>
 
 			                        @foreach($cashUpgrades as $key=>$cashUpgrade)
 			                        	@if($orders['cash_upgrade'] == $key)
@@ -133,7 +133,7 @@
 				                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
 				                    <div id="product_{{$total_product}}" class="form-group" style="width: 72%; display: inline-block;">
 				                        <select class="form-control pilihan-product" name="product_{{$total_product}}" data-msg="Mohon Pilih Product" required="">
-				                            <option selected disabled value="">Pilihan Product</option>
+				                            <option selected disabled value="">Choose Product</option>
 
 				                            @if(is_numeric($ProductPromo['id']))
 					                            @foreach($promos as $key=>$promo)
@@ -208,9 +208,9 @@
 			                <br>
 
 			                <div class="form-group">
-			                	<label for="">Pilihan Jenis Pembayaran</label>
+			                	<label for="">Payment Method</label>
 			                    <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe" required>
-			                        <option selected disabled value="">Pilihan Jenis Pembayaran</option>
+			                        <option selected disabled value="">Choose Payment Method</option>
 
 			                        @foreach($paymentTypes as $key=>$paymentType)
 			                        	@if($orders['payment_type'] == $key)
@@ -232,7 +232,7 @@
 			                    @foreach($payments as $payment)
 			                    <div class="form-group bank_select" style="width: 62%; display: inline-block;">
 			                        <select class="form-control bank_name" name="bank_0" data-msg="Mohon Pilih Bank">
-			                            <option selected disabled value="">Pilihan Bank</option>
+			                            <option selected disabled value="">Choose Bank</option>
 
 			                            @foreach($banks as $key=>$bank)
 			                            	@if($payment['id'] == $key)
@@ -279,9 +279,9 @@
 			                <br>
 
 			                <div class="form-group">
-			                	<label for="">Pilihan Cabang</label>
+			                	<label for="">Branch</label>
 			                    <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-			                        <option selected disabled value="">Pilihan Cabang</option>
+			                        <option selected disabled value="">Choose Branch</option>
 
 			                        @foreach($branches as $branch)
 			                        	@if($orders['branch_id'] == $branch['id'])
@@ -297,17 +297,17 @@
 			                @if($orders['branch_id'] != null)
 			                <div id="container-Cabang">
 			                    <div class="form-group">
-			                    	<label for="">Kode Sales</label>
+			                    	<label for="">CSO Code</label>
 			                        <input type="text" class="form-control cso" name="cso_id" id="cso" value="{{$orders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
-			                    	<label for="">Kode Sales 30%</label>
+			                    	<label for="">CSO Code 30%</label>
 			                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" value="{{$orders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
-			                    	<label for="">Kode Sales 70%</label>
+			                    	<label for="">CSO Code 70%</label>
 			                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" value="{{$orders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
@@ -317,12 +317,12 @@
 
 
 			                <div class="form-group">
-			                	<label for="">Tipe Customer</label>
+			                	<label for="">Customer Type</label>
 			                    <input type="text" class="form-control" name="customer_type" id="customer_type" value="{{$orders['customer_type']}}" required data-msg="Mohon Isi Tipe Customer" />
 			                    <div class="validation"></div>
 			                </div>
 			                <div class="form-group">
-			                	<label for="">Keterangan</label>
+			                	<label for="">Description</label>
 			                    <textarea class="form-control" name="description" rows="5" data-msg="Mohon Isi Keterangan" value="{{$orders['description']}}">{{$orders['description']}}</textarea>
 			                    <div class="validation"></div>
 			                </div>
@@ -335,8 +335,8 @@
 	              				<input type="hidden" name="idCSO30" value="{{$orders['30_cso_id']}}">
 	              				<input type="hidden" name="idCSO70" value="{{$orders['70_cso_id']}}">
 	              				<input type="hidden" id="lastTotalProduct" value="{{$total_product}}">
-	              				<button id="updateOrder" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-	              				<button class="btn btn-light">Batal</button>	
+	              				<button id="updateOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+	              				<button class="btn btn-light">Cancel</button>	
 	              			</div>
 	            		</form>
 
@@ -462,7 +462,7 @@
         $("#tambah_bank").click(function(e){
             e.preventDefault();
             total_bank++;
-            strIsi = "<div class=\"form-group bank_select\" style=\"width: 62%; display: inline-block;\" id=\"bank_"+total_bank+"\"><select class=\"form-control bank_name\" name=\"bank_"+total_bank+"\" data-msg=\"Mohon Pilih Bank\"><option selected disabled value=\"\">Pilihan Bank</option> @foreach($banks as $key=>$bank) <option value=\"{{ $key }}\">{{ $bank }}</option> @endforeach </select><div class=\"validation\"></div></div><div class=\"form-group bank_select\" style=\"width: 26%; display: inline-block;\" id=\"cicilan_"+total_bank+"\"><select class=\"form-control bank_cicilan\" name=\"cicilan_"+total_bank+"\" data-msg=\"Mohon Pilih Jumlah Cicilan\"><option selected value=\"1\">1X</option> @for($i=2; $i<=12;$i+=2) <option class=\"other_valCicilan\" value=\"{{ $i }}\">{{ $i }}X</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_bank\" value=\""+total_bank+"\" title=\"Hapus Bank\" style=\"padding: 0.4em 0.7em; background-color: red\"><i class=\"fas fa-minus\"></i></button></div>";
+            strIsi = "<div class=\"form-group bank_select\" style=\"width: 62%; display: inline-block;\" id=\"bank_"+total_bank+"\"><select class=\"form-control bank_name\" name=\"bank_"+total_bank+"\" data-msg=\"Mohon Pilih Bank\"><option selected disabled value=\"\">Choose Bank</option> @foreach($banks as $key=>$bank) <option value=\"{{ $key }}\">{{ $bank }}</option> @endforeach </select><div class=\"validation\"></div></div><div class=\"form-group bank_select\" style=\"width: 26%; display: inline-block;\" id=\"cicilan_"+total_bank+"\"><select class=\"form-control bank_cicilan\" name=\"cicilan_"+total_bank+"\" data-msg=\"Mohon Pilih Jumlah Cicilan\"><option selected value=\"1\">1X</option> @for($i=2; $i<=12;$i+=2) <option class=\"other_valCicilan\" value=\"{{ $i }}\">{{ $i }}X</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_bank\" value=\""+total_bank+"\" title=\"Hapus Bank\" style=\"padding: 0.4em 0.7em; background-color: red\"><i class=\"fas fa-minus\"></i></button></div>";
             $('#tambahan_bank').html($('#tambahan_bank').html()+strIsi);
 
 
@@ -488,7 +488,7 @@
             total_product++;
             count = total_product + 1;
 
-            strIsi = "<div id=\"product_"+total_product+"\" class=\"form-group\" style=\"width: 72%; display: inline-block;\"><select class=\"form-control\" name=\"product_"+total_product+"\" data-msg=\"Mohon Pilih Product\" required=\"\"><option selected disabled value=\"\">Pilihan Product</option> @foreach($promos as $key=>$promo) <option value=\"{{ $key }}\">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option> @endforeach </select><div class=\"validation\"></div></div><div id=\"qty_"+total_product+"\" class=\"form-group\" style=\"width: 16%; display: inline-block;\"><select class=\"form-control\" name=\"qty_"+total_product+"\" data-msg=\"Mohon Pilih Jumlah\" required=\"\"><option selected value=\"1\">1</option> @for($i=2; $i<=10;$i++) <option value=\"{{ $i }}\">{{ $i }}</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_product\" value=\""+total_product+"\" title=\"Tambah Product\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
+            strIsi = "<div id=\"product_"+total_product+"\" class=\"form-group\" style=\"width: 72%; display: inline-block;\"><select class=\"form-control\" name=\"product_"+total_product+"\" data-msg=\"Mohon Pilih Product\" required=\"\"><option selected disabled value=\"\">Choose Product</option> @foreach($promos as $key=>$promo) <option value=\"{{ $key }}\">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option> @endforeach </select><div class=\"validation\"></div></div><div id=\"qty_"+total_product+"\" class=\"form-group\" style=\"width: 16%; display: inline-block;\"><select class=\"form-control\" name=\"qty_"+total_product+"\" data-msg=\"Mohon Pilih Jumlah\" required=\"\"><option selected value=\"1\">1</option> @for($i=2; $i<=10;$i++) <option value=\"{{ $i }}\">{{ $i }}</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_product\" value=\""+total_product+"\" title=\"Tambah Product\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
             $('#tambahan_product').html($('#tambahan_product').html()+strIsi);
         });
         $(document).on("click",".hapus_product", function(e){

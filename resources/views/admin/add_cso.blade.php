@@ -81,25 +81,25 @@
             					</div>
           					</div>
           					<div class="form-group">
-					            <label for="">Kode</label>
-					            <input type="text" class="form-control" name="code" placeholder="Kode CSO" required>
+					            <label for="">Code</label>
+					            <input type="text" class="form-control" name="code" placeholder="CSO Code" required>
           					</div>
           					<div class="form-group">
-					            <label for="">Nama</label>
-					            <input type="text" class="form-control" name="name" placeholder="Nama" required>
+					            <label for="">Name</label>
+					            <input type="text" class="form-control" name="name" placeholder="Name" required>
           					</div>
           					<div class="form-group d-none">
-					            <label for="">No. Telepon</label>
-					            <input type="text" class="form-control" name="phone" placeholder="No. Telepon">
+					            <label for="">Phone Number</label>
+					            <input type="text" class="form-control" name="phone" placeholder="Phone Number">
           					</div>
           					<div class="form-group d-none">
-					            <label for="exampleTextarea1">Alamat</label>
+					            <label for="exampleTextarea1">Address</label>
 					            <textarea class="form-control" name="address" rows="4" placeholder="Alamat Lengkap"></textarea>
           					</div>
           					<div class="form-group">
-			                	<label for="">Pilihan Cabang</label>
+			                	<label for="">Branch</label>
 			                    <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-			                        <option selected disabled value="">Pilihan Cabang</option>
+			                        <option selected disabled value="">Choose Branch</option>
 
 			                        @foreach($branches as $branch)
 			                            <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
@@ -111,9 +111,9 @@
          	 				<div class="form-group d-none">
 	                			<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
 	                  				<div class="col-xs-10 col-sm-10" style="padding: 0;display: inline-block;">
-					                    <label for="">Pilihan Bank</label>
+					                    <label for="">Bank</label>
 					                    <select class="form-control bank_name" name="bank_0" data-msg="Mohon Pilih Bank">
-			                            <option selected disabled value="">Pilihan Bank</option>
+			                            <option selected disabled value="">Choose Bank</option>
 
 			                            @foreach($banks as $key=>$bank)
 			                                <option value="{{ $key }}">{{ $bank }}</option>
@@ -122,15 +122,15 @@
 	                    				<div class="validation"></div>
 	                  				</div>
 	                  				<div class="col-xs-2 col-sm-2" style="padding-right: 0;display: inline-block;">
-	                    				<label for="">No. Rekening</label>
-	                					<input type="number" class="form-control" name="acc_number" placeholder="No. Rekening">
+	                    				<label for="">No. Account Number</label>
+	                					<input type="number" class="form-control" name="acc_number" placeholder="No. Account Number">
 	                    				<div class="validation"></div>
 	                  				</div>
 	                			</div>
 	              			</div>
 
-				          	<button id="addCso" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
-				          	<button class="btn btn-light">Batal</button>
+				          	<button id="addCso" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+				          	<button class="btn btn-light">Cancel</button>
         				</form>
       				</div>
     			</div>
