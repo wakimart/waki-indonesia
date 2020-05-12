@@ -85,7 +85,7 @@
 	          <li><a href="#portfolio">Gallery</a></li>
 	          @endif
 
-	          @if(Utils::$lang=='id')
+	          @if(Utils::$lang=='id' || Utils::$lang=='eng')
 	          <li class="drop-down"><a href="#product">Produk</a>
 	            <ul>
 	              <li class="drop-down "><a href="#">WAKi High Potential Therapy</a>
@@ -197,12 +197,12 @@
                  			<div class="col-sm-12">
 			                    <div class="footer-newsletter">
 				                  	@if(Utils::$lang=='id')
-				                  		<h4>Kantor Pusat WAKI</h4>	
+				                  		<h4>Kantor Pusat WAKI</h4>
 				                  	@elseif(Utils::$lang=='eng')
 				                  		<h4>WAKi Headquarter</h4>
 				                  	@endif
-			                      
-			                      
+
+
 			                      	<p style="margin-bottom: 5px;"><strong>WAKi International Group</strong></p>
 			                      	<p>WAKi Tower,
 			                      	S-01-01, Block C, USJ ONE,
@@ -223,7 +223,7 @@
 				                        	<br>Myanmar: +95 9 79653 2299
 				                        	<br>Vietnam: +84 90 143 31 99
 				                        	<br>Thailand: +66 6 1965 9646
-				                      	</p>	
+				                      	</p>
 				                  	@elseif(Utils::$lang=='eng')
 				                  		<h4>Contact Us</h4>
 				                      	<p>
@@ -245,7 +245,7 @@
 				                  	@elseif(Utils::$lang=='eng')
 				                  		<h4>Follow Us</h4>
 				                  	@endif
-			                      	
+
 			                      	<a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
 			                      	<a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
 			                      	<a href="#" class="youtube"><i class="fa fa-youtube"></i></a>
