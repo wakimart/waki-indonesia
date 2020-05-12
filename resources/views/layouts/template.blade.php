@@ -148,7 +148,6 @@
 	              <li><a href="{{ route('delivery_order') }}">REGISTRASI</a></li>
 								<li><a href="{{ route('add_order') }}">ORDER</a></li>
 								<li><a href="{{ route('add_homeServices') }}">HOME SERVICE</a></li>
-								<li><a href="{{ route('order_success') }}">HOME SERVICE success</a></li>
 							</ul>
 						</li>
 

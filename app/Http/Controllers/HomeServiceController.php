@@ -21,4 +21,14 @@ class HomeServiceController extends Controller
     	$banks = Order::$Banks;
         return view('homeservice', compact('promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
     }
+    public function servicesuccess()
+    {
+    	$promos = DeliveryOrder::$Promo;
+    	$branches = Branch::all();
+    	$csos = Cso::all();
+    	$cashUpgrades = Order::$CashUpgrade;
+    	$paymentTypes = Order::$PaymentType;
+    	$banks = Order::$Banks;
+        return view('homeservicesuccess', compact('promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
+    }
 }

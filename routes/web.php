@@ -32,6 +32,7 @@ Route::get('/order-success', 'OrderController@successorder')->name('order_succes
 
 //Home service
 Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeServices');
+Route::get('/homeservice-success', 'HomeServiceController@servicesuccess')->name('homeServices_success');
 
 Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {
@@ -282,11 +283,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    Route::post('/{PromoNya}', 'PromoController@delete')
 	    	->name('delete_promo');
     });
-<<<<<<< HEAD
-
-
-=======
->>>>>>> fe5b46b614dad356f219242ec33012732fc8f1bc
 });
 
 Auth::routes();
