@@ -23,6 +23,25 @@
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
+    table{
+        margin: 1em;
+        font-size: 14px;
+    }
+    table thead{
+        background-color: #8080801a;
+        text-align: center;
+    }
+    table td{
+        border: 0.5px #8080801a solid;
+        padding: 0.5em;
+    }
+    .right{
+        text-align: right;
+    }
+    .pInTable{
+        margin-bottom: 6pt !important;
+        font-size: 10pt;
+    }
 </style>
 
 
@@ -31,65 +50,95 @@
         <div class="row justify-content-center">
             <h2>REGISTRASI HOME SERVICE BERHASIL</h2>
         </div>
+
         <div class="row justify-content-center">
-            <form action="{{ Route('store_order') }}" method="post" role="form" class="contactForm col-md-9">
-                @csrf
-                <div class="form-group">
-                    <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="name" id="name" placeholder="Nama" required data-msg="Mohon Isi Nama" />
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group">
-                    <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" />
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control" name="address" rows="5" required data-msg="Mohon Isi Alamat" placeholder="Alamat"></textarea>
-                    <div class="validation"></div>
-                </div>
+          <table class="col-md-12">
+              <tr>
+                  <td>
+                      <p class="pInTable">
+                        Terima kasih kepada bapak/ibu yang terhormat telah memberi
+                        dukungan dan dorongan kepada WAKi Indonesia selama ini untuk
+                        lebih berkembang dan lebih baik di masa mendatang.</p>
+                      <p class="pInTable">Tujuan Home Service adalah untuk merapatkan hubungan antara
+                        bapak/ibu sama WAKi dan biar bapak/ibu lebih memahami cara guna
+                        WAKi produk supaya capai kesan yang lebih baik.</p>
+                      <p class="pInTable">Team WAKi Home Service akan menghubungi terlebih dahulu
+                        sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
+                        atau perubahan jadwal home service, dapat menghubungi WAKi
+                        Home Service Department kembali di nomor (+6281234511881) atau
+                        (Nama), (H/p No), (Cabang).</p>
+                  </td>
+              </tr>
+          </table>
+        </div>
 
-                <div class="form-group">
-                    <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-                        <option selected disabled value="">Pilihan Cabang</option>
+        <div class="row justify-content-center">
+            <table class="col-md-12">
+                <thead>
+                    <td colspan="2">Informasi Kustomer </td>
+                </thead>
+                <tr>
+                    <td>No. Member : </td>
+                    <td>WKF-0001</td>
+                </tr>
+                <tr>
+                    <td>Nama : </td>
+                    <td>Noname Nama</td>
+                </tr>
+                <tr>
+                    <td>No. Telp : </td>
+                    <td>08122334455667</td>
+                </tr>
+                <tr>
+                    <td>Kota : </td>
+                    <td>Surabaya</td>
+                </tr>
+                <tr>
+                    <td>Alamat : </td>
+                    <td>Jl. Raya Lebar</td>
+                </tr>
+                <tr>
+                    <td>Cabang Pembelian : </td>
+                    <td>Darmo Park</td>
+                </tr>
+                <tr>
+                    <td>Kode CSO : </td>
+                    <td>1122334455</td>
+                </tr>
+            </table>
+            <table class="col-md-12">
+                <thead>
+                    <td colspan="2">Tanggal dan Waktu Janjian </td>
+                </thead>
+                <tr>
+                    <td>Tanggal : </td>
+                    <td>30 Februari 2021</td>
+                </tr>
+                <tr>
+                    <td>Waktu : </td>
+                    <td>10:00 AM</td>
+                </tr>
 
-                        @foreach($branches as $branch)
-                            <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-                        @endforeach
-                    </select>
-                    <div class="validation"></div>
-                </div>
-                <div id="container-Cabang" style="display: none;">
-                    <div class="form-group">
-                        <input type="text" class="form-control cso" name="cso_id" id="cso" placeholder="Kode Sales" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-                        <div class="validation"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" placeholder="Kode Sales 30%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-                        <div class="validation"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" placeholder="Kode Sales 70%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-                        <div class="validation"></div>
-                    </div>
-                </div>
-                <br>
+            </table>
 
-
-                <div class="form-group">
-                    <input type="date" class="form-control" name="customer_type" id="customer_type" placeholder="Tipe Customer" data-msg="Mohon Isi Tanggal Janjian" />
-                    <div class="validation"></div>
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control" name="description" rows="5" data-msg="Mohon Isi Keterangan" placeholder="Keterangan"></textarea>
-                    <div class="validation"></div>
-                </div>
-
-                <div id="errormessage"></div>
-                <div class="text-center"><button id="submit" type="submit" title="Send Message" disabled="">Simpan Form Home Service</button></div>
-            </form>
+            <table class="col-md-12">
+                <thead>
+                    <td colspan="2">Kebijakan Home Service WAKi</td>
+                </thead>
+                <tr>
+                    <td>
+                      <p class="pInTable">1. Home Service dari WAKi tidak dipungut biaya apapun.</p>
+                      <p class="pInTable">2. Biaya akan dikenakan kepada konsumen jika ada sparepat ataupun kerusakan
+                        di luar persetujuan MPC / Warranty.</p>
+                      <p class="pInTable">3. Kenyamanan dan keamanan konsumen kami adalah prioritas pertama. Jika
+                        ada sesuatu bisa hubungi kami melalui Home Service department:
+                        +6281234511881.</p>
+                      <p class="pInTable">4. Form ini akan carbon copy (CC) kepada Customer, Petugas, Ketua Cabang,
+                        Home Service Department.</p>
+                    </td>
+                </tr>
+            </table>
+            <div class="text-center"><button id="submit" type="submit" title="" disabled="" data-action="share/whatsapp/share">Bagikan melalui Whatsapp</button></div>
         </div>
     </div>
 </section>

@@ -34,12 +34,17 @@
         <div class="row justify-content-center">
             <form action="{{ Route('store_order') }}" method="post" role="form" class="contactForm col-md-9">
                 @csrf
+                <br>
                 <div class="form-group">
                     <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name="name" id="name" placeholder="Nama" required data-msg="Mohon Isi Nama" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="city" id="phone" placeholder="Nomor Telepon" required data-msg="Mohon Isi Nomor Telepon" />
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
@@ -79,6 +84,7 @@
 
 
                 <div class="form-group">
+                    <label><b>Pilih Tanggal dan Waktu Janjian<b></label>
                     <input type="date" class="form-control" name="customer_type" id="customer_type" placeholder="Tipe Customer" data-msg="Mohon Isi Tanggal Janjian" />
                     <div class="validation"></div>
                 </div>
