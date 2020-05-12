@@ -7,11 +7,11 @@
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="page-header">
-  			<h3 class="page-title">List Delivery Order</h3>
+  			<h3 class="page-title">List Registration</h3>
   			<nav aria-label="breadcrumb">
     			<ol class="breadcrumb">
-      				<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">DO</a></li>
-      				<li class="breadcrumb-item active" aria-current="page">List DO</li>
+      				<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">Registration</a></li>
+      				<li class="breadcrumb-item active" aria-current="page">List Registration</li>
     			</ol>
   			</nav>
 		</div>
@@ -26,8 +26,8 @@
           						<thead>
 						            <tr>
 						              	<th> No. </th>
-						              	<th> Order Code </th>
-						              	<th> Order Date </th>
+						              	<th> Registration Code </th>
+						              	<th> Registration Date </th>
 						              	<th> Member Name </th>
 						              	<th colspan="2"> Product </th>
 						              	<th> Branch </th>
