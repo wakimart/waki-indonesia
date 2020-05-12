@@ -10,7 +10,6 @@ use App\Cso;
 
 class HomeServiceController extends Controller
 {
-    //
     public function index()
     {
     	$promos = DeliveryOrder::$Promo;
