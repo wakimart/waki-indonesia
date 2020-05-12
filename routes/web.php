@@ -32,7 +32,8 @@ Route::get('/order-success', 'OrderController@successorder')->name('order_succes
 
 //Home service
 Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeServices');
-Route::get('/homeservice-success', 'HomeServiceController@servicesuccess')->name('homeServices_success');
+Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
+Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
 Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {

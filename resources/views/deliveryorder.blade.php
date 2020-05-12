@@ -107,7 +107,7 @@
                     </div>
 
                     <div id="errormessage"></div>
-                    <div class="text-center"><button id="submit" type="submit" title="Send Message" disabled="">Simpan Form Registrasi</button></div>
+                    <div class="text-center"><button id="submit" type="submit" title="Send Message">Simpan Form Registrasi</button></div>
                 </form>
 
             @elseif(Utils::$lang=='eng')
@@ -188,7 +188,7 @@
                     </div>
 
                     <div id="errormessage"></div>
-                    <div class="text-center"><button id="submit" type="submit" title="Send Message" disabled="">Save Registration Form</button></div>
+                    <div class="text-center"><button id="submit" type="submit" title="Send Message">Save Registration Form</button></div>
                 </form>
             @endif
         </div>

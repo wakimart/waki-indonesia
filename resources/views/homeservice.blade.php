@@ -31,7 +31,7 @@
             <h2>FORM HOME SERVICE</h2>
         </div>
         <div class="row justify-content-center">
-            <form action="{{ Route('store_order') }}" method="post" role="form" class="contactForm col-md-9">
+            <form action="{{ Route('store_home_service') }}" method="post" role="form" class="contactForm col-md-9">
                 @csrf
                 <br>
                 <h5>Data Pelanggan</h5>
@@ -44,7 +44,7 @@
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="phone" id="phone" placeholder="Nomor Telepon" required data-msg="Mohon Isi Nomor Telepon" />
+                    <input type="number" class="form-control" name="phone" id="phone" placeholder="Nomor Telepon" required data-msg="Mohon Isi Nomor Telepon" />
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
@@ -72,7 +72,7 @@
                     <div class="validation" id="validation_cso"></div>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="phone" id="phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
+                    <input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
                     <div class="validation"></div>
                 </div>
                 
@@ -83,14 +83,36 @@
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
-                    <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:m'); ?>" required data-msg="Mohon Isi Jam" />
+                    <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" />
                     <div class="validation"></div>
                 </div>
 
                 <div id="errormessage"></div>
-                <div class="text-center"><button id="submit" type="submit" title="Send Message" disabled="">Simpan Form Home Service</button></div>
+                <div class="text-center"><button id="submit" type="submit" title="Send Message">Simpan Form Home Service</button></div>
             </form>
         </div>
     </div>
 </section>
+
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#cso").on("input", function(){
+            var txtCso = $(this).val();
+            $.get( '{{route("fetchCso")}}', { txt: txtCso })
+            .done(function( result ) {
+                if (result == 'true'){
+                    $('#validation_cso').html('Kode CSO Benar');
+                    $('#validation_cso').css('color', 'green');
+                    $('#submit').removeAttr('disabled');
+                }
+                else{
+                    $('#validation_cso').html('Kode CSO Salah');
+                    $('#validation_cso').css('color', 'red');
+                    $('#submit').attr('disabled',"");
+                }
+            });
+        });
+    });
+</script>
 @endsection
