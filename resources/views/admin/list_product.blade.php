@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "product";
+    $menu_item_second = "list_product";
 ?>
 @extends('admin.layouts.template')
 

@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "order";
+    $menu_item_second = "list_order";
 ?>
 @extends('admin.layouts.template')
 
@@ -37,7 +38,7 @@
           						</thead>
           						<tbody>
           							@foreach($orders as $key => $order)
-				                        @php 
+				                        @php
 				                            $ProductPromos = json_decode($order['product'], true);
 				                            $totalProduct = count($ProductPromos);
 				                        @endphp
@@ -53,7 +54,7 @@
 					                            @else
 					                                <td>{{ $ProductPromo['id'] }}</td>
 					                            @endif
-				                                
+
 				                                <td>{{ $ProductPromo['qty'] }}</td>
 				                                @php break; @endphp
 				                            @endforeach
@@ -76,7 +77,7 @@
 					                            @else
 					                                <td>{{ $ProductPromo['id'] }}</td>
 					                            @endif
-					                            
+
 				                                <td>{{ $ProductPromo['qty'] }}</td>
 				                            </tr>
 				                        @endforeach

@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "cso";
+    $menu_item_second = "list_cso";
 ?>
 @extends('admin.layouts.template')
 

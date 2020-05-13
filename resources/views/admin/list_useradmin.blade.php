@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "user";
+    $menu_item_second = "list_user";
 ?>
 @extends('admin.layouts.template')
 

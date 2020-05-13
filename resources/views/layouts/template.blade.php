@@ -4,8 +4,10 @@
 	<meta charset="utf-8">
 	  <title>WAKi Indonesia</title>
 	  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-	  <meta content="" name="keywords">
-	  <meta content="" name="description">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="waki, waki indonesia, waki indo, waki-indo, waki-indonesia, waki asia, waki ecommerce, waki shop" />
+		<meta name="description" content="Waki Indonesia WAKi International Group, Bukan Janji tapi Pasti!">
+
 
 	  <!--justicon-->
 	  <link rel="apple-touch-icon" sizes="57x57" href="{{asset('sources/icon/apple-icon-57x57.png')}}">

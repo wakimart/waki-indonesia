@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "branch";
+    $menu_item_second = "add_branch";
 ?>
 @extends('admin.layouts.template')
 
@@ -83,7 +84,7 @@
 	        if(hasil['errors'] != null){
 	            for (var key of frmAdd.keys()) {
 	                if(typeof hasil['errors'][key] === 'undefined') {
-	                    
+
 	                }
 	                else {
 	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");

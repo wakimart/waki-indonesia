@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "deliveryorder";
+    $menu_item_second = "add_deliveryorder";
 ?>
 @extends('admin.layouts.template')
 
@@ -44,7 +45,7 @@
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
-	          		<div class="card-body">	            		
+	          		<div class="card-body">
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_deliveryorder') }}">
 	            			{{ csrf_field() }}
 	              			<div class="form-group">
@@ -100,7 +101,7 @@
 	                			</div>
 	              			</div>
 	              			@endfor
-	              			
+
 	              			<div class="form-group">
 				                <label for="">Branch</label>
 				                <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
@@ -122,7 +123,7 @@
 
 	              			<div class="form-group">
 	              				<button id="addDeliveryOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
-	              				<button class="btn btn-light">Cancel</button>	
+	              				<button class="btn btn-light">Cancel</button>
 	              			</div>
 	            		</form>
 
@@ -176,7 +177,7 @@
 	        if(hasil['errors'] != null){
 	            for (var key of frmAdd.keys()) {
 	                if(typeof hasil['errors'][key] === 'undefined') {
-	                    
+
 	                }
 	                else {
 	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");

@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "cso";
+    $menu_item_second = "add_cso";
 ?>
 @extends('admin.layouts.template')
 @section('content')
@@ -182,7 +183,7 @@
 	        if(hasil['errors'] != null){
 	            for (var key of frmAdd.keys()) {
 	                if(typeof hasil['errors'][key] === 'undefined') {
-	                    
+
 	                }
 	                else {
 	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
@@ -258,7 +259,7 @@
             }
             if(parseInt($('.reg_year_cso').val()) < parseInt($('.reg_year_cso').attr('min')) && $('.reg_year_cso').val().length > 3){
                 $('.reg_year_cso').val($('.reg_year_cso').attr('min'));
-            }  
+            }
         });
     //end reg cso
 
@@ -309,7 +310,7 @@
             }
             if(parseInt($('.upreg_year_cso').val()) < parseInt($('.upreg_year_cso').attr('min')) && $('.upreg_year_cso').val().length > 3){
                 $('.upreg_year_cso').val($('.upreg_year_cso').attr('min'));
-            }  
+            }
         });
     //end update cso
 
@@ -360,7 +361,7 @@
             }
             if(parseInt($('.unreg_year_cso').val()) < parseInt($('.unreg_year_cso').attr('min')) && $('.unreg_year_cso').val().length > 3){
                 $('.unreg_year_cso').val($('.unreg_year_cso').attr('min'));
-            }  
+            }
         });
     //end unreg cso
 
@@ -411,7 +412,7 @@
             }
             if(parseInt($('.upunreg_year_cso').val()) < parseInt($('.upunreg_year_cso').attr('min')) && $('.upunreg_year_cso').val().length > 3){
                 $('.upunreg_year_cso').val($('.upunreg_year_cso').attr('min'));
-            }  
+            }
         });
     //end update unreg cso
 </script>
