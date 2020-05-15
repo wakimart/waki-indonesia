@@ -1,3 +1,7 @@
+<?php
+    $menu_item_page = "form";
+    $menu_item_second = "formhomeservice";
+?>
 @extends('layouts.template')
 
 @section('content')
@@ -75,7 +79,7 @@
                     <input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
                     <div class="validation"></div>
                 </div>
-                
+
                 <br>
                 <h5>Waktu Home Service</h5>
                 <div class="form-group">

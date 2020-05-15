@@ -1,3 +1,7 @@
+<?php
+    $menu_item_page = "form";
+    $menu_item_second = "formregistrasi";
+?>
 @extends('layouts.template')
 
 @section('content')

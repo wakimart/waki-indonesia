@@ -1,3 +1,7 @@
+<?php
+    $menu_item_page = "form";
+    $menu_item_second = "formorder";
+?>
 @extends('layouts.template')
 
 @section('content')
@@ -442,7 +446,7 @@
                     console.log("masuk");
                 }
                 else{
-                    $('#submit').attr('disabled',"");                    
+                    $('#submit').attr('disabled',"");
                 }
             });
         });
@@ -537,7 +541,7 @@
                     $(this).parent().next().next().next().children().removeAttr('required', '');
                 }
             });
-        @endif 
+        @endif
 
         //KHUSUS Untuk tambah customer indo
         $("#tambah_member").click(function(e){

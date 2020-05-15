@@ -70,24 +70,12 @@
 	      <nav class="main-nav float-right d-none d-lg-block">
 	        <ul>
 	          @if(Utils::$lang=='id')
-	          <li class="active"><a href="#intro">Beranda</a></li>
+	          <li><a href="{{route('index')}}#intro">Beranda</a></li>
 	          @elseif(Utils::$lang=='eng')
-	          <li class="active"><a href="#intro">Home</a></li>
+	          <li><a href="{{route('index')}}#intro">Home</a></li>
 	          @endif
 
-	          @if(Utils::$lang=='id')
-	          <li><a href="#about">Tentang Kami</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="#about">About Us</a></li>
-	          @endif
-
-	          @if(Utils::$lang=='id')
-	          <li><a href="#portfolio">Galeri</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="#portfolio">Gallery</a></li>
-	          @endif
-
-	          @if(Utils::$lang=='id' || Utils::$lang=='eng')
+						@if(Utils::$lang=='id' || Utils::$lang=='eng')
 	          <li class="drop-down"><a href="#product">Produk</a>
 	            <ul>
 	              <li class="drop-down "><a href="#">WAKi High Potential Therapy</a>
@@ -145,27 +133,45 @@
 	              </li>
 	            </ul>
 	          </li>
-						<li class="drop-down"><a href="#product">Form</a>
-	            <ul>
-	              <li><a href="{{ route('delivery_order') }}">REGISTRASI</a></li>
-								<li><a href="{{ route('add_order') }}">ORDER</a></li>
-								<li><a href="{{ route('add_homeServices') }}">HOME SERVICE</a></li>
-							</ul>
-						</li>
+						@endif
 
-	          <li><a href="#team">World Peace</a></li>
+	          @if(Utils::$lang=='id')
+	          <li><a href="{{route('index')}}#about">Tentang</a></li>
 	          @elseif(Utils::$lang=='eng')
-	          <li><a href="#team">World Peace</a></li>
+	          <li><a href="{{route('index')}}#about">About Us</a></li>
 	          @endif
 
 	          @if(Utils::$lang=='id')
-	          <li><a href="#footer">Kontak Kami</a></li>
+	          <li><a href="{{route('index')}}#portfolio">Galeri</a></li>
 	          @elseif(Utils::$lang=='eng')
-	          <li><a href="#footer">Contact Us</a></li>
+	          <li><a href="{{route('index')}}#portfolio">Gallery</a></li>
 	          @endif
 
 
-	          <li><a href="#" class="searchtxtmob">Chair</a>
+						@if(Utils::$lang=='id')
+						<li class="drop-down {{isset($menu_item_page) && $menu_item_page == 'form'? 'active': '' }}"><a href="#product">Form</a>
+	            <ul>
+	              <li class="{{isset($menu_item_second) && $menu_item_second == 'formregistrasi'? 'active': '' }}"><a href="{{ route('delivery_order') }}">REGISTRASI</a></li>
+								<li class="{{isset($menu_item_second) && $menu_item_second == 'formorder'? 'active': '' }}"><a href="{{ route('add_order') }}">ORDER</a></li>
+								<li class="{{isset($menu_item_second) && $menu_item_second == 'formhomeservice'? 'active': '' }}"><a href="{{ route('add_homeServices') }}">HOME SERVICE</a></li>
+							</ul>
+						</li>
+						@endif
+
+						@if(Utils::$lang=='id')
+	          <li><a href="{{route('index')}}#team">World Peace</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="{{route('index')}}#team">World Peace</a></li>
+	          @endif
+
+	          @if(Utils::$lang=='id')
+	          <li><a href="{{route('index')}}#footer">Kontak</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="{{route('index')}}#footer">Contact Us</a></li>
+	          @endif
+
+
+	          <li><a href="#" class="searchtxtmob"> </a>
 	            <div class="searchicon">
 	                <i id="searchicn" class="fa fa-search hidden-sm"></i>
 	              </div>

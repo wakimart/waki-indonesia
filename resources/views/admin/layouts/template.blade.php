@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
     <!-- Styles -->
+    @yield('style')
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/admin/style.css')}}">
     <link rel="stylesheet" href="{{ asset('css/vendors/mdi/css/materialdesignicons.min.css') }}">
@@ -25,7 +26,6 @@
     <link rel="shortcut icon" href="{{ asset('sources/favicon.png') }}" />
 </head>
 <body>
-    @yield('style')
     <div id="app">
         <div class="container-scroller">
             <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -93,6 +93,8 @@
         </div>
     </div>
 
+    
+    @yield('script')
     <script src="{{ asset('css/vendors/js/vendor.bundle.base.js') }}"></script>
     <script src="{{ asset('css/vendors/chart.js/Chart.min.js') }}"></script>
 
@@ -104,6 +106,5 @@
     <script src="{{ asset('js/todolist.js') }}"></script>
 
     <script src="{{asset('js/file-upload.js')}}"></script>
-    @yield('script')
 </body>
 </html>

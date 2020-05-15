@@ -1,3 +1,4 @@
+
 @extends('layouts.template')
 
 @section('content')
@@ -164,7 +165,7 @@
                   <div class="icon" style="background: #eafde7;"><h1 class="WAKI" style="color: #fcb813;">i</h1></div>
                   <h4 class="title" style="color: #fcb813;font-weight: bolder;">Innovation</h4>
                   @if(Utils::$lang=='id')
-                  <p class="description">Kami percaya bahwa <i>Innovation</i> akan membawa peluang tak 
+                  <p class="description">Kami percaya bahwa <i>Innovation</i> akan membawa peluang tak
                   terbatas kepada kita.</p>
                   @elseif(Utils::$lang=='eng')
                   <p class="description">We believe that <i>Innovation</i> will bring about infinite opportunities to us.</p>
@@ -230,7 +231,7 @@
                   @elseif(Utils::$lang=='eng')
                     <h4>WAKi's Mission</h4>
 
-                    <p>Bringing WAKian and WAKi’s customers, towards a better life!</p>  
+                    <p>Bringing WAKian and WAKi’s customers, towards a better life!</p>
                   @endif
                 </div>
 
@@ -243,7 +244,7 @@
                   @elseif(Utils::$lang=='eng')
                     <h4>WAKi's Objective</h4>
 
-                    <p>Continuously creating values for stakeholders.</p>  
+                    <p>Continuously creating values for stakeholders.</p>
                   @endif
                 </div>
 
@@ -296,7 +297,7 @@
           </ul>
         </div>
       </div>
-     
+
 
       <div class="row portfolio-container">
 
