@@ -155,6 +155,13 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('delete_order');
     });
 
+    Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function(){
+	    //List Order
+	    Route::get('/list', 'HomeServiceController@admin_ListHomeService')
+	    	->name('admin_list_homeService')
+	    	->middleware('can:browse-order');
+    });
+
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
     	//Add Form CSO
     	Route::get('/', 'CsoController@create')

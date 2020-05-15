@@ -70,6 +70,26 @@
     </li>
     @endif
 
+    @if(Gate::check('add-order') || Gate::check('browse-order'))
+    <li class="{{isset($menu_item_page) && $menu_item_page == 'homeservice'? 'active': '' }} nav-item">
+      <a class="nav-link" data-toggle="collapse" href="#homeservice-dd" aria-expanded="false" aria-controls="homeservice-dd">
+        <span class="menu-title">Home Service</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-calendar-text menu-icon"></i>
+      </a>
+      <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'homeservice'? 'show': '' }}" id="homeservice-dd">
+        <ul class="nav flex-column sub-menu">
+          @if(Gate::check('add-order'))
+          <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_homeservice' ? 'active': '' }}" href="{{ route('admin_add_order')}}">Add Home Service</a></li>
+          @endif
+          @if(Gate::check('browse-order'))
+          <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_homeservice' ? 'active': '' }}" href="{{  route('admin_list_homeService') }}">List Home Service</a></li>
+          @endif
+        </ul>
+      </div>
+    </li>
+    @endif
+
     @if(Gate::check('add-cso') || Gate::check('browse-cso'))
     <li class="{{isset($menu_item_page) && $menu_item_page == 'cso'? 'active': '' }} nav-item">
       <a class="nav-link" data-toggle="collapse" href="#cso-dd" aria-expanded="false" aria-controls="cso-dd">
@@ -89,20 +109,6 @@
       </div>
     </li>
     @endif
-
-		<li class="{{isset($menu_item_page) && $menu_item_page == 'homeservice'? 'active': '' }} nav-item">
-      <a class="nav-link" data-toggle="collapse" href="#hs-dd" aria-expanded="false" aria-controls="hs-dd">
-        <span class="menu-title">Home Service</span>
-        <i class="menu-arrow"></i>
-        <i class="mdi mdi-account-multiple menu-icon"></i>
-      </a>
-      <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'cso'? 'show': '' }}" id="hs-dd">
-        <ul class="nav flex-column sub-menu">
-          <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_homeservice'? 'active': '' }}" href="#">Add Home Service</a></li>
-          <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_homeservice'? 'active': '' }}" href="{{route('list_cso')}}">List Home Service</a></li>
-        </ul>
-      </div>
-    </li>
 
     @if(Gate::check('add-branch') || Gate::check('browse-branch'))
     <li class="{{isset($menu_item_page) && $menu_item_page == 'branch'? 'active': '' }} nav-item">
