@@ -7,16 +7,26 @@
 @section('style')
 <link rel="stylesheet" href="{{ asset('css/admin/calendarorganizer.css')}}">
 <style>
+/* manual override */
 .cjslib-day-indicator {
   color: #ffc107 !important;
-  background-color: #ffc107 !important;
+  background-color: #1bcfb4 !important;
   }
 .cjslib-indicator-type-numeric {
   color: #ffa000 !important;
   }
 .cjslib-day.cjslib-day-today > .cjslib-day-num {
-  border-color: #ffc107 !important;
+  border-color: #1bcfb4 !important;
   }
+.cjslib-calendar.cjslib-size-small .cjslib-day > .cjslib-day-indicator {
+    width: 24px;
+    height: 24px;
+}
+.cjslib-calendar.cjslib-size-small .cjslib-day > .cjslib-indicator-type-numeric {
+    font-size: 12px;
+    font-weight: bolder;
+    color: #ffffff !important;
+}
 </style>
 
 @endsection
@@ -25,14 +35,24 @@
 
 <div class="main-panel">
 	<div class="content-wrapper">
+    <div class="page-header">
+  			<h3 class="page-title">Home Service</h3>
+  			<nav aria-label="breadcrumb">
+    			<ol class="breadcrumb">
+      				<li class="breadcrumb-item"><a data-toggle="collapse" href="#cso-dd" aria-expanded="false" aria-controls="cso-dd">Home Service</a></li>
+      				<li class="breadcrumb-item active" aria-current="page">List Home Service</li>
+    			</ol>
+  			</nav>
+		</div>
+
     <div class="row">
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
       					<h5 style="margin-bottom: 0.5em;">Appointment</h5>
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
-                  <div id="calendarContainer"></div>
-              		<div id="organizerContainer"></div>
+                  <div id="calendarContainer" style="float: left;"></div>
+              		<div id="organizerContainer" style="float: left;"></div>
         				</div>
       				</div>
     			</div>
@@ -68,7 +88,9 @@
 
 @section('script')
 <script src="{{ asset('js/admin/calendarorganizer.js') }}"></script>
+
 <script>
+  window.onload = function() {
   "use strict";
 
   // function that creates dummy data for demonstration
@@ -83,18 +105,20 @@
                     {
                         startTime: "00:00",
                         endTime: "24:00",
-                        text: "Christmas Day"
+                        text: "All Day Event",
+                        link: "#"
                     },
                     // 2
                     {
-                        startTime: "5:00pm", //bisa am pm soale string tp msh g tau carane sorting ini time
-                        endTime: "11:00pm",
-                        text: "Christmas Dinner"
+                        startTime: "10:00", //bisa am pm soale string tp msh g tau carane sorting ini time
+                        endTime: "11:00",
+                        text: "Some Event Here",
+                        link: "#"
                     },
                     // 3
                     {
-                        startTime: "10:00",
-                        endTime: "12:00",
+                        startTime: "13:00",
+                        endTime: "15:00",
                         text: "Some Event Here",
                         link: "#" //link kalo mungkin edit modal kali yaa
                     },
@@ -163,6 +187,9 @@
   // creating the dummy static data
   var data = createDummyData();
 
+  // stating variables in order for them to be global
+  // var calendar, organizer;
+
   // initializing a new calendar object, that will use an html container to create itself
   var calendar = new Calendar("calendarContainer", // id of html container for calendar
     "small", // size of calendar, can be small | medium | large
@@ -190,6 +217,84 @@
     data // giving the organizer the static data that should be displayed
   );
 
+  /*// This is gonna be similar to an ajax function that would grab
+  // data from the server; then when the data for a this current month
+  // is grabbed, you just add it to the data object of the form
+  // { year num: { month num: { day num: [ array of events ] } } }
+  function dataWithAjax(date, callback) {
+    var data = {};
+
+    try {
+      data[date.getFullYear()] = {};
+      data[date.getFullYear()][date.getMonth() + 1] = serverData[date.getFullYear()][date.getMonth() + 1];
+    } catch (e) {}
+
+    callback(data);
+  };
+
+  window.onload = function() {
+    dataWithAjax(new Date(), function(data) {
+      // initializing a new organizer object, that will use an html container to create itself
+      organizer = new Organizer("organizerContainer", // id of html container for calendar
+        calendar, // defining the calendar that the organizer is related
+        data // small part of the data of type object
+      );
+
+      // after initializing the organizer, we need to initialize the onMonthChange
+      // there needs to be a callback parameter, this is what updates the organizer
+      organizer.onMonthChange = function(callback) {
+        dataWithAjax(organizer.calendar.date, function(data) {
+          organizer.data = data;
+          callback();
+        });
+      };
+    });
+  };*/
+
+
+    // Days Block Click Listener
+    organizer.setOnClickListener('days-blocks',
+        // Called when a day block is clicked
+        function () {
+            console.log("Day block clicked");
+        }
+    );
+
+    // Days Block Long Click Listener
+    organizer.setOnLongClickListener('days-blocks',
+        // Called when a day block is long clicked
+        function () {
+            console.log("Day block long clicked");
+        }
+    );
+
+    // Month Slider (Left and Right Arrow) Click Listeners
+    organizer.setOnClickListener('month-slider',
+        // Called when the month left arrow is clicked
+        function () {
+            console.log("Month back slider clicked");
+        },
+        // Called when the month right arrow is clicked
+        function () {
+            console.log("Month next slider clicked");
+        }
+    );
+
+    // Year Slider (Left and Right Arrow) Click Listeners
+    organizer.setOnClickListener('year-slider',
+        // Called when the year left arrow is clicked
+        function () {
+            console.log("Year back slider clicked");
+        },
+        // Called when the year right arrow is clicked
+        function () {
+            console.log("Year next slider clicked");
+        }
+    );
+
+
+};
 </script>
+
 
 @endsection

@@ -715,7 +715,7 @@ Organizer.prototype.setupLongClickBlock = function (blockId, organizerInstance, 
                 organizerInstance.addDate(document.getElementById(calendarInstance.id + "-day-num-" + blockId).innerHTML, blockId);
                 callback();
             }
-        }, 1000);
+        }, 500);
     };
 
     document.getElementById(calendarInstance.id + "-day-" + blockId).onmousedown = mouseDownEvent;

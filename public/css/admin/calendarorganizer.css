@@ -24,13 +24,13 @@
 }
 
 .cjslib-calendar.cjslib-size-small {
-    width: 400px;
-    height: 400px;
+    width: 500px;
+    height: 500px;
 }
 
 .cjslib-calendar.cjslib-size-medium {
-    width: 600px;
-    height: 600px;
+    width: 650px;
+    height: 650px;
 }
 
 .cjslib-calendar.cjslib-size-large {
@@ -39,7 +39,8 @@
 }
 
 .cjslib-year {
-    width: calc(100% - 10px);
+    /* width: calc(100% - 10px); */
+    width: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -89,7 +90,8 @@
 
 .cjslib-month {
     z-index: 1;
-    width: calc(100% - 10px);
+    /* width: calc(100% - 10px); */
+    width: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -266,9 +268,9 @@
 }
 
 .cjslib-indicator-type-numeric {
-    padding: 3px;    
-    display: -webkit-box;    
-    display: -ms-flexbox;    
+    padding: 3px;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
     -webkit-box-align: center;
         -ms-flex-align: center;
@@ -360,13 +362,13 @@
 }
 
 .cjslib-events.cjslib-size-small {
-    width: 400px;
-    height: 400px;
+    width: 500px;
+    height: 500px;
 }
 
 .cjslib-events.cjslib-size-medium {
-    width: 600px;
-    height: 600px;
+    width: 650px;
+    height: 650px;
 }
 
 .cjslib-events.cjslib-size-large {
@@ -375,7 +377,8 @@
 }
 
 .cjslib-date {
-    width: calc(100% - 10px);
+    /* width: calc(100% - 10px); */
+    width: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
