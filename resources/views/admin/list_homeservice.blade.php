@@ -113,8 +113,6 @@
               </div>
 
 
-                <option value="">City</option>
-                <option value="">Team</option>
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
                   <div id="calendarContainer" style="float: left;"></div>
               		<div id="organizerContainer" style="float: left;"></div>
