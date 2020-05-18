@@ -4,16 +4,24 @@
 <!--==========================Intro Section============================-->
 <section id="intro" class="clearfix">
   <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+    @php
+      $banners = json_decode($banners['image']);
+      $defaultImg = asset('sources/banners/');
+
+      $count_banner = sizeof($banners);
+    @endphp
     <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img class="d-block w-100" src="{{asset('sources/waki-carousel1.jpg')}}" alt="First slide">
-      </div>
-      <div class="carousel-item">
+      @for($i = 0; $i < $count_banner; $i++)
+        <div class="carousel-item active">
+          <img class="d-block w-100" src="{{$defaultImg.'/'.$banners[$i]->img}}">
+        </div>
+      @endfor
+      <!-- <div class="carousel-item">
         <img class="d-block w-100" src="{{asset('sources/waki-carousel2.jpg')}}" alt="Second slide">
       </div>
       <div class="carousel-item">
         <img class="d-block w-100" src="{{asset('sources/waki-carousel3.jpg')}}" alt="Third slide">
-      </div>
+      </div> -->
     </div>
     <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -299,411 +307,39 @@
      
 
       <div class="row portfolio-container">
+        @php
+          $photos = json_decode($galleries['photo']);
+          $photoPath = asset('sources/portfolio/');
+          $count_photo = sizeof($photos);
 
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo1.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 1</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo1.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo2.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 2</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo2.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo3.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 3</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo3.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo4.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 4</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo4.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo5.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 5</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo5.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo6.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 6</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo6.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo7.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 7</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo7.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo8.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 8</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo8.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo9.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 9</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo9.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo10.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 10</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo10.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo11.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 11</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo11.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo12.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 12</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo12.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo13.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 13</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo13.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo14.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 14</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo14.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo15.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 15</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo15.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo16.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 16</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo16.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo17.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 17</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo17.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo18.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 18</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo18.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo19.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 19</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo19.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo20.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 20</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo20.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo21.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 21</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo21.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo22.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 22</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo22.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo23.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 23</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo23.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo24.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 24</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo24.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo25.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 25</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo25.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo26.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 26</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo26.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo27.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 27</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo27.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo28.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 28</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo28.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{asset('sources/portfolio/photo29.jpg')}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo 29</a></h4>
-              <p>App</p>
-              <div>
-                <a href="{{asset('sources/portfolio/photo29.jpg')}}" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
-            </div>
-          </div>
-        </div>
+          $videos = json_decode($galleries['url_youtube']);
+          $count_video = sizeof($videos);
+        @endphp
 
+        @for($x = 0; $x < $count_photo; $x++)
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{$photoPath.'/'.$photos[$x]}}" class="img-fluid" alt="">
+            <div class="portfolio-info">
+              <h4><a href="#">Photo {{$x+1}}</a></h4>
+              <p>App</p>
+              <div>
+                <a href="#" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        @endfor
 
+        @for($v = 0; $v < $count_video; $v++)
         <div class="col-lg-4 col-md-6 portfolio-item filter-video">
           <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">The Opening of WAKi Relic Museum</h5>
-            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/AlodzGToyG4" frameborder="0" allowfullscreen=""></iframe>
+            <h5 class="portfolio-video-title">{{$videos[$v]->title}}</h5>
+            <iframe width="100%" height="auto" position="relative" src="{{$videos[$v]->url}}" frameborder="0" allowfullscreen=""></iframe>
           </div>
         </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
-          <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">World Peace Awards 2019, Stockholm City Hall, Sweden</h5>
-            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/dDCFtdrinbk" frameborder="0" allowfullscreen=""></iframe>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
-          <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">WAKi Indonesia – Ramadhan Diary 2019</h5>
-            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/4w8Z1boMAKo" frameborder="0" allowfullscreen=""></iframe>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
-          <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">WAKi Indonesia Present – Mahakarya 2019</h5>
-            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/hoAchdTvpY8" frameborder="0" allowfullscreen=""></iframe>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
-          <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">Iftar with Anak Rumah Penyayang Ulin Nuha & Al Munirah</h5>
-            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/W-pbLd9KZtk" frameborder="0" allowfullscreen=""></iframe>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
-          <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">Iftar with Anak Rumah Amal Al Firdaus</h5>
-            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/hoeYyGmWnNc" frameborder="0" allowfullscreen=""></iframe>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
-          <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">Iftar & Teraweeh Prayers with Anak Madrasah Tahfiz Sg Buluh</h5>
-            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/BHNm9dl4f0Q" frameborder="0" allowfullscreen=""></iframe>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
-          <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">WAKi FOOT MASSAGE MASTER II</h5>
-            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/RwjWCVyT9-U" frameborder="0" allowfullscreen=""></iframe>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
-          <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">WAKi International Group Corporate Song</h5>
-            <iframe width="100%" height="auto" position="relative" src="https://www.youtube.com/embed/ZzKgr4_-BKw" frameborder="0" allowfullscreen=""></iframe>
-          </div>
-        </div>
+        @endfor
+        
       </div>
     </div>
   </section><!-- #portfolio -->

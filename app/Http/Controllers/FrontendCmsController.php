@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Banner;
+use App\OurGallery;
+use DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +30,18 @@ class FrontendCmsController extends Controller
                     );
             $banners = Banner::create($data);
         }
-        return view('admin.frontendcms', compact('banners'));
+
+        $galleries = OurGallery::all()->first();
+        if($galleries == null){
+            $data = array(
+                        "id" => "1",
+                        "photo" => "[]",
+                        "url_youtube" => "[]",
+                    );
+            $galleries = OurGallery::create($data);
+        }
+
+        return view('admin.frontendcms', compact('banners', 'galleries'));
     }
 
     /**
@@ -175,7 +188,98 @@ class FrontendCmsController extends Controller
 
         $data['image'] = json_encode($arr_image_before);
         $data->save();
-        return response()->json(['success' => 'Berhasil!']);
+
+        //restore photos
+        $galleries = OurGallery::all()[0];
+        $arr_photo_before = json_decode($galleries['photo']);
+        $namaPhoto = [];
+        $namaPhoto = array_values($arr_photo_before);
+
+
+        for ($i = 0; $i < $request->total_photos; $i++) { 
+            if ($request->hasFile('photos' . $i)) {
+                if(array_key_exists($i, $arr_photo_before)){
+                    if(File::exists("sources/portfolio/" . $arr_photo_before[$i]->img))
+                    {
+                        File::delete("sources/portfolio/" . $arr_photo_before[$i]->img);
+                    }
+                }
+                //return response()->json(['success' => $request->dlt_img ]);
+                // $path = "public/portfolio/" . $codePath;
+                // $path = str_replace("\\", "", $path);
+                $file = $request->file('photos' . $i);
+                $filename = $file->getClientOriginalName();
+
+                // $image_resize = Image::make($file->getRealPath());
+                // $image_resize->resize(720, 720);
+
+                //storing gambar - gambar
+                //$pathForImage = "sources/portfolio/" . $codePath;
+                $file->move("sources/portfolio/", $filename);
+                //$image_resize->save(public_path($pathForImage.'/'.$filename));
+
+                if(array_key_exists($i, $arr_photo_before)){
+                    $arr_photo_before[$i] = $namaPhoto[$i];
+                }else{
+                    array_push($arr_photo_before, $filename);    
+                }
+            }
+
+            else{
+                if(array_key_exists($i, $arr_photo_before)){
+                    $arr_photo_before[$i] = $namaPhoto[$i];
+                }
+            }
+        }
+
+        if($request->dlt_photos!="")
+        {
+            $deletes = explode(",", $request->dlt_photos);
+            foreach ($deletes as $value) {
+                if(array_key_exists($value, $namaPhoto))
+                {
+                    if(File::exists("sources/portfolio/" . $namaPhoto[$value]))
+                    {
+                        File::delete("sources/portfolio/" . $namaPhoto[$value]);
+                    }
+                   // return response()->json(['success' => $value ]);
+                    unset($namaPhoto[$value]);
+                }
+               
+            }
+        }
+
+        $arr_vid_before = json_decode($galleries['url_youtube']);
+        $namaVideo = [];
+        $namaVideo = array_push($namaVideo, $arr_vid_before);
+
+        for ($v=0; $v < $request->total_videos; $v++) {
+
+            if($request->input('video_' . $v) != null){
+                
+                if(array_key_exists($v, $arr_vid_before)){
+                    $arr_vid_before[$v]->title = $request->input('title_'.$v);
+                    $arr_vid_before[$v]->url = $request->input('video_'.$v);
+                }else{
+                    $json_vid =array(
+                        "title" => $request->input('title_'.$v),
+                        "url" => $request->input('video_'.$v),
+                    );
+                    array_push($arr_vid_before, $json_vid);    
+                }
+            }
+        }        
+        
+        return response()->json(['test' => json_encode($arr_vid_before)]);
+
+        DB::table('our_galleries')
+            ->where('id', 1)
+            ->update([
+                'photo' => json_encode($arr_photo_before),
+                'url_youtube' => json_encode($arr_vid_before)
+            ]);
+        
+        return response()->json(['success' => 'Berhasil!']);        
         
     }
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Banner;
+use App\OurGallery;
 
 class IndexController extends Controller
 {
@@ -13,7 +15,10 @@ class IndexController extends Controller
      */
     public function index()
     {
-        return view('index');
+        $banners = Banner::all()[0];
+        $galleries = OurGallery::all()[0];
+
+        return view('index', compact('banners', 'galleries'));
     }
 
     /**
