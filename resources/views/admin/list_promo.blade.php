@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "promo";
+    $menu_item_second = "list_promo";
 ?>
 @extends('admin.layouts.template')
 
@@ -35,7 +36,7 @@
           						</thead>
           						<tbody>
           							@foreach($promos as $key => $promo)
-          								@php 
+          								@php
 				                            $ProductPromos = json_decode($promo['product'], true);
 				                            $totalProduct = count($ProductPromos);
 				                        @endphp
@@ -53,7 +54,7 @@
                                           			</div>
                                       			</div>
 				                            </td>
-				                            
+
 				                            @foreach($ProductPromos as $key => $ProductPromo)
 				                                <td>{{ $promo->product_list()[$key]['name']}}</td>
 				                                <td>{{ $ProductPromo['qty'] }}</td>

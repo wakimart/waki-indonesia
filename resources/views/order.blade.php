@@ -1,3 +1,7 @@
+<?php
+    $menu_item_page = "form";
+    $menu_item_second = "formorder";
+?>
 @extends('layouts.template')
 
 @section('content')
@@ -179,17 +183,19 @@
 
                     <div id="tambahan_bank"></div>
                     {{-- ++++++++ ==== ++++++++ --}}
-                    <div class="form-group">
-                        <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Harga" required data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
-                        <div class="validation"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="number" class="form-control" name="down_payment" id="down_payment" placeholder="Down Payment(DP)" required data-msg="Mohon Isi Down Payment(DP)" style="text-transform:uppercase"/>
-                        <div class="validation"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" placeholder="Sisa Pembayaran" required data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
-                        <div class="validation"></div>
+                    <div id="container-totalHarga" style="display: none;">
+                        <div class="form-group">
+                            <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Harga" required data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
+                            <div class="validation"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" name="down_payment" id="down_payment" placeholder="Down Payment(DP)" required data-msg="Mohon Isi Down Payment(DP)" style="text-transform:uppercase"/>
+                            <div class="validation"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" placeholder="Sisa Pembayaran" required data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
+                            <div class="validation"></div>
+                        </div>
                     </div>
                 </div>
                 <br>
@@ -231,7 +237,7 @@
                 </div>
 
                 <div id="errormessage"></div>
-                <div class="text-center"><button id="submit" type="submit" title="Send Message" disabled="">Simpan Form Order</button></div>
+                <div class="text-center"><button id="submit" type="submit" title="Send Message">Simpan Form Order</button></div>
             </form>
         </div>
         @elseif(Utils::$lang=='eng')
@@ -341,17 +347,19 @@
 
                     <div id="tambahan_bank"></div>
                     {{-- ++++++++ ==== ++++++++ --}}
-                    <div class="form-group">
-                        <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Payment" required data-msg="Please Fill the Total Payment" style="text-transform:uppercase"/>
-                        <div class="validation"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="number" class="form-control" name="down_payment" id="down_payment" placeholder="Down Payment(DP)" required data-msg="Please Fill the Down Payment" style="text-transform:uppercase"/>
-                        <div class="validation"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" placeholder="Remaining Payment" required data-msg="Please Fill the Remaining Payment" style="text-transform:uppercase"/>
-                        <div class="validation"></div>
+                    <div id="container-totalHarga" style="display: none;">
+                        <div class="form-group">
+                            <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Payment" required data-msg="Please Fill the Total Payment" style="text-transform:uppercase"/>
+                            <div class="validation"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" name="down_payment" id="down_payment" placeholder="Down Payment(DP)" required data-msg="Please Fill the Down Payment" style="text-transform:uppercase"/>
+                            <div class="validation"></div>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" placeholder="Remaining Payment" required data-msg="Please Fill the Remaining Payment" style="text-transform:uppercase"/>
+                            <div class="validation"></div>
+                        </div>
                     </div>
                 </div>
                 <br>
@@ -438,7 +446,7 @@
                     console.log("masuk");
                 }
                 else{
-                    $('#submit').attr('disabled',"");                    
+                    $('#submit').attr('disabled',"");
                 }
             });
         });
@@ -513,6 +521,10 @@
             }
         });
 
+        $(document).on("change", ".bank_name", function(e){
+            $("#container-totalHarga").show();
+        });
+
          $("#branch").change( function(e){
             $("#container-Cabang").show();
         });
@@ -529,7 +541,7 @@
                     $(this).parent().next().next().next().children().removeAttr('required', '');
                 }
             });
-        @endif 
+        @endif
 
         //KHUSUS Untuk tambah customer indo
         $("#tambah_member").click(function(e){

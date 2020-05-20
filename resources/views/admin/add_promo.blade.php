@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "promo";
+    $menu_item_second = "add_promo";
 ?>
 @extends('admin.layouts.template')
 
@@ -14,7 +15,7 @@
       background-repeat: no-repeat;
       display: inline-block;
    }
-   
+
   	.del {
       position: absolute;
       top: 0px;
@@ -30,7 +31,7 @@
   	#intro {
         padding-top: 2em;
     }
-    
+
     .validation{
         color: red;
         font-size: 9pt;
@@ -104,7 +105,7 @@
 	                  				<div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
 
 	                  				<div id="tambahan_product"></div>
-	                			</div>								
+	                			</div>
 							</div>
 
 							<div class="form-group d-none">
@@ -199,7 +200,7 @@
 	        if(hasil['errors'] != null){
 	            for (var key of frmAdd.keys()) {
 	                if(typeof hasil['errors'][key] === 'undefined') {
-	                    
+
 	                }
 	                else {
 	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
@@ -232,17 +233,17 @@
 	        var uploadFile = $(this);
 	        var files = !!this.files ? this.files : [];
 	        if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
-	 
+
 	        if (/^image/.test( files[0].type)){ // only image file
 	            var reader = new FileReader(); // instance of the FileReader
 	            reader.readAsDataURL(files[0]); // read the local file
-	 
+
 	            reader.onloadend = function(){ // set image data as background of div
 	                //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
 	                uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url("+this.result+")");
 	            }
 	        }
-	      
+
 	    });
 	});
 </script>

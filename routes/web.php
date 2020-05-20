@@ -24,12 +24,18 @@ Route::get('/register-success', 'DeliveryOrderController@successorder')->name('s
 Route::get('/fetchCso', 'DeliveryOrderController@fetchCso')->name('fetchCso');
 Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
-//Order 
+//Order
 Route::get('/order', 'OrderController@index')->name('add_order');
 Route::post('/order', 'OrderController@store')->name('store_order');
 Route::get('/order-success', 'OrderController@successorder')->name('order_success');
 //Route::get('/templistorderwaki1995', 'OrderController@listOrder')->name('list_order');
 
+//Home service
+Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeServices');
+Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
+Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
+
+Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {
 	Route::get('/', function () {
 		if(Auth::guard()->check()){
@@ -147,6 +153,13 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    //Delete Order
 	    Route::post('/{OrderNya}', 'OrderController@delete')
 	    	->name('delete_order');
+    });
+
+    Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function(){
+	    //List Order
+	    Route::get('/list', 'HomeServiceController@admin_ListHomeService')
+	    	->name('admin_list_homeService')
+	    	->middleware('can:browse-order');
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){

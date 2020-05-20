@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "order";
+    $menu_item_second = "add_order";
 ?>
 @extends('admin.layouts.template')
 
@@ -44,7 +45,7 @@
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
-	          		<div class="card-body">	            		
+	          		<div class="card-body">
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_order') }}">
 	            			{{ csrf_field() }}
 	              			<div class="form-group">
@@ -221,7 +222,7 @@
 
 	              			<div class="form-group">
 	              				<button id="addOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
-	              				<button class="btn btn-light">Cancel</button>	
+	              				<button class="btn btn-light">Cancel</button>
 	              			</div>
 	            		</form>
 
@@ -275,7 +276,7 @@
 	        if(hasil['errors'] != null){
 	            for (var key of frmAdd.keys()) {
 	                if(typeof hasil['errors'][key] === 'undefined') {
-	                    
+
 	                }
 	                else {
 	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
@@ -338,7 +339,7 @@
                     console.log("masuk");
                 }
                 else{
-                    $('#submit').attr('disabled',"");                    
+                    $('#submit').attr('disabled',"");
                 }
             });
         });

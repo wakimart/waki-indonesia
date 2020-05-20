@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "deliveryorder";
+    $menu_item_second = "add_deliveryorder";
 ?>
 @extends('admin.layouts.template')
 
@@ -33,18 +34,18 @@
 <div class="main-panel">
   	<div class="content-wrapper">
     	<div class="page-header">
-      		<h3 class="page-title">Add Delivery Order</h3>
+      		<h3 class="page-title">Add Registration</h3>
       		<nav aria-label="breadcrumb">
 	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">DO</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Add DO</li>
+	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">Registration</a></li>
+	          		<li class="breadcrumb-item active" aria-current="page">Add Registration</li>
 	        	</ol>
       		</nav>
     	</div>
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
-	          		<div class="card-body">	            		
+	          		<div class="card-body">
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_deliveryorder') }}">
 	            			{{ csrf_field() }}
 	              			<div class="form-group">
@@ -100,7 +101,7 @@
 	                			</div>
 	              			</div>
 	              			@endfor
-	              			
+
 	              			<div class="form-group">
 				                <label for="">Branch</label>
 				                <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
@@ -122,7 +123,7 @@
 
 	              			<div class="form-group">
 	              				<button id="addDeliveryOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
-	              				<button class="btn btn-light">Cancel</button>	
+	              				<button class="btn btn-light">Cancel</button>
 	              			</div>
 	            		</form>
 
@@ -176,7 +177,7 @@
 	        if(hasil['errors'] != null){
 	            for (var key of frmAdd.keys()) {
 	                if(typeof hasil['errors'][key] === 'undefined') {
-	                    
+
 	                }
 	                else {
 	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");

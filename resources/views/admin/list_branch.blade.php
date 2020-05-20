@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "branch";
+    $menu_item_second = "list_branch";
 ?>
 @extends('admin.layouts.template')
 

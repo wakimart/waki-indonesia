@@ -1,5 +1,6 @@
 <?php
     $menu_item_page = "category";
+    $menu_item_second = "add_category";
 ?>
 @extends('admin.layouts.template')
 
@@ -103,7 +104,7 @@
 	        if(hasil['errors'] != null){
 	            for (var key of frmAdd.keys()) {
 	                if(typeof hasil['errors'][key] === 'undefined') {
-	                    
+
 	                }
 	                else {
 	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");

@@ -1,9 +1,12 @@
 <?php
     $menu_item_page = "cso";
+    $menu_item_second = "list_cso";
 ?>
 @extends('admin.layouts.template')
 
+
 @section('content')
+
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="page-header">
@@ -76,4 +79,7 @@
     </div>
     <!-- End Modal Delete -->
 </div>
+@endsection
+
+@section('script')
 @endsection
