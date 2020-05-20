@@ -27,6 +27,32 @@
     font-weight: bolder;
     color: #ffffff !important;
 }
+.btnappoint {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 1.4em;
+    padding: 0.2rem 1rem;
+    border-radius: 0.1875rem;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+.titleAppoin {
+    font-weight: bolder;
+}
+.timeContainerDiv{
+    flex: 1 !important;
+}
+.paragrapContainerDiv{
+    flex-direction: column;
+    align-items: normal !important;
+}
+.iconContainerDiv{
+    flex: 1 !important;
+}
 </style>
 
 @endsection
@@ -50,37 +76,159 @@
     			<div class="card">
       				<div class="card-body">
       					<h5 style="margin-bottom: 0.5em;">Appointment</h5>
+                <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+                  <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
+                    <div class="form-group">
+                      <label for="">Filter By Province</label>
+                        <select class="form-control" id="filter_type" name="filter_type" data-msg="Mohon Pilih Tipe" required>
+                            <option selected disabled value="">Choose Filter</option>
+                                <option value="">All</option>
+                                <option value="">Province</option>
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                  </div>
+                  <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
+                    <div class="form-group">
+                      <label for="">Filter By City</label>
+                        <select class="form-control" id="filter_type" name="filter_type" data-msg="Mohon Pilih Tipe" required>
+                            <option selected disabled value="">Choose Filter</option>
+                                <option value="">All</option>
+                                <option value="">City</option>
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                  </div>
+                  <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
+                    <div class="form-group">
+                      <label for="">Filter By Team</label>
+                        <select class="form-control" id="filter_type" name="filter_type" data-msg="Mohon Pilih Tipe" required>
+                            <option selected disabled value="">Choose Filter</option>
+                                <option value="">All</option>
+                                <option value="">Team</option>
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                  </div>
+              </div>
+
+
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
                   <div id="calendarContainer" style="float: left;"></div>
               		<div id="organizerContainer" style="float: left;"></div>
         				</div>
-      				</div>
+              </div>
     			</div>
   			</div>
 		</div>
 	</div>
 <!-- partial -->
-	<!-- Modal Delete -->
-	<div class="modal fade" id="deleteDoModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+  <!-- Modal Add -->
+  <div class="modal fade" id="addHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add Appointment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 style="text-align:center;"></h5>
+                <form id="actionAdd" class="forms-sample" method="POST" action="#">
+                  {{ csrf_field() }}
+                    <div class="form-group">
+                      <label for="">Start Date</label>
+                      <input type="time" class="form-control" name="code" placeholder="Branch Code" required="">
+                    </div>
+                    <div class="form-group">
+                      <label for="">End Date</label>
+                      <input type="time" class="form-control" name="name" placeholder="Branch Name" required="">
+                    </div>
+                    <div class="form-group">
+                      <label for="">Appointment Title</label>
+                      <input type="text" class="form-control" name="name" placeholder="Appointment" required="">
+                    </div>
+                    <div class="form-group">
+                      <label for="">Appointment Description</label>
+                      <input type="text" class="form-control" name="name" placeholder="Description" required="">
+                    </div>
+
+                </form>
+              </div>
+            <div class="modal-footer">
+              <button id="addBranch" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+              <button class="btn btn-light" data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+          </div>
+      </div>
+  </div>
+  <!-- End Modal Edit -->
+
+	<!-- Modal Edit -->
+	<div class="modal fade" id="editHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           	<div class="modal-content">
             	<div class="modal-header">
+                <h5 class="modal-title">Edit Appointment</h5>
               		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 		<span aria-hidden="true">&times;</span>
               		</button>
             	</div>
             	<div class="modal-body">
-              		<h5 style="text-align:center;">Are You Sure to Delete this Delivery Order ?</h5>
-            	</div>
+              		<h5 style="text-align:center;"></h5>
+                  <form id="actionAdd" class="forms-sample" method="POST" action="#">
+    					    	{{ csrf_field() }}
+    					      	<div class="form-group">
+    					        	<label for="">Start Date</label>
+    					        	<input type="time" class="form-control" name="code" placeholder="Branch Code" required="">
+    					      	</div>
+    					      	<div class="form-group">
+    					        	<label for="">End Date</label>
+    					        	<input type="time" class="form-control" name="name" placeholder="Branch Name" required="">
+    					      	</div>
+                      <div class="form-group">
+    					        	<label for="">Appointment Title</label>
+    					        	<input type="text" class="form-control" name="name" placeholder="Appointment" required="">
+    					      	</div>
+                      <div class="form-group">
+    					        	<label for="">Appointment Description</label>
+    					        	<input type="text" class="form-control" name="name" placeholder="Description" required="">
+    					      	</div>
+
+    					    </form>
+    				  	</div>
             	<div class="modal-footer">
-            		<form id="frmDelete" method="post" action="">
-                    {{csrf_field()}}
-                    	<button type="submit" class="btn btn-gradient-danger mr-2">Yes</button>
-                	</form>
-              		<button class="btn btn-light">No</button>
+                <button id="addBranch" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+                <button class="btn btn-light" data-dismiss="modal" aria-label="Close">Cancel</button>
             	</div>
           	</div>
         </div>
+    </div>
+    <!-- End Modal Edit -->
+
+    <!-- Modal Delete -->
+  	<div class="modal fade" id="deleteHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            	<div class="modal-content">
+              	<div class="modal-header">
+                		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  		<span aria-hidden="true">&times;</span>
+                		</button>
+              	</div>
+              	<div class="modal-body">
+                		<h5 style="text-align:center;">Are You Sure to Delete this Appointment ?</h5>
+              	</div>
+              	<div class="modal-footer">
+              		<form id="frmDelete" method="post" action="">
+                      {{csrf_field()}}
+                      	<button type="submit" class="btn btn-gradient-danger mr-2">Yes</button>
+                  	</form>
+                		<button type="button" data-dismiss="modal" class="btn btn-light">No</button>
+              	</div>
+            	</div>
+          </div>
     </div>
     <!-- End Modal Delete -->
 </div>
@@ -105,14 +253,16 @@
                     {
                         startTime: "00:00",
                         endTime: "24:00",
-                        text: "All Day Event",
+                        title: "Judul Appointment YAY",
+                        desc: "disini nanti desc dengan tambahan kejelasan",
                         link: "#"
                     },
                     // 2
                     {
                         startTime: "10:00", //bisa am pm soale string tp msh g tau carane sorting ini time
                         endTime: "11:00",
-                        text: "Some Event Here",
+                        title: "Judul Appointment YAY",
+                        desc: "disini nanti desc dengan tambahan kejelasan",
                         link: "#"
                     },
                     // 3
@@ -128,13 +278,15 @@
                     {
                         startTime: "00:00",
                         endTime: "24:00",
-                        text: "Christmas Day"
+                        title: "Judul Appointment YAY",
+                        desc: "disini nanti desc dengan tambahan kejelasan",
                     },
                     // 2
                     {
                         startTime: "5:00pm", //bisa am pm soale string
                         endTime: "11:00pm",
-                        text: "Christmas Dinner"
+                        title: "Judul Appointment YAY",
+                        desc: "disini nanti desc dengan tambahan kejelasan",
                     }
                 ],
                 17: [
@@ -142,7 +294,8 @@
                     {
                         startTime: "00:00",
                         endTime: "24:00",
-                        text: "Christmas Day"
+                        title: "Judul Appointment YAY",
+                        desc: "disini nanti desc dengan tambahan kejelasan",
                     },
                 ]
             }
@@ -240,7 +393,7 @@
     ],
     {
       // placeholder: "" // Removes Organizer's Placeholder
-      placeholder: "<button style='width: calc(100% - 16px); background-color: #E6E6E6; border-radius: 6px; margin: 8px; border: none; padding: 12px 0px; cursor: pointer;'>Add New Event</button>",
+      placeholder: "<li style='text-align:center; margin-top: 1em;'>No appointments on this day.</li><br><button type='button' data-toggle='modal' data-target='#addHomeServiceModal' style='width: calc(100% - 16px); background-color: #E6E6E6; border-radius: 6px; margin: 8px; border: none; padding: 12px 0px; cursor: pointer;'>Add New Appointment</button>",
       indicator: true,
       indicator_type: 1, // indicator type, can be 0 (not numeric) | 1 (numeric)
       indicator_pos: "bottom" // indicator position, can be top | bottom

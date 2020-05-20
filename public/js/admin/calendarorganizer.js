@@ -498,32 +498,46 @@ Organizer.prototype.list = function (data) {
         listItem.id = this.id + "-list-item-" + i;
 
         var division = document.createElement("DIV");
-
+        division.className = "timeContainerDiv";
         var span = document.createElement("SPAN");
         span.id = this.id + "-list-item-" + i + "-time";
         span.class = this.id + " time";
         span.appendChild(document.createTextNode(data[i].startTime + ' - ' + data[i].endTime));
-
         division.appendChild(span);
 
-        var paragraph = document.createElement("P");
-        paragraph.id = this.id + "-list-item-" + i + "-text";
+        var paragraph = document.createElement("div");
+        paragraph.id = this.id + "-list-item-" + i + "-desc";
+        paragraph.className = "paragrapContainerDiv";
 
-        var textNode = document.createTextNode(data[i].text);
-         if (data[i].link == undefined || data[i].link == "") {
-            paragraph.appendChild(textNode);
-        } else {
-            var link = document.createElement("A");
-            link.href = data[i].link;
-            link.target = "_blank";
-            link.class = this.id + " link";
-            link.appendChild(textNode);
+        var texttest = '<p class="titleAppoin">' + data[i].title + '</p>';
+        var testdesc = '<p class="descAppoin">' + data[i].desc + '</p>';
+        paragraph.insertAdjacentHTML('beforeend', texttest );
+        paragraph.insertAdjacentHTML('beforeend', testdesc );
 
-            paragraph.appendChild(link);
-        }
+        var editdelContainer = document.createElement("DIV");
+        editdelContainer.className = "iconContainerDiv";
+        editdelContainer.id = this.id + "-list-item-" + i + "-icon";
+        var btnEdit=document.createElement("button");
+        btnEdit.id = this.id + "-list-item-" + i + "-time";
+        btnEdit.className = "btnappoint btn-gradient-info mr-2 mdi mdi-border-color";
+        btnEdit.type = "button";
+        btnEdit.dataset.toggle = "modal";
+        btnEdit.dataset.target = "#editHomeServiceModal";
+        var btnDel=document.createElement("button");
+        btnDel.id = this.id + "-list-item-" + i + "-time";
+        btnDel.className = "btnappoint btn-gradient-danger mdi mdi-delete";
+        btnDel.type = "button";
+        btnDel.dataset.toggle = "modal";
+        btnDel.dataset.target = "#deleteHomeServiceModal";
+        var iconDel = $('<i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>');
+        editdelContainer.append(btnEdit);
+        editdelContainer.append(btnDel);
+
 
         listItem.appendChild(division);
         listItem.appendChild(paragraph);
+        listItem.appendChild(editdelContainer);
+
 
         container.appendChild(listItem);
     }
