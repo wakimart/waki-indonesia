@@ -31,7 +31,7 @@ class HomeServiceController extends Controller
     }
 
     public function admin_ListHomeService(){
-        $homeServices = HomeService::all();
+        $homeServices = HomeService::orderBy('appointment', 'desc')->get();
         return view('admin.list_homeservice', compact('homeServices'));
     }
 }

@@ -147,12 +147,10 @@
                 ]
             }
         }
-    }
-
-
+    };
 
     // function dummy bawaan buat random atau for db
-    /*for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 10; i++) {
       data[date.getFullYear() + i] = {};
 
       for (var j = 0; j < 12; j++) {
@@ -162,6 +160,7 @@
           var l = Math.ceil(Math.random() * 28);
 
           try {
+            console.log("masuk try")
             data[date.getFullYear() + i][j + 1][l].push({
               startTime: "10:00",
               endTime: "12:00",
@@ -169,6 +168,7 @@
               link: "#"
             });
           } catch (e) {
+            console.log("masuk catch")
             data[date.getFullYear() + i][j + 1][l] = [];
             data[date.getFullYear() + i][j + 1][l].push({
               startTime: "10:00",
@@ -179,8 +179,44 @@
           }
         }
       }
-    }*/
+    }
+    console.log(data);
 
+    data = {};
+    data[new Date().getFullYear()] = {};
+    data[new Date().getFullYear()][new Date().getMonth()] = {};
+
+    @foreach($homeServices as $dataNya)
+      @php
+        $AppointmentNya = new DateTime($dataNya['appointment']);
+        $tahun = $AppointmentNya->format('Y');
+        $bulan = $AppointmentNya->format('n');
+        $hari = $AppointmentNya->format('j');
+        $jam = $AppointmentNya->format('H:i');
+      @endphp
+
+      try{
+            console.log("masuk try");
+        data[{{ $tahun }}][{{ $bulan }}][{{ $hari }}].push({
+                startTime: "{{ $jam }}",
+                endTime: "{{ $jam }}",
+                text: "{{ $dataNya['code'] }}",
+                link: "{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}"
+              });
+        console.log(data);
+      } catch (e){
+            console.log(e);
+        data[{{ $tahun }}][{{ $bulan }}][{{ $hari }}] = [];
+        data[{{ $tahun }}][{{ $bulan }}][{{ $hari }}].push({
+                startTime: "{{ $jam }}",
+                endTime: "{{ $jam }}",
+                text: "{{ $dataNya['code'] }}",
+                link: "{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}"
+              });
+      }
+    @endforeach
+    // console.log(data);
+    
     return data;
   }
 

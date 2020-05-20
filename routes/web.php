@@ -156,7 +156,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function(){
-	    //List Order
+	    //List Home Service
 	    Route::get('/list', 'HomeServiceController@admin_ListHomeService')
 	    	->name('admin_list_homeService')
 	    	->middleware('can:browse-order');
