@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\HomeService;
 use App\Branch;
 use App\Cso;
+use Carbon\Carbon;
 
 class HomeServiceController extends Controller
 {
@@ -31,7 +32,17 @@ class HomeServiceController extends Controller
     }
 
     public function admin_ListHomeService(){
-        $homeServices = HomeService::orderBy('appointment', 'desc')->get();
-        return view('admin.list_homeservice', compact('homeServices'));
+        $awalBulan = Carbon::now()->startOfMonth()->subMonth(4);
+        $akhirBulan = Carbon::now()->startOfMonth()->addMonth(12);//5
+        $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
+                     ->orderBy('appointment', 'asc')->get();
+        return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan'));
+    }
+
+    public function admin_fetchHomeService(Request $request){
+        //$data['year'], $data['month']
+        $data = $request->all();
+        $homeServices = HomeService::whereYear('appointment', $data['year'])->whereMonth('appointment', $data['month'])->orderBy('appointment', 'asc')->get();
+        return response()->json($homeServices);
     }
 }

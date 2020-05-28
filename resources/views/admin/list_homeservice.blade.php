@@ -178,7 +178,7 @@
             	</div>
             	<div class="modal-body">
               		<h5 style="text-align:center;"></h5>
-                  <form id="actionAdd" class="forms-sample" method="POST" action="#">
+                  <form id="actionEdit" class="forms-sample" method="POST" action="#">
     					    	{{ csrf_field() }}
     					      	<div class="form-group">
     					        	<label for="">Start Date</label>
@@ -238,106 +238,14 @@
 <script src="{{ asset('js/admin/calendarorganizer.js') }}"></script>
 
 <script>
-  window.onload = function() {
+window.onload = function() {
   "use strict";
 
-  // function that creates dummy data for demonstration
-  function createDummyData() {
-    var date = new Date();
-    var data = {
-    // Cuma dummy buat 15,16,17,19.
-        2020: {
-            5: {
-                15: [
-                    // 1
-                    {
-                        startTime: "00:00",
-                        endTime: "24:00",
-                        title: "Judul Appointment YAY",
-                        desc: "disini nanti desc dengan tambahan kejelasan",
-                        link: "#"
-                    },
-                    // 2
-                    {
-                        startTime: "10:00", //bisa am pm soale string tp msh g tau carane sorting ini time
-                        endTime: "11:00",
-                        title: "Judul Appointment YAY",
-                        desc: "disini nanti desc dengan tambahan kejelasan",
-                        link: "#"
-                    },
-                    // 3
-                    {
-                        startTime: "13:00",
-                        endTime: "15:00",
-                        text: "Some Event Here",
-                        link: "#" //link kalo mungkin edit modal kali yaa
-                    },
-                ],
-                16: [
-                    // 1
-                    {
-                        startTime: "00:00",
-                        endTime: "24:00",
-                        title: "Judul Appointment YAY",
-                        desc: "disini nanti desc dengan tambahan kejelasan",
-                    },
-                    // 2
-                    {
-                        startTime: "5:00pm", //bisa am pm soale string
-                        endTime: "11:00pm",
-                        title: "Judul Appointment YAY",
-                        desc: "disini nanti desc dengan tambahan kejelasan",
-                    }
-                ],
-                17: [
-                    // 1
-                    {
-                        startTime: "00:00",
-                        endTime: "24:00",
-                        title: "Judul Appointment YAY",
-                        desc: "disini nanti desc dengan tambahan kejelasan",
-                    },
-                ]
-            }
-        }
-    };
-
-    // function dummy bawaan buat random atau for db
-    for (var i = 0; i < 10; i++) {
-      data[date.getFullYear() + i] = {};
-
-      for (var j = 0; j < 12; j++) {
-        data[date.getFullYear() + i][j + 1] = {};
-
-        for (var k = 0; k < Math.ceil(Math.random() * 10); k++) {
-          var l = Math.ceil(Math.random() * 28);
-
-          try {
-            console.log("masuk try")
-            data[date.getFullYear() + i][j + 1][l].push({
-              startTime: "10:00",
-              endTime: "12:00",
-              text: "Some Event Here",
-              link: "#"
-            });
-          } catch (e) {
-            console.log("masuk catch")
-            data[date.getFullYear() + i][j + 1][l] = [];
-            data[date.getFullYear() + i][j + 1][l].push({
-              startTime: "10:00",
-              endTime: "12:00",
-              text: "Some Event Here",
-              link: "#"
-            });
-          }
-        }
-      }
-    }
-    console.log(data);
-
+  // untuk pertama kali data di buka
+  function onLoadDate(){
     data = {};
-    data[new Date().getFullYear()] = {};
-    data[new Date().getFullYear()][new Date().getMonth()] = {};
+    // data[new Date().getFullYear()] = {};
+    // data[new Date().getFullYear()][new Date().getMonth()+1] = {};
 
     @foreach($homeServices as $dataNya)
       @php
@@ -348,39 +256,58 @@
         $jam = $AppointmentNya->format('H:i');
       @endphp
 
+      //try tahun
       try{
-            console.log("masuk try");
+        console.log(data[{{$tahun}}][{{$bulan}}]);
+      }
+      catch(e){
+        data[{{$tahun}}] = {};
+      }
+
+      //try bulan
+      try{
+        console.log(data[{{$tahun}}][{{$bulan}}][{{ $hari }}]);
+      }
+      catch(e){
+        data[{{$tahun}}][{{$bulan}}] = {};
+      }
+
+      //try hari
+      try{
         data[{{ $tahun }}][{{ $bulan }}][{{ $hari }}].push({
                 startTime: "{{ $jam }}",
                 endTime: "{{ $jam }}",
-                text: "{{ $dataNya['code'] }}",
-                link: "{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}"
+                title: "<a href=\"{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}\" target=\"_blank\">{{ $dataNya['code'] }}</a>",
+                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }}",
+                dataId : "{{ $dataNya['id'] }}"
               });
-        console.log(data);
-      } catch (e){
-            console.log(e);
+      } 
+      catch (e){
         data[{{ $tahun }}][{{ $bulan }}][{{ $hari }}] = [];
         data[{{ $tahun }}][{{ $bulan }}][{{ $hari }}].push({
                 startTime: "{{ $jam }}",
                 endTime: "{{ $jam }}",
-                text: "{{ $dataNya['code'] }}",
-                link: "{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}"
+                title: "<a href=\"{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}\" target=\"_blank\">{{ $dataNya['code'] }}</a>",
+                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }}",
+                dataId : "{{ $dataNya['id'] }}"
               });
       }
     @endforeach
-    // console.log(data);
-    
+
     return data;
   }
 
   // creating the dummy static data
-  var data = createDummyData();
+  var data = onLoadDate();
 
   // stating variables in order for them to be global
-  // var calendar, organizer;
+  var calendar, organizer;
+  var minDate = new Date('{{ $awalBulan }}');
+  var maxDate = new Date('{{ $akhirBulan }}');
+  var nowDate = new Date();
 
   // initializing a new calendar object, that will use an html container to create itself
-  var calendar = new Calendar("calendarContainer", // id of html container for calendar
+  calendar = new Calendar("calendarContainer", // id of html container for calendar
     "small", // size of calendar, can be small | medium | large
     [
       "Sunday", // left most day of calendar labels
@@ -401,89 +328,193 @@
   );
 
   // initializing a new organizer object, that will use an html container to create itself
-  var organizer = new Organizer("organizerContainer", // id of html container for calendar
+  organizer = new Organizer("organizerContainer", // id of html container for calendar
     calendar, // defining the calendar that the organizer is related to
     data // giving the organizer the static data that should be displayed
   );
 
-  /*// This is gonna be similar to an ajax function that would grab
-  // data from the server; then when the data for a this current month
-  // is grabbed, you just add it to the data object of the form
-  // { year num: { month num: { day num: [ array of events ] } } }
-  function dataWithAjax(date, callback) {
-    var data = {};
+  // Month Slider (Left and Right Arrow) Click Listeners
+  organizer.setOnClickListener('month-slider',
+      // Called when the month left arrow is clicked
+      function () {
+        // calendarContainer-month-back
+        var currentMonth = organizer.calendar.date.getMonth()+1;
+        var currentYear = organizer.calendar.date.getFullYear();
 
-    try {
-      data[date.getFullYear()] = {};
-      data[date.getFullYear()][date.getMonth() + 1] = serverData[date.getFullYear()][date.getMonth() + 1];
-    } catch (e) {}
-
-    callback(data);
-  };
-
-  window.onload = function() {
-    dataWithAjax(new Date(), function(data) {
-      // initializing a new organizer object, that will use an html container to create itself
-      organizer = new Organizer("organizerContainer", // id of html container for calendar
-        calendar, // defining the calendar that the organizer is related
-        data // small part of the data of type object
-      );
-
-      // after initializing the organizer, we need to initialize the onMonthChange
-      // there needs to be a callback parameter, this is what updates the organizer
-      organizer.onMonthChange = function(callback) {
-        dataWithAjax(organizer.calendar.date, function(data) {
-          organizer.data = data;
-          callback();
-        });
-      };
-    });
-  };*/
-
-
-    // Days Block Click Listener
-    organizer.setOnClickListener('days-blocks',
-        // Called when a day block is clicked
-        function () {
-            console.log("Day block clicked");
+        if(currentMonth > minDate.getMonth()+1 || currentYear > minDate.getFullYear()){
+          $('#calendarContainer-month-back').css('display', 'flex');
         }
-    );
-
-    // Days Block Long Click Listener
-    organizer.setOnLongClickListener('days-blocks',
-        // Called when a day block is long clicked
-        function () {
-            console.log("Day block long clicked");
+        else{
+          $('#calendarContainer-month-back').css('display', 'none');
         }
-    );
-
-    // Month Slider (Left and Right Arrow) Click Listeners
-    organizer.setOnClickListener('month-slider',
-        // Called when the month left arrow is clicked
-        function () {
-            console.log("Month back slider clicked");
-        },
-        // Called when the month right arrow is clicked
-        function () {
-            console.log("Month next slider clicked");
+        if(currentMonth < maxDate.getMonth() || currentYear < maxDate.getFullYear()){
+          $('#calendarContainer-month-next').css('display', 'flex');
         }
-    );
-
-    // Year Slider (Left and Right Arrow) Click Listeners
-    organizer.setOnClickListener('year-slider',
-        // Called when the year left arrow is clicked
-        function () {
-            console.log("Year back slider clicked");
-        },
-        // Called when the year right arrow is clicked
-        function () {
-            console.log("Year next slider clicked");
+        else{
+          $('#calendarContainer-month-next').css('display', 'none');
         }
-    );
+        // while(organizer.calendar.date.getFullYear() != minDate.getFullYear()){
+        //   if(organizer.calendar.date.getFullYear() < minDate.getFullYear()){
+        //     calendar.next();
+        //   }
+        //   else if(organizer.calendar.date.getFullYear() > minDate.getFullYear()){
+        //     calendar.back('year');
+        //   }
+        //   console.log(organizer.calendar.date.getFullYear());
+        // }
+        
+          $('#calendarContainer-year-next').css('display', 'flex');
+          $('#calendarContainer-year-back').css('display', 'none');
+      },
+      // Called when the month right arrow is clicked
+      function () {
+        var currentMonth = organizer.calendar.date.getMonth()+1;
+        var currentYear = organizer.calendar.date.getFullYear();
 
+        if(currentMonth > minDate.getMonth()+1 || currentYear > minDate.getFullYear()){
+          $('#calendarContainer-month-back').css('display', 'flex');
+        }
+        else{
+          $('#calendarContainer-month-back').css('display', 'none');
+        }
+        if(currentMonth < maxDate.getMonth() || currentYear < maxDate.getFullYear()){
+          $('#calendarContainer-month-next').css('display', 'flex');
+        }
+        else{
+          $('#calendarContainer-month-next').css('display', 'none');
+        }
+      }
+  );
 
+  // Year Slider (Left and Right Arrow) Click Listeners
+  organizer.setOnClickListener('year-slider',
+      // Called when the year left arrow is clicked
+      function () {  
+        var currentYear = organizer.calendar.date.getFullYear();
+        if(currentYear > minDate.getFullYear()){
+          $('#calendarContainer-year-back').css('display', 'flex');
+        }
+        else{
+          $('#calendarContainer-year-back').css('display', 'none');
+        }
+        if(currentYear < maxDate.getFullYear()){
+          $('#calendarContainer-year-next').css('display', 'flex');
+        }
+        else{
+          $('#calendarContainer-year-next').css('display', 'none');
+        }
+        while(organizer.calendar.date.getMonth()+1 != minDate.getMonth()+1){
+          if(organizer.calendar.date.getMonth()+1 < minDate.getMonth()+1){
+            calendar.next('month');
+          }
+          else if(organizer.calendar.date.getMonth()+1 > minDate.getMonth()+1){
+            calendar.back('month');
+          }
+          $('#calendarContainer-month-next').css('display', 'flex');
+          $('#calendarContainer-month-back').css('display', 'none');
+        }
+      },
+      // Called when the year right arrow is clicked
+      function () {
+        var currentYear = organizer.calendar.date.getFullYear();
+        if(currentYear > minDate.getFullYear()){
+          $('#calendarContainer-year-back').css('display', 'flex');
+        }
+        else{
+          $('#calendarContainer-year-back').css('display', 'none');
+        }
+        if(currentYear < maxDate.getFullYear()){
+          $('#calendarContainer-year-next').css('display', 'flex');
+        }
+        else{
+          $('#calendarContainer-year-next').css('display', 'none');
+        }
+        while(organizer.calendar.date.getMonth()+1 != maxDate.getMonth()){
+          if(organizer.calendar.date.getMonth()+1 < maxDate.getMonth()){
+            calendar.next('month');
+          }
+          else if(organizer.calendar.date.getMonth()+1 > maxDate.getMonth()){
+            calendar.back('month');
+          }
+          $('#calendarContainer-month-next').css('display', 'none');
+          $('#calendarContainer-month-back').css('display', 'flex');
+          console.log("masuk tahun");
+        }
+      }, 
+  );
+
+  //cek ada tahun depan atau belakang
+  $(document).ready(function(e){
+    if(nowDate.getFullYear() == minDate.getFullYear()){
+      $('#calendarContainer-year-back').css('display', 'none');
+      console.log("masuk");
+    }
+    if(nowDate.getFullYear() == maxDate.getFullYear()){
+      $('#calendarContainer-year-next').css('display', 'none');
+      console.log("masuk");
+    }
+  });
+   
+//   //ajax ambil data di bulan atau tahun baru
+//   function fetchingCalenderData(month, year){
+//     $.ajax({
+//         headers: {
+//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             },
+//         type: 'post',
+//         url: "",
+//         data: {
+//             'month': month,
+//             'year': year
+//         },
+//         success: function(data){
+//           if(data.length > 0){
+//             var calenderFill = {};
+//             calenderFill[year] = {};
+//             calenderFill[year][month] = {};
+
+//             $.each(data, function( index, value ) {
+//               //rubah ke satuan hari, bulan, tahun dan jam
+//               var rawDate = new Date(value['appointment']);
+//               var date = addZero(rawDate.getDate());
+//               var hour = addZero(rawDate.getHours())+":"+addZero(rawDate.getMinutes());
+
+//               try{
+//                 calenderFill[year][month][date].push({
+//                         startTime: hour,
+//                         endTime: hour,
+//                         title: value['code'],
+//                         desc: value['name'] +"-"+ value['phone'] +"\n"+ value['address'] ,
+//                         dataId : value['id']
+//                       });
+//               } 
+//               catch (e){
+//                 calenderFill[year][month][date] = [];
+//                 calenderFill[year][month][date].push({
+//                         startTime: hour,
+//                         endTime: hour,
+//                         title: value['code'],
+//                         desc: value['name'] +"-"+ value['phone'] +"\n"+ value['address'] ,
+//                         dataId : value['id']
+//                       });
+//               }
+//             });
+
+//             organizer.data = onLoadDate();
+//             console.log(organizer.data);
+//           }
+//         },
+//     });
+//   };
+// };
+
+// function addZero(i) {
+//   if (i < 10) {
+//     i = "0" + i;
+//   }
+//   return i;
+// }
 };
+
 </script>
-
-
 @endsection

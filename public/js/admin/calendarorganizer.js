@@ -523,12 +523,14 @@ Organizer.prototype.list = function (data) {
         btnEdit.type = "button";
         btnEdit.dataset.toggle = "modal";
         btnEdit.dataset.target = "#editHomeServiceModal";
+        btnEdit.value = data[i].dataId;
         var btnDel=document.createElement("button");
         btnDel.id = this.id + "-list-item-" + i + "-time";
         btnDel.className = "btnappoint btn-gradient-danger mdi mdi-delete";
         btnDel.type = "button";
         btnDel.dataset.toggle = "modal";
         btnDel.dataset.target = "#deleteHomeServiceModal";
+        btnDel.value = data[i].dataId;
         var iconDel = $('<i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>');
         editdelContainer.append(btnEdit);
         editdelContainer.append(btnDel);
