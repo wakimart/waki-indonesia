@@ -14,7 +14,7 @@
       background-repeat: no-repeat;
       display: inline-block;
    }
-   
+
   .del {
       position: absolute;
       top: 0px;
@@ -62,6 +62,7 @@
                   	<div class="card-body">
 
                     	<form id="actionUpdate" class="forms-sample" method="POST" action="{{route('update_frontendcms')}}">
+                        <div class="form-group">
                           <h4 class="card-title">BANNER IMAGES</h4>
                           <p class="card-description"> Image Size (1280x500 pixel) </p>
                           @php
@@ -70,7 +71,7 @@
                           @endphp
 
                           @for($i=0;$i<6;$i++)
-                          
+
                       		<div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp" style="padding: 15px; float: left;">
                           		<label>Banner Image {{$i+1}}</label>
                         		  @if(!empty($img[$i]->url))
@@ -98,13 +99,15 @@
                               @endif
                       		</div>
                           @endfor
+                        </div>
+                        <div class="clearfix"></div>
 
-                          
+                        <div class="form-group">
                           <label id="btnAddPhoto" class="btn btn-gradient-primary" style="float: right;margin-bottom: 0px;">Add Photo</label>
                           <h4 class="card-title">GALLERY PHOTO</h4>
                           <p class="card-description"> Image Size (1280x500 pixel) </p>
 
-                          
+
                           @php
                               $photos = json_decode($galleries['photo']);
                               $defaultImg = asset('sources/portfolio/');
@@ -132,6 +135,11 @@
 
                           <div id="tambahan_photo"></div>
 
+                        </div>
+                        <div class="clearfix"></div>
+
+
+                        <div class="form-group">
                           @php
                               $urlvideo = json_decode($galleries['url_youtube']);
                               $count_url = sizeof($urlvideo);
@@ -152,9 +160,9 @@
                                 </div>
 
                                 @if($v == 0)
-                                  <span><label id="btnAddUrl" class="btn btn-gradient-primary" style="float: right;display: inline-block;margin-top: 2.5%;width: 16%;">Add URL</label></span>
+                                  <span><label id="btnAddUrl" class="btn btn-gradient-primary" style="float: right;display: inline-block;margin-top: 1.8em;">Add URL</label></span>
                                 @else
-                                  <span><label class="btn btn-light delete_url" style="float: right;display: inline-block;margin-top: 2.5%;width: 16%;" value="{{$v}}">Delete URL</label></span>
+                                  <span><label class="btn btn-gradient-danger delete_url" style="float: right;display: inline-block;margin-top: 1.8em;" value="{{$v}}">Delete URL</label></span>
                                 @endif
                               </div>
                             @endfor
@@ -179,6 +187,7 @@
 
                           <input type="hidden" id="totalVideo" value="{{$count_url}}">
                           <input type="hidden" id="totalPhoto" value="{{$count_photo}}">
+                        </div>
                       		<button id="updateBanner" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
                       		<button class="btn btn-light">Cancel</button>
                     	</form>
@@ -223,7 +232,7 @@
           }else{
             alert("Maksimum of photo is 30 photos");
           }
-          
+
         });
       }else{
         photo = parseFloat(getTotalPhoto) - 1;
@@ -241,7 +250,7 @@
           }else{
             alert("Maksimum of photo is 30 photos");
           }
-          
+
         });
       }
 
@@ -269,7 +278,7 @@
           counter++;
 
           if(total_video <= 10){
-            strisi = "<div id=\"video_"+video+"\" style=\"padding: 15px;\"><div class=\"form-group\" style=\"width: 72%; display: inline-block;\"><span>Video Title "+total_video+"</span><input type=\"text\" name=\"title_"+video+"\" class=\"text-uppercase form-control\" placeholder=\"Video Title\" style=\"margin: 5px 0px;\"><div class=\"validation\"></div><span>URL Video "+total_video+"</span><input type=\"text\" name=\"video_"+video+"\" class=\"text-uppercase form-control\" placeholder=\"URL Video\" style=\"margin: 5px 0px;\"><div class=\"validation\"></div></div><span><label class=\"btn btn-light delete_url\" style=\"float: right;display: inline-block;margin-top: 2.5%;width: 16%;\" value=\""+video+"\">Delete URL</label></span></div>";
+            strisi = "<div id=\"video_"+video+"\" style=\"padding: 15px;\"><div class=\"form-group\" style=\"width: 72%; display: inline-block;\"><span>Video Title "+total_video+"</span><input type=\"text\" name=\"title_"+video+"\" class=\"text-uppercase form-control\" placeholder=\"Video Title\" style=\"margin: 5px 0px;\"><div class=\"validation\"></div><span>URL Video "+total_video+"</span><input type=\"text\" name=\"video_"+video+"\" class=\"text-uppercase form-control\" placeholder=\"URL Video\" style=\"margin: 5px 0px;\"><div class=\"validation\"></div></div><span><label class=\"btn btn-gradient-danger delete_url\" style=\"float: right;display: inline-block;margin-top: 1.8em;\" value=\""+video+"\">Delete URL</label></span></div>";
 
             $('#tambahan_video').html($('#tambahan_video').html()+strisi);
           }else{
@@ -281,7 +290,7 @@
         total_video = getTotalUrl;
 
         console.log("weeee" + total_video);
-        
+
         $('#btnAddUrl').click(function(e){
           e.preventDefault();
           total_video++;
@@ -289,7 +298,7 @@
           counter++;
 
           if(total_video <= 10){
-            strisi = "<div id=\"video_"+video+"\" style=\"padding: 15px;\"><div class=\"form-group\" style=\"width: 72%; display: inline-block;\"><span>Video Title "+total_video+"</span><input type=\"text\" name=\"title_"+video+"\" class=\"text-uppercase form-control\" placeholder=\"Video Title\" style=\"margin: 5px 0px;\"><div class=\"validation\"></div><span>URL Video "+total_video+"</span><input type=\"text\" name=\"video_"+video+"\" class=\"text-uppercase form-control\" placeholder=\"URL Video\" style=\"margin: 5px 0px;\"><div class=\"validation\"></div></div><span><label class=\"btn btn-light delete_url\" style=\"float: right;display: inline-block;margin-top: 2.5%;width: 16%;\" value=\""+video+"\">Delete URL</label></span></div>";
+            strisi = "<div id=\"video_"+video+"\" style=\"padding: 15px;\"><div class=\"form-group\" style=\"width: 72%; display: inline-block;\"><span>Video Title "+total_video+"</span><input type=\"text\" name=\"title_"+video+"\" class=\"text-uppercase form-control\" placeholder=\"Video Title\" style=\"margin: 5px 0px;\"><div class=\"validation\"></div><span>URL Video "+total_video+"</span><input type=\"text\" name=\"video_"+video+"\" class=\"text-uppercase form-control\" placeholder=\"URL Video\" style=\"margin: 5px 0px;\"><div class=\"validation\"></div></div><span><label class=\"btn btn-gradient-danger delete_url\" style=\"float: right;display: inline-block;margin-top: 1.8em;\" value=\""+video+"\">Delete URL</label></span></div>";
 
             $('#tambahan_video').html($('#tambahan_video').html()+strisi);
           }else{
@@ -306,7 +315,7 @@
           $('#title_'+$(this).attr('value')).remove();
           $(this).remove();
       });
-      
+
       var banner = JSON.parse(<?php echo json_encode($banners['image']); ?>);
       var urlNya = "<?php echo asset('sources/banners/'); ?>";
 
@@ -400,7 +409,7 @@
           if(hasil['errors'] != null){
               for (var key of frmUpdate.keys()) {
                   if(typeof hasil['errors'][key] === 'undefined') {
-                      
+
                   }
                   else {
                       $("#actionUpdate").find("input[name="+key+"]").addClass("is-invalid");
@@ -445,17 +454,17 @@
           var uploadFile = $(this);
           var files = !!this.files ? this.files : [];
           if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
-   
+
           if (/^image/.test( files[0].type)){ // only image file
               var reader = new FileReader(); // instance of the FileReader
               reader.readAsDataURL(files[0]); // read the local file
-   
+
               reader.onloadend = function(){ // set image data as background of div
                   //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
                   uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url("+this.result+")");
               }
           }
-        
+
       });
   });
 </script>
