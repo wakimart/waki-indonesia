@@ -519,22 +519,34 @@ Organizer.prototype.list = function (data) {
         editdelContainer.id = this.id + "-list-item-" + i + "-icon";
         var btnEdit=document.createElement("button");
         btnEdit.id = this.id + "-list-item-" + i + "-time";
-        btnEdit.className = "btnappoint btn-gradient-info mr-2 mdi mdi-border-color";
+        btnEdit.className = "btnappoint btn-gradient-info mx-auto my-2 mdi mdi-border-color btn-homeservice-edit";
         btnEdit.type = "button";
         btnEdit.dataset.toggle = "modal";
         btnEdit.dataset.target = "#editHomeServiceModal";
         btnEdit.value = data[i].dataId;
         var btnDel=document.createElement("button");
         btnDel.id = this.id + "-list-item-" + i + "-time";
-        btnDel.className = "btnappoint btn-gradient-danger mdi mdi-delete";
+        btnDel.className = "btnappoint btn-gradient-danger mx-auto my-2 mdi mdi-calendar-remove btn-homeservice-cancel";
         btnDel.type = "button";
         btnDel.dataset.toggle = "modal";
         btnDel.dataset.target = "#deleteHomeServiceModal";
         btnDel.value = data[i].dataId;
-        var iconDel = $('<i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>');
-        editdelContainer.append(btnEdit);
-        editdelContainer.append(btnDel);
+        var iconDel = $('<i class="mdi mdi-calendar-remove" style="font-size: 24px; color:#fe7c96;"></i>');
 
+        //tambahan
+        var btnCash=document.createElement("button");
+        btnCash.id = this.id + "-list-item-" + i + "-cash";
+        btnCash.className = "btnappoint btn-gradient-success mx-auto my-2 mdi mdi-cash-multiple btn-homeservice-cash";
+        btnCash.type = "button";
+        btnCash.dataset.toggle = "modal";
+        btnCash.dataset.target = "#cashHomeServiceModal";
+        btnCash.value = data[i].dataId;
+        //tambahan style
+        editdelContainer.style.display = "block"; //khusus tambah 1 button lagi
+
+        editdelContainer.append(btnEdit);
+        editdelContainer.append(btnCash);
+        editdelContainer.append(btnDel);
 
         listItem.appendChild(division);
         listItem.appendChild(paragraph);

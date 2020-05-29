@@ -298,7 +298,7 @@
 			                <div id="container-Cabang">
 			                    <div class="form-group">
 			                    	<label for="">CSO Code</label>
-			                        <input type="text" class="form-control cso" name="cso_id" id="cso" value="{{$orders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+			                        <input type="text" class="form-control cso" name="cso_id" id="cso" value="{{$orders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">

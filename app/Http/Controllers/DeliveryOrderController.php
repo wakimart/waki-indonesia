@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\DeliveryOrder;
 use App\Branch;
@@ -64,7 +65,7 @@ class DeliveryOrderController extends Controller
     }
 
     public function listDeliveryOrder(Request $request){
-        $deliveryOrders = DeliveryOrder::all();
+        $deliveryOrders = DeliveryOrder::all();        
         return view('templistregwaki1995', compact('deliveryOrders'));
     }
 
@@ -100,7 +101,23 @@ class DeliveryOrderController extends Controller
     }
 
     public function admin_ListDeliveryOrder(){
+        //khususu head-manager, head-admin, admin
         $deliveryOrders = DeliveryOrder::all();
+
+        //khusus akun CSO
+        if(Auth::user()->roles[0]['slug'] == 'cso'){
+            $deliveryOrders = Auth::user()->cso->deliveryOrder;
+        }
+
+        //khusus akun branch dan area-manager
+        if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
+            $arrbranches = [];
+            foreach (Auth::user()->listBranches() as $value) {
+                array_push($arrbranches, $value['id']);
+            }
+            $deliveryOrders = DeliveryOrder::WhereIn('id', $arrbranches)->get();
+        }
+        
         return view('admin.list_deliveryorder', compact('deliveryOrders'));
     }
 

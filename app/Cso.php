@@ -32,4 +32,16 @@ class Cso extends Model
     {
         return $this->hasMany('App\Order', '70_cso_id', 'id');
     }
+    public function home_service()
+    {
+        return $this->hasMany('App\HomeService', 'cso_id', 'id');
+    }
+
+    public function home_service2()
+    {
+        return $this->hasMany('App\HomeService', 'cso2_id', 'id');
+    }
+    public function user(){
+        return $this->hasOne('App\User');
+    }
 }

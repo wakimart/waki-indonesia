@@ -104,4 +104,9 @@ class CsoController extends Controller
     {
         //
     }
+
+    public function fetchCsoById(Request $request){
+        $cso = Cso::where('id', $request->id)->first();
+        return response()->json($cso);
+    }
 }

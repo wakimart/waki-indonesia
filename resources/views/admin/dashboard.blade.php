@@ -1,6 +1,20 @@
 @extends('admin.layouts.template')
 
 @section('content')
+@if(Auth::user()->roles[0]['slug'] != 'head-admin')
+<div class="main-panel">
+  <div class="content-wrapper">
+    <div class="page-header">
+        <h3 class="page-title">
+          Welcome, {{ Auth::user()->name }}
+        </h3>
+        <nav aria-label="breadcrumb">
+
+        </nav>
+    </div>
+  </div>
+</div>
+@endif
 @can('show-dashboard')
 <div class="main-panel">
     <div class="content-wrapper">

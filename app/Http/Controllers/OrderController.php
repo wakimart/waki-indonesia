@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\DeliveryOrder;
 use App\Order;
@@ -147,7 +148,23 @@ class OrderController extends Controller
     }
 
     public function admin_ListOrder(){
+        //khususu head-manager, head-admin, admin
         $orders = Order::all();
+
+        //khusus akun CSO
+        if(Auth::user()->roles[0]['slug'] == 'cso'){
+            $orders = Auth::user()->cso->order_sales;
+        }
+
+        //khusus akun branch dan area-manager
+        if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
+            $arrbranches = [];
+            foreach (Auth::user()->listBranches() as $value) {
+                array_push($arrbranches, $value['id']);
+            }
+            $orders = Order::WhereIn('id', $arrbranches)->get();
+        }
+
         return view('admin.list_order', compact('orders'));
     }
 

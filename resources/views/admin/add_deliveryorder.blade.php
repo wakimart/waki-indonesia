@@ -50,7 +50,7 @@
 	            			{{ csrf_field() }}
 	              			<div class="form-group">
 	                			<label for="">No. Member (optional)</label>
-	                			<input type="number" class="form-control" id="no_member" name="no_member" placeholder="No. Member">
+	                			<input type="text" class="form-control" id="no_member" name="no_member" placeholder="No. Member">
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
@@ -115,7 +115,7 @@
 	              			</div>
 	              			<div class="form-group">
 	                			<label for="">CSO Code</label>
-	               			 	<input type="text" class="form-control" name="cso_id" id="cso" placeholder="CSO Code" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+	               			 	<input type="text" class="form-control" name="cso_id" id="cso" placeholder="CSO Code" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['code'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
                     			<div class="validation" id="validation_cso"></div>
 	              			</div>
 

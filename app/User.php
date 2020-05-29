@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'code', 'name', 'username', 'password', 'permissions', 'active', 'user_image'
+        'code', 'name', 'username', 'password', 'permissions', 'active', 'user_image', 'birth_date', 'branches_id', 'cso_id',
     ];
 
     protected $casts = [
@@ -74,5 +74,16 @@ class User extends Authenticatable
     public function inRole(string $roleSlug)
     {
         return $this->roles()->where('slug', $roleSlug)->count() == 1;
+    }
+
+    public function listBranches(){
+        $listBranch = json_decode($this['branches_id'], true);
+        if($listBranch == null){
+            return null;
+        }
+        return Branch::WhereIn('id', $listBranch)->get();
+    }
+    public function cso(){
+        return $this->belongsTo('App\Cso');
     }
 }

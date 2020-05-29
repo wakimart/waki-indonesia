@@ -35,6 +35,11 @@ Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeService
 Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
+//fetching cso and branch by id
+Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
+Route::get('/fetchBranchById', 'BranchController@fetchBranchById')->name('fetchBranchById');
+
+
 Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {
 	Route::get('/', function () {
@@ -160,6 +165,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    Route::get('/list', 'HomeServiceController@admin_ListHomeService')
 	    	->name('admin_list_homeService')
 	    	->middleware('can:browse-order');
+	    //Edit
+        Route::get('/edit/', 'HomeServiceController@edit')
+                ->name('edit_homeService');
+	    //Update
+        Route::post('/update/', 'HomeServiceController@update')
+                ->name('update_homeService');
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){

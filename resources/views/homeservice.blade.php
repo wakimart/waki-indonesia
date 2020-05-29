@@ -79,6 +79,10 @@
                     <input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
                     <div class="validation"></div>
                 </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="cso2_id" id="cso2" placeholder="Kode Partner CSO (opsional)" style="text-transform:uppercase"/>
+                    <div class="validation" id="validation_cso2"></div>
+                </div>
 
                 <br>
                 <h5>Waktu Home Service</h5>
@@ -101,18 +105,22 @@
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script>
     $(document).ready(function(){
-        $("#cso").on("input", function(){
+        $("#cso, #cso2").on("input", function(){
             var txtCso = $(this).val();
+            var obj = $('#validation_cso');
+            if($(this)[0].id == "cso2"){
+                obj = $('#validation_cso2');
+            }
             $.get( '{{route("fetchCso")}}', { txt: txtCso })
             .done(function( result ) {
                 if (result == 'true'){
-                    $('#validation_cso').html('Kode CSO Benar');
-                    $('#validation_cso').css('color', 'green');
+                    obj.html('Kode CSO Benar');
+                    obj.css('color', 'green');
                     $('#submit').removeAttr('disabled');
                 }
                 else{
-                    $('#validation_cso').html('Kode CSO Salah');
-                    $('#validation_cso').css('color', 'red');
+                    obj.html('Kode CSO Salah');
+                    obj.css('color', 'red');
                     $('#submit').attr('disabled',"");
                 }
             });

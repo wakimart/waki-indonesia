@@ -22,7 +22,7 @@
 	              			</div>
 	            			<div class="form-group">
 	                			<label for="">No. Member (optional)</label>
-	                			<input type="number" class="form-control" id="no_member" name="no_member" value="{{$deliveryOrders['no_member']}}">
+	                			<input type="text" class="form-control" id="no_member" name="no_member" value="{{$deliveryOrders['no_member']}}">
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
@@ -131,7 +131,7 @@
 	              			</div>
 	              			<div class="form-group">
 	                			<label for="">CSO Code</label>
-	               			 	<input type="text" class="form-control" name="cso_id" id="cso" value="{{$deliveryOrders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+	               			 	<input type="text" class="form-control" name="cso_id" id="cso" value="{{$deliveryOrders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
                     			<div class="validation" id="validation_cso"></div>
 	              			</div>
 

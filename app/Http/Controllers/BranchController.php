@@ -97,4 +97,9 @@ class BranchController extends Controller
     {
         //
     }
+
+    public function fetchBranchById(Request $request){
+        $branch = Branch::where('id', $request->id)->first();
+        return response()->json($branch);
+    }
 }
