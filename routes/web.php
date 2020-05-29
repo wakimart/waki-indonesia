@@ -70,6 +70,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //update frontendcms
     Route::post('/frontend-cms/update', 'FrontendCmsController@update')
 	    	->name('update_frontendcms');
+	//change password admin    
+	Route::post('/changePassword','UserAdminController@changePassword')
+			->name('changePassword');
+    //Check change password admin    
+    Route::post('/checkChangePassword', 'UserAdminController@checkChangePassword')
+    		->name('check-change-password');
 
 	Route::group(['prefix' => 'useradmin', 'middleware' => 'auth'], function(){
 		//Add Form UserAdmin
@@ -93,7 +99,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('update_useradmin')
 	    	->middleware('can:edit-user');
 	    //Delete UserAdmin
-	    Route::post('/{userAdminNya}', 'UserAdminController@delete')
+	    Route::post('/{userAdminNya}', 'UserAdminController@destroy')
 	    	->name('delete_useradmin');
 	    //get user image
         Route::get('file/{file}', 'UserAdminController@serveImages')

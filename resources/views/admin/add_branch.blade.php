@@ -12,7 +12,7 @@
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb">
 				  	<li class="breadcrumb-item"><a data-toggle="collapse" href="#branch-dd" aria-expanded="false" aria-controls="branch-dd">Branch</a></li>
-				  	<li class="breadcrumb-item active" aria-current="page">Tambah Branch</li>
+				  	<li class="breadcrumb-item active" aria-current="page">Add Branch</li>
 				</ol>
 			</nav>
 		</div>

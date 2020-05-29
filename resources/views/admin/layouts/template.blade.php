@@ -48,6 +48,32 @@
                             </div>
                         </form>
                     </div>
+
+                    <!-- For Change Password -->
+                    @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+
+                    @if($errors->has('new-password'))
+                    @foreach($errors->get('new-password') as $error)
+                    <div class="alert alert-danger">
+                        {{ $error }}
+                    </div>
+                    @endforeach
+                    @endif
+
+                    <!-- For Saved/Changed Data -->
+                    @if (session()->has('message'))
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#modal-Notification").modal("show");
+                            $("#txt-notification").html("<div class=\"alert alert-success\">{{ session()->get('message')}}</div>");
+                        });
+                    </script>
+                    @endif
+                    
                     <ul class="navbar-nav navbar-nav-right">
                         <li class="nav-item nav-profile dropdown">
                             <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
@@ -80,9 +106,95 @@
             </nav>
 
             <div class="container-fluid page-body-wrapper">
-                @include("admin.layouts.navigation")
+                <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                    <ul class="nav">
+                        <li class="nav-item nav-profile" >
+                            <a href="#" class="nav-link">
+                                <div class="nav-profile-image">
+                                    <img src="{{asset('sources/favicon.png')}}" alt="profile">
+                                    <span class="login-status online"></span>
+                                    <!--change to offline or busy as needed-->
+                                </div>
+                                <div class="nav-profile-text d-flex flex-column">
+                                    <span class="font-weight-bold mb-2">Welcome, {{ Auth::user()->name }}</span>
+                                    <span class="text-secondary text-small">Admin WAKI Indonesia</span>
+                                </div>
+                                <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                                <span class="text-secondary text-small"><a href="#" data-toggle="modal" data-target="#modal-ChangePassword">Change Password</a></span>
+                            </a>
+                        </li>
+
+                        @include("admin.layouts.navigation")
+                    </ul>
+                </nav>
 
                 @yield('content')
+            </div>
+
+            <!-- modal notification (data saved) -->
+            <div class="modal fade" role="dialog" tabindex="-1" id="modal-Notification">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Notice</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="txt-notification"></p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" type="button" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- modal ganti password -->
+            <div class="modal fade" role="dialog" tabindex="-1" id="modal-ChangePassword">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Change Password</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+
+                        <!-- form untuk ganti password -->
+                        <form method="post" action="{{ route('changePassword') }}">
+                            {{ csrf_field() }}
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <span style="display:block;">Current Password</span>
+                                    <input class="form-control form-control" id="current-password" type="password" name="current-password" placeholder="Current Password" required>
+                                    <span class="invalid-feedback">
+                                        <strong>Your current password does not matches with the password you provided.</strong>
+                                    </span>
+                                </div>
+                                <div class="form-group">
+                                    <span style="display:block;">New Password</span>
+                                    <input class="form-control form-control" id="new-password" type="password" name="new-password" required placeholder="Min length: 6">
+                                    <span class="invalid-feedback">
+                                        <strong>New Password cannot be same as your current password.</strong>
+                                    </span>
+                                </div>
+                                <div class="form-group">
+                                    <span style="display:block;">Confirm New Password</span>
+                                    <input class="form-control form-control" id="new-password-confirm" type="password" name="new-password_confirmation" placeholder="Confirm New Password" required>
+                                    <span class="invalid-feedback">
+                                        <strong>This field must same with your New Password.</strong>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-light" type="button" data-dismiss="modal">Close</button>
+                                <button class="btn btn-primary" type="submit">Change Password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
 
             <footer class="footer">
@@ -106,5 +218,59 @@
     <script src="{{ asset('js/todolist.js') }}"></script>
 
     <script src="{{asset('js/file-upload.js')}}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#current-password").on("keyup", function () {
+                console.log("tes");
+                CheckChangePassword();
+            });
+
+            $("#new-password").on("keyup", function () {
+                console.log("tes1");
+                CheckChangePassword();
+            });
+
+            $("#new-password-confirm").on("keyup", function () {
+                console.log("tes2");
+                CheckChangePassword();
+            });
+        });
+
+        function CheckChangePassword()
+        {
+            var currentPass = $("#current-password").val();
+            var newPass = $("#new-password").val();
+            var confirmPass = $("#new-password-confirm").val();
+
+            console.log("cp: " + currentPass + ", np: " + newPass + ", cfrpas: " + confirmPass);
+
+            $.ajax({
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                type: "POST",
+                url: "{{route('check-change-password')}}",
+                data: {
+                    'currentPass': currentPass,
+                    'newPass': newPass,
+                    'confirmPass': confirmPass,
+                },
+                success: function (data) {
+                    $.each(data, function (key, val)
+                    {
+                        if (val != '')
+                        {
+                            $("#" + key).addClass("is-invalid");
+                        } else
+                        {
+                            $("#" + key).removeClass("is-invalid");
+                        }
+                    });
+                },
+                error: function( error )
+                {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
 </body>
 </html>
