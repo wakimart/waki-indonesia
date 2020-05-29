@@ -75,6 +75,23 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-order']);
         });
 
+        //-- HOME SERVICE --//
+        Gate::define('add-home_service', function ($user) {
+            return $user->hasAccess(['add-home_service']);
+        });
+        Gate::define('browse-home_service', function ($user) {
+            return $user->hasAccess(['browse-home_service']);
+        });
+        Gate::define('detail-home_service', function ($user) {
+            return $user->hasAccess(['detail-home_service']);
+        });
+        Gate::define('edit-home_service', function ($user) {
+            return $user->hasAccess(['edit-home_service']);
+        });
+        Gate::define('delete-home_service', function ($user) {
+            return $user->hasAccess(['delete-home_service']);
+        });
+
         //-- CSO --//
         Gate::define('add-cso', function ($user) {
             return $user->hasAccess(['add-cso']);

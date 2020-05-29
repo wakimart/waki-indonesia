@@ -164,13 +164,15 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    //List Home Service
 	    Route::get('/list', 'HomeServiceController@admin_ListHomeService')
 	    	->name('admin_list_homeService')
-	    	->middleware('can:browse-order');
+	    	->middleware('can:browse-home_service');
 	    //Edit
         Route::get('/edit/', 'HomeServiceController@edit')
-                ->name('edit_homeService');
+                ->name('edit_homeService')
+		    	->middleware('can:edit-home_service');
 	    //Update
         Route::post('/update/', 'HomeServiceController@update')
-                ->name('update_homeService');
+                ->name('update_homeService')
+		    	->middleware('can:edit-home_service');
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
