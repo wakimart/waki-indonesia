@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cso extends Model
 {
     protected $fillable = [
-        'code', 'name', 'branch_id',
+        'code', 'name', 'branch_id', 'active',
     ];
 
     public function branch()
