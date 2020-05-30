@@ -70,6 +70,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //update frontendcms
     Route::post('/frontend-cms/update', 'FrontendCmsController@update')
 	    	->name('update_frontendcms');
+	    	
 	//change password admin    
 	Route::post('/changePassword','UserAdminController@changePassword')
 			->name('changePassword');

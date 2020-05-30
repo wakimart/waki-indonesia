@@ -32,6 +32,28 @@
       background-color: rgba(255,255,255,0.6);
       cursor: pointer;
   }
+
+  	#intro {
+	    padding-top: 2em;
+	}
+	button{
+	    background: #1bb1dc;
+	    border: 0;
+	    border-radius: 3px;
+	    padding: 8px 30px;
+	    color: #fff;
+	    transition: 0.3s;
+	}
+	.validation{
+	    color: red;
+	    font-size: 9pt;
+	}
+	input, select, textarea{
+	    border-radius: 0 !important;
+	    box-shadow: none !important;
+	    border: 1px solid #dce1ec !important;
+	    font-size: 14px !important;
+	}
 </style>
 @endsection
 
@@ -53,6 +75,10 @@
 					<div class="card-body">
 						<form id="actionUpdate" class="forms-sample" action="{{route('update_useradmin')}}" method="POST">
 							{{ csrf_field() }}
+
+							@php
+								$get_roleId = $role_users[0]->role_id;
+							@endphp
 							<div class="form-group">
 								<label for="">USERNAME ADMIN</label>
 								<input type="text" class="form-control" name="username" value="{{$users['username']}}" required>
@@ -60,6 +86,78 @@
 							<div class="form-group">
 								<label for="">ADMIN'S NAME</label>
 								<input type="text" class="form-control" value="{{$users['name']}}" name="name" required>
+							</div>
+
+							@if($get_roleId == 3)
+							<!-- CSO -->
+					        <div id="form-cso" class="form-group">
+					        	<span>CSO</span>
+					            <select id="dropdown-cso" style="margin-top: 0.5em;" id="role" class="form-control" style="height: auto;" name="cso_id">
+					            	<option value="">Choose CSO</option>
+					                @foreach ($csos as $cso)
+					                	@if($users['cso_id'] == $cso->id)
+					                    <option value="{{$cso->id}}" selected="">{{$cso->code}} - {{$cso->name}}</option>
+					                    @else
+					                    <option value="{{$cso->id}}">{{$cso->code}} - {{$cso->name}}</option>
+					                    @endif
+					                @endforeach
+					            </select>
+					            <span class="invalid-feedback">
+					                <strong></strong>
+					            </span>
+					        </div>
+					        <!-- End CSO -->
+							@elseif($get_roleId == 5 || $get_roleId == 6)
+
+							@php
+								$getBranches = json_decode($users['branches_id'], true);
+								$total_branch = count($getBranches);
+							@endphp
+
+							<input type="hidden" name="role_id" id="role_id" value="{{$get_roleId}}">
+		                    <input type="hidden" name="total_branch" id="total_branch" value="{{$total_branch}}">
+							<!-- Branch -->
+							
+					        <div id="form-branch" class="container-branch">
+					        	@for($i = 0; $i < $total_branch; $i++)
+
+					        	<div id="branch_{{$i}}" class="form-group" style="width: 90%; display: inline-block;">
+					        		<span>BRANCH {{$i+1}}</span>
+			                        <select class="form-control" name="branch_{{$i}}" data-msg="Please choose the Branch">
+
+			                            <option selected disabled value="">Choose Branch</option>
+
+			                            @foreach($branches as $branch)
+
+			                            	@if($getBranches[$i] == $branch->id)
+			                            	<option value="{{ $branch->id }}" selected="">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+			                            	@else
+			                            	<option value="{{ $branch->id }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+			                            	@endif
+			                            @endforeach
+			                        </select>
+			                        <div class="validation"></div>
+			                    </div>
+
+			                    @if($i == 0)
+			                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_branch" title="Add branch" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+			                    @else
+			                    <div class="text-center" style="display: inline-block; float: right;"><button class="hapus_branch" value="{{$i}}" title="Hapus Branch" style="padding: 0.4em 0.7em; background-color: red;"><i class="fas fa-minus"></i></button></div>
+			                    @endif
+
+			                    @endfor
+			                    <div id="tambahan_branch"></div>
+					        </div>
+					        
+					        <!-- End Branch -->
+							@endif
+
+							@php
+								$get_birthdate = Carbon\Carbon::parse($users->birth_date)->format('Y-m-d');
+							@endphp
+							<div class="form-group">
+								<label for="">ADMIN'S BIRTH DATE</label>
+								<input type="date" class="form-control" value="{{ $get_birthdate }}" name="birth_date" required>
 							</div>
 							<div class="form-group">
 								<div class="col-xs-12">
@@ -155,6 +253,32 @@
 		                            <div class="form-check form-check-inline">
 		                                <input class="form-check-input" type="checkbox" id="delete-order">
 		                                <label class="form-check-label" for="delete-order">Delete Order</label>
+		                            </div>
+		                    	</div>
+		                    </div>
+
+		                    <div class="form-group" id="group-product">
+		                        <span style="display:block;">HOME SERVICE</span>
+		                        <div class="div-CheckboxGroup">
+		                        	<div class="form-check form-check-inline">
+		                                <input class="form-check-input" type="checkbox" id="add-home_service">
+		                                <label class="form-check-label" for="add-home_service">Add Home Service</label>
+		                            </div>
+		                            <div class="form-check form-check-inline">
+		                                <input class="form-check-input" type="checkbox" id="browse-home_service">
+		                                <label class="form-check-label" for="browse-home_service">Browse Home Service</label>
+		                            </div>
+		                            <div class="form-check form-check-inline">
+		                                <input class="form-check-input" type="checkbox" id="detail-home_service">
+		                                <label class="form-check-label" for="detail-home_service">Detail Home Service</label>
+		                            </div>
+		                            <div class="form-check form-check-inline">
+		                                <input class="form-check-input" type="checkbox" id="edit-home_service">
+		                                <label class="form-check-label" for="edit-home_service">Edit Home Service</label>
+		                            </div>
+		                            <div class="form-check form-check-inline">
+		                                <input class="form-check-input" type="checkbox" id="delete-home_service">
+		                                <label class="form-check-label" for="delete-home_service">Delete Home Service</label>
 		                            </div>
 		                    	</div>
 		                    </div>
@@ -323,6 +447,41 @@
 </script>
 
 <script type="text/javascript">
+	var branch = $('#total_branch').val();
+	var val = $('#role_id').val();
+	var total_branch = branch - 1;
+
+	$(document).ready(function(){
+		$('#tambah_branch').click(function(e){
+			e.preventDefault();
+			total_branch++;
+			branch++;
+			if(val == 4){
+				if(total_branch <= 1){
+					strIsi = "<div id=\"branch_"+total_branch+"\" class=\"form-group\" style=\"width: 90%; display: inline-block;\"><span>BRANCH "+branch+"</span><select class=\"form-control\" name=\"branch_"+total_branch+"\" data-msg=\"Please choose the Branch\"><option selected disabled value=\"\">Choose Branch</option>@foreach($branches as $branch)<option value=\"{{ $branch->id }}\">{{ $branch['code'] }} - {{ $branch['name'] }}</option>@endforeach</select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_branch\" value=\""+total_branch+"\" title=\"Hapus Branch\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
+					$('#tambahan_branch').html($('#tambahan_branch').html()+strIsi);
+				}else{
+					alert("Maksimum choice of Branch is 2");
+				}
+			}else if(val == 5){
+				if(total_branch <= 4){
+					strIsi = "<div id=\"branch_"+total_branch+"\" class=\"form-group\" style=\"width: 90%; display: inline-block;\"><span>BRANCH "+branch+"</span><select class=\"form-control\" name=\"branch_"+total_branch+"\" data-msg=\"Please choose the Branch\"><option selected disabled value=\"\">Choose Branch</option>@foreach($branches as $branch)<option value=\"{{ $branch->id }}\">{{ $branch['code'] }} - {{ $branch['name'] }}</option>@endforeach</select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_branch\" value=\""+total_branch+"\" title=\"Hapus Branch\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
+					$('#tambahan_branch').html($('#tambahan_branch').html()+strIsi);
+				}else{
+					alert("Maksimum choice of Branch is 5");
+				}
+			}	
+		});
+
+		$(document).on("click",".hapus_branch", function(e){
+	        e.preventDefault();
+	        total_branch--;
+	        branch--;
+	        $('#branch_'+$(this).val()).remove();
+	        $(this).remove();
+	    });
+	});
+
 	$(document).ready(function() {
         var frmUpdate;
 
@@ -335,6 +494,8 @@
 	        $(".form-check-input").each(function(e) {
 	            frmUpdate.append($(this)[0].id, $(this)[0].checked);
 	        });
+
+	        frmUpdate.append('total_branch', branch);
 
 	        var URLNya = $("#actionUpdate").attr('action');
 	        console.log(URLNya);
