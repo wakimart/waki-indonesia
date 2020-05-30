@@ -73,7 +73,7 @@
     </li>
     @endif
 
-    @if(Gate::check('add-order') || Gate::check('browse-order'))
+    @if(Gate::check('add-home_service') || Gate::check('browse-home_service'))
     <li class="{{isset($menu_item_page) && $menu_item_page == 'homeservice'? 'active': '' }} nav-item">
       <a class="nav-link" data-toggle="collapse" href="#homeservice-dd" aria-expanded="false" aria-controls="homeservice-dd">
         <span class="menu-title">Home Service</span>
@@ -82,10 +82,10 @@
       </a>
       <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'homeservice'? 'show': '' }}" id="homeservice-dd">
         <ul class="nav flex-column sub-menu">
-          @if(Gate::check('add-order'))
+          @if(Gate::check('add-home_service'))
           {{-- <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_homeservice' ? 'active': '' }}" href="{{ route('admin_add_order')}}">Add Home Service</a></li> --}}
           @endif
-          @if(Gate::check('browse-order'))
+          @if(Gate::check('browse-home_service'))
           <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_homeservice' ? 'active': '' }}" href="{{  route('admin_list_homeService') }}">List Home Service</a></li>
           @endif
         </ul>

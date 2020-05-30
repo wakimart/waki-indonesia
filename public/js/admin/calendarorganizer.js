@@ -519,14 +519,14 @@ Organizer.prototype.list = function (data) {
         editdelContainer.id = this.id + "-list-item-" + i + "-icon";
         var btnEdit=document.createElement("button");
         btnEdit.id = this.id + "-list-item-" + i + "-time";
-        btnEdit.className = "btnappoint btn-gradient-info mx-auto my-2 mdi mdi-border-color btn-homeservice-edit";
+        btnEdit.className = "btnappoint btn-gradient-info mr-1 mdi mdi-border-color btn-homeservice-edit";
         btnEdit.type = "button";
         btnEdit.dataset.toggle = "modal";
         btnEdit.dataset.target = "#editHomeServiceModal";
         btnEdit.value = data[i].dataId;
         var btnDel=document.createElement("button");
         btnDel.id = this.id + "-list-item-" + i + "-time";
-        btnDel.className = "btnappoint btn-gradient-danger mx-auto my-2 mdi mdi-calendar-remove btn-homeservice-cancel";
+        btnDel.className = "btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel";
         btnDel.type = "button";
         btnDel.dataset.toggle = "modal";
         btnDel.dataset.target = "#deleteHomeServiceModal";
@@ -536,16 +536,26 @@ Organizer.prototype.list = function (data) {
         //tambahan
         var btnCash=document.createElement("button");
         btnCash.id = this.id + "-list-item-" + i + "-cash";
-        btnCash.className = "btnappoint btn-gradient-success mx-auto my-2 mdi mdi-cash-multiple btn-homeservice-cash";
+        btnCash.className = "btnappoint btn-gradient-success mb-1 mdi mdi-cash-multiple btn-homeservice-cash";
         btnCash.type = "button";
         btnCash.dataset.toggle = "modal";
         btnCash.dataset.target = "#cashHomeServiceModal";
         btnCash.value = data[i].dataId;
-        //tambahan style
-        editdelContainer.style.display = "block"; //khusus tambah 1 button lagi
 
-        editdelContainer.append(btnEdit);
+        var btnView=document.createElement("button");
+        btnView.id = this.id + "-list-item-" + i + "-view";
+        btnView.className = "btnappoint btn-gradient-primary mr-1 mb-1 mdi mdi-eye btn-homeservice-view";
+        btnView.type = "button";
+        btnView.dataset.toggle = "modal";
+        btnView.dataset.target = "#viewHomeServiceModal";
+        btnView.value = data[i].dataId;
+
+        //tambahan style
+        editdelContainer.style.display = "-webkit-inline-box"; //khusus tambah 1 button lagi
+
+        editdelContainer.append(btnView);
         editdelContainer.append(btnCash);
+        editdelContainer.append(btnEdit);
         editdelContainer.append(btnDel);
 
         listItem.appendChild(division);

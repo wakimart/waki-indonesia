@@ -28,10 +28,10 @@
     color: #ffffff !important;
 }
 .btnappoint {
-    display: block;/*inline-block;*/
+    display: inline-block;
     font-weight: 400;
     font-size: 1.4em;
-    padding: 0.2rem 1rem;
+    padding: 0.2rem 0.8rem;
     border-radius: 0.1875rem;
     text-align: center;
     vertical-align: middle;
@@ -164,7 +164,86 @@
           </div>
       </div>
   </div>
-  <!-- End Modal Edit -->
+  <!-- End Modal Add -->
+
+  <!-- Modal View -->
+  <div class="modal fade" id="viewHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">View Appointment</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <h5 style="text-align:center;"></h5>
+                    {{ csrf_field() }}
+                      <h5>Data Pelanggan</h5>
+                      <div class="form-group">
+                          <input type="text" name="no_member" class="form-control input-view" id="view-no_member" value=""/>
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                          <input type="text" class="form-control input-view" name="name" id="view-name" value=""/>
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                          <input type="number" class="form-control input-view" name="phone" id="view-phone" value=""/>
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                          <input type="text" class="form-control input-view" name="city" id="view-city" value=""/>
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                          <textarea class="form-control input-view" name="address" id="view-address" rows="5" value=""></textarea>
+                          <div class="validation"></div>
+                      </div>
+                      <br>
+                      <h5>Data CSO</h5>
+                      <div class="form-group">
+                          <select class="form-control input-view" id="view-branch" name="branch_id" value="">
+                              <option selected disabled value="">Pilihan Cabang</option>
+
+                              @foreach($branches as $branch)
+                                  <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                              @endforeach
+                          </select>
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                          <input type="text" class="form-control input-view cso" name="cso_id" id="view-cso" value="" style="text-transform:uppercase"/>
+                          <div class="validation" id="validation_cso"></div>
+                      </div>
+                      <div class="form-group">
+                          <input type="number" class="form-control input-view" name="cso_phone" id="view-cso_phone" value=""/>
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                          <input type="text" class="form-control input-view cso" name="cso2_id" id="view-cso2" value="" style="text-transform:uppercase"/>
+                          <div class="validation" id="validation_cso2"></div>
+                      </div>
+
+                      <br>
+                      <h5>Waktu Home Service</h5>
+                      <div class="form-group">
+                          <input type="date" class="form-control input-view" name="date" id="view-date" value="" />
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                          <input type="time" class="form-control input-view" name="time" id="view-time" value="" />
+                          <div class="validation"></div>
+                      </div>
+              </div>
+              <div class="modal-footer">
+                <a id="url_share" href="" data-action="share/whatsapp/share" target="_blank"><button id="btn-share" type="button" class="btn btn-gradient-primary mr-2"><span class="mdi mdi-whatsapp" style="font-size: 18px;"></span> Share</button></a>
+                <button class="btn btn-light" data-dismiss="modal" aria-label="Close">Cancel</button>
+              </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal View -->
 
 	<!-- Modal Edit -->
 	<div class="modal fade" id="editHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -552,6 +631,12 @@ window.onload = function() {
           }
       });
     });
+
+    @if(Gate::check('detail-home_service'))
+      $(document).find(".btn-homeservice-view").attr('disabled', 'true');
+      console.log("masuk gate");
+      console.log($(document).find(".btn-homeservice-view"));
+    @endif
   });
 };
 
@@ -634,6 +719,87 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
       @if(Auth::user()->roles[0]['slug'] == 'cso')
         $('#edit-cso').attr('readonly','true');
       @endif
+    },
+  });
+});
+
+//ajax ambil data detail home service KHUSUS VIEW
+$(document).on("click", ".btn-homeservice-view", function(e){
+  $('.input-view').removeAttr('readonly');
+  $.ajax({
+    headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+    type: 'get',
+    url: "{{ route('edit_homeService') }}",
+    data: {
+        'id': e.target.value,
+    },
+    success: function(result){
+      result = result['result'];
+      var tgl = new Date(result['appointment']);
+      console.log(tgl.getHours());
+      var tahun = tgl.getFullYear();
+      var hari = tgl.getDate();if(hari < 9)  hari="0" +hari;
+      var bulan = tgl.getMonth()+1;if(bulan < 9)  bulan="0" +bulan;
+      var jam = tgl.getHours();if(jam < 9)  jam="0" +jam;
+      var menit = tgl.getMinutes();if(menit < 9)  menit="0" +menit;
+
+      tgl = tahun+"-"+bulan+"-"+hari;
+
+      //fetching cso
+      $.ajax({
+        headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+        type: 'get',
+        url: "{{ route('fetchCsoById') }}",
+        data: {
+            'id': result['cso_id'],
+        },
+        success: function(data1){
+          $('#view-cso').val(data1['code']);
+        },
+      });
+      //fetching cso2
+      $.ajax({
+        headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+        type: 'get',
+        url: "{{ route('fetchCsoById') }}",
+        data: {
+            'id': result['cso2_id'],
+        },
+        success: function(data1){
+          $('#view-cso2').val(data1['code']);
+        },
+      });
+      //fetching branch
+      $.ajax({
+        headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+        type: 'get',
+        url: "{{ route('fetchBranchById') }}",
+        data: {
+            'id': result['branch_id'],
+        },
+        success: function(data1){
+          $('#view-branch').val(data1['id']);
+        },
+      });
+
+      $('#view-no_member').val(result['no_member']);
+      $('#view-name').val(result['name']);
+      $('#view-phone').val(result['phone']);
+      $('#view-city').val(result['city']);
+      $('#view-address').val(result['address']);
+      $('#view-cso_phone').val(result['cso_phone']);
+      $('#view-date').val(tgl);
+      $('#view-time').val(jam+":"+menit);
+      $('.input-view').attr('readonly', true);
+      $('#url_share').attr('href', "whatsapp://send?text={{ Route('homeServices_success') }}?code="+result['code']);
     },
   });
 });
