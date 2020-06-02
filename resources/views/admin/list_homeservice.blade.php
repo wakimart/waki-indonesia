@@ -93,8 +93,10 @@
                       <label for="">Filter By City</label>
                         <select class="form-control" id="filter_type" name="filter_type" data-msg="Mohon Pilih Tipe" required>
                             <option selected disabled value="">Choose Filter</option>
-                                <option value="">All</option>
-                                <option value="">City</option>
+                                <option value="all">All</option>
+                                @foreach($arrCity as $city)
+                                  <option value="{{ $city }}">{{ $city }}</option>
+                                @endforeach
                         </select>
                         <div class="validation"></div>
                     </div>
@@ -388,6 +390,20 @@
 <script src="{{ asset('js/admin/calendarorganizer.js') }}"></script>
 
 <script>
+ var btnCheckView = false;
+ var btnCheckCancel = false;
+ var btnCheckEdit = false;
+
+@if(Gate::check('detail-home_service'))
+  btnCheckView = true;
+@endif
+@if(Gate::check('delete-home_service'))
+  btnCheckCancel = true;
+@endif
+@if(Gate::check('edit-home_service'))
+  btnCheckEdit = true;
+@endif
+
 window.onload = function() {
   "use strict";
 
@@ -481,6 +497,24 @@ window.onload = function() {
   organizer = new Organizer("organizerContainer", // id of html container for calendar
     calendar, // defining the calendar that the organizer is related to
     data // giving the organizer the static data that should be displayed
+  );
+
+  // Days Block Click Listener
+  organizer.setOnClickListener('days-blocks',
+      // Called when a day block is clicked
+      function () {
+        if(btnCheckView){
+          $(document).find(".btn-homeservice-view").attr('disabled', 'true');
+          console.log("masuk");
+        }
+        if(btnCheckEdit){
+          $(document).find(".btn-homeservice-edit").attr('disabled', 'true');
+          $(document).find(".btn-homeservice-cash").attr('disabled', 'true');
+        }
+        if(btnCheckCancel){
+          $(document).find(".btn-homeservice-cancel").attr('disabled', 'true');
+        }
+      }
   );
 
   // Month Slider (Left and Right Arrow) Click Listeners
@@ -632,11 +666,16 @@ window.onload = function() {
       });
     });
 
-    @if(Gate::check('detail-home_service'))
+    if(btnCheckView){
       $(document).find(".btn-homeservice-view").attr('disabled', 'true');
-      console.log("masuk gate");
-      console.log($(document).find(".btn-homeservice-view"));
-    @endif
+    }
+    if(btnCheckEdit){
+      $(document).find(".btn-homeservice-edit").attr('disabled', 'true');
+      $(document).find(".btn-homeservice-cash").attr('disabled', 'true');
+    }
+    if(btnCheckCancel){
+      $(document).find(".btn-homeservice-cancel").attr('disabled', 'true');
+    }
   });
 };
 
@@ -726,6 +765,7 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
 //ajax ambil data detail home service KHUSUS VIEW
 $(document).on("click", ".btn-homeservice-view", function(e){
   $('.input-view').removeAttr('readonly');
+  $('.input-view').removeAttr('disabled');
   $.ajax({
     headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -799,6 +839,7 @@ $(document).on("click", ".btn-homeservice-view", function(e){
       $('#view-date').val(tgl);
       $('#view-time').val(jam+":"+menit);
       $('.input-view').attr('readonly', true);
+      $('.input-view').attr('disabled', true);
       $('#url_share').attr('href', "whatsapp://send?text={{ Route('homeServices_success') }}?code="+result['code']);
     },
   });

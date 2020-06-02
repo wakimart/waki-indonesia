@@ -40,7 +40,7 @@ class HomeServiceController extends Controller
 
         //khususu head-manager, head-admin, admin
         $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-                     ->orderBy('appointment', 'asc')->where('active', true)->get();
+                     ->where('active', true)->get();
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
@@ -54,10 +54,27 @@ class HomeServiceController extends Controller
                 array_push($arrbranches, $value['id']);
             }
             $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-                     ->whereIn('id', $arrbranches)->orderBy('appointment', 'asc')->where('active', true)->get();
+                     ->whereIn('branch_id', $arrbranches)->where('active', true)->get();
         }
 
-        return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches'));
+        $arrCity = [];
+        if($homeServices != null){
+            array_push($arrCity, $homeServices[0]['city']);
+            foreach ($homeServices as $hs) {
+                $isSame = false;
+                foreach ($arrCity as $City) {
+                    if($City == $hs['city']){
+                        $isSame = true;
+                    }
+                }  
+                if(!$isSame){
+                    array_push($arrCity, $hs['city']);
+                }              
+            }
+        }
+        
+
+        return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches', 'arrCity'));
     }
 
     public function admin_fetchHomeService(Request $request){

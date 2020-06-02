@@ -675,7 +675,7 @@ Organizer.prototype.indicateEvents = function (data) {
 
             for (var key in month) {
                 if (month[key].length > 0)
-                    allDays[key - 1].children[1].innerHTML = (month[key].length > 9) ? "9+" : month[key].length;
+                    allDays[key - 1].children[1].innerHTML = month[key].length;
             }
         } catch (e) {}
     }

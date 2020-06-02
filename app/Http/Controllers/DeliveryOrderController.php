@@ -115,7 +115,7 @@ class DeliveryOrderController extends Controller
             foreach (Auth::user()->listBranches() as $value) {
                 array_push($arrbranches, $value['id']);
             }
-            $deliveryOrders = DeliveryOrder::WhereIn('id', $arrbranches)->get();
+            $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->get();
         }
         
         return view('admin.list_deliveryorder', compact('deliveryOrders'));

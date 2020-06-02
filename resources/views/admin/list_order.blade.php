@@ -33,7 +33,9 @@
 						              	<th colspan="2"> Product </th>
 						              	<th> Branch </th>
 						              	<th> CSO </th>
-						              	<th colspan="2"> Edit / Delete </th>
+						              	@if(Gate::check('edit-order') || Gate::check('delete-order'))
+							              	<th colspan="2"> Edit / Delete </th>
+							            @endif
 						            </tr>
           						</thead>
           						<tbody>
@@ -60,8 +62,12 @@
 				                            @endforeach
 				                            <td rowspan="{{ $totalProduct }}">{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
 				                            <td rowspan="{{ $totalProduct }}">{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
-				                            <td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('edit_order', ['id' => $order['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
-                          					<td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('delete_order', ['id' => $order['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+				                            @can('edit-order')
+					                            <td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('edit_order', ['id' => $order['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+				                            @endcan
+				                            @can('delete-order')
+	                          					<td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('delete_order', ['id' => $order['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+	                          				@endcan
 				                        </tr>
 				                        @php $first = true; @endphp
 				                        @foreach($ProductPromos as $ProductPromo)

@@ -175,6 +175,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/edit/', 'HomeServiceController@edit')
                 ->name('edit_homeService')
 		    	->middleware('can:edit-home_service');
+	    //View
+        Route::get('/detail/', 'HomeServiceController@edit')
+                ->name('detail_homeService')
+		    	->middleware('can:detail-home_service');
 	    //Update
         Route::post('/update/', 'HomeServiceController@update')
                 ->name('update_homeService')

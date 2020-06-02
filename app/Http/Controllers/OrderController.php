@@ -162,7 +162,7 @@ class OrderController extends Controller
             foreach (Auth::user()->listBranches() as $value) {
                 array_push($arrbranches, $value['id']);
             }
-            $orders = Order::WhereIn('id', $arrbranches)->get();
+            $orders = Order::WhereIn('branch_id', $arrbranches)->get();
         }
 
         return view('admin.list_order', compact('orders'));
