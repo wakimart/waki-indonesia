@@ -35,9 +35,12 @@ Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeService
 Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
-//fetching cso and branch by id
+//fetching data - data
 Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
 Route::get('/fetchBranchById', 'BranchController@fetchBranchById')->name('fetchBranchById');
+Route::get('/fetchCity/{province}', function ($province) {
+		return RajaOngkir::FetchCity($province);
+	})->name('fetchCity');
 
 
 Auth::routes(['verify' => true]);
