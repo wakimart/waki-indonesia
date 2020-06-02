@@ -73,7 +73,7 @@
 			<div class="col-12 grid-margin stretch-card">
 				<div class="card">
 					<div class="card-body">
-						<form id="actionUpdate" class="forms-sample" action="{{route('update_useradmin')}}" method="POST">
+						<form id="actionUpdate" class="forms-sample" action="{{ route('update_useradmin', ['id' => $users['id']])}}" method="POST">
 							{{ csrf_field() }}
 
 							@php
@@ -82,10 +82,16 @@
 							<div class="form-group">
 								<label for="">USERNAME ADMIN</label>
 								<input type="text" class="form-control" name="username" value="{{$users['username']}}" required>
+								<span class="invalid-feedback">
+					                <strong></strong>
+					            </span>
 							</div>
 							<div class="form-group">
 								<label for="">ADMIN'S NAME</label>
 								<input type="text" class="form-control" value="{{$users['name']}}" name="name" required>
+								<span class="invalid-feedback">
+					                <strong></strong>
+					            </span>
 							</div>
 
 							@if($get_roleId == 3)
@@ -513,7 +519,6 @@
 	    }
 	    function completeHandler(event){
 	        var hasil = JSON.parse(event.target.responseText);
-	        console.log(hasil);
 
 	        for (var key of frmUpdate.keys()) {
 	            $("#actionUpdate").find("input[name="+key.name+"]").removeClass("is-invalid");
@@ -524,6 +529,8 @@
 	            $("#actionUpdate").find("select[name="+key.name+"]").next().find("strong").text("");
 	            $("#actionUpdate").find("textarea[name="+key.name+"]").next().find("strong").text("");
 	        }
+
+	        console.log(hasil);
 
 	        if(hasil['errors'] != null){
 	            for (var key of frmUpdate.keys()) {
@@ -541,6 +548,7 @@
 	                }
 	            }
 	            alert("Input Error !!!");
+
 	        }
 	        else{
 	            alert("Input Success !!!");
