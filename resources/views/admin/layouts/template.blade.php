@@ -73,23 +73,23 @@
                         });
                     </script>
                     @endif
-                    
+
                     <ul class="navbar-nav navbar-nav-right">
                         <li class="nav-item nav-profile dropdown">
-                            <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
                                 <div class="nav-profile-img">
                                     <img src="{{asset('sources/favicon.png')}}" alt="image">
                                     <span class="availability-status online"></span>
                                 </div>
                                 <div class="nav-profile-text">
-                                  <p class="mb-1 text-black"></p>
+                                  <p class="mb-1 text-black">{{ Auth::user()->name }}</p>
                                 </div>
                             </a>
                             <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                                <a class="dropdown-item" href="#">
+                                <!-- <a class="dropdown-item" href="#">
                                 <i class="mdi mdi-cached mr-2 text-success"></i> Activity Log </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="login.html">
+                                <div class="dropdown-divider"></div> -->
+                                <a class="dropdown-item" href="{{route('admin_logout')}}">
                                 <i class="mdi mdi-logout mr-2 text-primary"></i> Signout </a>
                             </div>
                         </li>
@@ -125,6 +125,10 @@
                         </li>
 
                         @include("admin.layouts.navigation")
+                        <li class="nav-item">
+                          <a class="nav-link" href="{{route('admin_logout')}}">
+                          <i class="mdi mdi-logout mr-2 text-primary"></i> Signout </a>
+                        </li>
                     </ul>
                 </nav>
 
@@ -205,7 +209,7 @@
         </div>
     </div>
 
-    
+
     @yield('script')
     <script src="{{ asset('css/vendors/js/vendor.bundle.base.js') }}"></script>
     <script src="{{ asset('css/vendors/chart.js/Chart.min.js') }}"></script>

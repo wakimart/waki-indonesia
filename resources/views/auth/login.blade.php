@@ -8,7 +8,7 @@
                 <div class="col-lg-4 mx-auto">
                     <div class="auth-form-light text-left p-5">
                         <div class="brand-logo">
-                            <img src="{{ asset('sources/Logosince.svg') }}">
+                            <img src="{{ asset('sources/logosince.svg') }}">
                         </div>
                         <h4>WAKi Indonesia Admin</h4>
                         <h6 class="font-weight-light">
@@ -18,7 +18,7 @@
                         <form class="pt-3" method="POST" action="{{ route('admin_login') }}">
                             @csrf
                             <div class="form-group">
-                                <input id="username" type="username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" required autofocus>
+                                <input id="username" type="username" placeholder="Username" class="form-control{{ $errors->has('username') ? ' is-invalid' : '' }}" name="username" value="{{ old('username') }}" required autofocus>
                                 @if ($errors->has('username'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('username') }}</strong>
@@ -26,7 +26,7 @@
                                 @endif
                             </div>
                             <div class="form-group">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                                <input id="password" type="password" placeholder="Password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $errors->first('password') }}</strong>
@@ -49,12 +49,12 @@
                                 @endif
                             </div>
                         </form>
-                        
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
 </div>
 @endsection
