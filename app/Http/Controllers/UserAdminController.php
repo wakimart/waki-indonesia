@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Role;
+use App\RoleUser;
+use App\Cso;
+use App\Branch;
 use Auth;
+use DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -34,7 +38,9 @@ class UserAdminController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return view('admin.add_useradmin', compact('roles'));
+        $csos = Cso::all();
+        $branches = Branch::all();
+        return view('admin.add_useradmin', compact('roles', 'csos', 'branches'));
     }
 
     /**
@@ -71,6 +77,24 @@ class UserAdminController extends Controller
             $file->move($imgPath, $filename);
             $data['user_image'] = $filename;
         }
+
+        $data['birth_date'] = $request->get('birth_date');
+
+        if($request->has('branch_0')){
+            $arr_branchid = [];
+            for ($i=0; $i < $request->total_branch; $i++) { 
+                array_push($arr_branchid, $request->get('branch_' . $i));    
+            }
+            $data['branches_id'] = json_encode($arr_branchid);
+        }
+        
+        if($request->has('cso_id')){
+            if($request->get('cso_id') != null){
+                $data['cso_id'] = $request->get('cso_id');    
+            }            
+        }
+
+        //  return response()->json(['test' => $data]);      
         
         $user = User::create($data); //INSERT INTO DATABASE (with created_at)
         $user->roles()->attach($request['role']);
@@ -99,7 +123,14 @@ class UserAdminController extends Controller
     {
         if($request->has('id')){
             $users = User::find($request->get('id'));
-            return view('admin.update_useradmin', compact('users'));
+            $role_users = DB::table('role_users')
+                            ->select('role_id')
+                            ->where('user_id', $request->get('id'))
+                            ->get();
+            $roles = Role::all();
+            $csos = Cso::all();
+            $branches = Branch::all();
+            return view('admin.update_useradmin', compact('users', 'roles', 'role_users', 'csos', 'branches'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -131,6 +162,22 @@ class UserAdminController extends Controller
             }
         }
         $data['permissions'] = json_encode($userpermiss);
+
+        $data['birth_date'] = $request->get('birth_date');
+
+        if($request->has('branch_0')){
+            $arr_branchid = [];
+            for ($i=0; $i < $request->total_branch; $i++) { 
+                array_push($arr_branchid, $request->get('branch_' . $i));    
+            }
+            $data['branches_id'] = json_encode($arr_branchid);
+        }
+        
+        if($request->has('cso_id')){
+            if($request->get('cso_id') != null){
+                $data['cso_id'] = $request->get('cso_id');    
+            }            
+        }
 
         $user->fill($data)->save();
         return response()->json(['success' => $user]);

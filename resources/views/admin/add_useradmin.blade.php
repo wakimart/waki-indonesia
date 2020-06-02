@@ -27,6 +27,28 @@
       background-color: rgba(255,255,255,0.6);
       cursor: pointer;
   }
+
+  	#intro {
+	    padding-top: 2em;
+	}
+	button{
+	    background: #1bb1dc;
+	    border: 0;
+	    border-radius: 3px;
+	    padding: 8px 30px;
+	    color: #fff;
+	    transition: 0.3s;
+	}
+	.validation{
+	    color: red;
+	    font-size: 9pt;
+	}
+	input, select, textarea{
+	    border-radius: 0 !important;
+	    box-shadow: none !important;
+	    border: 1px solid #dce1ec !important;
+	    font-size: 14px !important;
+	}
 </style>
 @endsection
 
@@ -50,7 +72,7 @@
 							{{ csrf_field() }}
 							<div class="form-group">
 					            <span>ADMIN ROLE</span>
-					            <select style="margin-top: 0.5em;" id="role" class="form-control" style="height: auto;" name="role" required>
+					            <select id="dropdown-role" style="margin-top: 0.5em;" id="role" class="form-control" style="height: auto;" name="role" required>
 					                @foreach ($roles as $role)
 					                    <option value="{{$role->id}}">{{$role->name}}</option>
 					                @endforeach
@@ -59,6 +81,41 @@
 					                <strong></strong>
 					            </span>
 					        </div>
+
+					        <!-- CSO -->
+					        <div id="form-cso" class="form-group" style="display: none;">
+					        	<span>CSO</span>
+					            <select id="dropdown-cso" style="margin-top: 0.5em;" id="role" class="form-control" style="height: auto;" name="cso_id">
+					            	<option value="">Choose CSO</option>
+					                @foreach ($csos as $cso)
+					                    <option value="{{$cso->id}}">{{$cso->code}} - {{$cso->name}}</option>
+					                @endforeach
+					            </select>
+					            <span class="invalid-feedback">
+					                <strong></strong>
+					            </span>
+					        </div>
+					        <!-- End CSO -->
+
+					        <!-- Branch -->
+					        <div id="form-branch" class="container-branch" style="display: none;">
+					        	<div id="branch_0" class="form-group" style="width: 90%; display: inline-block;">
+					        		<span>BRANCH</span>
+			                        <select class="form-control" name="branch_0" data-msg="Please choose the Branch">
+			                            <option selected disabled value="">Choose Branch</option>
+
+			                            @foreach($branches as $branch)
+			                                <option value="{{ $branch->id }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+			                            @endforeach
+			                        </select>
+			                        <div class="validation"></div>
+			                    </div>
+			                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_branch" title="Add branch" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+
+			                    <div id="tambahan_branch"></div>
+					        </div>
+					        <!-- End Branch -->
+
 							<div class="form-group">
 								<label for="">USERNAME ADMIN</label>
 								<input type="text" class="form-control" name="username" placeholder="Username Admin" required>
@@ -74,6 +131,10 @@
 							<div class="form-group">
 								<label for="">RE-ENTER PASSWORD</label>
 								<input type="password" class="form-control" name="password_confirmation" required>
+							</div>
+							<div class="form-group">
+								<label for="">BIRTH DATE</label>
+								<input type="date" name="birth_date" class="form-control" required>
 							</div>
 							<div class="form-group">
 								<div class="col-xs-12">
@@ -104,6 +165,68 @@
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript">
+	var total_branch = 0;
+	var branch = 1;
+	$(document).ready(function(){
+		var val = 0;
+		$('#dropdown-role').change(function(){
+			val = this.value;
+			console.log("tes " + val);
+
+			if(val == 1){
+				$('#form-cso').hide();
+				$('#form-branch').hide();
+			}else if(val == 2){
+				$('#form-cso').hide();
+				$('#form-branch').hide();
+			}else if(val == 3){
+				$('#form-cso').show();
+				$('#form-branch').hide();
+			}else if(val == 4){
+				$('#form-cso').hide();
+				$('#form-branch').show();
+			}else if(val == 5){
+				$('#form-cso').hide();
+				$('#form-branch').show();
+			}else if(val == 6){
+				$('#form-cso').hide();
+				$('#form-branch').hide();
+			}else if(val == 7){
+				$('#form-cso').hide();
+				$('#form-branch').hide();
+			}
+		});
+
+		$('#tambah_branch').click(function(e){
+			e.preventDefault();
+			total_branch++;
+			branch++;
+			if(val == 4){
+				if(total_branch <= 1){
+					strIsi = "<div id=\"branch_"+total_branch+"\" class=\"form-group\" style=\"width: 90%; display: inline-block;\"><select class=\"form-control\" name=\"branch_"+total_branch+"\" data-msg=\"Please choose the Branch\"><option selected disabled value=\"\">Choose Branch</option>@foreach($branches as $branch)<option value=\"{{ $branch->id }}\">{{ $branch['code'] }} - {{ $branch['name'] }}</option>@endforeach</select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_branch\" value=\""+total_branch+"\" title=\"Hapus Branch\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
+					$('#tambahan_branch').html($('#tambahan_branch').html()+strIsi);
+				}else{
+					alert("Maksimum choice of Branch is 2");
+				}
+			}else if(val == 5){
+				if(total_branch <= 4){
+					strIsi = "<div id=\"branch_"+total_branch+"\" class=\"form-group\" style=\"width: 90%; display: inline-block;\"><select class=\"form-control\" name=\"branch_"+total_branch+"\" data-msg=\"Please choose the Branch\"><option selected disabled value=\"\">Choose Branch</option>@foreach($branches as $branch)<option value=\"{{ $branch->id }}\">{{ $branch['code'] }} - {{ $branch['name'] }}</option>@endforeach</select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_branch\" value=\""+total_branch+"\" title=\"Hapus Branch\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
+					$('#tambahan_branch').html($('#tambahan_branch').html()+strIsi);
+				}else{
+					alert("Maksimum choice of Branch is 5");
+				}
+			}	
+		});
+
+		$(document).on("click",".hapus_branch", function(e){
+            e.preventDefault();
+            total_branch--;
+            branch--;
+            $('#branch_'+$(this).val()).remove();
+            $(this).remove();
+        });
+	});
+
 	$(document).ready(function() {
         var frmAdd;
 
@@ -112,6 +235,9 @@
 	        frmAdd = _("actionAdd");
 	        frmAdd = new FormData(document.getElementById("actionAdd"));
 	        frmAdd.enctype = "multipart/form-data";
+
+	        frmAdd.append('total_branch', branch);
+
 	        var URLNya = $("#actionAdd").attr('action');
 	        console.log(URLNya);
 
