@@ -5,7 +5,7 @@
 @extends('admin.layouts.template')
 
 @section('style')
-<link rel="stylesheet" href="{{ asset('css/admin/calendarorganizer.css')}}">
+<link rel="stylesheet" href="{{ asset('css/admin/calendarorganizer.css?v='.filemtime('css/admin/calendarorganizer.css'))}}">
 <style>
 /* manual override */
 .cjslib-day-indicator {
@@ -115,9 +115,9 @@
               </div>
 
 
-        				<div class="table-responsive col-sm-12 col-md-12" style="padding: 0; border: 1px solid #ebedf2;">
-                  <div class="col-xs-12 col-sm-6" id="calendarContainer" style="padding: 0; float: left;"></div>
-              		<div class="col-xs-12 col-sm-6" id="organizerContainer" style="padding: 0; float: left;"></div>
+        				<div class="col-sm-12 col-md-12" style="padding: 0; border: 1px solid #ebedf2;">
+                  <div class="col-xs-12 col-sm-11 col-md-6 table-responsive" id="calendarContainer" style="padding: 0; float: left;"></div>
+              		<div class="col-xs-12 col-sm-11 col-md-6" id="organizerContainer" style="padding: 0; float: left;"></div>
         				</div>
               </div>
     			</div>
