@@ -24,8 +24,11 @@
 }
 
 .cjslib-calendar.cjslib-size-small {
-    width: 500px;
-    height: 500px;
+    width: 100%;
+    height: auto;
+    min-height: 500px;
+    /* width: 500px;
+    height: 500px; */
 }
 
 .cjslib-calendar.cjslib-size-medium {
@@ -362,8 +365,11 @@
 }
 
 .cjslib-events.cjslib-size-small {
-    width: 500px;
-    height: 500px;
+    width: 100%;
+    height: auto;
+    min-height: 500px;
+    /* width: 500px;
+    height: 500px; */
 }
 
 .cjslib-events.cjslib-size-medium {
@@ -516,7 +522,7 @@
             align-items: center;
     -ms-flex-line-pack: center;
             align-content: center;
-    padding: 10px;
+    padding: 5px;
     border-left: 1px solid rgba(21, 21, 21, 0.12);
     border-right: 1px solid rgba(21, 21, 21, 0.12);
 }

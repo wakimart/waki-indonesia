@@ -115,9 +115,9 @@
               </div>
 
 
-        				<div class="table-responsive" style="border: 1px solid #ebedf2;">
-                  <div id="calendarContainer" style="float: left;"></div>
-              		<div id="organizerContainer" style="float: left;"></div>
+        				<div class="table-responsive col-sm-12 col-md-12" style="padding: 0; border: 1px solid #ebedf2;">
+                  <div class="col-xs-12 col-sm-6" id="calendarContainer" style="padding: 0; float: left;"></div>
+              		<div class="col-xs-12 col-sm-6" id="organizerContainer" style="padding: 0; float: left;"></div>
         				</div>
               </div>
     			</div>
@@ -447,7 +447,7 @@ window.onload = function() {
                 desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }}",
                 dataId : "{{ $dataNya['id'] }}"
               });
-      } 
+      }
       catch (e){
         data[{{ $tahun }}][{{ $bulan }}][{{ $hari }}] = [];
         data[{{ $tahun }}][{{ $bulan }}][{{ $hari }}].push({
@@ -566,7 +566,7 @@ window.onload = function() {
         else{
           $('#calendarContainer-month-next').css('display', 'none');
         }
-        
+
         if(!(currentYear == maxDate.getFullYear() && currentYear == minDate.getFullYear())){
           if(currentYear == maxDate.getFullYear()){
             $('#calendarContainer-year-next').css('display', 'none');
@@ -583,7 +583,7 @@ window.onload = function() {
   // Year Slider (Left and Right Arrow) Click Listeners
   organizer.setOnClickListener('year-slider',
       // Called when the year left arrow is clicked
-      function () {  
+      function () {
         var currentYear = organizer.calendar.date.getFullYear();
         if(currentYear > minDate.getFullYear()){
           $('#calendarContainer-year-back').css('display', 'flex');
@@ -633,7 +633,7 @@ window.onload = function() {
           $('#calendarContainer-month-next').css('display', 'none');
           $('#calendarContainer-month-back').css('display', 'flex');
         }
-      }, 
+      },
   );
 
   //cek ada tahun depan atau belakang
