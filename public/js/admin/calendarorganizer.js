@@ -520,6 +520,10 @@ Organizer.prototype.list = function (data) {
         var btnEdit=document.createElement("button");
         btnEdit.id = this.id + "-list-item-" + i + "-time";
         btnEdit.className = "btnappoint btn-gradient-info mr-1 mdi mdi-border-color btn-homeservice-edit";
+        if(data[i].canEdit == ""){
+            btnEdit.className = "btnappoint btn-gradient-secondary mr-1 mdi mdi-border-color btn-homeservice-edit";
+            btnEdit.disabled = true;
+        }
         btnEdit.type = "button";
         btnEdit.dataset.toggle = "modal";
         btnEdit.dataset.target = "#editHomeServiceModal";
@@ -527,6 +531,10 @@ Organizer.prototype.list = function (data) {
         var btnDel=document.createElement("button");
         btnDel.id = this.id + "-list-item-" + i + "-time";
         btnDel.className = "btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel";
+        if(data[i].canDelete == ""){
+            btnDel.className = "btnappoint btn-gradient-secondary mdi mdi-calendar-remove btn-homeservice-cancel";
+            btnDel.disabled = true;
+        }
         btnDel.type = "button";
         btnDel.dataset.toggle = "modal";
         btnDel.dataset.target = "#deleteHomeServiceModal";
@@ -537,6 +545,10 @@ Organizer.prototype.list = function (data) {
         var btnCash=document.createElement("button");
         btnCash.id = this.id + "-list-item-" + i + "-cash";
         btnCash.className = "btnappoint btn-gradient-success mb-1 mdi mdi-cash-multiple btn-homeservice-cash";
+        if(data[i].canCash == ""){
+            btnCash.className = "btnappoint btn-gradient-secondary mb-1 mdi mdi-cash-multiple btn-homeservice-cash";
+            btnCash.disabled = true;
+        }
         btnCash.type = "button";
         btnCash.dataset.toggle = "modal";
         btnCash.dataset.target = "#cashHomeServiceModal";

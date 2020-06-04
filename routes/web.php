@@ -37,6 +37,7 @@ Route::get('/homeservice-success', 'HomeServiceController@successRegister')->nam
 
 //fetching data - data
 Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
+Route::get('/fetchCsoByIdBranch/{branch}', 'CsoController@fetchCsoByIdBranch')->name('fetchCsoByIdBranch');
 Route::get('/fetchBranchById', 'BranchController@fetchBranchById')->name('fetchBranchById');
 Route::get('/fetchCity/{province}', function ($province) {
 		return RajaOngkir::FetchCity($province);

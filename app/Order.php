@@ -20,11 +20,11 @@ class Order extends Model
     }
     public function cso_id_30()
     {
-        return $this->belongsTo('App\Cso');
+        return $this->belongsTo('App\Cso', '30_cso_id', 'id');
     }
     public function cso_id_70()
     {
-        return $this->belongsTo('App\Cso');
+        return $this->belongsTo('App\Cso', '70_cso_id', 'id');
     }
     public function branch()
     {

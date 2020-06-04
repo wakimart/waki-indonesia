@@ -33,8 +33,8 @@ class HomeServiceController extends Controller
         return view('homeservicesuccess', compact('homeService'));
     }
 
-    public function admin_ListHomeService(){
-        $branches = Branch::all();
+    public function admin_ListHomeService(Request $request){
+        $branches = Branch::Where('active', true)->get();
         $awalBulan = Carbon::now()->startOfMonth()->subMonth(4);
         $akhirBulan = Carbon::now()->startOfMonth()->addMonth(5);//5
 
@@ -57,24 +57,15 @@ class HomeServiceController extends Controller
                      ->whereIn('branch_id', $arrbranches)->where('active', true)->get();
         }
 
-        $arrCity = [];
-        if($homeServices != null){
-            array_push($arrCity, $homeServices[0]['city']);
-            foreach ($homeServices as $hs) {
-                $isSame = false;
-                foreach ($arrCity as $City) {
-                    if($City == $hs['city']){
-                        $isSame = true;
-                    }
-                }  
-                if(!$isSame){
-                    array_push($arrCity, $hs['city']);
-                }              
+        //kalau ada filter
+        if(Utils::$lang=='id'){
+            if($request->has('filter_city')){
+                $homeServices = Auth::user()->cso->home_service->where('active', true);//->where('city', 'like', '%'.$request->filter_city.'%');
+                dd($homeServices);
             }
         }
-        
 
-        return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches', 'arrCity'));
+        return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches'));
     }
 
     public function admin_fetchHomeService(Request $request){
@@ -119,7 +110,6 @@ class HomeServiceController extends Controller
             $homeService->fill($data)->save();
         }
         
-
         return $this->admin_ListHomeService();
     }
 }

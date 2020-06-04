@@ -106,7 +106,12 @@ class CsoController extends Controller
     }
 
     public function fetchCsoById(Request $request){
-        $cso = Cso::where('id', $request->id)->first();
+        $cso = Cso::Where('id', $request->id)->first();
+        return response()->json($cso);
+    }
+
+    public function fetchCsoByIdBranch($branch){
+        $cso = Cso::Where('branch_id', $branch)->get();
         return response()->json($cso);
     }
 }

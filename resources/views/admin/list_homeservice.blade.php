@@ -77,43 +77,67 @@
       				<div class="card-body">
       					<h5 style="margin-bottom: 0.5em;">Appointment</h5>
                 <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-                  <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
-                    <div class="form-group">
-                      <label for="">Filter By Province</label>
-                        <select class="form-control" id="filter_type" name="filter_type" data-msg="Mohon Pilih Tipe" required>
-                            <option selected disabled value="">Choose Filter</option>
-                                <option value="">All</option>
-                                <option value="">Province</option>
-                        </select>
-                        <div class="validation"></div>
+                  @if(Utils::$lang=='id')
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+                        <label for="">Filter By City</label>
+                          <select class="form-control" id="filter_province" name="filter_province">
+                              <option value="" selected="">All Province</option>
+                              @php
+                                $result = RajaOngkir::FetchProvince();
+                                $result = $result['rajaongkir']['results'];
+                                $arrProvince = [];
+                                if(sizeof($result) > 0){
+                                    foreach ($result as $value) {
+                                        echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+                                    }
+                                }
+                              @endphp
+                          </select>
+                          <div class="validation"></div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
-                    <div class="form-group">
-                      <label for="">Filter By City</label>
-                        <select class="form-control" id="filter_type" name="filter_type" data-msg="Mohon Pilih Tipe" required>
-                            <option selected disabled value="">Choose Filter</option>
-                                <option value="all">All</option>
-                                @foreach($arrCity as $city)
-                                  <option value="{{ $city }}">{{ $city }}</option>
-                                @endforeach
-                        </select>
-                        <div class="validation"></div>
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+                        <label style="opacity: 0;" for=""> s</label>
+                          <select class="form-control" id="filter_city" name="filter_city">
+                            <option value="">All City</option>
+                          </select>
+                          <div class="validation"></div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
+                  @endif
+                  <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                     <div class="form-group">
                       <label for="">Filter By Team</label>
-                        <select class="form-control" id="filter_type" name="filter_type" data-msg="Mohon Pilih Tipe" required>
-                            <option selected disabled value="">Choose Filter</option>
-                                <option value="">All</option>
-                                <option value="">Team</option>
+                        <select class="form-control" id="filter_branch" name="filter_branch">
+                          <option value="" selected="">All Branch</option>
+                          @foreach($branches as $branch)
+                              <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                          @endforeach
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                  </div>
+                  <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                    <div class="form-group">
+                      <label for="">Filter By CSO</label>
+                        <select class="form-control" id="filter_cso" name="filter_cso">
+                              <option value="">All CSO</option>
                         </select>
                         <div class="validation"></div>
                     </div>
                   </div>
               </div>
 
+              <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+                <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+                  <div class="form-group">
+                    <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+                    <button id="btn-filter" type="button" class="btn btn-gradient-info m-1" name="filter" value="-"><span class="mdi mdi-file-document"></span> Export XLS</button>
+                  </div>
+                </div>
+              </div>
 
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
                   <div id="calendarContainer" style="float: left;"></div>
@@ -390,20 +414,6 @@
 <script src="{{ asset('js/admin/calendarorganizer.js') }}"></script>
 
 <script>
- var btnCheckView = false;
- var btnCheckCancel = false;
- var btnCheckEdit = false;
-
-@if(Gate::check('detail-home_service'))
-  btnCheckView = true;
-@endif
-@if(Gate::check('delete-home_service'))
-  btnCheckCancel = true;
-@endif
-@if(Gate::check('edit-home_service'))
-  btnCheckEdit = true;
-@endif
-
 window.onload = function() {
   "use strict";
 
@@ -420,6 +430,19 @@ window.onload = function() {
         $bulan = $AppointmentNya->format('n');
         $hari = $AppointmentNya->format('j');
         $jam = $AppointmentNya->format('H:i');
+
+        $canEdit = false;
+        $canDelete = false;
+        $canCash = false;
+        if(Gate::check('detail-home_service')){
+          $canEdit = true;
+        }
+        if(Gate::check('delete-home_service')){
+          $canDelete = true;
+        }
+        if(Gate::check('edit-home_service')){
+          $canCash = true;
+        }
       @endphp
 
       //try tahun
@@ -445,7 +468,10 @@ window.onload = function() {
                 endTime: "{{ $jam }}",
                 title: "<a href=\"{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}\" target=\"_blank\">{{ $dataNya['code'] }}</a>",
                 desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }}",
-                dataId : "{{ $dataNya['id'] }}"
+                dataId : "{{ $dataNya['id'] }}",
+                canEdit : "{{ $canEdit }}",
+                canDelete : "{{ $canDelete }}",
+                canCash : "{{ $canCash }}"
               });
       } 
       catch (e){
@@ -455,7 +481,10 @@ window.onload = function() {
                 endTime: "{{ $jam }}",
                 title: "<a href=\"{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}\" target=\"_blank\">{{ $dataNya['code'] }}</a>",
                 desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }}",
-                dataId : "{{ $dataNya['id'] }}"
+                dataId : "{{ $dataNya['id'] }}",
+                canEdit : "{{ $canEdit }}",
+                canDelete : "{{ $canDelete }}",
+                canCash : "{{ $canCash }}"
               });
       }
     @endforeach
@@ -497,24 +526,6 @@ window.onload = function() {
   organizer = new Organizer("organizerContainer", // id of html container for calendar
     calendar, // defining the calendar that the organizer is related to
     data // giving the organizer the static data that should be displayed
-  );
-
-  // Days Block Click Listener
-  organizer.setOnClickListener('days-blocks',
-      // Called when a day block is clicked
-      function () {
-        if(btnCheckView){
-          $(document).find(".btn-homeservice-view").attr('disabled', 'true');
-          console.log("masuk");
-        }
-        if(btnCheckEdit){
-          $(document).find(".btn-homeservice-edit").attr('disabled', 'true');
-          $(document).find(".btn-homeservice-cash").attr('disabled', 'true');
-        }
-        if(btnCheckCancel){
-          $(document).find(".btn-homeservice-cancel").attr('disabled', 'true');
-        }
-      }
   );
 
   // Month Slider (Left and Right Arrow) Click Listeners
@@ -666,16 +677,38 @@ window.onload = function() {
       });
     });
 
-    if(btnCheckView){
-      $(document).find(".btn-homeservice-view").attr('disabled', 'true');
-    }
-    if(btnCheckEdit){
-      $(document).find(".btn-homeservice-edit").attr('disabled', 'true');
-      $(document).find(".btn-homeservice-cash").attr('disabled', 'true');
-    }
-    if(btnCheckCancel){
-      $(document).find(".btn-homeservice-cancel").attr('disabled', 'true');
-    }
+    $("#filter_province").on("change", function(){
+      var id = $(this).val();
+      $( "#filter_city" ).html("");
+      $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+      .done(function( result ) {
+          result = result['rajaongkir']['results'];
+          var arrCity = "<option selected value=\"\">All City</option>";
+          if(result.length > 0){
+              $.each( result, function( key, value ) {
+                  if(value['type'] == "Kota"){                            
+                      arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                  }
+              });
+              $( "#filter_city" ).append(arrCity);
+            }
+        });
+    });
+
+    $("#filter_branch").on("change", function(){
+      var id = $(this).val();
+      $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
+      .done(function( result ) {
+          $( "#filter_cso" ).html("");
+          var arrCSO = "<option selected value=\"\">All CSO</option>";
+          if(result.length > 0){
+              $.each( result, function( key, value ) {
+                arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
+              });
+              $( "#filter_cso" ).append(arrCSO);
+            }
+        });
+    });
   });
 };
 
@@ -771,7 +804,7 @@ $(document).on("click", ".btn-homeservice-view", function(e){
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
     type: 'get',
-    url: "{{ route('edit_homeService') }}",
+    url: "{{ route('detail_homeService') }}",
     data: {
         'id': e.target.value,
     },
