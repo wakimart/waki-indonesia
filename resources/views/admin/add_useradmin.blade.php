@@ -119,18 +119,30 @@
 							<div class="form-group">
 								<label for="">USERNAME ADMIN</label>
 								<input type="text" class="form-control" name="username" placeholder="Username Admin" required>
+								<span class="invalid-feedback">
+					                <strong></strong>
+					            </span>
 							</div>
 							<div class="form-group">
 								<label for="">ADMIN'S NAME</label>
 								<input type="text" class="form-control" name="name" placeholder="Nama Admin" required>
+								<span class="invalid-feedback">
+					                <strong></strong>
+					            </span>
 							</div>
 							<div class="form-group">
 								<label for="">PASSWORD</label>
 								<input type="password" name="password" class="form-control" required>
+								<span class="invalid-feedback">
+					                <strong></strong>
+					            </span>
 							</div>
 							<div class="form-group">
 								<label for="">RE-ENTER PASSWORD</label>
 								<input type="password" class="form-control" name="password_confirmation" required>
+								<span class="invalid-feedback">
+					                <strong></strong>
+					            </span>
 							</div>
 							<div class="form-group">
 								<label for="">BIRTH DATE</label>

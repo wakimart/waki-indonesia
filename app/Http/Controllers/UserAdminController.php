@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
+use Validator;
 
 class UserAdminController extends Controller
 {
@@ -51,55 +53,75 @@ class UserAdminController extends Controller
      */
     public function store(Request $request)
     {
-        $role = Role::find($request->get('role'));
-        $count = User::all()->count();
-        $count++;
+        $validator = \Validator::make($request->all(), [
+                    'name' => 'required|string|max:255',
+                    'username' => [
+                        'required',
+                        Rule::unique('users')->where('active', 1),
+                    ],
+                    'password' => 'required|string|min:6|confirmed',
+                    'role' => 'required|exists:roles,id',
+        ]);
 
-        $data = $request->only('name', 'username');
-        $data['name'] = strtoupper($data['name']);
-        $data['username'] = strtoupper($data['username']);
-
-        for ($i = strlen($count); $i < 4; $i++) {
-            $count = "0" . $count;
-        }
-
-        $code = "EMP-" . substr($data['username'], 0, 2) . $count;
-
-
-        $data['code'] = $code;
-        $data['password'] = Hash::make($request->get('password'));
-        $data['permissions'] = $role->permissions;
-        $data['user_image'] = null;
-        if ($request->hasFile('user_image')) {
-            $file = $request->file('user_image');
-            $filename = $data['code'] . ".jpg";
-            $imgPath = storage_path('app/admin');
-            $file->move($imgPath, $filename);
-            $data['user_image'] = $filename;
-        }
-
-        $data['birth_date'] = $request->get('birth_date');
-
-        if($request->has('branch_0')){
-            $arr_branchid = [];
-            for ($i=0; $i < $request->total_branch; $i++) { 
-                array_push($arr_branchid, $request->get('branch_' . $i));    
+        if ($validator->fails()) {
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
             }
-            $data['branches_id'] = json_encode($arr_branchid);
-        }
-        
-        if($request->has('cso_id')){
-            if($request->get('cso_id') != null){
-                $data['cso_id'] = $request->get('cso_id');    
-            }            
-        }
+            return response()->json(['errors' => $arr_Hasil]);
+        }else{
+            $role = Role::find($request->get('role'));
+            $count = User::all()->count();
+            $count++;
 
-        //  return response()->json(['test' => $data]);      
-        
-        $user = User::create($data); //INSERT INTO DATABASE (with created_at)
-        $user->roles()->attach($request['role']);
+            $data = $request->only('name', 'username');
+            $data['name'] = strtoupper($data['name']);
+            $data['username'] = strtoupper($data['username']);
 
-        return response()->json(['success' => 'Berhasil !!' . $user]);
+            for ($i = strlen($count); $i < 4; $i++) {
+                $count = "0" . $count;
+            }
+
+            $code = "EMP-" . substr($data['username'], 0, 2) . $count;
+
+
+            $data['code'] = $code;
+            $data['password'] = Hash::make($request->get('password'));
+            $data['permissions'] = $role->permissions;
+            $data['user_image'] = null;
+            if ($request->hasFile('user_image')) {
+                $file = $request->file('user_image');
+                $filename = $data['code'] . ".jpg";
+                $imgPath = storage_path('app/admin');
+                $file->move($imgPath, $filename);
+                $data['user_image'] = $filename;
+            }
+
+            $data['birth_date'] = $request->get('birth_date');
+
+            if($request->has('branch_0')){
+                $arr_branchid = [];
+                for ($i=0; $i < $request->total_branch; $i++) { 
+                    array_push($arr_branchid, $request->get('branch_' . $i));    
+                }
+                $data['branches_id'] = json_encode($arr_branchid);
+            }
+            
+            if($request->has('cso_id')){
+                if($request->get('cso_id') != null){
+                    $data['cso_id'] = $request->get('cso_id');    
+                }            
+            }
+
+            //  return response()->json(['test' => $data]);      
+            
+            $user = User::create($data); //INSERT INTO DATABASE (with created_at)
+            $user->roles()->attach($request['role']);
+
+            return response()->json(['success' => 'Berhasil !!' . $user]);
+        }
     }
 
     /**
@@ -145,44 +167,62 @@ class UserAdminController extends Controller
      */
     public function update(Request $request)
     {
-        $data = $request->only('name', 'username');
-        $data['name'] = strtoupper($data['name']);
-        $data['username'] = strtoupper($data['username']);
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'username' => [
+                'required',
+                Rule::unique('users')->whereNot('id', $request->get('id'))->where('active', 1),
+            ],
+        ]);
 
-        $user = User::find($request->input('idUserAdmin'));
+        if ($validator->fails()) {
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json(['errors' => $arr_Errors]);
+        }else{
+            $data = $request->only('name', 'username');
+            $data['name'] = strtoupper($data['name']);
+            $data['username'] = strtoupper($data['username']);
 
-        $userpermiss = json_decode($user->permissions, true);
+            $user = User::find($request->input('idUserAdmin'));
 
-        foreach ($userpermiss as $key => $value) {
-            $userpermiss[$key] = true;
-            if ($request->get($key) == "true") {
+            $userpermiss = json_decode($user->permissions, true);
+
+            foreach ($userpermiss as $key => $value) {
                 $userpermiss[$key] = true;
-            } else {
-                $userpermiss[$key] = false;
+                if ($request->get($key) == "true") {
+                    $userpermiss[$key] = true;
+                } else {
+                    $userpermiss[$key] = false;
+                }
             }
-        }
-        $data['permissions'] = json_encode($userpermiss);
+            $data['permissions'] = json_encode($userpermiss);
 
-        $data['birth_date'] = $request->get('birth_date');
+            $data['birth_date'] = $request->get('birth_date');
 
-        if($request->has('branch_0')){
-            $arr_branchid = [];
-            for ($i=0; $i < $request->total_branch; $i++) { 
-                array_push($arr_branchid, $request->get('branch_' . $i));    
+            if($request->has('branch_0')){
+                $arr_branchid = [];
+                for ($i=0; $i < $request->total_branch; $i++) { 
+                    array_push($arr_branchid, $request->get('branch_' . $i));    
+                }
+                $data['branches_id'] = json_encode($arr_branchid);
             }
-            $data['branches_id'] = json_encode($arr_branchid);
-        }
-        
-        if($request->has('cso_id')){
-            if($request->get('cso_id') != null){
-                $data['cso_id'] = $request->get('cso_id');    
-            }            
-        }
+            
+            if($request->has('cso_id')){
+                if($request->get('cso_id') != null){
+                    $data['cso_id'] = $request->get('cso_id');    
+                }            
+            }
 
-        $user->fill($data)->save();
-        return response()->json(['success' => $user]);
+            $user->fill($data)->save();
+            return response()->json(['success' => $user]);
 
-        return response()->json(['success' => 'Berhasil']);
+            return response()->json(['success' => 'Berhasil']);
+        }
     }
 
     public function serveImages($file) {

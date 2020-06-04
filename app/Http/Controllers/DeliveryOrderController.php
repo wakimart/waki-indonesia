@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\DeliveryOrder;
 use App\Branch;
 use App\Cso;
+use Illuminate\Validation\Rule;
+use Validator;
 
 class DeliveryOrderController extends Controller
 {
@@ -20,6 +22,7 @@ class DeliveryOrderController extends Controller
     }
 
     public function store(Request $request){
+
     	$data = $request->all();
     	$data['code'] = "DO_BOOK/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
     	$data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
