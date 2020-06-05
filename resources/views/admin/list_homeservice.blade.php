@@ -102,39 +102,69 @@
                         <label style="opacity: 0;" for=""> s</label>
                           <select class="form-control" id="filter_city" name="filter_city">
                             <option value="">All City</option>
+                            @if(isset($_GET['filter_city']))
+                              <option selected="" value="{{$_GET['filter_city']}}">{{$_GET['filter_city']}}</option>
+                            @endif
                           </select>
                           <div class="validation"></div>
                       </div>
                     </div>
                   @endif
-                  <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-                    <div class="form-group">
-                      <label for="">Filter By Team</label>
-                        <select class="form-control" id="filter_branch" name="filter_branch">
-                          <option value="" selected="">All Branch</option>
-                          @foreach($branches as $branch)
-                              <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-                          @endforeach
-                        </select>
-                        <div class="validation"></div>
+
+                  @if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+                        <label for="">Filter By Team</label>
+                          <select class="form-control" id="filter_branch" name="filter_branch">
+                            <option value="" selected="">All Branch</option>
+                            @foreach($branches as $branch)
+                              @php
+                                $selected = "";
+                                if(isset($_GET['filter_branch'])){
+                                  if($_GET['filter_branch'] == $branch['id']){
+                                    $selected = "selected=\"\"";
+                                  }
+                                }
+                              @endphp
+
+                              <option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                            @endforeach
+                          </select>
+                          <div class="validation"></div>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-                    <div class="form-group">
-                      <label for="">Filter By CSO</label>
-                        <select class="form-control" id="filter_cso" name="filter_cso">
-                              <option value="">All CSO</option>
-                        </select>
-                        <div class="validation"></div>
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+                        <label for="">Filter By CSO</label>
+                          <select class="form-control" id="filter_cso" name="filter_cso">
+                            <option value="">All CSO</option>
+                            @php
+                              if(isset($_GET['filter_branch'])){
+                                $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+
+                                foreach ($csos as $cso) {
+                                  if(isset($_GET['filter_cso'])){
+                                    if($_GET['filter_cso'] == $cso['id']){
+                                      echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+                                      continue;
+                                    }
+                                  }
+                                  echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+                                }
+                              }
+                            @endphp
+                          </select>
+                          <div class="validation"></div>
+                      </div>
                     </div>
-                  </div>
+                  @endif
               </div>
 
               <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
                 <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
                   <div class="form-group">
                     <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-                    <button id="btn-filter" type="button" class="btn btn-gradient-info m-1" name="filter" value="-"><span class="mdi mdi-file-document"></span> Export XLS</button>
+                    <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" value="-"><span class="mdi mdi-file-document"></span> Export XLS</button>
                   </div>
                 </div>
               </div>
@@ -708,6 +738,9 @@ window.onload = function() {
               $( "#filter_cso" ).append(arrCSO);
             }
         });
+      if(id == ""){
+        $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
+      }
     });
   });
 };
@@ -908,6 +941,29 @@ $(document).on("click", ".btn-homeservice-cash", function(e){
       }
     },
   });
+});
+
+$(document).on("click", "#btn-filter", function(e){
+  var urlParamArray = new Array();
+  var urlParamStr = "";
+  if($('#filter_city').val() != ""){
+    urlParamArray.push("filter_city=" + $('#filter_city').val());
+  }
+  if($('#filter_branch').val() != ""){
+    urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+  }
+  if($('#filter_cso').val() != ""){
+    urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+  }
+  for (var i = 0; i < urlParamArray.length; i++) {
+    if (i === 0) {
+      urlParamStr += "?" + urlParamArray[i]
+    } else {
+      urlParamStr += "&" + urlParamArray[i]
+    }
+  }
+
+  window.location.href = "{{route('admin_list_homeService')}}" + urlParamStr;
 });
 
 </script>

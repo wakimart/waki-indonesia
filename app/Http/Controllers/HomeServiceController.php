@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\HomeService;
 use App\Branch;
 use App\Cso;
+use App\Utils;
 use Carbon\Carbon;
 
 class HomeServiceController extends Controller
@@ -37,33 +38,38 @@ class HomeServiceController extends Controller
         $branches = Branch::Where('active', true)->get();
         $awalBulan = Carbon::now()->startOfMonth()->subMonth(4);
         $akhirBulan = Carbon::now()->startOfMonth()->addMonth(5);//5
+        $arrbranches = [];
 
         //khususu head-manager, head-admin, admin
         $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-                     ->where('active', true)->get();
+                     ->where('active', true);
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
-            $homeServices = Auth::user()->cso->home_service->where('active', true);
+            $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
         }
 
         //khusus akun branch dan area-manager
         if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
-            $arrbranches = [];
             foreach (Auth::user()->listBranches() as $value) {
                 array_push($arrbranches, $value['id']);
             }
             $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-                     ->whereIn('branch_id', $arrbranches)->where('active', true)->get();
+                     ->whereIn('branch_id', $arrbranches)->where('active', true);
         }
 
         //kalau ada filter
-        if(Utils::$lang=='id'){
-            if($request->has('filter_city')){
-                $homeServices = Auth::user()->cso->home_service->where('active', true);//->where('city', 'like', '%'.$request->filter_city.'%');
-                dd($homeServices);
-            }
+        if($request->has('filter_city')){
+            $homeServices = $homeServices->where('city', 'like', '%'.$request->filter_city.'%');
         }
+        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+            $homeServices = $homeServices->where('branch_id', $request->filter_branch);
+        }
+        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
+            $homeServices = $homeServices->where('cso_id', $request->filter_cso);
+        }
+
+        $homeServices = $homeServices->get();
 
         return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches'));
     }
