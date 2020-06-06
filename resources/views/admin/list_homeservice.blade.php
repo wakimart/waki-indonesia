@@ -160,14 +160,17 @@
                   @endif
               </div>
 
-              <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-                <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-                  <div class="form-group">
-                    <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-                    <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" value="-"><span class="mdi mdi-file-document"></span> Export XLS</button>
+
+              @if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
+                <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+                  <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+                    <div class="form-group">
+                      <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+                      <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" value="-"><span class="mdi mdi-file-document"></span> Export XLS</button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              @endif
 
         				<div class="col-sm-12 col-md-12" style="padding: 0; border: 1px solid #ebedf2;">
                   <div class="col-xs-12 col-sm-11 col-md-6 table-responsive" id="calendarContainer" style="padding: 0; float: left;"></div>
@@ -477,7 +480,7 @@ window.onload = function() {
 
       //try tahun
       try{
-        console.log(data[{{$tahun}}][{{$bulan}}]);
+        var kosonngan = data[{{$tahun}}][{{$bulan}}];
       }
       catch(e){
         data[{{$tahun}}] = {};
@@ -485,7 +488,7 @@ window.onload = function() {
 
       //try bulan
       try{
-        console.log(data[{{$tahun}}][{{$bulan}}][{{ $hari }}]);
+        var kosonngan = data[{{$tahun}}][{{$bulan}}][{{ $hari }}];
       }
       catch(e){
         data[{{$tahun}}][{{$bulan}}] = {};
@@ -742,6 +745,16 @@ window.onload = function() {
         $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
       }
     });
+
+    $("#btn-export").on("click", function(){
+      var tgl = organizer.calendar.date;
+      var tahun = tgl.getFullYear();
+      var hari = tgl.getDate();if(hari < 9)  hari="0" +hari;
+      var bulan = tgl.getMonth()+1;if(bulan < 9)  bulan="0" +bulan;
+      tgl = tahun+"-"+bulan+"-"+hari;
+      window.location.href = "{{route('homeservice_export-to-xls')}}?date=" + tgl;   
+    });
+
   });
 };
 

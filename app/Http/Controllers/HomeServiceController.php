@@ -9,6 +9,8 @@ use App\Branch;
 use App\Cso;
 use App\Utils;
 use Carbon\Carbon;
+use App\Exports\HomeServicesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class HomeServiceController extends Controller
 {
@@ -117,5 +119,18 @@ class HomeServiceController extends Controller
         }
         
         return $this->admin_ListHomeService();
+    }
+
+    public function export_to_xls(Request $request)
+    {
+        if($request->has('date')){
+            return Excel::download(new HomeServicesExport($request->date), 'Home Service.xlsx');
+        }
+        // $tgl = date($request->date);
+        // return view('admin.exports.homeservice1_export', [
+        //     'HomeServices' => HomeService::WhereDate('appointment', $tgl)->where('active', true)->orderBy('appointment', 'ASC')->get(),
+        //     'Branches' => Branch::Where('active', true)->get(),
+        //     'Csos' => Cso::Where('active', true)->get(),
+        // ]);
     }
 }

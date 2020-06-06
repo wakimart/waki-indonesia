@@ -188,6 +188,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update/', 'HomeServiceController@update')
                 ->name('update_homeService')
 		    	->middleware('can:edit-home_service');
+        //Export to XLS
+        Route::get('/export-to-xls', 'HomeServiceController@export_to_xls')
+                ->name('homeservice_export-to-xls');
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
