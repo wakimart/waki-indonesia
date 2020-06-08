@@ -112,7 +112,7 @@
                 <td>Address</td>
                 @foreach($nowHomeService as $showHS)
                     @if($showHS != null)
-                        <td>{{ $showHS['address'] }}</td>
+                        <td>{{ $showHS['address'] }} ( {{ $showHS['city'] }} )</td>
                     @else
                         <td></td>
                     @endif

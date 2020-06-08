@@ -747,12 +747,27 @@ window.onload = function() {
     });
 
     $("#btn-export").on("click", function(){
+      var urlParamArray = new Array();
+      var urlParamStr = "";
+      if($('#filter_city').val() != ""){
+        urlParamArray.push("filter_city=" + $('#filter_city').val());
+      }
+      if($('#filter_branch').val() != ""){
+        urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+      }
+      if($('#filter_cso').val() != ""){
+        urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+      }
+      for (var i = 0; i < urlParamArray.length; i++) {
+        urlParamStr += "&" + urlParamArray[i]
+      }
+
       var tgl = organizer.calendar.date;
       var tahun = tgl.getFullYear();
       var hari = tgl.getDate();if(hari < 9)  hari="0" +hari;
       var bulan = tgl.getMonth()+1;if(bulan < 9)  bulan="0" +bulan;
       tgl = tahun+"-"+bulan+"-"+hari;
-      window.location.href = "{{route('homeservice_export-to-xls')}}?date=" + tgl;   
+      window.location.href = "{{route('homeservice_export-to-xls')}}?date=" + tgl + urlParamStr;   
     });
 
   });

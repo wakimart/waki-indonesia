@@ -118,19 +118,28 @@ class HomeServiceController extends Controller
             $homeService->fill($data)->save();
         }
         
-        return $this->admin_ListHomeService();
+        $req = new Request();
+        return $this->admin_ListHomeService($req);
     }
 
     public function export_to_xls(Request $request)
     {
+        $date = null;
+        $city = null;
+        $branch = null;
+        $cso = null;
         if($request->has('date')){
-            return Excel::download(new HomeServicesExport($request->date), 'Home Service.xlsx');
+            $date = $request->date;
         }
-        // $tgl = date($request->date);
-        // return view('admin.exports.homeservice1_export', [
-        //     'HomeServices' => HomeService::WhereDate('appointment', $tgl)->where('active', true)->orderBy('appointment', 'ASC')->get(),
-        //     'Branches' => Branch::Where('active', true)->get(),
-        //     'Csos' => Cso::Where('active', true)->get(),
-        // ]);
+        if($request->has('filter_city')){
+            $city = $request->filter_city;
+        }
+        if($request->has('filter_branch')){
+            $branch = $request->filter_branch;
+        }
+        if($request->has('filter_cso')){
+            $cso = $request->filter_cso;
+        }
+        return Excel::download(new HomeServicesExport($date, $city, $branch, $cso), 'Home Service.xlsx');
     }
 }
