@@ -102,7 +102,7 @@
 
 							<div class="form-group">
 								<label for="">Quick Description</label>
-								<textarea id="edit_description" name="quick_desc" class="form-control form-control-sm"  rows="4" placeholder="Deskripsi Produk" required></textarea>
+								<textarea id="edit_quickdescription" name="quick_desc" class="form-control form-control-sm"  rows="4" placeholder="Deskripsi Produk" required></textarea>
 							</div>
 
 							<div class="form-group">
@@ -124,8 +124,12 @@
 
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+        CKEDITOR.replace('edit_quickdescription');
+        CKEDITOR.replace('edit_description');
+
         var frmAdd;
 
 	    $("#actionAdd").on("submit", function (e) {
