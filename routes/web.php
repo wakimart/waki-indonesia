@@ -44,6 +44,27 @@ Route::get('/fetchCity/{province}', function ($province) {
 	})->name('fetchCity');
 
 
+//KHUSUS WEB SERVICE APPS (for non CSRF)
+Route::group(['prefix' => 'api-apps'], function () {
+    Route::post('login','Auth\LoginController@loginApi'); //login
+    Route::get('fetchbranch', 'BranchController@fetchBranchApi'); //fetching all active branch
+    Route::get('fetchcso/{branchId}', 'CsoController@fetchCsoApi'); //fetching all active Cso by branch
+    Route::get('fetchPromosApi', 'DeliveryOrderController@fetchPromosApi'); //fetching all promo
+
+	Route::group(['prefix' => 'homeservice'], function () {
+	    Route::post('add','HomeServiceController@addApi'); //add home service
+	    Route::post('update','HomeServiceController@updateApi'); //update home service
+	    Route::post('delete','HomeServiceController@deleteApi'); //delete home service
+	    Route::post('list','HomeServiceController@listApi'); //list home service
+	    Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
+	});
+
+	Route::group(['prefix' => 'register'], function () {
+	    Route::post('add','DeliveryOrderController@addApi'); //add register DO
+	    Route::post('list','DeliveryOrderController@listApi'); //list register DO
+	});
+});
+
 Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {
 	Route::get('/', function () {

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\DeliveryOrder;
 use App\Branch;
 use App\Cso;
+use App\User;
 use Illuminate\Validation\Rule;
 use Validator;
 
@@ -195,5 +196,128 @@ class DeliveryOrderController extends Controller
      */
     public function delete(Request $request) {
         
+    }
+
+    //KHUSUS API APPS
+    public function fetchPromosApi(){
+        $data = DeliveryOrder::$Promo;
+        $data = ['result' => 1,
+                     'data' => $data
+                    ];
+            return response()->json($data, 200);
+    }
+
+    public function addApi(Request $request)
+    {
+        $messages = array(
+                'cso_id.required' => 'The CSO Code field is required.',
+                'cso_id.exists' => 'Wrong CSO Code.',
+                'branch_id.required' => 'The Branch must be selected.'
+            );
+
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'city' => 'required',
+            'cso_id' => ['required', 'exists:csos,code'],
+            'branch_id' => 'required',
+            'product_0' => 'required',
+            'qty_0' => 'required'
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $data = $request->all();
+            $data['code'] = "DO_BOOK/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+
+            //pembentukan array product
+            $data['arr_product'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($data['qty_'.$arrKey[1]])){
+                        $data['arr_product'][$key] = [];
+                        $data['arr_product'][$key]['id'] = $value;
+
+                        // {{-- KHUSUS Philiphin --}}
+                        if($value == 'other'){
+                            $data['arr_product'][$key]['id'] = $data['product_other_'.$arrKey[1]];
+                        }
+                        //===========================
+
+                        $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+                    }
+                }
+            }
+            $data['arr_product'] = json_encode($data['arr_product']);
+
+            $deliveryOrder = DeliveryOrder::create($data);
+            $deliveryOrder['URL'] = route('successorder')."?code=".$deliveryOrder['code'];
+
+            $data = ['result' => 1,
+                     'data' => $deliveryOrder
+                    ];
+            return response()->json($data, 200);
+        }
+    }
+
+    public function listApi(Request $request)
+    {
+        $messages = array(
+                'user_id.required' => 'There\'s an error with the data.',
+                'user_id.exists' => 'There\'s an error with the data.'
+            );
+
+        $validator = \Validator::make($request->all(), [
+            'user_id' => ['required', 'exists:users,id'],
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $data = $request->all();
+            $userNya = User::find($data['user_id']);
+
+            //khususu head-manager, head-admin, admin
+            $deliveryOrders = DeliveryOrder::where('delivery_orders.active', true);
+
+            //khusus akun CSO
+            if($userNya->roles[0]['slug'] == 'cso'){
+                $csoIdUser = $userNya->cso['id'];
+                $deliveryOrders = DeliveryOrder::where([['delivery_orders.active', true], ['delivery_orders.cso_id', $csoIdUser]]);
+            }
+
+            //khusus akun branch dan area-manager
+            if($userNya->roles[0]['slug'] == 'branch' || $userNya->roles[0]['slug'] == 'area-manager'){
+                $arrbranches = [];
+                foreach ($userNya->listBranches() as $value) {
+                    array_push($arrbranches, $value['id']);
+                }
+                $deliveryOrders = DeliveryOrder::WhereIn('delivery_orders.branch_id', $arrbranches)->where('delivery_orders.active', true);
+            }
+
+            $deliveryOrders = $deliveryOrders->leftjoin('branches', 'delivery_orders.branch_id', '=', 'branches.id')
+                                ->leftjoin('csos', 'delivery_orders.cso_id', '=', 'csos.id')
+                                ->select('delivery_orders.id', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.name as custommer_name', 'delivery_orders.arr_product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
+                                ->get();
+
+            $promos = DeliveryOrder::$Promo;
+
+            $data = ['result' => 1,
+                     'data' => ['regis' => $deliveryOrders, 'promos' => $promos]
+                    ];
+            return response()->json($data, 200);
+        }        
     }
 }

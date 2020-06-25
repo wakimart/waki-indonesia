@@ -147,13 +147,13 @@ class OrderController extends Controller
         return response()->json(['success' => 'Berhasil']);
     }
 
-    public function admin_ListOrder(){
+    public function admin_ListOrder(Request $request){
         //khususu head-manager, head-admin, admin
-        $orders = Order::all();
+        $orders = Order::where('active', true);
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
-            $orders = Auth::user()->cso->order_sales;
+            $orders = Order::where('cso_id', Auth::user()->cso['id'])->where('active', true);
         }
 
         //khusus akun branch dan area-manager
@@ -162,10 +162,21 @@ class OrderController extends Controller
             foreach (Auth::user()->listBranches() as $value) {
                 array_push($arrbranches, $value['id']);
             }
-            $orders = Order::WhereIn('branch_id', $arrbranches)->get();
+            $orders = Order::WhereIn('branch_id', $arrbranches)->where('active', true);
         }
 
-        return view('admin.list_order', compact('orders'));
+        //kalau ada Filter
+        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+            $orders = $orders->where('branch_id', $request->filter_branch);
+        }
+        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
+            $orders = $orders->where('cso_id', $request->filter_cso);
+        }
+
+        $orders = $orders->get();
+        $branches = Branch::Where('active', true)->get();
+
+        return view('admin.list_order', compact('orders', 'branches'));
     }
 
     public function admin_DetailOrder(Request $request){

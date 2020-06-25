@@ -114,4 +114,13 @@ class CsoController extends Controller
         $cso = Cso::Where('branch_id', $branch)->get();
         return response()->json($cso);
     }
+
+    //KHUSUS API APPS
+    public function fetchCsoApi($branchId){
+        $csos = Cso::where([['active', true],['branch_id', $branchId]])->get();
+        $data = ['result' => 1,
+                 'data' => $csos
+                ];
+        return response()->json($data,200);
+    }
 }
