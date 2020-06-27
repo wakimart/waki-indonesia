@@ -15,7 +15,7 @@ Auth::routes(['verify' => true]);
 
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category', 'CategoryProductController@index')->name('product_category');
-Route::get('/single_product', 'ProductController@index')->name('single_product');
+Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
 
 //DO Register
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
