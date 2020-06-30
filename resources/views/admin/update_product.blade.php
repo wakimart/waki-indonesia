@@ -112,7 +112,7 @@
 
 							<div class="form-group">
 								<label for="">Quick Description</label>
-								<textarea id="edit_description" name="quick_desc" class="form-control form-control-sm"  rows="4" value="{{$products['quick_desc']}}" required>{{$products['quick_desc']}}</textarea>
+								<textarea id="edit_quickdescription" name="quick_desc" class="form-control form-control-sm"  rows="4" value="{{$products['quick_desc']}}" required>{{$products['quick_desc']}}</textarea>
 							</div>
 
 							<div class="form-group">
@@ -134,8 +134,21 @@
 @endsection
 
 @section('script')
+<script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript">
+	$(document).ready(function() {
+        CKEDITOR.replace('edit_description');
+    });
+
+    $(document).ready(function() {
+        CKEDITOR.replace('edit_quickdescription');
+    });
+
+    function _(el){
+        return document.getElementById(el);
+    };
+
 	$(document).ready(function() {
         var frmUpdate;
 
@@ -144,6 +157,8 @@
 	        frmUpdate = _("actionUpdate");
 	        frmUpdate = new FormData(document.getElementById("actionUpdate"));
 	        frmUpdate.enctype = "multipart/form-data";
+	        frmUpdate.append('description', CKEDITOR.instances.edit_description.getData());
+	        frmUpdate.append('quick_description', CKEDITOR.instances.edit_quickdescription.getData());
 
 	        for (var i = 0; i < 3; i++)
 	        {
@@ -211,8 +226,8 @@
 	            alert("Input Error !!!");
 	        }
 	        else{
-	            alert("Input Success !!!");
-	            window.location.reload()
+	            // alert("Input Success !!!");
+	            // window.location.reload()
 	        }
 
 	        document.getElementById("updateProduct").innerHTML = "SAVE";
