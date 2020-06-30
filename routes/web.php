@@ -15,7 +15,7 @@ Auth::routes(['verify' => true]);
 
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category', 'CategoryProductController@index')->name('product_category');
-Route::get('/single_product', 'ProductController@index')->name('single_product');
+Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
 
 //DO Register
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
@@ -37,6 +37,7 @@ Route::get('/homeservice-success', 'HomeServiceController@successRegister')->nam
 
 //fetching data - data
 Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
+Route::get('/fetchCsoByIdBranch/{branch}', 'CsoController@fetchCsoByIdBranch')->name('fetchCsoByIdBranch');
 Route::get('/fetchBranchById', 'BranchController@fetchBranchById')->name('fetchBranchById');
 Route::get('/fetchCity/{province}', function ($province) {
 		return RajaOngkir::FetchCity($province);
@@ -187,6 +188,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update/', 'HomeServiceController@update')
                 ->name('update_homeService')
 		    	->middleware('can:edit-home_service');
+        //Export to XLS
+        Route::get('/export-to-xls', 'HomeServiceController@export_to_xls')
+                ->name('homeservice_export-to-xls');
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){

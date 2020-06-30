@@ -102,12 +102,12 @@
 
 							<div class="form-group">
 								<label for="">Quick Description</label>
-								<textarea id="edit_description" name="quick_desc" class="form-control form-control-sm"  rows="4" placeholder="Deskripsi Produk" required></textarea>
+								<textarea id="edit_quickdescription" name="quick_desc" class="form-control form-control-sm" rows="4" placeholder="Deskripsi Produk" required></textarea>
 							</div>
 
 							<div class="form-group">
 								<label for="">Description</label>
-								<textarea id="edit_description" name="description" class="form-control form-control-sm"  rows="4" placeholder="Description" required></textarea>
+								<textarea id="edit_description" name="description" class="form-control form-control-sm" rows="6" placeholder="Description" required></textarea>
 							</div>
 
 							<button id="addProduct" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
@@ -124,8 +124,12 @@
 
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+        CKEDITOR.replace('edit_quickdescription');
+        CKEDITOR.replace('edit_description');
+
         var frmAdd;
 
 	    $("#actionAdd").on("submit", function (e) {
@@ -133,6 +137,9 @@
 	        frmAdd = _("actionAdd");
 	        frmAdd = new FormData(document.getElementById("actionAdd"));
 	        frmAdd.enctype = "multipart/form-data";
+	        frmAdd.append('quick_desc', CKEDITOR.instances.edit_quickdescription.getData());
+	        frmAdd.append('description', CKEDITOR.instances.edit_description.getData());
+
 	        var URLNya = $("#actionAdd").attr('action');
 	        console.log(URLNya);
 
