@@ -19,14 +19,20 @@
       <div class="col-12 grid-margin stretch-card">
         <div class="card">
             <div class="card-body">
-              <form id="actionUpdate" class="forms-sample" method="POST" action="{{route('update_branch')}}">
+              <form id="actionUpdate" class="forms-sample" method="POST" action="{{route('update_branch', ['id' => $branches['id']])}}">
                   <div class="form-group">
                     <label for="">Code</label>
                     <input type="text" class="form-control" name="code" value="{{$branches['code']}}">
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                   </div>
                   <div class="form-group">
                     <label for="">Branch</label>
                     <input type="text" class="form-control" name="name" value="{{$branches['name']}}">
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                   </div>
 
                   <input type="hidden" name="idBranch" value="{{$branches['id']}}">

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Branch;
 use App\Order;
 use App\Cso;
+use Illuminate\Validation\Rule;
+use Validator;
 
 class CsoController extends Controller
 {
@@ -40,11 +42,31 @@ class CsoController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $data['code'] = strtoupper($data['code']);
-        $data['name'] = strtoupper($data['name']);
-        $cso = Cso::create($data);
-        return response()->json(['success' => 'Berhasil']);
+        $validator = \Validator::make($request->all(), [
+            'code' => [
+                'required',
+                Rule::unique('csos')->where('active', 1),
+            ],
+            'name' => 'required|string|max:255',
+            'branch_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json(['errors' => $arr_Hasil]);
+        }else{
+            $data = $request->all();
+            $data['code'] = strtoupper($data['code']);
+            $data['name'] = strtoupper($data['name']);
+            $data['branch_id'] = strtoupper($data['branch_id']);
+            $cso = Cso::create($data);
+            return response()->json(['success' => 'Berhasil']);
+        }
     }
 
     /**
@@ -85,13 +107,32 @@ class CsoController extends Controller
      */
     public function update(Request $request)
     {
-        $csos = Cso::find($request->input('idCso'));
-        $csos->code = $request->input('code');
-        $csos->name = $request->input('name');
-        $csos->branch_id = $request->input('branch_id');
-        $csos->save();
+        $validator = \Validator::make($request->all(), [
+            'code' => [
+                'required',
+                Rule::unique('csos')->whereNot('id', $request->get('id'))->where('active', 1),
+            ],
+            'name' => 'required|string|max:255',
+            'branch_id' => 'required',
+        ]);
 
-        return response()->json(['success' => 'Berhasil!']);
+        if ($validator->fails()) {
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json(['errors' => $arr_Errors]);
+        }else{
+            $csos = Cso::find($request->input('idCso'));
+            $csos->code = $request->input('code');
+            $csos->name = $request->input('name');
+            $csos->branch_id = $request->input('branch_id');
+            $csos->save();
+
+            return response()->json(['success' => 'Berhasil!']);
+        }
     }
 
     /**

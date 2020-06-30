@@ -25,10 +25,16 @@
 					      	<div class="form-group">
 					        	<label for="">Code</label>
 					        	<input type="text" class="form-control" name="code" placeholder="Branch Code" required>
+					        	<span class="invalid-feedback">
+			                        <strong></strong>
+			                    </span>
 					      	</div>
 					      	<div class="form-group">
 					        	<label for="">Name</label>
 					        	<input type="text" class="form-control" name="name" placeholder="Branch Name" required="">
+					        	<span class="invalid-feedback">
+			                        <strong></strong>
+			                    </span>
 					      	</div>
 
 					      	<button id="addBranch" type="submit" class="btn btn-gradient-primary mr-2">Save</button>

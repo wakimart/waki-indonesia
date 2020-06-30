@@ -2,7 +2,8 @@
     $menu_item_page = "order";
 ?>
 @extends('admin.layouts.template')
-@section('content')
+
+@section('style')
 <style type="text/css">
     .imagePreview {
 	    width: 100%;
@@ -50,7 +51,9 @@
         font-size: 14px !important;
     }
 </style>
+@endsection
 
+@section('content')
 <div class="main-panel">
   	<div class="content-wrapper">
     	<div class="page-header">

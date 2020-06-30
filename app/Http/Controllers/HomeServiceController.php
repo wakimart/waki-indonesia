@@ -8,6 +8,8 @@ use App\HomeService;
 use App\Branch;
 use App\Cso;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
+use Validator;
 
 class HomeServiceController extends Controller
 {
@@ -20,11 +22,25 @@ class HomeServiceController extends Controller
     public function store(Request $request){
         $data = $request->all();
         $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+
+        $getAppointment = $request->get('date')." ".$request->get('time');
+        $getIdCso = Cso::where('code', $data['cso_id'])->first()['id'];
+        $getHomeServices = HomeService::where([
+            ['cso_id', '=', $getIdCso],
+            ['appointment', '=', $getAppointment]
+        ])->get();
+        //dd(count($getHomeServices));
+        
+        if (count($getHomeServices) > 0) {
+            //return response()->json(['errors' => "An appointment has been already scheduled."]);
+            return redirect()->back()->with("errors","An appointment has been already scheduled.");
+        }
+
         $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
         $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
         $data['appointment'] = $data['date']." ".$data['time'];
         $order = HomeService::create($data);
-
+        //return response()->json(['berhasil' => $data]);
         return redirect()->route('homeServices_success', ['code'=>$order['code']]);
     }
 

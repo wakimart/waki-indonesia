@@ -424,8 +424,8 @@
               alert("Input Error !!!");
           }
           else{
-              // alert("Input Success !!!");
-              // window.location.reload()
+              alert("Input Success !!!");
+              window.location.reload()
           }
 
           document.getElementById("updateBanner").innerHTML = "SAVE";
