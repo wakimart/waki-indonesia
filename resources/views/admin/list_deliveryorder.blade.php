@@ -196,6 +196,23 @@
 
 @section('script')
 <script>
+$("#filter_branch").on("change", function(){
+      var id = $(this).val();
+      $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
+      .done(function( result ) {
+          $( "#filter_cso" ).html("");
+          var arrCSO = "<option selected value=\"\">All CSO</option>";
+          if(result.length > 0){
+              $.each( result, function( key, value ) {
+                arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
+              });
+              $( "#filter_cso" ).append(arrCSO);
+            }
+        });
+      if(id == ""){
+        $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
+      }
+    });
 $(document).on("click", "#btn-filter", function(e){
   var urlParamArray = new Array();
   var urlParamStr = "";
