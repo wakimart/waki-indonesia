@@ -62,7 +62,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 	    Route::post('add','HomeServiceController@addApi'); //add home service
 	    Route::post('update','HomeServiceController@updateApi'); //update home service
 	    Route::post('delete','HomeServiceController@deleteApi'); //delete home service
-	    Route::get('list','HomeServiceController@listApi'); //list home service
+	    Route::post('list','HomeServiceController@listApi'); //list home service
 	    Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
 	});
 
@@ -73,7 +73,9 @@ Route::group(['prefix' => 'api-apps'], function () {
 
 	Route::group(['prefix' => 'order'], function () {
 	    Route::post('add','OrderController@addApi'); //add order
-	    Route::post('list','OrderController@listApi'); //list order
+		Route::post('list','OrderController@listApi'); //list order
+		Route::post('update','OrderController@updateApi'); //update order
+		Route::get('view/{id}','OrderController@viewApi'); //view single order
 	});
 });
 

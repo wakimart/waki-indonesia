@@ -316,7 +316,7 @@ class HomeServiceController extends Controller
                      'data' => $homeServices
                     ];
             return response()->json($data, 200);
-        }
+        }        
     }
     
 
