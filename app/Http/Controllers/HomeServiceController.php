@@ -295,7 +295,6 @@ class HomeServiceController extends Controller
             $data = $request->all();
             $tgl=date_create($data['date']);
             $userSlug = User::find($data['user_id'])->roles[0];
-            return response()->json($userSlug, 200);
 
             //khususu head-manager, head-admin, admin
             $homeServices = HomeService::WhereMonth('home_services.appointment', '=', date_format($tgl, "n"))
