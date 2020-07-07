@@ -124,12 +124,11 @@ class DeliveryOrderController extends Controller
             $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->get();
         }
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
-            $homeServices = $homeServices->where('branch_id', $request->filter_branch);
+            $deliveryOrders = $deliveryOrders->where('branch_id', $request->filter_branch);
         }
         if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
-            $homeServices = $homeServices->where('cso_id', $request->filter_cso);
+            $deliveryOrders = $deliveryOrders->where('cso_id', $request->filter_cso);
         }
-
         $deliveryOrders = $deliveryOrders->paginate(10);
         return view('admin.list_deliveryorder', compact('deliveryOrders', 'countDeliveryOrders', 'branches'));
     }

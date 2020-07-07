@@ -70,7 +70,8 @@
 				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
 				  <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
 					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-					  <div class="form-group">
+						<label for=""></label>
+						<div class="form-group">
 						<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
 					  </div>
 					</div>
