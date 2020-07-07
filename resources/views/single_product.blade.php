@@ -56,89 +56,41 @@
           				<div class="row">
             				<div class="col-sm-12 col-md-6 col-lg-6 wow fadeInRight prodpd" data-wow-duration="1.4s">
               					<div class="image-zoom">
-                					<img src="https://waki.asia/wp-content/uploads/2019/05/wkt2080-1-300x300.jpg" data-zoom="enabled" style="background: center top no-repeat; background-size: contain; width: 100%; padding:1em;">
+                            @php
+                                $img = json_decode($product->image);
+                                $defaultImg = asset('sources/product_images/').'/'.strtolower($product['code']).'/'.$img[0];
+                            @endphp
+                					<img src="{{ $defaultImg }}" data-zoom="enabled" style="background: center top no-repeat; background-size: contain; width: 100%; padding:1em;">
               					</div>
               <!-- <div>
                 <img src="https://waki.asia/wp-content/uploads/2019/05/wkt2080-1-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
               </div> -->
               					<div class="titleprd">
-									<p class="titleprodcat">WKT2080 – WAKi Multi Functional Electro Massager Equipment</p>
+									<p class="titleprodcat">{{ $product->code }} – {{ $product->name }}</p>
               					</div>
             				</div>
 
             				<div class="col-sm-12 col-md-6 col-lg-6 wow fadeInRight prodpd" data-wow-duration="1.4s">
               					<div class="titleprd">
-                					<h4>WKT2080 – WAKi Multi Functional Electro Massager Equipment</h4>
-            						<p class="titleprodcat">
-                  					WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying
-                  					“Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in
-                  					“Internal Body Massage” effect.
-                  					<br>
-                  					<br>
-                  					“Bio-Electro Energy” and “Magnetic Heat Energy” can help to stimulate and activate meridians in
-                  					human body, venous cells, arterial cells, microvascular, and nervous system, especially for the
-                  					effects of foot and palm acupuncture point of reflexology zone. Apply about 30 to 40 minutes daily
-                  					for long term, it helps your whole family become healthier and more happiness.</p>
+                					<h4>{{ $product->code }} – {{ $product->name }}</h4>
+            						  <p class="titleprodcat">
+                  					{!! $product->quick_desc !!}
+                          </p>
                 					<p class="titleprodcat">
-                  					Category:
-                  					<a href="#">WAKi High Potential Therapy Range Tags: Far Infrared Medical Lamp</a>,
-                  					<a href="#">High Potential Therapeutic Equipment</a>,
-                  					<a href="#">High Potential Therapy</a></p>
+                  					Category : <a href="#">{{ $product->category['name'] }}</a>
+                          </p>
               					</div>
             				</div>
 
         					<div class="col-sm-12 col-md-12 col-lg-12 wow fadeInRight prodpd" data-wow-duration="1.4s" style="margin-top: 1em;">
               					<div class="titleprd">
-                					<h4>Description</h4>
-
-                  					<div class="row">
-                    					<div class="col-sm-6 col-md-4 col-lg-4">
-                      						<div>
-                        						<img src="https://waki.asia/wp-content/uploads/2019/05/meg_1.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-                      						</div>
-                      						<div class="titleprd">
-                    							<p class="titleprodcat"><strong>Buttock</strong></p>
-                        						<p class="titleprodcat">
-                          						Suitable for: People who has abdominal pain during menstruation, people who has unsmooth menstruation.</p>
-                      						</div>
-                    					</div>
-                    					<div class="col-sm-6 col-md-4 col-lg-4">
-                      						<div>
-                        						<img src="https://waki.asia/wp-content/uploads/2019/05/meg_2.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-                      						</div>
-                      						<div class="titleprd">
-						                        <p class="titleprodcat"><strong>Waist</strong></p>
-						                        <p class="titleprodcat">
-                      							Suitable for: People who are lack of energy “chi”, people who has lower back pain, people who are lack of stamina.</p>
-                      						</div>
-                    					</div>
-                    					<div class="col-sm-6 col-md-4 col-lg-4">
-                      						<div>
-                        						<img src="https://waki.asia/wp-content/uploads/2019/05/meg_3.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-                      						</div>
-                      						<div class="titleprd">
-						                        <p class="titleprodcat"><strong>Foot</strong></p>
-						                        <p class="titleprodcat">
-                          						Suitable for: People who has cold feet, people who has foot fatigue.</p>
-                      						</div>
-                    					</div>
-                  					</div><!-- row -->
-
-                  					<div class="desctxt">
-					                    <p class="titleprodcat">
-					                    WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying
-					                    “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in
-					                    “Internal Body Massage” effect.
-					                    <br>
-					                    <br>
-					                    “Bio-Electro Energy” and “Magnetic Heat Energy” can help to stimulate and activate meridians in
-					                    human body, venous cells, arterial cells, microvascular, and nervous system, especially for the
-					                    effects of foot and palm acupuncture point of reflexology zone. Apply about 30 to 40 minutes daily
-					                    for long term, it helps your whole family become healthier and more happiness.</p>
-                  					</div>
-                  					<div class="descvid">
-                    					<iframe width="100%" height="250px" position="relative" src="https://www.youtube.com/embed/jao2YY7_0sM" frameborder="0" allowfullscreen=""></iframe>
-                  					</div>
+                          <div>
+                            {!! $product->description !!}
+                          </div>
+                          
+                					<div class="descvid">
+                  					<iframe width="100%" height="250px" position="relative" src="{{ $product->video }}" frameborder="0" allowfullscreen=""></iframe>
+                					</div>
               					</div>
             				</div>
           				</div><!-- row -->

@@ -102,12 +102,12 @@
 
 							<div class="form-group">
 								<label for="">Quick Description</label>
-								<textarea id="edit_quickdescription" name="quick_desc" class="form-control form-control-sm"  rows="4" placeholder="Deskripsi Produk" required></textarea>
+								<textarea id="edit_quickdescription" name="quick_desc" class="form-control form-control-sm" rows="4" placeholder="Deskripsi Produk" required></textarea>
 							</div>
 
 							<div class="form-group">
 								<label for="">Description</label>
-								<textarea id="edit_description" name="description" class="form-control form-control-sm"  rows="4" placeholder="Description" required></textarea>
+								<textarea id="edit_description" name="description" class="form-control form-control-sm" rows="6" placeholder="Description" required></textarea>
 							</div>
 
 							<button id="addProduct" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
@@ -137,6 +137,9 @@
 	        frmAdd = _("actionAdd");
 	        frmAdd = new FormData(document.getElementById("actionAdd"));
 	        frmAdd.enctype = "multipart/form-data";
+	        frmAdd.append('quick_desc', CKEDITOR.instances.edit_quickdescription.getData());
+	        frmAdd.append('description', CKEDITOR.instances.edit_description.getData());
+
 	        var URLNya = $("#actionAdd").attr('action');
 	        console.log(URLNya);
 
