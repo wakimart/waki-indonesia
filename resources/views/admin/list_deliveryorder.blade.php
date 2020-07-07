@@ -56,6 +56,7 @@
                                       echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
                                       continue;
                                     }
+									@endif
                                   }
                                   echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
                                 }
@@ -65,7 +66,6 @@
                           <div class="validation"></div>
                       </div>
                     </div>
-                @endif
 			
 				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
 				  <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
@@ -209,10 +209,10 @@ $("#filter_branch").on("change", function(){
               $( "#filter_cso" ).append(arrCSO);
             }
         });
-      if(id == ""){
-        $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
-      }
-    });
+    if(id == ""){
+      $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
+  }
+});
 $(document).on("click", "#btn-filter", function(e){
   var urlParamArray = new Array();
   var urlParamStr = "";
