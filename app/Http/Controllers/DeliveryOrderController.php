@@ -201,8 +201,13 @@ class DeliveryOrderController extends Controller
     //KHUSUS API APPS
     public function fetchPromosApi(){
         $data = DeliveryOrder::$Promo;
+        $promos = [];
+        foreach ($data as $key => $value) {
+            $value['id'] = $key;
+            array_push($promos, $value);
+        }
         $data = ['result' => 1,
-                     'data' => $data
+                     'data' => $promos
                     ];
             return response()->json($data, 200);
     }
@@ -309,13 +314,29 @@ class DeliveryOrderController extends Controller
 
             $deliveryOrders = $deliveryOrders->leftjoin('branches', 'delivery_orders.branch_id', '=', 'branches.id')
                                 ->leftjoin('csos', 'delivery_orders.cso_id', '=', 'csos.id')
-                                ->select('delivery_orders.id', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.name as custommer_name', 'delivery_orders.arr_product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
+                                ->select('delivery_orders.id', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.name as customer_name', 'delivery_orders.arr_product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                                 ->get();
+
+            foreach ($deliveryOrders as $i => $doNya) {
+                $tempId = json_decode($doNya['arr_product'], true);
+                $tempArray = $doNya['arr_product'];
+                $tempArray = [];
+                foreach ($tempId as $j => $product) {
+                    $tempArray2 = [];
+                    $tempArray2['name'] = $product['id'];
+                    if(isset(DeliveryOrder::$Promo[$product['id']])){
+                        $tempArray2['name'] = DeliveryOrder::$Promo[$product['id']]['name'];
+                    }
+                    $tempArray2['qty'] = $product['qty'];
+                    array_push($tempArray, $tempArray2);
+                }
+                $doNya['arr_product'] = $tempArray;
+            }
 
             $promos = DeliveryOrder::$Promo;
 
             $data = ['result' => 1,
-                     'data' => ['regis' => $deliveryOrders, 'promos' => $promos]
+                     'data' => $deliveryOrders
                     ];
             return response()->json($data, 200);
         }        

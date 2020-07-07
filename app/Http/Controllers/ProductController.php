@@ -17,9 +17,10 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        return view('single_product');
+        $product = Product::find($id);
+        return view('single_product', compact('product'));
     }
 
     /**
