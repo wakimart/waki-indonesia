@@ -193,3 +193,27 @@
     });
 </script>
 @endsection
+
+@section('script')
+<script>
+$(document).on("click", "#btn-filter", function(e){
+  var urlParamArray = new Array();
+  var urlParamStr = "";
+  if($('#filter_branch').val() != ""){
+    urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+  }
+  if($('#filter_cso').val() != ""){
+    urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+  }
+  for (var i = 0; i < urlParamArray.length; i++) {
+    if (i === 0) {
+      urlParamStr += "?" + urlParamArray[i]
+    } else {
+      urlParamStr += "&" + urlParamArray[i]
+    }
+  }
+
+  window.location.href = "{{route('list_deliveryorder')}}" + urlParamStr;
+});
+</script>
+@endsection
