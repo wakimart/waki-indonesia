@@ -299,6 +299,21 @@ class OrderController extends Controller
     }
 
     //KHUSUS API APPS
+    public function fetchBanksApi(){
+        $data = Order::$Banks;
+        $banks = [];
+        foreach ($data as $key => $value) {
+            $temp = [];
+            $temp['id'] = $key;
+            $temp['name'] = $value;
+            array_push($banks, $temp);
+        }
+        $data = ['result' => 1,
+                     'data' => $banks
+                    ];
+        return response()->json($data, 200);
+    }
+
     public function addApi(Request $request)
     {
         $messages = array(
