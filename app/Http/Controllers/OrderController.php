@@ -149,7 +149,8 @@ class OrderController extends Controller
 
     public function admin_ListOrder(){
         //khususu head-manager, head-admin, admin
-        $orders = Order::all();
+        $orders = Order::paginate(10);
+        $countOrders = Order::count();
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
@@ -165,7 +166,7 @@ class OrderController extends Controller
             $orders = Order::WhereIn('branch_id', $arrbranches)->get();
         }
 
-        return view('admin.list_order', compact('orders'));
+        return view('admin.list_order', compact('orders','countOrders'));
     }
 
     public function admin_DetailOrder(Request $request){

@@ -18,8 +18,9 @@ class CsoController extends Controller
      */
     public function index()
     {
-        $csos = Cso::all();
-        return view('admin.list_cso', compact('csos'));
+        $csos = Cso::paginate(10);
+        $countCso = Cso::count();
+        return view('admin.list_cso', compact('csos','countCso'));
     }
 
     /**

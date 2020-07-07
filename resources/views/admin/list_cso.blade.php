@@ -23,7 +23,7 @@
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
-      					<h5 style="margin-bottom: 0.5em;">Total : {{ sizeof($csos) }} data</h5>
+      					<h5 style="margin-bottom: 0.5em;">Total : {{ $countCso }} data</h5>
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
         					<table class="table table-bordered">
           						<thead>
@@ -47,7 +47,9 @@
 				                        </tr>
 				                    @endforeach
           						</tbody>
-        					</table>
+							</table>
+							<br />
+							{{ $csos-> Links()}}
         				</div>
       				</div>
     			</div>

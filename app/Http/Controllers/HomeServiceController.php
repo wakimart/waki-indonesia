@@ -88,6 +88,8 @@ class HomeServiceController extends Controller
 
         $homeServices = $homeServices->get();
 
+        // $homeServices = collect($homeServices) -> paginate(10);
+
         return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches'));
     }
 

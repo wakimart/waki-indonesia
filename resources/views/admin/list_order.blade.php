@@ -21,7 +21,7 @@
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
-      					<h5 style="margin-bottom: 0.5em;">Total : {{ sizeof($orders) }} data</h5>
+      					<h5 style="margin-bottom: 0.5em;">Total : {{ $countOrders }} data</h5>
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
         					<table class="table table-bordered">
           						<thead>
@@ -51,7 +51,7 @@
 				                            <td rowspan="{{ $totalProduct }}">{{ $order['name'] }}</td>
 
 				                            @foreach($ProductPromos as $ProductPromo)
-				                            	@if(is_numeric($ProductPromo['id']))
+				                            	@if(isset(App\DeliveryOrder::$Promo[$ProductPromo['id']]))
 					                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
 					                            @else
 					                                <td>{{ $ProductPromo['id'] }}</td>
@@ -89,7 +89,9 @@
 				                        @endforeach
 				                    @endforeach
           						</tbody>
-        					</table>
+							</table>
+							<br/>
+							{{ $orders->links()}}
         				</div>
       				</div>
     			</div>

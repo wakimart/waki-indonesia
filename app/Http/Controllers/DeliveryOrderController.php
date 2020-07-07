@@ -103,9 +103,12 @@ class DeliveryOrderController extends Controller
         return response()->json(['success' => 'Berhasil!!']);
     }
 
-    public function admin_ListDeliveryOrder(){
+    public function admin_ListDeliveryOrder(Request $request){
+        $branches = Branch::Where('active', true)->get();
+
         //khususu head-manager, head-admin, admin
-        $deliveryOrders = DeliveryOrder::all();
+        $deliveryOrders = DeliveryOrder::where('delivery_orders.active', true);
+        $countDeliveryOrders = DeliveryOrder::count();
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
@@ -120,8 +123,15 @@ class DeliveryOrderController extends Controller
             }
             $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->get();
         }
-        
-        return view('admin.list_deliveryorder', compact('deliveryOrders'));
+        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+            $homeServices = $homeServices->where('branch_id', $request->filter_branch);
+        }
+        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
+            $homeServices = $homeServices->where('cso_id', $request->filter_cso);
+        }
+
+        $deliveryOrders = $deliveryOrders->paginate(10);
+        return view('admin.list_deliveryorder', compact('deliveryOrders', 'countDeliveryOrders', 'branches'));
     }
 
     public function admin_DetailDeliveryOrder(Request $request){
