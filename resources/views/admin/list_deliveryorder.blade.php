@@ -56,7 +56,6 @@
                                       echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
                                       continue;
                                     }
-									@endif
                                   }
                                   echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
                                 }
@@ -65,7 +64,8 @@
                           </select>
                           <div class="validation"></div>
                       </div>
-                    </div>
+					</div>
+				@endif
 			
 				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
 				  <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
