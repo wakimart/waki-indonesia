@@ -76,6 +76,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 		Route::post('list','OrderController@listApi'); //list order
 		Route::post('update','OrderController@updateApi'); //update order
 		Route::get('view/{id}','OrderController@viewApi'); //view single order
+		Route::post('delete','OrderController@deleteApi'); //delete order
 	});
 });
 

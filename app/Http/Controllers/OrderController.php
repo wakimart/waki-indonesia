@@ -595,4 +595,35 @@ class OrderController extends Controller
     }
 
 
+    public function deleteApi(Request $request)
+    {
+        $messages = array(
+            'id.required' => 'There\'s an error with the data.',
+            'id.exists' => 'There\'s an error with the data.'
+        );
+
+        $validator = \Validator::make($request->all(), [
+            'id' => ['required', 'exists:orders,id,active,1']
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $order = order::find($request->id);
+            $order->active = false;
+            $order->save();
+
+            $data = ['result' => 1,
+                     'data' => $order
+                    ];
+            return response()->json($data, 200);
+        }
+
+    }
+
+
 }
