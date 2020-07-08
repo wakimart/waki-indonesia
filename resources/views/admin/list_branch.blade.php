@@ -22,23 +22,8 @@
 				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
                     <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                       <div class="form-group">
-                        <label for="">Filter By Team</label>
-                          <select class="form-control" id="filter_branch" name="filter_branch">
-                            <option value="" selected="">All Branch</option>
-                            @foreach($branches as $branch)
-                              @php
-                                $selected = "";
-                                if(isset($_GET['filter_branch'])){
-                                  if($_GET['filter_branch'] == $branch['id']){
-                                    $selected = "selected=\"\"";
-                                  }
-                                }
-                              @endphp
-
-                              <option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-                            @endforeach
-                          </select>
-                          <div class="validation"></div>
+						<input class="form-control" id="search" name="search" placeholder="Search By Name">
+                        <div class="validation"></div>
                       </div>
                     </div>
 				@endif
@@ -46,7 +31,6 @@
 				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
 				  <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
 					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-						<label for=""></label>
 						<div class="form-group">
 						<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
 					  </div>
@@ -126,8 +110,8 @@
 	$(document).on("click", "#btn-filter", function(e){
 	  var urlParamArray = new Array();
 	  var urlParamStr = "";
-	  if($('#filter_branch').val() != ""){
-		urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+	  if($('#search').val() != ""){
+		urlParamArray.push("serach=" + $('#search').val());
 	  }
 	  for (var i = 0; i < urlParamArray.length; i++) {
 		if (i === 0) {
