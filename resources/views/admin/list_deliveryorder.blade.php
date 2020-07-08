@@ -77,6 +77,11 @@
 					</div>
 				  </div>
 				@endif
+
+				<div class="col-sm-12 col-md-12" style="padding: 0; border: 1px solid #ebedf2;">
+					<div class="col-xs-12 col-sm-11 col-md-6 table-responsive" id="calendarContainer" style="padding: 0; float: left;"></div>
+					<div class="col-xs-12 col-sm-11 col-md-6" id="organizerContainer" style="padding: 0; float: left;"></div>
+				</div>
 			
 			</div>
   			<div class="col-12 grid-margin stretch-card">

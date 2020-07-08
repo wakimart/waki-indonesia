@@ -147,9 +147,10 @@ class OrderController extends Controller
         return response()->json(['success' => 'Berhasil']);
     }
 
-    public function admin_ListOrder(){
+    public function admin_ListOrder(Request $request){
+        $branches = Branch::Where('active', true)->get();
         //khususu head-manager, head-admin, admin
-        $orders = Order::paginate(10);
+        $orders = Order::where('orders.active', true);
         $countOrders = Order::count();
 
         //khusus akun CSO
@@ -166,7 +167,15 @@ class OrderController extends Controller
             $orders = Order::WhereIn('branch_id', $arrbranches)->get();
         }
 
-        return view('admin.list_order', compact('orders','countOrders'));
+        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+            $deliveryOrders = $deliveryOrders->where('branch_id', $request->filter_branch);
+        }
+        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
+            $deliveryOrders = $deliveryOrders->where('cso_id', $request->filter_cso);
+        }
+
+        $orders = $orders->paginate(10);
+        return view('admin.list_order', compact('orders','countOrders','branches'));
     }
 
     public function admin_DetailOrder(Request $request){
