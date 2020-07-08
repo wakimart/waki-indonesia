@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Branch;
 use App\Order;
@@ -16,11 +17,29 @@ class CsoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $branches = Branch::Where('active', true)->get();
         $csos = Cso::paginate(10);
         $countCso = Cso::count();
-        return view('admin.list_cso', compact('csos','countCso'));
+    
+        return view('admin.list_cso', compact('csos','countCso', 'branches'));
+    }
+
+    public function admin_ListCso(Request $request)
+    {
+        $branches = Branch::Where('active', true)->get();
+        $csos = Cso::where('active', true);
+        $countCso = Cso::count();
+
+        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+            $csos = $csos->where('branch_id', $request->filter_branch);
+        }
+        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
+            $csos = $csos->where('id', $request->filter_cso);
+        }
+        $csos = $csos->paginate(10);
+        return view('admin.list_cso', compact('csos','countCso', 'branches'));
     }
 
     /**

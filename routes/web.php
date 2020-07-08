@@ -203,7 +203,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('store_cso')
 	    	->middleware('can:add-cso');
 	    //List CSO
-	    Route::get('/list', 'CsoController@index')
+	    Route::get('/list', 'CsoController@admin_ListCso')
 	    	->name('list_cso')
 	    	->middleware('can:browse-cso');
 	    //Edit CSO
