@@ -29,7 +29,7 @@ class CsoController extends Controller
     public function admin_ListCso(Request $request)
     {
         $branches = Branch::Where('active', true)->get();
-        $csos = Cso::where('active', true);
+        $csos = Cso::where('csos.active', true);
         $countCso = Cso::count();
 
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){

@@ -115,7 +115,7 @@
           						</tbody>
 							</table>
 							<br />
-							{{ $csos-> Links()}}
+							{{ $csos->links()}}
         				</div>
       				</div>
     			</div>
