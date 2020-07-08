@@ -203,6 +203,21 @@
 
 @section('script')
 <script>
+//fetching cso
+$.ajax({
+	headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		},
+	type: 'get',
+	url: "{{ route('fetchCsoById') }}",
+	data: {
+		'id': result['cso_id'],
+	},
+	success: function(data1){
+		$('#view-cso').val(data1['code']);
+    },
+});
+ 
 $("#filter_branch").on("change", function(){
       var id = $(this).val();
       $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
