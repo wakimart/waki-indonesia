@@ -237,7 +237,7 @@ $(document).on("click", "#btn-filter", function(e){
     }
   }
 
-  window.location.href = "{{route('list_deliveryorder')}}" + urlParamStr;
+  window.location.href = "{{route('admin_list_order')}}" + urlParamStr;
 });
 </script>
 @endsection
