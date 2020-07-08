@@ -16,8 +16,11 @@ class BranchController extends Controller
      */
     public function index()
     {   
-        $branches = Branch::all();
-        return view('admin.list_branch', compact('branches'));
+        $branches = Branch::where('branches.active', true);
+        $countBranches = Branch::where('branches.active', true)->count();
+
+        $branches = $branches->paginate(10);
+        return view('admin.list_branch', compact('branches', 'countBranches'));
     }
 
     /**
