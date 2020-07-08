@@ -199,60 +199,46 @@
         $("#frmDelete").attr("action",  $(this).val());
     });
 </script>
-@endsection
 
-@section('script')
 <script>
-//fetching cso
-$.ajax({
-	headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		},
-	type: 'get',
-	url: "{{ route('fetchCsoById') }}",
-	data: {
-		'id': result['cso_id'],
-	},
-	success: function(data1){
-		$('#view-cso').val(data1['code']);
-    },
-});
- 
-$("#filter_branch").on("change", function(){
-      var id = $(this).val();
-      $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
-      .done(function( result ) {
-          $( "#filter_cso" ).html("");
-          var arrCSO = "<option selected value=\"\">All CSO</option>";
-          if(result.length > 0){
-              $.each( result, function( key, value ) {
-                arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
-              });
-              $( "#filter_cso" ).append(arrCSO);
-            }
-        });
-    if(id == ""){
-      $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
-  }
-});
-$(document).on("click", "#btn-filter", function(e){
-  var urlParamArray = new Array();
-  var urlParamStr = "";
-  if($('#filter_branch').val() != ""){
-    urlParamArray.push("filter_branch=" + $('#filter_branch').val());
-  }
-  if($('#filter_cso').val() != ""){
-    urlParamArray.push("filter_cso=" + $('#filter_cso').val());
-  }
-  for (var i = 0; i < urlParamArray.length; i++) {
-    if (i === 0) {
-      urlParamStr += "?" + urlParamArray[i]
-    } else {
-      urlParamStr += "&" + urlParamArray[i]
-    }
-  }
-
-  window.location.href = "{{route('admin_list_order')}}" + urlParamStr;
-});
-</script>
+	$(document).ready(function(e){
+		$("#filter_branch").on("change", function(){
+		  console.log("test")
+		  var id = $(this).val();
+		  $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
+		  .done(function( result ) {
+			  $( "#filter_cso" ).html("");
+			  var arrCSO = "<option selected value=\"\">All CSO</option>";
+			  if(result.length > 0){
+				  $.each( result, function( key, value ) {
+					arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
+				  });
+				  $( "#filter_cso" ).append(arrCSO);
+				}
+			});
+		if(id == ""){
+		  $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
+	  }
+	});
+	});
+	$(document).on("click", "#btn-filter", function(e){
+	  var urlParamArray = new Array();
+	  var urlParamStr = "";
+	  if($('#filter_branch').val() != ""){
+		urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+	  }
+	  if($('#filter_cso').val() != ""){
+		urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+	  }
+	  for (var i = 0; i < urlParamArray.length; i++) {
+		if (i === 0) {
+		  urlParamStr += "?" + urlParamArray[i]
+		} else {
+		  urlParamStr += "&" + urlParamArray[i]
+		}
+	  }
+	
+	  window.location.href = "{{route('admin_list_order')}}" + urlParamStr;
+	});
+	</script>
 @endsection

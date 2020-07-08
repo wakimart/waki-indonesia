@@ -168,10 +168,10 @@ class OrderController extends Controller
         }
 
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
-            $deliveryOrders = $deliveryOrders->where('branch_id', $request->filter_branch);
+            $orders = $orders->where('branch_id', $request->filter_branch);
         }
         if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
-            $deliveryOrders = $deliveryOrders->where('cso_id', $request->filter_cso);
+            $orders = $orders->where('cso_id', $request->filter_cso);
         }
 
         $orders = $orders->paginate(10);
