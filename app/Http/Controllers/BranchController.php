@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Branch;
 use Illuminate\Validation\Rule;
@@ -14,11 +15,14 @@ class BranchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {   
         $branches = Branch::where('branches.active', true);
         $countBranches = Branch::where('branches.active', true)->count();
 
+        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+            $branches = $branches->where('id', $request->filter_branch);
+        }
         $branches = $branches->paginate(10);
         return view('admin.list_branch', compact('branches', 'countBranches'));
     }
