@@ -111,7 +111,7 @@
 	  var urlParamArray = new Array();
 	  var urlParamStr = "";
 	  if($('#search').val() != ""){
-		urlParamArray.push("serach=" + $('#search').val());
+		urlParamArray.push("search=" + $('#search').val());
 	  }
 	  for (var i = 0; i < urlParamArray.length; i++) {
 		if (i === 0) {
