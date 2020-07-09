@@ -21,7 +21,7 @@ class BranchController extends Controller
         $countBranches = Branch::where('branches.active', true)->count();
 
         if($request->has('search')){
-            $branches = $branches->where( 'name', 'LIKE', '%'.$request->search.'%' );
+            $branches = $branches->where( 'name', 'LIKE', '%'.$request->search.'%' )->orWhere( 'code', 'LIKE', '%'.$request->search.'%' );
         }
         $branches = $branches->paginate(10);
         return view('admin.list_branch', compact('branches', 'countBranches'));

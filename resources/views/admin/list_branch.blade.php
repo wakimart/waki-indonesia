@@ -22,7 +22,7 @@
 				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
                     <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                       <div class="form-group">
-						<input class="form-control" id="search" name="search" placeholder="Search By Name">
+						<input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
                         <div class="validation"></div>
                       </div>
                     </div>

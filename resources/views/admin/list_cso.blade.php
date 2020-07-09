@@ -45,25 +45,8 @@
                     </div>
                     <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                       <div class="form-group">
-                        <label for="">Filter By CSO</label>
-                          <select class="form-control" id="filter_cso" name="filter_cso">
-                            <option value="">All CSO</option>
-                            @php
-                              if(isset($_GET['filter_branch'])){
-                                $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
-
-                                foreach ($csos as $cso) {
-                                  if(isset($_GET['filter_cso'])){
-                                    if($_GET['filter_cso'] == $cso['id']){
-                                      echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                      continue;
-                                    }
-                                  }
-                                  echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                }
-                              }
-                            @endphp
-                          </select>
+						<label for="">Search By Name and Code</label>
+                        <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
                           <div class="validation"></div>
                       </div>
 					</div>
@@ -115,7 +98,7 @@
           						</tbody>
 							</table>
 							<br />
-							{{ $csos->links()}}
+							{{ $csos->Links()}}
         				</div>
       				</div>
     			</div>
@@ -152,34 +135,14 @@
 @section('script')
 
 <script>
-	$(document).ready(function(e){
-		$("#filter_branch").on("change", function(){
-		  console.log("test")
-		  var id = $(this).val();
-		  $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
-		  .done(function( result ) {
-			  $( "#filter_cso" ).html("");
-			  var arrCSO = "<option selected value=\"\">All CSO</option>";
-			  if(result.length > 0){
-				  $.each( result, function( key, value ) {
-					arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
-				  });
-				  $( "#filter_cso" ).append(arrCSO);
-				}
-			});
-		if(id == ""){
-		  $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
-	  }
-	});
-	});
 	$(document).on("click", "#btn-filter", function(e){
 	  var urlParamArray = new Array();
 	  var urlParamStr = "";
 	  if($('#filter_branch').val() != ""){
 		urlParamArray.push("filter_branch=" + $('#filter_branch').val());
 	  }
-	  if($('#filter_cso').val() != ""){
-		urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+	  if($('#search').val() != ""){
+		urlParamArray.push("search=" + $('#search').val());
 	  }
 	  for (var i = 0; i < urlParamArray.length; i++) {
 		if (i === 0) {
