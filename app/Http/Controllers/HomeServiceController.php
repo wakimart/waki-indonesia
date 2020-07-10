@@ -133,6 +133,15 @@ class HomeServiceController extends Controller
             $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
             $data['appointment'] = $data['date']." ".$data['time'];
             $homeService->fill($data)->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Home Service";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $data];
+            $historyUpdate['user_id'] = $user['id'];
+
+            $createData = HistoryUpdate::create($historyUpdate);
         }
         
         $req = new Request();
