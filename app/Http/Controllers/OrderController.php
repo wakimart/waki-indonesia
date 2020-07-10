@@ -268,6 +268,15 @@ class OrderController extends Controller
         $orders['description'] = $request->input('description');
         $orders->save();
 
+        $user = Auth::user();
+        $historyUpdate= [];
+        $historyUpdate['type_menu'] = "Order";
+        $historyUpdate['method'] = "Update";
+        $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $orders];
+        $historyUpdate['user_id'] = $user['id'];
+
+        $createData = HistoryUpdate::create($historyUpdate);
+
         return response()->json(['success' => 'Berhasil!']);
         
     }

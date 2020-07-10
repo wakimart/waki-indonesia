@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-// use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Branch;
 use App\Order;
 use App\Cso;
+use App\HistoryUpdate;
 use Illuminate\Validation\Rule;
 use Validator;
 
@@ -150,6 +151,15 @@ class CsoController extends Controller
             $csos->name = $request->input('name');
             $csos->branch_id = $request->input('branch_id');
             $csos->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Cso";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $csos];
+            $historyUpdate['user_id'] = $user['id'];
+
+            $createData = HistoryUpdate::create($historyUpdate);
 
             return response()->json(['success' => 'Berhasil!']);
         }

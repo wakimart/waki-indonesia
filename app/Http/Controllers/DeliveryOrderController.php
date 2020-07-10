@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\DeliveryOrder;
 use App\Branch;
 use App\Cso;
+use App\HistoryUpdate;
 use Illuminate\Validation\Rule;
 use Validator;
 
@@ -192,6 +193,18 @@ class DeliveryOrderController extends Controller
         $deliveryOrders->branch_id = $request->input('branch_id');
         $deliveryOrders->city = $request->input('city');
         $deliveryOrders->save();
+        
+
+        $user = Auth::user();
+        $historyUpdate= [];
+        $historyUpdate['type_menu'] = "Delivery Order";
+        $historyUpdate['method'] = "Update";
+        $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $deliveryOrders];
+        $historyUpdate['user_id'] = $user['id'];
+
+
+        $createData = HistoryUpdate::create($historyUpdate);
+
 
         return response()->json(['success' => 'Berhasil!!']);
     }

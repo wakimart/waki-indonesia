@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Branch;
+use App\HistoryUpdate;
 use Illuminate\Validation\Rule;
 use Validator;
 
@@ -127,6 +128,15 @@ class BranchController extends Controller
             $branches->code = $request->input('code');
             $branches->name = $request->input('name');
             $branches->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Branch";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $branches];
+            $historyUpdate['user_id'] = $user['id'];
+
+            $createData = HistoryUpdate::create($historyUpdate);
 
             return response()->json(['success' => 'Berhasil!']);
         }
