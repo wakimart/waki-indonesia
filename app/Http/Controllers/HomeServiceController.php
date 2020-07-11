@@ -155,6 +155,7 @@ class HomeServiceController extends Controller
                 'cso_id.required' => 'The CSO Code field is required.',
                 'cso_id.exists' => 'Wrong CSO Code.',
                 'branch_id.required' => 'The Branch must be selected.',
+                'branch_id.exists' => 'Please choose the branch.',
                 'cso2_id.required' => 'The CSO Code field is required.',
                 'cso2_id.exists' => 'Wrong CSO Code.'
             );
@@ -165,7 +166,7 @@ class HomeServiceController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
-            'branch_id' => 'required',
+            'branch_id' => ['required', 'exists:branches,id'],
             'cso_phone' => 'required',
             'date' => 'required',
             'time' => 'required',

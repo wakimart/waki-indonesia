@@ -339,8 +339,8 @@ class OrderController extends Controller
             'down_payment' => 'required',
             'remaining_payment' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
-            '30_cso_id' => ['required', 'exists:csos,code'],
-            '70_cso_id' => ['required', 'exists:csos,code'],
+            'cso_id_30' => ['required', 'exists:csos,code'],
+            'cso_id_70' => ['required', 'exists:csos,code'],
             'branch_id' => 'required'
         ], $messages);
 
@@ -354,8 +354,8 @@ class OrderController extends Controller
             $data = $request->all();
             $data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $data['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
-            $data['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
+            $data['cso_id_30'] = Cso::where('code', $data['cso_id_30'])->first()['id'];
+            $data['cso_id_70'] = Cso::where('code', $data['cso_id_70'])->first()['id'];
 
             //pembentukan array product
             $index = 0;
