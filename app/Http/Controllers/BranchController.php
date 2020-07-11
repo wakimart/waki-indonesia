@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Branch;
+use Illuminate\Validation\Rule;
+use Validator;
 
 class BranchController extends Controller
 {
@@ -36,11 +38,29 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $data['code'] = strtoupper($data['code']);
-        $data['name'] = strtoupper($data['name']);
-        $branch = Branch::create($data);
-        return response()->json(['success' => 'Berhasil']);
+        $validator = \Validator::make($request->all(), [
+            'code' => [
+                'required',
+                Rule::unique('branches')->where('active', 1),
+            ],
+            'name' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json(['errors' => $arr_Hasil]);
+        }else{
+            $data = $request->all();
+            $data['code'] = strtoupper($data['code']);
+            $data['name'] = strtoupper($data['name']);
+            $branch = Branch::create($data);
+            return response()->json(['success' => 'Berhasil']);
+        }   
     }
 
     /**
@@ -79,12 +99,30 @@ class BranchController extends Controller
      */
     public function update(Request $request)
     {
-        $branches = Branch::find($request->input('idBranch'));
-        $branches->code = $request->input('code');
-        $branches->name = $request->input('name');
-        $branches->save();
+        $validator = \Validator::make($request->all(), [
+            'code' => [
+                'required',
+                Rule::unique('branches')->whereNot('id', $request->get('id'))->where('active', 1),
+            ],
+            'name' => 'required|string|max:255',
+        ]);
 
-        return response()->json(['success' => 'Berhasil!']);
+        if ($validator->fails()) {
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json(['errors' => $arr_Hasil]);
+        }else{
+            $branches = Branch::find($request->input('idBranch'));
+            $branches->code = $request->input('code');
+            $branches->name = $request->input('name');
+            $branches->save();
+
+            return response()->json(['success' => 'Berhasil!']);
+        }
     }
 
     /**

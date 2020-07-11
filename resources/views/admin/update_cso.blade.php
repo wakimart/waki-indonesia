@@ -18,7 +18,7 @@
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
-        					<form id="actionUpdate" class="forms-sample" method="POST" action="{{route('update_cso')}}">
+        					<form id="actionUpdate" class="forms-sample" method="POST" action="{{ route('update_cso', ['id' => $csos['id']])}}">
           						<div class="form-group d-none">
             						<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
               							<div class="col-xs-4 col-sm-4" style="padding-left: 0;">
@@ -81,11 +81,17 @@
           					</div>
           					<div class="form-group">
 					            <label for="">Code</label>
-					            <input type="text" class="form-control" name="code" value="{{$csos['code']}}">
+					            <input type="text" class="form-control" name="code" value="{{$csos['code']}}" required>
+                      <span class="invalid-feedback">
+                          <strong></strong>
+                      </span>
           					</div>
           					<div class="form-group">
 					            <label for="">Name</label>
-					            <input type="text" class="form-control" name="name" value="{{$csos['name']}}">
+					            <input type="text" class="form-control" name="name" value="{{$csos['name']}}" required>
+                      <span class="invalid-feedback">
+                          <strong></strong>
+                      </span>
           					</div>
           					<div class="form-group d-none">
 					            <label for="">Phone Number</label>
@@ -198,7 +204,8 @@
 	                    $("#actionUpdate").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
 	                }
 	            }
-	            alert("Input Error !!!");
+	            alert(hasil['errors']);
+              //alert("Input Error!!!");
 	        }
 	        else{
 	            alert("Input Success !!!");

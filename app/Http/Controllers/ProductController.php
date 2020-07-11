@@ -123,8 +123,8 @@ class ProductController extends Controller
         $products->price = $request->input('price');
         $products->video = $request->input('video');
         $products->category_id = $request->input('category_id');
-        $products->description = $request->input('description');
-        $products->quick_desc = $request->input('quick_desc');
+        $products->description = $request->description;
+        $products->quick_desc = $request->quick_description;
 
 
         //restore image
@@ -169,6 +169,7 @@ class ProductController extends Controller
                 }
             }  
         }
+
         // return response()->json(['success' => $request->dlt_img ]);
         if($request->dlt_img!="")
         {
@@ -208,10 +209,14 @@ class ProductController extends Controller
             }
             
         }
+
         $namaGambarFix.="]";
         $products->image = $namaGambarFix;
         $products->save();
-        return response()->json(['success' => 'Berhasil']);
+        return response()->json(['testing' => $products]);
+
+
+        // return response()->json(['success' => 'Berhasil']);
     }
 
     /**

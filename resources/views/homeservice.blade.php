@@ -34,22 +34,38 @@
         <div class="row justify-content-center">
             <h2>FORM HOME SERVICE</h2>
         </div>
+
+        @if(session('errors'))
+            <div class="alert alert-danger">
+                {{ session('errors') }}
+            </div>
+        @endif
+        
         <div class="row justify-content-center">
-            <form action="{{ Route('store_home_service') }}" method="post" role="form" class="contactForm col-md-9">
+            <form id="actionAdd" action="{{ route('store_home_service') }}" method="POST" role="form" class="contactForm col-md-9">
                 @csrf
                 <br>
                 <h5>Data Pelanggan</h5>
                 <div class="form-group">
                     <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
                     <div class="validation"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name="name" id="name" placeholder="Nama" required data-msg="Mohon Isi Nama" />
                     <div class="validation"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                 </div>
                 <div class="form-group">
                     <input type="number" class="form-control" name="phone" id="phone" placeholder="Nomor Telepon" required data-msg="Mohon Isi Nomor Telepon" />
                     <div class="validation"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                 </div>
                 <div class="form-group">
                     {{-- <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" /> --}}
@@ -78,6 +94,9 @@
                 <div class="form-group">
                     <textarea class="form-control" name="address" rows="5" required data-msg="Mohon Isi Alamat" placeholder="Alamat"></textarea>
                     <div class="validation"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                 </div>
                 <br>
                 <h5>Data CSO</h5>
@@ -90,18 +109,30 @@
                         @endforeach
                     </select>
                     <div class="validation"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name="cso_id" id="cso" placeholder="Kode CSO" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
                     <div class="validation" id="validation_cso"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                 </div>
                 <div class="form-group">
                     <input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
                     <div class="validation"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control" name="cso2_id" id="cso2" placeholder="Kode Partner CSO (opsional)" style="text-transform:uppercase"/>
                     <div class="validation" id="validation_cso2"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                 </div>
 
                 <br>
@@ -109,10 +140,16 @@
                 <div class="form-group">
                     <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
                     <div class="validation"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                 </div>
                 <div class="form-group">
                     <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>
                     <div class="validation"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
                 </div>
 
                 <div id="errormessage"></div>
@@ -160,6 +197,22 @@
                         }
                     });
                     $( "#city" ).append(arrCity);
+                }
+            });
+        });
+
+        $('#submit').click(function(){
+            var appointment = 
+            $.ajax({
+                type: 'POST',
+                data: {
+                    date: date
+                },
+                success: function(data){
+                    console.log(data.data);
+                },
+                error: function(xhr){
+                    console.log(xhr.responseText);
                 }
             });
         });

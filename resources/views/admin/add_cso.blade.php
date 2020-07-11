@@ -84,10 +84,16 @@
           					<div class="form-group">
 					            <label for="">Code</label>
 					            <input type="text" class="form-control" name="code" placeholder="CSO Code" required>
+                      <span class="invalid-feedback">
+                          <strong></strong>
+                      </span>
           					</div>
           					<div class="form-group">
 					            <label for="">Name</label>
 					            <input type="text" class="form-control" name="name" placeholder="Name" required>
+                      <span class="invalid-feedback">
+                          <strong></strong>
+                      </span>
           					</div>
           					<div class="form-group d-none">
 					            <label for="">Phone Number</label>

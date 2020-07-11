@@ -54,13 +54,13 @@ class UserAdminController extends Controller
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-                    'name' => 'required|string|max:255',
-                    'username' => [
-                        'required',
-                        Rule::unique('users')->where('active', 1),
-                    ],
-                    'password' => 'required|string|min:6|confirmed',
-                    'role' => 'required|exists:roles,id',
+            'name' => 'required|string|max:255',
+            'username' => [
+                'required',
+                Rule::unique('users')->where('active', 1),
+            ],
+            'password' => 'required|string|min:6|confirmed',
+            'role' => 'required|exists:roles,id',
         ]);
 
         if ($validator->fails()) {
