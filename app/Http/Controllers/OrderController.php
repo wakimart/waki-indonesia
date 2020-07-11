@@ -8,6 +8,7 @@ use App\DeliveryOrder;
 use App\Order;
 use App\Branch;
 use App\Cso;
+use App\User;
 
 class OrderController extends Controller
 {
@@ -120,6 +121,13 @@ class OrderController extends Controller
                 if(isset($data['qty_'.$arrKey[1]])){
                     $data['arr_product'][$index] = [];
                     $data['arr_product'][$index]['id'] = $value;
+
+                    // {{-- KHUSUS Philiphin --}}
+                    if($value == 'other'){
+                        $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
+                    }
+                    //===========================
+
                     $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
                     $index++;
                 }
@@ -147,13 +155,13 @@ class OrderController extends Controller
         return response()->json(['success' => 'Berhasil']);
     }
 
-    public function admin_ListOrder(){
+    public function admin_ListOrder(Request $request){
         //khususu head-manager, head-admin, admin
-        $orders = Order::all();
+        $orders = Order::where('active', true);
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
-            $orders = Auth::user()->cso->order_sales;
+            $orders = Order::where('cso_id', Auth::user()->cso['id'])->where('active', true);
         }
 
         //khusus akun branch dan area-manager
@@ -162,10 +170,21 @@ class OrderController extends Controller
             foreach (Auth::user()->listBranches() as $value) {
                 array_push($arrbranches, $value['id']);
             }
-            $orders = Order::WhereIn('branch_id', $arrbranches)->get();
+            $orders = Order::WhereIn('branch_id', $arrbranches)->where('active', true);
         }
 
-        return view('admin.list_order', compact('orders'));
+        //kalau ada Filter
+        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+            $orders = $orders->where('branch_id', $request->filter_branch);
+        }
+        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
+            $orders = $orders->where('cso_id', $request->filter_cso);
+        }
+
+        $orders = $orders->get();
+        $branches = Branch::Where('active', true)->get();
+
+        return view('admin.list_order', compact('orders', 'branches'));
     }
 
     public function admin_DetailOrder(Request $request){
@@ -224,6 +243,13 @@ class OrderController extends Controller
                 if(isset($data['qty_'.$arrKey[1]])){
                     $data['arr_product'][$index] = [];
                     $data['arr_product'][$index]['id'] = $value;
+
+                    // {{-- KHUSUS Philiphin --}}
+                    if($value == 'other'){
+                        $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
+                    }
+                    //===========================
+
                     $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
                     $index++;
                 }
@@ -270,5 +296,178 @@ class OrderController extends Controller
      */
     public function delete(Request $request) {
         
+    }
+
+    //KHUSUS API APPS
+    public function fetchBanksApi(){
+        $data = Order::$Banks;
+        $banks = [];
+        foreach ($data as $key => $value) {
+            $temp = [];
+            $temp['id'] = $key;
+            $temp['name'] = $value;
+            array_push($banks, $temp);
+        }
+        $data = ['result' => 1,
+                     'data' => $banks
+                    ];
+        return response()->json($data, 200);
+    }
+
+    public function addApi(Request $request)
+    {
+        $messages = array(
+                'cso_id.required' => 'The CSO Code field is required.',
+                'cso_id.exists' => 'Wrong CSO Code.',
+                'branch_id.required' => 'The Branch must be selected.',
+                'old_product.required_if' => 'The old product field is required when upgrade.'
+            );
+
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'city' => 'required',
+            'cash_upgrade' => 'required',
+            'product_0' => 'required',
+            'qty_0' => 'required',
+            'old_product' => 'required_if:cash_upgrade,==,2',
+            'payment_type' => 'required',
+            'bank_0' => 'required',
+            'cicilan_0' => 'required',
+            'total_payment' => 'required',
+            'down_payment' => 'required',
+            'remaining_payment' => 'required',
+            'cso_id' => ['required', 'exists:csos,code'],
+            'cso_id_30' => ['required', 'exists:csos,code'],
+            'cso_id_70' => ['required', 'exists:csos,code'],
+            'branch_id' => 'required'
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $data = $request->all();
+            $data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $data['cso_id_30'] = Cso::where('code', $data['cso_id_30'])->first()['id'];
+            $data['cso_id_70'] = Cso::where('code', $data['cso_id_70'])->first()['id'];
+
+            //pembentukan array product
+            $index = 0;
+            $data['arr_product'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($data['qty_'.$arrKey[1]])){
+                        $data['arr_product'][$index] = [];
+                        $data['arr_product'][$index]['id'] = $value;
+
+                        // {{-- KHUSUS Philiphin --}}
+                        if($value == 'other'){
+                            $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
+                        }
+                        //===========================
+
+                        $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
+                        $index++;
+                    }
+                }
+            }
+            $data['product'] = json_encode($data['arr_product']);
+
+            //pembentukan array Bank
+            $index = 0;
+            $data['arr_bank'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'bank'){
+                    if(isset($data['cicilan_'.$arrKey[1]])){
+                        $data['arr_bank'][$index] = [];
+                        $data['arr_bank'][$index]['id'] = $value;
+                        $data['arr_bank'][$index]['cicilan'] = $data['cicilan_'.$arrKey[1]];
+                        $index++;
+                    }
+                }
+            }
+            $data['bank'] = json_encode($data['arr_bank']);
+            $order = Order::create($data);
+            $order['URL'] = route('order_success')."?code=".$order['code'];
+
+            $data = ['result' => 1,
+                     'data' => $order
+                    ];
+            return response()->json($data, 200);
+        }
+    }
+
+    public function listApi(Request $request)
+    {
+        $messages = array(
+                'user_id.required' => 'There\'s an error with the data.',
+                'user_id.exists' => 'There\'s an error with the data.'
+            );
+
+        $validator = \Validator::make($request->all(), [
+            'user_id' => ['required', 'exists:users,id'],
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $data = $request->all();
+            $userNya = User::find($data['user_id']);
+
+            //khususu head-manager, head-admin, admin
+            $orders = Order::where('orders.active', true);
+
+            //khusus akun CSO
+            if($userNya->roles[0]['slug'] == 'cso'){
+                $csoIdUser = $userNya->cso['id'];
+                $orders = Order::where([['orders.active', true], ['orders.cso_id', $csoIdUser]]);
+            }
+
+            //khusus akun branch dan area-manager
+            if($userNya->roles[0]['slug'] == 'branch' || $userNya->roles[0]['slug'] == 'area-manager'){
+                $arrbranches = [];
+                foreach ($userNya->listBranches() as $value) {
+                    array_push($arrbranches, $value['id']);
+                }
+                $orders = Order::WhereIn('orders.branch_id', $arrbranches)->where('orders.active', true);
+            }
+
+            $orders = $orders->leftjoin('branches', 'orders.branch_id', '=', 'branches.id')
+                                ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
+                                ->select('orders.id', 'orders.code', 'orders.created_at', 'orders.name as customer_name', 'orders.product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
+                                ->get();
+
+            foreach ($orders as $i => $doNya) {
+                $tempId = json_decode($doNya['product'], true);
+                $tempArray = $doNya['product'];
+                $tempArray = [];
+                foreach ($tempId as $j => $product) {
+                    $tempArray[$j] = [];
+                    $tempArray[$j]['name'] = $product['id'];
+                    if(isset(DeliveryOrder::$Promo[$product['id']])){
+                        $tempArray[$j]['name'] = DeliveryOrder::$Promo[$product['id']]['name'];
+                    }
+                    $tempArray[$j]['qty'] = $product['qty'];
+                }
+                $doNya['product'] = $tempArray;
+            }
+
+            $data = ['result' => 1,
+                     'data' => $orders
+                    ];
+            return response()->json($data, 200);
+        }        
     }
 }

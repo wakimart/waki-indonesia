@@ -140,4 +140,13 @@ class BranchController extends Controller
         $branch = Branch::where('id', $request->id)->first();
         return response()->json($branch);
     }
+
+    //KHUSUS API APPS
+    public function fetchBranchApi(){
+        $branches = Branch::where('active', true)->get();
+        $data = ['result' => 1,
+                 'data' => $branches
+                ];
+        return response()->json($data,200);
+    }
 }

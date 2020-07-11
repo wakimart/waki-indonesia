@@ -90,10 +90,16 @@
                         <td>Quantity</td>
                     </thead>
 
-                    @foreach(json_decode($order['product']) as $promo)
+                     @foreach(json_decode($order['product'], true) as $ProductPromo)
                         <tr>
-                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
-                            <td>{{ $promo->qty }}</td>
+                            @if(is_numeric($ProductPromo['id']))
+                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
+                            @else
+                                <td>{{ $ProductPromo['id'] }}</td>
+                            @endif
+                            
+                            <td>{{ $ProductPromo['qty'] }}</td>
+                            @php break; @endphp
                         </tr>
                     @endforeach
                     @if($order['old_product'] != null)

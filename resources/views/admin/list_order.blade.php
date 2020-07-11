@@ -22,6 +22,64 @@
     			<div class="card">
       				<div class="card-body">
       					<h5 style="margin-bottom: 0.5em;">Total : {{ sizeof($orders) }} data</h5>
+      						@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
+	      					<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+	      						<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+	      							<div class="form-group">
+	      								<label for="">Filter By Team</label>
+	      								<select class="form-control" id="filter_branch" name="filter_branch">
+	      									<option value="" selected="">All Branch</option>
+	      									@foreach($branches as $branch)
+	      									@php
+	      									$selected = "";
+	      									if(isset($_GET['filter_branch'])){
+	      										if($_GET['filter_branch'] == $branch['id']){
+	      											$selected = "selected=\"\"";
+	      										}
+	      									}
+	      									@endphp
+
+	      									<option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+	      									@endforeach
+	      								</select>
+	      								<div class="validation"></div>
+	      							</div>
+	      						</div>
+	      						<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+	      							<div class="form-group">
+	      								<label for="">Filter By CSO</label>
+	      								<select class="form-control" id="filter_cso" name="filter_cso">
+	      									<option value="">All CSO</option>
+	      									@php
+	      									if(isset($_GET['filter_branch'])){
+	      										$csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+
+	      										foreach ($csos as $cso) {
+	      											if(isset($_GET['filter_cso'])){
+	      												if($_GET['filter_cso'] == $cso['id']){
+	      													echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+	      													continue;
+	      												}
+	      											}
+	      											echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+	      										}
+	      									}
+	      									@endphp
+	      								</select>
+	      								<div class="validation"></div>
+	      							</div>
+	      						</div>
+	      					</div>
+
+      					<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+      						<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+      							<div class="form-group">
+      								<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+      							</div>
+      						</div>
+      					</div>
+      					@endif
+
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
         					<table class="table table-bordered">
           						<thead>
@@ -29,9 +87,9 @@
 						              	<th> No. </th>
 						              	<th> Order Code </th>
 						              	<th> Order Date </th>
+						              	<th> Branch </th>
 						              	<th> Member Name </th>
 						              	<th colspan="2"> Product </th>
-						              	<th> Branch </th>
 						              	<th> CSO </th>
 						              	@if(Gate::check('edit-order') || Gate::check('delete-order'))
 							              	<th colspan="2"> Edit / Delete </th>
@@ -48,6 +106,7 @@
 				                        	<td rowspan="{{ $totalProduct }}">{{$key+1}}</td>
 				                            <td rowspan="{{ $totalProduct }}"><a href="{{ route('detail_order') }}?code={{ $order['code'] }}">{{ $order['code'] }}</a></td>
 				                            <td rowspan="{{ $totalProduct }}">{{ date("d/m/Y", strtotime($order['created_at'])) }}</td>
+				                            <td rowspan="{{ $totalProduct }}">{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
 				                            <td rowspan="{{ $totalProduct }}">{{ $order['name'] }}</td>
 
 				                            @foreach($ProductPromos as $ProductPromo)
@@ -60,7 +119,6 @@
 				                                <td>{{ $ProductPromo['qty'] }}</td>
 				                                @php break; @endphp
 				                            @endforeach
-				                            <td rowspan="{{ $totalProduct }}">{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
 				                            <td rowspan="{{ $totalProduct }}">{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
 				                            @can('edit-order')
 					                            <td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('edit_order', ['id' => $order['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
@@ -121,4 +179,48 @@
     </div>
     <!-- End Modal Delete -->
 </div>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+	$(document).ready(function(e){
+		$("#filter_branch").on("change", function(){
+	      var id = $(this).val();
+	      $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
+	      .done(function( result ) {
+	          $( "#filter_cso" ).html("");
+	          var arrCSO = "<option selected value=\"\">All CSO</option>";
+	          if(result.length > 0){
+	              $.each( result, function( key, value ) {
+	                arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
+	              });
+	              $( "#filter_cso" ).append(arrCSO);
+	            }
+	        });
+	      if(id == ""){
+	        $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
+	      }
+	    });
+	});
+
+	$(document).on("click", "#btn-filter", function(e){
+		var urlParamArray = new Array();
+		var urlParamStr = "";
+		if($('#filter_branch').val() != ""){
+			urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+		}
+		if($('#filter_cso').val() != ""){
+			urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+		}
+		for (var i = 0; i < urlParamArray.length; i++) {
+			if (i === 0) {
+				urlParamStr += "?" + urlParamArray[i]
+			} else {
+				urlParamStr += "&" + urlParamArray[i]
+			}
+		}
+
+		window.location.href = "{{route('admin_list_order')}}" + urlParamStr;
+	});
+</script>
 @endsection

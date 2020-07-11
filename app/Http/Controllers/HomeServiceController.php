@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\HomeService;
 use App\Branch;
 use App\Cso;
+use App\User;
 use App\Utils;
 use Carbon\Carbon;
 use App\Exports\HomeServicesExport;
@@ -22,7 +23,7 @@ class HomeServiceController extends Controller
     }
 
     public function store(Request $request){
-        $data = $request->all();
+        $data = $request->all(); dd($data);
         $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
 
         $getAppointment = $request->get('date')." ".$request->get('time');
@@ -39,7 +40,9 @@ class HomeServiceController extends Controller
         }
 
         $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-        $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
+        if($request->has('cso2_id')){
+            $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];            
+        }
         $data['appointment'] = $data['date']." ".$data['time'];
         $order = HomeService::create($data);
         //return response()->json(['berhasil' => $data]);
@@ -128,7 +131,9 @@ class HomeServiceController extends Controller
             $data = $request->all();
             $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
+            if($request->has('cso2_id')){
+                $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];            
+            }
             $data['appointment'] = $data['date']." ".$data['time'];
             $homeService->fill($data)->save();
         }
@@ -156,5 +161,177 @@ class HomeServiceController extends Controller
             $cso = $request->filter_cso;
         }
         return Excel::download(new HomeServicesExport($date, $city, $branch, $cso), 'Home Service.xlsx');
+    }
+
+    //KHUSUS API APPS
+    public function addApi(Request $request)
+    {
+        $messages = array(
+                'cso_id.required' => 'The CSO Code field is required.',
+                'cso_id.exists' => 'Wrong CSO Code.',
+                'branch_id.required' => 'The Branch must be selected.',
+                'branch_id.exists' => 'Please choose the branch.',
+                'cso2_id.required' => 'The CSO Code field is required.',
+                'cso2_id.exists' => 'Wrong CSO Code.'
+            );
+
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'city' => 'required',
+            'cso_id' => ['required', 'exists:csos,code'],
+            'branch_id' => ['required', 'exists:branches,id'],
+            'cso_phone' => 'required',
+            'date' => 'required',
+            'time' => 'required',
+            'cso2_id' => ['exists:csos,code']
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $data = $request->all();
+            $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            if($request->has('cso2_id')){
+                $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];            
+            }
+            $data['appointment'] = $data['date']." ".$data['time'];
+            $homeservice = HomeService::create($data);
+
+            $data = ['result' => 1,
+                     'data' => $homeservice
+                    ];
+            return response()->json($data, 200);
+        }
+    }
+
+    public function updateApi(Request $request)
+    {
+        $messages = array(
+                'id.required' => 'There\'s an error with the data.',
+                'id.exists' => 'There\'s an error with the data.',
+                'cso_id.required' => 'The CSO Code field is required.',
+                'cso_id.exists' => 'Wrong CSO Code.',
+                'branch_id.required' => 'The Branch must be selected.',
+                'cso2_id.required' => 'The CSO Code field is required.',
+                'cso2_id.exists' => 'Wrong CSO Code.'
+            );
+
+        $validator = \Validator::make($request->all(), [
+            'id' => ['required', 'exists:home_services,id,active,1'],
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'city' => 'required',
+            'cso_id' => ['required', 'exists:csos,code'],
+            'branch_id' => 'required',
+            'cso_phone' => 'required',
+            'date' => 'required',
+            'time' => 'required',
+            'cso2_id' => ['exists:csos,code']
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $data = $request->all();
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            if($request->has('cso2_id')){
+                $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];            
+            }
+            $data['appointment'] = $data['date']." ".$data['time'];
+            $homeservice = HomeService::find($data['id']);
+            $homeservice->fill($data)->save();
+
+            $data = ['result' => 1,
+                     'data' => $homeservice
+                    ];
+            return response()->json($data, 200);
+        }
+    }
+
+    public function deleteApi(Request $request)
+    {
+        $messages = array(
+                'id.required' => 'There\'s an error with the data.',
+                'id.exists' => 'There\'s an error with the data.'
+            );
+
+        $validator = \Validator::make($request->all(), [
+            'id' => ['required', 'exists:home_services,id,active,1']
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $homeservice = HomeService::find($request->id);
+            $homeservice->active = false;
+            $homeservice->save();
+
+            $data = ['result' => 1,
+                     'data' => $homeservice
+                    ];
+            return response()->json($data, 200);
+        }
+    }
+
+    public function listApi(Request $request)
+    {
+        $messages = array(
+                'date.required' => 'There\'s an error with the data.',
+                'user_id.required' => 'There\'s an error with the data.'
+            );
+
+        $validator = \Validator::make($request->all(), [
+            'date' => 'required',
+            'user_id' => 'required',
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $data = $request->all();
+            $tgl=date_create($data['date']);
+            $userSlug = User::find($data['user_id'])->roles[0];
+
+            //khususu head-manager, head-admin, admin
+            $homeServices = HomeService::WhereMonth('home_services.appointment', '=', date_format($tgl, "n"))
+                            ->where('home_services.active', true);
+
+            //khusus akun CSO
+            if($userSlug == 'cso'){
+                $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
+            }
+            $homeServices = $homeServices->where('home_services.branch_id', 1);
+
+            //LAST Strutured Eloquent for Homeservices
+            $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
+                            ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
+                            ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name')
+                            ->orderBy('home_services.appointment', 'ASC')->get();
+
+            $data = ['result' => 1,
+                     'data' => $homeServices
+                    ];
+            return response()->json($data, 200);
+        }        
     }
 }
