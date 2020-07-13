@@ -24,7 +24,7 @@ class HomeServiceController extends Controller
     public function indexAdmin()
     {
     	$branches = Branch::all();
-        return view('admin.layouts.template', compact('branches'));
+        return view('admin.add_home_service', compact('branches'));
     }
     
     public function store(Request $request){

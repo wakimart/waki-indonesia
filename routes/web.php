@@ -178,7 +178,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->middleware('can:add-home_service');
 		//Add Home Service
 	    Route::post('/', 'HomeServiceController@admin_addHomeService')
-	    	->name('admin_add_homeService')
+	    	->name('admin_store_homeService')
 	    	->middleware('can:add_homeServices');
 		//List Home Service
 	    Route::get('/list', 'HomeServiceController@admin_ListHomeService')
