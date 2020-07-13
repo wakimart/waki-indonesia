@@ -46,7 +46,7 @@
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
 	          		<div class="card-body">
-	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_add_homeService') }}">
+	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_homeService') }}">
 	            			{{ csrf_field() }}
 	              			<div class="form-group">
                                 <label for=""><h2>Data Pelanggan</h2></label><br/>

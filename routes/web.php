@@ -172,14 +172,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function(){
-		//Add Form Order
+		//Add Form home service
     	Route::get('/', 'HomeServiceController@indexAdmin')
 	    	->name('admin_add_homeService')
 	    	->middleware('can:add-home_service');
 		//Add Home Service
 	    Route::post('/', 'HomeServiceController@admin_addHomeService')
 	    	->name('admin_store_homeService')
-	    	->middleware('can:add_homeServices');
+	    	->middleware('can:add-home_service');
 		//List Home Service
 	    Route::get('/list', 'HomeServiceController@admin_ListHomeService')
 	    	->name('admin_list_homeService')
