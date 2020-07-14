@@ -174,8 +174,8 @@ class OrderController extends Controller
             $orders = $orders->where('cso_id', $request->filter_cso);
         }
 
-        $orders = $orders->paginate(10);
-        return view('admin.list_order', compact('orders','countOrders','branches'));
+        $orders = $orders->sortable()->paginate(10);
+        return view('admin.list_order', compact('orders','countOrders','branches', $orders));
     }
 
     public function admin_DetailOrder(Request $request){

@@ -105,6 +105,7 @@
 						            </tr>
           						</thead>
           						<tbody>
+									@sortablelink('created_at')
           							@foreach($orders as $key => $order)
 				                        @php
 				                            $ProductPromos = json_decode($order['product'], true);
@@ -157,7 +158,8 @@
           						</tbody>
 							</table>
 							<br/>
-							{{ $orders->links()}}
+							{!! $orders->appends(\Request::except('page'))->render() !!}
+							{{-- {{ $orders->appends(['sort' => 'created_at'])->links()}} --}}
         				</div>
       				</div>
     			</div>

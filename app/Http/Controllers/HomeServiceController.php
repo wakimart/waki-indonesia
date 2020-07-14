@@ -12,7 +12,9 @@ use Carbon\Carbon;
 use App\Exports\HomeServicesExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Google_Service_Calendar_Event;
-
+use DB;
+use Google_Client;
+use Google_Service_Calendar;
 
 class HomeServiceController extends Controller
 {
@@ -127,40 +129,60 @@ class HomeServiceController extends Controller
         $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
         $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
         $data['appointment'] = $data['date']." ".$data['time'];
-        $order = HomeService::create($data);
-    
-        $event = new Google_Service_Calendar_Event(array(
-            'summary' => 'Google I/O 2015',
-            'location' => '800 Howard St., San Francisco, CA 94103',
-            'description' => 'A chance to hear more about Google\'s developer products.',
-            'start' => array(
-              'dateTime' => '2021-05-28T09:00:00-07:00',
-              'timeZone' => 'America/Los_Angeles',
-            ),
-            'end' => array(
-              'dateTime' => '2021-05-28T17:00:00-07:00',
-              'timeZone' => 'America/Los_Angeles',
-            ),
-            'recurrence' => array(
-              'RRULE:FREQ=DAILY;COUNT=2'
-            ),
-            'attendees' => array(
-              array('email' => 'rayas143120@gmail.com'),
-              array('email' => 'myasiraa16@gmail.com'),
-            ),
-            'reminders' => array(
-              'useDefault' => FALSE,
-              'overrides' => array(
-                array('method' => 'email', 'minutes' => 24 * 60),
-                array('method' => 'popup', 'minutes' => 10),
-              ),
-            ),
-          ));
-          
-          $calendarId = 'primary';
-          $event = $service->events->insert($calendarId, $event);
-          
-        return response()->json(['success' => 'Berhasil']);
+
+        $client = new Google_Client();
+
+        $application_creds = 'credentials.json';
+
+        $credentials_file = file_exists($application_creds) ? $application_creds : false;
+        define("SCOPE",Google_Service_Calendar::CALENDAR);
+        define("APP_NAME","Google Calendar API PHP");
+
+        $client->setAuthConfig($credentials_file);
+        $client->setApplicationName(APP_NAME);
+        $client->setScopes([SCOPE]);
+
+        $service = new Google_Service_Calendar($client);
+
+        DB::beginTransaction();
+        try{
+            $order = HomeService::create($data);
+            $event = new Google_Service_Calendar_Event(array(
+                'summary' => 'Google I/O 2021',
+                'location' => '800 Howard St., San Francisco, CA 94103',
+                'description' => 'A chance to hear more about Google\'s developer products.',
+                'start' => array(
+                  'dateTime' => '2021-05-28T09:00:00-07:00',
+                  'timeZone' => 'America/Los_Angeles',
+                ),
+                'end' => array(
+                  'dateTime' => '2021-05-28T17:00:00-07:00',
+                  'timeZone' => 'America/Los_Angeles',
+                ),
+                'recurrence' => array(
+                  'RRULE:FREQ=DAILY;COUNT=2'
+                ),
+                'attendees' => array(
+                  array('email' => 'rayas143120@gmail.com'),
+                  array('email' => 'myasiraa16@gmail.com'),
+                ),
+                'reminders' => array(
+                  'useDefault' => FALSE,
+                  'overrides' => array(
+                    array('method' => 'email', 'minutes' => 24 * 60),
+                    array('method' => 'popup', 'minutes' => 10),
+                  ),
+                ),
+              ));
+              
+            $calendarId = 'primary';
+            $event = $service->events->insert($calendarId, $event);
+            DB::commit();
+            return response()->json(['success' => 'Berhasil']);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' => $ex->getMessage()], 500);
+        }
     }
 
     public function edit(Request $request)
@@ -190,21 +212,27 @@ class HomeServiceController extends Controller
             $homeService->save();
         }
         else{
-            $data = $request->all();
-            $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
-            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
-            $data['appointment'] = $data['date']." ".$data['time'];
-            $homeService->fill($data)->save();
+            DB:beginTransaction();
+            try{
+                $data = $request->all();
+                $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+                $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+                $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
+                $data['appointment'] = $data['date']." ".$data['time'];
+                $homeService->fill($data)->save();
 
-            $user = Auth::user();
-            $historyUpdate= [];
-            $historyUpdate['type_menu'] = "Home Service";
-            $historyUpdate['method'] = "Update";
-            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $data];
-            $historyUpdate['user_id'] = $user['id'];
+                $user = Auth::user();
+                $historyUpdate= [];
+                $historyUpdate['type_menu'] = "Home Service";
+                $historyUpdate['method'] = "Update";
+                $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $data];
+                $historyUpdate['user_id'] = $user['id'];
 
-            $createData = HistoryUpdate::create($historyUpdate);
+                $createData = HistoryUpdate::create($historyUpdate);
+                DB::commit();
+            }catch (\Exception $ex) {
+                DB::rollback();
+            }
         }
         
         $req = new Request();

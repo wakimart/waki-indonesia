@@ -8,6 +8,7 @@ use App\Branch;
 use App\HistoryUpdate;
 use Illuminate\Validation\Rule;
 use Validator;
+use DB;
 
 class BranchController extends Controller
 {
@@ -124,21 +125,27 @@ class BranchController extends Controller
             }
             return response()->json(['errors' => $arr_Hasil]);
         }else{
-            $branches = Branch::find($request->input('idBranch'));
-            $branches->code = $request->input('code');
-            $branches->name = $request->input('name');
-            $branches->save();
+            DB:beginTransaction();
+            try{
+                $branches = Branch::find($request->input('idBranch'));
+                $branches->code = $request->input('code');
+                $branches->name = $request->input('name');
+                $branches->save();
 
-            $user = Auth::user();
-            $historyUpdate= [];
-            $historyUpdate['type_menu'] = "Branch";
-            $historyUpdate['method'] = "Update";
-            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $branches];
-            $historyUpdate['user_id'] = $user['id'];
+                $user = Auth::user();
+                $historyUpdate= [];
+                $historyUpdate['type_menu'] = "Branch";
+                $historyUpdate['method'] = "Update";
+                $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $branches];
+                $historyUpdate['user_id'] = $user['id'];
 
-            $createData = HistoryUpdate::create($historyUpdate);
-
-            return response()->json(['success' => 'Berhasil!']);
+                $createData = HistoryUpdate::create($historyUpdate);
+                DB::commit();
+                return response()->json(['success' => 'Berhasil!']);
+            }catch (\Exception $ex) {
+                DB::rollback();
+                return response()->json(['error' => $ex->getMessage()], 500);
+            }
         }
     }
 
