@@ -94,7 +94,7 @@
 						            <tr>
 						              	<th> No. </th>
 						              	<th> Order Code </th>
-						              	<th> Order Date </th>
+						              	<th> @sortablelink('created_at', 'Order Date') </th>
 						              	<th> Member Name </th>
 						              	<th colspan="2"> Product </th>
 						              	<th> Branch </th>
@@ -105,7 +105,7 @@
 						            </tr>
           						</thead>
           						<tbody>
-									@sortablelink('created_at')
+									
           							@foreach($orders as $key => $order)
 				                        @php
 				                            $ProductPromos = json_decode($order['product'], true);
