@@ -396,6 +396,22 @@ class OrderController extends Controller
             }
             $data['bank'] = json_encode($data['arr_bank']);
             $order = Order::create($data);
+
+            if(isset($data['name_2'])){
+                $order2 = $order->replicate();
+                if(isset($data['name_2'])){
+                    $order->code .= "/1";
+                    $order->save();
+                    $order2->code .= "/2";
+                }
+                $order2->no_member = $data['no_member_2'];
+                $order2->name = $data['name_2'];
+                $order2->address = $data['address_2'];
+                $order2->phone = $data['phone_2'];
+                $order2->city = $data['city_2'];
+                $order2->save();
+            }
+
             $order['URL'] = route('order_success')."?code=".$order['code'];
 
             $data = ['result' => 1,
@@ -512,7 +528,6 @@ class OrderController extends Controller
         }
         else{
             $data = $request->all();
-            $data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
             $data['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
             $data['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
@@ -566,7 +581,7 @@ class OrderController extends Controller
     }
 
 
-    public function viewApi(Request $request, $id)
+    public function viewApi($id)
     {
         //khususu head-manager, head-admin, admin
         $orders = Order::where('orders.active', true);
@@ -591,7 +606,10 @@ class OrderController extends Controller
             $doNya['product'] = $tempArray;
         }
         $orders = $orders->find($id);
-        return response()->json($orders, 200);
+        $data = ['result' => 1,
+                 'data' => $orders
+                ];
+        return response()->json($data, 200);
     }
 
 
@@ -622,8 +640,5 @@ class OrderController extends Controller
                     ];
             return response()->json($data, 200);
         }
-
     }
-
-
 }

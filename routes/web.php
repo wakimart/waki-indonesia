@@ -69,6 +69,9 @@ Route::group(['prefix' => 'api-apps'], function () {
 	Route::group(['prefix' => 'register'], function () {
 	    Route::post('add','DeliveryOrderController@addApi'); //add register DO
 	    Route::post('list','DeliveryOrderController@listApi'); //list register DO
+		Route::post('update','DeliveryOrderController@updateApi'); //update register DO
+		Route::get('view/{id}','DeliveryOrderController@viewApi'); //view single register DO 
+		Route::post('delete','DeliveryOrderController@deleteApi'); //delete register DO
 	});
 
 	Route::group(['prefix' => 'order'], function () {

@@ -217,7 +217,8 @@ class DeliveryOrderController extends Controller
         $messages = array(
                 'cso_id.required' => 'The CSO Code field is required.',
                 'cso_id.exists' => 'Wrong CSO Code.',
-                'branch_id.required' => 'The Branch must be selected.'
+                'branch_id.required' => 'The Branch must be selected.',
+                'branch_id.exists' => 'Please choose the branch.',
             );
 
         $validator = \Validator::make($request->all(), [
@@ -226,7 +227,7 @@ class DeliveryOrderController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
-            'branch_id' => 'required',
+            'branch_id' => ['required', 'exists:branches,id'],
             'product_0' => 'required',
             'qty_0' => 'required'
         ], $messages);
@@ -333,12 +334,133 @@ class DeliveryOrderController extends Controller
                 $doNya['arr_product'] = $tempArray;
             }
 
-            $promos = DeliveryOrder::$Promo;
-
             $data = ['result' => 1,
                      'data' => $deliveryOrders
                     ];
             return response()->json($data, 200);
         }        
+    }
+
+    public function updateApi(Request $request)
+    {
+        $messages = array(
+                'cso_id.required' => 'The CSO Code field is required.',
+                'cso_id.exists' => 'Wrong CSO Code.',
+                'branch_id.required' => 'The Branch must be selected.',
+                'branch_id.exists' => 'Please choose the branch.',
+            );
+
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required',
+            'city' => 'required',
+            'cso_id' => ['required', 'exists:csos,code'],
+            'branch_id' => ['required', 'exists:branches,id'],
+            'product_0' => 'required',
+            'qty_0' => 'required'
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $data = $request->all();
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+
+            //pembentukan array product
+            $data['arr_product'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($data['qty_'.$arrKey[1]])){
+                        $data['arr_product'][$key] = [];
+                        $data['arr_product'][$key]['id'] = $value;
+
+                        // {{-- KHUSUS Philiphin --}}
+                        if($value == 'other'){
+                            $data['arr_product'][$key]['id'] = $data['product_other_'.$arrKey[1]];
+                        }
+                        //===========================
+
+                        $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+                    }
+                }
+            }
+            $data['arr_product'] = json_encode($data['arr_product']);
+
+            $deliveryOrder = DeliveryOrder::find($data['id']);
+            $deliveryOrder->fill($data)->save();
+
+            $deliveryOrder['URL'] = route('successorder')."?code=".$deliveryOrder['code'];
+
+            $data = ['result' => 1,
+                     'data' => $deliveryOrder
+                    ];
+            return response()->json($data, 200);
+        }
+    }
+
+    public function viewApi($id)
+    {
+        $delivery_orders = DeliveryOrder::where([['delivery_orders.active', true], ['delivery_orders.id', $id]]);
+
+        $delivery_orders = $delivery_orders->leftjoin('branches', 'delivery_orders.branch_id', '=', 'branches.id')
+                            ->leftjoin('csos', 'delivery_orders.cso_id', '=', 'csos.id')
+                            ->select('delivery_orders.id', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.name as customer_name', 'delivery_orders.phone as customer_phone', 'delivery_orders.address as customer_address', 'delivery_orders.arr_product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
+                            ->get();
+
+        foreach ($delivery_orders as $i => $doNya) {
+            $tempId = json_decode($doNya['arr_product'], true);
+            $tempArray = $doNya['arr_product'];
+            $tempArray = [];
+            foreach ($tempId as $j => $product) {
+                $tempArray2 = [];
+                $tempArray2['name'] = $product['id'];
+                if(isset(DeliveryOrder::$Promo[$product['id']])){
+                    $tempArray2['name'] = DeliveryOrder::$Promo[$product['id']]['name'];
+                }
+                $tempArray2['qty'] = $product['qty'];
+                array_push($tempArray, $tempArray2);
+            }
+            $doNya['arr_product'] = $tempArray;
+        }
+
+        $data = ['result' => 1,
+                 'data' => $delivery_orders
+                ];
+        return response()->json($data, 200);
+    }
+
+    public function deleteApi(Request $request)
+    {
+        $messages = array(
+            'id.required' => 'There\'s an error with the data.',
+            'id.exists' => 'There\'s an error with the data.'
+        );
+
+        $validator = \Validator::make($request->all(), [
+            'id' => ['required', 'exists:orders,id,active,1']
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $order = DeliveryOrder::find($request->id);
+            $order->active = false;
+            $order->save();
+
+            $data = ['result' => 1,
+                     'data' => $order
+                    ];
+            return response()->json($data, 200);
+        }
     }
 }
