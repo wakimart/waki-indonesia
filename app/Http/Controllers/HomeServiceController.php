@@ -138,20 +138,17 @@ class HomeServiceController extends Controller
         $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
         $data['appointment'] = $data['date']." ".$data['time'];
 
-
+        $startDateTime = $data['date']."T".$data['time'].":00";
+        $user = Auth::user();
         DB::beginTransaction();
         try{
             $order = HomeService::create($data);
             $event = array(
-                'summary' => 'Testing coeg',
-                'location' => '800 Howard St., San Francisco, CA 94103',
+                'summary' => 'Acara Home Service',
+                'location' => $data['address'],
                 'description' => 'A chance to hear more about Google\'s developer products.',
                 'start' => array(
-                    'dateTime' => '2020-07-16T09:00:00-07:00',
-                    'timeZone' => 'Asia/Jakarta',
-                ),
-                'end' => array(
-                    'dateTime' => '2021-05-17T17:00:00-07:00',
+                    'dateTime' => $startDateTime,
                     'timeZone' => 'Asia/Jakarta',
                 ),
                 'recurrence' => array(
@@ -172,7 +169,7 @@ class HomeServiceController extends Controller
 
             $event = $this->gCalendarController->store($event);
             DB::commit();
-            return response()->json(['success' => 'Berhasil']);
+            return response()->json(['success' => 'Berhasil'. " ".$endDateTime]);
         } catch (\Exception $ex) {
             DB::rollback();
             return response()->json(['error' => $ex->getMessage()], 500);
