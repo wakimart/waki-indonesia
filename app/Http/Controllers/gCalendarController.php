@@ -61,7 +61,7 @@ class gCalendarController extends Controller
         } else {
             $this->client->authenticate($_GET['code']);
             $_SESSION['access_token'] = $this->client->getAccessToken();
-            return redirect()->route('cal.index');
+            return redirect()->route('gcalendar.index');
         }
     }
 
@@ -81,24 +81,15 @@ class gCalendarController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($event)
     {
         session_start();
-        $startDateTime = $request->start_date;
-        $endDateTime = $request->end_date;
-
         if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
             $this->client->setAccessToken($_SESSION['access_token']);
             $service = new Google_Service_Calendar($this->client);
 
             $calendarId = 'primary';
-            $event = new Google_Service_Calendar_Event([
-                'summary' => $request->title,
-                'description' => $request->description,
-                'start' => ['dateTime' => $startDateTime],
-                'end' => ['dateTime' => $endDateTime],
-                'reminders' => ['useDefault' => true],
-            ]);
+            $event = new Google_Service_Calendar_Event($event);
             $results = $service->events->insert($calendarId, $event);
             if (!$results) {
                 return response()->json(['status' => 'error', 'message' => 'Something went wrong']);

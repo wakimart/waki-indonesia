@@ -15,6 +15,7 @@ use Google_Service_Calendar_Event;
 use DB;
 use Google_Client;
 use Google_Service_Calendar;
+use App\Http\Controllers\gCalendarController;
 
 class HomeServiceController extends Controller
 {
@@ -109,6 +110,13 @@ class HomeServiceController extends Controller
         return response()->json($homeServices);
     }
 
+
+    protected $gCalendarController;
+    public function __construct(gCalendarController $gCalendarController)
+    {
+        $this->gCalendarController = $gCalendarController;
+    }
+
     public function admin_addHomeService(Request $request){
         $data = $request->all();
         $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
@@ -119,7 +127,7 @@ class HomeServiceController extends Controller
             ['cso_id', '=', $getIdCso],
             ['appointment', '=', $getAppointment]
         ])->get();
-        //dd(count($getHomeServices));
+        
         
         if (count($getHomeServices) > 0) {
             //return response()->json(['errors' => "An appointment has been already scheduled."]);
@@ -130,53 +138,39 @@ class HomeServiceController extends Controller
         $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
         $data['appointment'] = $data['date']." ".$data['time'];
 
-        $client = new Google_Client();
-
-        $application_creds = 'credentials.json';
-
-        $credentials_file = file_exists($application_creds) ? $application_creds : false;
-        define("SCOPE",Google_Service_Calendar::CALENDAR);
-        define("APP_NAME","Google Calendar API PHP");
-
-        $client->setAuthConfig($credentials_file);
-        $client->setApplicationName(APP_NAME);
-        $client->setScopes([SCOPE]);
-
-        $service = new Google_Service_Calendar($client);
 
         DB::beginTransaction();
         try{
             $order = HomeService::create($data);
-            $event = new Google_Service_Calendar_Event(array(
-                'summary' => 'Google I/O 2021',
+            $event = array(
+                'summary' => 'Testing coeg',
                 'location' => '800 Howard St., San Francisco, CA 94103',
                 'description' => 'A chance to hear more about Google\'s developer products.',
                 'start' => array(
-                  'dateTime' => '2021-05-28T09:00:00-07:00',
-                  'timeZone' => 'America/Los_Angeles',
+                    'dateTime' => '2020-07-16T09:00:00-07:00',
+                    'timeZone' => 'Asia/Jakarta',
                 ),
                 'end' => array(
-                  'dateTime' => '2021-05-28T17:00:00-07:00',
-                  'timeZone' => 'America/Los_Angeles',
+                    'dateTime' => '2021-05-17T17:00:00-07:00',
+                    'timeZone' => 'Asia/Jakarta',
                 ),
                 'recurrence' => array(
-                  'RRULE:FREQ=DAILY;COUNT=2'
+                    'RRULE:FREQ=DAILY;COUNT=2'
                 ),
                 'attendees' => array(
-                  array('email' => 'rayas143120@gmail.com'),
-                  array('email' => 'myasiraa16@gmail.com'),
+                    array('email' => 'rayas143120@gmail.com'),
+                    array('email' => 'myasiraa16@gmail.com'),
                 ),
                 'reminders' => array(
-                  'useDefault' => FALSE,
-                  'overrides' => array(
+                    'useDefault' => FALSE,
+                    'overrides' => array(
                     array('method' => 'email', 'minutes' => 24 * 60),
                     array('method' => 'popup', 'minutes' => 10),
-                  ),
+                    ),
                 ),
-              ));
-              
-            $calendarId = 'primary';
-            $event = $service->events->insert($calendarId, $event);
+            );
+
+            $event = $this->gCalendarController->store($event);
             DB::commit();
             return response()->json(['success' => 'Berhasil']);
         } catch (\Exception $ex) {
