@@ -565,6 +565,21 @@
             $(".cust-2").attr('required', '');
             $(this).hide();
         });
+        $('#submit').click(function(){
+            var appointment = 
+            $.ajax({
+                type: 'POST',
+                data: {
+                    date: date
+                },
+                success: function(data){
+                    console.log(data.data);
+                },
+                error: function(xhr){
+                    console.log(xhr.responseText);
+                }
+            });
+        });
     });
 </script>
 @endsection
