@@ -570,12 +570,10 @@ class OrderController extends Controller
     {
         //khususu head-manager, head-admin, admin
         $orders = Order::where('orders.active', true);
-
         $orders = $orders->leftjoin('branches', 'orders.branch_id', '=', 'branches.id')
                             ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
-                            ->select('orders.id', 'orders.code', 'orders.created_at', 'orders.name as customer_name', 'orders.product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
+                            ->select('orders.id', 'orders.code', 'orders.orderDate', 'orders.name as customer_name', 'orders.phone as customer_phone', 'orders.city as customer_city', 'orders.address as customer_address','orders.product', 'orders.old_product as old_product', 'orders.prize as prize_product', 'orders.total_payment as total_payment', 'orders.down_payment as down_payment', 'orders.remaining_payment as remaining_payment', 'orders.bank as bank','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->get();
-
         foreach ($orders as $i => $doNya) {
             $tempId = json_decode($doNya['product'], true);
             $tempArray = $doNya['product'];

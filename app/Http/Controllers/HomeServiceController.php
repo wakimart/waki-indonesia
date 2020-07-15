@@ -347,7 +347,7 @@ class HomeServiceController extends Controller
         //LAST Strutured Eloquent for Homeservices
         $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
                         ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
-                        ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name')
+                        ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.address as custommer_address','home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name')
                         ->orderBy('home_services.appointment', 'ASC')->get();
         $homeServices = $homeServices->find($id);
         return response()->json($homeServices, 200);
