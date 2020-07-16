@@ -134,12 +134,15 @@ class HomeServiceController extends Controller
             return redirect()->back()->with("errors","An appointment has been already scheduled.");
         }
 
-        $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-        $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
+        $cso = Cso::where('code', $data['cso_id']);
+        $cso2 = Cso::where('code', $data['cso2_id']);
+        $data['cso_id'] = $cso->first()['id'];
+        $data['cso2_id'] = $cso2->first()['id'];
         $data['appointment'] = $data['date']." ".$data['time'];
 
         $startDateTime = $data['date']."T".$data['time'].":00";
-        $user = Auth::user();
+        $time = strtotime($data['time']) + 60*60 * 2;
+        $endDateTime = $data['date']."T".date('H:i', $time).":00";
         DB::beginTransaction();
         try{
             $order = HomeService::create($data);
@@ -151,12 +154,16 @@ class HomeServiceController extends Controller
                     'dateTime' => $startDateTime,
                     'timeZone' => 'Asia/Jakarta',
                 ),
+                'end' => array(
+                    'dateTime' => $endDateTime,
+                    'timeZone' => 'America/Los_Angeles',
+                ),
                 'recurrence' => array(
                     'RRULE:FREQ=DAILY;COUNT=2'
                 ),
                 'attendees' => array(
-                    array('email' => 'rayas143120@gmail.com'),
-                    array('email' => 'myasiraa16@gmail.com'),
+                    array('email' => $cso->first()['email']),
+                    array('email' => $cso2->first()['email']),
                 ),
                 'reminders' => array(
                     'useDefault' => FALSE,
@@ -169,7 +176,7 @@ class HomeServiceController extends Controller
 
             $event = $this->gCalendarController->store($event);
             DB::commit();
-            return response()->json(['success' => 'Berhasil'. " ".$endDateTime]);
+            return response()->json(['success' => 'Berhasil'." ".$cso->first()['email']]);
         } catch (\Exception $ex) {
             DB::rollback();
             return response()->json(['error' => $ex->getMessage()], 500);
