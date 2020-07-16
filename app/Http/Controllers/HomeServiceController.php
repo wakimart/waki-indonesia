@@ -163,7 +163,7 @@ class HomeServiceController extends Controller
                 ),
                 'attendees' => array(
                     array('email' => $cso->first()['email']),
-                    array('email' => $cso2->first()['email']),
+                    // array('email' => $cso2->first()['email']),
                 ),
                 'reminders' => array(
                     'useDefault' => FALSE,
@@ -176,7 +176,7 @@ class HomeServiceController extends Controller
 
             $event = $this->gCalendarController->store($event);
             DB::commit();
-            return response()->json(['success' => 'Berhasil'." ".$cso->first()['email']]);
+            return response()->json(['success' => 'Berhasil']);
         } catch (\Exception $ex) {
             DB::rollback();
             return response()->json(['error' => $ex->getMessage()], 500);
