@@ -42,7 +42,7 @@
                 <h5 class="add-customer d-none">Customer 1</h5>
                 <h6>Waktu Order</h6>
                 <div class="form-group">
-                    <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+                    <input type="date" class="form-control" name="orderDate" id="date" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
                     <div class="validation"></div>
                     <span class="invalid-feedback">
                         <strong></strong>
@@ -72,7 +72,7 @@
                 <h5 class="add-customer d-none">Customer 2</h5>
                 <h6 class="add-customer d-none">Waktu Order</h6>
                 <div class="form-group add-customer d-none">
-                    <input type="date" class="form-control" name="date" id="member_date-2" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+                    <input type="date" class="form-control" name="orderDate" id="member_date-2" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
                     <div class="validation"></div>
                     <span class="invalid-feedback">
                         <strong></strong>
