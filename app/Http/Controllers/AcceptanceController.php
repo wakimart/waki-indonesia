@@ -83,6 +83,7 @@ class AcceptanceController extends Controller
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
             $data['branch_id'] = Branch::where('id', $data['branch_id'])->first()['id'];
             $data['description'] = $data['description'];
+            $data['status'] = $data['status'];
             $acceptance = Acceptance::find($data['id']);
             $acceptance->fill($data)->save();
 
@@ -91,6 +92,8 @@ class AcceptanceController extends Controller
                 $accStatusLog['status'] = $data['status'];
                 $accStatusLog['user_id'] =  $data['user_id'];
                 $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
+                
+                
             }
             $data = ['result' => 1,
                      'data' => $acceptance
@@ -169,11 +172,11 @@ class AcceptanceController extends Controller
 
             $acceptance = $acceptance->leftjoin('branches', 'acceptance.branch_id', '=', 'branches.id')
                                 ->leftjoin('csos', 'acceptance.cso_id', '=', 'csos.id')
-                                ->select('acceptance.id', 'acceptance.code', 'acceptance.name as customer_name', 'acceptance.description as description','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as csos_code', 'csos.name as csos_name')
+                                ->select('acceptance.id', 'acceptance.code', 'acceptance.name as customer_name', 'acceptance.description as description', 'acceptance.status as status','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as csos_code', 'csos.name as csos_name')
                                 ->get();
 
 
-            $data = ['result' => 1,
+            $data = ['result' => count($acceptance),
                      'data' => $acceptance
                     ];
             return response()->json($data, 200);
