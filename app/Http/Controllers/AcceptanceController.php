@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Acceptance;
+use App\AcceptanceStatusLog;
 use App\Branch;
 use App\Cso;
 use App\User;
@@ -44,8 +45,12 @@ class AcceptanceController extends Controller
             $branch = Branch::find($data['branch_id']);
             $data['code'] = "ACC/".$branch->code."/".$data['cso_id']."/".date("Ymd");
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $acceptance = Acceptance::create($data);
             $data['user_id'] = $data['user_id'];
+            $acceptance = Acceptance::create($data);
+
+            $accStatusLog['acceptance_id'] = $acceptance->id;
+            $accStatusLog['user_id'] =  $data['user_id'];
+            $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
             $data = ['result' => 1,
                      'data' => $acceptance
                     ];
@@ -76,10 +81,17 @@ class AcceptanceController extends Controller
         }else {
             $data = $request->all();
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $data['branch_id'] = Branch::where('code', $data['cso_id'])->first()['id'];
+            $data['branch_id'] = Branch::where('id', $data['branch_id'])->first()['id'];
             $data['description'] = $data['description'];
             $acceptance = Acceptance::find($data['id']);
             $acceptance->fill($data)->save();
+
+            if ($data['status']!= ''){
+                $accStatusLog['acceptance_id'] = $acceptance->id;
+                $accStatusLog['status'] = $data['status'];
+                $accStatusLog['user_id'] =  $data['user_id'];
+                $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
+            }
             $data = ['result' => 1,
                      'data' => $acceptance
                     ];
