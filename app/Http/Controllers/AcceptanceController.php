@@ -26,9 +26,7 @@ class AcceptanceController extends Controller
             'cso_id.required' => 'The CSO Code field is required.',
             'cso_id.exists' => 'Wrong CSO Code.',
             'branch_id.required' => 'The Branch must be selected.',
-            'branch_id.exists' => 'Please choose the branch.',
-            'cso2_id.required' => 'The CSO Code field is required.',
-            'cso2_id.exists' => 'Wrong CSO Code.'
+            'branch_id.exists' => 'Please choose the branch.'
         );
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
@@ -62,9 +60,7 @@ class AcceptanceController extends Controller
             'cso_id.required' => 'The CSO Code field is required.',
             'cso_id.exists' => 'Wrong CSO Code.',
             'branch_id.required' => 'The Branch must be selected.',
-            'branch_id.exists' => 'Please choose the branch.',
-            'cso2_id.required' => 'The CSO Code field is required.',
-            'cso2_id.exists' => 'Wrong CSO Code.'
+            'branch_id.exists' => 'Please choose the branch.'
         );
         $validator = \Validator::make($request->all(), [
             'name' => 'required',

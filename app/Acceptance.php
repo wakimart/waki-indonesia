@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Acceptance extends Model
 {
+    protected $table = 'acceptance';
     protected $fillable = [
         'name', 'code', 'description',  'cso_id', 'branch_id', 'order_id', 'active',
     ];
