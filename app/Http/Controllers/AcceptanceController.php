@@ -42,12 +42,12 @@ class AcceptanceController extends Controller
         }else {
             $data = $request->all();
             $branch = Branch::find($data['branch_id']);
-            $cso = Cso::find($data['cso_id']);
-            $data['code'] = "ACC/".$branch->code."/".$cso->code."/".strtotime(date("Ymd"));
+            $data['code'] = "ACC/".$branch->code."/".$data['cso_id']."/".date("Ymd");
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
             $acceptance = Acceptance::create($data);
-
+            $data['user_id'] = $data['user_id'];
             $data = ['result' => 1,
-                     'data' => $homeservice
+                     'data' => $acceptance
                     ];
             return response()->json($data, 200);
         }

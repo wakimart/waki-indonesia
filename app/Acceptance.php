@@ -8,7 +8,7 @@ class Acceptance extends Model
 {
     protected $table = 'acceptance';
     protected $fillable = [
-        'name', 'code', 'description',  'cso_id', 'branch_id', 'order_id', 'active',
+        'name', 'code', 'description',  'cso_id', 'branch_id', 'order_id', 'active', 'user_id'
     ];
 
     public function cso()

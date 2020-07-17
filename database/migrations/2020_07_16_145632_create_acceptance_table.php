@@ -24,9 +24,9 @@ class CreateAcceptanceTable extends Migration
             $table->foreign('branch_id')->references('id')->on('branches');
             $table->integer('cso_id')->unsigned();
             $table->foreign('cso_id')->references('id')->on('csos');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('order_id')->unsigned();
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('order_id')->unsigned()->nullable();
             $table->foreign('order_id')->references('id')->on('orders');
             $table->timestamps();
         });
