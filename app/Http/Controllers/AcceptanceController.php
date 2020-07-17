@@ -188,7 +188,7 @@ class AcceptanceController extends Controller
         $acceptance = Acceptance::where('acceptance.active', true);
         $acceptance = $acceptance->leftjoin('branches', 'acceptance.branch_id', '=', 'branches.id')
                                 ->leftjoin('csos', 'acceptance.cso_id', '=', 'csos.id')
-                                ->select('acceptance.id', 'acceptance.code', 'acceptance.name as customer_name', 'acceptance.description as description','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as csos_code', 'csos.name as csos_name')
+                                ->select('acceptance.id', 'acceptance.code', 'acceptance.name as customer_name','acceptance.status as status', 'acceptance.description as description','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as csos_code', 'csos.name as csos_name')
                                 ->get();
 
         $acceptance = $acceptance->find($id);
