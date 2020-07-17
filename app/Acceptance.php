@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Acceptance extends Model
 {
     protected $fillable = [
-        'name', 'description',  'cso_id', 'branch_id', 'order_id', 'active',
+        'name', 'code', 'description',  'cso_id', 'branch_id', 'order_id', 'active',
     ];
 
     public function cso()
