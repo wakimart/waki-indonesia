@@ -175,7 +175,6 @@ class AcceptanceController extends Controller
                                 ->select('acceptance.id', 'acceptance.code', 'acceptance.name as customer_name', 'acceptance.description as description', 'acceptance.status as status','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as csos_code', 'csos.name as csos_name')
                                 ->get();
 
-
             $data = ['result' => count($acceptance),
                      'data' => $acceptance
                     ];
@@ -192,7 +191,11 @@ class AcceptanceController extends Controller
                                 ->get();
 
         $acceptance = $acceptance->find($id);
-
+        $statusLog= AcceptanceStatusLog::where('acceptance_id', $id);
+        $statusLog = $statusLog->leftjoin('users', 'acceptance_status_log.user_id', '=', 'users.id')
+                                ->select('acceptance_status_log.acceptance_id', 'acceptance_status_log.status', 'acceptance_status_log.user_id', 'users.name', "acceptance_status_log.created_at")
+                                ->get();
+        $acceptance['status_log'] = $statusLog;
         return response()->json($acceptance, 200);
 
     }
