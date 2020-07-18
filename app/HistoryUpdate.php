@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class HistoryUpdate extends Model
 {
      protected $fillable = [
-        'method', 'meta', 'user_id', 'type_menu',
+        'method', 'meta', 'user_id', 'type_menu', 'menu_id',
     ];
 
     protected $casts = [
