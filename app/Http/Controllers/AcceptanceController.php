@@ -10,6 +10,7 @@ use App\Branch;
 use App\Cso;
 use App\User;
 use App\Utils;
+use DB;
 
 
 
@@ -41,20 +42,28 @@ class AcceptanceController extends Controller
                     ];
             return response()->json($data, 401);
         }else {
-            $data = $request->all();
-            $branch = Branch::find($data['branch_id']);
-            $data['code'] = "ACC/".$branch->code."/".$data['cso_id']."/".date("Ymd");
-            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $data['user_id'] = $data['user_id'];
-            $acceptance = Acceptance::create($data);
+            DB::beginTransaction();
+            try{
+                $data = $request->all();
+                $branch = Branch::find($data['branch_id']);
+                $data['code'] = "ACC/".$branch->code."/".$data['cso_id']."/".date("Ymd");
+                $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+                $data['user_id'] = $data['user_id'];
+                $acceptance = Acceptance::create($data);
 
-            $accStatusLog['acceptance_id'] = $acceptance->id;
-            $accStatusLog['user_id'] =  $data['user_id'];
-            $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
-            $data = ['result' => 1,
-                     'data' => $acceptance
-                    ];
-            return response()->json($data, 200);
+                $accStatusLog['acceptance_id'] = $acceptance->id;
+                $accStatusLog['user_id'] =  $data['user_id'];
+                $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
+                DB::commit();
+                $data = ['result' => 1,
+                        'data' => $acceptance
+                        ];
+                return response()->json($data, 200);
+            } catch (\Exception $ex) {
+                DB::rollback();
+                return response()->json(['error' => $ex->getMessage()], 500);
+            }
+            
         }
    
     }
@@ -79,26 +88,35 @@ class AcceptanceController extends Controller
                     ];
             return response()->json($data, 401);
         }else {
-            $data = $request->all();
-            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $data['branch_id'] = Branch::where('id', $data['branch_id'])->first()['id'];
-            $data['description'] = $data['description'];
-            $data['status'] = $data['status'];
-            $acceptance = Acceptance::find($data['id']);
-            $acceptance->fill($data)->save();
+            DB::beginTransaction();
+            try{
+                $data = $request->all();
+                $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+                $data['branch_id'] = Branch::where('id', $data['branch_id'])->first()['id'];
+                $data['description'] = $data['description'];
+                $data['status'] = $data['status'];
+                $acceptance = Acceptance::find($data['id']);
+                $acceptance->fill($data)->save();
 
-            if ($data['status']!= ''){
-                $accStatusLog['acceptance_id'] = $acceptance->id;
-                $accStatusLog['status'] = $data['status'];
-                $accStatusLog['user_id'] =  $data['user_id'];
-                $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
+                if ($data['status']!= ''){
+                    $accStatusLog['acceptance_id'] = $acceptance->id;
+                    $accStatusLog['status'] = $data['status'];
+                    $accStatusLog['user_id'] =  $data['user_id'];
+                    $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
+                    
+                    
+                }
+                DB::commit();
                 
-                
+                $data = ['result' => 1,
+                        'data' => $acceptance
+                        ];
+                return response()->json($data, 200);
+            } catch (\Exception $ex) {
+                DB::rollback();
+                return response()->json(['error' => $ex->getMessage()], 500);
             }
-            $data = ['result' => 1,
-                     'data' => $acceptance
-                    ];
-            return response()->json($data, 200);
+            
         }
     }
 
