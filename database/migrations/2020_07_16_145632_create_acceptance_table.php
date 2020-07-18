@@ -16,6 +16,7 @@ class CreateAcceptanceTable extends Migration
         Schema::create('acceptance', function (Blueprint $table) {
             $table->increments('id');
             $table->string('code');
+            $table->string('no_do')->nullable();;
             $table->string('name');
             $table->enum('status', ['new', 'rejected', 'approved']);
             $table->text('description');
