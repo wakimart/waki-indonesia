@@ -200,7 +200,7 @@
             <tr>
                 <td>{{$key+1}}</td>
                 <td>{{$historyUpdateOrder->method}}</td>
-                <td>{{$historyUpdateOrder->method}}</td>
+                <td>{{$historyUpdateOrder->name}}</td>
                 <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
             </tr>
             @endforeach

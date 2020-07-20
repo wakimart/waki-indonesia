@@ -136,7 +136,7 @@
             <tr>
                 <td>{{$key+1}}</td>
                 <td>{{$historyUpdateDeliveryOrder->method}}</td>
-                <td>{{$historyUpdateDeliveryOrder->method}}</td>
+                <td>{{$historyUpdateDeliveryOrder->name}}</td>
                 <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateDeliveryOrder->created_at)) }}</td>
             </tr>
             @endforeach
