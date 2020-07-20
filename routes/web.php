@@ -82,6 +82,14 @@ Route::group(['prefix' => 'api-apps'], function () {
 		Route::get('view/{id}','OrderController@viewApi'); //view single order
 		Route::post('delete','OrderController@deleteApi'); //delete order
 	});
+
+	Route::group(['prefix' => 'acceptance'], function () {
+	    Route::post('add','AcceptanceController@addApi'); //add acceptance
+		Route::post('list','AcceptanceController@listApi'); //list acceptance
+		Route::post('update','AcceptanceController@updateApi'); //update acceptance
+		Route::get('view/{id}','AcceptanceController@viewApi'); //view single acceptance
+		Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
+	});
 });
 
 Auth::routes(['verify' => true]);
