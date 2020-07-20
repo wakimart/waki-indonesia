@@ -182,7 +182,8 @@ class OrderController extends Controller
 
     public function admin_DetailOrder(Request $request){
         $order = Order::where('code', $request['code'])->first();
-        return view('admin.detail_order', compact('order'));
+        $historyUpdateOrder = HistoryUpdate::where('type_menu', 'Order')->where('menu_id', $order->id)->get();
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder'));
     }
 
     /**
