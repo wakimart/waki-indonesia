@@ -122,4 +122,15 @@ class LoginController extends Controller
             return response()->json($data,401);
         }
     }
+
+    public function loginQRApi(Request $request){
+        $user = User::where('qrcode', $request['hash'])->get();
+
+        if(sizeof($user) > 0){
+            $data = ['result' => 1,
+                     'data' => $user[0]
+                    ];
+            return response()->json($data,200);
+        }
+    }
 }

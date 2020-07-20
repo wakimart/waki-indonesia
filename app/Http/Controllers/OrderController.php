@@ -463,7 +463,7 @@ class OrderController extends Controller
             $orders = $orders->leftjoin('branches', 'orders.branch_id', '=', 'branches.id')
                                 ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
                                 ->select('orders.id', 'orders.code', 'orders.created_at', 'orders.name as customer_name', 'orders.product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
-                                ->get();
+                                ->paginate($request->limit);
 
             foreach ($orders as $i => $doNya) {
                 $tempId = json_decode($doNya['product'], true);

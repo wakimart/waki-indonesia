@@ -309,16 +309,16 @@ class HomeServiceController extends Controller
         }
         else{
             $data = $request->all();
-            $tgl=date_create($data['date']);
+            $tgl=date_create(date_format($tgl, "Y")."-".date_format($tgl, "m")."-".$tempHari);
             $userSlug = User::find($data['user_id'])->roles[0];
 
             //khususu head-manager, head-admin, admin
-            $homeServices = HomeService::WhereMonth('home_services.appointment', '=', date_format($tgl, "n"))
+            $homeServices = HomeService::whereDate('home_services.appointment', '=', $tgl)
                             ->where('home_services.active', true);
 
             //khusus akun CSO
             if($userSlug == 'cso'){
-                $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
+                $homeServices = HomeService::whereDate('home_services.appointment', '=', $tgl)->where('cso_id', Auth::user()->cso['id'])->where('active', true);
             }
             $homeServices = $homeServices->where('home_services.branch_id', 1);
 
@@ -328,13 +328,42 @@ class HomeServiceController extends Controller
                             ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->orderBy('home_services.appointment', 'ASC')->get();
 
+            $totalPerDay = [];
+
+            for ($i=1; $i <= 31; $i++) { 
+                $tempHari = ($i < 9 ? "0".$i : $i);
+                $tempTgl = date_create(date_format($tgl, "Y")."-".date_format($tgl, "m")."-".$tempHari);
+                $temp = HomeService::whereDate('appointment', "=" , $tempTgl)
+                            ->where('home_services.active', true)
+                            ->count();
+                array_push($totalPerDay, $temp);
+            }
+
             $data = ['result' => count($homeServices),
-                     'data' => $homeServices
+                     'data' => $homeServices,
+                     'totalPerDay' => $totalPerDay
                     ];
             return response()->json($data, 200);
         }        
     }
-    
+
+    public function listPerTotalDay(){
+        $totalPerDay = [];
+
+        for ($i=1; $i <= 31; $i++) { 
+            $tempHari = ($i < 9 ? "0".$i : $i);
+            $tempTgl = date_create(date_format($tgl, "Y")."-".date_format($tgl, "m")."-".$tempHari);
+            $temp = HomeService::whereDate('appointment', "=" , $tempTgl)
+                        ->where('home_services.active', true)
+                        ->count();
+            array_push($totalPerDay, $temp);
+        }
+
+        $data = ['result' => 1,
+                 'totalPerDay' => $totalPerDay
+                ];
+            return response()->json($data, 200);
+    }
 
     public function viewApi(Request $request, $id)
     {

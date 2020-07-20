@@ -316,7 +316,7 @@ class DeliveryOrderController extends Controller
             $deliveryOrders = $deliveryOrders->leftjoin('branches', 'delivery_orders.branch_id', '=', 'branches.id')
                                 ->leftjoin('csos', 'delivery_orders.cso_id', '=', 'csos.id')
                                 ->select('delivery_orders.id', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.name as customer_name', 'delivery_orders.arr_product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
-                                ->get();
+                                ->paginate($request->limit);
 
             foreach ($deliveryOrders as $i => $doNya) {
                 $tempId = json_decode($doNya['arr_product'], true);
