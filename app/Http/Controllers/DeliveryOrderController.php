@@ -136,7 +136,7 @@ class DeliveryOrderController extends Controller
 
     public function admin_DetailDeliveryOrder(Request $request){
         $deliveryOrder = DeliveryOrder::where('code', $request['code'])->first();
-        $historyUpdateDeliveryOrder = HistoryUpdate::where('type_menu', 'Delivery Order')->where('menu_id', $deliveryOrder->id)->get();
+        $historyUpdateDeliveryOrder = HistoryUpdate::where('type_menu', 'Delivery Order')->where('menu_id', $deliveryOrder->id)->first();
         return view('admin.detail_deliveryorder', compact('deliveryOrder', 'historyUpdateDeliveryOrder'));
     }
 
