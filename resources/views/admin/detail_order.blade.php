@@ -181,41 +181,43 @@
                         </tr>
                     </table>
                 @endif
+                <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share"
+                class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
+            </div>
 
-                <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share">Share to Whatsapp</a>
+
+            <div class="row justify-content-center" style="margin-top: 2em;">
+                <h2>ORDER HISTORY LOG</h2>
             </div>
-        </div>
-    </section>
-    <section id="intro" class="clearfix">
-        <h2>ORDER HISTORY LOG </h2>
-        <table class="col-md-12">
-            <thead>
-                <td>No.</td>
-                <td>Action</td>
-                <td>User</td>
-                <td>Change</td>
-                <td>Time</td>
-            </thead>
-            @if($historyUpdateOrder != null)
-            @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
-            <tr>
-                <td>{{$key+1}}</td>
-                <td>{{$historyUpdateOrder->method}}</td>
-                <td>{{$historyUpdateOrder->name}}</td>
-                <td></td>
-                <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
-            </tr>
-            @endforeach
-            @endif
-        </table>
-    </section>
-@else
-    <section id="intro" class="clearfix">
-        <div class="container">
             <div class="row justify-content-center">
-                <h2>CANNOT FIND ORDER</h2>
+              <table class="col-md-12">
+                  <thead>
+                      <td>No.</td>
+                      <td>Action</td>
+                      <td>User</td>
+                      <td>Change</td>
+                      <td>Time</td>
+                  </thead>
+                  @if($historyUpdateOrder != null)
+                  @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
+                  <tr>
+                      <td>{{$key+1}}</td>
+                      <td>{{$historyUpdateOrder->method}}</td>
+                      <td>{{$historyUpdateOrder->name}}</td>
+                      <td></td>
+                      <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
+                  </tr>
+                  @endforeach
+                  @endif
+              </table>
             </div>
+                @else
+                <div class="row justify-content-center">
+                    <h2>CANNOT FIND ORDER</h2>
+                </div>
+                @endif
         </div>
+
     </section>
-@endif
+
 @endsection
