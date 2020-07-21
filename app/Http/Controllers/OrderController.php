@@ -185,7 +185,6 @@ class OrderController extends Controller
         $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
         ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
-        // {{array_diff_assoc(json_encode($historyUpdateOrder->meta['dataBefore'],true), json_encode($historyUpdateOrder->meta['dataChange'],true))}}
         return view('admin.detail_order', compact('order', 'historyUpdateOrder'));
     }
 
@@ -281,12 +280,11 @@ class OrderController extends Controller
             $user = Auth::user();
             $historyUpdate['type_menu'] = "Order";
             $historyUpdate['method'] = "Update";
-            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataBefore'=> $dataBefore ,'dataChange'=> $orders];
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($orders, true), json_decode($dataBefore,true))];
             $historyUpdate['user_id'] = $user['id'];
             $historyUpdate['menu_id'] = $orders->id;
             $createData = HistoryUpdate::create($historyUpdate);
             DB::commit();
-            $historyUpdate['dataChange']= array_diff_assoc($currentData, $updateData);
             return response()->json(['success' => 'Berhasil!']);
         } catch (\Exception $ex) {
             DB::rollback();

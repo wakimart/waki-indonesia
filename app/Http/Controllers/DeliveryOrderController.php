@@ -10,6 +10,7 @@ use App\Cso;
 use App\HistoryUpdate;
 use Illuminate\Validation\Rule;
 use Validator;
+use DB;
 
 class DeliveryOrderController extends Controller
 {
@@ -136,7 +137,9 @@ class DeliveryOrderController extends Controller
 
     public function admin_DetailDeliveryOrder(Request $request){
         $deliveryOrder = DeliveryOrder::where('code', $request['code'])->first();
-        $historyUpdateDeliveryOrder = HistoryUpdate::where('type_menu', 'Delivery Order')->where('menu_id', $deliveryOrder->id)->first();
+        $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
+        ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
+        ->where('type_menu', 'Delivery Order')->where('menu_id', $deliveryOrder->id)->get();
         return view('admin.detail_deliveryorder', compact('deliveryOrder', 'historyUpdateDeliveryOrder'));
     }
 
@@ -170,6 +173,7 @@ class DeliveryOrderController extends Controller
     public function update(Request $request)
     {
         $deliveryOrders = DeliveryOrder::find($request->input('idDeliveryOrder'));
+        $dataBefore = DeliveryOrder::find($request->input('idDeliveryOrder'));
         $deliveryOrders->no_member = $request->input('no_member');
         $deliveryOrders->name = $request->input('name');
         $deliveryOrders->address = $request->input('address');
@@ -193,21 +197,28 @@ class DeliveryOrderController extends Controller
         $deliveryOrders->cso_id = $request->input('idCSO');
         $deliveryOrders->branch_id = $request->input('branch_id');
         $deliveryOrders->city = $request->input('city');
-        $deliveryOrders->save();
+
+        DB::beginTransaction();
+        try {
+            $deliveryOrders->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Delivery Order";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($deliveryOrders, true), json_decode($dataBefore,true))];
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $deliveryOrders->id;
+
+            $createData = HistoryUpdate::create($historyUpdate);
+
+            DB::commit();
+            return response()->json(['success' => 'Berhasil!!']);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' => $ex->getMessage()], 500);
+        }
         
-
-        $user = Auth::user();
-        $historyUpdate= [];
-        $historyUpdate['type_menu'] = "Delivery Order";
-        $historyUpdate['method'] = "Update";
-        $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $deliveryOrders];
-        $historyUpdate['user_id'] = $user['id'];
-
-
-        $createData = HistoryUpdate::create($historyUpdate);
-
-
-        return response()->json(['success' => 'Berhasil!!']);
     }
 
     /**
