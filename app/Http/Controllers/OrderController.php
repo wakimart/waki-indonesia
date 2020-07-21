@@ -584,10 +584,10 @@ class OrderController extends Controller
     public function viewApi($id)
     {
         //khususu head-manager, head-admin, admin
-        $orders = Order::where('orders.active', true);
+        $orders = Order::where([['orders.active', true], ['orders.id', $id]]);
         $orders = $orders->leftjoin('branches', 'orders.branch_id', '=', 'branches.id')
                             ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
-                            ->select('orders.id', 'orders.code', 'orders.orderDate', 'orders.name as customer_name', 'orders.phone as customer_phone', 'orders.city as customer_city', 'orders.address as customer_address','orders.product', 'orders.old_product as old_product', 'orders.prize as prize_product', 'orders.total_payment as total_payment', 'orders.down_payment as down_payment', 'orders.remaining_payment as remaining_payment', 'orders.bank as bank','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
+                            ->select('orders.id', 'orders.code', 'orders.orderDate', 'orders.no_member', 'orders.name as customer_name', 'orders.phone as customer_phone', 'orders.city as customer_city', 'orders.address as customer_address','orders.product', 'orders.old_product as old_product', 'orders.prize as prize_product', 'orders.payment_type as payment_type', 'orders.total_payment as total_payment', 'orders.cash_upgrade as cash_upgrade', 'orders.down_payment as down_payment', 'orders.remaining_payment as remaining_payment', 'orders.bank as bank','branches.code as branch_code', 'orders.customer_type as customer_type', 'orders.description as description','branches.code as branch_code', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->get();
         foreach ($orders as $i => $doNya) {
             $tempId = json_decode($doNya['product'], true);
@@ -603,7 +603,6 @@ class OrderController extends Controller
             }
             $doNya['product'] = $tempArray;
         }
-        $orders = $orders->find($id);
         $data = ['result' => 1,
                  'data' => $orders
                 ];

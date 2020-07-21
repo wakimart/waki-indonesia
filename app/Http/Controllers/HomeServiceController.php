@@ -309,7 +309,7 @@ class HomeServiceController extends Controller
         }
         else{
             $data = $request->all();
-            $tgl=date_create(date_format($tgl, "Y")."-".date_format($tgl, "m")."-".$tempHari);
+            $tgl=date_create($request->date);
             $userSlug = User::find($data['user_id'])->roles[0];
 
             //khususu head-manager, head-admin, admin
@@ -320,13 +320,12 @@ class HomeServiceController extends Controller
             if($userSlug == 'cso'){
                 $homeServices = HomeService::whereDate('home_services.appointment', '=', $tgl)->where('cso_id', Auth::user()->cso['id'])->where('active', true);
             }
-            $homeServices = $homeServices->where('home_services.branch_id', 1);
 
             //LAST Strutured Eloquent for Homeservices
             $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
                             ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
-                            ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name')
-                            ->orderBy('home_services.appointment', 'ASC')->get();
+                            ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name', 'branches.color as branch_color')->get();
+                            // ->orderBy('home_services.appointment', 'ASC')
 
             $totalPerDay = [];
 
@@ -376,7 +375,7 @@ class HomeServiceController extends Controller
         //LAST Strutured Eloquent for Homeservices
         $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
                         ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
-                        ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.address as custommer_address','home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name')
+                        ->select('home_services.id', 'home_services.appointment', 'home_services.no_member as no_member', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.address as custommer_address','home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name')
                         ->orderBy('home_services.appointment', 'ASC')->get();
         $homeServices = $homeServices->find($id);
         return response()->json($homeServices, 200);
