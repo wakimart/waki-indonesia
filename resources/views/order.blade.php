@@ -39,15 +39,16 @@
         <div class="row justify-content-center">
             <form action="{{ Route('store_order') }}" method="post" role="form" class="contactForm col-md-9">
                 @csrf
-                <h5 class="add-customer d-none">Customer 1</h5>
                 <h6>Waktu Order</h6>
                 <div class="form-group">
-                    <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+                    <input type="date" class="form-control" name="orderDate" id="orderDate" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
                     <div class="validation"></div>
                     <span class="invalid-feedback">
                         <strong></strong>
                     </span>
                 </div>
+                <h5 class="add-customer d-none">Customer 1</h5>
+                
                 <div class="form-group">
                     <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
                     <div class="validation"></div>
@@ -70,14 +71,6 @@
                 </div>
                 <br>
                 <h5 class="add-customer d-none">Customer 2</h5>
-                <h6 class="add-customer d-none">Waktu Order</h6>
-                <div class="form-group add-customer d-none">
-                    <input type="date" class="form-control" name="date" id="member_date-2" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
-                    <div class="validation"></div>
-                    <span class="invalid-feedback">
-                        <strong></strong>
-                    </span>
-                </div>
                 <div class="form-group add-customer d-none">
                     <input type="text" name="no_member-2" class="form-control" id="no_member-2" placeholder="No. Member (optional)"/>
                     <div class="validation"></div>
