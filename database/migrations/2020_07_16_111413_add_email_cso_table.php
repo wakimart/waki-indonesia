@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddOrderDateOrderTable extends Migration
+class AddEmailCsoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddOrderDateOrderTable extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->date('orderDate')->nullable();
+        Schema::table('csos', function (Blueprint $table) {
+            $table->string('email');
         });
     }
 
@@ -25,8 +25,8 @@ class AddOrderDateOrderTable extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('orderDate');
+        Schema::table('csos', function (Blueprint $table) {
+            $table->dropColumn('email');
         });
     }
 }

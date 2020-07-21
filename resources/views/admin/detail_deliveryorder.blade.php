@@ -122,6 +122,27 @@
             </div>
         </div>
     </section>
+    <section id="intro" class="clearfix">
+        <h2>REGISTRATION HISTORY LOG</h2>
+        <table class="col-md-12">
+            <thead>
+                <td>No.</td>
+                <td>Action</td>
+                <td>User</td>
+                <td>Time</td>
+            </thead>
+            @if($historyUpdateDeliveryOrder != null)
+            @foreach($historyUpdateDeliveryOrder as $key => $historyUpdateDeliveryOrder)
+            <tr>
+                <td>{{$key+1}}</td>
+                <td>{{$historyUpdateDeliveryOrder->method}}</td>
+                <td>{{$historyUpdateDeliveryOrder->name}}</td>
+                <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateDeliveryOrder->created_at)) }}</td>
+            </tr>
+            @endforeach
+            @endif
+        </table>
+    </section>
 @else
     <section id="intro" class="clearfix">
         <div class="container">

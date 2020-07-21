@@ -8,6 +8,8 @@ use App\DeliveryOrder;
 use App\Order;
 use App\Branch;
 use App\Cso;
+use App\HistoryUpdate;
+use DB;
 
 class OrderController extends Controller
 {
@@ -180,7 +182,10 @@ class OrderController extends Controller
 
     public function admin_DetailOrder(Request $request){
         $order = Order::where('code', $request['code'])->first();
-        return view('admin.detail_order', compact('order'));
+        $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
+        ->select('history_updates.method', 'history_updates.created_at', 'users.name as name')
+        ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder'));
     }
 
     /**
@@ -266,18 +271,25 @@ class OrderController extends Controller
         $orders['city'] = $request->input('city');
         $orders['customer_type'] = $request->input('customer_type');
         $orders['description'] = $request->input('description');
-        $orders->save();
+        DB::beginTransaction();
+        try{
+            $orders->save();
 
-        $user = Auth::user();
-        $historyUpdate= [];
-        $historyUpdate['type_menu'] = "Order";
-        $historyUpdate['method'] = "Update";
-        $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $orders];
-        $historyUpdate['user_id'] = $user['id'];
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $orders];
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $orders->id;
 
-        $createData = HistoryUpdate::create($historyUpdate);
-
-        return response()->json(['success' => 'Berhasil!']);
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return response()->json(['success' => 'Berhasil!']);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' => $ex->getMessage()], 500);
+        }
         
     }
 
