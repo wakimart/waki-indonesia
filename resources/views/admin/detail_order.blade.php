@@ -193,6 +193,7 @@
                 <td>No.</td>
                 <td>Action</td>
                 <td>User</td>
+                <td>Change</td>
                 <td>Time</td>
             </thead>
             @if($historyUpdateOrder != null)
@@ -201,6 +202,7 @@
                 <td>{{$key+1}}</td>
                 <td>{{$historyUpdateOrder->method}}</td>
                 <td>{{$historyUpdateOrder->name}}</td>
+                <td></td>
                 <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
             </tr>
             @endforeach
