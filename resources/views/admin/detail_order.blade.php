@@ -92,7 +92,12 @@
 
                     @foreach(json_decode($order['product']) as $promo)
                         <tr>
-                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
+                            {{-- khusus Philipin --}}
+                            @if(is_numeric($promo->id))
+                                <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
+                            @else
+                                <td>{{ $promo->id }}</td>
+                            @endif
                             <td>{{ $promo->qty }}</td>
                         </tr>
                     @endforeach
@@ -202,7 +207,7 @@
                 <td>{{$key+1}}</td>
                 <td>{{$historyUpdateOrder->method}}</td>
                 <td>{{$historyUpdateOrder->name}}</td>
-                <td></td>
+                <td>{{$historyUpdateOrder->meta}}</td>
                 <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
             </tr>
             @endforeach

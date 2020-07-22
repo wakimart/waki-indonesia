@@ -129,6 +129,7 @@
                 <td>No.</td>
                 <td>Action</td>
                 <td>User</td>
+                <td>Change</td>
                 <td>Time</td>
             </thead>
             @if($historyUpdateDeliveryOrder != null)
@@ -137,6 +138,7 @@
                 <td>{{$key+1}}</td>
                 <td>{{$historyUpdateDeliveryOrder->method}}</td>
                 <td>{{$historyUpdateDeliveryOrder->name}}</td>
+                <td>{{$historyUpdateDeliveryOrder->meta['dataChange']}}</td>
                 <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateDeliveryOrder->created_at)) }}</td>
             </tr>
             @endforeach
