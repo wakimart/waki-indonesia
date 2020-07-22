@@ -439,6 +439,7 @@ class DeliveryOrderController extends Controller
             }else {
                 $doNya['province_id'] = $city->province_id;
             }
+            $doNya['URL'] = route('successorder')."?code=".$doNya['code'];
         }
         $data = ['result' => 1,
                  'data' => $delivery_orders
