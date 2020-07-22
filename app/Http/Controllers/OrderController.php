@@ -602,9 +602,22 @@ class OrderController extends Controller
                 $tempArray[$j]['qty'] = $product['qty'];
             }
             $doNya['product'] = $tempArray;
+
+            //khusus 
+            $doNya['30_cso_code'] = Cso::where('id', $doNya['cso_30_id'])->first()['code'];
+            $doNya['70_cso_code'] = Cso::where('id', $doNya['cso_70_id'])->first()['code'];
+
+            $tempId = json_decode($doNya['bank'], true);
+            $tempArray = [];
+            foreach ($tempId as $j => $bank) {
+                $tempArray[$j] = [];
+                $tempArray[$j]['id'] = $bank['id'];
+                $tempArray[$j]['name'] = Order::$Banks[$bank['id']];
+                $tempArray[$j]['cicilan'] = $bank['cicilan'];
+            }
+            $doNya['bank'] = $tempArray;
+            $doNya['URL'] = route('order_success')."?code=".$doNya['code'];
         }
-        $doNya['30_cso_code'] = Cso::where('id', $orders[0]->cso_30_id)->first()['code'];
-        $doNya['70_cso_code'] = Cso::where('id', $orders[0]->cso_70_id)->first()['code'];
         $data = ['result' => 1,
                  'data' => $orders
                 ];
