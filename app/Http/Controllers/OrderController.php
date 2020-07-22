@@ -9,6 +9,7 @@ use App\Order;
 use App\Branch;
 use App\Cso;
 use App\User;
+use App\RajaOngkir_City;
 
 class OrderController extends Controller
 {
@@ -589,6 +590,13 @@ class OrderController extends Controller
                             ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
                             ->select('orders.id', 'orders.code', 'orders.orderDate', 'orders.no_member', 'orders.name as customer_name', 'orders.phone as customer_phone', 'orders.city as customer_city', 'orders.address as customer_address','orders.product', 'orders.old_product as old_product', 'orders.prize as prize_product', 'orders.payment_type as payment_type', 'orders.total_payment as total_payment', 'orders.cash_upgrade as cash_upgrade', 'orders.down_payment as down_payment', 'orders.remaining_payment as remaining_payment', 'orders.bank as bank','branches.code as branch_code', 'orders.customer_type as customer_type', 'orders.30_cso_id as cso_30_id', 'orders.70_cso_id as cso_70_id','orders.description as description','branches.id as branch_id', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->get();
+        $kota = $orders[0]->customer_city; 
+        if (strpos($kota, 'Kota') !== false) {
+            $kota = str_replace('Kota ', '',$kota);
+        }elseif (strpos($kota, 'Kabupaten') !== false){
+            $kota = str_replace('Kabupaten ', '',$kota);
+        }
+        $city = RajaOngkir_City::where('city_name', 'like', '%'.$kota.'%')->first();
         foreach ($orders as $i => $doNya) {
             $tempId = json_decode($doNya['product'], true);
             $tempArray = $doNya['product'];
@@ -602,6 +610,11 @@ class OrderController extends Controller
                 $tempArray[$j]['qty'] = $product['qty'];
             }
             $doNya['product'] = $tempArray;
+            if($city == null){
+                $doNya['province_id'] = 0;
+            }else {
+                $doNya['province_id'] = $city->province_id;
+            }
         }
         $doNya['cso_30_code'] = Cso::where('id', $orders[0]->cso_30_id)->first()['code'];
         $doNya['cso_70_code'] = Cso::where('id', $orders[0]->cso_70_id)->first()['code'];

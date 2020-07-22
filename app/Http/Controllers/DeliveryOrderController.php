@@ -413,12 +413,13 @@ class DeliveryOrderController extends Controller
                             ->select('delivery_orders.id','delivery_orders.city as city', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.no_member as no_member', 'delivery_orders.name as customer_name', 'delivery_orders.phone as customer_phone', 'delivery_orders.address as customer_address', 'delivery_orders.city as city', 'delivery_orders.arr_product', 'branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->get();
 
-        if (strpos($delivery_orders[0]->city, 'Kota') !== false) {
-            $delivery_orders[0]->city = str_replace('Kota ', '',$delivery_orders[0]->city);
-        }elseif (strpos($delivery_orders[0]->city, 'Kabupaten') !== false){
-            $delivery_orders[0]->city = str_replace('Kabupaten ', '',$delivery_orders[0]->city);
+        $kota = $delivery_orders[0]->city; 
+        if (strpos($kota, 'Kota') !== false) {
+            $kota = str_replace('Kota ', '',$kota);
+        }elseif (strpos($kota, 'Kabupaten') !== false){
+            $kota = str_replace('Kabupaten ', '',$kota);
         }                    
-        $city = RajaOngkir_City::where('city_name', 'like', '%'.$delivery_orders[0]->city.'%')->first();
+        $city = RajaOngkir_City::where('city_name', 'like', '%'.$kota.'%')->first();
         foreach ($delivery_orders as $i => $doNya) {
             $tempId = json_decode($doNya['arr_product'], true);
             $tempArray = $doNya['arr_product'];
