@@ -604,8 +604,8 @@ class OrderController extends Controller
             $doNya['product'] = $tempArray;
 
             //khusus 
-            $doNya['30_cso_code'] = Cso::where('id', $doNya['cso_30_id'])->first()['code'];
-            $doNya['70_cso_code'] = Cso::where('id', $doNya['cso_70_id'])->first()['code'];
+            $doNya['cso_30_code'] = Cso::where('id', $doNya['cso_30_id'])->first()['code'];
+            $doNya['cso_70_code'] = Cso::where('id', $doNya['cso_70_id'])->first()['code'];
 
             $tempId = json_decode($doNya['bank'], true);
             $tempArray = [];
