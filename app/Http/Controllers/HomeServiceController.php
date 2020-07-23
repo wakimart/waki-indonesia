@@ -366,19 +366,17 @@ class HomeServiceController extends Controller
 
     public function viewApi(Request $request, $id)
     {
-        //khususu head-manager, head-admin, admin
-        $homeServices = HomeService::where('home_services.active', true);
+        $homeServices = HomeService::where([['home_services.active', true], ['home_services.id', $id]]);
 
-        
-        $homeServices = $homeServices->where('home_services.branch_id', 1);
-
-        //LAST Strutured Eloquent for Homeservices
         $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
                         ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
-                        ->select('home_services.id', 'home_services.appointment', 'home_services.no_member as no_member', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.address as custommer_address','home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name')
-                        ->orderBy('home_services.appointment', 'ASC')->get();
-        $homeServices = $homeServices->find($id);
-        return response()->json($homeServices, 200);
-           
+                        ->select('home_services.id', 'home_services.code as code', 'home_services.appointment', 'home_services.no_member as no_member', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.address as custommer_address','home_services.phone as custommer_phone', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')->first();
+
+        $homeServices['URL'] = route('homeServices_success')."?code=".$homeServices['code'];
+
+        $data = ['result' => 1,
+                 'data' => $homeServices
+                ];
+        return response()->json($data, 200);
     }
 }
