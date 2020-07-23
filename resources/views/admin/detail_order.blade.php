@@ -200,11 +200,19 @@
                   </thead>
                   @if($historyUpdateOrder != null)
                   @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
+                  @php
+
+                  @endphp
                   <tr>
                       <td>{{$key+1}}</td>
                       <td>{{$historyUpdateOrder->method}}</td>
                       <td>{{$historyUpdateOrder->name}}</td>
-                      <td></td>
+                      <?php $dataChange = json_decode($historyUpdateOrder->meta, true);?>
+                      <td>
+                      @foreach ($dataChange['dataChange'] as $key=>$value)
+                          <b>{{$key}}</b>: {{$value}}<br/>
+                      @endforeach
+                      </td>
                       <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
                   </tr>
                   @endforeach

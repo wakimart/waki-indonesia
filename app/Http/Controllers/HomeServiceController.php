@@ -174,7 +174,7 @@ class HomeServiceController extends Controller
                 ),
             );
 
-            $event = $this->gCalendarController->store($event);
+            // $event = $this->gCalendarController->store($event);
             DB::commit();
             return response()->json(['success' => 'Berhasil']);
         } catch (\Exception $ex) {

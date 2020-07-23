@@ -70,7 +70,7 @@ class DeliveryOrderController extends Controller
     }
 
     public function listDeliveryOrder(Request $request){
-        $deliveryOrders = DeliveryOrder::all();        
+        $deliveryOrders = DeliveryOrder::all();
         return view('templistregwaki1995', compact('deliveryOrders'));
     }
 
@@ -206,7 +206,7 @@ class DeliveryOrderController extends Controller
             $historyUpdate= [];
             $historyUpdate['type_menu'] = "Delivery Order";
             $historyUpdate['method'] = "Update";
-            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($deliveryOrders, true), json_decode($dataBefore,true))];
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($deliveryOrders, true), json_decode($dataBefore,true))]);
             $historyUpdate['user_id'] = $user['id'];
             $historyUpdate['menu_id'] = $deliveryOrders->id;
 
@@ -218,7 +218,7 @@ class DeliveryOrderController extends Controller
             DB::rollback();
             return response()->json(['error' => $ex->getMessage()], 500);
         }
-        
+
     }
 
     /**
@@ -228,6 +228,6 @@ class DeliveryOrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function delete(Request $request) {
-        
+
     }
 }

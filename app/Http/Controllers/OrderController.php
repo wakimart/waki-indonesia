@@ -218,7 +218,7 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
-    {   
+    {
         $historyUpdate= [];
         $data = $request->all();
         $orders = Order::find($request->input('idOrder'));
@@ -231,7 +231,7 @@ class OrderController extends Controller
         $orders['total_payment'] = $request->input('total_payment');
         $orders['down_payment'] = $request->input('down_payment');
         $orders['remaining_payment'] = $request->input('remaining_payment');
-        
+
         //pembentukan array product
         $index = 0;
         $data['arr_product'] = [];
@@ -280,7 +280,9 @@ class OrderController extends Controller
             $user = Auth::user();
             $historyUpdate['type_menu'] = "Order";
             $historyUpdate['method'] = "Update";
-            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($orders, true), json_decode($dataBefore,true))];
+            // $different = array_diff(json_decode($orders, true), json_decode($dataBefore,true));
+            // $different = json_encode($different);
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($orders, true), json_decode($dataBefore,true))]);
             $historyUpdate['user_id'] = $user['id'];
             $historyUpdate['menu_id'] = $orders->id;
             $createData = HistoryUpdate::create($historyUpdate);
@@ -290,7 +292,7 @@ class OrderController extends Controller
             DB::rollback();
             return response()->json(['error' => $ex->getMessage()], 500);
         }
-        
+
     }
 
     /**
@@ -300,6 +302,6 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function delete(Request $request) {
-        
+
     }
 }

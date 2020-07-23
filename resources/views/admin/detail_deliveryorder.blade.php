@@ -37,8 +37,9 @@
     }
 </style>
 @endsection
-@section('content')
 
+
+@section('content')
 @if( $deliveryOrder['code'] != null)
     <section id="intro" class="clearfix">
         <div class="container">
@@ -117,42 +118,47 @@
                     </tr>
                 </table>
 
-                <a href="whatsapp://send?text={{ Route('successorder') }}?code={{ $deliveryOrder['code'] }}" data-action="share/whatsapp/share"
-                class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
+                <a href="whatsapp://send?text={{ Route('successorder') }}?code={{ $deliveryOrder['code'] }}" data-action="share/whatsapp/share">Share to Whatsapp</a>
             </div>
-
-            <div class="row justify-content-center" style="margin-top: 2em;">
-                <h2>REGISTRATION HISTORY LOG</h2>
-            </div>
-            <div class="row justify-content-center">
-              <table class="col-md-12">
-                  <thead>
-                      <td>No.</td>
-                      <td>Action</td>
-                      <td>User</td>
-                      <td>Time</td>
-                  </thead>
-                  @if($historyUpdateDeliveryOrder != null)
-                  @foreach($historyUpdateDeliveryOrder as $key => $historyUpdateDeliveryOrder)
-                  <tr>
-                      <td>{{$key+1}}</td>
-                      <td>{{$historyUpdateDeliveryOrder->method}}</td>
-                      <td>{{$historyUpdateDeliveryOrder->name}}</td>
-                      <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateDeliveryOrder->created_at)) }}</td>
-                  </tr>
-                  @endforeach
-                  @endif
-              </table>
-            </div>
-              @else
-              <div class="row justify-content-center">
-                  <h2>CANNOT FIND DELIVERY ORDER</h2>
-              </div>
-
-              @endif
         </div>
 
-    </section>
+        <div class="row justify-content-center" style="margin-top: 2em;">
+          <h2>REGISTRATION HISTORY LOG</h2>
+        </div>
+        <div class="row justify-content-center">
+          <table class="col-md-12">
+              <thead>
+                  <td>No.</td>
+                  <td>Action</td>
+                  <td>User</td>
+                  <td>Change</td>
+                  <td>Time</td>
+              </thead>
+              @if($historyUpdateDeliveryOrder != null)
+              @foreach($historyUpdateDeliveryOrder as $key => $historyUpdateDeliveryOrder)
+              <tr>
+                  <td>{{$key+1}}</td>
+                  <td>{{$historyUpdateDeliveryOrder->method}}</td>
+                  <td>{{$historyUpdateDeliveryOrder->name}}</td>
+                  <?php $dataChange = json_decode($historyUpdateDeliveryOrder->meta, true);?>
+                  <td>
+                      @foreach ($dataChange['dataChange'] as $key=>$value)
+                          <b>{{$key}}</b>: {{$value}}<br/>
+                      @endforeach
+                  </td>
+                  <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateDeliveryOrder->created_at)) }}</td>
+              </tr>
+              @endforeach
+              @endif
+          </table>
+      </div>
+          @else
+          <div class="row justify-content-center">
+              <h2>CANNOT FIND DELIVERY ORDER</h2>
+          </div>
+          @endif
+    </div>
 
+  </section>
 
 @endsection
