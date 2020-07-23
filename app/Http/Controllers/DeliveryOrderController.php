@@ -206,7 +206,7 @@ class DeliveryOrderController extends Controller
             $historyUpdate= [];
             $historyUpdate['type_menu'] = "Delivery Order";
             $historyUpdate['method'] = "Update";
-            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($deliveryOrders, true), json_decode($dataBefore,true))];
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($deliveryOrders, true), json_decode($dataBefore,true))]);
             $historyUpdate['user_id'] = $user['id'];
             $historyUpdate['menu_id'] = $deliveryOrders->id;
 
