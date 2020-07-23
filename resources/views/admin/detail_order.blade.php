@@ -207,7 +207,12 @@
                 <td>{{$key+1}}</td>
                 <td>{{$historyUpdateOrder->method}}</td>
                 <td>{{$historyUpdateOrder->name}}</td>
-                <td>{{$historyUpdateOrder->meta}}</td>
+                <?php $dataChange = json_decode($historyUpdateOrder->meta, true);?>
+                <td>
+                @foreach ($dataChange['dataChange'] as $key=>$value)
+                    <b>{{$key}}</b>: {{$value}}<br/>
+                @endforeach
+                </td>
                 <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
             </tr>
             @endforeach
