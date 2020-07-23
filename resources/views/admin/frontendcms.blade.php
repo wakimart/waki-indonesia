@@ -109,7 +109,7 @@
 
 
                           @php
-                              $photos = json_decode($galleries['photo']);
+                              <!-- $photos = json_decode($galleries['photo']); -->
                               $defaultImg = asset('sources/portfolio/');
 
                               $count_photo = sizeof($photos);

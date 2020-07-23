@@ -18,10 +18,76 @@
 		</div>
 
 		<div class="row">
+			<div class="col-12 grid-margin stretch-card">
+				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+                        <label for="">Filter By Team</label>
+                          <select class="form-control" id="filter_branch" name="filter_branch">
+                            <option value="" selected="">All Branch</option>
+                            @foreach($branches as $branch)
+                              @php
+                                $selected = "";
+                                if(isset($_GET['filter_branch'])){
+                                  if($_GET['filter_branch'] == $branch['id']){
+                                    $selected = "selected=\"\"";
+                                  }
+                                }
+                              @endphp
+
+                              <option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                            @endforeach
+                          </select>
+                          <div class="validation"></div>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+                        <label for="">Filter By CSO</label>
+                          <select class="form-control" id="filter_cso" name="filter_cso">
+                            <option value="">All CSO</option>
+                            @php
+                              if(isset($_GET['filter_branch'])){
+                                $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+
+                                foreach ($csos as $cso) {
+                                  if(isset($_GET['filter_cso'])){
+                                    if($_GET['filter_cso'] == $cso['id']){
+                                      echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+                                      continue;
+                                    }
+                                  }
+                                  echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+                                }
+                              }
+                            @endphp
+                          </select>
+                          <div class="validation"></div>
+                      </div>
+					</div>
+				@endif
+			
+				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
+				  <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+						<label for=""></label>
+						<div class="form-group">
+						<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+					  </div>
+					</div>
+				  </div>
+				@endif
+
+				<div class="col-sm-12 col-md-12" style="padding: 0; border: 1px solid #ebedf2;">
+					<div class="col-xs-12 col-sm-11 col-md-6 table-responsive" id="calendarContainer" style="padding: 0; float: left;"></div>
+					<div class="col-xs-12 col-sm-11 col-md-6" id="organizerContainer" style="padding: 0; float: left;"></div>
+				</div>
+			
+			</div>
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
-      					<h5 style="margin-bottom: 0.5em;">Total : {{ sizeof($deliveryOrders) }} data</h5>
+      					<h5 style="margin-bottom: 0.5em;">Total : {{ $countDeliveryOrders }} data</h5>
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
         					<table class="table table-bordered">
           						<thead>
@@ -89,7 +155,9 @@
 				                        @endforeach
 				                    @endforeach
           						</tbody>
-        					</table>
+							</table>
+											<br/>
+							{{ $deliveryOrders->links() }}
         				</div>
       				</div>
     			</div>
@@ -128,5 +196,47 @@
 	$(".btn-delete").click(function(e) {
         $("#frmDelete").attr("action",  $(this).val());
     });
+</script>
+
+<script>
+	$(document).ready(function(e){
+		$("#filter_branch").on("change", function(){
+		  console.log("test")
+		  var id = $(this).val();
+		  $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
+		  .done(function( result ) {
+			  $( "#filter_cso" ).html("");
+			  var arrCSO = "<option selected value=\"\">All CSO</option>";
+			  if(result.length > 0){
+				  $.each( result, function( key, value ) {
+					arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
+				  });
+				  $( "#filter_cso" ).append(arrCSO);
+				}
+			});
+		if(id == ""){
+		  $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
+	  }
+	});
+	});
+	$(document).on("click", "#btn-filter", function(e){
+	  var urlParamArray = new Array();
+	  var urlParamStr = "";
+	  if($('#filter_branch').val() != ""){
+		urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+	  }
+	  if($('#filter_cso').val() != ""){
+		urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+	  }
+	  for (var i = 0; i < urlParamArray.length; i++) {
+		if (i === 0) {
+		  urlParamStr += "?" + urlParamArray[i]
+		} else {
+		  urlParamStr += "&" + urlParamArray[i]
+		}
+	  }
+	
+	  window.location.href = "{{route('list_deliveryorder')}}" + urlParamStr;
+	});
 </script>
 @endsection

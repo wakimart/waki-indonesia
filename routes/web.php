@@ -12,6 +12,8 @@
 */
 
 Auth::routes(['verify' => true]);
+Route::resource('gcalendar', 'gCalendarController');
+Route::get('oauth', ['as' => 'oauthCallback', 'uses' => 'gCalendarController@oauth'])->name('oauthCallback');
 
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category', 'CategoryProductController@index')->name('product_category');
@@ -220,7 +222,15 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function(){
-	    //List Home Service
+		//Add Form home service
+    	Route::get('/', 'HomeServiceController@indexAdmin')
+	    	->name('admin_add_homeService')
+	    	->middleware('can:add-home_service');
+		//Add Home Service
+	    Route::post('/', 'HomeServiceController@admin_addHomeService')
+	    	->name('admin_store_homeService')
+	    	->middleware('can:add-home_service');
+		//List Home Service
 	    Route::get('/list', 'HomeServiceController@admin_ListHomeService')
 	    	->name('admin_list_homeService')
 	    	->middleware('can:browse-home_service');
@@ -251,7 +261,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('store_cso')
 	    	->middleware('can:add-cso');
 	    //List CSO
-	    Route::get('/list', 'CsoController@index')
+	    Route::get('/list', 'CsoController@admin_ListCso')
 	    	->name('list_cso')
 	    	->middleware('can:browse-cso');
 	    //Edit CSO

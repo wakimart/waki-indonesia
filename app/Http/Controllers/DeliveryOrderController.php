@@ -11,6 +11,8 @@ use App\User;
 use Illuminate\Validation\Rule;
 use Validator;
 use App\RajaOngkir_City;
+use App\HistoryUpdate;
+use DB;
 
 class DeliveryOrderController extends Controller
 {
@@ -70,7 +72,7 @@ class DeliveryOrderController extends Controller
     }
 
     public function listDeliveryOrder(Request $request){
-        $deliveryOrders = DeliveryOrder::all();        
+        $deliveryOrders = DeliveryOrder::all();
         return view('templistregwaki1995', compact('deliveryOrders'));
     }
 
@@ -105,9 +107,12 @@ class DeliveryOrderController extends Controller
         return response()->json(['success' => 'Berhasil!!']);
     }
 
-    public function admin_ListDeliveryOrder(){
+    public function admin_ListDeliveryOrder(Request $request){
+        $branches = Branch::Where('active', true)->get();
+
         //khususu head-manager, head-admin, admin
-        $deliveryOrders = DeliveryOrder::all();
+        $deliveryOrders = DeliveryOrder::where('delivery_orders.active', true);
+        $countDeliveryOrders = DeliveryOrder::count();
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
@@ -122,13 +127,22 @@ class DeliveryOrderController extends Controller
             }
             $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->get();
         }
-        
-        return view('admin.list_deliveryorder', compact('deliveryOrders'));
+        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+            $deliveryOrders = $deliveryOrders->where('branch_id', $request->filter_branch);
+        }
+        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
+            $deliveryOrders = $deliveryOrders->where('cso_id', $request->filter_cso);
+        }
+        $deliveryOrders = $deliveryOrders->paginate(10);
+        return view('admin.list_deliveryorder', compact('deliveryOrders', 'countDeliveryOrders', 'branches'));
     }
 
     public function admin_DetailDeliveryOrder(Request $request){
         $deliveryOrder = DeliveryOrder::where('code', $request['code'])->first();
-        return view('admin.detail_deliveryorder', compact('deliveryOrder'));
+        $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
+        ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
+        ->where('type_menu', 'Delivery Order')->where('menu_id', $deliveryOrder->id)->get();
+        return view('admin.detail_deliveryorder', compact('deliveryOrder', 'historyUpdateDeliveryOrder'));
     }
 
     /**
@@ -161,6 +175,7 @@ class DeliveryOrderController extends Controller
     public function update(Request $request)
     {
         $deliveryOrders = DeliveryOrder::find($request->input('idDeliveryOrder'));
+        $dataBefore = DeliveryOrder::find($request->input('idDeliveryOrder'));
         $deliveryOrders->no_member = $request->input('no_member');
         $deliveryOrders->name = $request->input('name');
         $deliveryOrders->address = $request->input('address');
@@ -184,9 +199,28 @@ class DeliveryOrderController extends Controller
         $deliveryOrders->cso_id = $request->input('idCSO');
         $deliveryOrders->branch_id = $request->input('branch_id');
         $deliveryOrders->city = $request->input('city');
-        $deliveryOrders->save();
 
-        return response()->json(['success' => 'Berhasil!!']);
+        DB::beginTransaction();
+        try {
+            $deliveryOrders->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Delivery Order";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($deliveryOrders, true), json_decode($dataBefore,true))]);
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $deliveryOrders->id;
+
+            $createData = HistoryUpdate::create($historyUpdate);
+
+            DB::commit();
+            return response()->json(['success' => 'Berhasil!!']);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' => $ex->getMessage()], 500);
+        }
+
     }
 
     /**
@@ -196,7 +230,7 @@ class DeliveryOrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function delete(Request $request) {
-        
+
     }
 
     //KHUSUS API APPS

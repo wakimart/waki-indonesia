@@ -4,25 +4,12 @@
 @section('content')
 <!--==========================Intro Section============================-->
 <section id="intro" class="clearfix">
-  <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-    @php
-      $banners = json_decode($banners['image']);
-      $defaultImg = asset('sources/banners/');
-
-      $count_banner = sizeof($banners);
-    @endphp
-    <div class="carousel-inner">
-      @for($i = 0; $i < $count_banner; $i++)
-        <div class="carousel-item active">
-          <img class="d-block w-100" src="{{$defaultImg.'/'.$banners[$i]->img}}">
-        </div>
-      @endfor
-      <!-- <div class="carousel-item">
+      <div class="carousel-item">
         <img class="d-block w-100" src="{{asset('sources/waki-carousel2.jpg')}}" alt="Second slide">
       </div>
       <div class="carousel-item">
         <img class="d-block w-100" src="{{asset('sources/waki-carousel3.jpg')}}" alt="Third slide">
-      </div> -->
+      </div>
     </div>
     <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -305,22 +292,26 @@
           </ul>
         </div>
       </div>
-
+<!-- $photos = json_decode($galleries['photo']);
+          $photoPath = asset('sources/portfolio/');
+          $count_photo = sizeof($photos);
+        $videos = json_decode($galleries['url_youtube']);
+          $count_video = sizeof($videos);
+        -->
 
       <div class="row portfolio-container">
         @php
-          $photos = json_decode($galleries['photo']);
-          $photoPath = asset('sources/portfolio/');
-          $count_photo = sizeof($photos);
+        $photoPath = asset('sources/portfolio/');
 
-          $videos = json_decode($galleries['url_youtube']);
-          $count_video = sizeof($videos);
+        $count_photo = 1;
+        $count_video = 1;
         @endphp
 
         @for($x = 0; $x < $count_photo; $x++)
         <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
           <div class="portfolio-wrap">
-            <img src="{{$photoPath.'/'.$photos[$x]}}" class="img-fluid" alt="">
+            <!--  -->
+            <img src="" class="img-fluid" alt="">
             <div class="portfolio-info">
               <h4><a href="#">Photo {{$x+1}}</a></h4>
               <p>App</p>
@@ -335,8 +326,8 @@
         @for($v = 0; $v < $count_video; $v++)
         <div class="col-lg-4 col-md-6 portfolio-item filter-video">
           <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">{{$videos[$v]->title}}</h5>
-            <iframe width="100%" height="auto" position="relative" src="{{$videos[$v]->url}}" frameborder="0" allowfullscreen=""></iframe>
+            <h5 class="portfolio-video-title">VIDEO</h5>
+            <iframe width="100%" height="auto" position="relative" src="" frameborder="0" allowfullscreen=""></iframe>
           </div>
         </div>
         @endfor

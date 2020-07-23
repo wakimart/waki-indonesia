@@ -10,6 +10,8 @@ use App\Branch;
 use App\Cso;
 use App\User;
 use App\RajaOngkir_City;
+use App\HistoryUpdate;
+use DB;
 
 class OrderController extends Controller
 {
@@ -157,8 +159,10 @@ class OrderController extends Controller
     }
 
     public function admin_ListOrder(Request $request){
+        $branches = Branch::Where('active', true)->get();
         //khususu head-manager, head-admin, admin
-        $orders = Order::where('active', true);
+        $orders = Order::where('orders.active', true);
+        $countOrders = Order::count();
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
@@ -182,15 +186,16 @@ class OrderController extends Controller
             $orders = $orders->where('cso_id', $request->filter_cso);
         }
 
-        $orders = $orders->get();
-        $branches = Branch::Where('active', true)->get();
-
-        return view('admin.list_order', compact('orders', 'branches'));
+        $orders = $orders->sortable(['orderDate' => 'desc'])->paginate(10);
+        return view('admin.list_order', compact('orders','countOrders','branches', $orders));
     }
 
     public function admin_DetailOrder(Request $request){
         $order = Order::where('code', $request['code'])->first();
-        return view('admin.detail_order', compact('order'));
+        $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
+        ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
+        ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder'));
     }
 
     /**
@@ -223,9 +228,11 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
-    {   
+    {
+        $historyUpdate= [];
         $data = $request->all();
         $orders = Order::find($request->input('idOrder'));
+        $dataBefore = Order::find($request->input('idOrder'));
         $orders['no_member'] = $request->input('no_member');
         $orders['name'] = $request->input('name');
         $orders['address'] = $request->input('address');
@@ -234,7 +241,7 @@ class OrderController extends Controller
         $orders['total_payment'] = $request->input('total_payment');
         $orders['down_payment'] = $request->input('down_payment');
         $orders['remaining_payment'] = $request->input('remaining_payment');
-        
+
         //pembentukan array product
         $index = 0;
         $data['arr_product'] = [];
@@ -283,10 +290,26 @@ class OrderController extends Controller
         $orders['city'] = $request->input('city');
         $orders['customer_type'] = $request->input('customer_type');
         $orders['description'] = $request->input('description');
-        $orders->save();
+        DB::beginTransaction();
+        try{
+            $orders->save();
 
-        return response()->json(['success' => 'Berhasil!']);
-        
+            $user = Auth::user();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Update";
+            // $different = array_diff(json_decode($orders, true), json_decode($dataBefore,true));
+            // $different = json_encode($different);
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($orders, true), json_decode($dataBefore,true))]);
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $orders->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return response()->json(['success' => 'Berhasil!']);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' => $ex->getMessage()], 500);
+        }
+
     }
 
     /**
@@ -296,7 +319,7 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function delete(Request $request) {
-        
+
     }
 
     //KHUSUS API APPS

@@ -27,8 +27,9 @@ class UserAdminController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::where('users.active', true);
         $roles = Role::all();
+        $users = $users->paginate(10);
         return view('admin.list_useradmin', compact('users', 'roles'));
     }
 

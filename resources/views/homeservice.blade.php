@@ -161,6 +161,42 @@
 
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script>
+
+function completeHandler(event){
+    var hasil = JSON.parse(event.target.responseText);
+    console.log(hasil);
+    for (var key of frmAdd.keys()) {
+        $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
+        $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
+        $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
+
+        $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
+        $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
+        $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
+    }
+
+    if(hasil['errors'] != null){
+        for (var key of frmAdd.keys()) {
+            if(typeof hasil['errors'][key] === 'undefined') {
+
+            }
+            else {
+                $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
+                $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
+                $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
+
+                $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+            }
+        }
+        alert("Input Error !!!");
+    }
+    else{
+        alert("Input Success !!!");
+        window.location.reload()
+    }
+
     $(document).ready(function(){
         $("#cso, #cso2").on("input", function(){
             var txtCso = $(this).val();

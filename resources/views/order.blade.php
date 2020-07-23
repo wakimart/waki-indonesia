@@ -39,7 +39,16 @@
         <div class="row justify-content-center">
             <form action="{{ Route('store_order') }}" method="post" role="form" class="contactForm col-md-9">
                 @csrf
+                <h6>Waktu Order</h6>
+                <div class="form-group">
+                    <input type="date" class="form-control" name="orderDate" id="orderDate" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+                    <div class="validation"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
+                </div>
                 <h5 class="add-customer d-none">Customer 1</h5>
+                
                 <div class="form-group">
                     <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
                     <div class="validation"></div>
@@ -548,6 +557,21 @@
             $(".add-customer").removeClass("d-none");
             $(".cust-2").attr('required', '');
             $(this).hide();
+        });
+        $('#submit').click(function(){
+            var appointment = 
+            $.ajax({
+                type: 'POST',
+                data: {
+                    date: date
+                },
+                success: function(data){
+                    console.log(data.data);
+                },
+                error: function(xhr){
+                    console.log(xhr.responseText);
+                }
+            });
         });
     });
 </script>

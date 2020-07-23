@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Branch;
 use App\Order;
 use App\Cso;
+use App\HistoryUpdate;
 use Illuminate\Validation\Rule;
 use Validator;
 
@@ -16,10 +18,29 @@ class CsoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $csos = Cso::all();
-        return view('admin.list_cso', compact('csos'));
+        $branches = Branch::Where('active', true)->get();
+        $csos = Cso::paginate(10);
+        $countCso = Cso::count();
+    
+        return view('admin.list_cso', compact('csos','countCso', 'branches'));
+    }
+
+    public function admin_ListCso(Request $request)
+    {
+        $branches = Branch::Where('active', true)->get();
+        $csos = Cso::where('csos.active', true);
+        $countCso = Cso::count();
+
+        if($request->has('filter_branch')){
+            $csos = $csos->where('branch_id', $request->filter_branch);
+        }
+        if($request->has('search')){
+            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')->orWhere('code','LIKE', '%'.$request->search.'%');
+        }
+        $csos = $csos->paginate(10);
+        return view('admin.list_cso', compact('csos','countCso', 'branches'));
     }
 
     /**
@@ -130,6 +151,15 @@ class CsoController extends Controller
             $csos->name = $request->input('name');
             $csos->branch_id = $request->input('branch_id');
             $csos->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Cso";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $csos];
+            $historyUpdate['user_id'] = $user['id'];
+
+            $createData = HistoryUpdate::create($historyUpdate);
 
             return response()->json(['success' => 'Berhasil!']);
         }

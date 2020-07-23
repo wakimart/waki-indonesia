@@ -15,8 +15,8 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $banners = Banner::all()[0];
-        $galleries = OurGallery::all()[0];
+        // $banners = Banner::all()[0];
+        // $galleries = OurGallery::all()[0];
 
         return view('index', compact('banners', 'galleries'));
     }
