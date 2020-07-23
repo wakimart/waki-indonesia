@@ -88,64 +88,6 @@
     			<div class="card">
       				<div class="card-body">
 						<h5 style="margin-bottom: 0.5em;">Total : {{ $countOrders }} data</h5>
-      						@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
-	      					<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-	      						<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-	      							<div class="form-group">
-	      								<label for="">Filter By Team</label>
-	      								<select class="form-control" id="filter_branch" name="filter_branch">
-	      									<option value="" selected="">All Branch</option>
-	      									@foreach($branches as $branch)
-	      									@php
-	      									$selected = "";
-	      									if(isset($_GET['filter_branch'])){
-	      										if($_GET['filter_branch'] == $branch['id']){
-	      											$selected = "selected=\"\"";
-	      										}
-	      									}
-	      									@endphp
-
-	      									<option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-	      									@endforeach
-	      								</select>
-	      								<div class="validation"></div>
-	      							</div>
-	      						</div>
-	      						<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-	      							<div class="form-group">
-	      								<label for="">Filter By CSO</label>
-	      								<select class="form-control" id="filter_cso" name="filter_cso">
-	      									<option value="">All CSO</option>
-	      									@php
-	      									if(isset($_GET['filter_branch'])){
-	      										$csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
-
-	      										foreach ($csos as $cso) {
-	      											if(isset($_GET['filter_cso'])){
-	      												if($_GET['filter_cso'] == $cso['id']){
-	      													echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-	      													continue;
-	      												}
-	      											}
-	      											echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-	      										}
-	      									}
-	      									@endphp
-	      								</select>
-	      								<div class="validation"></div>
-	      							</div>
-	      						</div>
-	      					</div>
-
-      					<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-      						<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-      							<div class="form-group">
-      								<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-      							</div>
-      						</div>
-      					</div>
-      					@endif
-
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
         					<table class="table table-bordered">
           						<thead>
