@@ -133,7 +133,7 @@
 					                            <td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('edit_order', ['id' => $order['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
 				                            @endcan
 				                            @can('delete-order')
-	                          					<td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('delete_order', ['id' => $order['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+	                          					<td style="text-align: center;"><button value="{{ route('delete_order', ['id' => $order['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btn-delete" ><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></button></td>
 	                          				@endcan
 				                        </tr>
 				                        @php $first = true; @endphp
@@ -177,14 +177,14 @@
               		</button>
             	</div>
             	<div class="modal-body">
-              		<h5 style="text-align:center;">Are You Sure to Delete this Delivery Order ?</h5>
+              		<h5 style="text-align:center;">Are You Sure to Delete this Order ?</h5>
             	</div>
             	<div class="modal-footer">
             		<form id="frmDelete" method="post" action="">
                     {{csrf_field()}}
                     	<button type="submit" class="btn btn-gradient-danger mr-2">Yes</button>
                 	</form>
-              		<button class="btn btn-light">No</button>
+              		<button class="btn btn-light" data-dismiss="modal">No</button>
             	</div>
           	</div>
         </div>
@@ -198,7 +198,7 @@
 @section('script')
 <script type="text/javascript">
 	$(".btn-delete").click(function(e) {
-        $("#frmDelete").attr("action",  $(this).val());
+		$("#frmDelete").attr("action",  $(this).val());
     });
 </script>
 

@@ -230,7 +230,27 @@ class DeliveryOrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function delete(Request $request) {
+        DB::beginTransaction();
+        try{
+            $deliveryOrder = DeliveryOrder::find($request->id);
+            $deliveryOrder->active = false;
+            $deliveryOrder->save();
+            // return view('admin.list_order');
 
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Delivery Order";
+            $historyUpdate['method'] = "Delete";
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> json_encode(array('Active'=>$order->active))];
+            $historyUpdate['user_id'] = $user['id'];
+
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return response()->json(['success' => 'Berhasil']);
+        }catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' =>  $ex->getMessage(), 500]);
+        }
     }
 
     //KHUSUS API APPS

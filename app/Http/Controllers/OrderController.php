@@ -297,8 +297,6 @@ class OrderController extends Controller
             $user = Auth::user();
             $historyUpdate['type_menu'] = "Order";
             $historyUpdate['method'] = "Update";
-            // $different = array_diff(json_decode($orders, true), json_decode($dataBefore,true));
-            // $different = json_encode($different);
             $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($orders, true), json_decode($dataBefore,true))]);
             $historyUpdate['user_id'] = $user['id'];
             $historyUpdate['menu_id'] = $orders->id;
@@ -319,7 +317,27 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function delete(Request $request) {
+        DB::beginTransaction();
+        try{
+            $order = Order::where('id', $request['id'])->first();
+            $order->active = false;
+            $order->save();
+            // return view('admin.list_order');
 
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Delete";
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> json_encode(array('Active'=>'false'))]);
+            $historyUpdate['user_id'] = $user['id'];
+
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return response()->json(['success' => 'Berhasil']);
+        }catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' =>  $ex->getMessage(), 500]);
+        }
     }
 
     //KHUSUS API APPS
