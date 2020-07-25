@@ -196,11 +196,6 @@
 
 
 @section('script')
-<script type="text/javascript">
-	$(".btn-delete").click(function(e) {
-		$("#frmDelete").attr("action",  $(this).val());
-    });
-</script>
 
 <script>
 	$(document).ready(function(e){
@@ -222,6 +217,9 @@
 		  $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
 	  }
 	  });
+	  $(".btn-delete").click(function(e) {
+		$("#frmDelete").attr("action",  $(this).val());
+    });
 	});
 	$(document).on("click", "#btn-filter", function(e){
 	  var urlParamArray = new Array();

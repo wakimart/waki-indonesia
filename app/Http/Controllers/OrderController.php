@@ -161,7 +161,7 @@ class OrderController extends Controller
     public function admin_ListOrder(Request $request){
         $branches = Branch::Where('active', true)->get();
         //khususu head-manager, head-admin, admin
-        $orders = Order::where('orders.active', true);
+        $orders = Order::where('active', true);
         $countOrders = Order::count();
 
         //khusus akun CSO
@@ -316,10 +316,10 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete(Request $request) {
+    public function delete($id) {
         DB::beginTransaction();
         try{
-            $order = Order::where('id', $request['id'])->first();
+            $order = Order::where('id', $id)->first();
             $order->active = false;
             $order->save();
             // return view('admin.list_order');
@@ -328,12 +328,12 @@ class OrderController extends Controller
             $historyUpdate= [];
             $historyUpdate['type_menu'] = "Order";
             $historyUpdate['method'] = "Delete";
-            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> json_encode(array('Active'=>'false'))]);
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> json_encode(array('Active'=>$order->active))]);
             $historyUpdate['user_id'] = $user['id'];
-
+            $historyUpdate['menu_id'] = $id;
             $createData = HistoryUpdate::create($historyUpdate);
             DB::commit();
-            return response()->json(['success' => 'Berhasil']);
+            return redirect()->route('admin_list_order')->with('success', 'Data Berhasil Di Hapus'); //response()->json(['success' => 'Berhasil']);
         }catch (\Exception $ex) {
             DB::rollback();
             return response()->json(['error' =>  $ex->getMessage(), 500]);

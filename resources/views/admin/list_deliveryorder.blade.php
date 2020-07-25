@@ -132,7 +132,7 @@
 					                            <td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('edit_deliveryorder', ['id' => $deliveryOrder['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
 				                            @endcan
 				                            @can('delete-deliveryorder')
-	                          					<td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('delete_deliveryorder', ['id' => $deliveryOrder['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+	                          					<td rowspan="{{ $totalProduct }}" style="text-align: center;"><button value="{{ route('delete_deliveryorder', ['id' => $deliveryOrder['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btn-delete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></button></td>
 	                          				@endcan
 				                        </tr>
 				                        @php $first = true; @endphp
@@ -192,12 +192,6 @@
 @endsection
 
 @section('script')
-<script type="text/javascript">
-	$(".btn-delete").click(function(e) {
-        $("#frmDelete").attr("action",  $(this).val());
-    });
-</script>
-
 <script>
 	$(document).ready(function(e){
 		$("#filter_branch").on("change", function(){
@@ -217,7 +211,10 @@
 		if(id == ""){
 		  $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
 	  }
-	});
+		});	
+	  $(".btn-delete").click(function(e) {
+		$("#frmDelete").attr("action",  $(this).val());
+		});	
 	});
 	$(document).on("click", "#btn-filter", function(e){
 	  var urlParamArray = new Array();
