@@ -229,8 +229,8 @@ class DeliveryOrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete(Request $request) {
-
+    public function delete(DeliveryOrder $deliveryOrderNya) {
+        dd("masol");
     }
 
     //KHUSUS API APPS

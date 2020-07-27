@@ -18,7 +18,7 @@ class IndexController extends Controller
         // $banners = Banner::all()[0];
         // $galleries = OurGallery::all()[0];
 
-        return view('index', compact('banners', 'galleries'));
+        return view('index');
     }
 
     /**
