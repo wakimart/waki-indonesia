@@ -47,7 +47,15 @@
 	        	<div class="card">
 	          		<div class="card-body">
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_order') }}">
-	            			{{ csrf_field() }}
+							{{ csrf_field() }}
+							<div class="form-group">
+								<label for="">Waktu Order</label>
+								<input type="date" class="form-control" name="orderDate" id="orderDate" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+								<div class="validation"></div>
+								<span class="invalid-feedback">
+									<strong></strong>
+								</span>
+							</div>
 	              			<div class="form-group">
 	                			<label for="">No. Member (optional)</label>
 	                			<input type="number" class="form-control" id="no_member" name="no_member" placeholder="No. Member">
@@ -64,9 +72,29 @@
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
+				                <label for="">Province</label>
+								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+									<option selected disabled value="">Pilihan Provinsi</option>
+			
+									@php
+										$result = RajaOngkir::FetchProvince();
+										$result = $result['rajaongkir']['results'];
+										$arrProvince = [];
+										if(sizeof($result) > 0){
+											foreach ($result as $value) {
+												echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+											}
+										}
+									@endphp
+								</select>
+								<div class="validation"></div>
+							  </div>
+							<div class="form-group">
 				                <label for="">City</label>
-				                <input type="text" class="form-control" id="city" name="city" placeholder="Kota">
-				                <div class="validation"></div>
+								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+									<option selected disabled value="">Pilihan Kota</option>
+								</select>
+								<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
@@ -340,6 +368,24 @@
                 }
                 else{
                     $('#submit').attr('disabled',"");
+                }
+            });
+        });
+
+		$("#province").on("change", function(){
+            var id = $(this).val();
+            $( "#city" ).html("");
+            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+            .done(function( result ) {
+                result = result['rajaongkir']['results'];
+                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {
+                        if(value['type'] == "Kota"){                            
+                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                        }
+                    });
+                    $( "#city" ).append(arrCity);
                 }
             });
         });
