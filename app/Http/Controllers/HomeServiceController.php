@@ -261,6 +261,13 @@ class HomeServiceController extends Controller
         return Excel::download(new HomeServicesExport($date, $city, $branch, $cso), 'Home Service.xlsx');
     }
 
+    public function delete(Request $request) {
+        $homeService = HomeService::find($request->id);
+        $homeService->active = false;
+        $order->save();
+        return view('admin.list_order');
+    }
+
     //KHUSUS API APPS
     public function addApi(Request $request)
     {
