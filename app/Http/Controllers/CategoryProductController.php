@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CategoryProduct;
+use App\Product;
 use Illuminate\Http\Request;
 
 class CategoryProductController extends Controller
@@ -12,9 +13,15 @@ class CategoryProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        return view('product_category');
+        $categoryProducts = CategoryProduct::with('product')->get(); //->where('id','=', '2')
+        $product = null;
+        if($id != null){
+            $product = Product::where('category_id', '=', $id)->get();
+            // dd($product);
+        }
+        return view('product_category', compact('categoryProducts','product'));
     }
 
     public function admin_ListCategoryProduct(){
