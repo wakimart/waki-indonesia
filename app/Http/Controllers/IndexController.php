@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Banner;
 use App\OurGallery;
-
+use App\CategoryProduct;
+use App\Product;
 class IndexController extends Controller
 {
     /**
@@ -15,12 +16,18 @@ class IndexController extends Controller
      */
     public function index()
     {
-        // $banners = Banner::all()[0];
-        // $galleries = OurGallery::all()[0];
+        $banners = Banner::all();
+        $galleries = OurGallery::all();
+        $categoryProducts = CategoryProduct::with('product')->get();
 
-        return view('index', compact('banners', 'galleries'));
+        return view('index', compact('banners', 'galleries', 'categoryProducts'));
     }
 
+
+    public function fetchProductByCategoryProductId(Request $request){
+        $cso = Product::Where('category_id', $request->categoryId)->first();
+        return response()->json($cso);
+    }
     /**
      * Show the form for creating a new resource.
      *

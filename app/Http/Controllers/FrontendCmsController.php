@@ -270,7 +270,6 @@ class FrontendCmsController extends Controller
             }
         }        
         
-        return response()->json(['test' => json_encode($arr_vid_before)]);
 
         DB::table('our_galleries')
             ->where('id', 1)
