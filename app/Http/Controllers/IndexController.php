@@ -18,7 +18,7 @@ class IndexController extends Controller
     {
         $banners = Banner::all();
         $galleries = OurGallery::all();
-        $categoryProducts = CategoryProduct::with('product')->get();
+        $categoryProducts = CategoryProduct::all();
 
         return view('index', compact('banners', 'galleries', 'categoryProducts'));
     }

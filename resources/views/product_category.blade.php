@@ -54,7 +54,11 @@
 							@foreach ($product as $product )
 							<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
 								<div class="boxprd">
-									<img src="https://waki.asia/wp-content/uploads/2019/05/wkt2080-1-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
+									@php
+										$img = json_decode($product->image);
+									  	$defaulting = asset('sources/product_images/').'/'.strtolower($product->code).'/'.$img[0];
+									@endphp
+									<img src="{{$defaulting}}" style="background: center top no-repeat; background-size: contain; width: 100%;">
 								</div>
 								<div class="titleprd">
 									<p class="titleprodcat">{{$product->code.' - '.$product->name}}</p>
