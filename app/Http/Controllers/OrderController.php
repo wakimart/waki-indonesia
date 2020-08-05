@@ -8,6 +8,7 @@ use App\DeliveryOrder;
 use App\Order;
 use App\Branch;
 use App\Cso;
+use App\CategoryProduct;
 use App\User;
 use App\RajaOngkir_City;
 use App\HistoryUpdate;
@@ -23,8 +24,9 @@ class OrderController extends Controller
     	$csos = Cso::all();
     	$cashUpgrades = Order::$CashUpgrade;
     	$paymentTypes = Order::$PaymentType;
-    	$banks = Order::$Banks;
-        return view('order', compact('promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
+        $banks = Order::$Banks;
+        $categoryProducts = CategoryProduct::all();
+        return view('order', compact('promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks', 'categoryProducts'));
     }
 
     public function store(Request $request){

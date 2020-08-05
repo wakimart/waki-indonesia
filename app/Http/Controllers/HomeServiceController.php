@@ -8,6 +8,7 @@ use App\HomeService;
 use App\Branch;
 use App\Cso;
 use App\User;
+use App\CategoryProduct;
 use App\Utils;
 use Carbon\Carbon;
 use App\Exports\HomeServicesExport;
@@ -22,8 +23,9 @@ class HomeServiceController extends Controller
 {
     public function index()
     {
-    	$branches = Branch::all();
-        return view('homeservice', compact('branches'));
+        $branches = Branch::all();
+        $categoryProducts = CategoryProduct::all();
+        return view('homeservice', compact('branches', 'categoryProducts'));
     }
 
     public function indexAdmin()

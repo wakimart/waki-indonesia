@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
 use Validator;
 use App\RajaOngkir_City;
 use App\HistoryUpdate;
+use App\CategoryProduct;
 use DB;
 
 class DeliveryOrderController extends Controller
@@ -21,8 +22,9 @@ class DeliveryOrderController extends Controller
     {
     	$promos = DeliveryOrder::$Promo;
     	$branches = Branch::all();
-    	$csos = Cso::all();
-        return view('deliveryorder', compact('promos', 'branches', 'csos'));
+        $csos = Cso::all();
+        $categoryProducts = CategoryProduct::all();
+        return view('deliveryorder', compact('promos', 'branches', 'csos', 'categoryProducts'));
     }
 
     public function store(Request $request){

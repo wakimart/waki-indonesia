@@ -73,7 +73,6 @@
 	          @elseif(Utils::$lang=='eng')
 	          <li><a href="{{route('index')}}#intro">Home</a></li>
 	          @endif
-
 						@if(Utils::$lang=='id' || Utils::$lang=='eng')
 	          <li class="drop-down"><a href="#product">Produk</a>
 	            <ul>
