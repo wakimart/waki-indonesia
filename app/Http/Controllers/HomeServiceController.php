@@ -417,23 +417,41 @@ class HomeServiceController extends Controller
         else{
             $data = $request->all();
             $tgl=date_create($request->date);
-            $userSlug = User::find($data['user_id'])->roles[0];
+            $userSlug = User::find($data['user_id']);
 
             //khususu head-manager, head-admin, admin
             $homeServices = HomeService::whereDate('home_services.appointment', '=', $tgl)
                             ->where('home_services.active', true);
 
             //khusus akun CSO
-            if($userSlug == 'cso'){
+            if($userSlug->roles[0]['slug'] == 'cso'){
                 $homeServices = HomeService::whereDate('home_services.appointment', '=', $tgl)->where('cso_id', Auth::user()->cso['id'])->where('active', true);
+            }
+
+            //khusus akun branch dan area-manager
+            if($userSlug->roles[0]['slug'] == 'branch' || $userSlug->roles[0]['slug'] == 'area-manager'){
+                $arrbranches = [];
+                foreach ($userNya->listBranches() as $value) {
+                    array_push($arrbranches, $value['id']);
+                }
+                $homeServices = HomeService::WhereIn('home_services.branch_id', $arrbranches)->where('home_services.active', true);
             }
 
             //LAST Strutured Eloquent for Homeservices
             $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
                             ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
-                            ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name', 'branches.color as branch_color')->get();
+                            ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name', 'branches.color as branch_color');
                             // ->orderBy('home_services.appointment', 'ASC')
-
+            if($request->has('filter_branch')){
+                $homeServices = $homeServices->where('home_services.branch_id', $request->filter_branch);
+            }
+            if($request->has('filter_cso')){
+                $homeServices = $homeServices->where('home_services.cso_id', $request->filter_cso);
+            }
+            if($request->has('filter_city')){
+                $homeServices = $homeServices->where('home_services.city', 'like', '%'.$request->filter_city.'%');
+            }
+            $homeServices = $homeServices->get();          
             $totalPerDay = [];
 
             for ($i=1; $i <= 31; $i++) { 
