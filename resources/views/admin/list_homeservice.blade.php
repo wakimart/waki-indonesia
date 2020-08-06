@@ -734,6 +734,7 @@ window.onload = function() {
       .done(function( result ) {
           $( "#filter_cso" ).html("");
           var arrCSO = "<option selected value=\"\">All CSO</option>";
+          $( "#filter_cso" ).append(arrCSO);
           if(result.length > 0){
               $.each( result, function( key, value ) {
                 arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
