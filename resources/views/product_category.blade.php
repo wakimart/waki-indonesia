@@ -41,117 +41,42 @@
 	        		<div class="product_categoriesmenu">
 	          			<h5 class="prodcat-title">Product categories</h5>
 	          			<ul class="product-categories">
-		            		<li class="cat-item cat-item-24 current-cat"><a href="single_product.htmlx">WAKi High Potential Therapy Range</a></li>
-				            <li class="cat-item cat-item-29"><a href="#">WAKi Air Humidifier Range</a></li>
-				            <li class="cat-item cat-item-38"><a href="#">WAKi Bio Energy Range</a></li>
-				            <li class="cat-item cat-item-44"><a href="#">WAKi Massager Range</a></li>
-				            <li class="cat-item cat-item-52"><a href="#">WAKi Household Range</a></li>
-				            <li class="cat-item cat-item-55"><a href="#">WAKi Others Range</a></li>
+							  @foreach ($categoryProducts as $categoryProduct )
+						  <li class="cat-item cat-item-24 current-cat"><a href="{{route('product_category',['id' => $categoryProduct->id])}}" id=categoryId value={{$categoryProduct->id}} >{{$categoryProduct->name}}</a></li>
+							  @endforeach
+		            		
 	          			</ul>
 	        		</div>
 	      		</div>
 
 	      		<div class="col-lg-8 col-md-8 col-sm-12">
 	        		<div class="row">
-	          			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-	            			<div class="boxprd">
-	              				<img src="https://waki.asia/wp-content/uploads/2019/05/wkt2080-1-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-	            			</div>
-	            			<div class="titleprd">
-	             				<p class="titleprodcat">WKT2080 – WAKi Multi Functional Electro Massager Equipment</p>
-	            			</div>
-	            			<div class="buttonprd">
-	              				<a href="{{route('single_product')}}" class="button">Read More</a>
-	            			</div>
-	          			</div>
-
-	          			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-	            			<div class="boxprd">
-	              			<img src="https://waki.asia/wp-content/uploads/2017/08/WAKi-High-Potential-Therapeutic-Equipment-wk2079-edit-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-	            			</div>
-	            			<div class="titleprd">
-	              				<p class="titleprodcat">WK2079 – WAKi High Potential Therapeutic Equipment</p>
-	            			</div>
-	            			<div class="buttonprd">
-	              				<a href="#" class="button">Read More</a>
-	            			</div>
-	          			</div>
-
-	          			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-				            <div class="boxprd">
-				              <img src="https://waki.asia/wp-content/uploads/2017/07/wk2076i-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-				            </div>
-				            <div class="titleprd">
-				              <p class="titleprodcat">WK2076i – WAKi Multi Functional Ultra Potential Therapy Healthcare Device</p>
-				            </div>
-				            <div class="buttonprd">
-				              <a href="single_product.html" class="button">Read More</a>
-				            </div>
-	          			</div>
-
-	          			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-				            <div class="boxprd">
-				              <img src="https://waki.asia/wp-content/uploads/2017/07/WAKi-Multi-Functional-High-Potential-Therapeutic-Equipment-wk2076h-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-				            </div>
-				            <div class="titleprd">
-				              <p class="titleprodcat">WK2076H – Waki Multi Functional High Potential Therapeutic Equipment</p>
-				            </div>
-				            <div class="buttonprd">
-				              <a href="#" class="button">Read More</a>
-				            </div>
-	          			</div>
-
-	          			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-				            <div class="boxprd">
-				              <img src="https://waki.asia/wp-content/uploads/2019/05/wkt2080-1-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-				            </div>
-				            <div class="titleprd">
-				              <p class="titleprodcat">WKT2080 – WAKi Multi Functional Electro Massager Equipment</p>
-				            </div>
-				            <div class="buttonprd">
-				              <a href="#" class="button">Read More</a>
-				            </div>
-	          			</div>
-
-	          			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-				            <div class="boxprd">
-				              <img src="https://waki.asia/wp-content/uploads/2017/08/WAKi-High-Potential-Therapeutic-Equipment-wk2079-edit-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-				            </div>
-				            <div class="titleprd">
-				              <p class="titleprodcat">WK2079 – WAKi High Potential Therapeutic Equipment</p>
-				            </div>
-				            <div class="buttonprd">
-				              <a href="#" class="button">Read More</a>
-				            </div>
-	          			</div>
-
-	          			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-				            <div class="boxprd">
-				              <img src="https://waki.asia/wp-content/uploads/2017/07/wk2076i-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-				            </div>
-				            <div class="titleprd">
-				              <p class="titleprodcat">WK2076i – WAKi Multi Functional Ultra Potential Therapy Healthcare Device</p>
-				            </div>
-				            <div class="buttonprd">
-				              <a href="#" class="button">Read More</a>
-				            </div>
-	          			</div>
-
-	          			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-				            <div class="boxprd">
-				              <img src="https://waki.asia/wp-content/uploads/2017/07/WAKi-Multi-Functional-High-Potential-Therapeutic-Equipment-wk2076h-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-				            </div>
-				            <div class="titleprd">
-				              <p class="titleprodcat">WK2076H – Waki Multi Functional High Potential Therapeutic Equipment</p>
-				            </div>
-				            <div class="buttonprd">
-				              <a href="#" class="button">Read More</a>
-				            </div>
-	          			</div>
+							@foreach ($product as $product )
+							<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
+								<div class="boxprd">
+									@php
+										$img = json_decode($product->image);
+									  	$defaulting = asset('sources/product_images/').'/'.strtolower($product->code).'/'.$img[0];
+									@endphp
+									<img src="{{$defaulting}}" style="background: center top no-repeat; background-size: contain; width: 100%;">
+								</div>
+								<div class="titleprd">
+									<p class="titleprodcat">{{$product->code.' - '.$product->name}}</p>
+								</div>
+								<div class="buttonprd">
+									<a href="{{route('single_product',['id' => $product->id])}}" class="button">Read More</a>
+								</div>
+							</div>
+							@endforeach	
 	        		</div><!-- row -->
 	      		</div>
 	    	</div><!-- row -->
 	  	</div>
 	</div><!-- container -->
 </section><!-- #intro -->
+@endsection
+@section('script')
+<script>
+
+</script>	
 @endsection

@@ -20,7 +20,8 @@ class ProductController extends Controller
     public function index($id)
     {
         $product = Product::find($id);
-        return view('single_product', compact('product'));
+        $categoryProducts = CategoryProduct::all();
+        return view('single_product', compact('product', 'categoryProducts'));
     }
 
     /**

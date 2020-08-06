@@ -8,6 +8,7 @@ use App\DeliveryOrder;
 use App\Order;
 use App\Branch;
 use App\Cso;
+use App\CategoryProduct;
 use App\User;
 use App\RajaOngkir_City;
 use App\HistoryUpdate;
@@ -23,8 +24,9 @@ class OrderController extends Controller
     	$csos = Cso::all();
     	$cashUpgrades = Order::$CashUpgrade;
     	$paymentTypes = Order::$PaymentType;
-    	$banks = Order::$Banks;
-        return view('order', compact('promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
+        $banks = Order::$Banks;
+        $categoryProducts = CategoryProduct::all();
+        return view('order', compact('promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks', 'categoryProducts'));
     }
 
     public function store(Request $request){
@@ -501,12 +503,23 @@ class OrderController extends Controller
                 }
                 $orders = Order::WhereIn('orders.branch_id', $arrbranches)->where('orders.active', true);
             }
-
             $orders = $orders->leftjoin('branches', 'orders.branch_id', '=', 'branches.id')
                                 ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
-                                ->select('orders.id', 'orders.code', 'orders.created_at', 'orders.name as customer_name', 'orders.product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
-                                ->paginate($request->limit);
-
+                                ->select('orders.id', 'orders.code', 'orders.created_at', 'orders.name as customer_name', 'orders.product', 'branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name');
+            // dd($orders);
+            if($request->has('filter_branch')){
+                $orders = $orders->where('orders.branch_id', $request->filter_branch);
+            }
+            if($request->has('filter_cso')){
+                $orders = $orders->where('orders.cso_id', $request->filter_cso);
+            }
+            if($request->has('filter_startDate')&& $request->has('filter_endDate')){
+                $orders = $orders->whereBetween('orders.orderDate', [date($request->filter_startDate), date($request->filter_endDate)]);
+            }
+            if($request->has('filter_city')){
+                $orders = $orders->where('orders.city', 'like', '%'.$request->filter_city.'%');
+            }
+            $orders = $orders->paginate($request->limit);
             foreach ($orders as $i => $doNya) {
                 $tempId = json_decode($doNya['product'], true);
                 $tempArray = $doNya['product'];
