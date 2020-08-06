@@ -381,7 +381,8 @@ class DeliveryOrderController extends Controller
             }
             if($request->has('filter_city')){
                 $deliveryOrders = $deliveryOrders->where('delivery_orders.city', 'like', '%'.$request->filter_city.'%');
-            }                   
+            }
+            $deliveryOrders = $deliveryOrders->orderBy('created_at', 'DESC');                     
             $deliveryOrders = $deliveryOrders->paginate($request->limit);
 
             foreach ($deliveryOrders as $i => $doNya) {
