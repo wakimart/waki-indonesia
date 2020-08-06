@@ -176,6 +176,72 @@
 @endsection
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+        var frmAdd;
+
+	    $("#actionAdd").on("submit", function (e) {
+	        e.preventDefault();
+	        frmAdd = _("actionAdd");
+	        frmAdd = new FormData(document.getElementById("actionAdd"));
+	        frmAdd.enctype = "multipart/form-data";
+	        var URLNya = $("#actionAdd").attr('action');
+	        console.log(URLNya);
+
+	        var ajax = new XMLHttpRequest();
+	        ajax.upload.addEventListener("progress", progressHandler, false);
+	        ajax.addEventListener("load", completeHandler, false);
+	        ajax.addEventListener("error", errorHandler, false);
+	        ajax.open("POST", URLNya);
+	        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+	        ajax.send(frmAdd);
+	    });
+	    function progressHandler(event){
+	        document.getElementById("addHomeService").innerHTML = "UPLOADING...";
+	    }
+	    function completeHandler(event){
+	        var hasil = JSON.parse(event.target.responseText);
+	        console.log(hasil);
+
+	        for (var key of frmAdd.keys()) {
+	            $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
+	            $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
+	            $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
+
+	            $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
+	            $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
+	            $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
+	        }
+
+	        if(hasil['errors'] != null){
+	            for (var key of frmAdd.keys()) {
+	                if(typeof hasil['errors'][key] === 'undefined') {
+
+	                }
+	                else {
+	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
+	                    $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
+	                    $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
+
+	                    $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+	                    $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+	                    $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+	                }
+	            }
+	            alert("Input Error !!!");
+	        }
+	        else{
+	            alert("Input Success !!!");
+	            window.location.reload()
+	        }
+
+	        document.getElementById("addHomeService").innerHTML = "SAVE";
+	    }
+	    function errorHandler(event){
+	        document.getElementById("addHomeService").innerHTML = "SAVE";
+	    }
+    });
+</script>
 <script>
     $(document).ready(function(){
         $("#cso, #cso2").on("input", function(){
@@ -215,61 +281,7 @@
                     $( "#city" ).append(arrCity);
                 }
             });
-        });
-
-		function completeHandler(event){
-	        var hasil = JSON.parse(event.target.responseText);
-	        console.log(hasil);
-
-	        for (var key of frmAdd.keys()) {
-	            $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
-	            $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
-	            $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
-
-	            $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
-	            $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
-	            $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
-	        }
-
-	        if(hasil['errors'] != null){
-	            for (var key of frmAdd.keys()) {
-	                if(typeof hasil['errors'][key] === 'undefined') {
-
-	                }
-	                else {
-	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
-	                    $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
-	                    $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
-
-	                    $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                    $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                    $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                }
-	            }
-	            alert("Input Error !!!");
-	        }
-	        else{
-	            alert("Input Success !!!");
-	            window.location.reload()
-	        }
-
-	        document.getElementById("addOrder").innerHTML = "SAVE";
-	    };
-        $('#submit').click(function(){
-            var appointment = 
-            $.ajax({
-                type: 'POST',
-                data: {
-                    date: date
-                },
-                success: function(data){
-                    console.log(data.data);
-                },
-                error: function(xhr){
-                    console.log(xhr.responseText);
-                }
-            });
-        });
+        });        
     });
 </script>
 @endsection

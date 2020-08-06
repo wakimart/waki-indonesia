@@ -9,6 +9,7 @@ use App\Branch;
 use App\Cso;
 use App\User;
 use App\Utils;
+use App\HistoryUpdate;
 use Carbon\Carbon;
 use App\Exports\HomeServicesExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -213,8 +214,8 @@ class HomeServiceController extends Controller
             $homeService->save();
         }
         else{
-            DB:beginTransaction();
-            try{
+            DB::beginTransaction();
+            try {
                 $data = $request->all();
                 $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
                 $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
@@ -228,16 +229,62 @@ class HomeServiceController extends Controller
                 $historyUpdate['method'] = "Update";
                 $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $data];
                 $historyUpdate['user_id'] = $user['id'];
+                $historyUpdate['menu_id'] = $homeService->id;
 
+                //dd($historyUpdate);
                 $createData = HistoryUpdate::create($historyUpdate);
                 DB::commit();
-            }catch (\Exception $ex) {
+            } catch (\Exception $ex) {
                 DB::rollback();
             }
+            
         }
         
         $req = new Request();
         return $this->admin_ListHomeService($req);
+        
+        // $homeService = HomeService::find($request->id);
+        // if($request->has('cancel')){
+        //     $homeService->active = false;
+        //     $homeService->save();
+        // }
+        // else if($request->has('cash')){
+        //     if($request->cash == 0){
+        //         $homeService->cash = false;
+        //     }
+        //     else{
+        //         $homeService->cash = true;
+        //     }
+        //     $homeService->cash_description = $request['cash_description'];
+        //     $homeService->save();
+        // }
+        // else{
+        //     DB::beginTransaction();
+        //     try{
+        //         $data = $request->all();
+        //         $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+        //         $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+        //         $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
+        //         $data['appointment'] = $data['date']." ".$data['time'];
+        //         $homeService->fill($data)->save();
+
+        //         $user = Auth::user();
+        //         $historyUpdate= [];
+        //         $historyUpdate['type_menu'] = "Home Service";
+        //         $historyUpdate['method'] = "Update";
+        //         $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $data];
+        //         $historyUpdate['user_id'] = $user['id'];
+
+        //         //dd($historyUpdate);
+        //         $createData = HistoryUpdate::create($historyUpdate);
+        //         DB::commit();
+        //     }catch (\Exception $ex) {
+        //         DB::rollback();
+        //     }
+        // }
+        
+        // $req = new Request();
+        // return $this->admin_ListHomeService($req);
     }
 
     public function export_to_xls(Request $request)

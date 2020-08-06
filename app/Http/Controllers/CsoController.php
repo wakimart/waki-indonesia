@@ -37,7 +37,8 @@ class CsoController extends Controller
             $csos = $csos->where('branch_id', $request->filter_branch);
         }
         if($request->has('search')){
-            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')->orWhere('code','LIKE', '%'.$request->search.'%');
+            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')
+                            ->orWhere('code','LIKE', '%'.$request->search.'%');
         }
         $csos = $csos->paginate(10);
         return view('admin.list_cso', compact('csos','countCso', 'branches'));
