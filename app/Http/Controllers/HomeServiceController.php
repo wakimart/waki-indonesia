@@ -12,6 +12,7 @@ use App\CategoryProduct;
 use App\Utils;
 use Carbon\Carbon;
 use App\Exports\HomeServicesExport;
+use App\Exports\HomeServicesExportByDate;
 use Maatwebsite\Excel\Facades\Excel;
 use Google_Service_Calendar_Event;
 use DB;
@@ -94,6 +95,11 @@ class HomeServiceController extends Controller
         if($request->has('filter_city')){
             $homeServices = $homeServices->where('city', 'like', '%'.$request->filter_city.'%');
         }
+        if($request->has('filter_search')){
+            $homeServices = $homeServices->where('name', 'like', '%'.$request->filter_search.'%')
+            ->orWhere('phone', 'like', '%'.$request->filter_search.'%')
+            ->orWhere('code', 'like', '%'.$request->filter_search.'%');
+        }
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $homeServices = $homeServices->where('branch_id', $request->filter_branch);
         }
@@ -102,8 +108,6 @@ class HomeServiceController extends Controller
         }
 
         $homeServices = $homeServices->get();
-
-        // $homeServices = collect($homeServices) -> paginate(10);
 
         return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches'));
     }
@@ -248,9 +252,35 @@ class HomeServiceController extends Controller
         $city = null;
         $branch = null;
         $cso = null;
+        $search = null;
         if($request->has('date')){
             $date = $request->date;
         }
+        if($request->has('filter_city')){
+            $city = $request->filter_city;
+        }
+        if($request->has('filter_search')){
+            $search = $request->filter_search;
+        }
+        if($request->has('filter_branch')){
+            $branch = $request->filter_branch;
+        }
+        if($request->has('filter_cso')){
+            $cso = $request->filter_cso;
+        }
+        // dd(new HomeServicesExportByDate($date, $city, $branch, $cso, null));
+        return Excel::download(new HomeServicesExport($city, $branch, $cso, $search, null), 'Home Service.xlsx');
+    }
+
+    public function export_to_xls_byDate(Request $request)
+    {
+        $city = null;
+        $branch = null;
+        $cso = null;
+        $search = null;
+        $startDate = null;
+        $endDate = null;
+
         if($request->has('filter_city')){
             $city = $request->filter_city;
         }
@@ -260,9 +290,17 @@ class HomeServiceController extends Controller
         if($request->has('filter_cso')){
             $cso = $request->filter_cso;
         }
-        return Excel::download(new HomeServicesExport($date, $city, $branch, $cso), 'Home Service.xlsx');
+        if($request->has('filter_search')){
+            $search = $request->filter_search;
+        }
+        if($request->has('filter_startDate')&&$request->has('filter_endDate')){
+            $startDate = $request->filter_startDate;
+            $endDate = $request->filter_endDate;
+            $endDate = new \DateTime($endDate);
+            $endDate = $endDate->modify('+1 day')->format('Y-m-d'); 
+        }
+        return Excel::download(new HomeServicesExportByDate($city, $branch, $cso, $search, array($startDate, $endDate)), 'Home Service By Date.xlsx');
     }
-
     public function delete(Request $request) {
         $homeService = HomeService::find($request->id);
         $homeService->active = false;
