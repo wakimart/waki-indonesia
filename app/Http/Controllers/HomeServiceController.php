@@ -13,6 +13,7 @@ use App\Utils;
 use App\HistoryUpdate;
 use Carbon\Carbon;
 use App\Exports\HomeServicesExport;
+use App\Exports\HomeServicesExportByDate;
 use Maatwebsite\Excel\Facades\Excel;
 use Google_Service_Calendar_Event;
 use DB;
@@ -95,6 +96,11 @@ class HomeServiceController extends Controller
         if($request->has('filter_city')){
             $homeServices = $homeServices->where('city', 'like', '%'.$request->filter_city.'%');
         }
+        if($request->has('filter_search')){
+            $homeServices = $homeServices->where('name', 'like', '%'.$request->filter_search.'%')
+            ->orWhere('phone', 'like', '%'.$request->filter_search.'%')
+            ->orWhere('code', 'like', '%'.$request->filter_search.'%');
+        }
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $homeServices = $homeServices->where('branch_id', $request->filter_branch);
         }
@@ -103,8 +109,6 @@ class HomeServiceController extends Controller
         }
 
         $homeServices = $homeServices->get();
-
-        // $homeServices = collect($homeServices) -> paginate(10);
 
         return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches'));
     }
@@ -295,9 +299,35 @@ class HomeServiceController extends Controller
         $city = null;
         $branch = null;
         $cso = null;
+        $search = null;
         if($request->has('date')){
             $date = $request->date;
         }
+        if($request->has('filter_city')){
+            $city = $request->filter_city;
+        }
+        if($request->has('filter_search')){
+            $search = $request->filter_search;
+        }
+        if($request->has('filter_branch')){
+            $branch = $request->filter_branch;
+        }
+        if($request->has('filter_cso')){
+            $cso = $request->filter_cso;
+        }
+        // dd(new HomeServicesExportByDate($date, $city, $branch, $cso, null));
+        return Excel::download(new HomeServicesExport($city, $branch, $cso, $search, null), 'Home Service.xlsx');
+    }
+
+    public function export_to_xls_byDate(Request $request)
+    {
+        $city = null;
+        $branch = null;
+        $cso = null;
+        $search = null;
+        $startDate = null;
+        $endDate = null;
+
         if($request->has('filter_city')){
             $city = $request->filter_city;
         }
@@ -307,9 +337,17 @@ class HomeServiceController extends Controller
         if($request->has('filter_cso')){
             $cso = $request->filter_cso;
         }
-        return Excel::download(new HomeServicesExport($date, $city, $branch, $cso), 'Home Service.xlsx');
+        if($request->has('filter_search')){
+            $search = $request->filter_search;
+        }
+        if($request->has('filter_startDate')&&$request->has('filter_endDate')){
+            $startDate = $request->filter_startDate;
+            $endDate = $request->filter_endDate;
+            $endDate = new \DateTime($endDate);
+            $endDate = $endDate->modify('+1 day')->format('Y-m-d'); 
+        }
+        return Excel::download(new HomeServicesExportByDate($city, $branch, $cso, $search, array($startDate, $endDate)), 'Home Service By Date.xlsx');
     }
-
     public function delete(Request $request) {
         $homeService = HomeService::find($request->id);
         $homeService->active = false;
@@ -464,23 +502,41 @@ class HomeServiceController extends Controller
         else{
             $data = $request->all();
             $tgl=date_create($request->date);
-            $userSlug = User::find($data['user_id'])->roles[0];
+            $userSlug = User::find($data['user_id']);
 
             //khususu head-manager, head-admin, admin
             $homeServices = HomeService::whereDate('home_services.appointment', '=', $tgl)
                             ->where('home_services.active', true);
 
             //khusus akun CSO
-            if($userSlug == 'cso'){
+            if($userSlug->roles[0]['slug'] == 'cso'){
                 $homeServices = HomeService::whereDate('home_services.appointment', '=', $tgl)->where('cso_id', Auth::user()->cso['id'])->where('active', true);
+            }
+
+            //khusus akun branch dan area-manager
+            if($userSlug->roles[0]['slug'] == 'branch' || $userSlug->roles[0]['slug'] == 'area-manager'){
+                $arrbranches = [];
+                foreach ($userNya->listBranches() as $value) {
+                    array_push($arrbranches, $value['id']);
+                }
+                $homeServices = HomeService::WhereIn('home_services.branch_id', $arrbranches)->where('home_services.active', true);
             }
 
             //LAST Strutured Eloquent for Homeservices
             $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
                             ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
-                            ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name', 'branches.color as branch_color')->get();
+                            ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name', 'branches.color as branch_color');
                             // ->orderBy('home_services.appointment', 'ASC')
-
+            if($request->has('filter_branch')){
+                $homeServices = $homeServices->where('home_services.branch_id', $request->filter_branch);
+            }
+            if($request->has('filter_cso')){
+                $homeServices = $homeServices->where('home_services.cso_id', $request->filter_cso);
+            }
+            if($request->has('filter_city')){
+                $homeServices = $homeServices->where('home_services.city', 'like', '%'.$request->filter_city.'%');
+            }
+            $homeServices = $homeServices->get();          
             $totalPerDay = [];
 
             for ($i=1; $i <= 31; $i++) { 

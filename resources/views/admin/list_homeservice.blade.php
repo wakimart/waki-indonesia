@@ -96,6 +96,10 @@
                           </select>
                           <div class="validation"></div>
                       </div>
+                      <div class="form-group">
+                        <input class="form-control" id="search" name="search" placeholder="Search By Name, Phone, and Code Homeservice">
+                        <div class="validation"></div>
+                      </div>
                     </div>
                     <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                       <div class="form-group">
@@ -167,6 +171,7 @@
                     <div class="form-group">
                       <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
                       <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" value="-"><span class="mdi mdi-file-document"></span> Export XLS</button>
+                      <button id="btn-exportDate" type="button" class="btn btn-gradient-info m-1" name="export" data-toggle="modal" data-target="#datePickerHomeServiceModal" value="-"><span class="mdi mdi-file-document"></span> Export XLS with Date</button>
                     </div>
                   </div>
                 </div>
@@ -182,7 +187,6 @@
 		</div>
 	</div>
 <!-- partial -->
-
   <!-- Modal Add -->
   <div class="modal fade" id="addHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -440,6 +444,36 @@
           </div>
     </div>
     <!-- End Modal Cash -->
+    <!-- Modal Date Picker export Xls -->
+  <div class="modal fade" id="datePickerHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <label for="">Pick a Date</label>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Tanggal Awal</label>
+              <input type="date" class="form-control" name="date" id="filter_startDate" placeholder="Awal Tanggal" required data-msg="Mohon Isi Tanggal" onload="getDate()" />
+              <div class="validation"></div>
+          </div>
+          <div class="form-group">
+            <label>Tanggal Akhir</label>
+            <input type="date" class="form-control" name="date" id="filter_endDate" placeholder="Akhir Tanggal" required data-msg="Mohon Isi Tanggal" onload="getDate()"/>
+            <div class="validation"></div>
+        </div>
+              
+          </div>
+        <div class="modal-footer">
+                {{csrf_field()}}
+                  <input type="hidden" id="hiddenInput" name="cancel" value="1">
+                  <button type="submit" data-dismiss="modal" id="btn-exportByDate" class="btn btn-gradient-danger mr-2" name="id" value="-">Export</button>
+              <button type="button" data-dismiss="modal" class="btn btn-light">No</button>
+          </div>
+        </div>
+    </div>
+  </div>
+  <!-- End Modal Date Picker export Xls -->
 </div>
 @endsection
 
@@ -452,6 +486,7 @@ window.onload = function() {
 
   // untuk pertama kali data di buka
   function onLoadDate(){
+    
     data = {};
     // data[new Date().getFullYear()] = {};
     // data[new Date().getFullYear()][new Date().getMonth()+1] = {};
@@ -745,7 +780,34 @@ window.onload = function() {
         $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
       }
     });
-
+    $("#btn-exportByDate").on("click", function(){
+      var urlParamArray = new Array();
+      var urlParamStr = "";
+      if($('#filter_city').val() != ""){
+        urlParamArray.push("filter_city=" + $('#filter_city').val());
+      }
+      if($('#filter_branch').val() != ""){
+        urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+      }
+      if($('#filter_cso').val() != ""){
+        urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+      }
+      if($('#search').val() != ""){
+        urlParamArray.push("filter_search=" + $('#search').val());
+      }
+      if($('#filter_startDate').val() != "" && $('#filter_endDate').val() != ""){
+        urlParamArray.push("filter_startDate=" + $('#filter_startDate').val());
+        urlParamArray.push("filter_endDate=" + $('#filter_endDate').val());
+      }
+      for (var i = 0; i < urlParamArray.length; i++) {
+        if (i === 0) {
+          urlParamStr += "?" + urlParamArray[i]
+        } else {
+          urlParamStr += "&" + urlParamArray[i]
+        }
+      }
+      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}?" + urlParamStr;   
+    });
     $("#btn-export").on("click", function(){
       var urlParamArray = new Array();
       var urlParamStr = "";
@@ -757,6 +819,9 @@ window.onload = function() {
       }
       if($('#filter_cso').val() != ""){
         urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+      }
+      if($('#search').val() != ""){
+        urlParamArray.push("filter_search=" + $('#search').val());
       }
       for (var i = 0; i < urlParamArray.length; i++) {
         urlParamStr += "&" + urlParamArray[i]
@@ -982,6 +1047,9 @@ $(document).on("click", "#btn-filter", function(e){
   }
   if($('#filter_cso').val() != ""){
     urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+  }
+  if($('#search').val() != ""){
+    urlParamArray.push("filter_search=" + $('#search').val());
   }
   for (var i = 0; i < urlParamArray.length; i++) {
     if (i === 0) {
