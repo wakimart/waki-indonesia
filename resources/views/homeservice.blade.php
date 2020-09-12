@@ -45,6 +45,28 @@
             <form id="actionAdd" action="{{ route('store_home_service') }}" method="POST" role="form" class="contactForm col-md-9">
                 @csrf
                 <br>
+                <div class="form-group">
+                    <span>Type Customer</span>
+                    <select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
+                            <option value="Tele Voucher">Tele Voucher</option>
+                            <option value="Tele Home Service">Tele Home Service</option>
+                            <option value="Home Office Voucher">Home Office Voucher</option>
+                            <option value="Home Voucher">Home Voucher</option>
+                    </select>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span>Type Home Service</span>
+                    <select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
+                            <option value="Home service">Home service</option>
+                            <option value="Upgrade Member">Upgrade Member</option>
+                    </select>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
+                </div>
                 <h5>Data Pelanggan</h5>
                 <div class="form-group">
                     <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
@@ -161,42 +183,6 @@
 
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script>
-
-function completeHandler(event){
-    var hasil = JSON.parse(event.target.responseText);
-    console.log(hasil);
-    for (var key of frmAdd.keys()) {
-        $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
-        $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
-        $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
-
-        $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
-        $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
-        $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
-    }
-
-    if(hasil['errors'] != null){
-        for (var key of frmAdd.keys()) {
-            if(typeof hasil['errors'][key] === 'undefined') {
-
-            }
-            else {
-                $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
-                $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
-                $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
-
-                $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-                $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-                $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-            }
-        }
-        alert("Input Error !!!");
-    }
-    else{
-        alert("Input Success !!!");
-        window.location.reload()
-    }
-
     $(document).ready(function(){
         $("#cso, #cso2").on("input", function(){
             var txtCso = $(this).val();
@@ -253,5 +239,40 @@ function completeHandler(event){
             });
         });
     });
+function completeHandler(event){
+    var hasil = JSON.parse(event.target.responseText);
+    console.log(hasil);
+    for (var key of frmAdd.keys()) {
+        $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
+        $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
+        $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
+
+        $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
+        $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
+        $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
+    }
+
+    if(hasil['errors'] != null){
+        for (var key of frmAdd.keys()) {
+            if(typeof hasil['errors'][key] === 'undefined') {
+
+            }
+            else {
+                $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
+                $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
+                $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
+
+                $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+            }
+        }
+        alert("Input Error !!!");
+    }
+    else{
+        alert("Input Success !!!");
+        window.location.reload()
+    }
+}
 </script>
 @endsection

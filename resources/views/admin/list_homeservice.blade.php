@@ -806,7 +806,7 @@ window.onload = function() {
           urlParamStr += "&" + urlParamArray[i]
         }
       }
-      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}?" + urlParamStr;   
+      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}" + urlParamStr;   
     });
     $("#btn-export").on("click", function(){
       var urlParamArray = new Array();

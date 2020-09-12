@@ -36,7 +36,7 @@ class HomeServiceController extends Controller
     }
     
     public function store(Request $request){
-        $data = $request->all(); dd($data);
+        $data = $request->all();
         $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
 
         $getAppointment = $request->get('date')." ".$request->get('time');
@@ -64,7 +64,8 @@ class HomeServiceController extends Controller
 
     public function successRegister(Request $request){
         $homeService = HomeService::where('code', $request['code'])->first();
-        return view('homeservicesuccess', compact('homeService'));
+        $categoryProducts = CategoryProduct::all();
+        return view('homeservicesuccess', compact('homeService', $categoryProducts));
     }
 
     public function admin_ListHomeService(Request $request){

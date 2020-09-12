@@ -48,8 +48,7 @@
 <section id="intro" class="clearfix">
     <div class="container">
         <div class="row justify-content-center">
-            <h2 style="margin: 0 5px 0 5px;">REGISTRASI HOME</h2>
-            <h2 style="margin: 0 5px 0 5px;">SERVICE BERHASIL</h2>
+            <h2 style="margin: 0 5px 0 5px;">REGISTRASI {{strtoUpper($homeService->type_homeservices)}} BERHASIL</h2>
         </div>
 
         <div class="row justify-content-center">
