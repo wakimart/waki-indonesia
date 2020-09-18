@@ -244,6 +244,28 @@
                     {{ csrf_field() }}
                       <h5>Data Pelanggan</h5>
                       <div class="form-group">
+                        <span>Type Customer</span>
+                        <select id="view_type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_customer" value="" required>
+                            <option value="Tele Voucher">Tele Voucher</option>
+                            <option value="Tele Home Service">Tele Home Service</option>
+                            <option value="Home Office Voucher">Home Office Voucher</option>
+                            <option value="Home Voucher">Home Voucher</option>
+                        </select>
+                        <span class="invalid-feedback">
+                          <strong></strong>
+                        </span>
+                      </div>
+                      <div class="form-group">
+                        <span>Type Home Service</span>
+                        <select id="view_type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_homeservices" value="" required>
+                            <option value="Home service">Home service</option>
+                            <option value="Upgrade Member">Upgrade Member</option>
+                        </select>
+                        <span class="invalid-feedback">
+                          <strong></strong>
+                        </span>
+                      </div>
+                      <div class="form-group">
                           <input type="text" name="no_member" class="form-control input-view" id="view-no_member" value=""/>
                           <div class="validation"></div>
                       </div>
@@ -323,6 +345,28 @@
                 		<h5 style="text-align:center;"></h5>
       					    	{{ csrf_field() }}
                         <h5>Data Pelanggan</h5>
+                        <div class="form-group">
+                          <span>Type Customer</span>
+                          <select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
+                                  <option value="Tele Voucher">Tele Voucher</option>
+                                  <option value="Tele Home Service">Tele Home Service</option>
+                                  <option value="Home Office Voucher">Home Office Voucher</option>
+                                  <option value="Home Voucher">Home Voucher</option>
+                          </select>
+                          <span class="invalid-feedback">
+                              <strong></strong>
+                          </span>
+                      </div>
+                      <div class="form-group">
+                          <span>Type Home Service</span>
+                          <select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
+                                  <option value="Home service">Home service</option>
+                                  <option value="Upgrade Member">Upgrade Member</option>
+                          </select>
+                          <span class="invalid-feedback">
+                              <strong></strong>
+                          </span>
+                      </div>
                         <div class="form-group">
                             <input type="text" name="no_member" class="form-control" id="edit-no_member" placeholder="No. Member (optional)"/>
                             <div class="validation"></div>
@@ -904,6 +948,8 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
         },
       });
 
+      $('#type_homeservices').val(result['type_homeservices']);
+      $('#type_customer').val(result['type_customer']);
       $('#edit-no_member').val(result['no_member']);
       $('#edit-name').val(result['name']);
       $('#edit-phone').val(result['phone']);
@@ -988,7 +1034,8 @@ $(document).on("click", ".btn-homeservice-view", function(e){
           $('#view-branch').val(data1['id']);
         },
       });
-
+      $('#view_type_homeservices').val(result['type_homeservices']);
+      $('#view_type_customer').val(result['type_customer']);
       $('#view-no_member').val(result['no_member']);
       $('#view-name').val(result['name']);
       $('#view-phone').val(result['phone']);

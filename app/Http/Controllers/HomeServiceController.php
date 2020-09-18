@@ -10,6 +10,7 @@ use App\Cso;
 use App\User;
 use App\CategoryProduct;
 use App\Utils;
+use App\HistoryUpdate;
 use Carbon\Carbon;
 use App\Exports\HomeServicesExport;
 use App\Exports\HomeServicesExportByDate;
@@ -220,13 +221,15 @@ class HomeServiceController extends Controller
             $homeService->save();
         }
         else{
-            DB:beginTransaction();
+            DB::beginTransaction();
             try{
                 $data = $request->all();
                 $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
                 $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
                 $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
                 $data['appointment'] = $data['date']." ".$data['time'];
+                // $homeServices->type_customer = $data['type_customer'];
+                // $homeServices->type_homeservices = $data['type_homeservices']; 
                 $homeService->fill($data)->save();
 
                 $user = Auth::user();
@@ -322,6 +325,8 @@ class HomeServiceController extends Controller
             );
 
         $validator = \Validator::make($request->all(), [
+            'type_customer' => 'required',
+            'type_homeservices' => 'required',
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',

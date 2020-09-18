@@ -47,7 +47,29 @@
 	        	<div class="card">
 	          		<div class="card-body">
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_homeService') }}">
-	            			{{ csrf_field() }}
+							{{ csrf_field() }}
+							<div class="form-group">
+								<span>Type Customer</span>
+								<select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
+										<option value="Tele Voucher">Tele Voucher</option>
+										<option value="Tele Home Service">Tele Home Service</option>
+										<option value="Home Office Voucher">Home Office Voucher</option>
+										<option value="Home Voucher">Home Voucher</option>
+								</select>
+								<span class="invalid-feedback">
+									<strong></strong>
+								</span>
+							</div>
+							<div class="form-group">
+								<span>Type Home Service</span>
+								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
+										<option value="Home service">Home service</option>
+										<option value="Upgrade Member">Upgrade Member</option>
+								</select>
+								<span class="invalid-feedback">
+									<strong></strong>
+								</span>
+							</div>
 	              			<div class="form-group">
                                 <label for=""><h2>Data Pelanggan</h2></label><br/>
 	                			<label for="">No. Member (optional)</label>
@@ -176,48 +198,30 @@
 @endsection
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script>
-    $(document).ready(function(){
-        $("#cso, #cso2").on("input", function(){
-            var txtCso = $(this).val();
-            var obj = $('#validation_cso');
-            if($(this)[0].id == "cso2"){
-                obj = $('#validation_cso2');
-            }
-            $.get( '{{route("fetchCso")}}', { txt: txtCso })
-            .done(function( result ) {
-                if (result == 'true'){
-                    obj.html('Kode CSO Benar');
-                    obj.css('color', 'green');
-                    $('#submit').removeAttr('disabled');
-                }
-                else{
-                    obj.html('Kode CSO Salah');
-                    obj.css('color', 'red');
-                    $('#submit').attr('disabled',"");
-                }
-            });
-        });
+<script type="text/javascript">
+	$(document).ready(function() {
+        var frmAdd;
 
-        $("#province").on("change", function(){
-            var id = $(this).val();
-            $( "#city" ).html("");
-            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
-            .done(function( result ) {
-                result = result['rajaongkir']['results'];
-                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
-                if(result.length > 0){
-                    $.each( result, function( key, value ) {
-                        if(value['type'] == "Kota"){                            
-                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
-                        }
-                    });
-                    $( "#city" ).append(arrCity);
-                }
-            });
-        });
+	    $("#actionAdd").on("submit", function (e) {
+	        e.preventDefault();
+	        frmAdd = _("actionAdd");
+	        frmAdd = new FormData(document.getElementById("actionAdd"));
+	        frmAdd.enctype = "multipart/form-data";
+	        var URLNya = $("#actionAdd").attr('action');
+	        console.log(URLNya);
 
-		function completeHandler(event){
+	        var ajax = new XMLHttpRequest();
+	        ajax.upload.addEventListener("progress", progressHandler, false);
+	        ajax.addEventListener("load", completeHandler, false);
+	        ajax.addEventListener("error", errorHandler, false);
+	        ajax.open("POST", URLNya);
+	        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+	        ajax.send(frmAdd);
+	    });
+	    function progressHandler(event){
+	        document.getElementById("addHomeService").innerHTML = "UPLOADING...";
+	    }
+	    function completeHandler(event){
 	        var hasil = JSON.parse(event.target.responseText);
 	        console.log(hasil);
 
@@ -253,20 +257,48 @@
 	            window.location.reload()
 	        }
 
-	        document.getElementById("addOrder").innerHTML = "SAVE";
-	    };
-        $('#submit').click(function(){
-            var appointment = 
-            $.ajax({
-                type: 'POST',
-                data: {
-                    date: date
-                },
-                success: function(data){
-                    console.log(data.data);
-                },
-                error: function(xhr){
-                    console.log(xhr.responseText);
+	        document.getElementById("addHomeService").innerHTML = "SAVE";
+	    }
+	    function errorHandler(event){
+	        document.getElementById("addHomeService").innerHTML = "SAVE";
+	    }
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        $("#cso, #cso2").on("input", function(){
+            var txtCso = $(this).val();
+            var obj = $('#validation_cso');
+            if($(this)[0].id == "cso2"){
+                obj = $('#validation_cso2');
+            }
+            $.get( '{{route("fetchCso")}}', { txt: txtCso })
+            .done(function( result ) {
+                if (result == 'true'){
+                    obj.html('Kode CSO Benar');
+                    obj.css('color', 'green');
+                    $('#submit').removeAttr('disabled');
+                }
+                else{
+                    obj.html('Kode CSO Salah');
+                    obj.css('color', 'red');
+                    $('#submit').attr('disabled',"");
+                }
+            });
+        });
+
+        $("#province").on("change", function(){
+            var id = $(this).val();
+            $( "#city" ).html("");
+            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+            .done(function( result ) {
+                result = result['rajaongkir']['results'];
+                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {
+                        arrCity += "<option value=\""+value['type']+" "+value['city_name']+"\">"+value['type']+" "+value['city_name']+"</option>";
+                    });
+                    $( "#city" ).append(arrCity);
                 }
             });
         });
