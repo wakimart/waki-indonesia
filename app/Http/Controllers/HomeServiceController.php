@@ -81,7 +81,8 @@ class HomeServiceController extends Controller
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
-            $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
+            // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
+            $homeService = $homeService->where('home_services.cso_id', Auth::user()->cso['id']);
         }
 
         //khusus akun branch dan area-manager
@@ -89,28 +90,29 @@ class HomeServiceController extends Controller
             foreach (Auth::user()->listBranches() as $value) {
                 array_push($arrbranches, $value['id']);
             }
-            $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-                     ->whereIn('branch_id', $arrbranches)->where('active', true);
+            // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
+            //          ->whereIn('branch_id', $arrbranches)->where('active', true);
+            $homeService = $homeService->whereIn('home_services.branch_id', $arrbranches);
         }
 
         //kalau ada filter
         if($request->has('filter_city')){
-            $homeServices = $homeServices->where('city', 'like', '%'.$request->filter_city.'%');
+            $homeServices = $homeServices->where('home_services.city', 'like', '%'.$request->filter_city.'%');
         }
         if($request->has('filter_search')){
-            $homeServices = $homeServices->where('name', 'like', '%'.$request->filter_search.'%')
-            ->orWhere('phone', 'like', '%'.$request->filter_search.'%')
-            ->orWhere('code', 'like', '%'.$request->filter_search.'%');
+            $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
+            ->orWhere('home_services.phone', 'like', '%'.$request->filter_search.'%')
+            ->orWhere('home_services.code', 'like', '%'.$request->filter_search.'%');
         }
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
-            $homeServices = $homeServices->where('branch_id', $request->filter_branch);
+            $homeServices = $homeServices->where('home_services.branch_id', $request->filter_branch);
         }
         if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
-            $homeServices = $homeServices->where('cso_id', $request->filter_cso);
+            $homeServices = $homeServices->where('home_services.cso_id', $request->filter_cso);
         }
-
+        
         $homeServices = $homeServices->get();
-
+        
         return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches'));
     }
 
@@ -223,6 +225,7 @@ class HomeServiceController extends Controller
         else{
             DB::beginTransaction();
             try{
+                $appointmentBefore = $homeservice->appointment;
                 $data = $request->all();
                 $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
                 $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
@@ -236,8 +239,9 @@ class HomeServiceController extends Controller
                 $historyUpdate= [];
                 $historyUpdate['type_menu'] = "Home Service";
                 $historyUpdate['method'] = "Update";
-                $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $data];
+                $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $data, 'appointmentBefore'=>$appointmentBefore];
                 $historyUpdate['user_id'] = $user['id'];
+                $historyUpdate['menu_id'] = $homeService->id;
 
                 $createData = HistoryUpdate::create($historyUpdate);
                 DB::commit();
@@ -539,10 +543,9 @@ class HomeServiceController extends Controller
 
         $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
                         ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
-                        ->select('home_services.id', 'home_services.code as code', 'home_services.appointment', 'home_services.no_member as no_member', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.address as custommer_address','home_services.phone as custommer_phone', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')->first();
+                        ->select('home_services.id', 'home_services.code as code', 'home_services.appointment', 'home_services.no_member as no_member', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.address as custommer_address','home_services.phone as custommer_phone', 'home_services.type_customer as type_customer', 'home_services.type_homeservices as type_homeservices','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')->first();
 
         $homeServices['URL'] = route('homeServices_success')."?code=".$homeServices['code'];
-
         $data = ['result' => 1,
                  'data' => $homeServices
                 ];

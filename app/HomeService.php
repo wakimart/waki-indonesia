@@ -22,4 +22,8 @@ class HomeService extends Model
     {
         return $this->belongsTo('App\Branch');
     }
+    public function historyUpdate()
+    {
+        return HistoryUpdate::where([['type_menu', 'Home Service'], ['menu_id', $this['id']]])->get();
+    }
 }
