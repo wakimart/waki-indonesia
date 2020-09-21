@@ -56,7 +56,6 @@
 </style>
 
 @endsection
-
 @section('content')
 <div class="main-panel">
 	<div class="content-wrapper">
@@ -414,7 +413,7 @@
                         <br>
                         <h5>Waktu Home Service</h5>
                         <div class="form-group">
-                            <input type="date" class="form-control" name="date" id="edit-date" placeholder="Tanggal Janjian" required data-msg="Mohon Isi Tanggal" />
+                            <input type="date" class="form-control" name="edit-date" id="edit-date" placeholder="Tanggal Janjian" required data-msg="Mohon Isi Tanggal" />
                             <div class="validation"></div>
                         </div>
                         <div class="form-group">
@@ -540,8 +539,8 @@ window.onload = function() {
         $bulan = $AppointmentNya->format('n');
         $hari = $AppointmentNya->format('j');
         $jam = $AppointmentNya->format('H:i');
-
-        $appointmentBefore = json_decode($dataNya->meta, true);
+        
+        $appointmentBefore =$dataNya->historyUpdate()['meta'];
         if ($appointmentBefore['appointmentBefore'] == null){
             $appointmentBefore['appointmentBefore'] = "-";
         }
@@ -959,7 +958,7 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
       $('#edit-city').val(result['city']);
       $('#edit-address').val(result['address']);
       $('#edit-cso_phone').val(result['cso_phone']);
-      $('#edit-date').val(tgl);
+      $('#edit-date').val(new Date(result['appointment']));
       $('#edit-time').val(jam+":"+menit);
       $('#btn-edit').val(result['id']);
 
