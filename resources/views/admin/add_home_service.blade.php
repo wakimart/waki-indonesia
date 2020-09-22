@@ -251,7 +251,11 @@
 	                }
 	            }
 	            alert("Input Error !!!");
-	        }
+	        } else if(hasil['validator'] != null){
+	            alert("Appointment dengan nomer ini sudah ada!!");
+			} else if (hasil['active'] != null){
+	            alert("Apakah Appointment ini reschadule? Jika iya lakukan edit pada menu edit");
+			}
 	        else{
 	            alert("Input Success !!!");
 	            window.location.reload()

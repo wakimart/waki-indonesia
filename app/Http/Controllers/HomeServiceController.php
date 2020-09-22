@@ -37,6 +37,12 @@ class HomeServiceController extends Controller
     }
     
     public function store(Request $request){
+        if(count(HomeService::where([['phone', $request->phone],['appointment', '>', DB::raw('NOW()')],['active', true]])->get()) != 0){
+            return response()->json(['validator' => 'Phone Number Already Exists'], 401); 
+        }
+        if(count(HomeService::where([['phone', $request->phone],['active', false]])->get()) != 0){
+            return response()->json(['active' => 'Wanna Reschedule?'], 401); 
+        }
         $data = $request->all();
         $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
 
@@ -131,6 +137,12 @@ class HomeServiceController extends Controller
     }
 
     public function admin_addHomeService(Request $request){
+        if(count(HomeService::where([['phone', $request->phone],['appointment', '>', DB::raw('NOW()')],['active', true]])->get()) != 0){
+            return response()->json(['validator' => 'Phone Number Already Exists'], 401); 
+        }
+        if(count(HomeService::where([['phone', $request->phone],['active', false]])->get()) != 0){
+            return response()->json(['active' => 'Wanna Reschedule?'], 401); 
+        }
         $data = $request->all();
         $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
 
@@ -257,7 +269,6 @@ class HomeServiceController extends Controller
     public function export_to_xls(Request $request)
     {
         $date = null;
-        $city = null;
         $branch = null;
         $cso = null;
         $search = null;
@@ -319,6 +330,12 @@ class HomeServiceController extends Controller
     //KHUSUS API APPS
     public function addApi(Request $request)
     {
+        if(count(HomeService::where([['phone', $request->phone],['appointment', '>', DB::raw('NOW()')],['active', true]])->get()) != 0){
+            return response()->json(['validator' => 'Appointment Has Been Made by New Phone Number'], 401); 
+        }
+        if(count(HomeService::where([['phone', $request->phone],['active', false]])->get()) != 0){
+            return response()->json(['active' => 'Wanna Reschedule?'], 401); 
+        }
         $messages = array(
                 'cso_id.required' => 'The CSO Code field is required.',
                 'cso_id.exists' => 'Wrong CSO Code.',
