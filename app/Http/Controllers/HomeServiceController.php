@@ -237,21 +237,19 @@ class HomeServiceController extends Controller
         else{
             DB::beginTransaction();
             try{
-                $appointmentBefore = $homeservice->appointment;
+                $appointmentBefore = HomeService::find($request->id);
                 $data = $request->all();
                 $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
                 $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
                 $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
                 $data['appointment'] = $data['date']." ".$data['time'];
-                // $homeServices->type_customer = $data['type_customer'];
-                // $homeServices->type_homeservices = $data['type_homeservices']; 
                 $homeService->fill($data)->save();
 
                 $user = Auth::user();
                 $historyUpdate= [];
                 $historyUpdate['type_menu'] = "Home Service";
                 $historyUpdate['method'] = "Update";
-                $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $data, 'appointmentBefore'=>$appointmentBefore];
+                $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $data, 'appointmentBefore'=>$appointmentBefore->appointment];
                 $historyUpdate['user_id'] = $user['id'];
                 $historyUpdate['menu_id'] = $homeService->id;
 

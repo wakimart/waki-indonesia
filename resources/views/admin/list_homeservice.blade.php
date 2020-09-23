@@ -540,9 +540,13 @@ window.onload = function() {
         $hari = $AppointmentNya->format('j');
         $jam = $AppointmentNya->format('H:i');
         
-        $appointmentBefore =$dataNya->historyUpdate()['meta'];
-        if ($appointmentBefore['appointmentBefore'] == null){
-            $appointmentBefore['appointmentBefore'] = "-";
+        $appointmentBefore = $dataNya->historyUpdate()['meta'];
+        $before = "-";
+        if($appointmentBefore != null){
+          if (isset($appointmentBefore['appointmentBefore'])){
+            
+            $before = $appointmentBefore['appointmentBefore'];
+          }
         }
 
         $canEdit = false;
@@ -581,7 +585,7 @@ window.onload = function() {
                 startTime: "{{ $jam }}",
                 endTime: "{{ $jam }}",
                 title: "<a href=\"{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}\" target=\"_blank\">{{ $dataNya['code'] }}</a>",
-                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }} <br>CreatedAt : {{ $dataNya['created_at'] }} <br>Last Update : {{ $dataNya['updated_at'] }} <br><p style='color:yellow'>Appointment Before : {{$appointmentBefore['appointmentBefore']}}</p>",
+                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }} <br>CreatedAt : {{ $dataNya['created_at'] }} <br>Last Update : {{ $dataNya['updated_at'] }} <br><p style='color:yellow'>Appointment Before : {{$before}}</p>",
                 dataId : "{{ $dataNya['id'] }}",
                 canEdit : "{{ $canEdit }}",
                 canDelete : "{{ $canDelete }}",
@@ -594,7 +598,7 @@ window.onload = function() {
                 startTime: "{{ $jam }}",
                 endTime: "{{ $jam }}",
                 title: "<a href=\"{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}\" target=\"_blank\">{{ $dataNya['code'] }}</a>",
-                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }} <br>CreatedAt : {{ $dataNya['created_at'] }} <br>Last Update : {{ $dataNya['updated_at'] }} <br><p style='color:yellow'>Appointment Before : {{$appointmentBefore['appointmentBefore']}}</p>",
+                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }} <br>CreatedAt : {{ $dataNya['created_at'] }} <br>Last Update : {{ $dataNya['updated_at'] }} <br><p style='color:yellow'>Appointment Before : {{$before}}</p>",
                 dataId : "{{ $dataNya['id'] }}",
                 canEdit : "{{ $canEdit }}",
                 canDelete : "{{ $canDelete }}",

@@ -24,6 +24,6 @@ class HomeService extends Model
     }
     public function historyUpdate()
     {
-        return HistoryUpdate::where([['type_menu', 'Home Service'], ['menu_id', $this['id']]])->first();
+        return HistoryUpdate::where([['type_menu', 'Home Service'], ['menu_id', $this['id']]])->orderBy('id', 'DESC')->first();
     }
 }
