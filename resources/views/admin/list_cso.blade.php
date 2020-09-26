@@ -98,7 +98,7 @@
           						</tbody>
 							</table>
 							<br />
-							{{ $csos->Links()}}
+							{{ $csos->appends($url)->Links()}}
         				</div>
       				</div>
     			</div>

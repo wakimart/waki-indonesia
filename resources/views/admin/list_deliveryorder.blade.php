@@ -157,7 +157,7 @@
           						</tbody>
 							</table>
 											<br/>
-							{{ $deliveryOrders->links() }}
+							{{ $deliveryOrders->appends($url)->links() }}
         				</div>
       				</div>
     			</div>

@@ -29,6 +29,7 @@ class CsoController extends Controller
 
     public function admin_ListCso(Request $request)
     {
+        $url = $request->all();
         $branches = Branch::Where('active', true)->get();
         $csos = Cso::where('csos.active', true);
         $countCso = Cso::count();
@@ -40,7 +41,7 @@ class CsoController extends Controller
             $csos = $csos->where('name','LIKE', '%'.$request->search.'%')->orWhere('code','LIKE', '%'.$request->search.'%');
         }
         $csos = $csos->paginate(10);
-        return view('admin.list_cso', compact('csos','countCso', 'branches'));
+        return view('admin.list_cso', compact('csos','countCso', 'branches', 'url'));
     }
 
     /**

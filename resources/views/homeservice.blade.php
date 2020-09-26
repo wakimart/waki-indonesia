@@ -42,6 +42,7 @@
         @endif
         
         <div class="row justify-content-center">
+            @if(Utils::$lang=='id')
             <form id="actionAdd" action="{{ route('store_home_service') }}" method="POST" role="form" class="contactForm col-md-9">
                 @csrf
                 <br>
@@ -177,6 +178,67 @@
                 <div id="errormessage"></div>
                 <div class="text-center"><button id="submit" type="submit" title="Send Message">Simpan Form Home Service</button></div>
             </form>
+                @elseif(Utils::$lang=='eng')
+                <form action="{{ Route('store_home_service') }}" method="post" role="form" class="contactForm col-md-9">
+                    @csrf
+                    <br>
+                    <h5>Data Member</h5>
+                    <div class="form-group">
+                        <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Name" required data-msg="Please fill the Name" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="phone" id="phone" placeholder="Phone Number" required data-msg="Please fill the Phone" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="city" id="city" placeholder="City" required data-msg="Please fill the City" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="address" rows="5" required data-msg="Please fill the Address" placeholder="Address"></textarea>
+                        <div class="validation"></div>
+                    </div>
+                    <br>
+                    <h5>Data CSO</h5>
+                    <div class="form-group">
+                        <select class="form-control" id="branch" name="branch_id" data-msg="Please choose the Branch" required>
+                            <option selected disabled value="">Branch Option</option>
+    
+                            @foreach($branches as $branch)
+                                <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                            @endforeach
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="cso_id" id="cso" placeholder="CSO Code" required data-msg="Please fill the CSO Code" style="text-transform:uppercase"/>
+                        <div class="validation" id="validation_cso"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" required data-msg="Please fill the CSO Phone Number" />
+                        <div class="validation"></div>
+                    </div>
+    
+                    <br>
+                    <h5>Home Service Appointment</h5>
+                    <div class="form-group">
+                        <input type="date" class="form-control" name="date" id="date" placeholder="Appointment Date" value="<?php echo date('Y-m-j'); ?>" required data-msg="Please fill the Date" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="time" class="form-control" name="time" id="time" placeholder="Appointment Time" value="<?php echo date('H:i'); ?>" required data-msg="Please fill the Time" />
+                        <div class="validation"></div>
+                    </div>
+    
+                    <div id="errormessage"></div>
+                    <div class="text-center"><button id="submit" type="submit" title="Send Message">Save Form Home Service</button></div>
+                </form>
+                @endif
         </div>
     </div>
 </section>
@@ -222,7 +284,6 @@
                 }
             });
         });
-
         $('#submit').click(function(){
             var appointment = 
             $.ajax({

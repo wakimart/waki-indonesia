@@ -110,6 +110,7 @@ class DeliveryOrderController extends Controller
     }
 
     public function admin_ListDeliveryOrder(Request $request){
+        $url = $request->all();
         $branches = Branch::Where('active', true)->get();
 
         //khususu head-manager, head-admin, admin
@@ -136,7 +137,7 @@ class DeliveryOrderController extends Controller
             $deliveryOrders = $deliveryOrders->where('cso_id', $request->filter_cso);
         }
         $deliveryOrders = $deliveryOrders->paginate(10);
-        return view('admin.list_deliveryorder', compact('deliveryOrders', 'countDeliveryOrders', 'branches'));
+        return view('admin.list_deliveryorder', compact('deliveryOrders', 'countDeliveryOrders', 'branches','url'));
     }
 
     public function admin_DetailDeliveryOrder(Request $request){
