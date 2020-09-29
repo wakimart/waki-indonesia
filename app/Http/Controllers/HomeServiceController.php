@@ -270,19 +270,19 @@ class HomeServiceController extends Controller
         $branch = null;
         $cso = null;
         $search = null;
-        if($request->has('date')){
+        if($request->has('date') && $request->date != "undefined"){
             $date = $request->date;
         }
-        if($request->has('filter_city')){
+        if($request->has('filter_city') && $request->filter_city != "undefined"){
             $city = $request->filter_city;
         }
-        if($request->has('filter_search')){
+        if($request->has('filter_search') && $request->filter_search != "undefined"){
             $search = $request->filter_search;
         }
-        if($request->has('filter_branch')){
+        if($request->has('filter_branch') && $request->filter_branch != "undefined"){
             $branch = $request->filter_branch;
         }
-        if($request->has('filter_cso')){
+        if($request->has('filter_cso') && $request->filter_cso != "undefined"){
             $cso = $request->filter_cso;
         }
         // dd(new HomeServicesExportByDate($date, $city, $branch, $cso, null));
@@ -298,16 +298,16 @@ class HomeServiceController extends Controller
         $startDate = null;
         $endDate = null;
 
-        if($request->has('filter_city')){
+        if($request->has('filter_city')  && $request->filter_city != "undefined"){
             $city = $request->filter_city;
         }
-        if($request->has('filter_branch')){
+        if($request->has('filter_branch')  && $request->filter_branch != "undefined"){
             $branch = $request->filter_branch;
         }
-        if($request->has('filter_cso')){
+        if($request->has('filter_cso')  && $request->filter_cso != "undefined"){
             $cso = $request->filter_cso;
         }
-        if($request->has('filter_search')){
+        if($request->has('filter_search') && $request->filter_search != "undefined"){
             $search = $request->filter_search;
         }
         if($request->has('filter_startDate')&&$request->has('filter_endDate')){
@@ -513,6 +513,11 @@ class HomeServiceController extends Controller
             }
             if($request->has('filter_city')){
                 $homeServices = $homeServices->where('home_services.city', 'like', '%'.$request->filter_city.'%');
+            }
+            if($request->has('filter_search')){
+                $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
+                ->orWhere('home_services.phone', 'like', '%'.$request->filter_search.'%')
+                ->orWhere('home_services.code', 'like', '%'.$request->filter_search.'%');
             }
             $homeServices = $homeServices->get();          
             $totalPerDay = [];
