@@ -383,6 +383,9 @@ class DeliveryOrderController extends Controller
             if($request->has('filter_city')){
                 $deliveryOrders = $deliveryOrders->where('delivery_orders.city', 'like', '%'.$request->filter_city.'%');
             }
+            if($request->has('filter_startDate')&& $request->has('filter_endDate')){
+                $deliveryOrders = $deliveryOrders->whereBetween('delivery_orders.created_at', [$request->filter_startDate.' 00:00:00', $request->filter_endDate.' 23:59:59']);
+            }
             $deliveryOrders = $deliveryOrders->orderBy('created_at', 'DESC');                     
             $deliveryOrders = $deliveryOrders->paginate($request->limit);
 
