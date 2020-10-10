@@ -66,11 +66,17 @@ class DeliveryOrderController extends Controller
 
     public function fetchCso(Request $request){
     	$csos = Cso::where('code', $request->txt)->get();
-    	$result = 'false';
     	if(sizeof($csos) > 0){
-    		$result = 'true';
-    	}
-    	return $result;
+    		return [
+                'result' =>'true',
+                'data' => $csos
+            ];
+        }
+        
+    	return [
+            'result' =>'false',
+            'data' => $csos
+        ];
     }
 
     public function listDeliveryOrder(Request $request){
