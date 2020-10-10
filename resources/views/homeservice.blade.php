@@ -254,7 +254,7 @@
             }
             $.get( '{{route("fetchCso")}}', { txt: txtCso })
             .done(function( result ) {
-                if (result == 'true'){
+                if (result.result == 'true'){
                     obj.html('Kode CSO Benar');
                     obj.css('color', 'green');
                     $('#submit').removeAttr('disabled');
