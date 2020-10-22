@@ -38,23 +38,30 @@ class HomeServiceController extends Controller
     
     public function store(Request $request){
         $homeServiceRawData = HomeService::where([['phone', $request->phone],['active', true]]);
-        $homeServiceDataSatu = $homeServiceRawData->where(['appointment', '>', DB::raw('NOW()')])->get();
+        $homeServiceDataEmpat = $homeServiceRawData->where('type_homeservices', 'Upgrade Member')->get();
+        if($homeServiceDataEmpat != null ){
+            if(count($homeServiceDataEmpat)>0){
+                return redirect()->back()->with("errors","Upgrade Member Hanya Sekali Saja Untuk Nomer Yang Sama");
+            }
+        }
+        
+        $homeServiceDataSatu = $homeServiceRawData->where('appointment', '>', DB::raw('NOW()'))->get();
+        
         for($i = 0; $i<count($homeServiceDataSatu); $i++){
             $dateTime = explode(' ', $homeServiceDataSatu[$i]->appointment); 
-            if($dateTime[0] == $request->get(['date'])){
-                if($dateTime[1] == $request->get(['time'])){
+            if($dateTime[0] == $request->date){
+                if($dateTime[1] == $request->time){
                     return redirect()->back()->with("errors","Appointment dengan nomer ini sudah ada!!");        
                 }
             }
         }
 
-        $homeServiceDataTiga = $homeServiceRawData->where('type_homeservices', 'Home service')->order_by('created_at', 'desc')->first();
-        if($homeServiceDataTiga->appointment < $request->get('date')." ".$request->get('time')){ //date("Y-m-d h:i:s",strtotime('last week'));
-            return redirect()->back()->with("errors","Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service ");
-        }
-        $homeServiceDataEmpat = $homeServiceRawData->where('type_homeservices', 'Upgrade Member')->get();
-        if(count($homeServiceDataEmpat)>0){
-            return redirect()->back()->with("errors","Upgrade Member Hanya Sekali Saja Untuk Nomer Yang Sama");
+        $homeServiceDataTiga = $homeServiceRawData->where('type_homeservices', 'Home service')->orderBy('created_at', 'desc')->first();
+        
+        if($homeServiceDataTiga != null){
+            if($homeServiceDataTiga->appointment < $request->get('date')." ".$request->get('time')){ //date("Y-m-d h:i:s",strtotime('last week'));
+                return redirect()->back()->with("errors","Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service ");
+            }
         }
 
         $homeServiceDataDua = $homeServiceRawData->orWhere([['type_homeservices', 'Home Eksklusif Therapy'], ['type_homeservices', 'Home Family Family']])->orWhere('type_homeservices', 'Home Family Therapy')->get();
@@ -69,7 +76,7 @@ class HomeServiceController extends Controller
             }
         }
 
-        if(count($counterExecutive)> 3 || count($counterFamily)>3 ){
+        if($counterExecutive> 3 || $counterFamily>3 ){
             return redirect()->back()->with("errors","Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Di Gunakan 3 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama");
         }
 
