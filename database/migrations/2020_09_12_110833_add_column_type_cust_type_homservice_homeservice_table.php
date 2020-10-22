@@ -15,7 +15,7 @@ class AddColumnTypeCustTypeHomserviceHomeserviceTable extends Migration
     {
         Schema::table('home_services', function (Blueprint $table) {
             $table->enum('type_customer', ['Tele Voucher', 'Tele Home Service', 'Home Office Voucher', 'Home Voucher']);
-            $table->enum('type_homeservices', ['Home service', 'Upgrade Member']);
+            $table->enum('type_homeservices', ['Home service', 'Upgrade Member', 'Home Eksklusif Therapy', 'Home Family Therapy']);
         });
     }
 

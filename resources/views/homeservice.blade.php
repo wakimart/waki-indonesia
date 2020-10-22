@@ -63,6 +63,8 @@
                     <select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
                             <option value="Home service">Home service</option>
                             <option value="Upgrade Member">Upgrade Member</option>
+                            <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                            <option value="Home Family Family">Home Family Family</option>
                     </select>
                     <span class="invalid-feedback">
                         <strong></strong>
