@@ -302,17 +302,20 @@
 			                    <div class="form-group">
 			                    	<label for="">CSO Code</label>
 			                        <input type="text" class="form-control cso" name="cso_id" id="cso" value="{{$orders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
-			                        <div class="validation"></div>
+									<input type="hidden" class="csoId" name="idCSO" value="">
+									<div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
 			                    	<label for="">CSO Code 30%</label>
 			                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" value="{{$orders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
+									<input type="hidden" class="csoId" name="idCSO30" value="">
+									<div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
 			                    	<label for="">CSO Code 70%</label>
 			                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" value="{{$orders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
+									<input type="hidden" class="csoId" name="idCSO70" value="">
+									<div class="validation"></div>
 			                    </div>
 			                </div>
 			                @endif
@@ -334,9 +337,6 @@
 
 	              			<div class="form-group">
 	              				<input type="hidden" name="idOrder" value="{{$orders['id']}}">
-	              				<input type="hidden" name="idCSO" value="{{$orders['cso_id']}}">
-	              				<input type="hidden" name="idCSO30" value="{{$orders['30_cso_id']}}">
-	              				<input type="hidden" name="idCSO70" value="{{$orders['70_cso_id']}}">
 	              				<input type="hidden" id="lastTotalProduct" value="{{$total_product}}">
 	              				<button id="updateOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
 	              				<button class="btn btn-light">Cancel</button>	
@@ -433,10 +433,11 @@
             .done(function( result ) {
                 var bool = false;
 
-                if (result == 'true'){
+                if (result.result == 'true'){
                     $(temp).parent().children('.validation').html('Kode CSO Benar');
                     $(temp).parent().children('.validation').css('color', 'green');
                     bool = true;
+					$(temp).parent().children('.csoId').val(result.data[0].id);
                 }
                 else{
                     $(temp).parent().children('.validation').html('Kode CSO Salah');

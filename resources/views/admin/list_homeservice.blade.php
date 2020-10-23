@@ -56,9 +56,7 @@
 </style>
 
 @endsection
-
 @section('content')
-
 <div class="main-panel">
 	<div class="content-wrapper">
     <div class="page-header">
@@ -95,6 +93,10 @@
                               @endphp
                           </select>
                           <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                        <input class="form-control" id="search" name="search" placeholder="Search By Name, Phone, and Code Homeservice">
+                        <div class="validation"></div>
                       </div>
                     </div>
                     <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
@@ -167,6 +169,7 @@
                     <div class="form-group">
                       <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
                       <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" value="-"><span class="mdi mdi-file-document"></span> Export XLS</button>
+                      <button id="btn-exportDate" type="button" class="btn btn-gradient-info m-1" name="export" data-toggle="modal" data-target="#datePickerHomeServiceModal" value="-"><span class="mdi mdi-file-document"></span> Export XLS with Date</button>
                     </div>
                   </div>
                 </div>
@@ -182,7 +185,6 @@
 		</div>
 	</div>
 <!-- partial -->
-
   <!-- Modal Add -->
   <div class="modal fade" id="addHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
@@ -239,6 +241,28 @@
                   <h5 style="text-align:center;"></h5>
                     {{ csrf_field() }}
                       <h5>Data Pelanggan</h5>
+                      <div class="form-group">
+                        <span>Type Customer</span>
+                        <select id="view_type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_customer" value="" required>
+                            <option value="Tele Voucher">Tele Voucher</option>
+                            <option value="Tele Home Service">Tele Home Service</option>
+                            <option value="Home Office Voucher">Home Office Voucher</option>
+                            <option value="Home Voucher">Home Voucher</option>
+                        </select>
+                        <span class="invalid-feedback">
+                          <strong></strong>
+                        </span>
+                      </div>
+                      <div class="form-group">
+                        <span>Type Home Service</span>
+                        <select id="view_type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_homeservices" value="" required>
+                            <option value="Home service">Home service</option>
+                            <option value="Upgrade Member">Upgrade Member</option>
+                        </select>
+                        <span class="invalid-feedback">
+                          <strong></strong>
+                        </span>
+                      </div>
                       <div class="form-group">
                           <input type="text" name="no_member" class="form-control input-view" id="view-no_member" value=""/>
                           <div class="validation"></div>
@@ -320,6 +344,28 @@
       					    	{{ csrf_field() }}
                         <h5>Data Pelanggan</h5>
                         <div class="form-group">
+                          <span>Type Customer</span>
+                          <select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
+                                  <option value="Tele Voucher">Tele Voucher</option>
+                                  <option value="Tele Home Service">Tele Home Service</option>
+                                  <option value="Home Office Voucher">Home Office Voucher</option>
+                                  <option value="Home Voucher">Home Voucher</option>
+                          </select>
+                          <span class="invalid-feedback">
+                              <strong></strong>
+                          </span>
+                      </div>
+                      <div class="form-group">
+                          <span>Type Home Service</span>
+                          <select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
+                                  <option value="Home service">Home service</option>
+                                  <option value="Upgrade Member">Upgrade Member</option>
+                          </select>
+                          <span class="invalid-feedback">
+                              <strong></strong>
+                          </span>
+                      </div>
+                        <div class="form-group">
                             <input type="text" name="no_member" class="form-control" id="edit-no_member" placeholder="No. Member (optional)"/>
                             <div class="validation"></div>
                         </div>
@@ -367,7 +413,7 @@
                         <br>
                         <h5>Waktu Home Service</h5>
                         <div class="form-group">
-                            <input type="date" class="form-control" name="date" id="edit-date" placeholder="Tanggal Janjian" required data-msg="Mohon Isi Tanggal" />
+                            <input type="date" class="form-control" name="edit-date" id="edit-date" placeholder="Tanggal Janjian" required data-msg="Mohon Isi Tanggal" />
                             <div class="validation"></div>
                         </div>
                         <div class="form-group">
@@ -440,6 +486,36 @@
           </div>
     </div>
     <!-- End Modal Cash -->
+    <!-- Modal Date Picker export Xls -->
+  <div class="modal fade" id="datePickerHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <label for="">Pick a Date</label>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Tanggal Awal</label>
+              <input type="date" class="form-control" name="date" id="filter_startDate" placeholder="Awal Tanggal" required data-msg="Mohon Isi Tanggal" onload="getDate()" />
+              <div class="validation"></div>
+          </div>
+          <div class="form-group">
+            <label>Tanggal Akhir</label>
+            <input type="date" class="form-control" name="date" id="filter_endDate" placeholder="Akhir Tanggal" required data-msg="Mohon Isi Tanggal" onload="getDate()"/>
+            <div class="validation"></div>
+        </div>
+              
+          </div>
+        <div class="modal-footer">
+                {{csrf_field()}}
+                  <input type="hidden" id="hiddenInput" name="cancel" value="1">
+                  <button type="submit" data-dismiss="modal" id="btn-exportByDate" class="btn btn-gradient-danger mr-2" name="id" value="-">Export</button>
+              <button type="button" data-dismiss="modal" class="btn btn-light">No</button>
+          </div>
+        </div>
+    </div>
+  </div>
+  <!-- End Modal Date Picker export Xls -->
 </div>
 @endsection
 
@@ -452,10 +528,10 @@ window.onload = function() {
 
   // untuk pertama kali data di buka
   function onLoadDate(){
+    
     data = {};
     // data[new Date().getFullYear()] = {};
     // data[new Date().getFullYear()][new Date().getMonth()+1] = {};
-
     @foreach($homeServices as $dataNya)
       @php
         $AppointmentNya = new DateTime($dataNya['appointment']);
@@ -463,6 +539,15 @@ window.onload = function() {
         $bulan = $AppointmentNya->format('n');
         $hari = $AppointmentNya->format('j');
         $jam = $AppointmentNya->format('H:i');
+        
+        $appointmentBefore = $dataNya->historyUpdate()['meta'];
+        $before = "-";
+        if($appointmentBefore != null){
+          if (isset($appointmentBefore['appointmentBefore'])){
+            
+            $before = $appointmentBefore['appointmentBefore'];
+          }
+        }
 
         $canEdit = false;
         $canDelete = false;
@@ -500,7 +585,7 @@ window.onload = function() {
                 startTime: "{{ $jam }}",
                 endTime: "{{ $jam }}",
                 title: "<a href=\"{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}\" target=\"_blank\">{{ $dataNya['code'] }}</a>",
-                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }}",
+                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }} <br>CreatedAt : {{ $dataNya['created_at'] }} <br>Last Update : {{ $dataNya['updated_at'] }} <br><p style='color:red'>Appointment Before : {{$before}}</p>",
                 dataId : "{{ $dataNya['id'] }}",
                 canEdit : "{{ $canEdit }}",
                 canDelete : "{{ $canDelete }}",
@@ -513,7 +598,7 @@ window.onload = function() {
                 startTime: "{{ $jam }}",
                 endTime: "{{ $jam }}",
                 title: "<a href=\"{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}\" target=\"_blank\">{{ $dataNya['code'] }}</a>",
-                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }}",
+                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }} <br>CreatedAt : {{ $dataNya['created_at'] }} <br>Last Update : {{ $dataNya['updated_at'] }} <br><p style='color:red'>Appointment Before : {{$before}}</p>",
                 dataId : "{{ $dataNya['id'] }}",
                 canEdit : "{{ $canEdit }}",
                 canDelete : "{{ $canDelete }}",
@@ -746,7 +831,34 @@ window.onload = function() {
         $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
       }
     });
-
+    $("#btn-exportByDate").on("click", function(){
+      var urlParamArray = new Array();
+      var urlParamStr = "";
+      if($('#filter_city').val() != ""){
+        urlParamArray.push("filter_city=" + $('#filter_city').val());
+      }
+      if($('#filter_branch').val() != ""){
+        urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+      }
+      if($('#filter_cso').val() != ""){
+        urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+      }
+      if($('#search').val() != ""){
+        urlParamArray.push("filter_search=" + $('#search').val());
+      }
+      if($('#filter_startDate').val() != "" && $('#filter_endDate').val() != ""){
+        urlParamArray.push("filter_startDate=" + $('#filter_startDate').val());
+        urlParamArray.push("filter_endDate=" + $('#filter_endDate').val());
+      }
+      for (var i = 0; i < urlParamArray.length; i++) {
+        if (i === 0) {
+          urlParamStr += "?" + urlParamArray[i]
+        } else {
+          urlParamStr += "&" + urlParamArray[i]
+        }
+      }
+      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}" + urlParamStr;   
+    });
     $("#btn-export").on("click", function(){
       var urlParamArray = new Array();
       var urlParamStr = "";
@@ -758,6 +870,9 @@ window.onload = function() {
       }
       if($('#filter_cso').val() != ""){
         urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+      }
+      if($('#search').val() != ""){
+        urlParamArray.push("filter_search=" + $('#search').val());
       }
       for (var i = 0; i < urlParamArray.length; i++) {
         urlParamStr += "&" + urlParamArray[i]
@@ -840,13 +955,15 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
         },
       });
 
+      $('#type_homeservices').val(result['type_homeservices']);
+      $('#type_customer').val(result['type_customer']);
       $('#edit-no_member').val(result['no_member']);
       $('#edit-name').val(result['name']);
       $('#edit-phone').val(result['phone']);
       $('#edit-city').val(result['city']);
       $('#edit-address').val(result['address']);
       $('#edit-cso_phone').val(result['cso_phone']);
-      $('#edit-date').val(tgl);
+      $('#edit-date').val(new Date(result['appointment']));
       $('#edit-time').val(jam+":"+menit);
       $('#btn-edit').val(result['id']);
 
@@ -924,7 +1041,8 @@ $(document).on("click", ".btn-homeservice-view", function(e){
           $('#view-branch').val(data1['id']);
         },
       });
-
+      $('#view_type_homeservices').val(result['type_homeservices']);
+      $('#view_type_customer').val(result['type_customer']);
       $('#view-no_member').val(result['no_member']);
       $('#view-name').val(result['name']);
       $('#view-phone').val(result['phone']);
@@ -983,6 +1101,9 @@ $(document).on("click", "#btn-filter", function(e){
   }
   if($('#filter_cso').val() != ""){
     urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+  }
+  if($('#search').val() != ""){
+    urlParamArray.push("filter_search=" + $('#search').val());
   }
   for (var i = 0; i < urlParamArray.length; i++) {
     if (i === 0) {

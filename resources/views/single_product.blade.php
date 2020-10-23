@@ -41,13 +41,10 @@
         			<div class="product_categoriesmenu">
           				<h5 class="prodcat-title">Product categories</h5>
           				<ul class="product-categories">
-            				<li class="cat-item cat-item-24 current-cat"><a href="single_product.htmlx">WAKi High Potential Therapy Range</a></li>
-				            <li class="cat-item cat-item-29"><a href="#">WAKi Air Humidifier Range</a></li>
-				            <li class="cat-item cat-item-38"><a href="#">WAKi Bio Energy Range</a></li>
-				            <li class="cat-item cat-item-44"><a href="#">WAKi Massager Range</a></li>
-				            <li class="cat-item cat-item-52"><a href="#">WAKi Household Range</a></li>
-				            <li class="cat-item cat-item-55"><a href="#">WAKi Others Range</a></li>
-          				</ul>
+							@foreach ($categoryProducts as $categoryProduct )
+								<li class="cat-item cat-item-24 current-cat"><a href="{{route('product_category',['id' => $categoryProduct->id])}}" id=categoryId value={{$categoryProduct->id}} >{{$categoryProduct->name}}</a></li>
+							@endforeach
+						</ul>
         			</div>
       			</div>
 

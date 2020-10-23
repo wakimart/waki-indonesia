@@ -28,10 +28,10 @@
 						            <tr>
 						              	<th> No. </th>
 						              	<th> Code </th>
-                            <th> Image </th>
-                            <th> Name </th>
-                            <th> Price </th>
-                            <th> Category </th>
+										<th> Image </th>
+										<th> Name </th>
+										<th> Price </th>
+										<th> Category </th>
 						              	<th colspan="2"> Edit / Delete </th>
 						            </tr>
           						</thead>

@@ -519,6 +519,7 @@ class OrderController extends Controller
             if($request->has('filter_city')){
                 $orders = $orders->where('orders.city', 'like', '%'.$request->filter_city.'%');
             }
+            $orders = $orders->orderBy('orderDate', 'DESC');
             $orders = $orders->paginate($request->limit);
             foreach ($orders as $i => $doNya) {
                 $tempId = json_decode($doNya['product'], true);

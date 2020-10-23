@@ -11,12 +11,13 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class HomeServicesExport implements FromView, ShouldAutoSize
 {
-	public function __construct($date, $city, $branch, $cso)
+	public function __construct($date, $city, $branch, $cso, $search)
     {
     	$this->date = date($date);
         $this->city = $city;
         $this->branch = $branch;
         $this->cso = $cso;
+        $this->search = $search;
     }
 
     public function view(): View
@@ -30,6 +31,11 @@ class HomeServicesExport implements FromView, ShouldAutoSize
         }
         if($this->cso != null){
             $HomeServiceNya = $HomeServiceNya->where('cso_id', $this->cso);
+        }
+        if($this->search != null){
+            $HomeServiceNya = $HomeServiceNya->where('name', 'like', '%'.$this->search.'%')
+            ->orWhere('phone', 'like', '%'.$this->search.'%')
+            ->orWhare('code', 'like', '%'.$this->search.'%');
         }
 
         return view('admin.exports.homeservice1_export', [

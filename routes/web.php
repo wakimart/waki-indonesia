@@ -248,7 +248,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
 		    	->middleware('can:edit-home_service');
         //Export to XLS
         Route::get('/export-to-xls', 'HomeServiceController@export_to_xls')
-                ->name('homeservice_export-to-xls');
+				->name('homeservice_export-to-xls');
+		//Export to XLS By Date
+        Route::get('/export-to-xls-by-date', 'HomeServiceController@export_to_xls_byDate')
+                ->name('homeservice_export-to-xls-by-date');
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
