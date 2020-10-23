@@ -42,11 +42,11 @@ class HomeServiceController extends Controller
         $homeServiceRawData = HomeService::where([['phone', $request->phone],['active', true]])->get();
         if ($homeServiceRawData != null && count($homeServiceRawData) > 0){
             for ($i=0; $i<count($homeServiceRawData);$i++){
-                if ($homeServiceRawData[$i]->type_homeservices == "Upgrade Member"){
+                if ($homeServiceRawData[$i]->type_homeservices == "Upgrade Member" && $request->type_homeservices == "Upgrade Member"){
                     return redirect()->back()->with("errors","Upgrade Member Hanya Sekali Saja Untuk Nomer Yang Sama");    
                 }
                 if ($homeServiceRawData[$i]->appointment > date("Y-m-d H:i:s")){
-                    $dateTime = explode(' ', $homeServiceDataSatu[$i]->appointment); 
+                    $dateTime = explode(' ', $homeServiceRawData[$i]->appointment); 
                     if($dateTime[0] == $request->date){
                         if($dateTime[1] == $request->time){
                             return redirect()->back()->with("errors","Appointment dengan nomer ini sudah ada!!");        
@@ -179,11 +179,11 @@ class HomeServiceController extends Controller
         $homeServiceRawData = HomeService::where([['phone', $request->phone],['active', true]])->get();
         if ($homeServiceRawData != null && count($homeServiceRawData) > 0){
             for ($i=0; $i<count($homeServiceRawData);$i++){
-                if ($homeServiceRawData[$i]->type_homeservices == "Upgrade Member"){
+                if ($homeServiceRawData[$i]->type_homeservices == "Upgrade Member" && $request->type_homeservices == "Upgrade Member"){
                     return redirect()->back()->with("errors","Upgrade Member Hanya Sekali Saja Untuk Nomer Yang Sama");    
                 }
                 if ($homeServiceRawData[$i]->appointment > date("Y-m-d H:i:s")){
-                    $dateTime = explode(' ', $homeServiceDataSatu[$i]->appointment); 
+                    $dateTime = explode(' ', $homeServiceRawData[$i]->appointment); 
                     if($dateTime[0] == $request->date){
                         if($dateTime[1] == $request->time){
                             return redirect()->back()->with("errors","Appointment dengan nomer ini sudah ada!!");        
@@ -407,11 +407,11 @@ class HomeServiceController extends Controller
         $homeServiceRawData = HomeService::where([['phone', $request->phone],['active', true]])->get();
         if ($homeServiceRawData != null && count($homeServiceRawData) > 0){
             for ($i=0; $i<count($homeServiceRawData);$i++){
-                if ($homeServiceRawData[$i]->type_homeservices == "Upgrade Member"){
+                if ($homeServiceRawData[$i]->type_homeservices == "Upgrade Member"&& $request->type_homeservices == "Upgrade Member"){
                     return redirect()->back()->with("errors","Upgrade Member Hanya Sekali Saja Untuk Nomer Yang Sama");    
                 }
                 if ($homeServiceRawData[$i]->appointment > date("Y-m-d H:i:s")){
-                    $dateTime = explode(' ', $homeServiceDataSatu[$i]->appointment); 
+                    $dateTime = explode(' ', $homeServiceRawData[$i]->appointment); 
                     if($dateTime[0] == $request->date){
                         if($dateTime[1] == $request->time){
                             return redirect()->back()->with("errors","Appointment dengan nomer ini sudah ada!!");        
