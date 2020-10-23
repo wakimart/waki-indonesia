@@ -65,7 +65,7 @@ class HomeServiceController extends Controller
         $homeServiceDataTiga = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home service']])->orderBy('created_at', 'desc')->first();
         
         if($homeServiceDataTiga != null){
-            if($homeServiceDataTiga->appointment < $request->get('date')." ".$request->get('time')){ //date("Y-m-d h:i:s",strtotime('last week'));
+            if($homeServiceDataTiga->appointment > date("Y-m-d h:i:s",strtotime('last week'))){ //date("Y-m-d h:i:s",strtotime('last week'));
                 return redirect()->back()->with("errors","Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service ");
             }
         }
@@ -202,7 +202,7 @@ class HomeServiceController extends Controller
         $homeServiceDataTiga = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home service']])->orderBy('created_at', 'desc')->first();
         
         if($homeServiceDataTiga != null){
-            if($homeServiceDataTiga->appointment < $request->get('date')." ".$request->get('time')){ //date("Y-m-d h:i:s",strtotime('last week'));
+            if($homeServiceDataTiga->appointment > date("Y-m-d h:i:s",strtotime('last week'))){ //date("Y-m-d h:i:s",strtotime('last week'));
                 return redirect()->back()->with("errors","Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service ");
             }
         }
@@ -430,7 +430,7 @@ class HomeServiceController extends Controller
         $homeServiceDataTiga = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home service']])->orderBy('created_at', 'desc')->first();
         
         if($homeServiceDataTiga != null){
-            if($homeServiceDataTiga->appointment < $request->get('date')." ".$request->get('time')){ //date("Y-m-d h:i:s",strtotime('last week'));
+            if($homeServiceDataTiga->appointment > date("Y-m-d h:i:s",strtotime('last week'))){ //date("Y-m-d h:i:s",strtotime('last week'));
                 return redirect()->back()->with("errors","Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service ");
             }
         }
