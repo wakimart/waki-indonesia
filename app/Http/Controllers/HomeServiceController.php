@@ -20,6 +20,7 @@ use DB;
 use Google_Client;
 use Google_Service_Calendar;
 use App\Http\Controllers\gCalendarController;
+use DateTime;
 
 class HomeServiceController extends Controller
 {
@@ -99,7 +100,6 @@ class HomeServiceController extends Controller
             ['cso_id', '=', $getIdCso],
             ['appointment', '=', $getAppointment]
         ])->get();
-        //dd(count($getHomeServices));
         
         if (count($getHomeServices) > 0) {
             //return response()->json(['errors' => "An appointment has been already scheduled."]);
@@ -112,7 +112,15 @@ class HomeServiceController extends Controller
         }
         $data['appointment'] = $data['date']." ".$data['time'];
         $order = HomeService::create($data);
-        //return response()->json(['berhasil' => $data]);
+        $dt = new DateTime($data['appointment']);
+
+        $phone = preg_replace('/[^A-Za-z0-9\-]/', '', $order['phone']);
+        if($phone[0]==0 || $phone[0]=="0"){
+           $phone =  substr($phone, 1);
+        }
+        $phone = "62".$phone;
+        Utils::sendSms($phone, "Terima kasih telah mendaftar layanan 'Home Service' kami. Tim kami akan datang pada tanggal ".$dt->format('j/m/Y')." pukul ".$dt->format('H:i')." WIB. Info lebih lanjut, hubungi 082138864962"); 
+        
         return redirect()->route('homeServices_success', ['code'=>$order['code']]);
     }
 
