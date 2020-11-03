@@ -7,6 +7,7 @@ use App\Banner;
 use App\OurGallery;
 use App\CategoryProduct;
 use App\Product;
+use App\Version;
 class IndexController extends Controller
 {
     /**
@@ -92,5 +93,23 @@ class IndexController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function storeVersion(Request $request){
+        $data = $request->all();
+        $version = Version::create($data);
+
+        $result = ['result'=> 1,
+                   'data' => $version
+        ];
+        return response()->json($result, 200);
+    }
+
+    public function listVersion(){
+        $version = Version::orderBy('id', 'desc')->first();
+        $result = ['result'=> 1,
+                   'data' => $version
+        ];
+        return response()->json($result, 200);
     }
 }
