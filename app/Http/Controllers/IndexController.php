@@ -94,6 +94,12 @@ class IndexController extends Controller
     {
         //
     }
+    
+    public function termNCondition()
+    {
+        $vartest = "TESTING";
+        return view('term_cond', compact('vartest'));
+    }
 
     public function storeVersion(Request $request){
         $data = $request->all();

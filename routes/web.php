@@ -14,6 +14,7 @@
 Auth::routes(['verify' => true]);
 Route::resource('gcalendar', 'gCalendarController');
 Route::get('oauth', ['as' => 'oauthCallback', 'uses' => 'gCalendarController@oauth'])->name('oauthCallback');
+Route::get('/term_cond', 'IndexController@termNCondition')->name('term_cond');
 
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category/{id}', 'CategoryProductController@index')->name('product_category');
@@ -75,7 +76,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 	    Route::post('add','DeliveryOrderController@addApi'); //add register DO
 	    Route::post('list','DeliveryOrderController@listApi'); //list register DO
 		Route::post('update','DeliveryOrderController@updateApi'); //update register DO
-		Route::get('view/{id}','DeliveryOrderController@viewApi'); //view single register DO 
+		Route::get('view/{id}','DeliveryOrderController@viewApi'); //view single register DO
 		Route::post('delete','DeliveryOrderController@deleteApi'); //delete register DO
 	});
 
@@ -126,11 +127,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //update frontendcms
     Route::post('/frontend-cms/update', 'FrontendCmsController@update')
 	    	->name('update_frontendcms');
-	    	
-	//change password admin    
+
+	//change password admin
 	Route::post('/changePassword','UserAdminController@changePassword')
 			->name('changePassword');
-    //Check change password admin    
+    //Check change password admin
     Route::post('/checkChangePassword', 'UserAdminController@checkChangePassword')
     		->name('check-change-password');
 
