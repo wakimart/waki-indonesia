@@ -200,6 +200,8 @@
 				                        	<br>Vietnam: +84 90 143 31 99
 				                        	<br>Thailand: +66 6 1965 9646
 				                      	</p>
+
+				                      	<a href="{{ route('term_cond') }}"><p><strong>Term and Condition</strong></p></a>
 				                  	@endif
 			                    </div>
 
