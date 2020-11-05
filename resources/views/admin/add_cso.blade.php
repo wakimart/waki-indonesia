@@ -95,7 +95,7 @@
                           <strong></strong>
                       </span>
           					</div>
-          					<div class="form-group d-none">
+          					<div class="form-group">
 					            <label for="">Phone Number</label>
 					            <input type="text" class="form-control" name="phone" placeholder="Phone Number">
           					</div>

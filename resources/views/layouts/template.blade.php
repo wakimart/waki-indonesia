@@ -104,7 +104,7 @@
 	          @endif
 
 
-						@if(Utils::$lang=='id')
+						{{-- @if(Utils::$lang=='id')
 						<li class="drop-down {{isset($menu_item_page) && $menu_item_page == 'form'? 'active': '' }}"><a href="#product">Form</a>
 	            <ul>
 	              <li class="{{isset($menu_item_second) && $menu_item_second == 'formregistrasi'? 'active': '' }}"><a href="{{ route('delivery_order') }}">REGISTRASI</a></li>
@@ -112,7 +112,7 @@
 								<li class="{{isset($menu_item_second) && $menu_item_second == 'formhomeservice'? 'active': '' }}"><a href="{{ route('add_homeServices') }}">HOME SERVICE</a></li>
 							</ul>
 						</li>
-						@endif
+						@endif --}}
 
 						@if(Utils::$lang=='id')
 	          <li><a href="{{route('index')}}#team">World Peace</a></li>
