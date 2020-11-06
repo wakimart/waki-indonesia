@@ -130,9 +130,8 @@
 	  window.location.href = "{{route('list_branch')}}" + urlParamStr;
 	});
 
-	$(".btn-delete").click(function(e) {
-		console.log("ASU	");
-        $("#frmDelete").attr("action",  $(this).val());
-    });
+	$(document).on("click", ".btnDelete", function(e){
+		$("#frmDelete").attr("action", $(this).attr('href'));
+	});
 </script>
 @endsection
