@@ -54,8 +54,10 @@
 						            <tr>
 						              	<th> No. </th>
 						              	<th> Code </th>
-						              	<th> Name </th>
-						              	<th colspan="2"> Edit / Delete </th>
+										<th> Name </th>
+										@if(Gate::check('edit-branch') || Gate::check('delete-branch'))
+											  <th colspan="2"> Edit / Delete </th>
+										@endif
 						            </tr>
           						</thead>
           						<tbody>
@@ -64,9 +66,13 @@
 				                        	<td>{{$key+1}}</td>
 				                            <td>{{$branch['code']}}</td>
 				                            <td>{{$branch['name']}}</td>
-				                            <td style="text-align: center;"><a href="{{ route('edit_branch', ['id' => $branch['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
-                          					<td style="text-align: center;"><a href="{{ route('delete_branch', ['id' => $branch['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
-				                        </tr>
+											@can('edit-branch')
+											<td style="text-align: center;"><a href="{{ route('edit_branch', ['id' => $branch['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+											@endcan
+											@can('delete-branch')  
+											<td style="text-align: center;"><a value="{{ route('delete_branch', ['id' => $branch['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btn-delete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+											@endcan
+										</tr>
 				                    @endforeach
           						</tbody>
 							</table>
@@ -123,5 +129,10 @@
 	
 	  window.location.href = "{{route('list_branch')}}" + urlParamStr;
 	});
+
+	$(".btn-delete").click(function(e) {
+		console.log("ASU	");
+        $("#frmDelete").attr("action",  $(this).val());
+    });
 </script>
 @endsection
