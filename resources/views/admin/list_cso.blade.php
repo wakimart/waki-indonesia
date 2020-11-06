@@ -91,10 +91,8 @@
 				                            <td>{{$cso['code']}}</td>
 				                            <td>{{$cso['name']}}</td>
 											<td>{{$cso->branch['name']}}</td> 
-				                            <td>{{$cso->branch['name']}}</td>
-											<td>{{$cso->branch['name']}}</td> 
 				                            <td style="text-align: center;"><a href="{{ route('edit_cso', ['id' => $cso['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
-                          					<td style="text-align: center;"><a href="" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+                          					<td style="text-align: center;"><a href="{{ route('delete_cso', ['id' => $cso['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
 				                        </tr>
 				                    @endforeach
           						</tbody>
@@ -121,7 +119,7 @@
               		<h5 style="text-align:center;">Are You Sure to Delete this CSO ?</h5>
             	</div>
             	<div class="modal-footer">
-            		<form id="frmDelete" method="post" action="{{ route('delete_cso', ['id' => $cso['id']])}}">
+            		<form id="frmDelete" method="post" action="">
                     {{csrf_field()}}
                     	<button type="submit" class="btn btn-gradient-danger mr-2">Yes</button>
                 	</form>
@@ -155,6 +153,9 @@
 	  }
 
 	  window.location.href = "{{route('list_cso')}}" + urlParamStr;
+	});
+	$(document).on("click", ".btnDelete", function(e){
+		$("#frmDelete").attr("action", $(this).attr('href'));
 	});
 </script>
 @endsection

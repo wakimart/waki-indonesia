@@ -163,7 +163,6 @@ class BranchController extends Controller
     public function delete($id){
         DB::beginTransaction();
         try{
-            dd($id);
             $branch = Branch::where('id', $id)->first();
             $branch->active = false;
             $branch->save();
