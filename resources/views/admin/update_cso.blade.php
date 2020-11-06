@@ -93,9 +93,9 @@
                           <strong></strong>
                       </span>
           					</div>
-          					<div class="form-group d-none">
+          					<div class="form-group">
 					            <label for="">Phone Number</label>
-					            <input type="text" class="form-control" name="phone" placeholder="No. Telepon">
+					            <input type="text" class="form-control" name="phone" placeholder="No. Telepon" value="{{$csos['phone']}}">
           					</div>
           					<div class="form-group d-none">
 					            <label for="exampleTextarea1">Address</label>

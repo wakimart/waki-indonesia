@@ -9,6 +9,7 @@ use App\Order;
 use App\Cso;
 use App\HistoryUpdate;
 use Illuminate\Validation\Rule;
+use DB;
 use Validator;
 
 class CsoController extends Controller
@@ -147,22 +148,30 @@ class CsoController extends Controller
             }
             return response()->json(['errors' => $arr_Errors]);
         }else{
-            $csos = Cso::find($request->input('idCso'));
-            $csos->code = $request->input('code');
-            $csos->name = $request->input('name');
-            $csos->branch_id = $request->input('branch_id');
-            $csos->save();
+            DB::beginTransaction();
+            try{
+                $csos = Cso::find($request->input('idCso'));
+                $csos->code = $request->input('code');
+                $csos->name = $request->input('name');
+                $csos->branch_id = $request->input('branch_id');
+                $csos->phone = $request->input('phone');
+                $csos->save();
 
-            $user = Auth::user();
-            $historyUpdate= [];
-            $historyUpdate['type_menu'] = "Cso";
-            $historyUpdate['method'] = "Update";
-            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $csos];
-            $historyUpdate['user_id'] = $user['id'];
+                $user = Auth::user();
+                $historyUpdate= [];
+                $historyUpdate['type_menu'] = "Cso";
+                $historyUpdate['method'] = "Update";
+                $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $csos];
+                $historyUpdate['user_id'] = $user['id'];
+                $historyUpdate['menu_id'] = $csos->id;
 
-            $createData = HistoryUpdate::create($historyUpdate);
+                $createData = HistoryUpdate::create($historyUpdate);
 
-            return response()->json(['success' => 'Berhasil!']);
+                return response()->json(['success' => 'Berhasil!']);
+                DB::commit();
+            }catch (\Exception $ex) {
+                DB::rollback();
+            }
         }
     }
 
