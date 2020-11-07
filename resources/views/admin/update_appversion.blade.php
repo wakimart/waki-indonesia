@@ -18,25 +18,25 @@
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
-        					<form id="actionAdd" class="forms-sample" method="POST" action="">
+        					<form id="actionUpdate" class="forms-sample" method="POST" action="{{ route('update_app', ['id' => $version['id']])}}">
                     {{ csrf_field() }}
           					<div class="form-group">
 					            <label for="">Version</label>
-					            <input type="text" class="form-control" name="version" placeholder="App version" required>
+					            <input type="text" class="form-control" name="version" value="{{$version['version']}}" placeholder="App version" required>
                       <span class="invalid-feedback">
                           <strong></strong>
                       </span>
           					</div>
           					<div class="form-group">
 					            <label for="">Description Detail</label>
-					            <input type="text" class="form-control" name="detail" placeholder="Description Detail" required>
+					            <input type="text" class="form-control" name="detail" placeholder="Description Detail" value="{{$version['detail']}}" required>
                       <span class="invalid-feedback">
                           <strong></strong>
                       </span>
           					</div>
           					<div class="form-group">
 					            <label for="">App URLs</label>
-					            <input type="text" class="form-control" name="url" placeholder="App URLs here">
+					            <input type="text" class="form-control" name="url" placeholder="App URLs here" value="{{$version['url']}}">
           					</div>
 
 
@@ -77,7 +77,8 @@
 	        document.getElementById("updateAppVer").innerHTML = "UPLOADING...";
 	    }
 	    function completeHandler(event){
-          var hasil = JSON.parse(event.target.responseText);
+            console.log(event);
+          var hasil = JSON.parse(event.target.responseText);                    //(event.target.responseText);
           console.log(hasil);
 
           for (var key of frmUpdate.keys()) {

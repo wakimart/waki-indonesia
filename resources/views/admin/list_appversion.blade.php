@@ -23,25 +23,27 @@
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
-      					<h5 style="margin-bottom: 0.5em;">Total :  data</h5>
+						<h5 style="margin-bottom: 0.5em;">Total : {{$count}} data</h5>
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
         					<table class="table table-bordered">
         						<thead>
 					            <tr>
 					              	<th> No. </th>
 					              	<th> Version </th>
-					              	<th> Detail </th>
-					              	<th colspan="2"> Edit / Delete </th>
+									<th> Detail </th>
+									<th> URL </th>
+					              	<th style="text-align: center;" colspan="2"> Edit / Delete </th>
 					            </tr>
         						</thead>
         						<tbody>
-        							@foreach()
+        							@foreach($versions as $key => $version)
                         <tr>
-                        	<td></td>
-                            <td></td>
-                            <td></td>
-                            <td style="text-align: center;"><a href=""><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
-                  					<td style="text-align: center;"><a href="" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+							<td>{{$key+1}}</td>
+							<td>{{$version['version']}}</td>
+							<td>{{$version['detail']}}</td>
+							<td>{{$version['url']}}</td>
+                            <td style="text-align: center;"><a href="{{route('edit_app', ['id' => $version['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+ 							<td style="text-align: center;"><a href="{{ route('delete_app', ['id' => $version['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
                         </tr>
 	                    @endforeach
         						</tbody>
@@ -83,5 +85,10 @@
 @endsection
 
 @section('script')
+<script>
+	$(document).on("click", ".btnDelete", function(e){
+		$("#frmDelete").attr("action", $(this).attr('href'));
+	});
+</script>
 
 @endsection

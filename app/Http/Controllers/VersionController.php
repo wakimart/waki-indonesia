@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Version;
+use App\HistoryUpdate;
+use Illuminate\Support\Facades\Auth;
+use DB;
 
 use Illuminate\Http\Request;
 
@@ -13,19 +17,80 @@ class VersionController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+    public function index(Request $request){
+        $versions = Version::where('active', true)->get();
+        $count = count($versions);
+        
+        return view('admin.list_appversion', compact('versions', 'count'));
+    }
+    public function create(){
+        return view('admin.add_appversion');
+    }
+
+    public function delete($id){
+        DB::beginTransaction();
+        try{
+            $app = Version::where('id', $id)->first();
+            $app->active = false;
+            $app->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "App";
+            $historyUpdate['method'] = "Delete";
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> json_encode(array('Active'=>$app->active))]);
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $id;
+
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return redirect()->route('list_appVersion')->with('success', 'Data Berhasil Di Hapus');
+        }catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' =>  $ex->getMessage(), 500]);
+        }
+    }
+
     public function store(Request $request){
         $data = $request->all();
         $version = Version::create($data);
-        return view('', compact());
+        return response()->json(['success' => 'Berhasil']);
     }
 
+    public function edit(Request $request)
+    {
+        if($request->has('id')){
+            $version = Version::find($request->get('id'));
+            return view('admin.update_appversion', compact('version'));
+        }else{
+            return response()->json(['result' => 'Gagal!!']);
+        }
+    }
     public function update(Request $request){
-        $version = Version::find($request->input('id'));
-        $version->version = $data->input('version');
-        $version->detail = $data->input('detail');
-        $version->url = $data->input('url');
-        $version->save();
-        return view('', compact());
+        DB::beginTransaction();
+            try{
+                $version = Version::find($request->input('id'));
+                $version->version = $request->input('version');
+                $version->detail = $request->input('detail');
+                $version->url = $request->input('url');
+                $version->save();
+
+                $user = Auth::user();
+                $historyUpdate= [];
+                $historyUpdate['type_menu'] = "App";
+                $historyUpdate['method'] = "Update";
+                $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $version];
+                $historyUpdate['user_id'] = $user['id'];
+                $historyUpdate['menu_id'] = $version->id;
+
+                $createData = HistoryUpdate::create($historyUpdate);
+
+                DB::commit();
+                return response()->json(['success' => 'Berhasil!'], 200);
+            }catch (\Exception $ex) {
+                DB::rollback();
+                return response()->json(['error' => $ex->getMessage()], 500);
+            }
     }
 
     //  API 
