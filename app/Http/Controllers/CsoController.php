@@ -39,7 +39,7 @@ class CsoController extends Controller
             $csos = $csos->where('branch_id', $request->filter_branch);
         }
         if($request->has('search')){
-            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')->orWhere('code','LIKE', '%'.$request->search.'%');
+            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')->orWhere('code','LIKE', '%'.$request->search.'%')->orWhere('phone','LIKE', '%'.$request->search.'%');
         }
         $csos = $csos->paginate(10);
         return view('admin.list_cso', compact('csos','countCso', 'branches', 'url'));
@@ -101,6 +101,30 @@ class CsoController extends Controller
     public function show($id)
     {
         //
+    }
+
+    public function delete($id){
+        DB::beginTransaction();
+        try{
+            $cso = Cso::where('id', $id)->first();
+            $cso->active = false;
+            $cso->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Cso";
+            $historyUpdate['method'] = "Delete";
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> json_encode(array('Active'=>$cso->active))]);
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $id;
+
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return redirect()->route('list_cso')->with('success', 'Data Berhasil Di Hapus');
+        }catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' =>  $ex->getMessage(), 500]);
+        }
     }
 
     /**
@@ -167,8 +191,8 @@ class CsoController extends Controller
 
                 $createData = HistoryUpdate::create($historyUpdate);
 
-                return response()->json(['success' => 'Berhasil!']);
                 DB::commit();
+                return response()->json(['success' => 'Berhasil!']);
             }catch (\Exception $ex) {
                 DB::rollback();
             }
