@@ -313,24 +313,24 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	Route::group(['prefix' => 'appVersion', 'middleware' => 'auth'], function(){
     	//Add Form App Version
     	Route::get('/', 'VersionController@create')
-	    	->name('add_appVersion');
-	    	// ->middleware('can:add-app');
+	    	->name('add_appVersion')
+	    	->middleware('can:add-app');
 	    //Create App Version 
 	    Route::post('/', 'VersionController@store')
-	    	->name('store_appVersion');
-	    	// ->middleware('can:add-app');
+	    	->name('store_appVersion')
+	    	->middleware('can:add-app');
 	    //List App Version
 	    Route::get('/list', 'VersionController@index')
-	    	->name('list_appVersion');
-	    	// ->middleware('can:browse-app');
+	    	->name('list_appVersion')
+	    	->middleware('can:browse-app');
 	    //Edit App Version
 	    Route::get('/edit/', 'VersionController@edit')
-	    	->name('edit_app');
-	    	// ->middleware('can:edit-app');
+	    	->name('edit_app')
+	    	->middleware('can:edit-app');
 	    //Update Branch
 	    Route::post('/update/', 'VersionController@update')
-	    	->name('update_app');
-	    	// ->middleware('can:edit-app');
+	    	->name('update_app')
+	    	->middleware('can:edit-app');
 	    //Delete Branch
 	    Route::post('/{AppNya}', 'VersionController@delete')
 	    	->name('delete_app');
