@@ -66,6 +66,9 @@
 								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
 										<option value="Home service">Home service</option>
 										<option value="Upgrade Member">Upgrade Member</option>
+										<option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                            			<option value="Home Family Therapy">Home Family Therapy</option>
+			                            <option value="Health and Safety with WAKi">Health and Safety with WAKi</option>
 								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -141,7 +144,7 @@
 			                    <div class="validation"></div>
 							</div>
 							
-							<div class="form-group">
+							<div class="form-group d-none">
 								<label for="">No Telepon CSO</label>
 									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
 									<div class="validation"></div>
@@ -368,10 +371,11 @@
             }
             $.get( '{{route("fetchCso")}}', { txt: txtCso })
             .done(function( result ) {
-                if (result == 'true'){
+                if (result.result == 'true'){
                     obj.html('Kode CSO Benar');
                     obj.css('color', 'green');
-                    $('#submit').removeAttr('disabled');
+					$('#submit').removeAttr('disabled');
+					$('#cso_phone').val(result.data[0].phone);
                 }
                 else{
                     obj.html('Kode CSO Salah');

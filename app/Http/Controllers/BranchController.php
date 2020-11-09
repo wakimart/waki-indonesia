@@ -160,6 +160,30 @@ class BranchController extends Controller
         //
     }
 
+    public function delete($id){
+        DB::beginTransaction();
+        try{
+            $branch = Branch::where('id', $id)->first();
+            $branch->active = false;
+            $branch->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Branch";
+            $historyUpdate['method'] = "Delete";
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> json_encode(array('Active'=>$branch->active))]);
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $id;
+
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return redirect()->route('list_branch')->with('success', 'Data Berhasil Di Hapus');
+        }catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' =>  $ex->getMessage(), 500]);
+        }
+    }
+
     public function fetchBranchById(Request $request){
         $branch = Branch::where('id', $request->id)->first();
         return response()->json($branch);

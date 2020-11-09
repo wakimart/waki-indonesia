@@ -215,3 +215,23 @@
   </div>
 </li>
 @endif
+
+{{-- @if(Gate::check('add-app') || Gate::check('browse-app')) --}}
+<li class="{{isset($menu_item_page) && $menu_item_page == 'app'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#app-dd" aria-expanded="false" aria-controls="app-dd">
+    <span class="menu-title">App Version</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-account-multiple menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'app'? 'show': '' }}" id="app-dd">
+    <ul class="nav flex-column sub-menu">
+      {{-- @if(Gate::check('add-app')) --}}
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_appver'? 'active': '' }}" href="{{route('add_appVersion')}}">Add App Version</a></li>
+      {{-- @endif  --}}
+      {{-- @if(Gate::check('browse-app')) --}}
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_appver'? 'active': '' }}" href="{{route('list_appVersion')}}">List App Version</a></li>
+      {{-- @endif --}}
+    </ul>
+  </div>
+</li>
+{{-- @endif --}}

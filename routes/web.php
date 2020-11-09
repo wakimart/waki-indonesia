@@ -14,6 +14,7 @@
 Auth::routes(['verify' => true]);
 Route::resource('gcalendar', 'gCalendarController');
 Route::get('oauth', ['as' => 'oauthCallback', 'uses' => 'gCalendarController@oauth'])->name('oauthCallback');
+Route::get('/term_cond', 'IndexController@termNCondition')->name('term_cond');
 
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category/{id}', 'CategoryProductController@index')->name('product_category');
@@ -23,7 +24,6 @@ Route::get('/single_product/{id}', 'ProductController@index')->name('single_prod
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
 Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
 Route::get('/register-success', 'DeliveryOrderController@successorder')->name('successorder');
-Route::get('/fetchCso', 'DeliveryOrderController@fetchCso')->name('fetchCso');
 Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
 //Order
@@ -38,6 +38,7 @@ Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_ser
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
 //fetching data - data
+Route::get('/fetchCso', 'CsoController@fetchCso')->name('fetchCso');
 Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
 Route::get('/fetchCsoByIdBranch/{branch}', 'CsoController@fetchCsoByIdBranch')->name('fetchCsoByIdBranch');
 Route::get('/fetchBranchById', 'BranchController@fetchBranchById')->name('fetchBranchById');
@@ -53,7 +54,9 @@ Route::group(['prefix' => 'api-apps'], function () {
     Route::get('fetchbranch', 'BranchController@fetchBranchApi'); //fetching all active branch
     Route::get('fetchcso/{branchId}', 'CsoController@fetchCsoApi'); //fetching all active Cso by branch
     Route::get('fetchPromosApi', 'DeliveryOrderController@fetchPromosApi'); //fetching all promo
-    Route::get('fetchBanksApi', 'OrderController@fetchBanksApi'); //fetching all banks
+	Route::get('fetchBanksApi', 'OrderController@fetchBanksApi'); //fetching all banks
+	Route::post('addVersion', 'VersionController@storeVersion');
+	Route::get('listVersion', 'VersionController@listVersion');
     Route::get('fetchprovinceapi', function () {
 			return RajaOngkir::FetchProvinceApi();
 		}); //fetching all province
@@ -73,7 +76,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 	    Route::post('add','DeliveryOrderController@addApi'); //add register DO
 	    Route::post('list','DeliveryOrderController@listApi'); //list register DO
 		Route::post('update','DeliveryOrderController@updateApi'); //update register DO
-		Route::get('view/{id}','DeliveryOrderController@viewApi'); //view single register DO 
+		Route::get('view/{id}','DeliveryOrderController@viewApi'); //view single register DO
 		Route::post('delete','DeliveryOrderController@deleteApi'); //delete register DO
 	});
 
@@ -124,11 +127,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //update frontendcms
     Route::post('/frontend-cms/update', 'FrontendCmsController@update')
 	    	->name('update_frontendcms');
-	    	
-	//change password admin    
+
+	//change password admin
 	Route::post('/changePassword','UserAdminController@changePassword')
 			->name('changePassword');
-    //Check change password admin    
+    //Check change password admin
     Route::post('/checkChangePassword', 'UserAdminController@checkChangePassword')
     		->name('check-change-password');
 
@@ -304,6 +307,33 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    //Delete Branch
 	    Route::post('/{BranchNya}', 'BranchController@delete')
 	    	->name('delete_branch');
+	});
+	
+
+	Route::group(['prefix' => 'appVersion', 'middleware' => 'auth'], function(){
+    	//Add Form App Version
+    	Route::get('/', 'VersionController@create')
+	    	->name('add_appVersion');
+	    	// ->middleware('can:add-app');
+	    //Create App Version 
+	    Route::post('/', 'VersionController@store')
+	    	->name('store_appVersion');
+	    	// ->middleware('can:add-app');
+	    //List App Version
+	    Route::get('/list', 'VersionController@index')
+	    	->name('list_appVersion');
+	    	// ->middleware('can:browse-app');
+	    //Edit App Version
+	    Route::get('/edit/', 'VersionController@edit')
+	    	->name('edit_app');
+	    	// ->middleware('can:edit-app');
+	    //Update Branch
+	    Route::post('/update/', 'VersionController@update')
+	    	->name('update_app');
+	    	// ->middleware('can:edit-app');
+	    //Delete Branch
+	    Route::post('/{AppNya}', 'VersionController@delete')
+	    	->name('delete_app');
     });
 
     Route::group(['prefix' => 'category_products', 'middleware' => 'auth'], function(){

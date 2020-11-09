@@ -54,29 +54,22 @@ class DeliveryOrderController extends Controller
     	}
     	$data['arr_product'] = json_encode($data['arr_product']);
 
-    	$deliveryOrder = DeliveryOrder::create($data);
+        $deliveryOrder = DeliveryOrder::create($data);
 
+        $phone = preg_replace('/[^A-Za-z0-9\-]/', '', $deliveryOrder['phone']);
+        if($phone[0]==0 || $phone[0]=="0"){
+           $phone =  substr($phone, 1);
+        }
+        $phone = "62".$phone;
+        $code = $deliveryOrder['code'];
+        $url = "https://waki-indonesia.co.id/register-success?code=".$code."";
+        Utils::sendSms($phone, "Terima kasih telah melakukan registrasi di WAKi Indonesia. Berikut link detail registrasi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
     	return redirect()->route('successorder', ['code'=>$deliveryOrder['code']]);
     }
 
     public function successorder(Request $request){
     	$deliveryOrder = DeliveryOrder::where('code', $request['code'])->first();
         return view('ordersuccess', compact('deliveryOrder'));
-    }
-
-    public function fetchCso(Request $request){
-    	$csos = Cso::where('code', $request->txt)->get();
-    	if(sizeof($csos) > 0){
-    		return [
-                'result' =>'true',
-                'data' => $csos
-            ];
-        }
-        
-    	return [
-            'result' =>'false',
-            'data' => $csos
-        ];
     }
 
     public function listDeliveryOrder(Request $request){

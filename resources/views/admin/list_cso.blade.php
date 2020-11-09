@@ -45,13 +45,13 @@
                     </div>
                     <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                       <div class="form-group">
-						<label for="">Search By Name and Code</label>
+						<label for="">Search By Name, Code, and Phone</label>
                         <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
                           <div class="validation"></div>
                       </div>
 					</div>
 				@endif
-			
+
 				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
 				  <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
 					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
@@ -67,7 +67,7 @@
 					<div class="col-xs-12 col-sm-11 col-md-6 table-responsive" id="calendarContainer" style="padding: 0; float: left;"></div>
 					<div class="col-xs-12 col-sm-11 col-md-6" id="organizerContainer" style="padding: 0; float: left;"></div>
 				</div>
-			
+
 			</div>
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
@@ -90,7 +90,7 @@
 				                        	<td>{{$key+1}}</td>
 				                            <td>{{$cso['code']}}</td>
 				                            <td>{{$cso['name']}}</td>
-				                            <td>{{$cso->branch['name']}}</td>
+											<td>{{$cso->branch['name']}}</td> 
 				                            <td style="text-align: center;"><a href="{{ route('edit_cso', ['id' => $cso['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
                           					<td style="text-align: center;"><a href="{{ route('delete_cso', ['id' => $cso['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
 				                        </tr>
@@ -116,7 +116,7 @@
               		</button>
             	</div>
             	<div class="modal-body">
-              		<h5 style="text-align:center;">Are You Sure to Delete this Delivery Order ?</h5>
+              		<h5 style="text-align:center;">Are You Sure to Delete this CSO ?</h5>
             	</div>
             	<div class="modal-footer">
             		<form id="frmDelete" method="post" action="">
@@ -151,8 +151,11 @@
 		  urlParamStr += "&" + urlParamArray[i]
 		}
 	  }
-	
+
 	  window.location.href = "{{route('list_cso')}}" + urlParamStr;
+	});
+	$(document).on("click", ".btnDelete", function(e){
+		$("#frmDelete").attr("action", $(this).attr('href'));
 	});
 </script>
 @endsection

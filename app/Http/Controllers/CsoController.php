@@ -9,6 +9,7 @@ use App\Order;
 use App\Cso;
 use App\HistoryUpdate;
 use Illuminate\Validation\Rule;
+use DB;
 use Validator;
 
 class CsoController extends Controller
@@ -38,7 +39,7 @@ class CsoController extends Controller
             $csos = $csos->where('branch_id', $request->filter_branch);
         }
         if($request->has('search')){
-            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')->orWhere('code','LIKE', '%'.$request->search.'%');
+            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')->orWhere('code','LIKE', '%'.$request->search.'%')->orWhere('phone','LIKE', '%'.$request->search.'%');
         }
         $csos = $csos->paginate(10);
         return view('admin.list_cso', compact('csos','countCso', 'branches', 'url'));
@@ -102,6 +103,30 @@ class CsoController extends Controller
         //
     }
 
+    public function delete($id){
+        DB::beginTransaction();
+        try{
+            $cso = Cso::where('id', $id)->first();
+            $cso->active = false;
+            $cso->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Cso";
+            $historyUpdate['method'] = "Delete";
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> json_encode(array('Active'=>$cso->active))]);
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $id;
+
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return redirect()->route('list_cso')->with('success', 'Data Berhasil Di Hapus');
+        }catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' =>  $ex->getMessage(), 500]);
+        }
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -147,22 +172,30 @@ class CsoController extends Controller
             }
             return response()->json(['errors' => $arr_Errors]);
         }else{
-            $csos = Cso::find($request->input('idCso'));
-            $csos->code = $request->input('code');
-            $csos->name = $request->input('name');
-            $csos->branch_id = $request->input('branch_id');
-            $csos->save();
+            DB::beginTransaction();
+            try{
+                $csos = Cso::find($request->input('idCso'));
+                $csos->code = $request->input('code');
+                $csos->name = $request->input('name');
+                $csos->branch_id = $request->input('branch_id');
+                $csos->phone = $request->input('phone');
+                $csos->save();
 
-            $user = Auth::user();
-            $historyUpdate= [];
-            $historyUpdate['type_menu'] = "Cso";
-            $historyUpdate['method'] = "Update";
-            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $csos];
-            $historyUpdate['user_id'] = $user['id'];
+                $user = Auth::user();
+                $historyUpdate= [];
+                $historyUpdate['type_menu'] = "Cso";
+                $historyUpdate['method'] = "Update";
+                $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $csos];
+                $historyUpdate['user_id'] = $user['id'];
+                $historyUpdate['menu_id'] = $csos->id;
 
-            $createData = HistoryUpdate::create($historyUpdate);
+                $createData = HistoryUpdate::create($historyUpdate);
 
-            return response()->json(['success' => 'Berhasil!']);
+                DB::commit();
+                return response()->json(['success' => 'Berhasil!']);
+            }catch (\Exception $ex) {
+                DB::rollback();
+            }
         }
     }
 
@@ -183,8 +216,23 @@ class CsoController extends Controller
     }
 
     public function fetchCsoByIdBranch($branch){
-        $cso = Cso::Where('branch_id', $branch)->get();
+        $cso = Cso::Where([['branch_id', $branch], ['active', true]])->get();
         return response()->json($cso);
+    }
+
+    public function fetchCso(Request $request){
+        $csos = Cso::where([['code', $request->txt], ['active', true]])->get();
+        if(sizeof($csos) > 0){
+            return [
+                'result' =>'true',
+                'data' => $csos
+            ];
+        }
+        
+        return [
+            'result' =>'false',
+            'data' => $csos
+        ];
     }
 
     //KHUSUS API APPS
