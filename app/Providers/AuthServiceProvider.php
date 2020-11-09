@@ -177,7 +177,22 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('delete-user', function ($user) {
             return $user->hasAccess(['delete-user']);
-        });    
+        });
+        
+        
+        //-- APP VERSION --//
+        Gate::define('add-app', function ($user) {
+            return $user->hasAccess(['add-app']);
+        });
+        Gate::define('browse-app', function ($user) {
+            return $user->hasAccess(['browse-app']);
+        });
+        Gate::define('edit-app', function ($user) {
+            return $user->hasAccess(['edit-app']);
+        });
+        Gate::define('delete-app', function ($user) {
+            return $user->hasAccess(['delete-app']);
+        }); 
         
         //-- COMPANY INFO --//
         Gate::define('browse-company_info', function ($user) {

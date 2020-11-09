@@ -19,7 +19,7 @@
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
-        					<form id="actionAdd" class="forms-sample" method="POST" action="">
+        					<form id="actionAdd" class="forms-sample" method="POST" action="{{route('store_appVersion')}}">
                     {{ csrf_field() }}
           					<div class="form-group">
 					            <label for="">Version</label>
