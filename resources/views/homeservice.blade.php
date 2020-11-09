@@ -64,7 +64,8 @@
                             <option value="Home service">Home service</option>
                             <option value="Upgrade Member">Upgrade Member</option>
                             <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
-                            <option value="Home Family Family">Home Family Family</option>
+                            <option value="Home Family Therapy">Home Family Therapy</option>
+                            <option value="Home Demo">Home Demo</option>
                     </select>
                     <span class="invalid-feedback">
                         <strong></strong>
