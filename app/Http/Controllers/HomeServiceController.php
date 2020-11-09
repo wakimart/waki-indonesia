@@ -224,6 +224,7 @@ class HomeServiceController extends Controller
         if($homeServiceDataTiga != null && $homeServiceDataTiga->type_homeservices == "Home service"){
             if($homeServiceDataTiga->appointment > date("Y-m-d h:i:s",strtotime('last week'))){
                 return response()->json(['error' => "Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service."], 500);
+            }
         }
         if($counterExecutive >=3 || $counterFamily >=3 ){
             return response()->json(['error' => "Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Di Gunakan 3 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama."], 500);
@@ -254,7 +255,7 @@ class HomeServiceController extends Controller
         $time = strtotime($data['time']) + 60*60 * 2;
         $endDateTime = $data['date']."T".date('H:i', $time).":00";
         DB::beginTransaction();
-        try{
+        try{  
             $order = HomeService::create($data);
             $event = array(
                 'summary' => 'Acara Home Service',
