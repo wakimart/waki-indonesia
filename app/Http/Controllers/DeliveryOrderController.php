@@ -72,21 +72,6 @@ class DeliveryOrderController extends Controller
         return view('ordersuccess', compact('deliveryOrder'));
     }
 
-    public function fetchCso(Request $request){
-    	$csos = Cso::where('code', $request->txt)->get();
-    	if(sizeof($csos) > 0){
-    		return [
-                'result' =>'true',
-                'data' => $csos
-            ];
-        }
-        
-    	return [
-            'result' =>'false',
-            'data' => $csos
-        ];
-    }
-
     public function listDeliveryOrder(Request $request){
         $deliveryOrders = DeliveryOrder::all();
         return view('templistregwaki1995', compact('deliveryOrders'));

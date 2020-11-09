@@ -216,8 +216,23 @@ class CsoController extends Controller
     }
 
     public function fetchCsoByIdBranch($branch){
-        $cso = Cso::Where('branch_id', $branch)->get();
+        $cso = Cso::Where([['branch_id', $branch], ['active', true]])->get();
         return response()->json($cso);
+    }
+
+    public function fetchCso(Request $request){
+        $csos = Cso::where([['code', $request->txt], ['active', true]])->get();
+        if(sizeof($csos) > 0){
+            return [
+                'result' =>'true',
+                'data' => $csos
+            ];
+        }
+        
+        return [
+            'result' =>'false',
+            'data' => $csos
+        ];
     }
 
     //KHUSUS API APPS

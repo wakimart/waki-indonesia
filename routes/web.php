@@ -24,7 +24,6 @@ Route::get('/single_product/{id}', 'ProductController@index')->name('single_prod
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
 Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
 Route::get('/register-success', 'DeliveryOrderController@successorder')->name('successorder');
-Route::get('/fetchCso', 'DeliveryOrderController@fetchCso')->name('fetchCso');
 Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
 //Order
@@ -39,6 +38,7 @@ Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_ser
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
 //fetching data - data
+Route::get('/fetchCso', 'CsoController@fetchCso')->name('fetchCso');
 Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
 Route::get('/fetchCsoByIdBranch/{branch}', 'CsoController@fetchCsoByIdBranch')->name('fetchCsoByIdBranch');
 Route::get('/fetchBranchById', 'BranchController@fetchBranchById')->name('fetchBranchById');

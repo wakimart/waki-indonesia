@@ -68,6 +68,7 @@
 										<option value="Upgrade Member">Upgrade Member</option>
 										<option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
                             			<option value="Home Family Therapy">Home Family Therapy</option>
+			                            <option value="Health and Safety with WAKi">Health and Safety with WAKi</option>
 								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -371,7 +372,6 @@
             $.get( '{{route("fetchCso")}}', { txt: txtCso })
             .done(function( result ) {
                 if (result.result == 'true'){
-					console.log(result.data[0].phone);
                     obj.html('Kode CSO Benar');
                     obj.css('color', 'green');
 					$('#submit').removeAttr('disabled');
