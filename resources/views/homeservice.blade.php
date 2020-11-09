@@ -65,11 +65,7 @@
                             <option value="Upgrade Member">Upgrade Member</option>
                             <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
                             <option value="Home Family Therapy">Home Family Therapy</option>
-<<<<<<< HEAD
-                            <option value="Home Demo">Home Demo</option>
-=======
                             <option value="Health and Safety with WAKi">Health and Safety with WAKi</option>
->>>>>>> 4e3eae6e228d1d8e51497a4367210d070b93c0f9
                     </select>
                     <span class="invalid-feedback">
                         <strong></strong>
