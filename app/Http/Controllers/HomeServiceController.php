@@ -38,7 +38,7 @@ class HomeServiceController extends Controller
     }
     
     public function store(Request $request){
-        $inputAppointment = $data['date']." ".$data['time'];
+        $inputAppointment = $request->date." ".$request->time;
         if($request->type_homeservices == "Home Eksklusif Therapy" || $request->type_homeservices == "Home Family Therapy"){
             $homeserviceInactive = HomeService::where([['phone', $request->phone],['active', true]])->where('type_homeservices', 'Home Eksklusif Therapy')->orWhere('type_homeservices', 'Home Family Therapy')->get();
             for ($i = 0; $i< count($homeserviceInactive); $i++){
@@ -80,7 +80,7 @@ class HomeServiceController extends Controller
                 return redirect()->back()->with("errors","Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service ");
             }
         }
-        if($counterExecutive >=3 && $counterFamily >=3 ){
+        if($counterExecutive >=3 || $counterFamily >=3 ){
             return redirect()->back()->with("errors","Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Masing-Masing di Gunakan 3 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama");
         }
 
@@ -185,6 +185,7 @@ class HomeServiceController extends Controller
     }
 
     public function admin_addHomeService(Request $request){
+        $inputAppointment = $request->date." ".$request->time;
         if($request->type_homeservices == "Home Eksklusif Therapy" || $request->type_homeservices == "Home Family Therapy"){
             $homeserviceInactive = HomeService::where([['phone', $request->phone],['active', true]])->where('type_homeservices', 'Home Eksklusif Therapy')->orWhere('type_homeservices', 'Home Family Therapy')->get();
             for ($i = 0; $i< count($homeserviceInactive); $i++){
@@ -201,14 +202,13 @@ class HomeServiceController extends Controller
         if ($homeServiceRawData != null && count($homeServiceRawData) > 0){
             for ($i=0; $i<count($homeServiceRawData);$i++){
                 if ($homeServiceRawData[$i]->type_homeservices == "Upgrade Member" && $request->type_homeservices == "Upgrade Member"){
-                    return response()->json(['error' => "Upgrade Member Hanya Sekali Saja Untuk Nomer Yang Sama"], 500);
+                    return response()->json(['error' => "Upgrade Member Hanya Sekali Saja Untuk Nomer Yang Sama"], 500);    
                 }
-                if ($homeServiceRawData[$i]->appointment > date("Y-m-d H:i:s")){
+                if ($homeServiceRawData[$i]->appointment > $inputAppointment){
                     $dateTime = explode(' ', $homeServiceRawData[$i]->appointment); 
                     if($dateTime[0] == $request->date){
                         if($dateTime[1] == $request->time){
-                            return response()->json(['error' => "Appointment dengan nomer ini sudah ada!!"], 500);
-                        }
+                            return response()->json(['error' => "Appointment dengan nomer ini sudah ada!!"], 500);                        }
                     }        
                 }
                 if($homeServiceRawData[$i]->type_homeservices == "Home Eksklusif Therapy"){
@@ -220,15 +220,15 @@ class HomeServiceController extends Controller
             }    
         }
 
-        $homeServiceDataTiga = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home service']])->orderBy('created_at', 'desc')->first();
+        $homeServiceDataTiga = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home service']])->orderBy('appointment', 'desc')->first();
         
-        if($homeServiceDataTiga != null && $homeServiceDataTiga->type_homeservices == "Home service"){
-            if($homeServiceDataTiga->appointment > date("Y-m-d h:i:s",strtotime('last week'))){
-                return response()->json(['error' => "Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service."], 500);
+        if($homeServiceDataTiga != null && $request->type_homeservices == "Home service"){
+            if($homeServiceDataTiga->appointment > date($inputAppointment,strtotime('last week'))){ //date("Y-m-d h:i:s",strtotime('last week'));
+                return response()->json(['error' => "Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service "], 500);
             }
         }
         if($counterExecutive >=3 || $counterFamily >=3 ){
-            return response()->json(['error' => "Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Di Gunakan 3 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama."], 500);
+            return response()->json(['error' => "Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Masing-Masing di Gunakan 3 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama"], 500);
         }        
 
         $data = $request->all();
@@ -250,7 +250,7 @@ class HomeServiceController extends Controller
         $cso2 = Cso::where('code', $data['cso2_id']);
         $data['cso_id'] = $cso->first()['id'];
         $data['cso2_id'] = $cso2->first()['id'];
-        $data['appointment'] = $data['date']." ".$data['time'];
+        $data['appointment'] = $inputAppointment;
 
         $startDateTime = $data['date']."T".$data['time'].":00";
         $time = strtotime($data['time']) + 60*60 * 2;
@@ -447,6 +447,7 @@ class HomeServiceController extends Controller
         }
         else{
             //Validation 2
+            $inputAppointment = $request->date." ".$request->time;
             if($request->type_homeservices == "Home Eksklusif Therapy" || $request->type_homeservices == "Home Family Therapy"){
                 $homeserviceInactive = HomeService::where([['phone', $request->phone],['active', true]])->where('type_homeservices', 'Home Eksklusif Therapy')->orWhere('type_homeservices', 'Home Family Therapy')->get();
                 for ($i = 0; $i< count($homeserviceInactive); $i++){
@@ -468,7 +469,7 @@ class HomeServiceController extends Controller
                             ];
                         return response()->json($data, 401);
                     }
-                    if ($homeServiceRawData[$i]->appointment > date("Y-m-d H:i:s")){
+                    if ($homeServiceRawData[$i]->appointment > $inputAppointment){
                         $dateTime = explode(' ', $homeServiceRawData[$i]->appointment); 
                         if($dateTime[0] == $request->date){
                             if($dateTime[1] == $request->time){
@@ -488,10 +489,10 @@ class HomeServiceController extends Controller
                 }    
             }
 
-            $homeServiceDataTiga = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home service']])->orderBy('created_at', 'desc')->first();
+            $homeServiceDataTiga = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home service']])->orderBy('appointment', 'desc')->first();
             
             if($homeServiceDataTiga != null && $request->type_homeservices == "Home service"){
-                if($homeServiceDataTiga->appointment > date("Y-m-d h:i:s",strtotime('last week'))){ //date("Y-m-d h:i:s",strtotime('last week'));
+                if($homeServiceDataTiga->appointment > date($inputAppointment,strtotime('last week'))){ //date("Y-m-d h:i:s",strtotime('last week'));
                     $data = ['result' => 0,
                          'data' => ['type_HS' => "Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service"]
                         ];
