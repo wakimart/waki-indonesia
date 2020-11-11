@@ -122,18 +122,18 @@
 	              			<br>
 
 	              			<div class="form-group">
-								<label for=""><h2>Data CSO</h2></label><br/>  
+								<label for=""><h2>Data CSO</h2></label><br/>
 	              				<label for="">Cabang</label>
 								  <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
 									<option selected disabled value="">Pilihan Cabang</option>
-			
+
 									@foreach($branches as $branch)
 										<option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
 									@endforeach
 								</select>
 			                    <div class="validation"></div>
 							</div>
-							
+
 							<div class="form-group">
 								<label for="">Kode CSO</label>
 									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Kode CSO" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
@@ -143,8 +143,8 @@
 									</span>
 			                    <div class="validation"></div>
 							</div>
-							
-							<div class="form-group d-none">
+
+							<!-- <div class="form-group d-none">
 								<label for="">No Telepon CSO</label>
 									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
 									<div class="validation"></div>
@@ -152,8 +152,7 @@
 										<strong></strong>
 									</span>
 			                    <div class="validation"></div>
-							</div>
-							
+							</div> -->
 
 							<div class="form-group">
 								<label for="">Kode Partner CSO(Optional)</label>
@@ -167,7 +166,7 @@
 
 
 							<div class="form-group">
-								<label for=""><h2>Waktu Home Service</h2></label><br/>  
+								<label for=""><h2>Waktu Home Service</h2></label><br/>
 	              				<label for="">Tanggal</label>
 								  <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
 								<div class="validation"></div>
@@ -184,7 +183,7 @@
 									<strong></strong>
 								</span>
 							</div>
-			                
+
 	              			<div id="errormessage"></div>
 
 	              			<div class="form-group">
@@ -223,18 +222,18 @@
 	              			<br>
 
 	              			<div class="form-group">
-								<label for=""><h2>Data CSO</h2></label><br/>  
+								<label for=""><h2>Data CSO</h2></label><br/>
 	              				<label for="">Branch</label>
 								  <select class="form-control" id="branch" name="branch_id" data-msg="Please choose the Branch" required>
 									<option selected disabled value="">Branch Option</option>
-			
+
 									@foreach($branches as $branch)
 										<option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
 									@endforeach
 								</select>
 			                    <div class="validation"></div>
 							</div>
-							
+
 							<div class="form-group">
 								<label for="">Code CSO</label>
 									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Code CSO" required data-msg="Please fill the CSO Code" style="text-transform:uppercase"/>
@@ -244,7 +243,7 @@
 									</span>
 			                    <div class="validation"></div>
 							</div>
-							
+
 							<div class="form-group">
 								<label for="">No Telepon CSO</label>
 									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" required data-msg="Please fill the CSO Phone Number" />
@@ -254,9 +253,9 @@
 									</span>
 			                    <div class="validation"></div>
 							</div>
-						
+
 							<div class="form-group">
-								<label for=""><h2>Home Service Appointment</h2></label><br/>  
+								<label for=""><h2>Home Service Appointment</h2></label><br/>
 	              				<label for="">Date</label>
 								  <input type="date" class="form-control" name="date" id="date" placeholder="Appointment Date" value="<?php echo date('Y-m-j'); ?>" required data-msg="Please fill the Date" />
 								<div class="validation"></div>
@@ -273,7 +272,7 @@
 									<strong></strong>
 								</span>
 							</div>
-			                
+
 	              			<div id="errormessage"></div>
 
 	              			<div class="form-group">
