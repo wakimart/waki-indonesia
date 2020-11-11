@@ -54,8 +54,16 @@ class DeliveryOrderController extends Controller
     	}
     	$data['arr_product'] = json_encode($data['arr_product']);
 
-    	$deliveryOrder = DeliveryOrder::create($data);
+        $deliveryOrder = DeliveryOrder::create($data);
 
+        $phone = preg_replace('/[^A-Za-z0-9\-]/', '', $deliveryOrder['phone']);
+        if($phone[0]==0 || $phone[0]=="0"){
+           $phone =  substr($phone, 1);
+        }
+        $phone = "62".$phone;
+        $code = $deliveryOrder['code'];
+        $url = "https://waki-indonesia.co.id/register-success?code=".$code."";
+        Utils::sendSms($phone, "Terima kasih telah melakukan registrasi di WAKi Indonesia. Berikut link detail registrasi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
     	return redirect()->route('successorder', ['code'=>$deliveryOrder['code']]);
     }
 
@@ -63,15 +71,6 @@ class DeliveryOrderController extends Controller
     	$deliveryOrder = DeliveryOrder::where('code', $request['code'])->first();
         $categoryProducts = CategoryProduct::all();
         return view('ordersuccess', compact('deliveryOrder', 'categoryProducts'));
-    }
-
-    public function fetchCso(Request $request){
-    	$csos = Cso::where('code', $request->txt)->get();
-    	$result = 'false';
-    	if(sizeof($csos) > 0){
-    		$result = 'true';
-    	}
-    	return $result;
     }
 
     public function listDeliveryOrder(Request $request){
@@ -111,6 +110,7 @@ class DeliveryOrderController extends Controller
     }
 
     public function admin_ListDeliveryOrder(Request $request){
+        $url = $request->all();
         $branches = Branch::Where('active', true)->get();
 
         //khususu head-manager, head-admin, admin
@@ -137,7 +137,7 @@ class DeliveryOrderController extends Controller
             $deliveryOrders = $deliveryOrders->where('cso_id', $request->filter_cso);
         }
         $deliveryOrders = $deliveryOrders->paginate(10);
-        return view('admin.list_deliveryorder', compact('deliveryOrders', 'countDeliveryOrders', 'branches'));
+        return view('admin.list_deliveryorder', compact('deliveryOrders', 'countDeliveryOrders', 'branches','url'));
     }
 
     public function admin_DetailDeliveryOrder(Request $request){
@@ -387,6 +387,9 @@ class DeliveryOrderController extends Controller
             }
             if($request->has('filter_city')){
                 $deliveryOrders = $deliveryOrders->where('delivery_orders.city', 'like', '%'.$request->filter_city.'%');
+            }
+            if($request->has('filter_startDate')&& $request->has('filter_endDate')){
+                $deliveryOrders = $deliveryOrders->whereBetween('delivery_orders.created_at', [$request->filter_startDate.' 00:00:00', $request->filter_endDate.' 23:59:59']);
             }
             $deliveryOrders = $deliveryOrders->orderBy('created_at', 'DESC');                     
             $deliveryOrders = $deliveryOrders->paginate($request->limit);

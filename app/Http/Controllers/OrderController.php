@@ -13,6 +13,7 @@ use App\User;
 use App\RajaOngkir_City;
 use App\HistoryUpdate;
 use DB;
+use App\Utils;
 
 class OrderController extends Controller
 {
@@ -90,7 +91,14 @@ class OrderController extends Controller
             $order2->city = $data['city-2'];
             $order2->save();
         }
-
+        $code = $order['code'];
+        $url = "https://waki-indonesia.co.id/order-success?code=".$code."";
+        $phone = preg_replace('/[^A-Za-z0-9\-]/', '', $order['phone']);
+        if($phone[0]==0 || $phone[0]=="0"){
+           $phone =  substr($phone, 1);
+        }
+        $phone = "62".$phone;
+        Utils::sendSms($phone, "Terima kasih telah melakukan transaksi di WAKi Indonesia. Berikut link detail transaksi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
     	return redirect()->route('order_success', ['code'=>$order['code']]);
     }
 

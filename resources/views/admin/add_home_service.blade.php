@@ -46,8 +46,34 @@
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
 	          		<div class="card-body">
+						@if(Utils::$lang=='id')
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_homeService') }}">
-	            			{{ csrf_field() }}
+							{{ csrf_field() }}
+							<div class="form-group">
+								<span>Type Customer</span>
+								<select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
+										<option value="Tele Voucher">Tele Voucher</option>
+										<option value="Tele Home Service">Tele Home Service</option>
+										<option value="Home Office Voucher">Home Office Voucher</option>
+										<option value="Home Voucher">Home Voucher</option>
+								</select>
+								<span class="invalid-feedback">
+									<strong></strong>
+								</span>
+							</div>
+							<div class="form-group">
+								<span>Type Home Service</span>
+								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
+										<option value="Home service">Home service</option>
+										<option value="Upgrade Member">Upgrade Member</option>
+										<option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                            			<option value="Home Family Therapy">Home Family Therapy</option>
+			                            <option value="Health and Safety with WAKi">Health and Safety with WAKi</option>
+								</select>
+								<span class="invalid-feedback">
+									<strong></strong>
+								</span>
+							</div>
 	              			<div class="form-group">
                                 <label for=""><h2>Data Pelanggan</h2></label><br/>
 	                			<label for="">No. Member (optional)</label>
@@ -96,18 +122,18 @@
 	              			<br>
 
 	              			<div class="form-group">
-								<label for=""><h2>Data CSO</h2></label><br/>  
+								<label for=""><h2>Data CSO</h2></label><br/>
 	              				<label for="">Cabang</label>
 								  <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
 									<option selected disabled value="">Pilihan Cabang</option>
-			
+
 									@foreach($branches as $branch)
 										<option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
 									@endforeach
 								</select>
 			                    <div class="validation"></div>
 							</div>
-							
+
 							<div class="form-group">
 								<label for="">Kode CSO</label>
 									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Kode CSO" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
@@ -117,8 +143,8 @@
 									</span>
 			                    <div class="validation"></div>
 							</div>
-							
-							<div class="form-group">
+
+							<!-- <div class="form-group d-none">
 								<label for="">No Telepon CSO</label>
 									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
 									<div class="validation"></div>
@@ -126,8 +152,7 @@
 										<strong></strong>
 									</span>
 			                    <div class="validation"></div>
-							</div>
-							
+							</div> -->
 
 							<div class="form-group">
 								<label for="">Kode Partner CSO(Optional)</label>
@@ -141,7 +166,7 @@
 
 
 							<div class="form-group">
-								<label for=""><h2>Waktu Home Service</h2></label><br/>  
+								<label for=""><h2>Waktu Home Service</h2></label><br/>
 	              				<label for="">Tanggal</label>
 								  <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
 								<div class="validation"></div>
@@ -158,7 +183,7 @@
 									<strong></strong>
 								</span>
 							</div>
-			                
+
 	              			<div id="errormessage"></div>
 
 	              			<div class="form-group">
@@ -166,8 +191,97 @@
 	              				<button class="btn btn-light">Cancel</button>
 	              			</div>
 	            		</form>
+						@elseif(Utils::$lang=='eng')
+						<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_homeService') }}">
+							{{ csrf_field() }}
+	              			<div class="form-group">
+                                <label for=""><h2>Data Member</h2></label><br/>
+	                			<label for="">No. Member (optional)</label>
+	                			<input type="number" class="form-control" id="no_member" name="no_member" placeholder="No. Member (optional)">
+	                			<div class="validation"></div>
+	              			</div>
+	              			<div class="form-group">
+				                <label for="">Name</label>
+				                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+				                <div class="validation"></div>
+	              			</div>
+	              			<div class="form-group">
+				                <label for="">Phone Number</label>
+				                <input type="number" class="form-control" name="phone" id="phone" placeholder="Nomor Telepon" required data-msg="Mohon Isi Nomor Telepon"/>
+				                <div class="validation"></div>
+	              			</div>
+	              			<div class="form-group">
+								<input type="text" class="form-control" name="city" id="city" placeholder="City" required data-msg="Please fill the City" />
+								<div class="validation"></div>
+							</div>
+							<div class="form-group">
+				                <label for="exampleTextarea1">Address</label>
+				                <textarea class="form-control" name="address" rows="5" required data-msg="Please fill the Address" placeholder="Alamat"></textarea>
+				                <div class="validation"></div>
+	              			</div>
+	              			<br>
 
-	          		</div>
+	              			<div class="form-group">
+								<label for=""><h2>Data CSO</h2></label><br/>
+	              				<label for="">Branch</label>
+								  <select class="form-control" id="branch" name="branch_id" data-msg="Please choose the Branch" required>
+									<option selected disabled value="">Branch Option</option>
+
+									@foreach($branches as $branch)
+										<option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+									@endforeach
+								</select>
+			                    <div class="validation"></div>
+							</div>
+
+							<div class="form-group">
+								<label for="">Code CSO</label>
+									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Code CSO" required data-msg="Please fill the CSO Code" style="text-transform:uppercase"/>
+									<div class="validation" id="validation_cso"></div>
+									<span class="invalid-feedback">
+										<strong></strong>
+									</span>
+			                    <div class="validation"></div>
+							</div>
+
+							<div class="form-group">
+								<label for="">No Telepon CSO</label>
+									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" required data-msg="Please fill the CSO Phone Number" />
+									<div class="validation"></div>
+									<span class="invalid-feedback">
+										<strong></strong>
+									</span>
+			                    <div class="validation"></div>
+							</div>
+
+							<div class="form-group">
+								<label for=""><h2>Home Service Appointment</h2></label><br/>
+	              				<label for="">Date</label>
+								  <input type="date" class="form-control" name="date" id="date" placeholder="Appointment Date" value="<?php echo date('Y-m-j'); ?>" required data-msg="Please fill the Date" />
+								<div class="validation"></div>
+								<span class="invalid-feedback">
+									<strong></strong>
+								</span>
+							</div>
+
+							<div class="form-group">
+								<label for="">Appointment Time</label>
+								<input type="time" class="form-control" name="time" id="time" placeholder="Appointment Time" value="<?php echo date('H:i'); ?>" required data-msg="Please fill the time" min="10:00" max="20:00"/>
+								<div class="validation"></div>
+								<span class="invalid-feedback">
+									<strong></strong>
+								</span>
+							</div>
+
+	              			<div id="errormessage"></div>
+
+	              			<div class="form-group">
+	              				<button id="addHomeService" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+	              				<button class="btn btn-light">Cancel</button>
+	              			</div>
+	            		</form>
+						@endif
+					</div>
 	        	</div>
 	      	</div>
 	    </div>
@@ -229,7 +343,11 @@
 	                }
 	            }
 	            alert("Input Error !!!");
-	        }
+	        } else if(hasil['validator'] != null){
+	            alert("Appointment dengan nomer ini sudah ada!!");
+			} else if (hasil['active'] != null){
+	            alert("Apakah Appointment ini reschadule? Jika iya lakukan edit pada menu edit");
+			}
 	        else{
 	            alert("Input Success !!!");
 	            window.location.reload()
@@ -252,15 +370,33 @@
             }
             $.get( '{{route("fetchCso")}}', { txt: txtCso })
             .done(function( result ) {
-                if (result == 'true'){
+
+                if (result.result == 'true'){
                     obj.html('Kode CSO Benar');
                     obj.css('color', 'green');
-                    $('#submit').removeAttr('disabled');
+					$('#submit').removeAttr('disabled');
+					$('#cso_phone').val(result.data[0].phone);
                 }
                 else{
                     obj.html('Kode CSO Salah');
                     obj.css('color', 'red');
                     $('#submit').attr('disabled',"");
+                }
+            });
+        });
+
+        $("#province").on("change", function(){
+            var id = $(this).val();
+            $( "#city" ).html("");
+            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+            .done(function( result ) {
+                result = result['rajaongkir']['results'];
+                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {
+                        arrCity += "<option value=\""+value['type']+" "+value['city_name']+"\">"+value['type']+" "+value['city_name']+"</option>";
+                    });
+                    $( "#city" ).append(arrCity);
                 }
             });
         });

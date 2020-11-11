@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class HomeService extends Model
 {
      protected $fillable = [
-        'code', 'no_member', 'name', 'address', 'phone', 'city', 'cso_id', 'branch_id', 'cso_phone', 'appointment', 'cso2_id', 'active', 'cash', 'cash_description', 'description',
+        'code', 'no_member', 'name', 'address', 'phone', 'city', 'cso_id', 'branch_id', 'cso_phone', 'appointment', 'cso2_id', 'active', 'cash', 'cash_description', 'description', 'type_customer', 'type_homeservices', 
     ];
 
     public function cso()
@@ -21,5 +21,9 @@ class HomeService extends Model
     public function branch()
     {
         return $this->belongsTo('App\Branch');
+    }
+    public function historyUpdate()
+    {
+        return HistoryUpdate::where([['type_menu', 'Home Service'], ['menu_id', $this['id']]])->orderBy('id', 'DESC')->first();
     }
 }

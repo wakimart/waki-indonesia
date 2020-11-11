@@ -42,9 +42,35 @@
         @endif
         
         <div class="row justify-content-center">
+            @if(Utils::$lang=='id')
             <form id="actionAdd" action="{{ route('store_home_service') }}" method="POST" role="form" class="contactForm col-md-9">
                 @csrf
                 <br>
+                <div class="form-group">
+                    <span>Type Customer</span>
+                    <select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
+                            <option value="Tele Voucher">Tele Voucher</option>
+                            <option value="Tele Home Service">Tele Home Service</option>
+                            <option value="Home Office Voucher">Home Office Voucher</option>
+                            <option value="Home Voucher">Home Voucher</option>
+                    </select>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
+                </div>
+                <div class="form-group">
+                    <span>Type Home Service</span>
+                    <select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
+                            <option value="Home service">Home service</option>
+                            <option value="Upgrade Member">Upgrade Member</option>
+                            <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                            <option value="Home Family Therapy">Home Family Therapy</option>
+                            <option value="Health and Safety with WAKi">Health and Safety with WAKi</option>
+                    </select>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
+                </div>
                 <h5>Data Pelanggan</h5>
                 <div class="form-group">
                     <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
@@ -155,48 +181,73 @@
                 <div id="errormessage"></div>
                 <div class="text-center"><button id="submit" type="submit" title="Send Message">Simpan Form Home Service</button></div>
             </form>
+                @elseif(Utils::$lang=='eng')
+                <form action="{{ Route('store_home_service') }}" method="post" role="form" class="contactForm col-md-9">
+                    @csrf
+                    <br>
+                    <h5>Data Member</h5>
+                    <div class="form-group">
+                        <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="name" id="name" placeholder="Name" required data-msg="Please fill the Name" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="phone" id="phone" placeholder="Phone Number" required data-msg="Please fill the Phone" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="city" id="city" placeholder="City" required data-msg="Please fill the City" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="address" rows="5" required data-msg="Please fill the Address" placeholder="Address"></textarea>
+                        <div class="validation"></div>
+                    </div>
+                    <br>
+                    <h5>Data CSO</h5>
+                    <div class="form-group">
+                        <select class="form-control" id="branch" name="branch_id" data-msg="Please choose the Branch" required>
+                            <option selected disabled value="">Branch Option</option>
+    
+                            @foreach($branches as $branch)
+                                <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                            @endforeach
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="cso_id" id="cso" placeholder="CSO Code" required data-msg="Please fill the CSO Code" style="text-transform:uppercase"/>
+                        <div class="validation" id="validation_cso"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" required data-msg="Please fill the CSO Phone Number" />
+                        <div class="validation"></div>
+                    </div>
+    
+                    <br>
+                    <h5>Home Service Appointment</h5>
+                    <div class="form-group">
+                        <input type="date" class="form-control" name="date" id="date" placeholder="Appointment Date" value="<?php echo date('Y-m-j'); ?>" required data-msg="Please fill the Date" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="time" class="form-control" name="time" id="time" placeholder="Appointment Time" value="<?php echo date('H:i'); ?>" required data-msg="Please fill the Time" />
+                        <div class="validation"></div>
+                    </div>
+    
+                    <div id="errormessage"></div>
+                    <div class="text-center"><button id="submit" type="submit" title="Send Message">Save Form Home Service</button></div>
+                </form>
+                @endif
         </div>
     </div>
 </section>
 
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script>
-
-function completeHandler(event){
-    var hasil = JSON.parse(event.target.responseText);
-    console.log(hasil);
-    for (var key of frmAdd.keys()) {
-        $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
-        $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
-        $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
-
-        $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
-        $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
-        $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
-    }
-
-    if(hasil['errors'] != null){
-        for (var key of frmAdd.keys()) {
-            if(typeof hasil['errors'][key] === 'undefined') {
-
-            }
-            else {
-                $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
-                $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
-                $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
-
-                $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-                $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-                $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-            }
-        }
-        alert("Input Error !!!");
-    }
-    else{
-        alert("Input Success !!!");
-        window.location.reload()
-    }
-
     $(document).ready(function(){
         $("#cso, #cso2").on("input", function(){
             var txtCso = $(this).val();
@@ -206,7 +257,7 @@ function completeHandler(event){
             }
             $.get( '{{route("fetchCso")}}', { txt: txtCso })
             .done(function( result ) {
-                if (result == 'true'){
+                if (result.result == 'true'){
                     obj.html('Kode CSO Benar');
                     obj.css('color', 'green');
                     $('#submit').removeAttr('disabled');
@@ -236,7 +287,6 @@ function completeHandler(event){
                 }
             });
         });
-
         $('#submit').click(function(){
             var appointment = 
             $.ajax({
@@ -253,5 +303,44 @@ function completeHandler(event){
             });
         });
     });
+function completeHandler(event){
+    var hasil = JSON.parse(event.target.responseText);
+    console.log(hasil);
+    for (var key of frmAdd.keys()) {
+        $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
+        $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
+        $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
+
+        $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
+        $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
+        $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
+    }
+
+    if(hasil['errors'] != null){
+        for (var key of frmAdd.keys()) {
+            if(typeof hasil['errors'][key] === 'undefined') {
+
+            }
+            else {
+                $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
+                $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
+                $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
+
+                $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+            }
+        }
+        alert("Input Error !!!");
+    } else if(hasil['validator'] != null){
+        alert("Appointment dengan nomer ini sudah ada!!");
+    } else if (hasil['active'] != null){
+        alert("Apakah Appointment ini reschadule? Jika iya lakukan edit pada menu edit");
+    }
+    else{
+        alert("Input Success !!!");
+        window.location.reload()
+    }
+}
 </script>
 @endsection

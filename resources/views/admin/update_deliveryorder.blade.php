@@ -138,7 +138,7 @@
 	              			<div id="errormessage"></div>
 
 	              			<div class="form-group">
-	              				<input type="hidden" name="idCSO" value="{{$deliveryOrders['cso_id']}}">
+	              				<input type="hidden" id="idCSO" name="idCSO" value="">
 	              				<input type="hidden" name="idDeliveryOrder" value="{{$deliveryOrders['id']}}">
 	              				<button id="updateDeliveryOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
 	              				<button class="btn btn-light">Cancel</button>	
@@ -233,11 +233,13 @@
             var txtCso = $(this).val();
             $.get( '{{route("fetchCso")}}', { txt: txtCso })
             .done(function( result ) {
-                console.log(result);
-                if (result == 'true'){
+                console.log(result.data[0].id);
+                if (result.result == 'true'){
                     $('#validation_cso').html('Kode CSO Benar');
                     $('#validation_cso').css('color', 'green');
                     $('#submit').removeAttr('disabled');
+					document.getElementById('idCSO').value = result.data[0].id; 
+					// $('#idCSO').val() = 
                 }
                 else{
                     $('#validation_cso').html('Kode CSO Salah');

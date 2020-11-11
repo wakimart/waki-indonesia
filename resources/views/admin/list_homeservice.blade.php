@@ -56,9 +56,7 @@
 </style>
 
 @endsection
-
 @section('content')
-
 <div class="main-panel">
 	<div class="content-wrapper">
     <div class="page-header">
@@ -244,6 +242,28 @@
                     {{ csrf_field() }}
                       <h5>Data Pelanggan</h5>
                       <div class="form-group">
+                        <span>Type Customer</span>
+                        <select id="view_type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_customer" value="" required>
+                            <option value="Tele Voucher">Tele Voucher</option>
+                            <option value="Tele Home Service">Tele Home Service</option>
+                            <option value="Home Office Voucher">Home Office Voucher</option>
+                            <option value="Home Voucher">Home Voucher</option>
+                        </select>
+                        <span class="invalid-feedback">
+                          <strong></strong>
+                        </span>
+                      </div>
+                      <div class="form-group">
+                        <span>Type Home Service</span>
+                        <select id="view_type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_homeservices" value="" required>
+                            <option value="Home service">Home service</option>
+                            <option value="Upgrade Member">Upgrade Member</option>
+                        </select>
+                        <span class="invalid-feedback">
+                          <strong></strong>
+                        </span>
+                      </div>
+                      <div class="form-group">
                           <input type="text" name="no_member" class="form-control input-view" id="view-no_member" value=""/>
                           <div class="validation"></div>
                       </div>
@@ -324,6 +344,28 @@
       					    	{{ csrf_field() }}
                         <h5>Data Pelanggan</h5>
                         <div class="form-group">
+                          <span>Type Customer</span>
+                          <select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
+                                  <option value="Tele Voucher">Tele Voucher</option>
+                                  <option value="Tele Home Service">Tele Home Service</option>
+                                  <option value="Home Office Voucher">Home Office Voucher</option>
+                                  <option value="Home Voucher">Home Voucher</option>
+                          </select>
+                          <span class="invalid-feedback">
+                              <strong></strong>
+                          </span>
+                      </div>
+                      <div class="form-group">
+                          <span>Type Home Service</span>
+                          <select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
+                                  <option value="Home service">Home service</option>
+                                  <option value="Upgrade Member">Upgrade Member</option>
+                          </select>
+                          <span class="invalid-feedback">
+                              <strong></strong>
+                          </span>
+                      </div>
+                        <div class="form-group">
                             <input type="text" name="no_member" class="form-control" id="edit-no_member" placeholder="No. Member (optional)"/>
                             <div class="validation"></div>
                         </div>
@@ -360,7 +402,7 @@
                             <div class="validation" id="validation_cso"></div>
                         </div>
                         <div class="form-group">
-                            <input type="number" class="form-control" name="cso_phone" id="edit-cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
+                            <input type="hidden" class="form-control" name="cso_phone" id="edit-cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
                             <div class="validation"></div>
                         </div>
                         <div class="form-group">
@@ -371,7 +413,7 @@
                         <br>
                         <h5>Waktu Home Service</h5>
                         <div class="form-group">
-                            <input type="date" class="form-control" name="date" id="edit-date" placeholder="Tanggal Janjian" required data-msg="Mohon Isi Tanggal" />
+                            <input type="date" class="form-control" name="edit-date" id="edit-date" placeholder="Tanggal Janjian" required data-msg="Mohon Isi Tanggal" />
                             <div class="validation"></div>
                         </div>
                         <div class="form-group">
@@ -490,7 +532,6 @@ window.onload = function() {
     data = {};
     // data[new Date().getFullYear()] = {};
     // data[new Date().getFullYear()][new Date().getMonth()+1] = {};
-
     @foreach($homeServices as $dataNya)
       @php
         $AppointmentNya = new DateTime($dataNya['appointment']);
@@ -498,6 +539,15 @@ window.onload = function() {
         $bulan = $AppointmentNya->format('n');
         $hari = $AppointmentNya->format('j');
         $jam = $AppointmentNya->format('H:i');
+        
+        $appointmentBefore = $dataNya->historyUpdate()['meta'];
+        $before = "-";
+        if($appointmentBefore != null){
+          if (isset($appointmentBefore['appointmentBefore'])){
+            
+            $before = $appointmentBefore['appointmentBefore'];
+          }
+        }
 
         $canEdit = false;
         $canDelete = false;
@@ -535,7 +585,7 @@ window.onload = function() {
                 startTime: "{{ $jam }}",
                 endTime: "{{ $jam }}",
                 title: "<a href=\"{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}\" target=\"_blank\">{{ $dataNya['code'] }}</a>",
-                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }}",
+                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }} <br>CreatedAt : {{ $dataNya['created_at'] }} <br>Last Update : {{ $dataNya['updated_at'] }} <br><p style='color:red'>Appointment Before : {{$before}}</p>",
                 dataId : "{{ $dataNya['id'] }}",
                 canEdit : "{{ $canEdit }}",
                 canDelete : "{{ $canDelete }}",
@@ -548,7 +598,7 @@ window.onload = function() {
                 startTime: "{{ $jam }}",
                 endTime: "{{ $jam }}",
                 title: "<a href=\"{{ Route('homeServices_success') }}?code={{ $dataNya['code'] }}\" target=\"_blank\">{{ $dataNya['code'] }}</a>",
-                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }}",
+                desc: "{{ $dataNya['name'] }} - {{ $dataNya['phone'] }}<br>Branch : {{ $dataNya->branch['code'] }}<br>CSO : {{ $dataNya->cso['name'] }} <br>CreatedAt : {{ $dataNya['created_at'] }} <br>Last Update : {{ $dataNya['updated_at'] }} <br><p style='color:red'>Appointment Before : {{$before}}</p>",
                 dataId : "{{ $dataNya['id'] }}",
                 canEdit : "{{ $canEdit }}",
                 canDelete : "{{ $canDelete }}",
@@ -724,6 +774,7 @@ window.onload = function() {
       $('#calendarContainer-year-next').css('display', 'none');
     }
 
+
     //cek cso
     $(".cso").on("input", function(){
       var txtCso = $(this).val();
@@ -733,9 +784,10 @@ window.onload = function() {
       .done(function( result ) {
           var bool = false;
           console.log(result);
-          if (result == 'true'){
+          if (result.result == 'true'){
               $(temp).parent().children('.validation').html('Kode CSO Benar');
               $(temp).parent().children('.validation').css('color', 'green');
+              $('#edit-cso_phone').val(result.data[0].phone);
               bool = true;
           }
           else{
@@ -769,6 +821,7 @@ window.onload = function() {
       .done(function( result ) {
           $( "#filter_cso" ).html("");
           var arrCSO = "<option selected value=\"\">All CSO</option>";
+          $( "#filter_cso" ).append(arrCSO);
           if(result.length > 0){
               $.each( result, function( key, value ) {
                 arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
@@ -806,7 +859,7 @@ window.onload = function() {
           urlParamStr += "&" + urlParamArray[i]
         }
       }
-      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}?" + urlParamStr;   
+      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}" + urlParamStr;   
     });
     $("#btn-export").on("click", function(){
       var urlParamArray = new Array();
@@ -904,13 +957,15 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
         },
       });
 
+      $('#type_homeservices').val(result['type_homeservices']);
+      $('#type_customer').val(result['type_customer']);
       $('#edit-no_member').val(result['no_member']);
       $('#edit-name').val(result['name']);
       $('#edit-phone').val(result['phone']);
       $('#edit-city').val(result['city']);
       $('#edit-address').val(result['address']);
       $('#edit-cso_phone').val(result['cso_phone']);
-      $('#edit-date').val(tgl);
+      $('#edit-date').val(new Date(result['appointment']));
       $('#edit-time').val(jam+":"+menit);
       $('#btn-edit').val(result['id']);
 
@@ -988,7 +1043,8 @@ $(document).on("click", ".btn-homeservice-view", function(e){
           $('#view-branch').val(data1['id']);
         },
       });
-
+      $('#view_type_homeservices').val(result['type_homeservices']);
+      $('#view_type_customer').val(result['type_customer']);
       $('#view-no_member').val(result['no_member']);
       $('#view-name').val(result['name']);
       $('#view-phone').val(result['phone']);
