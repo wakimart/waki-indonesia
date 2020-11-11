@@ -774,27 +774,6 @@ window.onload = function() {
       $('#calendarContainer-year-next').css('display', 'none');
     }
 
-    // $("#edit-cso, #edit-cso2").on("input", function(){
-    //         var txtCso = $(this).val();
-    //         var obj = $('#validation_cso');
-    //         if($(this)[0].id == "cso2"){
-    //             obj = $('#validation_cso2');
-    //         }
-    //         $.get( '{{route("fetchCso")}}', { txt: txtCso })
-    //         .done(function( result ) {
-    //             if (result.result == 'true'){
-    //                 obj.html('Kode CSO Benar');
-    //                 obj.css('color', 'green');
-		// 			$('#submit').removeAttr('disabled');
-		// 			$('#cso_phone').val(result.data[0].phone);
-    //             }
-    //             else{
-    //                 obj.html('Kode CSO Salah');
-    //                 obj.css('color', 'red');
-    //                 $('#submit').attr('disabled',"");
-    //             }
-    //         });
-    //     });
 
     //cek cso
     $(".cso").on("input", function(){
