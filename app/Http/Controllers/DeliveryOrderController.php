@@ -61,7 +61,8 @@ class DeliveryOrderController extends Controller
 
     public function successorder(Request $request){
     	$deliveryOrder = DeliveryOrder::where('code', $request['code'])->first();
-        return view('ordersuccess', compact('deliveryOrder'));
+        $categoryProducts = CategoryProduct::all();
+        return view('ordersuccess', compact('deliveryOrder', 'categoryProducts'));
     }
 
     public function fetchCso(Request $request){

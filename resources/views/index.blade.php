@@ -10,10 +10,10 @@
       @php 
         $img = json_decode($banner->image, true);
       @endphp
-      <div class="carousel-item active">
-        <img class="d-block w-100" src="{{asset('sources/banners/').'/'.$img[0]['img']}}"  href ="{{$img[0]['url']}}" alt="Second slide">
-      </div>
-    @endforeach
+        {{--<div class="carousel-item active">
+                          <img class="d-block w-100" src="{{asset('sources/banners/').'/'.$img[0]['img']}}"  href ="{{$img[0]['url']}}" alt="Second slide">
+                        </div>--}}
+      @endforeach
     </div>      
     <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
