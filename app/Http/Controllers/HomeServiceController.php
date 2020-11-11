@@ -38,6 +38,7 @@ class HomeServiceController extends Controller
     }
     
     public function store(Request $request){
+        $inputAppointment = $data['date']." ".$data['time'];
         if($request->type_homeservices == "Home Eksklusif Therapy" || $request->type_homeservices == "Home Family Therapy"){
             $homeserviceInactive = HomeService::where([['phone', $request->phone],['active', true]])->where('type_homeservices', 'Home Eksklusif Therapy')->orWhere('type_homeservices', 'Home Family Therapy')->get();
             for ($i = 0; $i< count($homeserviceInactive); $i++){
@@ -56,7 +57,7 @@ class HomeServiceController extends Controller
                 if ($homeServiceRawData[$i]->type_homeservices == "Upgrade Member" && $request->type_homeservices == "Upgrade Member"){
                     return redirect()->back()->with("errors","Upgrade Member Hanya Sekali Saja Untuk Nomer Yang Sama");    
                 }
-                if ($homeServiceRawData[$i]->appointment > date("Y-m-d H:i:s")){
+                if ($homeServiceRawData[$i]->appointment > $inputAppointment){
                     $dateTime = explode(' ', $homeServiceRawData[$i]->appointment); 
                     if($dateTime[0] == $request->date){
                         if($dateTime[1] == $request->time){
@@ -75,7 +76,7 @@ class HomeServiceController extends Controller
         $homeServiceDataTiga = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home service']])->orderBy('created_at', 'desc')->first();
         
         if($homeServiceDataTiga != null && $request->type_homeservices == "Home service"){
-            if($homeServiceDataTiga->appointment > date("Y-m-d h:i:s",strtotime('last week'))){ //date("Y-m-d h:i:s",strtotime('last week'));
+            if($homeServiceDataTiga->appointment > date($inputAppointment,strtotime('last week'))){ //date("Y-m-d h:i:s",strtotime('last week'));
                 return redirect()->back()->with("errors","Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service ");
             }
         }
@@ -102,7 +103,7 @@ class HomeServiceController extends Controller
         if($request->has('cso2_id')){
             $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];            
         }
-        $data['appointment'] = $data['date']." ".$data['time'];
+        $data['appointment'] = $inputAppointment;
         $order = HomeService::create($data);
         $dt = new DateTime($data['appointment']);
 
