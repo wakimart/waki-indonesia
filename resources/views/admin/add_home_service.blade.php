@@ -328,6 +328,12 @@
 	        }
 
 	        if(hasil['errors'] != null){
+	        	if(typeof hasil['errors'][key] != 'undefined'){
+                    $("#actionAdd").find("input[name="+hasil['errors'][key]+"]").focus();
+                    $("#actionAdd").find("select[name="+hasil['errors'][key]+"]").focus();
+                    $("#actionAdd").find("textarea[name="+hasil['errors'][key]+"]").focus();
+	        	}
+
 	            for (var key of frmAdd.keys()) {
 	                if(typeof hasil['errors'][key] === 'undefined') {
 
@@ -350,7 +356,7 @@
 			}
 	        else{
 	            alert("Input Success !!!");
-	            window.location.reload()
+	            // window.location.reload()
 	        }
 
 	        document.getElementById("addHomeService").innerHTML = "SAVE";
