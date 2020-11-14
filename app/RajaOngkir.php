@@ -33,7 +33,7 @@ class RajaOngkir extends Model
     }
 
     static public function FetchCityApi($province){
-        $data = RajaOngkir_City::where([['province_id', $province], ['type', 'Kota']])->select(DB::raw('CONCAT(type, " ", city_name) AS city_name'))->get();
+        $data = RajaOngkir_City::where('province_id', $province)->select(DB::raw('CONCAT(type, " ", city_name) AS city_name'))->get();
         
         $data = ['result' => 1,
                      'data' => $data
