@@ -402,7 +402,7 @@
                             <div class="validation" id="validation_cso"></div>
                         </div>
                         <div class="form-group">
-                            <input type="number" class="form-control" name="cso_phone" id="edit-cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
+                            <input type="hidden" class="form-control" name="cso_phone" id="edit-cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
                             <div class="validation"></div>
                         </div>
                         <div class="form-group">
@@ -774,6 +774,7 @@ window.onload = function() {
       $('#calendarContainer-year-next').css('display', 'none');
     }
 
+
     //cek cso
     $(".cso").on("input", function(){
       var txtCso = $(this).val();
@@ -783,9 +784,10 @@ window.onload = function() {
       .done(function( result ) {
           var bool = false;
           console.log(result);
-          if (result == 'true'){
+          if (result.result == 'true'){
               $(temp).parent().children('.validation').html('Kode CSO Benar');
               $(temp).parent().children('.validation').css('color', 'green');
+              $('#edit-cso_phone').val(result.data[0].phone);
               bool = true;
           }
           else{

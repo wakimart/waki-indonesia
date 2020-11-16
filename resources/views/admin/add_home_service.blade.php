@@ -67,8 +67,9 @@
 										<option value="Home service">Home service</option>
 										<option value="Upgrade Member">Upgrade Member</option>
 										<option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
-                            			<option value="Home Family Therapy">Home Family Therapy</option>
-			                            <option value="Health and Safety with WAKi">Health and Safety with WAKi</option>
+			                            <option value="Home Family Therapy">Home Family Therapy</option>
+			                            <option value="Health and Safety with WAKi">Demo</option>
+			                            <option value="Soft Launching WAKimart Apps">Invitation</option>
 								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -144,7 +145,7 @@
 			                    <div class="validation"></div>
 							</div>
 
-							<!-- <div class="form-group d-none">
+							<div class="form-group d-none">
 								<label for="">No Telepon CSO</label>
 									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
 									<div class="validation"></div>
@@ -152,7 +153,7 @@
 										<strong></strong>
 									</span>
 			                    <div class="validation"></div>
-							</div> -->
+							</div>
 
 							<div class="form-group">
 								<label for="">Kode Partner CSO(Optional)</label>

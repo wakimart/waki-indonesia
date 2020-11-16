@@ -10,7 +10,6 @@ use Illuminate\Validation\Rule;
 use \Illuminate\Http\Request;
 use App\User;
 
-
 class LoginController extends Controller
 {
     /*
@@ -86,7 +85,7 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
         return $this->sendFailedLoginResponse($request);
     }
-
+    
     //KHUSUS API REST
     public function loginApi(Request $request)
     {
@@ -107,6 +106,9 @@ class LoginController extends Controller
         }
         else{
             $user = User::Where('username', strtoupper($request->username))->first();
+            $user->roles;
+            $user->cso;
+            $user['list_branches'] = $user->listBranches();
         
             if(Hash::check($request->password, $user->password)){              
                 $data = ['result' => 1,
@@ -122,13 +124,16 @@ class LoginController extends Controller
             return response()->json($data,401);
         }
     }
-
+    
     public function loginQRApi(Request $request){
-        $user = User::where('qrcode', $request['hash'])->get();
+        $user = User::where('qrcode', $request['hash'])->first();
+        $user->roles;
+        $user->cso;
+        $user['list_branches'] = $user->listBranches();
 
-        if(sizeof($user) > 0){
+        if($user != null){
             $data = ['result' => 1,
-                     'data' => $user[0]
+                     'data' => $user
                     ];
             return response()->json($data,200);
         }
