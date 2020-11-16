@@ -412,6 +412,7 @@ class HomeServiceController extends Controller
         $search = null;
         $startDate = null;
         $endDate = null;
+        $inputDate = null; 
 
         if($request->has('filter_city')  && $request->filter_city != "undefined"){
             $city = $request->filter_city;
@@ -431,7 +432,10 @@ class HomeServiceController extends Controller
             $endDate = new \DateTime($endDate);
             $endDate = $endDate->modify('+1 day')->format('Y-m-d'); 
         }
-        return Excel::download(new HomeServicesExportByDate($city, $branch, $cso, $search, array($startDate, $endDate)), 'Home Service By Date.xlsx');
+        if($request->has('inputDate')){
+            $inputDate = $request->inputDate; 
+        }
+        return Excel::download(new HomeServicesExportByDate($city, $branch, $cso, $search, array($startDate, $endDate), $inputDate), 'Home Service By Date.xlsx');
     }
     public function delete(Request $request) {
         $homeService = HomeService::find($request->id);
