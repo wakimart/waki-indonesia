@@ -67,9 +67,9 @@
 										<option value="Home service">Home service</option>
 										<option value="Upgrade Member">Upgrade Member</option>
 										<option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
-			                            <option value="Home Family Therapy">Home Family Therapy</option>
-			                            <option value="Health and Safety with WAKi">Demo</option>
-			                            <option value="Soft Launching WAKimart Apps">Invitation</option>
+                    <option value="Home Family Therapy">Home Family Therapy</option>
+                    <option value="Health and Safety with WAKi">Demo</option>
+                    <option value="Soft Launching WAKimart Apps">Invitation</option>
 								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -165,33 +165,35 @@
 			                    <div class="validation"></div>
 			                </div>
 
+              <label for=""><h2>Waktu Home Service</h2></label><br/>
 
-							<div class="form-group">
-								<label for=""><h2>Waktu Home Service</h2></label><br/>
-	              				<label for="">Tanggal</label>
-								  <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
-								<div class="validation"></div>
-								<span class="invalid-feedback">
-									<strong></strong>
-								</span>
-							</div>
+              <div class="form_appoint_container">
+                <div class="form-group">
+                  <label for="">Tanggal Janjian</label>
+  								  <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+  								<div class="validation"></div>
+  								<span class="invalid-feedback">
+  									<strong></strong>
+  								</span>
+  							</div>
+  							<div class="form-group">
+  								<label for="">Jam Janjian</label>
+  								<input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>
+  								<div class="validation"></div>
+  								<span class="invalid-feedback">
+  									<strong></strong>
+  								</span>
+  							</div>
+              </div>
 
-							<div class="form-group">
-								<label for="">Jam Janjian</label>
-								<input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>
-								<div class="validation"></div>
-								<span class="invalid-feedback">
-									<strong></strong>
-								</span>
-							</div>
+        			<div id="errormessage"></div>
 
-	              			<div id="errormessage"></div>
+        			<div class="form-group">
+        				<button id="addHomeService" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+        				<button class="btn btn-light">Cancel</button>
+        			</div>
 
-	              			<div class="form-group">
-	              				<button id="addHomeService" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
-	              				<button class="btn btn-light">Cancel</button>
-	              			</div>
-	            		</form>
+	          </form>
 						@elseif(Utils::$lang=='eng')
 						<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_homeService') }}">
 							{{ csrf_field() }}
@@ -445,5 +447,55 @@
             });
         });
     });
+</script>
+<script>
+  $(document).ready(function(){
+    var Limit = 1;
+    $('#type_homeservices').change(function(){
+    if( $(this).val() == 'Home Eksklusif Therapy' || $(this).val() == 'Home Family Therapy'){
+      if( Limit > 1){
+        return false;
+      }
+      else {
+        Limit ++;
+        $('.form_appoint_container').append(
+          '<div class="form-group optional_appointment">\
+            <label for="">Tanggal Janjian 2 (Optional)</label>\
+              <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Jam Janjian 2 (Optional)</label>\
+            <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Tanggal Janjian 3 (Optional)</label>\
+              <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Jam Janjian 3 (Optional)</label>\
+            <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>');
+      }
+    }else{
+        $('.optional_appointment').remove();
+    }
+    });
+  });
 </script>
 @endsection
