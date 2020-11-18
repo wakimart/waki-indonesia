@@ -86,4 +86,8 @@ class User extends Authenticatable
     public function cso(){
         return $this->belongsTo('App\Cso');
     }
+
+    public function routeNotificationForFcm(){
+        return $this->fcm_token;
+    }
 }

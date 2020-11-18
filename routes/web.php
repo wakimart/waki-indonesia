@@ -19,7 +19,7 @@ Route::get('/term_cond', 'IndexController@termNCondition')->name('term_cond');
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category/{id}', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
-
+Route::get('/firebase','FirebaseController@index');
 //DO Register
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
 Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
