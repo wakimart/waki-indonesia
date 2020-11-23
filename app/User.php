@@ -16,11 +16,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'code', 'name', 'username', 'password', 'permissions', 'active', 'user_image', 'birth_date', 'branches_id', 'cso_id',
+        'code', 'name', 'username', 'password', 'permissions', 'active', 'user_image', 'birth_date', 'branches_id', 'cso_id', 'fcm_token',
     ];
 
     protected $casts = [
         'permissions' => 'array',
+        'fmc_token' => 'array',
     ];
 
     /**

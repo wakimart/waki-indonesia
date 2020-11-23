@@ -110,7 +110,10 @@ class LoginController extends Controller
             $user->cso;
             $user['list_branches'] = $user->listBranches();
         
-            if(Hash::check($request->password, $user->password)){              
+            if(Hash::check($request->password, $user->password)){   
+                //update FMC token
+                $user->fmc_token = array_push($user->fcm_token, $request->fcm_token);
+                $user->save();           
                 $data = ['result' => 1,
                          'data' => $user
                         ];
@@ -130,6 +133,10 @@ class LoginController extends Controller
         $user->roles;
         $user->cso;
         $user['list_branches'] = $user->listBranches();
+        
+        //update FMC token
+        $user->fmc_token = array_push($user->fcm_token, $request->fcm_token);
+        $user->save();
 
         if($user != null){
             $data = ['result' => 1,
