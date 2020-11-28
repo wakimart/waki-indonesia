@@ -91,7 +91,7 @@ class LoginController extends Controller
     {
         $messages = array(
                 'username.exists' => 'The username is invalid.',
-            );
+        );
 
         $validator = \Validator::make($request->all(), [
             'username' => ['required', 'exists:users,username'],
