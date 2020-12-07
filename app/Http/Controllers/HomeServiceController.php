@@ -22,6 +22,7 @@ use Google_Client;
 use Google_Service_Calendar;
 use App\Http\Controllers\gCalendarController;
 use DateTime;
+use RajaOngkir;
 
 class HomeServiceController extends Controller
 {
@@ -125,7 +126,7 @@ class HomeServiceController extends Controller
             $phone =  substr($phone, 1);
             }
             $phone = "62".$phone;
-            Utils::sendSms($phone, "Terima kasih telah mendaftar layanan 'Home Service' kami. Tim kami akan datang pada tanggal ".$dt->format('j/m/Y')." pukul ".$dt->format('H:i')." WIB. Info lebih lanjut, hubungi 082138864962"); 
+            Utils::sendSms($phone, "Terima kasih telah mendaftar layanan 'Home Service' kami. Tim kami akan datang pada tanggal ".$dt->format('j/m/Y')." pukul ".$dt->format('H:i')." WIB. Info lebih lanjut, hubungi ".$data['cso_phone']); 
             
             return redirect()->route('homeServices_success', ['code'=>$order['code']]);
         }
@@ -549,6 +550,19 @@ class HomeServiceController extends Controller
             $data['appointment'] = $data['date']." ".$data['time'];
             $homeservice = HomeService::create($data);
 
+            try{
+                $dt = new DateTime($data['appointment']);
+                $phone = preg_replace('/[^A-Za-z0-9\-]/', '', $data['phone']);
+                if($phone[0]==0 || $phone[0]=="0"){
+                $phone =  substr($phone, 1);
+                }
+                $phone = "62".$phone;
+                Utils::sendSms($phone, "Terima kasih telah mendaftar layanan 'Home Service' kami. Tim kami akan datang pada tanggal ".$dt->format('j/m/Y')." pukul ".$dt->format('H:i')." WIB. Info lebih lanjut, hubungi ".$data['cso_phone']);
+            }
+            catch(\Exception $ex){
+
+            }
+
             $data = ['result' => 1,
                      'data' => $homeservice
                     ];
@@ -572,11 +586,10 @@ class HomeServiceController extends Controller
             'id' => ['required', 'exists:home_services,id,active,1'],
             'name' => 'required',
             'address' => 'required',
-            'phone' => 'required',
+            'phone' => 'required|min:7',
             'city' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => 'required',
-            'cso_phone' => 'required',
             'date' => 'required',
             'time' => 'required',
             'cso2_id' => ['exists:csos,code']
@@ -591,6 +604,7 @@ class HomeServiceController extends Controller
         else{
             $data = $request->all();
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $data['cso_phone'] = Cso::where('id', $data['cso_id'])->first()['phone'];
             if($request->has('cso2_id')){
                 $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];            
             }
@@ -663,38 +677,37 @@ class HomeServiceController extends Controller
 
             //khusus akun CSO
             if($userSlug->roles[0]['slug'] == 'cso'){
-                $homeServices = HomeService::whereDate('home_services.appointment', '=', $tgl)->where('cso_id', Auth::user()->cso['id'])->where('active', true);
+                $homeServices = HomeService::whereDate('home_services.appointment', '=', $tgl)->where('home_services.cso_id', $userSlug->cso['id'])->where('home_services.active', true);
             }
-
-            //khusus akun branch dan area-manager
-            if($userSlug->roles[0]['slug'] == 'branch' || $userSlug->roles[0]['slug'] == 'area-manager'){
-                $arrbranches = [];
-                foreach ($userNya->listBranches() as $value) {
-                    array_push($arrbranches, $value['id']);
-                }
-                $homeServices = HomeService::WhereIn('home_services.branch_id', $arrbranches)->where('home_services.active', true);
+            
+            //khusus akun Branch
+            else if($userSlug->roles[0]['slug'] == 'branch' || $userSlug->roles[0]['slug'] == 'area-manager'){
+                $homeServices = HomeService::whereDate('home_services.appointment', '=', $tgl)->whereIn('home_services.branch_id', json_decode($userSlug['branches_id']))->where('home_services.active', true);
+            }
+            
+            //khusus filter
+            if(isset($data['filter']['filter_city'])){
+                $homeServices = $homeServices->Where('home_services.city', $data['filter']['filter_city']);
+            }
+            if(isset($data['filter']['filter_branch'])){
+                $homeServices = $homeServices->Where('home_services.branch_id', $data['filter']['filter_branch']);
+            }
+            if(isset($data['filter']['filter_cso'])){
+                $homeServices = $homeServices->Where('home_services.cso_id', $data['filter']['filter_cso']);
             }
 
             //LAST Strutured Eloquent for Homeservices
             $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
                             ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
-                            ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name', 'branches.color as branch_color');
+                            ->select('home_services.id', 'home_services.appointment', 'home_services.name as custommer_name', 'home_services.phone as custommer_phone', 'branches.code as branch_code', 'csos.code as cso_code', 'csos.name as cso_name', 'branches.color as branch_color', 'home_services.created_at', 'home_services.updated_at')->get();
                             // ->orderBy('home_services.appointment', 'ASC')
-            if($request->has('filter_branch')){
-                $homeServices = $homeServices->where('home_services.branch_id', $request->filter_branch);
+                            
+            foreach($homeServices as $HS){
+                if($HS->historyUpdate() != null){
+                    $HS['appointmentBefore'] = $HS->historyUpdate()['meta']['appointmentBefore'];
+                }
             }
-            if($request->has('filter_cso')){
-                $homeServices = $homeServices->where('home_services.cso_id', $request->filter_cso);
-            }
-            if($request->has('filter_city')){
-                $homeServices = $homeServices->where('home_services.city', 'like', '%'.$request->filter_city.'%');
-            }
-            if($request->has('filter_search')){
-                $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
-                ->orWhere('home_services.phone', 'like', '%'.$request->filter_search.'%')
-                ->orWhere('home_services.code', 'like', '%'.$request->filter_search.'%');
-            }
-            $homeServices = $homeServices->get();          
+
             $totalPerDay = [];
 
             for ($i=1; $i <= 31; $i++) { 
@@ -711,7 +724,7 @@ class HomeServiceController extends Controller
                      'totalPerDay' => $totalPerDay
                     ];
             return response()->json($data, 200);
-        }        
+        }
     }
 
     public function listPerTotalDay(){
@@ -738,11 +751,23 @@ class HomeServiceController extends Controller
 
         $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
                         ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
-                        ->select('home_services.id', 'home_services.code as code', 'home_services.appointment', 'home_services.no_member as no_member', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.address as custommer_address','home_services.phone as custommer_phone', 'home_services.type_customer as type_customer', 'home_services.type_homeservices as type_homeservices','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')->first();
+                        ->select('home_services.id', 'home_services.code as code', 'home_services.appointment', 'home_services.no_member as no_member', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.address as custommer_address','home_services.phone as custommer_phone', 'home_services.type_customer as type_customer', 'home_services.type_homeservices as type_homeservices', 'branches.id as branch_id', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name', 'csos.phone as cso_phone')->first();
 
+        $homeServices['province_id'] = RajaOngkir::FetchProvinceByCity($homeServices['custommer_city'])['province_id'];
         $homeServices['URL'] = route('homeServices_success')."?code=".$homeServices['code'];
         $data = ['result' => 1,
                  'data' => $homeServices
+                ];
+        return response()->json($data, 200);
+    }
+
+    public function listAllTypeHS(){
+        $type_homeservices = ["Home service", "Home Tele Voucher", "Home Eksklusif Therapy", "Home Free Family Therapy", "Home Demo Health & Safety with WAKi", "Home Voucher", "Home Tele Free Gift", "Home Refrensi Product", "Home Delivery", "Home Free Refrensi Therapy VIP"];
+        $type_customers = ["Tele Voucher", "Tele Home Service", "Home Office Voucher", "Home Voucher"];
+
+        $data = ['result' => 1,
+                 'type_homeservices' => $type_homeservices,
+                 'type_customers' => $type_customers
                 ];
         return response()->json($data, 200);
     }

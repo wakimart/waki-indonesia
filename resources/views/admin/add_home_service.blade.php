@@ -64,12 +64,16 @@
 							<div class="form-group">
 								<span>Type Home Service</span>
 								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
-										<option value="Home service">Home service</option>
-										<option value="Upgrade Member">Upgrade Member</option>
-										<option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
-			                            <option value="Home Family Therapy">Home Family Therapy</option>
-			                            <option value="Health and Safety with WAKi">Demo</option>
-			                            <option value="Soft Launching WAKimart Apps">Invitation</option>
+		                            <option value="Home service">Home service</option>
+		                            <option value="Home Tele Voucher">Home Tele Voucher</option>
+		                            <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+		                            <option value="Home Free Family Therapy">Home Free Family Therapy</option>
+		                            <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
+		                            <option value="Home Voucher">Home Voucher</option>
+		                            <option value="Home Tele Free Gift">Home Tele Free Gift</option>
+		                            <option value="Home Refrensi Product">Home Refrensi Product</option>
+		                            <option value="Home Delivery">Home Delivery</option>
+		                            <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
 								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
