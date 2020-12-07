@@ -11,13 +11,14 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class HomeServicesExportByDate implements FromView, ShouldAutoSize
 {
-	public function __construct($city, $branch, $cso, $search, $dateRange)
+	public function __construct($city, $branch, $cso, $search, $dateRange, $inputDate)
     {
         $this->city = $city;
         $this->branch = $branch;
         $this->cso = $cso;
         $this->search = $search;
         $this->dateRange = $dateRange;
+        $this->inputDate = $inputDate;
     }
 
     public function view(): View
@@ -41,8 +42,13 @@ class HomeServicesExportByDate implements FromView, ShouldAutoSize
             ->orWhere('home_services.phone', 'like', '%'.$this->search.'%')
             ->orWhere('home_services.code', 'like', '%'.$this->search.'%');
         }
-        if($this->dateRange != null){
+            
+        if($this->dateRange[0] != null && $this->dateRange[1] != null){
             $HomeServiceNya = $HomeServiceNya->whereBetween('appointment', $this->dateRange);
+        }
+
+        if($this->inputDate != null){
+            $HomeServiceNya = $HomeServiceNya->whereDate('home_services.created_at', $this->inputDate);
         }
         
         return view('admin.exports.homeservice2_export', [
