@@ -623,6 +623,36 @@ class HomeServiceController extends Controller
         }
     }
 
+    public function reportHomeService(Request $request)
+    {
+        $messages = array(
+            'id.required'=> 'The ID field is required.',
+            'cash.required' => 'The Cash field is required.',
+            'cash_description.required' => 'The Cash Description field is required.'
+        );
+        $validator = \Validator::make($request->all(), [
+            'id' => 'required',
+            'cash' => 'required',
+            'cash_description' => 'required',
+        ], $messages);
+
+        if($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }else {
+            $data = $request->all();
+            $homeservice = Homeservice::find($data['id']);
+            $homeservice->fill($data)->save(); 
+
+            $data = ['result' => 1,
+                     'data' => $homeservice
+                    ];
+            return response()->json($data, 200);
+        }
+    }
+
     public function deleteApi(Request $request)
     {
         $messages = array(

@@ -67,7 +67,8 @@ Route::group(['prefix' => 'api-apps'], function () {
 
 	Route::group(['prefix' => 'homeservice'], function () {
 	    Route::post('add','HomeServiceController@addApi'); //add home service
-	    Route::post('update','HomeServiceController@updateApi'); //update home service
+		Route::post('update','HomeServiceController@updateApi'); //update home service
+		Route::post('reportHomeService','HomeServiceController@reportHomeService'); //reportHomeService home service
 	    Route::post('delete','HomeServiceController@deleteApi'); //delete home service
 	    Route::post('list','HomeServiceController@listApi'); //list home service
 	    Route::get('view/{id}','HomeServiceController@viewApi'); //view home service

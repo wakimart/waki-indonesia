@@ -141,7 +141,7 @@
 
 							<div class="form-group">
 								<label for="">Kode CSO</label>
-									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Kode CSO" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Kode CSO" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['code'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
 									<div class="validation" id="validation_cso"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
@@ -151,7 +151,7 @@
 
 							<div class="form-group d-none">
 								<label for="">No Telepon CSO</label>
-									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
+									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
 									<div class="validation"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
@@ -243,7 +243,7 @@
 
 							<div class="form-group">
 								<label for="">Code CSO</label>
-									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Code CSO" required data-msg="Please fill the CSO Code" style="text-transform:uppercase"/>
+									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Code CSO" required data-msg="Please fill the CSO Code" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['code'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
 									<div class="validation" id="validation_cso"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
@@ -253,7 +253,7 @@
 
 							<div class="form-group">
 								<label for="">No Telepon CSO</label>
-									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" required data-msg="Please fill the CSO Phone Number" />
+									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" required data-msg="Please fill the CSO Phone Number" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
 									<div class="validation"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
@@ -425,7 +425,7 @@
                     obj.html('Kode CSO Benar');
                     obj.css('color', 'green');
 					$('#submit').removeAttr('disabled');
-					$('#cso_phone').val(result.data[0].phone);
+					// $('#cso_phone').val(result.data[0].phone);
                 }
                 else{
                     obj.html('Kode CSO Salah');
