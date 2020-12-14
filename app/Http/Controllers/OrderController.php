@@ -409,8 +409,9 @@ class OrderController extends Controller
             $data = $request->all();
             $data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $data['cso_id_30'] = Cso::where('code', $data['cso_id_30'])->first()['id'];
-            $data['cso_id_70'] = Cso::where('code', $data['cso_id_70'])->first()['id'];
+            $data['30_cso_id'] = Cso::where('code', $data['cso_id_30'])->first()['id'];
+            $data['70_cso_id'] = Cso::where('code', $data['cso_id_70'])->first()['id'];
+            $data['prize'] = $data['gift_product'];
 
             //pembentukan array product
             $index = 0;
@@ -468,6 +469,10 @@ class OrderController extends Controller
             }
 
             $order['URL'] = route('order_success')."?code=".$order['code'];
+
+            $order['cso_id_30'] = $order['30_cso_id'];
+            $order['cso_id_70'] = $order['70_cso_id'];
+            $order['prize_product'] = $order['prize'];
 
             $data = ['result' => 1,
                      'data' => $order
