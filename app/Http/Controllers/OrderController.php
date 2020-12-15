@@ -674,7 +674,12 @@ class OrderController extends Controller
             $tempArray = [];
             foreach ($tempId as $j => $product) {
                 $tempArray[$j] = [];
-                $tempArray[$j]['name'] = $product['id'];
+                if (gettype($product['id']) == gettype(1)){
+                    $tempArray[$j]['id'] = $product['id'];    
+                }else {
+                    $tempArray[$j]['id'] = 8;
+                    $tempArray[$j]['name'] = $product['id'];
+                }
                 if(isset(DeliveryOrder::$Promo[$product['id']])){
                     $tempArray[$j]['name'] = DeliveryOrder::$Promo[$product['id']]['name'];
                 }
