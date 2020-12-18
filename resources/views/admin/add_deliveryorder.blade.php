@@ -212,11 +212,29 @@
 <script>
     $(document).ready(function(){
         $("#cso").on("input", function(){
-            var txtCso = $(this).val();
-            $.get( '{{route("fetchCso")}}', { txt: txtCso })
+            //var txtCso = $(this).val();
+            check_cso($("#cso").val());
+            // console.log(txtCso);
+            // $.get( '{{route("fetchCso")}}', { txt: txtCso })
+            // .done(function( result ) {
+            //     console.log(result);
+            //     if (result == 'true'){
+            //         $('#validation_cso').html('Kode CSO Benar');
+            //         $('#validation_cso').css('color', 'green');
+            //         $('#submit').removeAttr('disabled');
+            //     }
+            //     else{
+            //         $('#validation_cso').html('Kode CSO Salah');
+            //         $('#validation_cso').css('color', 'red');
+            //         $('#submit').attr('disabled',"");
+            //     }
+            // });
+        });
+
+        function check_cso(code) {
+        	$.get( '{{route("fetchCso")}}', { cso_code: code })
             .done(function( result ) {
-                console.log(result);
-                if (result == 'true'){
+                if (result['result'] == "true" && result['data'].length > 0) {
                     $('#validation_cso').html('Kode CSO Benar');
                     $('#validation_cso').css('color', 'green');
                     $('#submit').removeAttr('disabled');
@@ -227,7 +245,7 @@
                     $('#submit').attr('disabled',"");
                 }
             });
-        });
+        }
     });
 </script>
 

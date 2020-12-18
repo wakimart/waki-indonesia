@@ -125,6 +125,7 @@ class HomeServiceController extends Controller
 
     public function admin_ListHomeService(Request $request){
         $branches = Branch::Where('active', true)->get();
+        $csos = Cso::where('active', true)->get();
         $awalBulan = Carbon::now()->startOfMonth()->subMonth(4);
         $akhirBulan = Carbon::now()->startOfMonth()->addMonth(5);//5
         $arrbranches = [];
@@ -162,12 +163,13 @@ class HomeServiceController extends Controller
             $homeServices = $homeServices->where('home_services.branch_id', $request->filter_branch);
         }
         if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
-            $homeServices = $homeServices->where('home_services.cso_id', $request->filter_cso);
+            $cso_id = Cso::where('code', $request->filter_cso)->get();
+            $homeServices = $homeServices->where('home_services.cso_id', $cso_id[0]['id']);
         }
         
         $homeServices = $homeServices->get();
         
-        return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches'));
+        return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches', 'csos'));
     }
 
     public function admin_fetchHomeService(Request $request){
@@ -398,6 +400,7 @@ class HomeServiceController extends Controller
 
     public function export_to_xls(Request $request)
     {
+        $city = null;
         $date = null;
         $branch = null;
         $cso = null;
@@ -415,7 +418,8 @@ class HomeServiceController extends Controller
             $branch = $request->filter_branch;
         }
         if($request->has('filter_cso') && $request->filter_cso != "undefined"){
-            $cso = $request->filter_cso;
+            $csos = Cso::where('code', $request->filter_cso)->get();
+            $cso = $csos[0]['id'];
         }
         // dd(new HomeServicesExportByDate($date, $city, $branch, $cso, null));
         return Excel::download(new HomeServicesExport($city, $branch, $cso, $search, null), 'Home Service.xlsx');
@@ -437,7 +441,8 @@ class HomeServiceController extends Controller
             $branch = $request->filter_branch;
         }
         if($request->has('filter_cso')  && $request->filter_cso != "undefined"){
-            $cso = $request->filter_cso;
+            $csos = Cso::where('code', $request->filter_cso)->get();
+            $cso = $csos[0]['id'];
         }
         if($request->has('filter_search') && $request->filter_search != "undefined"){
             $search = $request->filter_search;

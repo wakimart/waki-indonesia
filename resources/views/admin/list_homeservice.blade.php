@@ -138,24 +138,19 @@
                     <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                       <div class="form-group">
                         <label for="">Filter By CSO</label>
-                          <select class="form-control" id="filter_cso" name="filter_cso">
-                            <option value="">All CSO</option>
-                            @php
-                              if(isset($_GET['filter_branch'])){
-                                $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+                          <input name="filter_cso" id="filter_cso" list="data_cso" class="text-uppercase form-control" placeholder="Search CSO" required="">
+                          <span class="invalid-feedback">
+                              <strong></strong>
+                          </span>
 
-                                foreach ($csos as $cso) {
-                                  if(isset($_GET['filter_cso'])){
-                                    if($_GET['filter_cso'] == $cso['id']){
-                                      echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                      continue;
-                                    }
-                                  }
-                                  echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                }
-                              }
-                            @endphp
-                          </select>
+                          <datalist id="data_cso">
+                              <select class="form-control">
+                                <option value="All CSO"></option>
+                                @foreach($csos as $cso)
+                                  <option value="{{$cso['code']}}-{{$cso['name']}}"></option>
+                                @endforeach
+                              </select>
+                          </datalist>
                           <div class="validation"></div>
                       </div>
                     </div>
@@ -815,24 +810,25 @@ window.onload = function() {
         });
     });
 
-    $("#filter_branch").on("change", function(){
-      var id = $(this).val();
-      $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
-      .done(function( result ) {
-          $( "#filter_cso" ).html("");
-          var arrCSO = "<option selected value=\"\">All CSO</option>";
-          $( "#filter_cso" ).append(arrCSO);
-          if(result.length > 0){
-              $.each( result, function( key, value ) {
-                arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
-              });
-              $( "#filter_cso" ).append(arrCSO);
-            }
-        });
-      if(id == ""){
-        $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
-      }
-    });
+    // $("#filter_branch").on("change", function(){
+    //   var id = $(this).val();
+    //   $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
+    //   .done(function( result ) {
+    //       $( "#filter_cso" ).html("");
+    //       var arrCSO = "<option selected value=\"\">All CSO</option>";
+    //       $( "#filter_cso" ).append(arrCSO);
+    //       if(result.length > 0){
+    //           $.each( result, function( key, value ) {
+    //             arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
+    //           });
+    //           $( "#filter_cso" ).append(arrCSO);
+    //         }
+    //     });
+    //   if(id == ""){
+    //     $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
+    //   }
+    // });
+
     $("#btn-exportByDate").on("click", function(){
       var urlParamArray = new Array();
       var urlParamStr = "";
@@ -843,7 +839,9 @@ window.onload = function() {
         urlParamArray.push("filter_branch=" + $('#filter_branch').val());
       }
       if($('#filter_cso').val() != ""){
-        urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+        var get_req = $('#filter_cso').val();
+        var get_code = get_req.split("-");
+        urlParamArray.push("filter_cso=" + get_code[0]);
       }
       if($('#search').val() != ""){
         urlParamArray.push("filter_search=" + $('#search').val());
@@ -871,7 +869,9 @@ window.onload = function() {
         urlParamArray.push("filter_branch=" + $('#filter_branch').val());
       }
       if($('#filter_cso').val() != ""){
-        urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+        var get_req = $('#filter_cso').val();
+        var get_code = get_req.split("-");
+        urlParamArray.push("filter_cso=" + get_code[0]);
       }
       if($('#search').val() != ""){
         urlParamArray.push("filter_search=" + $('#search').val());
@@ -1102,7 +1102,13 @@ $(document).on("click", "#btn-filter", function(e){
     urlParamArray.push("filter_branch=" + $('#filter_branch').val());
   }
   if($('#filter_cso').val() != ""){
-    urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+    var get_req = $('#filter_cso').val();
+    if(get_req != "All CSO"){
+      var get_code = get_req.split("-");
+      urlParamArray.push("filter_cso=" + get_code[0]);
+    }else{
+      console.log(urlParamArray);
+    }
   }
   if($('#search').val() != ""){
     urlParamArray.push("filter_search=" + $('#search').val());

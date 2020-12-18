@@ -223,12 +223,12 @@
 			                    </div>
 			                    <div class="form-group">
 			                    	<label for="">CSO Code 30%</label>
-			                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" placeholder="CSO Code 30%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+			                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" placeholder="CSO Code 30%" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
 			                    	<label for="">CSO Code 70%</label>
-			                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" placeholder="CSO Code 70%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+			                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" placeholder="CSO Code 70%" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                </div>
@@ -339,11 +339,11 @@
         $(".cso").on("input", function(){
             var txtCso = $(this).val();
             var temp = $(this);
-            $.get( '{{route("fetchCso")}}', { txt: txtCso })
+            $.get( '{{route("fetchCso")}}', { cso_code: txtCso })
             .done(function( result ) {
                 var bool = false;
 
-                if (result == 'true'){
+                if (result['result'] == 'true' && result['data'].length > 0){
                     $(temp).parent().children('.validation').html('Kode CSO Benar');
                     $(temp).parent().children('.validation').css('color', 'green');
                     bool = true;

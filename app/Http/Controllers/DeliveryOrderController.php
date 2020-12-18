@@ -86,27 +86,35 @@ class DeliveryOrderController extends Controller
     }
 
     public function admin_StoreDeliveryOrder(Request $request){
-        $data = $request->all();
-        $data['code'] = "DO_BOOK/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
-        $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            $data['code'] = "DO_BOOK/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
 
-        //pembentukan array product
-        $data['arr_product'] = [];
-        foreach ($data as $key => $value) {
-            $arrKey = explode("_", $key);
-            if($arrKey[0] == 'product'){
-                if(isset($data['qty_'.$arrKey[1]])){
-                    $data['arr_product'][$key] = [];
-                    $data['arr_product'][$key]['id'] = $value;
-                    $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+            //pembentukan array product
+            $data['arr_product'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($data['qty_'.$arrKey[1]])){
+                        $data['arr_product'][$key] = [];
+                        $data['arr_product'][$key]['id'] = $value;
+                        $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+                    }
                 }
             }
+            $data['arr_product'] = json_encode($data['arr_product']);
+
+            $deliveryOrder = DeliveryOrder::create($data);
+
+            DB::commit();
+            return response()->json(['success' => 'Berhasil!!']);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['errors' => $ex]);
         }
-        $data['arr_product'] = json_encode($data['arr_product']);
-
-        $deliveryOrder = DeliveryOrder::create($data);
-
-        return response()->json(['success' => 'Berhasil!!']);
+        
     }
 
     public function admin_ListDeliveryOrder(Request $request){
