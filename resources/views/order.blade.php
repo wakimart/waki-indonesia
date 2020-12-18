@@ -257,7 +257,13 @@
 
 
                 <div class="form-group">
-                    <input type="text" class="form-control" name="customer_type" id="customer_type" placeholder="Tipe Customer" data-msg="Mohon Isi Tipe Customer" />
+                    <span>Type Customer</span>
+                    <select id="customer_type" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="customer_type" value="" required>
+                        <option value="Tele Voucher">Tele Voucher</option>
+                        <option value="Tele Home Service">Tele Home Service</option>
+                        <option value="Home Office Voucher">Home Office Voucher</option>
+                        <option value="Home Voucher">Home Voucher</option>
+                    </select>
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">

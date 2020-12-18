@@ -33,11 +33,19 @@ class RajaOngkir extends Model
     }
 
     static public function FetchCityApi($province){
-        $data = RajaOngkir_City::where([['province_id', $province], ['type', 'Kota']])->select(DB::raw('CONCAT(type, " ", city_name) AS city_name'))->get();
+        $data = RajaOngkir_City::where('province_id', $province)->select(DB::raw('CONCAT(type, " ", city_name) AS city_name'))->get();
         
         $data = ['result' => 1,
                      'data' => $data
                     ];
             return response()->json($data, 200);
+    }
+
+    static public function FetchProvinceByCity($city_name){
+        $type_city = explode(" ", $city_name)[0];
+        $city_name = substr($city_name, strlen($type_city)+1);
+        $provinceNya = RajaOngkir_City::where([['city_name', $city_name], ['type', $type_city]])->first()->provinceNya;
+
+        return $provinceNya;
     }
 }

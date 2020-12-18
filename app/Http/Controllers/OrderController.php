@@ -21,8 +21,8 @@ class OrderController extends Controller
     public function index()
     {
     	$promos = DeliveryOrder::$Promo;
-    	$branches = Branch::all();
-    	$csos = Cso::all();
+    	$branches = Branch::where('active', true)->get();
+    	$csos = Cso::where('active', true)->get();
     	$cashUpgrades = Order::$CashUpgrade;
     	$paymentTypes = Order::$PaymentType;
         $banks = Order::$Banks;
@@ -180,7 +180,7 @@ class OrderController extends Controller
         $branches = Branch::Where('active', true)->get();
         //khususu head-manager, head-admin, admin
         $orders = Order::where('active', true);
-        $countOrders = Order::count();
+        $countOrders = Order::where('active', true)->count();
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
@@ -202,6 +202,9 @@ class OrderController extends Controller
         }
         if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
             $orders = $orders->where('cso_id', $request->filter_cso);
+        }
+        if($request->has('filter_type') && Auth::user()->roles[0]['slug'] != 'cso'){
+            $orders = $orders->where('customer_type', $request->filter_type);
         }
 
         $orders = $orders->sortable(['orderDate' => 'desc'])->paginate(10);

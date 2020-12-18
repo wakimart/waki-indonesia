@@ -22,6 +22,25 @@
 				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
                     <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                       <div class="form-group">
+                        <label for="">Filter By Type Customer</label>
+                          <select class="form-control" id="filter_type" name="filter_type">
+                            <option value="">All Type</option>
+                            @php
+	                            $selected = "";
+	                            if(isset($_GET['filter_type'])){
+	                            	$selected = $_GET['filter_type'];
+	                            }
+                            @endphp
+                            <option {{ $selected == "Tele Voucher" ? "selected=\"\"" : "" }} value="Tele Voucher">Tele Voucher</option>
+                            <option {{ $selected == "Tele Home Service" ? "selected=\"\"" : "" }} value="Tele Home Service">Tele Home Service</option>
+                            <option {{ $selected == "Home Office Voucher" ? "selected=\"\"" : "" }} value="Home Office Voucher">Home Office Voucher</option>
+                            <option {{ $selected == "Home Voucher" ? "selected=\"\"" : "" }} value="Home Voucher">Home Voucher</option>
+                          </select>
+                          <div class="validation"></div>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
                         <label for="">Filter By Team</label>
                           <select class="form-control" id="filter_branch" name="filter_branch">
                             <option value="" selected="">All Branch</option>
@@ -99,6 +118,7 @@
 						              	<th> Member Name </th>
 						              	<th colspan="2"> Product </th>
 						              	<th> CSO </th>
+						              	<th> Type Customer </th>
 						              	@if(Gate::check('edit-order') || Gate::check('delete-order'))
 							              	<th colspan="2"> Edit / Delete </th>
 							            @endif
@@ -129,6 +149,7 @@
 				                                @php break; @endphp
 				                            @endforeach
 				                            <td rowspan="{{ $totalProduct }}">{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
+				                            <td rowspan="{{ $totalProduct }}">{{ $order['customer_type'] }}</td>
 				                            @can('edit-order')
 					                            <td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('edit_order', ['id' => $order['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
 				                            @endcan
@@ -229,6 +250,9 @@
 	  }
 	  if($('#filter_cso').val() != ""){
 		urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+	  }
+	  if($('#filter_type').val() != ""){
+		urlParamArray.push("filter_type=" + $('#filter_type').val());
 	  }
 	  for (var i = 0; i < urlParamArray.length; i++) {
 		if (i === 0) {

@@ -75,7 +75,7 @@
 				                <label for="">Province</label>
 								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
 									<option selected disabled value="">Pilihan Provinsi</option>
-			
+
 									@php
 										$result = RajaOngkir::FetchProvince();
 										$result = $result['rajaongkir']['results'];
@@ -260,6 +260,45 @@
 	    </div>
 	</div>
 </div>
+<!-- modal success -->
+<div class="modal fade" role="dialog" tabindex="-1" id="modal-Success">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Input Success</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="txt-success">Appointment telah berhasil dibuat.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-gradient-primary" type="button" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal error -->
+<div class="modal fade" role="dialog" tabindex="-1" id="modal-Error">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Input Failed</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="txt-success">"Appointment dengan nomer ini sudah ada!!"</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-gradient-danger" type="button" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('script')
@@ -316,11 +355,13 @@
 	                    $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
 	                }
 	            }
-	            alert("Input Error !!!");
+              $("#modal-Error").modal("show");
+	            // alert("Input Error !!!");
 	        }
 	        else{
-	            alert("Input Success !!!");
-	            window.location.reload()
+              $("#modal-Success").modal("show");
+	            // alert("Input Success !!!");
+	            // window.location.reload()
 	        }
 
 	        document.getElementById("addOrder").innerHTML = "SAVE";
@@ -381,7 +422,7 @@
                 var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
-                        if(value['type'] == "Kota"){                            
+                        if(value['type'] == "Kota"){
                             arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
                         }
                     });

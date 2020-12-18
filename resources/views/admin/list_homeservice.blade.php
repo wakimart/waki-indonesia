@@ -165,6 +165,7 @@
                       <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
                       <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" value="-"><span class="mdi mdi-file-document"></span> Export XLS</button>
                       <button id="btn-exportDate" type="button" class="btn btn-gradient-info m-1" name="export" data-toggle="modal" data-target="#datePickerHomeServiceModal" value="-"><span class="mdi mdi-file-document"></span> Export XLS with Date</button>
+                      <button id="btn-exportByInput" type="button" class="btn btn-gradient-info m-1" name="export" data-toggle="modal" data-target="#datePickerByInput" value="-"><span class="mdi mdi-file-document"></span> Export XLS by Input Date</button>
                     </div>
                   </div>
                 </div>
@@ -511,6 +512,33 @@
     </div>
   </div>
   <!-- End Modal Date Picker export Xls -->
+
+
+  <!-- Modal Date Picker export By Input Xls -->
+  <div class="modal fade" id="datePickerByInput" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <label for="">Pick a Date</label>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Tanggal Input</label>
+              <input type="date" class="form-control" name="date" id="filter_inputByDate" placeholder="Awal Tanggal" required data-msg="Mohon Isi Tanggal" onload="getDate()" />
+              <div class="validation"></div>
+          </div>
+              
+          </div>
+        <div class="modal-footer">
+                {{csrf_field()}}
+                  <input type="hidden" id="hiddenInput" name="cancel" value="1">
+                  <button type="submit" data-dismiss="modal" id="btn-exportByInputDate" class="btn btn-gradient-danger mr-2" name="id" value="-">Export</button>
+              <button type="button" data-dismiss="modal" class="btn btn-light">No</button>
+          </div>
+        </div>
+    </div>
+  </div>
+  <!-- End Modal Date Picker export By Input Xls -->
 </div>
 @endsection
 
@@ -886,6 +914,11 @@ window.onload = function() {
       var bulan = tgl.getMonth()+1;if(bulan < 9)  bulan="0" +bulan;
       tgl = tahun+"-"+bulan+"-"+hari;
       window.location.href = "{{route('homeservice_export-to-xls')}}?date=" + tgl + urlParamStr;   
+    });
+
+    $("#btn-exportByInputDate").on("click", function(){
+      var inputDate = $('#filter_inputByDate').val();
+      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}?inputDate=" + inputDate;   
     });
 
   });
