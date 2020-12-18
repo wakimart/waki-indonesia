@@ -587,8 +587,8 @@ class OrderController extends Controller
             'down_payment' => 'required',
             'remaining_payment' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
-            '30_cso_id' => ['required', 'exists:csos,code'],
-            '70_cso_id' => ['required', 'exists:csos,code'],
+            'cso_id_30' => ['required', 'exists:csos,code'],
+            'cso_id_70' => ['required', 'exists:csos,code'],
             'branch_id' => 'required'
         ], $messages);
 
@@ -601,8 +601,9 @@ class OrderController extends Controller
         else{
             $data = $request->all();
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $data['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
-            $data['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
+            $data['30_cso_id'] = Cso::where('code', $data['cso_id_30'])->first()['id'];
+            $data['70_cso_id'] = Cso::where('code', $data['cso_id_70'])->first()['id'];
+            $data['prize'] = $data['gift_product'];
 
             //pembentukan array product
             $index = 0;
@@ -668,6 +669,7 @@ class OrderController extends Controller
             $kota = str_replace('Kabupaten ', '',$kota);
         }
         $city = RajaOngkir_City::where('city_name', 'like', '%'.$kota.'%')->first();
+        
         foreach ($orders as $i => $doNya) {
             $tempId = json_decode($doNya['product'], true);
             $tempArray = $doNya['product'];
@@ -688,9 +690,12 @@ class OrderController extends Controller
             $doNya['product'] = $tempArray;
 
             //khusus 
-            $doNya['cso_30_code'] = Cso::where('id', $doNya['cso_30_id'])->first()['code'];
-            $doNya['cso_70_code'] = Cso::where('id', $doNya['cso_70_id'])->first()['code'];
-
+            $cso_30 =  Cso::where('id', $doNya['cso_30_id'])->first();
+            $cso_70 = Cso::where('id', $doNya['cso_70_id'])->first();
+            $doNya['cso_30_code'] =$cso_30['code'];
+            $doNya['cso_30_name'] =$cso_30['name'];
+            $doNya['cso_70_code'] = $cso_70['code'];
+            $doNya['cso_70_name'] =$cso_70['name'];
             $tempId = json_decode($doNya['bank'], true);
             $tempArray = [];
             foreach ($tempId as $j => $bank) {

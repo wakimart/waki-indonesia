@@ -493,12 +493,20 @@ class DeliveryOrderController extends Controller
             $tempId = json_decode($doNya['arr_product'], true);
             $tempArray = $doNya['arr_product'];
             $tempArray = [];
+            // dd($tempId);
             foreach ($tempId as $j => $product) {
                 $tempArray2 = [];
-                $tempArray2['name'] = $product['id'];
-                if(isset(DeliveryOrder::$Promo[$product['id']])){
-                    $tempArray2['name'] = DeliveryOrder::$Promo[$product['id']]['name'];
+                if(is_numeric($product['id'])){
+                    $prod = DeliveryOrder::$Promo[$product['id']];
+                    if ($prod != null){
+                        $tempArray2['id'] = $product['id'];
+                        $tempArray2['name'] = $prod['name'];
+                    }
+                }else{
+                    $tempArray2['id'] = 8;
+                    $tempArray2['name'] = $product['id'];
                 }
+                               
                 $tempArray2['qty'] = $product['qty'];
                 array_push($tempArray, $tempArray2);
             }
