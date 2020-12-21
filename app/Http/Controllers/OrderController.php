@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use App\Exports\OrderExport;
 use App\DeliveryOrder;
 use App\Order;
 use App\Branch;
@@ -199,8 +201,9 @@ class OrderController extends Controller
             $orders = $orders->where('customer_type', $request->filter_type);
         }
 
+        $categories = CategoryProduct::all();
         $orders = $orders->sortable(['orderDate' => 'desc'])->paginate(10);
-        return view('admin.list_order', compact('orders','countOrders','branches', $orders));
+        return view('admin.list_order', compact('orders','countOrders','branches', 'categories', $orders));
     }
 
     public function admin_DetailOrder(Request $request){
@@ -352,6 +355,29 @@ class OrderController extends Controller
             return response()->json(['error' =>  $ex->getMessage(), 500]);
         }
     }
+
+    public function export_to_xls(Request $request){
+        $date = null;
+        $cso = null;
+        $city = null;
+        $category = null;
+        if($request->has('orderDate') && $request->orderDate != "undefined"){
+            $date = $request->orderDate;
+        }
+        if($request->has('cso') && $request->cso != "undefined"){
+            $cso = $request->cso;
+        }
+        if($request->has('city') && $request->city != "undefined"){
+            $city = $request->city;
+        }
+        if($request->has('category') && $request->category != "undefined"){
+            $category = $request->category;
+        }
+
+        return Excel::download(new OrderExport($date, $city, $category, $cso), 'Order Report.xlsx'); 
+    }
+
+
 
     //KHUSUS API APPS
     public function fetchBanksApi(){

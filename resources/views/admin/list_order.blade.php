@@ -92,7 +92,8 @@
 						<label for=""></label>
 						<div class="form-group">
 						<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-					  </div>
+						<button id="btn-report" type="button" class="btn btn-gradient-primary m-1" name="report" value="-" data-toggle="modal" data-target="#reportOrderModal"><span class="mdi mdi-filter"></span> Report Order</button>	
+						</div>
 					</div>
 				  </div>
 				@endif
@@ -210,7 +211,118 @@
           	</div>
         </div>
     </div>
-    <!-- End Modal Delete -->
+	<!-- End Modal Delete -->
+	
+	<!-- Modal Report -->
+	<div class="modal fade" id="reportOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          	<div class="modal-content">
+            	<div class="modal-header">
+					<label>Report Order</label>
+              		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                		<span aria-hidden="true">&times;</span>
+              		</button>
+            	</div>
+            	<div class="modal-body">
+					<div class="form-group">
+					  <label>Pick a Date</label>
+					  <input type="date" class="form-control" name="orderDate" id="orderDate" placeholder="Awal Tanggal" required data-msg="Mohon Isi Tanggal" onload="getDate()" />
+					  <div class="validation"></div>
+				  </div>
+				  {{-- <div class="form-group">
+						<label for="">Product Category</label>
+						<select class="form-control" id="categoryReport" name="categoryReport">
+							<option selected disabled value="">Choose Category</option>
+							@foreach($categories as $category)
+								<option value="{{$category['id']}}">{{$category['name']}}</option>
+							@endforeach
+						</select>
+					</div> --}}
+					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+						<div class="form-group">
+							<label for="">Province</label>
+							<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" >
+								<option selected disabled value="">Pilihan Provinsi</option>
+
+								@php
+									$result = RajaOngkir::FetchProvince();
+									$result = $result['rajaongkir']['results'];
+									$arrProvince = [];
+									if(sizeof($result) > 0){
+										foreach ($result as $value) {
+											echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+										}
+									}
+								@endphp
+							</select>
+							<div class="validation"></div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+						<div class="form-group">
+							<label for="">City</label>
+							<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota">
+								<option selected disabled value="">Pilihan Kota</option>
+							</select>
+							<div class="validation"></div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+						<div class="form-group">
+						  <label for="">Filter By Team</label>
+							<select class="form-control" id="filter_branch_modal" name="filter_branch_modal">
+							  <option value="" selected="">All Branch</option>
+							  @foreach($branches as $branch)
+								@php
+								  $selected = "";
+								  if(isset($_GET['filter_branch'])){
+									if($_GET['filter_branch'] == $branch['id']){
+									  $selected = "selected=\"\"";
+									}
+								  }
+								@endphp
+  
+								<option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+							  @endforeach
+							</select>
+							<div class="validation"></div>
+						</div>
+					  </div>
+					  <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+						<div class="form-group">
+						  <label for="">Filter By CSO</label>
+							<select class="form-control" id="report_cso_modal" name="report_cso_modal">
+							  <option value="">All CSO</option>
+							  @php
+								if(isset($_GET['filter_branch'])){
+								  $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+  
+								  foreach ($csos as $cso) {
+									if(isset($_GET['filter_cso_modal'])){
+									  if($_GET['filter_cso_model'] == $cso['id']){
+										echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+										continue;
+									  }
+									}
+									echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+								  }
+								}
+							  @endphp
+							</select>
+							<div class="validation"></div>
+						</div>
+					</div>
+					
+				
+            	<div class="modal-footer">
+                    {{csrf_field()}}
+                    <button type="submit" id="exportButton" class="btn btn-gradient-danger mr-2">Yes</button>
+              		<button class="btn btn-light" data-dismiss="modal">No</button>
+            	</div>
+          	</div>
+        </div>
+    </div>
+    <!-- End Modal Report -->
 </div>
 @endsection
 
@@ -240,7 +352,66 @@
 	  });
 	  $(".btn-delete").click(function(e) {
 		$("#frmDelete").attr("action",  $(this).val());
-    });
+	  });
+
+	  $("#exportButton").on("click", function(){
+		var urlParamArray = new Array();
+		var urlParamStr = "";
+		if($('#orderDate').val() != ""){
+			urlParamArray.push("orderDate=" + $('#orderDate').val());
+		}
+		if($('#report_cso_modal').val() != ""){
+			urlParamArray.push("report_cso_modal=" + $('#report_cso_modal').val());
+		}
+		// if($('#categoryReport').val() != "" || $('#categoryReport').val() != null){
+		// 	urlParamArray.push("categoryReport=" + $('#categoryReport').val());
+		// }
+		for (var i = 0; i < urlParamArray.length; i++) {
+			if (i === 0) {
+			urlParamStr += "?" + urlParamArray[i]
+			} else {
+			urlParamStr += "&" + urlParamArray[i]
+			}
+		}
+		console.log(urlParamStr);
+		window.location.href = "{{route('order_export-to-xls')}}" + urlParamStr;
+	  });
+	  $("#province").on("change", function(){
+		var id = $(this).val();
+		$( "#city" ).html("");
+		$.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+		.done(function( result ) {
+			result = result['rajaongkir']['results'];
+			var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+			if(result.length > 0){
+				$.each( result, function( key, value ) {
+					if(value['type'] == "Kota"){
+						arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+					}
+				});
+				$( "#city" ).append(arrCity);
+			}
+			});
+		});
+		
+		$("#filter_branch_modal").on("change", function(){
+		  console.log("test")
+		  var id = $(this).val();
+		  $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
+		  .done(function( result ) {
+			  $( "#report_cso_modal" ).html("");
+			  var arrCSO = "<option selected value=\"\">All CSO</option>";
+			  if(result.length > 0){
+				  $.each( result, function( key, value ) {
+					arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
+				  });
+				  $( "#report_cso_modal" ).append(arrCSO);
+				}
+			});
+		if(id == ""){
+		  $( "#report_cso_modal" ).html("<option selected value=\"\">All CSO</option>");
+	  	}
+	  });
 	});
 	$(document).on("click", "#btn-filter", function(e){
 	  var urlParamArray = new Array();

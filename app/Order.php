@@ -34,4 +34,8 @@ class Order extends Model
     {
         return $this->belongsTo('App\Branch');
     }
+    public function getCSO()
+    {
+        return Cso::where('id', $this->cso_id)->first();
+    }
 }

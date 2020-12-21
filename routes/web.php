@@ -223,7 +223,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->middleware('can:edit-order');
 	    //Delete Order
 	    Route::post('/{OrderNya}', 'OrderController@delete')
-	    	->name('delete_order');
+			->name('delete_order');
+		//Export to XLS By Date
+        Route::get('/report-to-xls-by-date', 'OrderController@export_to_xls')
+                ->name('order_export-to-xls');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function(){
