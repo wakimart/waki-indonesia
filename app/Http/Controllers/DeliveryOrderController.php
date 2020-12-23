@@ -178,32 +178,33 @@ class DeliveryOrderController extends Controller
     {
         $deliveryOrders = DeliveryOrder::find($request->input('idDeliveryOrder'));
         $dataBefore = DeliveryOrder::find($request->input('idDeliveryOrder'));
-        $deliveryOrders->no_member = $request->input('no_member');
-        $deliveryOrders->name = $request->input('name');
-        $deliveryOrders->address = $request->input('address');
-        $deliveryOrders->phone = $request->input('phone');
-
-        //pembentukan array product
-        $data = $request->all();
-        $data['arr_product'] = [];
-        foreach ($data as $key => $value) {
-            $arrKey = explode("_", $key);
-            if($arrKey[0] == 'product'){
-                if(isset($data['qty_'.$arrKey[1]])){
-                    $data['arr_product'][$key] = [];
-                    $data['arr_product'][$key]['id'] = $value;
-                    $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
-                }
-            }
-        }
-        $deliveryOrders->arr_product = json_encode($data['arr_product']);
-
-        $deliveryOrders->cso_id = $request->input('idCSO');
-        $deliveryOrders->branch_id = $request->input('branch_id');
-        $deliveryOrders->city = $request->input('city');
 
         DB::beginTransaction();
         try {
+            $deliveryOrders->no_member = $request->input('no_member');
+            $deliveryOrders->name = $request->input('name');
+            $deliveryOrders->address = $request->input('address');
+            $deliveryOrders->phone = $request->input('phone');
+
+            //pembentukan array product
+            $data = $request->all();
+            $data['arr_product'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($data['qty_'.$arrKey[1]])){
+                        $data['arr_product'][$key] = [];
+                        $data['arr_product'][$key]['id'] = $value;
+                        $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+                    }
+                }
+            }
+            $deliveryOrders->arr_product = json_encode($data['arr_product']);
+
+            $deliveryOrders->cso_id = $request->input('idCSO');
+            $deliveryOrders->branch_id = $request->input('branch_id');
+            $deliveryOrders->city = $request->input('city');
+            
             $deliveryOrders->save();
 
             $user = Auth::user();

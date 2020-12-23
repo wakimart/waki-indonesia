@@ -11,6 +11,8 @@ use App\User;
 use App\CategoryProduct;
 use App\Utils;
 use App\HistoryUpdate;
+use App\DeliveryOrder;
+use App\Order;
 use Carbon\Carbon;
 use App\Exports\HomeServicesExport;
 use App\Exports\HomeServicesExportByDate;
@@ -804,5 +806,58 @@ class HomeServiceController extends Controller
                  'type_customers' => $type_customers
                 ];
         return response()->json($data, 200);
+    }
+
+
+    public function fetchCSOFIlter(Request $request){
+        $csosId = [];
+        switch(true){
+            case($request->menu == "home service"):
+                $Homeservices = HomeService::Where([['branch_id', $request->branch_id], ['active', true]])->get();
+                foreach( $Homeservices as $Homeservice){
+                    array_push($csosId, $Homeservice->cso_id);
+                }
+                $data = Cso::where('code','like',  '%'.$request->text.'%')->whereIn('id', array_unique($csosId))->get();
+                $result = "true";
+                if(sizeof($data) < 0){
+                    $result = "false";
+                }
+                
+                return response()->json([
+                    'result' =>$result,
+                    'data' => $data
+                ], 200);
+            case($request->menu == "registration"):
+                $registrations = DeliveryOrder::Where([['branch_id', $request->branch_id], ['active', true]])->get();
+                foreach( $registrations as $registration){
+                    array_push($csosId, $registration->cso_id);
+                }
+                $data = Cso::where('code','like',  '%'.$request->text.'%')->whereIn('id', array_unique($csosId))->get();
+                $result = "false";
+                if(sizeof($data) > 0){
+                    $result = "true";
+                }
+                
+                return response()->json([
+                    'result' =>$result,
+                    'data' => $data
+                ], 200);
+            case($request->menu == "order"):
+                $Orders = Order::where([['branch_id', $request->branch_id], ['active', true]])->get();
+                foreach( $Orders as $Order){
+                    array_push($csosId, $Order->cso_id);
+                }
+                
+                $data = Cso::where('code','like',  '%'.$request->text.'%')->whereIn('id', array_unique($csosId))->get();
+                $result = "false";
+                if(sizeof($data) > 0){
+                    $result = "true";
+                }
+                
+                return response()->json([
+                    'result' =>$result,
+                    'data' => $data
+                ], 200);
+        }
     }
 }
