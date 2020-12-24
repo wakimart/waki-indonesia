@@ -31,7 +31,7 @@
                 <td> {{$order['name']}} </td>
                 <td> {{$order['phone']}} </td>
                 <td> {{$order['city']}} </td>
-                <td> {{$order['city']}} </td>
+                <td> {{$order['distric']}} </td>
                 <td> {{$order['address']}} </td>
                 <td> {{$order['total_payment']}}</td>
             </tr>
