@@ -55,7 +55,7 @@ Route::group(['prefix' => 'api-apps'], function () {
     Route::get('fetchcso/{branchId}', 'CsoController@fetchCsoApi'); //fetching all active Cso by branch
     Route::get('fetchPromosApi', 'DeliveryOrderController@fetchPromosApi'); //fetching all promo
 	Route::get('fetchBanksApi', 'OrderController@fetchBanksApi'); //fetching all banks
-	Route::get('fetchCSOFIlter', 'HomeServiceController@fetchCSOFIlter');
+	Route::post('fetchCSOFIlter', 'HomeServiceController@fetchCSOFIlter');
 	Route::post('addVersion', 'VersionController@storeVersion');
 	Route::get('listVersion', 'VersionController@listVersion');
 	Route::get('/fetchAllTypeHS', 'HomeServiceController@listAllTypeHS');
