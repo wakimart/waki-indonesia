@@ -17,96 +17,100 @@
   			</nav>
 		</div>
 
+    <div class="col-12 grid-margin" style="padding: 0;">
+      @if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
+        <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+          <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+            <div class="form-group">
+              <label for="">Filter By Type Customer</label>
+                <select class="form-control" id="filter_type" name="filter_type">
+                  <option value="">All Type</option>
+                  @php
+                    $selected = "";
+                    if(isset($_GET['filter_type'])){
+                      $selected = $_GET['filter_type'];
+                    }
+                  @endphp
+                  <option {{ $selected == "Tele Voucher" ? "selected=\"\"" : "" }} value="Tele Voucher">Tele Voucher</option>
+                  <option {{ $selected == "Tele Home Service" ? "selected=\"\"" : "" }} value="Tele Home Service">Tele Home Service</option>
+                  <option {{ $selected == "Home Office Voucher" ? "selected=\"\"" : "" }} value="Home Office Voucher">Home Office Voucher</option>
+                  <option {{ $selected == "Home Voucher" ? "selected=\"\"" : "" }} value="Home Voucher">Home Voucher</option>
+                </select>
+                <div class="validation"></div>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+            <div class="form-group">
+              <label for="">Filter By Team</label>
+                <select class="form-control" id="filter_branch" name="filter_branch">
+                  <option value="" selected="">All Branch</option>
+                  @foreach($branches as $branch)
+                    @php
+                      $selected = "";
+                      if(isset($_GET['filter_branch'])){
+                        if($_GET['filter_branch'] == $branch['id']){
+                          $selected = "selected=\"\"";
+                        }
+                      }
+                    @endphp
+
+                    <option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                  @endforeach
+                </select>
+                <div class="validation"></div>
+            </div>
+          </div>
+          <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+            <div class="form-group">
+              <label for="">Filter By CSO</label>
+                <select class="form-control" id="filter_cso" name="filter_cso">
+                  <option value="">All CSO</option>
+                  @php
+                    if(isset($_GET['filter_branch'])){
+                      $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+
+                      foreach ($csos as $cso) {
+                        if(isset($_GET['filter_cso'])){
+                          if($_GET['filter_cso'] == $cso['id']){
+                            echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+                            continue;
+                          }
+                        }
+                        echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+                      }
+                    }
+                  @endphp
+                </select>
+                <div class="validation"></div>
+            </div>
+          </div>
+        </div>
+      @endif
+
+      @if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
+        <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+        <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+          <label for=""></label>
+          <div class="form-group">
+          <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+          <button id="btn-report" type="button" class="btn btn-gradient-info m-1" name="report" value="-" data-toggle="modal" data-target="#reportOrderModal"><span class="mdi mdi-filter"></span> Report Order</button>
+          </div>
+        </div>
+        </div>
+      @endif
+
+      <div class="col-sm-12 col-md-12" style="padding: 0; border: 1px solid #ebedf2;">
+        <div class="col-xs-12 col-sm-11 col-md-6 table-responsive" id="calendarContainer" style="padding: 0; float: left;"></div>
+        <div class="col-xs-12 col-sm-11 col-md-6" id="organizerContainer" style="padding: 0; float: left;"></div>
+      </div>
+    </div>
+
 		<div class="row">
-			<div class="col-12 grid-margin stretch-card">
-				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-                      <div class="form-group">
-                        <label for="">Filter By Type Customer</label>
-                          <select class="form-control" id="filter_type" name="filter_type">
-                            <option value="">All Type</option>
-                            @php
-	                            $selected = "";
-	                            if(isset($_GET['filter_type'])){
-	                            	$selected = $_GET['filter_type'];
-	                            }
-                            @endphp
-                            <option {{ $selected == "Tele Voucher" ? "selected=\"\"" : "" }} value="Tele Voucher">Tele Voucher</option>
-                            <option {{ $selected == "Tele Home Service" ? "selected=\"\"" : "" }} value="Tele Home Service">Tele Home Service</option>
-                            <option {{ $selected == "Home Office Voucher" ? "selected=\"\"" : "" }} value="Home Office Voucher">Home Office Voucher</option>
-                            <option {{ $selected == "Home Voucher" ? "selected=\"\"" : "" }} value="Home Voucher">Home Voucher</option>
-                          </select>
-                          <div class="validation"></div>
-                      </div>
-                    </div>
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-                      <div class="form-group">
-                        <label for="">Filter By Team</label>
-                          <select class="form-control" id="filter_branch" name="filter_branch">
-                            <option value="" selected="">All Branch</option>
-                            @foreach($branches as $branch)
-                              @php
-                                $selected = "";
-                                if(isset($_GET['filter_branch'])){
-                                  if($_GET['filter_branch'] == $branch['id']){
-                                    $selected = "selected=\"\"";
-                                  }
-                                }
-                              @endphp
 
-                              <option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-                            @endforeach
-                          </select>
-                          <div class="validation"></div>
-                      </div>
-                    </div>
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-                      <div class="form-group">
-                        <label for="">Filter By CSO</label>
-                          <select class="form-control" id="filter_cso" name="filter_cso">
-                            <option value="">All CSO</option>
-                            @php
-                              if(isset($_GET['filter_branch'])){
-                                $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
 
-                                foreach ($csos as $cso) {
-                                  if(isset($_GET['filter_cso'])){
-                                    if($_GET['filter_cso'] == $cso['id']){
-                                      echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                      continue;
-                                    }
-                                  }
-                                  echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                }
-                              }
-                            @endphp
-                          </select>
-                          <div class="validation"></div>
-                      </div>
-					</div>
-				@endif
-			
-				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
-				  <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-						<label for=""></label>
-						<div class="form-group">
-						<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-						<button id="btn-report" type="button" class="btn btn-gradient-primary m-1" name="report" value="-" data-toggle="modal" data-target="#reportOrderModal"><span class="mdi mdi-filter"></span> Report Order</button>	
-						</div>
-					</div>
-				  </div>
-				@endif
-
-				<div class="col-sm-12 col-md-12" style="padding: 0; border: 1px solid #ebedf2;">
-					<div class="col-xs-12 col-sm-11 col-md-6 table-responsive" id="calendarContainer" style="padding: 0; float: left;"></div>
-					<div class="col-xs-12 col-sm-11 col-md-6" id="organizerContainer" style="padding: 0; float: left;"></div>
-				</div>
-			
-			</div>
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
-      				<div class="card-body">
+      			<div class="card-body">
 						<h5 style="margin-bottom: 0.5em;">Total : {{ $countOrders }} data</h5>
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
         					<table class="table table-bordered">
@@ -126,7 +130,7 @@
 						            </tr>
           						</thead>
           						<tbody>
-									
+
           							@foreach($orders as $key => $order)
 				                        @php
 				                            $ProductPromos = json_decode($order['product'], true);
@@ -183,7 +187,7 @@
 							{!! $orders->appends(\Request::except('page'))->render() !!}
 							{{-- {{ $orders->appends(['sort' => 'created_at'])->links()}} --}}
         				</div>
-      				</div>
+      			</div>
     			</div>
   			</div>
 		</div>
@@ -212,18 +216,18 @@
         </div>
     </div>
 	<!-- End Modal Delete -->
-	
+
 	<!-- Modal Report -->
 	<div class="modal fade" id="reportOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          	<div class="modal-content">
-            	<div class="modal-header">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      	<div class="modal-content">
+        	<div class="modal-header">
 					<label>Report Order</label>
               		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 		<span aria-hidden="true">&times;</span>
               		</button>
-            	</div>
-            	<div class="modal-body">
+        	</div>
+        	<div class="modal-body">
 					<div class="form-group">
 					  <label>Pick a Date</label>
 					  <input type="date" class="form-control" name="orderDate" id="orderDate" placeholder="Awal Tanggal" required data-msg="Mohon Isi Tanggal" onload="getDate()" />
@@ -238,85 +242,88 @@
 							@endforeach
 						</select>
 					</div> --}}
-					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-						<div class="form-group">
-							<label for="">Province</label>
-							<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" >
-								<option selected disabled value="">Pilihan Provinsi</option>
+          <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+  					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+  						<div class="form-group">
+  							<label for="">Province</label>
+  							<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" >
+  								<option selected disabled value="">Pilihan Provinsi</option>
 
-								@php
-									$result = RajaOngkir::FetchProvince();
-									$result = $result['rajaongkir']['results'];
-									$arrProvince = [];
-									if(sizeof($result) > 0){
-										foreach ($result as $value) {
-											echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
-										}
-									}
-								@endphp
-							</select>
-							<div class="validation"></div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-						<div class="form-group">
-							<label for="">City</label>
-							<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota">
-								<option selected disabled value="">Pilihan Kota</option>
-							</select>
-							<div class="validation"></div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-						<div class="form-group">
-						  <label for="">Filter By Team</label>
-							<select class="form-control" id="filter_branch_modal" name="filter_branch_modal">
-							  <option value="" selected="">All Branch</option>
-							  @foreach($branches as $branch)
-								@php
-								  $selected = "";
-								  if(isset($_GET['filter_branch'])){
-									if($_GET['filter_branch'] == $branch['id']){
-									  $selected = "selected=\"\"";
-									}
-								  }
-								@endphp
-  
-								<option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-							  @endforeach
-							</select>
-							<div class="validation"></div>
-						</div>
-					  </div>
-					  <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-						<div class="form-group">
-						  <label for="">Filter By CSO</label>
-							<select class="form-control" id="report_cso_modal" name="report_cso_modal">
-							  <option value="">All CSO</option>
-							  @php
-								if(isset($_GET['filter_branch'])){
-								  $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
-  
-								  foreach ($csos as $cso) {
-									if(isset($_GET['filter_cso_modal'])){
-									  if($_GET['filter_cso_model'] == $cso['id']){
-										echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-										continue;
-									  }
-									}
-									echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-								  }
-								}
-							  @endphp
-							</select>
-							<div class="validation"></div>
-						</div>
-					</div>
-					
-				
+  								@php
+  									$result = RajaOngkir::FetchProvince();
+  									$result = $result['rajaongkir']['results'];
+  									$arrProvince = [];
+  									if(sizeof($result) > 0){
+  										foreach ($result as $value) {
+  											echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+  										}
+  									}
+  								@endphp
+  							</select>
+  							<div class="validation"></div>
+  					   </div>
+				      </div>
+    					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+    						<div class="form-group">
+    							<label for="">City</label>
+    							<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota">
+    								<option selected disabled value="">Pilihan Kota</option>
+    							</select>
+    							<div class="validation"></div>
+    						</div>
+    					</div>
+            </div>
+            <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+              <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+                <div class="form-group">
+                  <label for="">Filter By Team</label>
+                  <select class="form-control" id="filter_branch_modal" name="filter_branch_modal">
+                    <option value="" selected="">All Branch</option>
+                    @foreach($branches as $branch)
+                    @php
+                      $selected = "";
+                      if(isset($_GET['filter_branch'])){
+                      if($_GET['filter_branch'] == $branch['id']){
+                        $selected = "selected=\"\"";
+                      }
+                      }
+                    @endphp
+
+                    <option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                    @endforeach
+                  </select>
+                  <div class="validation"></div>
+                </div>
+               </div>
+  					  <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+    						<div class="form-group">
+    						  <label for="">Filter By CSO</label>
+    							<select class="form-control" id="report_cso_modal" name="report_cso_modal">
+    							  <option value="">All CSO</option>
+    							  @php
+    								if(isset($_GET['filter_branch'])){
+    								  $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+
+    								  foreach ($csos as $cso) {
+    									if(isset($_GET['filter_cso_modal'])){
+    									  if($_GET['filter_cso_model'] == $cso['id']){
+    										echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+    										continue;
+    									  }
+    									}
+    									echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+    								  }
+    								}
+    							  @endphp
+    							</select>
+    							<div class="validation"></div>
+    						</div>
+    					</div>
+            </div>
+
             	<div class="modal-footer">
                     {{csrf_field()}}
-                    <button type="submit" id="exportButton" class="btn btn-gradient-danger mr-2">Yes</button>
+                    <button type="submit" id="exportButton" class="btn btn-gradient-primary mr-2">Download</button>
               		<button class="btn btn-light" data-dismiss="modal">No</button>
             	</div>
           	</div>
@@ -393,7 +400,7 @@
 			}
 			});
 		});
-		
+
 		$("#filter_branch_modal").on("change", function(){
 		  console.log("test")
 		  var id = $(this).val();
@@ -432,7 +439,7 @@
 		  urlParamStr += "&" + urlParamArray[i]
 		}
 	  }
-	
+
 	  window.location.href = "{{route('admin_list_order')}}" + urlParamStr;
 	});
 	</script>

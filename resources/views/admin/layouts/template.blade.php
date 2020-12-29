@@ -127,7 +127,8 @@
                         @include("admin.layouts.navigation")
                         <li class="nav-item">
                           <a class="nav-link" href="{{route('admin_logout')}}">
-                          <i class="mdi mdi-logout mr-2 text-primary"></i> Signout </a>
+                            <span class="menu-title">Signout</span>
+                          <i class="mdi mdi-logout menu-icon"></i> </a>
                         </li>
                     </ul>
                 </nav>
