@@ -120,54 +120,62 @@ class OrderController extends Controller
     }
 
     public function admin_StoreOrder(Request $request){
-        $data = $request->all();
-        // dd($data);
-        $data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
-        $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-        $data['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
-        $data['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            // dd($data);
+            $data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $data['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
+            $data['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
 
-        //pembentukan array product
-        $index = 0;
-        $data['arr_product'] = [];
-        foreach ($data as $key => $value) {
-            $arrKey = explode("_", $key);
-            if($arrKey[0] == 'product'){
-                if(isset($data['qty_'.$arrKey[1]])){
-                    $data['arr_product'][$index] = [];
-                    $data['arr_product'][$index]['id'] = $value;
+            //pembentukan array product
+            $index = 0;
+            $data['arr_product'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($data['qty_'.$arrKey[1]])){
+                        $data['arr_product'][$index] = [];
+                        $data['arr_product'][$index]['id'] = $value;
 
-                    // {{-- KHUSUS Philiphin --}}
-                    if($value == 'other'){
-                        $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
+                        // {{-- KHUSUS Philiphin --}}
+                        if($value == 'other'){
+                            $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
+                        }
+                        //===========================
+
+                        $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
+                        $index++;
                     }
-                    //===========================
-
-                    $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
-                    $index++;
                 }
             }
-        }
-        $data['product'] = json_encode($data['arr_product']);
+            $data['product'] = json_encode($data['arr_product']);
 
-        //pembentukan array Bank
-        $index = 0;
-        $data['arr_bank'] = [];
-        foreach ($data as $key => $value) {
-            $arrKey = explode("_", $key);
-            if($arrKey[0] == 'bank'){
-                if(isset($data['cicilan_'.$arrKey[1]])){
-                    $data['arr_bank'][$index] = [];
-                    $data['arr_bank'][$index]['id'] = $value;
-                    $data['arr_bank'][$index]['cicilan'] = $data['cicilan_'.$arrKey[1]];
-                    $index++;
+            //pembentukan array Bank
+            $index = 0;
+            $data['arr_bank'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'bank'){
+                    if(isset($data['cicilan_'.$arrKey[1]])){
+                        $data['arr_bank'][$index] = [];
+                        $data['arr_bank'][$index]['id'] = $value;
+                        $data['arr_bank'][$index]['cicilan'] = $data['cicilan_'.$arrKey[1]];
+                        $index++;
+                    }
                 }
             }
-        }
-        $data['bank'] = json_encode($data['arr_bank']);
-        $order = Order::create($data);
+            $data['bank'] = json_encode($data['arr_bank']);
+            $order = Order::create($data);
 
-        return response()->json(['success' => 'Berhasil']);
+            DB::commit();
+            return response()->json(['success' => 'Berhasil']);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['errors' => $ex]);
+        }
+        
     }
 
     public function admin_ListOrder(Request $request){

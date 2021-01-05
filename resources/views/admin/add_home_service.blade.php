@@ -421,6 +421,7 @@
             }
             $.get( '{{route("fetchCso")}}', { txt: txtCso })
             .done(function( result ) {
+
                 if (result.result == 'true'){
                     obj.html('Kode CSO Benar');
                     obj.css('color', 'green');
@@ -450,6 +451,24 @@
                 }
             });
         });
+
+        $("#province").on("change", function(){
+            var id = $(this).val();
+            $( "#city" ).html("");
+            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+            .done(function( result ) {
+                result = result['rajaongkir']['results'];
+                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {
+                        if(value['type'] == "Kota"){                            
+                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                        }
+                    });
+                    $( "#city" ).append(arrCity);
+                }
+            });
+        });        
     });
 </script>
 <script>
