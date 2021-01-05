@@ -170,7 +170,16 @@ class OrderController extends Controller
             $order = Order::create($data);
 
             DB::commit();
-            return response()->json(['success' => 'Berhasil']);
+
+            $code = $order['code'];
+            $url = "https://waki-indonesia.co.id/order-success?code=".$code."";
+            $phone = preg_replace('/[^A-Za-z0-9\-]/', '', $order['phone']);
+            if($phone[0]==0 || $phone[0]=="0"){
+               $phone =  substr($phone, 1);
+            }
+            $phone = "62".$phone;
+            Utils::sendSms($phone, "Terima kasih telah melakukan transaksi di WAKi Indonesia. Berikut link detail transaksi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
+            return redirect()->route('detail_order', ['code'=>$order['code']]);
         } catch (\Exception $ex) {
             DB::rollback();
             return response()->json(['errors' => $ex]);

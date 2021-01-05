@@ -14,6 +14,7 @@ use App\RajaOngkir_City;
 use App\HistoryUpdate;
 use App\CategoryProduct;
 use DB;
+use App\Utils;
 
 class DeliveryOrderController extends Controller
 {
@@ -109,7 +110,17 @@ class DeliveryOrderController extends Controller
             $deliveryOrder = DeliveryOrder::create($data);
 
             DB::commit();
-            return response()->json(['success' => 'Berhasil!!']);
+
+            $phone = preg_replace('/[^A-Za-z0-9\-]/', '', $deliveryOrder['phone']);
+            if($phone[0]==0 || $phone[0]=="0"){
+               $phone =  substr($phone, 1);
+            }
+            $phone = "62".$phone;
+            $code = $deliveryOrder['code'];
+            $url = "https://waki-indonesia.co.id/register-success?code=".$code."";
+            Utils::sendSms($phone, "Terima kasih telah melakukan registrasi di WAKi Indonesia. Berikut link detail registrasi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
+            return redirect()->route('detail_deliveryorder', ['code'=>$deliveryOrder['code']]);
+            //return response()->json(['success' => route('detail_deliveryorder', ['code'=>$deliveryOrder['code']])]);
         } catch (\Exception $ex) {
             DB::rollback();
             return response()->json(['errors' => $ex]);

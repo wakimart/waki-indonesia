@@ -151,7 +151,7 @@
 
 							<div class="form-group d-none">
 								<label for="">No Telepon CSO</label>
-									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
+									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" data-msg="Mohon Isi Nomor Telepon" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
 									<div class="validation"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
@@ -253,7 +253,7 @@
 
 							<div class="form-group">
 								<label for="">No Telepon CSO</label>
-									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" required data-msg="Please fill the CSO Phone Number" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
+									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" data-msg="Please fill the CSO Phone Number" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
 									<div class="validation"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
@@ -419,10 +419,9 @@
             if($(this)[0].id == "cso2"){
                 obj = $('#validation_cso2');
             }
-            $.get( '{{route("fetchCso")}}', { txt: txtCso })
+            $.get( '{{route("fetchCso")}}', { cso_code: txtCso })
             .done(function( result ) {
-
-                if (result.result == 'true'){
+                if (result['result'] == 'true' && result['data'].length > 0){
                     obj.html('Kode CSO Benar');
                     obj.css('color', 'green');
 					$('#submit').removeAttr('disabled');

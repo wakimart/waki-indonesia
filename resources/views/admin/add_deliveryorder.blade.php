@@ -177,72 +177,74 @@
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-        var frmAdd;
+	// $(document).ready(function() {
+ //        var frmAdd;
 
-	    $("#actionAdd").on("submit", function (e) {
-	        e.preventDefault();
-	        frmAdd = _("actionAdd");
-	        frmAdd = new FormData(document.getElementById("actionAdd"));
-	        frmAdd.enctype = "multipart/form-data";
-	        var URLNya = $("#actionAdd").attr('action');
-	        console.log(URLNya);
+	//     $("#actionAdd").on("submit", function (e) {
+	//         e.preventDefault();
+	//         frmAdd = _("actionAdd");
+	//         frmAdd = new FormData(document.getElementById("actionAdd"));
+	//         frmAdd.enctype = "multipart/form-data";
+	//         var URLNya = $("#actionAdd").attr('action');
+	//         console.log(URLNya);
 
-	        var ajax = new XMLHttpRequest();
-	        ajax.upload.addEventListener("progress", progressHandler, false);
-	        ajax.addEventListener("load", completeHandler, false);
-	        ajax.addEventListener("error", errorHandler, false);
-	        ajax.open("POST", URLNya);
-	        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
-	        ajax.send(frmAdd);
-	    });
-	    function progressHandler(event){
-	        document.getElementById("addDeliveryOrder").innerHTML = "UPLOADING...";
-	    }
-	    function completeHandler(event){
-	        var hasil = JSON.parse(event.target.responseText);
-	        console.log(hasil);
+	//         var ajax = new XMLHttpRequest();
+	//         ajax.upload.addEventListener("progress", progressHandler, false);
+	//         ajax.addEventListener("load", completeHandler, false);
+	//         ajax.addEventListener("error", errorHandler, false);
+	//         ajax.open("POST", URLNya);
+	//         ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+	//         ajax.send(frmAdd);
+	//     });
+	//     function progressHandler(event){
+	//         document.getElementById("addDeliveryOrder").innerHTML = "UPLOADING...";
+	//     }
+	//     function completeHandler(event){
+	//         var hasil = JSON.parse(event.target.responseText);
+	//         console.log(hasil);
 
-	        for (var key of frmAdd.keys()) {
-	            $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
-	            $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
-	            $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
+	//         for (var key of frmAdd.keys()) {
+	//             $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
+	//             $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
+	//             $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
 
-	            $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
-	            $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
-	            $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
-	        }
+	//             $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
+	//             $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
+	//             $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
+	//         }
 
-	        if(hasil['errors'] != null){
-	            for (var key of frmAdd.keys()) {
-	                if(typeof hasil['errors'][key] === 'undefined') {
+	//         if(hasil['errors'] != null){
+	//             for (var key of frmAdd.keys()) {
+	//                 if(typeof hasil['errors'][key] === 'undefined') {
 
-	                }
-	                else {
-	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
-	                    $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
-	                    $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
+	//                 }
+	//                 else {
+	//                     $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
+	//                     $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
+	//                     $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
 
-	                    $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                    $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                    $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                }
-	            }
-              $("#modal-Error").modal("show");
-	            // alert("Input Error !!!");
-	        }
-	        else{
-              $("#modal-Success").modal("show");
-	            // alert("Input Success !!!");
-	            // window.location.reload()
-	        }
+	//                     $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+	//                     $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+	//                     $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+	//                 }
+	//             }
+ //              $("#modal-Error").modal("show");
+	//             // alert("Input Error !!!");
+	//         }
+	//         else{
+	//         	console.log(hasil);
+	//         	window.location.assign(hasil);
+ //              	//$("#modal-Success").modal("show");
+	//           	// alert("Input Success !!!");
+	//           	//window.location.reload();
+	//         }
 
-	        document.getElementById("addDeliveryOrder").innerHTML = "SAVE";
-	    }
-	    function errorHandler(event){
-	        document.getElementById("addDeliveryOrder").innerHTML = "SAVE";
-	    }
-    });
+	//         document.getElementById("addDeliveryOrder").innerHTML = "SAVE";
+	//     }
+	//     function errorHandler(event){
+	//         document.getElementById("addDeliveryOrder").innerHTML = "SAVE";
+	//     }
+ //    });
 </script>
 <script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
 <script type="text/javascript">

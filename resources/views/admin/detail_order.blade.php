@@ -92,7 +92,7 @@
 
                      @foreach(json_decode($order['product'], true) as $ProductPromo)
                         <tr>
-                            @if(is_numeric($ProductPromo['id']))
+                            @if(is_numeric($ProductPromo['id']) && $ProductPromo['id'] < 8)
                                 <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
                             @else
                                 <td>{{ $ProductPromo['id'] }}</td>
