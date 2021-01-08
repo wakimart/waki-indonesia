@@ -155,7 +155,7 @@ class HomeServiceController extends Controller
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
             // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
-            $homeService = $homeService->where('home_services.cso_id', Auth::user()->cso['id']);
+            $homeServices = $homeServices->where('home_services.cso_id', Auth::user()->cso['id']);
         }
 
         //khusus akun branch dan area-manager
@@ -165,7 +165,7 @@ class HomeServiceController extends Controller
             }
             // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
             //          ->whereIn('branch_id', $arrbranches)->where('active', true);
-            $homeService = $homeService->whereIn('home_services.branch_id', $arrbranches);
+            $homeServices = $homeServices->whereIn('home_services.branch_id', $arrbranches);
         }
 
         //kalau ada filter
@@ -184,6 +184,7 @@ class HomeServiceController extends Controller
             $cso_id = Cso::where('code', $request->filter_cso)->get();
             $homeServices = $homeServices->where('home_services.cso_id', $cso_id[0]['id']);
         }
+        
         
         $homeServices = $homeServices->get();
         

@@ -81,7 +81,7 @@ class DeliveryOrderController extends Controller
 
     public function admin_AddDeliveryOrder(){
         $promos = DeliveryOrder::$Promo;
-        $branches = Branch::all();
+        $branches = Branch::where('active', true)->get();
         $csos = Cso::all();
         return view('admin.add_deliveryorder', compact('promos', 'branches', 'csos'));
     }
@@ -101,10 +101,28 @@ class DeliveryOrderController extends Controller
                     if(isset($data['qty_'.$arrKey[1]])){
                         $data['arr_product'][$key] = [];
                         $data['arr_product'][$key]['id'] = $value;
+
+                        // {{-- KHUSUS Philiphin --}}
+                        if($value == 'other'){
+                            $data['arr_product'][$key]['id'] = $data['product_other_'.$arrKey[1]];
+                        }
+                        //===========================
+
                         $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
                     }
                 }
             }
+            // $data['arr_product'] = [];
+            // foreach ($data as $key => $value) {
+            //     $arrKey = explode("_", $key);
+            //     if($arrKey[0] == 'product'){
+            //         if(isset($data['qty_'.$arrKey[1]])){
+            //             $data['arr_product'][$key] = [];
+            //             $data['arr_product'][$key]['id'] = $value;
+            //             $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+            //         }
+            //     }
+            // }
             $data['arr_product'] = json_encode($data['arr_product']);
 
             $deliveryOrder = DeliveryOrder::create($data);

@@ -64,10 +64,31 @@
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-				                <label for="">City</label>
-				                <input type="text" class="form-control" id="city" name="city" placeholder="Kota">
-				                <div class="validation"></div>
-	              			</div>
+	              				<label for="">Province</label>
+		                        {{-- <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" /> --}}
+		                        <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+		                            <option selected disabled value="">Pilihan Provinsi</option>
+		    
+		                            @php
+		                                $result = RajaOngkir::FetchProvince();
+		                                $result = $result['rajaongkir']['results'];
+		                                $arrProvince = [];
+		                                if(sizeof($result) > 0){
+		                                    foreach ($result as $value) {
+		                                        echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+		                                    }
+		                                }
+		                            @endphp
+		                        </select>
+		                        <div class="validation"></div>
+		                    </div>
+		                    <div class="form-group">
+		                    	<label for="">City</label>
+		                        <select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+		                            <option selected disabled value="">Pilihan Kota</option>
+		                        </select>
+		                        <div class="validation"></div>
+		                    </div>
 	              			<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
 				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address Lengkap"></textarea>
@@ -79,11 +100,16 @@
 	                			<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
 	                  				<div class="col-xs-10 col-sm-10" style="padding: 0;display: inline-block;">
 					                    <label for="">Promo {{$j+1}}</label>
-					                    <select class="form-control" name="product_{{ $j }}" data-msg="Mohon Pilih Promo" {{ $j>0 ? "":"required"}}>
+					                    <select class="form-control pilihan-product" name="product_{{ $j }}" data-msg="Mohon Pilih Promo" {{ $j>0 ? "":"required"}}>
 					                    	<option selected disabled value="">Choose Promo{{ $j>0 ? " (optional)":""}}</option>
 					                      	@foreach($promos as $key=>$promo)
 				                                <option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
 				                            @endforeach
+
+				                            {{-- KHUSUS Philiphin --}}
+			                                @if(true)
+			                                    <option value="other">OTHER</option>
+			                                @endif
 	                    				</select>
 	                    				<div class="validation"></div>
 	                  				</div>
@@ -98,6 +124,14 @@
 	                    				</select>
 	                    				<div class="validation"></div>
 	                  				</div>
+
+	                  				{{-- KHUSUS Philiphin --}}
+			                        @if(true)
+			                            <div class="form-group d-none">
+			                                <input type="text" class="form-control" name="product_other_{{ $j }}" placeholder="Product Name" data-msg="Please fill in the product" />
+			                                <div class="validation"></div>
+			                            </div>
+			                        @endif
 	                			</div>
 	              			</div>
 	              			@endfor
@@ -274,6 +308,28 @@
             // });
         });
 
+        $("#province").on("change", function(){
+            var id = $(this).val();
+            $( "#city" ).html("");
+            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+            .done(function( result ) {
+                result = result['rajaongkir']['results'];
+                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {
+                    	if(value['type'] == "Kabupaten"){
+                        	arrCity += "<option value=\"Kota "+value['city_name']+"\">Kabupaten "+value['city_name']+"</option>";
+                        }
+                        
+                        if(value['type'] == "Kota"){                            
+                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                        }
+                    });
+                    $( "#city" ).append(arrCity);
+                }
+            });
+        });
+
         function check_cso(code) {
         	$.get( '{{route("fetchCso")}}', { cso_code: code })
             .done(function( result ) {
@@ -289,6 +345,20 @@
                 }
             });
         }
+
+        {{-- KHUSUS Philiphin --}}
+        @if(true)
+            $(".pilihan-product").change( function(e){
+                if($(this).val() == 'other'){
+                    $(this).parent().next().next().removeClass("d-none");
+                    $(this).parent().next().next().children().attr('required', '');
+                }
+                else{
+                    $(this).parent().next().next().addClass("d-none");
+                    $(this).parent().next().next().children().removeAttr('required', '');
+                }
+            });
+        @endif
     });
 </script>
 

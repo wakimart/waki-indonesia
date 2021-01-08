@@ -547,8 +547,7 @@
 
 <script>
 window.onload = function() {
-  "use strict";
-
+  // "use strict";
   // untuk pertama kali data di buka
   function onLoadDate(){
     

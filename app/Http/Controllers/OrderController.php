@@ -111,7 +111,7 @@ class OrderController extends Controller
 
     public function admin_AddOrder(){
         $promos = DeliveryOrder::$Promo;
-        $branches = Branch::all();
+        $branches = Branch::where('active', true)->get();
         $csos = Cso::all();
         $cashUpgrades = Order::$CashUpgrade;
         $paymentTypes = Order::$PaymentType;
