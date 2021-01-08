@@ -46,6 +46,12 @@ Route::get('/fetchCity/{province}', function ($province) {
 		return RajaOngkir::FetchCity($province);
 	})->name('fetchCity');
 
+Route::get('/fetchDistrict/{city}', function ($city) {
+	$kotaOrKab = array("Kota ", "Kabupaten ");
+	$city = str_replace($kotaOrKab, '', $city);
+		return RajaOngkir::FetchDistrict($city);
+	})->name('fetchDistrict');
+
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)
 Route::group(['prefix' => 'api-apps'], function () {

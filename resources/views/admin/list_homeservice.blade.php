@@ -546,11 +546,11 @@
 <script src="{{ asset('js/admin/calendarorganizer.js') }}"></script>
 
 <script>
+  console.log("masuk cook ");
 window.onload = function() {
-  // "use strict";
+  "use strict";
   // untuk pertama kali data di buka
   function onLoadDate(){
-    
     data = {};
     // data[new Date().getFullYear()] = {};
     // data[new Date().getFullYear()][new Date().getMonth()+1] = {};
@@ -628,12 +628,12 @@ window.onload = function() {
               });
       }
     @endforeach
-
     return data;
   }
 
   // creating the dummy static data
   var data = onLoadDate();
+  // var data = {};
 
   // stating variables in order for them to be global
   var calendar, organizer;

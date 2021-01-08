@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Exports\OrderExport;
 use App\DeliveryOrder;
 use App\Order;
+use App\RajaOngkir_Province;
 use App\Branch;
 use App\Cso;
 use App\CategoryProduct;
@@ -167,6 +168,7 @@ class OrderController extends Controller
                 }
             }
             $data['bank'] = json_encode($data['arr_bank']);
+            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
             $order = Order::create($data);
 
             DB::commit();

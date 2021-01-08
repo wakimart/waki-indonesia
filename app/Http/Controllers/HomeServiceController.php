@@ -11,6 +11,7 @@ use App\User;
 use App\CategoryProduct;
 use App\Utils;
 use App\HistoryUpdate;
+use App\RajaOngkir_Province;
 use App\DeliveryOrder;
 use App\Order;
 use Carbon\Carbon;
@@ -267,6 +268,7 @@ class HomeServiceController extends Controller
             }
 
             $data = $request->all();
+            
             $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
 
             $getAppointment = $request->get('data')." ".$request->get('time');
@@ -286,12 +288,13 @@ class HomeServiceController extends Controller
             $data['cso_id'] = $cso->first()['id'];
             $data['cso2_id'] = $cso2->first()['id'];
             $data['appointment'] = $inputAppointment;
-
+            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
+            $data['distric'] = $data['subDistrict'];
             $startDateTime = $data['date']."T".$data['time'].":00";
             $time = strtotime($data['time']) + 60*60 * 2;
             $endDateTime = $data['date']."T".date('H:i', $time).":00";
             DB::beginTransaction();
-            try{  
+            try{
                 $order = HomeService::create($data);
                 $event = array(
                     'summary' => 'Acara Home Service',
