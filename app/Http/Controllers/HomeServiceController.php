@@ -173,6 +173,9 @@ class HomeServiceController extends Controller
         if($request->has('filter_city')){
             $homeServices = $homeServices->where('home_services.city', 'like', '%'.$request->filter_city.'%');
         }
+        if($request->has('filter_district')){
+            $homeServices = $homeServices->where('home_services.distric', 'like', '%'.$request->filter_district.'%');
+        }
         if($request->has('filter_search')){
             $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
             ->orWhere('home_services.phone', 'like', '%'.$request->filter_search.'%')

@@ -111,6 +111,18 @@
                           <div class="validation"></div>
                       </div>
                     </div>
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+                        <label style="opacity: 0;" for=""> s</label>
+                          <select class="form-control" id="filter_district" name="filter_district">
+                            <option value="">All District</option>
+                            @if(isset($_GET['filter_district']))
+                              <option selected="" value="{{$_GET['filter_district']}}">{{$_GET['filter_district']}}</option>
+                            @endif
+                          </select>
+                          <div class="validation"></div>
+                      </div>
+                    </div>
                   @endif
 
                   @if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
@@ -836,6 +848,21 @@ window.onload = function() {
             }
         });
     });
+    $("#filter_city").on("change", function(){
+      var id = $(this).val();
+      $( "#filter_district" ).html("");
+      $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
+      .done(function( result ) {
+          result = result['rajaongkir']['results'];
+          var arrdistrict = "<option selected value=\"\">All District</option>";
+          if(result.length > 0){
+              $.each( result, function( key, value ) {                            
+                arrdistrict += "<option value=\""+value['subdistrict_name']+"\">Kota "+value['subdistrict_name']+"</option>";  
+              });
+              $( "#filter_district" ).append(arrdistrict);
+            }
+        });
+    });
 
     // $("#filter_branch").on("change", function(){
     //   var id = $(this).val();
@@ -1129,6 +1156,9 @@ $(document).on("click", "#btn-filter", function(e){
   var urlParamStr = "";
   if($('#filter_city').val() != ""){
     urlParamArray.push("filter_city=" + $('#filter_city').val());
+  }
+  if($('#filter_district').val() != ""){
+    urlParamArray.push("filter_district=" + $('#filter_district').val());
   }
   if($('#filter_branch').val() != ""){
     urlParamArray.push("filter_branch=" + $('#filter_branch').val());

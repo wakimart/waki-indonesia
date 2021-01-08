@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Validation\Rule;
 use Validator;
 use App\RajaOngkir_City;
+use App\RajaOngkir_Province;
 use App\HistoryUpdate;
 use App\CategoryProduct;
 use DB;
@@ -124,6 +125,7 @@ class DeliveryOrderController extends Controller
             //     }
             // }
             $data['arr_product'] = json_encode($data['arr_product']);
+            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
 
             $deliveryOrder = DeliveryOrder::create($data);
 
