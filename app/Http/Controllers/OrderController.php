@@ -325,6 +325,8 @@ class OrderController extends Controller
         $orders['city'] = $request->input('city');
         $orders['customer_type'] = $request->input('customer_type');
         $orders['description'] = $request->input('description');
+        $orders['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
+        $orders['distric'] = $data['distric'];
         DB::beginTransaction();
         try{
             $orders->save();

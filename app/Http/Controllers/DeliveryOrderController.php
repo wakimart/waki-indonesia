@@ -244,7 +244,8 @@ class DeliveryOrderController extends Controller
             $deliveryOrders->cso_id = $request->input('idCSO');
             $deliveryOrders->branch_id = $request->input('branch_id');
             $deliveryOrders->city = $request->input('city');
-            
+            $deliveryOrders->province = RajaOngkir_Province::where('province_id', (int)$request->input('province_id'))->first()['province'];;
+            $deliveryOrders->distric = $request->input('distric');
             $deliveryOrders->save();
 
             $user = Auth::user();
