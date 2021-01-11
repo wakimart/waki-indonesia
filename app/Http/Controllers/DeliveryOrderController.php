@@ -169,6 +169,12 @@ class DeliveryOrderController extends Controller
             }
             $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->get();
         }
+        if($request->has('filter_city')){
+            $deliveryOrders = $deliveryOrders->where('city', 'like', '%'.$request->filter_city.'%');
+        }
+        if($request->has('filter_district')){
+            $deliveryOrders = $deliveryOrders->where('distric', 'like', '%'.$request->filter_district.'%');
+        }
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $deliveryOrders = $deliveryOrders->where('branch_id', $request->filter_branch);
         }

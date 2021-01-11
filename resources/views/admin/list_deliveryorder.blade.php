@@ -18,52 +18,100 @@
 		</div>
 
 		<div class="row">
-			<div class="col-12 grid-margin stretch-card">
+			<div class="col-12 grid-margin stretch-card" style="padding: 0;">
 				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-                      <div class="form-group">
-                        <label for="">Filter By Team</label>
-                          <select class="form-control" id="filter_branch" name="filter_branch">
-                            <option value="" selected="">All Branch</option>
-                            @foreach($branches as $branch)
-                              @php
-                                $selected = "";
-                                if(isset($_GET['filter_branch'])){
-                                  if($_GET['filter_branch'] == $branch['id']){
-                                    $selected = "selected=\"\"";
-                                  }
-                                }
-                              @endphp
+					@if(Utils::$lang=='id')
+					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+						<div class="form-group">
+						<label for="">Filter By City</label>
+							<select class="form-control" id="filter_province" name="filter_province">
+								<option value="" selected="">All Province</option>
+								@php
+								$result = RajaOngkir::FetchProvince();
+								$result = $result['rajaongkir']['results'];
+								$arrProvince = [];
+								if(sizeof($result) > 0){
+									foreach ($result as $value) {
+										echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+									}
+								}
+								@endphp
+							</select>
+							<div class="validation"></div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+						<div class="form-group">
+						<label style="opacity: 0;" for=""> s</label>
+							<select class="form-control" id="filter_city" name="filter_city">
+							<option value="">All City</option>
+							@if(isset($_GET['filter_city']))
+								<option selected="" value="{{$_GET['filter_city']}}">{{$_GET['filter_city']}}</option>
+							@endif
+							</select>
+							<div class="validation"></div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+						<div class="form-group">
+						<label style="opacity: 0;" for=""> s</label>
+							<select class="form-control" id="filter_district" name="filter_district">
+							<option value="">All District</option>
+							@if(isset($_GET['filter_district']))
+								<option selected="" value="{{$_GET['filter_district']}}">{{$_GET['filter_district']}}</option>
+							@endif
+							</select>
+							<div class="validation"></div>
+						</div>
+					</div>
+					@endif
+				
+					<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+						<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+							<div class="form-group">
+								<label for="">Filter By Team</label>
+								<select class="form-control" id="filter_branch" name="filter_branch">
+									<option value="" selected="">All Branch</option>
+									@foreach($branches as $branch)
+									@php
+										$selected = "";
+										if(isset($_GET['filter_branch'])){
+										if($_GET['filter_branch'] == $branch['id']){
+											$selected = "selected=\"\"";
+										}
+										}
+									@endphp
 
-                              <option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-                            @endforeach
-                          </select>
-                          <div class="validation"></div>
-                      </div>
-                    </div>
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-                      <div class="form-group">
-                        <label for="">Filter By CSO</label>
-                          <select class="form-control" id="filter_cso" name="filter_cso">
-                            <option value="">All CSO</option>
-                            @php
-                              if(isset($_GET['filter_branch'])){
-                                $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+									<option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+									@endforeach
+								</select>
+								<div class="validation"></div>
+							</div>
+						</div>
+						<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+							<div class="form-group">
+								<label for="">Filter By CSO</label>
+								<select class="form-control" id="filter_cso" name="filter_cso">
+									<option value="">All CSO</option>
+									@php
+									if(isset($_GET['filter_branch'])){
+										$csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
 
-                                foreach ($csos as $cso) {
-                                  if(isset($_GET['filter_cso'])){
-                                    if($_GET['filter_cso'] == $cso['id']){
-                                      echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                      continue;
-                                    }
-                                  }
-                                  echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                }
-                              }
-                            @endphp
-                          </select>
-                          <div class="validation"></div>
-                      </div>
+										foreach ($csos as $cso) {
+										if(isset($_GET['filter_cso'])){
+											if($_GET['filter_cso'] == $cso['id']){
+											echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+											continue;
+											}
+										}
+										echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
+										}
+									}
+									@endphp
+								</select>
+								<div class="validation"></div>
+							</div>
+						</div>
 					</div>
 				@endif
 			
@@ -212,6 +260,38 @@
 		  $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
 	  }
 		});	
+		$("#filter_province").on("change", function(){
+      var id = $(this).val();
+      $( "#filter_city" ).html("");
+      $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+      .done(function( result ) {
+          result = result['rajaongkir']['results'];
+          var arrCity = "<option selected value=\"\">All City</option>";
+          if(result.length > 0){
+              $.each( result, function( key, value ) {
+                  if(value['type'] == "Kota"){                            
+                      arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                  }
+              });
+              $( "#filter_city" ).append(arrCity);
+            }
+        });
+    });
+    $("#filter_city").on("change", function(){
+      var id = $(this).val();
+      $( "#filter_district" ).html("");
+      $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
+      .done(function( result ) {
+          result = result['rajaongkir']['results'];
+          var arrdistrict = "<option selected value=\"\">All District</option>";
+          if(result.length > 0){
+              $.each( result, function( key, value ) {                            
+                arrdistrict += "<option value=\""+value['subdistrict_name']+"\">Kota "+value['subdistrict_name']+"</option>";  
+              });
+              $( "#filter_district" ).append(arrdistrict);
+            }
+        });
+    });
 	  $(".btn-delete").click(function(e) {
 		$("#frmDelete").attr("action",  $(this).val());
 		});	
@@ -219,6 +299,12 @@
 	$(document).on("click", "#btn-filter", function(e){
 	  var urlParamArray = new Array();
 	  var urlParamStr = "";
+	  if($('#filter_city').val() != ""){
+		urlParamArray.push("filter_city=" + $('#filter_city').val());
+	  }
+	  if($('#filter_district').val() != ""){
+		urlParamArray.push("filter_district=" + $('#filter_district').val());
+	  }
 	  if($('#filter_branch').val() != ""){
 		urlParamArray.push("filter_branch=" + $('#filter_branch').val());
 	  }

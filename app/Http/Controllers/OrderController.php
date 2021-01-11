@@ -213,6 +213,12 @@ class OrderController extends Controller
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $orders = $orders->where('branch_id', $request->filter_branch);
         }
+        if($request->has('filter_city')){
+            $orders = $orders->where('city', 'like', '%'.$request->filter_city.'%');
+        }
+        if($request->has('filter_district')){
+            $orders = $orders->where('distric', 'like', '%'.$request->filter_district.'%');
+        }
         if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
             $orders = $orders->where('cso_id', $request->filter_cso);
         }
