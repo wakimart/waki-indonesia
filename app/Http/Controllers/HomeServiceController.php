@@ -849,8 +849,8 @@ class HomeServiceController extends Controller
     }
 
     public function listAllTypeHS(){
-        $type_homeservices = ["Home service", "Home Tele Voucher", "Home Eksklusif Therapy", "Home Free Family Therapy", "Home Demo Health & Safety with WAKi", "Home Voucher", "Home Tele Free Gift", "Home Refrensi Product", "Home Delivery", "Home Free Refrensi Therapy VIP"];
-        $type_customers = ["Tele Voucher", "Tele Home Service", "Home Office Voucher", "Home Voucher"];
+        $type_homeservices = ["Home Service", "Home Tele Voucher", "Home Eksklusif Therapy", "Home Free Family Therapy", "Home Demo Health & Safety with WAKi", "Home Voucher", "Home Tele Free Gift", "Home Refrensi Product", "Home Delivery", "Home Free Refrensi Therapy VIP"];
+        $type_customers = ["VVIP (Type A)", "WAKi Customer (Type B)", "New Customer (Type C)"];
 
         $data = ['result' => 1,
                  'type_homeservices' => $type_homeservices,

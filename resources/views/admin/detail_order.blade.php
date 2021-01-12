@@ -89,8 +89,8 @@
                         <td>Product Name</td>
                         <td>Quantity</td>
                     </thead>
-
-                     @foreach(json_decode($order['product'], true) as $ProductPromo)
+                    
+                    @foreach(json_decode($order['product'], true) as $ProductPromo)
                         <tr>
                             @if(is_numeric($ProductPromo['id']) && $ProductPromo['id'] < 8)
                                 <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
@@ -99,9 +99,9 @@
                             @endif
                             
                             <td>{{ $ProductPromo['qty'] }}</td>
-                            @php break; @endphp
                         </tr>
                     @endforeach
+                    
                     @if($order['old_product'] != null)
                         <thead style="background-color: #80808012 !important">
                             <td colspan="2">Old Product</td>

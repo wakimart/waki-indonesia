@@ -52,10 +52,9 @@
 							<div class="form-group">
 								<span>Type Customer</span>
 								<select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
-										<option value="Tele Voucher">Tele Voucher</option>
-										<option value="Tele Home Service">Tele Home Service</option>
-										<option value="Home Office Voucher">Home Office Voucher</option>
-										<option value="Home Voucher">Home Voucher</option>
+                                    <option value="VVIP (Type A)">VVIP (Type A)</option>
+                                    <option value="WAKi Customer (Type B)">WAKi Customer (Type B)</option>
+                                    <option value="New Customer (Type C)">New Customer (Type C)</option>
 								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -64,16 +63,16 @@
 							<div class="form-group">
 								<span>Type Home Service</span>
 								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
-		                            <option value="Home service">Home service</option>
-		                            <option value="Home Tele Voucher">Home Tele Voucher</option>
-		                            <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
-		                            <option value="Home Free Family Therapy">Home Free Family Therapy</option>
-		                            <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
-		                            <option value="Home Voucher">Home Voucher</option>
-		                            <option value="Home Tele Free Gift">Home Tele Free Gift</option>
-		                            <option value="Home Refrensi Product">Home Refrensi Product</option>
-		                            <option value="Home Delivery">Home Delivery</option>
-		                            <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
+                                    <option value="Home service">Home Service</option>
+                                    <option value="Home Tele Voucher">Home Tele Voucher</option>
+                                    <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                                    <option value="Home Free Family Therapy">Home Free Family Therapy</option>
+                                    <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
+                                    <option value="Home Voucher">Home Voucher</option>
+                                    <option value="Home Tele Free Gift">Home Tele Free Gift</option>
+                                    <option value="Home Refrensi Product">Home Refrensi Product</option>
+                                    <option value="Home Delivery">Home Delivery</option>
+                                    <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
 								</select>
 								<span class="invalid-feedback">
 									<strong></strong>

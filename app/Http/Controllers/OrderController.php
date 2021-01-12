@@ -150,6 +150,7 @@ class OrderController extends Controller
                     }
                 }
             }
+
             $data['product'] = json_encode($data['arr_product']);
 
             //pembentukan array Bank
@@ -168,7 +169,6 @@ class OrderController extends Controller
             }
             $data['bank'] = json_encode($data['arr_bank']);
             $order = Order::create($data);
-
             DB::commit();
 
             $code = $order['code'];
