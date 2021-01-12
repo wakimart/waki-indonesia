@@ -712,6 +712,27 @@ class HomeServiceController extends Controller
         }
     }
 
+    public function singleReportHomeService($id){
+        $homeService = HomeService::find($id);
+        if ($homeService != null) {
+            $cash = array(
+                'cash' => $homeService->cash,
+                'cash_description' => $homeService->cash_description
+            );
+            $data = [
+                    'result' => 1,
+                    'data' => $cash
+            ];
+            return response()->json($data, 200);
+        }else {
+            $data = [
+                'result' => 0,
+                'data' => "Data Not Found"
+            ];
+            return response()->json($data, 404);
+        }
+    }
+
     public function deleteApi(Request $request)
     {
         $messages = array(
