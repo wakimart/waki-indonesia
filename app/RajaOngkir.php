@@ -21,6 +21,12 @@ class RajaOngkir extends Model
     	$data['rajaongkir']['results'] = RajaOngkir_City::where('province_id', $province)->get();
     	return $data;
     }
+    static public function FetchDistrictAPI($city){
+        $data = [];
+        $data['rajaongkir'] = [];
+    	$data['rajaongkir']['results'] = RajaOngkir_Subdistrict::where('city_id', $city)->get();
+    	return $data;
+    }
     static public function FetchDistrict($city){
         $data = [];
         $data['rajaongkir'] = [];
@@ -40,6 +46,23 @@ class RajaOngkir extends Model
 
     static public function FetchCityApi($province){
         $data = RajaOngkir_City::where('province_id', $province)->select(DB::raw('CONCAT(type, " ", city_name) AS city_name'))->get();
+        
+        $data = ['result' => 1,
+                     'data' => $data
+                    ];
+            return response()->json($data, 200);
+    }
+
+    static public function FetchAllCityApi($province){
+        $data = RajaOngkir_City::where('province_id', $province)->get();
+        
+        $data = ['result' => 1,
+                     'data' => $data
+                    ];
+            return response()->json($data, 200);
+    }
+    static public function FetchAllDistrictApi($city){
+        $data = RajaOngkir_Subdistrict::where('city_id', $city)->get();
         
         $data = ['result' => 1,
                      'data' => $data
