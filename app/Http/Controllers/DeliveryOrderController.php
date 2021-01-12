@@ -11,6 +11,7 @@ use App\User;
 use Illuminate\Validation\Rule;
 use Validator;
 use App\RajaOngkir_City;
+use App\RajaOngkir_Province;
 use App\HistoryUpdate;
 use App\CategoryProduct;
 use DB;
@@ -124,6 +125,7 @@ class DeliveryOrderController extends Controller
             //     }
             // }
             $data['arr_product'] = json_encode($data['arr_product']);
+            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
 
             $deliveryOrder = DeliveryOrder::create($data);
 
@@ -166,6 +168,12 @@ class DeliveryOrderController extends Controller
                 array_push($arrbranches, $value['id']);
             }
             $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->get();
+        }
+        if($request->has('filter_city')){
+            $deliveryOrders = $deliveryOrders->where('city', 'like', '%'.$request->filter_city.'%');
+        }
+        if($request->has('filter_district')){
+            $deliveryOrders = $deliveryOrders->where('distric', 'like', '%'.$request->filter_district.'%');
         }
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $deliveryOrders = $deliveryOrders->where('branch_id', $request->filter_branch);
@@ -242,7 +250,8 @@ class DeliveryOrderController extends Controller
             $deliveryOrders->cso_id = $request->input('idCSO');
             $deliveryOrders->branch_id = $request->input('branch_id');
             $deliveryOrders->city = $request->input('city');
-            
+            $deliveryOrders->province = RajaOngkir_Province::where('province_id', (int)$request->input('province_id'))->first()['province'];;
+            $deliveryOrders->distric = $request->input('distric');
             $deliveryOrders->save();
 
             $user = Auth::user();

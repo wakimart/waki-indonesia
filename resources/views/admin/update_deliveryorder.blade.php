@@ -35,10 +35,42 @@
 				                <input type="number" class="form-control" id="phone" name="phone" value="{{$deliveryOrders['phone']}}">
 				                <div class="validation"></div>
 	              			</div>
-	              			<div class="form-group">
+	              			{{-- <div class="form-group">
 				                <label for="">City</label>
 				                <input type="text" class="form-control" id="city" name="city" value="{{$deliveryOrders['city']}}">
 				                <div class="validation"></div>
+							  </div> --}}
+							  <div class="form-group">
+				                <label for="">Province</label>
+								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+									<option selected disabled value="">{{$deliveryOrders['province']}}</option>
+
+									@php
+										$result = RajaOngkir::FetchProvince();
+										$result = $result['rajaongkir']['results'];
+										$arrProvince = [];
+										if(sizeof($result) > 0){
+											foreach ($result as $value) {
+												echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+											}
+										}
+									@endphp
+								</select>
+								<div class="validation"></div>
+							  </div>
+							<div class="form-group">
+				                <label for="">City</label>
+								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+									<option selected disabled value="">{{$deliveryOrders['city']}}</option>
+								</select>
+								<div class="validation"></div>
+							</div>
+							<div class="form-group">
+				                <label for="">Sub District</label>
+								<select class="form-control" id="subDistrict" name="distric" data-msg="Mohon Pilih Kecamatan" required>
+									<option selected disabled value="">{{$deliveryOrders['distric']}}</option>
+								</select>
+								<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
@@ -219,7 +251,46 @@
 	    function errorHandler(event){
 	        document.getElementById("updateDeliveryOrder").innerHTML = "SAVE";
 	    }
-    });
+		$("#province").on("change", function(){
+            var id = $(this).val();
+            $( "#city" ).html("");
+            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+            .done(function( result ) {
+                result = result['rajaongkir']['results'];
+                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {
+                    	if(value['type'] == "Kabupaten"){
+                        	arrCity += "<option value=\"Kota "+value['city_name']+"\">Kabupaten "+value['city_name']+"</option>";
+                        }
+	                        
+                        if(value['type'] == "Kota"){
+                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                        }
+
+
+                    });
+                    $( "#city" ).append(arrCity);
+                }
+            });
+		});
+		$("#city").on("change", function(){
+            var id = $(this).val();
+			$( "#subDistrict" ).html("");
+            $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
+            .done(function( result ) {
+				result = result['rajaongkir']['results'];
+				console.log(result);
+                var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {                            
+                        arrSubDistsrict += "<option value=\""+value['subdistrict_name']+"\">"+value['subdistrict_name']+"</option>";
+                    });
+                    $( "#subDistrict" ).append(arrSubDistsrict);
+                }
+            });
+        });
+	});
 </script>
 <script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
 <script type="text/javascript">
@@ -231,9 +302,9 @@
     $(document).ready(function(){
         $("#cso").on("input", function(){
             var txtCso = $(this).val();
-            $.get( '{{route("fetchCso")}}', { txt: txtCso })
+            $.get( '{{route("fetchCso")}}', { cso_code: txtCso })
             .done(function( result ) {
-                console.log(result.data[0].id);
+                console.log(result);
                 if (result.result == 'true'){
                     $('#validation_cso').html('Kode CSO Benar');
                     $('#validation_cso').css('color', 'green');

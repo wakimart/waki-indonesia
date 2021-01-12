@@ -95,7 +95,14 @@
 									<option selected disabled value="">Pilihan Kota</option>
 								</select>
 								<div class="validation"></div>
-	              			</div>
+							</div>
+							<div class="form-group">
+				                <label for="">Sub District</label>
+								<select class="form-control" id="subDistrict" name="distric" data-msg="Mohon Pilih Kecamatan" required>
+									<option selected disabled value="">Pilihan Kecamatan</option>
+								</select>
+								<div class="validation"></div>
+	              			</div>  
 	              			<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
 				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address"></textarea>
@@ -475,7 +482,23 @@
                     $( "#city" ).append(arrCity);
                 }
             });
-        });
+		});
+		$("#city").on("change", function(){
+            var id = $(this).val();
+			$( "#subDistrict" ).html("");
+            $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
+            .done(function( result ) {
+				result = result['rajaongkir']['results'];
+				console.log(result);
+                var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {                            
+                        arrSubDistsrict += "<option value=\""+value['subdistrict_name']+"\">"+value['subdistrict_name']+"</option>";
+                    });
+                    $( "#subDistrict" ).append(arrSubDistsrict);
+                }
+            });
+        });  
 
         $("#tambah_bank").click(function(e){
             e.preventDefault();

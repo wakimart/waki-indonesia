@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class HomeService extends Model
 {
      protected $fillable = [
-        'code', 'no_member', 'name', 'address', 'phone', 'city', 'cso_id', 'branch_id', 'cso_phone', 'appointment', 'cso2_id', 'active', 'cash', 'cash_description', 'description', 'type_customer', 'type_homeservices', 'distric',
+        'code', 'no_member', 'name', 'address', 'phone', 'city', 'cso_id', 'branch_id', 'cso_phone', 'appointment', 'cso2_id', 'active', 'cash', 'cash_description', 'description', 'type_customer', 'type_homeservices', 'distric', 'province',
     ];
 
     public function cso()

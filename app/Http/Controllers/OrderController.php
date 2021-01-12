@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Exports\OrderExport;
 use App\DeliveryOrder;
 use App\Order;
+use App\RajaOngkir_Province;
 use App\Branch;
 use App\Cso;
 use App\CategoryProduct;
@@ -168,6 +169,7 @@ class OrderController extends Controller
                 }
             }
             $data['bank'] = json_encode($data['arr_bank']);
+            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
             $order = Order::create($data);
             DB::commit();
 
@@ -210,6 +212,12 @@ class OrderController extends Controller
         //kalau ada Filter
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $orders = $orders->where('branch_id', $request->filter_branch);
+        }
+        if($request->has('filter_city')){
+            $orders = $orders->where('city', 'like', '%'.$request->filter_city.'%');
+        }
+        if($request->has('filter_district')){
+            $orders = $orders->where('distric', 'like', '%'.$request->filter_district.'%');
         }
         if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
             $orders = $orders->where('cso_id', $request->filter_cso);
@@ -323,6 +331,8 @@ class OrderController extends Controller
         $orders['city'] = $request->input('city');
         $orders['customer_type'] = $request->input('customer_type');
         $orders['description'] = $request->input('description');
+        $orders['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
+        $orders['distric'] = $data['distric'];
         DB::beginTransaction();
         try{
             $orders->save();

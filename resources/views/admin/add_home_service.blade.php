@@ -119,6 +119,13 @@
 				                <div class="validation"></div>
 							</div>
 							<div class="form-group">
+				                <label for="exampleTextarea1">Kecamatan</label>
+				                <select class="form-control" id="subDistrict" name="subDistrict" data-msg="Mohon Pilih Kecamatan" required>
+									<option selected disabled value="">Pilihan Kecamatan</option>
+								</select>
+				                <div class="validation"></div>
+							</div>
+							<div class="form-group">
 				                <label for="exampleTextarea1">Alamat</label>
 				                <textarea class="form-control" name="address" rows="5" required data-msg="Mohon Isi Alamat" placeholder="Alamat"></textarea>
 				                <div class="validation"></div>
@@ -218,6 +225,10 @@
 	              			</div>
 	              			<div class="form-group">
 								<input type="text" class="form-control" name="city" id="city" placeholder="City" required data-msg="Please fill the City" />
+								<div class="validation"></div>
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" name="distric" id="subDistrict" placeholder="Sub District" required data-msg="Please fill the Sub District" />
 								<div class="validation"></div>
 							</div>
 							<div class="form-group">
@@ -466,7 +477,23 @@
                     $( "#city" ).append(arrCity);
                 }
             });
-        });        
+		});
+		$("#city").on("change", function(){
+            var id = $(this).val();
+			$( "#subDistrict" ).html("");
+            $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
+            .done(function( result ) {
+				result = result['rajaongkir']['results'];
+				console.log(result);
+                var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {                            
+                        arrSubDistsrict += "<option value=\""+value['subdistrict_name']+"\">"+value['subdistrict_name']+"</option>";
+                    });
+                    $( "#subDistrict" ).append(arrSubDistsrict);
+                }
+            });
+        });          
     });
 </script>
 <script>

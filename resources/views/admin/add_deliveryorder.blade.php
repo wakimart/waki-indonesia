@@ -64,31 +64,37 @@
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-	              				<label for="">Province</label>
-		                        {{-- <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" /> --}}
-		                        <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
-		                            <option selected disabled value="">Pilihan Provinsi</option>
-		    
-		                            @php
-		                                $result = RajaOngkir::FetchProvince();
-		                                $result = $result['rajaongkir']['results'];
-		                                $arrProvince = [];
-		                                if(sizeof($result) > 0){
-		                                    foreach ($result as $value) {
-		                                        echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
-		                                    }
-		                                }
-		                            @endphp
-		                        </select>
-		                        <div class="validation"></div>
-		                    </div>
-		                    <div class="form-group">
-		                    	<label for="">City</label>
-		                        <select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
-		                            <option selected disabled value="">Pilihan Kota</option>
-		                        </select>
-		                        <div class="validation"></div>
-		                    </div>
+				                <label for="">Province</label>
+								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+									<option selected disabled value="">Pilihan Provinsi</option>
+
+									@php
+										$result = RajaOngkir::FetchProvince();
+										$result = $result['rajaongkir']['results'];
+										$arrProvince = [];
+										if(sizeof($result) > 0){
+											foreach ($result as $value) {
+												echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+											}
+										}
+									@endphp
+								</select>
+								<div class="validation"></div>
+							  </div>
+							<div class="form-group">
+				                <label for="">City</label>
+								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+									<option selected disabled value="">Pilihan Kota</option>
+								</select>
+								<div class="validation"></div>
+							</div>
+							<div class="form-group">
+				                <label for="">Sub District</label>
+								<select class="form-control" id="subDistrict" name="distric" data-msg="Mohon Pilih Kecamatan" required>
+									<option selected disabled value="">Pilihan Kecamatan</option>
+								</select>
+								<div class="validation"></div>
+	              			</div> 
 	              			<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
 				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address Lengkap"></textarea>
@@ -305,10 +311,10 @@
             //         $('#validation_cso').css('color', 'red');
             //         $('#submit').attr('disabled',"");
             //     }
-            // });
-        });
-
-        $("#province").on("change", function(){
+			// });
+		});
+		
+		$("#province").on("change", function(){
             var id = $(this).val();
             $( "#city" ).html("");
             $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
@@ -328,8 +334,24 @@
                     $( "#city" ).append(arrCity);
                 }
             });
-        });
-
+		});
+		$("#city").on("change", function(){
+            var id = $(this).val();
+			$( "#subDistrict" ).html("");
+            $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
+            .done(function( result ) {
+				result = result['rajaongkir']['results'];
+				console.log(result);
+                var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {                            
+                        arrSubDistsrict += "<option value=\""+value['subdistrict_name']+"\">"+value['subdistrict_name']+"</option>";
+                    });
+                    $( "#subDistrict" ).append(arrSubDistsrict);
+                }
+            });
+		});
+		
         function check_cso(code) {
         	$.get( '{{route("fetchCso")}}', { cso_code: code })
             .done(function( result ) {

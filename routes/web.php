@@ -46,6 +46,12 @@ Route::get('/fetchCity/{province}', function ($province) {
 		return RajaOngkir::FetchCity($province);
 	})->name('fetchCity');
 
+Route::get('/fetchDistrict/{city}', function ($city) {
+	$kotaOrKab = array("Kota ", "Kabupaten ");
+	$city = str_replace($kotaOrKab, '', $city);
+		return RajaOngkir::FetchDistrict($city);
+	})->name('fetchDistrict');
+
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)
 Route::group(['prefix' => 'api-apps'], function () {
@@ -64,15 +70,21 @@ Route::group(['prefix' => 'api-apps'], function () {
 		}); //fetching all province
     Route::get('fetchcityapi/{province}',function ($province) {
 			return RajaOngkir::FetchCityApi($province);
-		}); //fetching all city from province
-
+		}); //fetching all city from province  
+	Route::get('fetchallcityapi/{province}',function ($province) {
+		return RajaOngkir::FetchAllCityApi($province);
+	});
+	Route::get('fetchdistrictapi/{city}',function ($city) {
+		return RajaOngkir::FetchAllDistrictAPI($city);
+		}); //fetching all district from province
 	Route::group(['prefix' => 'homeservice'], function () {
 	    Route::post('add','HomeServiceController@addApi'); //add home service
 		Route::post('update','HomeServiceController@updateApi'); //update home service
 		Route::post('reportHomeService','HomeServiceController@reportHomeService'); //reportHomeService home service
 	    Route::post('delete','HomeServiceController@deleteApi'); //delete home service
 	    Route::post('list','HomeServiceController@listApi'); //list home service
-	    Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
+		Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
+		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
 	});
 
 	Route::group(['prefix' => 'register'], function () {

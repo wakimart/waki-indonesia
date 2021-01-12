@@ -111,6 +111,18 @@
                           <div class="validation"></div>
                       </div>
                     </div>
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+                        <label style="opacity: 0;" for=""> s</label>
+                          <select class="form-control" id="filter_district" name="filter_district">
+                            <option value="">All District</option>
+                            @if(isset($_GET['filter_district']))
+                              <option selected="" value="{{$_GET['filter_district']}}">{{$_GET['filter_district']}}</option>
+                            @endif
+                          </select>
+                          <div class="validation"></div>
+                      </div>
+                    </div>
                   @endif
 
                   @if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
@@ -546,11 +558,11 @@
 <script src="{{ asset('js/admin/calendarorganizer.js') }}"></script>
 
 <script>
+  console.log("masuk cook ");
 window.onload = function() {
-  // "use strict";
+  "use strict";
   // untuk pertama kali data di buka
   function onLoadDate(){
-    
     data = {};
     // data[new Date().getFullYear()] = {};
     // data[new Date().getFullYear()][new Date().getMonth()+1] = {};
@@ -628,12 +640,12 @@ window.onload = function() {
               });
       }
     @endforeach
-
     return data;
   }
 
   // creating the dummy static data
   var data = onLoadDate();
+  // var data = {};
 
   // stating variables in order for them to be global
   var calendar, organizer;
@@ -833,6 +845,21 @@ window.onload = function() {
                   }
               });
               $( "#filter_city" ).append(arrCity);
+            }
+        });
+    });
+    $("#filter_city").on("change", function(){
+      var id = $(this).val();
+      $( "#filter_district" ).html("");
+      $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
+      .done(function( result ) {
+          result = result['rajaongkir']['results'];
+          var arrdistrict = "<option selected value=\"\">All District</option>";
+          if(result.length > 0){
+              $.each( result, function( key, value ) {                            
+                arrdistrict += "<option value=\""+value['subdistrict_name']+"\">Kota "+value['subdistrict_name']+"</option>";  
+              });
+              $( "#filter_district" ).append(arrdistrict);
             }
         });
     });
@@ -1129,6 +1156,9 @@ $(document).on("click", "#btn-filter", function(e){
   var urlParamStr = "";
   if($('#filter_city').val() != ""){
     urlParamArray.push("filter_city=" + $('#filter_city').val());
+  }
+  if($('#filter_district').val() != ""){
+    urlParamArray.push("filter_district=" + $('#filter_district').val());
   }
   if($('#filter_branch').val() != ""){
     urlParamArray.push("filter_branch=" + $('#filter_branch').val());
