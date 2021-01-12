@@ -55,8 +55,10 @@ Route::group(['prefix' => 'api-apps'], function () {
     Route::get('fetchcso/{branchId}', 'CsoController@fetchCsoApi'); //fetching all active Cso by branch
     Route::get('fetchPromosApi', 'DeliveryOrderController@fetchPromosApi'); //fetching all promo
 	Route::get('fetchBanksApi', 'OrderController@fetchBanksApi'); //fetching all banks
+	Route::post('fetchCSOFIlter', 'HomeServiceController@fetchCSOFIlter');
 	Route::post('addVersion', 'VersionController@storeVersion');
 	Route::get('listVersion', 'VersionController@listVersion');
+	Route::get('/fetchAllTypeHS', 'HomeServiceController@listAllTypeHS');
     Route::get('fetchprovinceapi', function () {
 			return RajaOngkir::FetchProvinceApi();
 		}); //fetching all province
@@ -66,7 +68,8 @@ Route::group(['prefix' => 'api-apps'], function () {
 
 	Route::group(['prefix' => 'homeservice'], function () {
 	    Route::post('add','HomeServiceController@addApi'); //add home service
-	    Route::post('update','HomeServiceController@updateApi'); //update home service
+		Route::post('update','HomeServiceController@updateApi'); //update home service
+		Route::post('reportHomeService','HomeServiceController@reportHomeService'); //reportHomeService home service
 	    Route::post('delete','HomeServiceController@deleteApi'); //delete home service
 	    Route::post('list','HomeServiceController@listApi'); //list home service
 	    Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
@@ -221,7 +224,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->middleware('can:edit-order');
 	    //Delete Order
 	    Route::post('/{OrderNya}', 'OrderController@delete')
-	    	->name('delete_order');
+			->name('delete_order');
+		//Export to XLS By Date
+        Route::get('/report-to-xls-by-date', 'OrderController@export_to_xls')
+                ->name('order_export-to-xls');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function(){

@@ -40,4 +40,12 @@ class RajaOngkir extends Model
                     ];
             return response()->json($data, 200);
     }
+
+    static public function FetchProvinceByCity($city_name){
+        $type_city = explode(" ", $city_name)[0];
+        $city_name = substr($city_name, strlen($type_city)+1);
+        $provinceNya = RajaOngkir_City::where([['city_name', $city_name], ['type', $type_city]])->first()->provinceNya;
+
+        return $provinceNya;
+    }
 }

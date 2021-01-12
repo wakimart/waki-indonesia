@@ -11,7 +11,7 @@ class RajaOngkir_City extends Model
 		'city_id','province_id','province','type','city_name','postal_code',
     ];
 
-    public function province()
+    public function provinceNya()
     {
         return $this->belongsTo('App\RajaOngkir_Province', 'province_id', 'province_id');
     }

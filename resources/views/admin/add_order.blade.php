@@ -229,12 +229,12 @@
 			                    </div>
 			                    <div class="form-group">
 			                    	<label for="">CSO Code 30%</label>
-			                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" placeholder="CSO Code 30%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+			                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" placeholder="CSO Code 30%" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
 			                    	<label for="">CSO Code 70%</label>
-			                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" placeholder="CSO Code 70%" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+			                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" placeholder="CSO Code 70%" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                </div>
@@ -310,72 +310,72 @@
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-        var frmAdd;
+	// $(document).ready(function() {
+ //        var frmAdd;
 
-	    $("#actionAdd").on("submit", function (e) {
-	        e.preventDefault();
-	        frmAdd = _("actionAdd");
-	        frmAdd = new FormData(document.getElementById("actionAdd"));
-	        frmAdd.enctype = "multipart/form-data";
-	        var URLNya = $("#actionAdd").attr('action');
-	        console.log(URLNya);
+	//     $("#actionAdd").on("submit", function (e) {
+	//         e.preventDefault();
+	//         frmAdd = _("actionAdd");
+	//         frmAdd = new FormData(document.getElementById("actionAdd"));
+	//         frmAdd.enctype = "multipart/form-data";
+	//         var URLNya = $("#actionAdd").attr('action');
+	//         console.log(URLNya);
 
-	        var ajax = new XMLHttpRequest();
-	        ajax.upload.addEventListener("progress", progressHandler, false);
-	        ajax.addEventListener("load", completeHandler, false);
-	        ajax.addEventListener("error", errorHandler, false);
-	        ajax.open("POST", URLNya);
-	        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
-	        ajax.send(frmAdd);
-	    });
-	    function progressHandler(event){
-	        document.getElementById("addOrder").innerHTML = "UPLOADING...";
-	    }
-	    function completeHandler(event){
-	        var hasil = JSON.parse(event.target.responseText);
-	        console.log(hasil);
+	//         var ajax = new XMLHttpRequest();
+	//         ajax.upload.addEventListener("progress", progressHandler, false);
+	//         ajax.addEventListener("load", completeHandler, false);
+	//         ajax.addEventListener("error", errorHandler, false);
+	//         ajax.open("POST", URLNya);
+	//         ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+	//         ajax.send(frmAdd);
+	//     });
+	//     function progressHandler(event){
+	//         document.getElementById("addOrder").innerHTML = "UPLOADING...";
+	//     }
+	//     function completeHandler(event){
+	//         var hasil = JSON.parse(event.target.responseText);
+	//         console.log(hasil);
 
-	        for (var key of frmAdd.keys()) {
-	            $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
-	            $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
-	            $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
+	//         for (var key of frmAdd.keys()) {
+	//             $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
+	//             $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
+	//             $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
 
-	            $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
-	            $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
-	            $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
-	        }
+	//             $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
+	//             $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
+	//             $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
+	//         }
 
-	        if(hasil['errors'] != null){
-	            for (var key of frmAdd.keys()) {
-	                if(typeof hasil['errors'][key] === 'undefined') {
+	//         if(hasil['errors'] != null){
+	//             for (var key of frmAdd.keys()) {
+	//                 if(typeof hasil['errors'][key] === 'undefined') {
 
-	                }
-	                else {
-	                    $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
-	                    $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
-	                    $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
+	//                 }
+	//                 else {
+	//                     $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
+	//                     $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
+	//                     $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
 
-	                    $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                    $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                    $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                }
-	            }
-              $("#modal-Error").modal("show");
-	            // alert("Input Error !!!");
-	        }
-	        else{
-              $("#modal-Success").modal("show");
-	            // alert("Input Success !!!");
-	            // window.location.reload()
-	        }
+	//                     $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+	//                     $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+	//                     $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+	//                 }
+	//             }
+ //              $("#modal-Error").modal("show");
+	//             // alert("Input Error !!!");
+	//         }
+	//         else{
+ //              $("#modal-Success").modal("show");
+	//             // alert("Input Success !!!");
+	//             // window.location.reload()
+	//         }
 
-	        document.getElementById("addOrder").innerHTML = "SAVE";
-	    }
-	    function errorHandler(event){
-	        document.getElementById("addOrder").innerHTML = "SAVE";
-	    }
-    });
+	//         document.getElementById("addOrder").innerHTML = "SAVE";
+	//     }
+	//     function errorHandler(event){
+	//         document.getElementById("addOrder").innerHTML = "SAVE";
+	//     }
+ //    });
 </script>
 <script>
     var total_bank = 0;
@@ -386,11 +386,11 @@
         $(".cso").on("input", function(){
             var txtCso = $(this).val();
             var temp = $(this);
-            $.get( '{{route("fetchCso")}}', { txt: txtCso })
+            $.get( '{{route("fetchCso")}}', { cso_code: txtCso })
             .done(function( result ) {
                 var bool = false;
 
-                if (result == 'true'){
+                if (result['result'] == 'true' && result['data'].length > 0){
                     $(temp).parent().children('.validation').html('Kode CSO Benar');
                     $(temp).parent().children('.validation').css('color', 'green');
                     bool = true;

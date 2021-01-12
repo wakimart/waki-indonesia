@@ -14,6 +14,7 @@ use App\RajaOngkir_City;
 use App\HistoryUpdate;
 use App\CategoryProduct;
 use DB;
+use App\Utils;
 
 class DeliveryOrderController extends Controller
 {
@@ -69,7 +70,8 @@ class DeliveryOrderController extends Controller
 
     public function successorder(Request $request){
     	$deliveryOrder = DeliveryOrder::where('code', $request['code'])->first();
-        return view('ordersuccess', compact('deliveryOrder'));
+        $categoryProducts = CategoryProduct::all();
+        return view('ordersuccess', compact('deliveryOrder', 'categoryProducts'));
     }
 
     public function listDeliveryOrder(Request $request){
@@ -85,27 +87,45 @@ class DeliveryOrderController extends Controller
     }
 
     public function admin_StoreDeliveryOrder(Request $request){
-        $data = $request->all();
-        $data['code'] = "DO_BOOK/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
-        $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            $data['code'] = "DO_BOOK/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
 
-        //pembentukan array product
-        $data['arr_product'] = [];
-        foreach ($data as $key => $value) {
-            $arrKey = explode("_", $key);
-            if($arrKey[0] == 'product'){
-                if(isset($data['qty_'.$arrKey[1]])){
-                    $data['arr_product'][$key] = [];
-                    $data['arr_product'][$key]['id'] = $value;
-                    $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+            //pembentukan array product
+            $data['arr_product'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($data['qty_'.$arrKey[1]])){
+                        $data['arr_product'][$key] = [];
+                        $data['arr_product'][$key]['id'] = $value;
+                        $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+                    }
                 }
             }
+            $data['arr_product'] = json_encode($data['arr_product']);
+
+            $deliveryOrder = DeliveryOrder::create($data);
+
+            DB::commit();
+
+            $phone = preg_replace('/[^A-Za-z0-9\-]/', '', $deliveryOrder['phone']);
+            if($phone[0]==0 || $phone[0]=="0"){
+               $phone =  substr($phone, 1);
+            }
+            $phone = "62".$phone;
+            $code = $deliveryOrder['code'];
+            $url = "https://waki-indonesia.co.id/register-success?code=".$code."";
+            Utils::sendSms($phone, "Terima kasih telah melakukan registrasi di WAKi Indonesia. Berikut link detail registrasi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
+            return redirect()->route('detail_deliveryorder', ['code'=>$deliveryOrder['code']]);
+            //return response()->json(['success' => route('detail_deliveryorder', ['code'=>$deliveryOrder['code']])]);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['errors' => $ex]);
         }
-        $data['arr_product'] = json_encode($data['arr_product']);
-
-        $deliveryOrder = DeliveryOrder::create($data);
-
-        return response()->json(['success' => 'Berhasil!!']);
+        
     }
 
     public function admin_ListDeliveryOrder(Request $request){
@@ -178,32 +198,33 @@ class DeliveryOrderController extends Controller
     {
         $deliveryOrders = DeliveryOrder::find($request->input('idDeliveryOrder'));
         $dataBefore = DeliveryOrder::find($request->input('idDeliveryOrder'));
-        $deliveryOrders->no_member = $request->input('no_member');
-        $deliveryOrders->name = $request->input('name');
-        $deliveryOrders->address = $request->input('address');
-        $deliveryOrders->phone = $request->input('phone');
-
-        //pembentukan array product
-        $data = $request->all();
-        $data['arr_product'] = [];
-        foreach ($data as $key => $value) {
-            $arrKey = explode("_", $key);
-            if($arrKey[0] == 'product'){
-                if(isset($data['qty_'.$arrKey[1]])){
-                    $data['arr_product'][$key] = [];
-                    $data['arr_product'][$key]['id'] = $value;
-                    $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
-                }
-            }
-        }
-        $deliveryOrders->arr_product = json_encode($data['arr_product']);
-
-        $deliveryOrders->cso_id = $request->input('idCSO');
-        $deliveryOrders->branch_id = $request->input('branch_id');
-        $deliveryOrders->city = $request->input('city');
 
         DB::beginTransaction();
         try {
+            $deliveryOrders->no_member = $request->input('no_member');
+            $deliveryOrders->name = $request->input('name');
+            $deliveryOrders->address = $request->input('address');
+            $deliveryOrders->phone = $request->input('phone');
+
+            //pembentukan array product
+            $data = $request->all();
+            $data['arr_product'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($data['qty_'.$arrKey[1]])){
+                        $data['arr_product'][$key] = [];
+                        $data['arr_product'][$key]['id'] = $value;
+                        $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+                    }
+                }
+            }
+            $deliveryOrders->arr_product = json_encode($data['arr_product']);
+
+            $deliveryOrders->cso_id = $request->input('idCSO');
+            $deliveryOrders->branch_id = $request->input('branch_id');
+            $deliveryOrders->city = $request->input('city');
+            
             $deliveryOrders->save();
 
             $user = Auth::user();
@@ -231,6 +252,7 @@ class DeliveryOrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function delete($id) {
         DB::beginTransaction();
         try{
@@ -263,6 +285,10 @@ class DeliveryOrderController extends Controller
             $value['id'] = $key;
             array_push($promos, $value);
         }
+        
+        $other = ['id'=>sizeof($data)+1, 'name'=>"OTHER", 'harga'=>"-"];
+        array_push($promos, $other);
+
         $data = ['result' => 1,
                      'data' => $promos
                     ];
@@ -493,12 +519,20 @@ class DeliveryOrderController extends Controller
             $tempId = json_decode($doNya['arr_product'], true);
             $tempArray = $doNya['arr_product'];
             $tempArray = [];
+            // dd($tempId);
             foreach ($tempId as $j => $product) {
                 $tempArray2 = [];
-                $tempArray2['name'] = $product['id'];
-                if(isset(DeliveryOrder::$Promo[$product['id']])){
-                    $tempArray2['name'] = DeliveryOrder::$Promo[$product['id']]['name'];
+                if(is_numeric($product['id'])){
+                    $prod = DeliveryOrder::$Promo[$product['id']];
+                    if ($prod != null){
+                        $tempArray2['id'] = $product['id'];
+                        $tempArray2['name'] = $prod['name'];
+                    }
+                }else{
+                    $tempArray2['id'] = 8;
+                    $tempArray2['name'] = $product['id'];
                 }
+                               
                 $tempArray2['qty'] = $product['qty'];
                 array_push($tempArray, $tempArray2);
             }

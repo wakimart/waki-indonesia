@@ -64,12 +64,16 @@
 							<div class="form-group">
 								<span>Type Home Service</span>
 								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
-										<option value="Home service">Home service</option>
-										<option value="Upgrade Member">Upgrade Member</option>
-										<option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
-                    <option value="Home Family Therapy">Home Family Therapy</option>
-                    <option value="Health and Safety with WAKi">Demo</option>
-                    <option value="Soft Launching WAKimart Apps">Invitation</option>
+		                            <option value="Home service">Home service</option>
+		                            <option value="Home Tele Voucher">Home Tele Voucher</option>
+		                            <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+		                            <option value="Home Free Family Therapy">Home Free Family Therapy</option>
+		                            <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
+		                            <option value="Home Voucher">Home Voucher</option>
+		                            <option value="Home Tele Free Gift">Home Tele Free Gift</option>
+		                            <option value="Home Refrensi Product">Home Refrensi Product</option>
+		                            <option value="Home Delivery">Home Delivery</option>
+		                            <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
 								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -137,7 +141,7 @@
 
 							<div class="form-group">
 								<label for="">Kode CSO</label>
-									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Kode CSO" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Kode CSO" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['code'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
 									<div class="validation" id="validation_cso"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
@@ -147,7 +151,7 @@
 
 							<div class="form-group d-none">
 								<label for="">No Telepon CSO</label>
-									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" required data-msg="Mohon Isi Nomor Telepon" />
+									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" data-msg="Mohon Isi Nomor Telepon" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
 									<div class="validation"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
@@ -239,7 +243,7 @@
 
 							<div class="form-group">
 								<label for="">Code CSO</label>
-									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Code CSO" required data-msg="Please fill the CSO Code" style="text-transform:uppercase"/>
+									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Code CSO" required data-msg="Please fill the CSO Code" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['code'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
 									<div class="validation" id="validation_cso"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
@@ -249,7 +253,7 @@
 
 							<div class="form-group">
 								<label for="">No Telepon CSO</label>
-									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" required data-msg="Please fill the CSO Phone Number" />
+									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" data-msg="Please fill the CSO Phone Number" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
 									<div class="validation"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
@@ -415,13 +419,13 @@
             if($(this)[0].id == "cso2"){
                 obj = $('#validation_cso2');
             }
-            $.get( '{{route("fetchCso")}}', { txt: txtCso })
+            $.get( '{{route("fetchCso")}}', { cso_code: txtCso })
             .done(function( result ) {
-                if (result.result == 'true'){
+                if (result['result'] == 'true' && result['data'].length > 0){
                     obj.html('Kode CSO Benar');
                     obj.css('color', 'green');
 					$('#submit').removeAttr('disabled');
-					$('#cso_phone').val(result.data[0].phone);
+					// $('#cso_phone').val(result.data[0].phone);
                 }
                 else{
                     obj.html('Kode CSO Salah');
@@ -446,6 +450,24 @@
                 }
             });
         });
+
+        $("#province").on("change", function(){
+            var id = $(this).val();
+            $( "#city" ).html("");
+            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+            .done(function( result ) {
+                result = result['rajaongkir']['results'];
+                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {
+                        if(value['type'] == "Kota"){                            
+                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                        }
+                    });
+                    $( "#city" ).append(arrCity);
+                }
+            });
+        });        
     });
 </script>
 <script>

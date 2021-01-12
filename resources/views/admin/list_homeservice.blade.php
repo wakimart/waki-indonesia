@@ -138,24 +138,19 @@
                     <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                       <div class="form-group">
                         <label for="">Filter By CSO</label>
-                          <select class="form-control" id="filter_cso" name="filter_cso">
-                            <option value="">All CSO</option>
-                            @php
-                              if(isset($_GET['filter_branch'])){
-                                $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+                          <input name="filter_cso" id="filter_cso" list="data_cso" class="text-uppercase form-control" placeholder="Search CSO" required="">
+                          <span class="invalid-feedback">
+                              <strong></strong>
+                          </span>
 
-                                foreach ($csos as $cso) {
-                                  if(isset($_GET['filter_cso'])){
-                                    if($_GET['filter_cso'] == $cso['id']){
-                                      echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                      continue;
-                                    }
-                                  }
-                                  echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                }
-                              }
-                            @endphp
-                          </select>
+                          <datalist id="data_cso">
+                              <select class="form-control">
+                                <option value="All CSO"></option>
+                                @foreach($csos as $cso)
+                                  <option value="{{$cso['code']}}-{{$cso['name']}}"></option>
+                                @endforeach
+                              </select>
+                          </datalist>
                           <div class="validation"></div>
                       </div>
                     </div>
@@ -170,6 +165,7 @@
                       <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
                       <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" value="-"><span class="mdi mdi-file-document"></span> Export XLS</button>
                       <button id="btn-exportDate" type="button" class="btn btn-gradient-info m-1" name="export" data-toggle="modal" data-target="#datePickerHomeServiceModal" value="-"><span class="mdi mdi-file-document"></span> Export XLS with Date</button>
+                      <button id="btn-exportByInput" type="button" class="btn btn-gradient-info m-1" name="export" data-toggle="modal" data-target="#datePickerByInput" value="-"><span class="mdi mdi-file-document"></span> Export XLS by Input Date</button>
                     </div>
                   </div>
                 </div>
@@ -516,6 +512,33 @@
     </div>
   </div>
   <!-- End Modal Date Picker export Xls -->
+
+
+  <!-- Modal Date Picker export By Input Xls -->
+  <div class="modal fade" id="datePickerByInput" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <label for="">Pick a Date</label>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label>Tanggal Input</label>
+              <input type="date" class="form-control" name="date" id="filter_inputByDate" placeholder="Awal Tanggal" required data-msg="Mohon Isi Tanggal" onload="getDate()" />
+              <div class="validation"></div>
+          </div>
+              
+          </div>
+        <div class="modal-footer">
+                {{csrf_field()}}
+                  <input type="hidden" id="hiddenInput" name="cancel" value="1">
+                  <button type="submit" data-dismiss="modal" id="btn-exportByInputDate" class="btn btn-gradient-danger mr-2" name="id" value="-">Export</button>
+              <button type="button" data-dismiss="modal" class="btn btn-light">No</button>
+          </div>
+        </div>
+    </div>
+  </div>
+  <!-- End Modal Date Picker export By Input Xls -->
 </div>
 @endsection
 
@@ -815,24 +838,25 @@ window.onload = function() {
         });
     });
 
-    $("#filter_branch").on("change", function(){
-      var id = $(this).val();
-      $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
-      .done(function( result ) {
-          $( "#filter_cso" ).html("");
-          var arrCSO = "<option selected value=\"\">All CSO</option>";
-          $( "#filter_cso" ).append(arrCSO);
-          if(result.length > 0){
-              $.each( result, function( key, value ) {
-                arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
-              });
-              $( "#filter_cso" ).append(arrCSO);
-            }
-        });
-      if(id == ""){
-        $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
-      }
-    });
+    // $("#filter_branch").on("change", function(){
+    //   var id = $(this).val();
+    //   $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
+    //   .done(function( result ) {
+    //       $( "#filter_cso" ).html("");
+    //       var arrCSO = "<option selected value=\"\">All CSO</option>";
+    //       $( "#filter_cso" ).append(arrCSO);
+    //       if(result.length > 0){
+    //           $.each( result, function( key, value ) {
+    //             arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
+    //           });
+    //           $( "#filter_cso" ).append(arrCSO);
+    //         }
+    //     });
+    //   if(id == ""){
+    //     $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
+    //   }
+    // });
+
     $("#btn-exportByDate").on("click", function(){
       var urlParamArray = new Array();
       var urlParamStr = "";
@@ -843,7 +867,9 @@ window.onload = function() {
         urlParamArray.push("filter_branch=" + $('#filter_branch').val());
       }
       if($('#filter_cso').val() != ""){
-        urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+        var get_req = $('#filter_cso').val();
+        var get_code = get_req.split("-");
+        urlParamArray.push("filter_cso=" + get_code[0]);
       }
       if($('#search').val() != ""){
         urlParamArray.push("filter_search=" + $('#search').val());
@@ -871,7 +897,9 @@ window.onload = function() {
         urlParamArray.push("filter_branch=" + $('#filter_branch').val());
       }
       if($('#filter_cso').val() != ""){
-        urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+        var get_req = $('#filter_cso').val();
+        var get_code = get_req.split("-");
+        urlParamArray.push("filter_cso=" + get_code[0]);
       }
       if($('#search').val() != ""){
         urlParamArray.push("filter_search=" + $('#search').val());
@@ -886,6 +914,11 @@ window.onload = function() {
       var bulan = tgl.getMonth()+1;if(bulan < 9)  bulan="0" +bulan;
       tgl = tahun+"-"+bulan+"-"+hari;
       window.location.href = "{{route('homeservice_export-to-xls')}}?date=" + tgl + urlParamStr;   
+    });
+
+    $("#btn-exportByInputDate").on("click", function(){
+      var inputDate = $('#filter_inputByDate').val();
+      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}?inputDate=" + inputDate;   
     });
 
   });
@@ -1102,7 +1135,13 @@ $(document).on("click", "#btn-filter", function(e){
     urlParamArray.push("filter_branch=" + $('#filter_branch').val());
   }
   if($('#filter_cso').val() != ""){
-    urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+    var get_req = $('#filter_cso').val();
+    if(get_req != "All CSO"){
+      var get_code = get_req.split("-");
+      urlParamArray.push("filter_cso=" + get_code[0]);
+    }else{
+      console.log(urlParamArray);
+    }
   }
   if($('#search').val() != ""){
     urlParamArray.push("filter_search=" + $('#search').val());

@@ -10,6 +10,7 @@
       @php 
         $img = json_decode($banner->image, true);
       @endphp
+
       @if (count($img) != 0)
       <div class="carousel-item active">
         <img class="d-block w-100" src="{{asset('sources/banners/').'/'.$img[0]['img']}}"  href ="{{$img[0]['url']}}" alt="Second slide">
