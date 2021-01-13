@@ -26,7 +26,7 @@ class AddDistricInDelivOrderTabel extends Migration
     public function down()
     {
         Schema::table('delivery_orders', function (Blueprint $table){
-            $table->dropColum('distric');
+            $table->dropColumn('distric');
         });
     }
 }

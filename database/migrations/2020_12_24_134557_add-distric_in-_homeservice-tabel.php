@@ -26,7 +26,7 @@ class AddDistricInHomeserviceTabel extends Migration
     public function down()
     {
         Schema::table('home_services', function (Blueprint $table){
-            $table->dropColum('distric');
+            $table->dropColumn('distric');
         });
     }
 }

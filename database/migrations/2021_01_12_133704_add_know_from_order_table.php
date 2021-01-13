@@ -26,7 +26,7 @@ class AddKnowFromOrderTable extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropColum('know_from');
+            $table->dropColumn('know_from');
         });
     }
 }
