@@ -14,7 +14,7 @@ class AddKnowFromOrderTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->enum('know_from', ['Teman/Keluarga', 'Pameran/Showroom WAKI', 'Instagram', 'Facebook']);
+            $table->enum('know_from', ['Pameran/Showroom WAKI', 'Facebook', 'Instagram', 'Waki/Wakimart Customer Service', 'MGM', 'Program Refrensi']);
         });
     }
 
