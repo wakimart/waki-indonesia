@@ -422,6 +422,23 @@ class OrderController extends Controller
         return response()->json($data, 200);
     }
 
+    public function fetchKnowFromApi(){
+        $data = Order::$Know_From;
+        $know_From = [];
+        foreach($data as $key => $value) {
+            $tmp = [];
+            $tmp['id'] = $key;
+            $tmp['know_from'] = $value;
+            array_push($know_From, $tmp);
+        }
+
+        $data = ['result' => count($know_From),
+                 'data' => $know_From
+                ];
+
+        return response()->json($data, 200);
+    }
+
     public function addApi(Request $request)
     {
         $messages = array(

@@ -65,6 +65,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 	Route::post('addVersion', 'VersionController@storeVersion');
 	Route::get('listVersion', 'VersionController@listVersion');
 	Route::get('/fetchAllTypeHS', 'HomeServiceController@listAllTypeHS');
+	Route::get('fetchKnowFromApi', 'OrderController@fetchKnowFromApi'); //fetching all know from
     Route::get('fetchprovinceapi', function () {
 			return RajaOngkir::FetchProvinceApi();
 		}); //fetching all province
