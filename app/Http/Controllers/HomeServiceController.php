@@ -800,8 +800,14 @@ class HomeServiceController extends Controller
             }
             
             //khusus filter
+            if(isset($data['filter']['filter_province'])){
+                $homeServices = $homeServices->Where('home_services.province', $data['filter']['filter_provinc']);
+            }
             if(isset($data['filter']['filter_city'])){
                 $homeServices = $homeServices->Where('home_services.city', $data['filter']['filter_city']);
+            }
+            if(isset($data['filter']['filter_district'])){
+                $homeServices = $homeServices->Where('home_services.distric', $data['filter']['filter_district']);
             }
             if(isset($data['filter']['filter_branch'])){
                 $homeServices = $homeServices->Where('home_services.branch_id', $data['filter']['filter_branch']);

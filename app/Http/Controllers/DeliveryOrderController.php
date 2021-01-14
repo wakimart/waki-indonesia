@@ -425,15 +425,21 @@ class DeliveryOrderController extends Controller
 
             $deliveryOrders = $deliveryOrders->leftjoin('branches', 'delivery_orders.branch_id', '=', 'branches.id')
                                 ->leftjoin('csos', 'delivery_orders.cso_id', '=', 'csos.id')
-                                ->select('delivery_orders.id', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.name as customer_name', 'delivery_orders.arr_product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name');
+                                ->select('delivery_orders.id', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.name as customer_name', 'delivery_orders.arr_product', 'delivery_orders.province', 'delivery_orders.city', 'delivery_orders.distric','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name');
             if($request->has('filter_branch')){
                 $deliveryOrders = $deliveryOrders->where('delivery_orders.branch_id', $request->filter_branch);
             }
             if($request->has('filter_cso')){
                 $deliveryOrders = $deliveryOrders->where('delivery_orders.cso_id', $request->filter_cso);
             }
+            if($request->has('filter_province')){
+                $deliveryOrders = $deliveryOrders->where('delivery_orders.province', $request->filter_province);
+            }
             if($request->has('filter_city')){
-                $deliveryOrders = $deliveryOrders->where('delivery_orders.city', 'like', '%'.$request->filter_city.'%');
+                $deliveryOrders = $deliveryOrders->where('delivery_orders.city', $request->filter_city);
+            }
+            if($request->has('filter_district')){
+                $deliveryOrders = $deliveryOrders->where('delivery_orders.distric', $request->filter_district);
             }
             if($request->has('filter_startDate')&& $request->has('filter_endDate')){
                 $deliveryOrders = $deliveryOrders->whereBetween('delivery_orders.created_at', [$request->filter_startDate.' 00:00:00', $request->filter_endDate.' 23:59:59']);
@@ -455,6 +461,7 @@ class DeliveryOrderController extends Controller
                     array_push($tempArray, $tempArray2);
                 }
                 $doNya['arr_product'] = $tempArray;
+                $doNya['district'] = $doNya->getDistrict();
             }
 
             $data = ['result' => 1,

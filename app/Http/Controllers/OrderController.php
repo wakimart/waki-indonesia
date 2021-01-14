@@ -593,7 +593,7 @@ class OrderController extends Controller
             }
             $orders = $orders->leftjoin('branches', 'orders.branch_id', '=', 'branches.id')
                                 ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
-                                ->select('orders.id', 'orders.code', 'orders.created_at', 'orders.name as customer_name', 'orders.product', 'branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name');
+                                ->select('orders.id', 'orders.code', 'orders.created_at', 'orders.name as customer_name', 'orders.product', 'orders.province','orders.city', 'orders.distric','branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name');
             // dd($orders);
             if($request->has('filter_branch')){
                 $orders = $orders->where('orders.branch_id', $request->filter_branch);
@@ -604,8 +604,14 @@ class OrderController extends Controller
             if($request->has('filter_startDate')&& $request->has('filter_endDate')){
                 $orders = $orders->whereBetween('orders.orderDate', [date($request->filter_startDate), date($request->filter_endDate)]);
             }
+            if($request->has('filter_province')){
+                $orders = $orders->where('orders.province', $request->filter_province);
+            }
             if($request->has('filter_city')){
-                $orders = $orders->where('orders.city', 'like', '%'.$request->filter_city.'%');
+                $orders = $orders->where('orders.city', $request->filter_city);
+            }
+            if($request->has('filter_district')){
+                $orders = $orders->where('orders.distric', $request->filter_district);
             }
             $orders = $orders->orderBy('orderDate', 'DESC');
             $orders = $orders->paginate($request->limit);
@@ -622,6 +628,7 @@ class OrderController extends Controller
                     $tempArray[$j]['qty'] = $product['qty'];
                 }
                 $doNya['product'] = $tempArray;
+                $doNya['district'] = $doNya->getDistrict();
             }
 
             $data = ['result' => 1,
@@ -647,7 +654,9 @@ class OrderController extends Controller
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
-            'city' => 'required',
+            'district_id' => 'required',
+            'city_id' => 'required',
+            'province_id' => 'required',
             'cash_upgrade' => 'required',
             'product_0' => 'required',
             'qty_0' => 'required',
