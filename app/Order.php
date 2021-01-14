@@ -39,4 +39,14 @@ class Order extends Model
     {
         return Cso::where('id', $this->cso_id)->first();
     }
+
+    public function getDistrict()
+    {
+        $district = RajaOngkir_Subdistrict::where('subdistrict_id', $this->distric)->first();
+        if ($district != null) {
+            $district['type_city'] = RajaOngkir_City::where('city_id', $district['city_id'])->first()['type'];
+            $district['kota/kab'] = $district['type_city'].' '.$district['city']; 
+        }
+        return $district;
+    }
 }

@@ -532,7 +532,7 @@ class DeliveryOrderController extends Controller
         $delivery_orders = DeliveryOrder::where([['delivery_orders.active', true], ['delivery_orders.id', $id]]);
         $delivery_orders = $delivery_orders->leftjoin('branches', 'delivery_orders.branch_id', '=', 'branches.id')
                             ->leftjoin('csos', 'delivery_orders.cso_id', '=', 'csos.id')
-                            ->select('delivery_orders.id','delivery_orders.city as city', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.no_member as no_member', 'delivery_orders.name as customer_name', 'delivery_orders.phone as customer_phone', 'delivery_orders.address as customer_address', 'delivery_orders.city as city', 'delivery_orders.arr_product', 'branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
+                            ->select('delivery_orders.id','delivery_orders.city as city', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.no_member as no_member', 'delivery_orders.name as customer_name', 'delivery_orders.phone as customer_phone', 'delivery_orders.address as customer_address', 'delivery_orders.city as city', 'delivery_orders.arr_product','delivery_orders.distric','branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->get();
 
         $kota = $delivery_orders[0]->city; 
@@ -569,6 +569,7 @@ class DeliveryOrderController extends Controller
             }else {
                 $doNya['province_id'] = $city->province_id;
             }
+            $doNya['district'] = $doNya->getDistrict();
             $doNya['URL'] = route('successorder')."?code=".$doNya['code'];
         }
         $data = ['result' => 1,

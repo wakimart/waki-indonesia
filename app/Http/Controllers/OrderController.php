@@ -14,6 +14,7 @@ use App\Cso;
 use App\CategoryProduct;
 use App\User;
 use App\RajaOngkir_City;
+use App\RajaOngkir_Subdistrict;
 use App\HistoryUpdate;
 use DB;
 use App\Utils;
@@ -452,7 +453,9 @@ class OrderController extends Controller
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
-            'city' => 'required',
+            'district_id' => 'required',
+            'city_id' => 'required',
+            'province_id' => 'required',
             'cash_upgrade' => 'required',
             'product_0' => 'required',
             'qty_0' => 'required',
@@ -482,7 +485,6 @@ class OrderController extends Controller
             $data['30_cso_id'] = Cso::where('code', $data['cso_id_30'])->first()['id'];
             $data['70_cso_id'] = Cso::where('code', $data['cso_id_70'])->first()['id'];
             $data['prize'] = $data['gift_product'];
-
             //pembentukan array product
             $index = 0;
             $data['arr_product'] = [];
@@ -730,7 +732,7 @@ class OrderController extends Controller
         $orders = Order::where([['orders.active', true], ['orders.id', $id]]);
         $orders = $orders->leftjoin('branches', 'orders.branch_id', '=', 'branches.id')
                             ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
-                            ->select('orders.id', 'orders.code', 'orders.orderDate', 'orders.no_member', 'orders.name as customer_name', 'orders.phone as customer_phone', 'orders.city as customer_city', 'orders.address as customer_address','orders.product', 'orders.old_product as old_product', 'orders.prize as prize_product', 'orders.payment_type as payment_type', 'orders.total_payment as total_payment', 'orders.cash_upgrade as cash_upgrade', 'orders.down_payment as down_payment', 'orders.remaining_payment as remaining_payment', 'orders.bank as bank', 'orders.know_from','branches.code as branch_code', 'orders.customer_type as customer_type', 'orders.30_cso_id as cso_30_id', 'orders.70_cso_id as cso_70_id','orders.description as description', 'orders.know_from as know_from','branches.id as branch_id', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
+                            ->select('orders.id', 'orders.code', 'orders.orderDate', 'orders.no_member', 'orders.name as customer_name', 'orders.phone as customer_phone', 'orders.city as customer_city', 'orders.address as customer_address','orders.product', 'orders.old_product as old_product', 'orders.prize as prize_product', 'orders.payment_type as payment_type', 'orders.total_payment as total_payment', 'orders.cash_upgrade as cash_upgrade', 'orders.down_payment as down_payment', 'orders.remaining_payment as remaining_payment', 'orders.bank as bank','branches.code as branch_code', 'orders.customer_type as customer_type', 'orders.30_cso_id as cso_30_id', 'orders.70_cso_id as cso_70_id','orders.description as description', 'orders.know_from as know_from', 'orders.distric','branches.id as branch_id', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->get();
         $kota = $orders[0]->customer_city; 
         if (strpos($kota, 'Kota') !== false) {
@@ -780,6 +782,7 @@ class OrderController extends Controller
             }else {
                 $doNya['province_id'] = $city->province_id;
             }
+            $doNya['district'] = $doNya->getDistrict();
             $doNya['URL'] = route('order_success')."?code=".$doNya['code'];
         }
         $data = ['result' => 1,
