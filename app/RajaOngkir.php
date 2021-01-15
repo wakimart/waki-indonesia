@@ -30,7 +30,7 @@ class RajaOngkir extends Model
     static public function FetchDistrict($city){
         $data = [];
         $data['rajaongkir'] = [];
-    	$data['rajaongkir']['results'] = RajaOngkir_Subdistrict::where('city','like', '%'.$city.'%')->get();
+    	$data['rajaongkir']['results'] = RajaOngkir_Subdistrict::where('city_id',$city)->get();
     	return $data;
     }
 

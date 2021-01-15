@@ -271,7 +271,6 @@ class HomeServiceController extends Controller
             }
 
             $data = $request->all();
-            
             $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
 
             $getAppointment = $request->get('data')." ".$request->get('time');
@@ -291,7 +290,7 @@ class HomeServiceController extends Controller
             $data['cso_id'] = $cso->first()['id'];
             $data['cso2_id'] = $cso2->first()['id'];
             $data['appointment'] = $inputAppointment;
-            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
+            $data['province'] = (int)$data['province_id'];   //RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
             $data['distric'] = $data['subDistrict'];
             $startDateTime = $data['date']."T".$data['time'].":00";
             $time = strtotime($data['time']) + 60*60 * 2;
@@ -341,6 +340,8 @@ class HomeServiceController extends Controller
     {
         if($request->has('id')){
             $data = HomeService::find($request->id);
+            $data['district'] = $data->getDistrict();
+            // dd($data);
             return response()->json(['result' => $data]);
         }else{
             return response()->json(['result' => 'Gagal!!']);
