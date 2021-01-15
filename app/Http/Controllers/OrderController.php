@@ -170,7 +170,7 @@ class OrderController extends Controller
                 }
             }
             $data['bank'] = json_encode($data['arr_bank']);
-            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
+            $data['province'] = $data['province_id']; 
             $order = Order::create($data);
             DB::commit();
 
@@ -234,6 +234,7 @@ class OrderController extends Controller
 
     public function admin_DetailOrder(Request $request){
         $order = Order::where('code', $request['code'])->first();
+        $order['district'] = $order->getDistrict();
         $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
         ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
@@ -250,6 +251,7 @@ class OrderController extends Controller
     {
         if($request->has('id')){
             $orders = Order::find($request->get('id'));
+            $orders['district'] = $orders->getDistrict();
             $promos = DeliveryOrder::$Promo;
             $branches = Branch::all();
             $csos = Cso::all();
@@ -322,18 +324,17 @@ class OrderController extends Controller
             }
         }
         $orders['bank'] = json_encode($data['arr_bank']);
-
         $orders['old_product'] = $request->input('old_product');
         $orders['prize'] = $request->input('prize');
         $orders['cso_id'] = $request->input('idCSO');
         $orders['30_cso_id'] = $request->input('idCSO30');
         $orders['70_cso_id'] = $request->input('idCSO70');
         $orders['branch_id'] = $request->input('branch_id');
-        $orders['city'] = $request->input('city');
+        $orders['province'] = $data['province_id'];
+        $orders['city'] = $data['city'];;
+        $orders['distric'] = $data['distric'];
         $orders['customer_type'] = $request->input('customer_type');
         $orders['description'] = $request->input('description');
-        $orders['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
-        $orders['distric'] = $data['distric'];
         DB::beginTransaction();
         try{
             $orders->save();

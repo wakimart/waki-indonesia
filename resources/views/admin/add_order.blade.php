@@ -470,11 +470,11 @@
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
                     	if(value['type'] == "Kabupaten"){
-                        	arrCity += "<option value=\"Kota "+value['city_name']+"\">Kabupaten "+value['city_name']+"</option>";
+                        	arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
                         }
 	                        
                         if(value['type'] == "Kota"){
-                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                            arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                         }
 
 
@@ -493,7 +493,7 @@
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {                            
-                        arrSubDistsrict += "<option value=\""+value['subdistrict_name']+"\">"+value['subdistrict_name']+"</option>";
+                        arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
                     });
                     $( "#subDistrict" ).append(arrSubDistsrict);
                 }
