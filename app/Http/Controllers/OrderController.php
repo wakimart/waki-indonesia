@@ -792,7 +792,7 @@ class OrderController extends Controller
             }else {
                 $doNya['province_id'] = $city->province_id;
             }
-            $doNya['district'] = $doNya->getDistrict();
+            $doNya['district'] = array($doNya->getDistrict());
             $doNya['URL'] = route('order_success')."?code=".$doNya['code'];
         }
         $data = ['result' => 1,
