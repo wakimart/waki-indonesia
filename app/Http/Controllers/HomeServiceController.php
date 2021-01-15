@@ -873,7 +873,7 @@ class HomeServiceController extends Controller
                         ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
                         ->select('home_services.id', 'home_services.code as code', 'home_services.appointment', 'home_services.no_member as no_member', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.cash', 'home_services.cash_description','home_services.address as custommer_address','home_services.phone as custommer_phone', 'home_services.type_customer as type_customer', 'home_services.type_homeservices as type_homeservices', 'home_services.distric', 'branches.id as branch_id', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name', 'csos.phone as cso_phone')->first();
 
-        $homeServices['distict'] = $homeServices->getDistrict();
+        $homeServices['distict'] = array($homeServices->getDistrict());
         $homeServices['URL'] = route('homeServices_success')."?code=".$homeServices['code'];
         $data = ['result' => 1,
                  'data' => $homeServices
