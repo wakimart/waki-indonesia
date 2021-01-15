@@ -43,8 +43,7 @@
 							  <div class="form-group">
 				                <label for="">Province</label>
 								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
-									<option selected disabled value="">{{$deliveryOrders['province']}}</option>
-
+									<option selected disabled value="">{{$deliveryOrders['district']['province']}}</option>
 									@php
 										$result = RajaOngkir::FetchProvince();
 										$result = $result['rajaongkir']['results'];
@@ -61,14 +60,14 @@
 							<div class="form-group">
 				                <label for="">City</label>
 								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
-									<option selected disabled value="">{{$deliveryOrders['city']}}</option>
+									<option selected disabled value="">{{$deliveryOrders['district']['city']}}</option>
 								</select>
 								<div class="validation"></div>
 							</div>
 							<div class="form-group">
 				                <label for="">Sub District</label>
 								<select class="form-control" id="subDistrict" name="distric" data-msg="Mohon Pilih Kecamatan" required>
-									<option selected disabled value="">{{$deliveryOrders['distric']}}</option>
+									<option selected disabled value="">{{$deliveryOrders['district']['subdistrict_name']}}</option>
 								</select>
 								<div class="validation"></div>
 	              			</div>
@@ -261,11 +260,11 @@
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
                     	if(value['type'] == "Kabupaten"){
-                        	arrCity += "<option value=\"Kota "+value['city_name']+"\">Kabupaten "+value['city_name']+"</option>";
+                        	arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
                         }
 	                        
                         if(value['type'] == "Kota"){
-                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                            arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                         }
 
 
@@ -284,7 +283,7 @@
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {                            
-                        arrSubDistsrict += "<option value=\""+value['subdistrict_name']+"\">"+value['subdistrict_name']+"</option>";
+                        arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
                     });
                     $( "#subDistrict" ).append(arrSubDistsrict);
                 }

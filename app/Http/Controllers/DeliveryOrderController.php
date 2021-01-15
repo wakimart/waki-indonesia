@@ -125,8 +125,7 @@ class DeliveryOrderController extends Controller
             //     }
             // }
             $data['arr_product'] = json_encode($data['arr_product']);
-            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
-
+            $data['province'] = $data['province_id'];
             $deliveryOrder = DeliveryOrder::create($data);
 
             DB::commit();
@@ -170,10 +169,10 @@ class DeliveryOrderController extends Controller
             $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->get();
         }
         if($request->has('filter_city')){
-            $deliveryOrders = $deliveryOrders->where('city', 'like', '%'.$request->filter_city.'%');
+            $deliveryOrders = $deliveryOrders->where('city', $request->filter_city);
         }
         if($request->has('filter_district')){
-            $deliveryOrders = $deliveryOrders->where('distric', 'like', '%'.$request->filter_district.'%');
+            $deliveryOrders = $deliveryOrders->where('distric', $request->filter_district);
         }
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $deliveryOrders = $deliveryOrders->where('branch_id', $request->filter_branch);
@@ -203,6 +202,7 @@ class DeliveryOrderController extends Controller
     {
         if($request->has('id')){
             $deliveryOrders = DeliveryOrder::find($request->get('id'));
+            $deliveryOrders['district'] = $deliveryOrders->getDistrict();
             $promos = DeliveryOrder::$Promo;
             $branches = Branch::all();
             $csos = Cso::all();
@@ -250,7 +250,7 @@ class DeliveryOrderController extends Controller
             $deliveryOrders->cso_id = $request->input('idCSO');
             $deliveryOrders->branch_id = $request->input('branch_id');
             $deliveryOrders->city = $request->input('city');
-            $deliveryOrders->province = RajaOngkir_Province::where('province_id', (int)$request->input('province_id'))->first()['province'];;
+            $deliveryOrders->province = $request->input('province_id');//RajaOngkir_Province::where('province_id', (int)$request->input('province_id'))->first()['province'];;
             $deliveryOrders->distric = $request->input('distric');
             $deliveryOrders->save();
 
