@@ -877,7 +877,7 @@ class HomeServiceController extends Controller
         $homeServices['distict'] = array($homeServices->getDistrict());
         $homeServices['URL'] = route('homeServices_success')."?code=".$homeServices['code'];
         $data = ['result' => 1,
-                 'data' => $homeServices
+                 'data' => array($homeServices)
                 ];
         return response()->json($data, 200);
     }
