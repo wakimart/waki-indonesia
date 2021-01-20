@@ -112,7 +112,7 @@
 							<div class="form-group">
 				                <label for="">City</label>
 								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
-									<option selected disabled value="">{{$orders['district']['kota/kab']}}</option>
+									<option selected disabled value="">{{$orders['district']['kota_kab']}}</option>
 								</select>
 								<div class="validation"></div>
 							</div>
