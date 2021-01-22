@@ -118,7 +118,8 @@ class OrderController extends Controller
         $cashUpgrades = Order::$CashUpgrade;
         $paymentTypes = Order::$PaymentType;
         $banks = Order::$Banks;
-        return view('admin.add_order', compact('promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
+        $from_know = Order::$Know_From;
+        return view('admin.add_order', compact('promos', 'branches', 'csos', 'from_know','cashUpgrades', 'paymentTypes', 'banks'));
     }
 
     public function admin_StoreOrder(Request $request){
@@ -258,7 +259,8 @@ class OrderController extends Controller
             $cashUpgrades = Order::$CashUpgrade;
             $paymentTypes = Order::$PaymentType;
             $banks = Order::$Banks;
-            return view('admin.update_order', compact('orders','promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
+            $from_know = Order::$Know_From;
+            return view('admin.update_order', compact('orders','promos', 'from_know','branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -335,6 +337,7 @@ class OrderController extends Controller
         $orders['distric'] = $data['distric'];
         $orders['customer_type'] = $request->input('customer_type');
         $orders['description'] = $request->input('description');
+        $orders['know_from'] = $request->input('know_from');
         DB::beginTransaction();
         try{
             $orders->save();

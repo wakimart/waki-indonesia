@@ -103,12 +103,22 @@
 								</select>
 								<div class="validation"></div>
 	              			</div>  
-	              			<div class="form-group">
+							   
+							<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
 				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address"></textarea>
 				                <div class="validation"></div>
 	              			</div>
-
+							<div class="form-group">
+				                <label for="">Know From</label>
+								<select class="form-control" id="know_from" name="know_from" data-msg="Mohon Pilih Kecamatan" required>							
+									@foreach($from_know as $key=>$value)
+										<option value="{{ $value }}">{{ $value }}</option>
+									@endforeach
+								</select>
+								<div class="validation"></div>
+	              			</div> 
+							
 	              			<br>
 			                <h5 class="add-customer d-none">Customer 2</h5>
 			                <div class="form-group add-customer d-none">
@@ -498,8 +508,7 @@
                     $( "#subDistrict" ).append(arrSubDistsrict);
                 }
             });
-        });  
-
+		});  
         $("#tambah_bank").click(function(e){
             e.preventDefault();
             total_bank++;
