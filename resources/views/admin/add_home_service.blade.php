@@ -180,7 +180,7 @@
               <div class="form_appoint_container">
                 <div class="form-group">
                   <label for="">Tanggal Janjian</label>
-  								  <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+  								  <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
   								<div class="validation"></div>
   								<span class="invalid-feedback">
   									<strong></strong>
@@ -188,7 +188,7 @@
   							</div>
   							<div class="form-group">
   								<label for="">Jam Janjian</label>
-  								<input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>
+  								<input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>
   								<div class="validation"></div>
   								<span class="invalid-feedback">
   									<strong></strong>
@@ -377,13 +377,13 @@
 	        console.log(hasil);
 
 	        for (var key of frmAdd.keys()) {
-	            $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
-	            $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
-	            $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
+	            $("#actionAdd").find("input[name="+key.name+"]").removeClass("is-invalid");
+	            $("#actionAdd").find("select[name="+key.name+"]").removeClass("is-invalid");
+	            $("#actionAdd").find("textarea[name="+key.name+"]").removeClass("is-invalid");
 
-	            $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
-	            $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
-	            $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
+	            $("#actionAdd").find("input[name="+key.name+"]").next().find("strong").text("");
+	            $("#actionAdd").find("select[name="+key.name+"]").next().find("strong").text("");
+	            $("#actionAdd").find("textarea[name="+key.name+"]").next().find("strong").text("");
 	        }
 
 	        if(hasil['errors'] != null){
@@ -401,7 +401,7 @@
 	                    $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
 	                }
 	            }
-	            alert("Input Error !!!");
+	            alert(hasil['errors']);
 	        } else if(hasil['validator'] != null){
               $("#modal-Error").modal("show");
 	            // alert("Appointment dengan nomer ini sudah ada!!");
@@ -511,7 +511,7 @@
         $('.form_appoint_container').append(
           '<div class="form-group optional_appointment">\
             <label for="">Tanggal Janjian 2 (Optional)</label>\
-              <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
@@ -519,7 +519,7 @@
           </div>\
           <div class="form-group optional_appointment">\
             <label for="">Jam Janjian 2 (Optional)</label>\
-            <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
@@ -527,7 +527,7 @@
           </div>\
           <div class="form-group optional_appointment">\
             <label for="">Tanggal Janjian 3 (Optional)</label>\
-              <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
@@ -535,15 +535,90 @@
           </div>\
           <div class="form-group optional_appointment">\
             <label for="">Jam Janjian 3 (Optional)</label>\
-            <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
             </span>\
           </div>');
       }
-    }else{
+    }
+    else if($(this).val() == 'Home WAKi di Rumah Aja'){
+      if( Limit > 1){
+        return false;
+      }
+      else {
+        Limit ++;
+        $('.form_appoint_container').append(
+          '<div class="form-group optional_appointment">\
+            <label for="">Tanggal Janjian 2 (Optional)</label>\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Jam Janjian 2 (Optional)</label>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Tanggal Janjian 3 (Optional)</label>\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Jam Janjian 3 (Optional)</label>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Tanggal Janjian 4 (Optional)</label>\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Jam Janjian 4 (Optional)</label>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Tanggal Janjian 5 (Optional)</label>\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Jam Janjian 5 (Optional)</label>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>');
+      }
+    }
+    else{
         $('.optional_appointment').remove();
+        Limit = 1;
     }
     });
   });
