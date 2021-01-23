@@ -291,17 +291,17 @@ class HomeServiceController extends Controller
                             $data = $request->all();
                             $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
         
-                            // $getAppointment = $value." ".$get_timeAppointment[$key];
-                            // $getIdCso = Cso::where('code', $data['cso_id'])->first()['id'];
-                            // $getHomeServices = HomeService::where([
-                            //     ['cso_id', '=', $getIdCso],
-                            //     ['appointment', '=', $getAppointment]
-                            // ])->get();
+                            $getAppointment = $value." ".$get_timeAppointment[$key];
+                            $getIdCso = Cso::where('code', $data['cso_id'])->first()['id'];
+                            $getHomeServices = HomeService::where([
+                                ['cso_id', '=', $getIdCso],
+                                ['appointment', '=', $getAppointment], ['active', '=', true],
+                            ])->get();
         
         
-                            // if (count($getHomeServices) > 0) {
-                            //     return response()->json(['errors' => ['type_homeservices' => "An appointment has been already scheduled."]]);
-                            // }
+                            if (count($getHomeServices) > 0) {
+                                return response()->json(['errors' => ['type_homeservices' => "An appointment has been already scheduled."]]);
+                            }
         
                             $cso = Cso::where('code', $data['cso_id']);
                             $cso2 = Cso::where('code', $data['cso2_id']);
