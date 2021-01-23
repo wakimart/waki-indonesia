@@ -73,6 +73,7 @@
                                     <option value="Home Refrensi Product">Home Refrensi Product</option>
                                     <option value="Home Delivery">Home Delivery</option>
                                     <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
+                                    <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
 								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -500,15 +501,16 @@
 </script>
 <script>
   $(document).ready(function(){
-    var Limit = 1;
     $('#type_homeservices').change(function(){
-    if( $(this).val() == 'Home Eksklusif Therapy' || $(this).val() == 'Home Family Therapy'){
+    if( $(this).val() == 'Home Eksklusif Therapy' || $(this).val() == 'Home Free Family Therapy'){
+      $('.optional_appointment').remove();
+      var Limit = 1;
       if( Limit > 1){
         return false;
       }
       else {
         Limit ++;
-        $('.form_appoint_container').append(
+       $('.form_appoint_container').append(
           '<div class="form-group optional_appointment">\
             <label for="">Tanggal Janjian 2 (Optional)</label>\
               <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
@@ -544,6 +546,8 @@
       }
     }
     else if($(this).val() == 'Home WAKi di Rumah Aja'){
+      $('.optional_appointment').remove();
+      var Limit = 1;
       if( Limit > 1){
         return false;
       }
