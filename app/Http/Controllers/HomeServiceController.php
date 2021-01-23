@@ -209,7 +209,9 @@ class HomeServiceController extends Controller
         $this->gCalendarController = $gCalendarController;
     }
 
+
     public function admin_addHomeService(Request $request){
+        // dd($request->all());
         $validator = \Validator::make($request->all(), [
             'phone' => 'required|string|min:7',
         ]);
@@ -222,127 +224,145 @@ class HomeServiceController extends Controller
             }
             return response()->json(['errors' => $arr_Hasil]);
         }else {
-            $inputAppointment = $request->date." ".$request->time;
-            if($request->type_homeservices == "Home Eksklusif Therapy" || $request->type_homeservices == "Home Family Therapy"){
-                $homeserviceInactive = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home Eksklusif Therapy']])->orWhere([['phone', $request->phone],['active', true],['type_homeservices', 'Home Family Therapy']])->get();
-                for ($i = 0; $i< count($homeserviceInactive); $i++){
-                    if(date("Y-m-d",strtotime('+14 days', strtotime($homeserviceInactive[$i]->appointment))) < date("Y-m-d")) {
-                        $homeService = HomeService::find($homeserviceInactive[$i]->id);
-                        $homeService->active = false;
-                        $homeService->save();
+            $get_dateAppointment = $request->date;
+            $get_timeAppointment = $request->time;
+
+            if(count($get_dateAppointment) != count(array_unique($get_dateAppointment))){
+                return response()->json(['errors' => "Tanggal appointment tidak boleh sama!!"]);
+            }else{
+                DB::beginTransaction();
+                try{
+                    foreach ($get_dateAppointment as $key => $value) {
+                        $inputAppointment = $value." ".$get_timeAppointment[$key];
+                        if($request->type_homeservices == "Home Eksklusif Therapy" || $request->type_homeservices == "Home Family Therapy"){
+                            $homeserviceInactive = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home Eksklusif Therapy']])->orWhere([['phone', $request->phone],['active', true],['type_homeservices', 'Home Family Therapy']])->get();
+                            for ($i = 0; $i< count($homeserviceInactive); $i++){
+                                if(date("Y-m-d",strtotime('+14 days', strtotime($homeserviceInactive[$i]->appointment))) < date("Y-m-d")) {
+                                    $homeService = HomeService::find($homeserviceInactive[$i]->id);
+                                    $homeService->active = false;
+                                    $homeService->save();
+                                }
+                            }
+                        }
+    
+                        $counterExecutive=0;
+                        $counterFamily=0;
+                        $counterRumah=0;
+                        $homeServiceRawData = HomeService::where([['phone', $request->phone],['active', true]])->get();
+                        if ($homeServiceRawData != null && count($homeServiceRawData) > 0){
+                            for ($i=0; $i<count($homeServiceRawData);$i++){
+                                if ($homeServiceRawData[$i]->type_homeservices == "Upgrade Member" && $request->type_homeservices == "Upgrade Member"){
+                                    return response()->json(['errors' => "Upgrade Member Hanya Sekali Saja Untuk Nomer Yang Sama"]);
+                                }
+    
+                                if (date("Y-m-d", strtotime($homeServiceRawData[$i]->appointment)) == date("Y-m-d", strtotime($inputAppointment))){
+                                    return response()->json(['errors' => ['type_homeservices' => "Appointment dengan nomer ini sudah ada!!"]]);
+                                }
+    
+                                if($homeServiceRawData[$i]->type_homeservices == "Home Eksklusif Therapy"){
+                                    $counterExecutive ++;
+                                }
+                                if($homeServiceRawData[$i]->type_homeservices == "Home Family Therapy"){
+                                    $counterFamily ++;
+                                }
+                                if($homeServiceRawData[$i]->type_homeservices == "Home WAKi di Rumah Aja"){
+                                    $counterRumah ++;
+                                }
+                            }
+                        }
+    
+                        $homeServiceDataTiga = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home service']])->orderBy('appointment', 'desc')->first();
+                        if($homeServiceDataTiga != null && $request->type_homeservices == "Home service"){
+                            if(date("Y-m-d", strtotime($homeServiceDataTiga->appointment)) >= date("Y-m-d", strtotime($inputAppointment.' -7 days'))){
+                                return response()->json(['errors' => ['type_homeservices' => "Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service "]]);
+                            }
+                        }
+    
+                        if($counterExecutive >=3 && $request->type_homeservices == "Home Eksklusif Therapy"){
+                            return response()->json(['errors' =>['type_homeservices' =>  "Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Masing-Masing di Gunakan 3 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama"]]);
+                        }
+                        else if($counterFamily >=3 && $request->type_homeservices == "Home Family Therapy"){
+                            return response()->json(['errors' =>['type_homeservices' =>  "Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Masing-Masing di Gunakan 3 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama"]]);
+                        }
+                        else if($counterFamily >=5 && $request->type_homeservices == "Home WAKi di Rumah Aja"){
+                            return response()->json(['errors' =>['type_homeservices' =>  "Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Masing-Masing di Gunakan 5 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama"]]);
+                        }
+    
+                        $data = $request->all();
+                        $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+    
+                        $getAppointment = $value." ".$get_timeAppointment[$key];
+                        $getIdCso = Cso::where('code', $data['cso_id'])->first()['id'];
+                        $getHomeServices = HomeService::where([
+                            ['cso_id', '=', $getIdCso],
+                            ['appointment', '=', $getAppointment], ['active', '=', true],
+                        ])->get();
+    
+    
+                        if (count($getHomeServices) > 0) {
+                            return response()->json(['errors' => ['type_homeservices' => "An appointment has been already scheduled."]]);
+                        }
+    
+                        $cso = Cso::where('code', $data['cso_id']);
+                        $cso2 = Cso::where('code', $data['cso2_id']);
+                        $data['cso_id'] = $cso->first()['id'];
+                        $data['cso2_id'] = $cso2->first()['id'];
+                        $data['appointment'] = $inputAppointment;
+                        $data['province'] = (int)$data['province_id'];
+                        $data['distric'] = $data['subDistrict'];
+    
+                        $startDateTime = $value."T".$get_timeAppointment[$key].":00";
+                        $time = strtotime($get_timeAppointment[$key]) + 60*60 * 2;
+                        $endDateTime = $value."T".date('H:i', $time).":00";
+                        // DB::beginTransaction();
+                        // try{
+                        $order = HomeService::create($data);
+                        $event = array(
+                            'summary' => 'Acara Home Service',
+                            'location' => $data['address'],
+                            'description' => 'A chance to hear more about Google\'s developer products.',
+                            'start' => array(
+                                'dateTime' => $startDateTime,
+                                'timeZone' => 'Asia/Jakarta',
+                            ),
+                            'end' => array(
+                                'dateTime' => $endDateTime,
+                                'timeZone' => 'America/Los_Angeles',
+                            ),
+                            'recurrence' => array(
+                                'RRULE:FREQ=DAILY;COUNT=2'
+                            ),
+                            'attendees' => array(
+                                array('email' => $cso->first()['email']),
+                                // array('email' => $cso2->first()['email']),
+                            ),
+                            'reminders' => array(
+                                'useDefault' => FALSE,
+                                'overrides' => array(
+                                array('method' => 'email', 'minutes' => 24 * 60),
+                                array('method' => 'popup', 'minutes' => 10),
+                                ),
+                            ),
+                        );
+    
+                            // $event = $this->gCalendarController->store($event);
+                        //     DB::commit();
+                        //     return response()->json(['success' => 'Berhasil']);
+                        // } catch (\Exception $ex) {
+                        //     DB::rollback();
+                        //     return response()->json(['error' => $ex->getMessage()], 500);
+                        // }
                     }
+                    DB::commit();
+                    return response()->json(['success' => 'Berhasil']);
+                } catch (\Exception $ex) {
+                    DB::rollback();
+                    return response()->json(['error' => $ex->getMessage()], 500);
                 }
-            }
-
-            $counterExecutive=0;
-            $counterFamily=0;
-            $counterRumah=0;
-            $homeServiceRawData = HomeService::where([['phone', $request->phone],['active', true]])->get();
-            if ($homeServiceRawData != null && count($homeServiceRawData) > 0){
-                for ($i=0; $i<count($homeServiceRawData);$i++){
-                    if ($homeServiceRawData[$i]->type_homeservices == "Upgrade Member" && $request->type_homeservices == "Upgrade Member"){
-                        return response()->json(['errors' => "Upgrade Member Hanya Sekali Saja Untuk Nomer Yang Sama"]);
-                    }
-
-                    if (date("Y-m-d", strtotime($homeServiceRawData[$i]->appointment)) == date("Y-m-d", strtotime($inputAppointment))){
-                        return response()->json(['errors' => ['type_homeservices' => "Appointment dengan nomer ini sudah ada!!"]]);
-                    }
-
-                    if($homeServiceRawData[$i]->type_homeservices == "Home Eksklusif Therapy"){
-                        $counterExecutive ++;
-                    }
-                    if($homeServiceRawData[$i]->type_homeservices == "Home Family Therapy"){
-                        $counterFamily ++;
-                    }
-                    if($homeServiceRawData[$i]->type_homeservices == "Home WAKi di Rumah Aja"){
-                        $counterRumah ++;
-                    }
-                }
-            }
-
-            $homeServiceDataTiga = HomeService::where([['phone', $request->phone],['active', true],['type_homeservices', 'Home service']])->orderBy('appointment', 'desc')->first();
-            if($homeServiceDataTiga != null && $request->type_homeservices == "Home service"){
-                if(date("Y-m-d", strtotime($homeServiceDataTiga->appointment)) >= date("Y-m-d", strtotime($inputAppointment.' -7 days'))){
-                    return response()->json(['errors' => ['type_homeservices' => "Nomer Telpon Tersebut Telah Di Gunakan Dalam Home Service Dengan Type Home service "]]);
-                }
-            }
-
-            if($counterExecutive >=3 && $request->type_homeservices == "Home Eksklusif Therapy"){
-                return response()->json(['errors' =>['type_homeservices' =>  "Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Masing-Masing di Gunakan 3 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama"]]);
-            }
-            else if($counterFamily >=3 && $request->type_homeservices == "Home Family Therapy"){
-                return response()->json(['errors' =>['type_homeservices' =>  "Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Masing-Masing di Gunakan 3 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama"]]);
-            }
-            else if($counterFamily >=5 && $request->type_homeservices == "Home WAKi di Rumah Aja"){
-                return response()->json(['errors' =>['type_homeservices' =>  "Home Service dengan Tipe 'Home Family Therapy' atau 'Home Executive Therapy' Hanya Bisa Masing-Masing di Gunakan 5 Kali Dalam 2 Minggu Dengan Nomor Inputan yang Sama"]]);
-            }
-
-            $data = $request->all();
-
-            $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
-
-            $getAppointment = $request->get('data')." ".$request->get('time');
-            $getIdCso = Cso::where('code', $data['cso_id'])->first()['id'];
-            $getHomeServices = HomeService::where([
-                ['cso_id', '=', $getIdCso],
-                ['appointment', '=', $getAppointment]
-            ])->get();
-
-
-            if (count($getHomeServices) > 0) {
-                return response()->json(['errors' => ['type_homeservices' => "An appointment has been already scheduled."]]);
-            }
-
-            $cso = Cso::where('code', $data['cso_id']);
-            $cso2 = Cso::where('code', $data['cso2_id']);
-            $data['cso_id'] = $cso->first()['id'];
-            $data['cso2_id'] = $cso2->first()['id'];
-            $data['appointment'] = $inputAppointment;
-            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
-            $data['distric'] = $data['subDistrict'];
-            $startDateTime = $data['date']."T".$data['time'].":00";
-            $time = strtotime($data['time']) + 60*60 * 2;
-            $endDateTime = $data['date']."T".date('H:i', $time).":00";
-            DB::beginTransaction();
-            try{
-                $order = HomeService::create($data);
-                $event = array(
-                    'summary' => 'Acara Home Service',
-                    'location' => $data['address'],
-                    'description' => 'A chance to hear more about Google\'s developer products.',
-                    'start' => array(
-                        'dateTime' => $startDateTime,
-                        'timeZone' => 'Asia/Jakarta',
-                    ),
-                    'end' => array(
-                        'dateTime' => $endDateTime,
-                        'timeZone' => 'America/Los_Angeles',
-                    ),
-                    'recurrence' => array(
-                        'RRULE:FREQ=DAILY;COUNT=2'
-                    ),
-                    'attendees' => array(
-                        array('email' => $cso->first()['email']),
-                        // array('email' => $cso2->first()['email']),
-                    ),
-                    'reminders' => array(
-                        'useDefault' => FALSE,
-                        'overrides' => array(
-                        array('method' => 'email', 'minutes' => 24 * 60),
-                        array('method' => 'popup', 'minutes' => 10),
-                        ),
-                    ),
-                );
-
-                // $event = $this->gCalendarController->store($event);
-                DB::commit();
-                return response()->json(['success' => 'Berhasil']);
-            } catch (\Exception $ex) {
-                DB::rollback();
-                return response()->json(['error' => $ex->getMessage()], 500);
             }
         }
     }
+    
 
     public function edit(Request $request)
     {
@@ -807,8 +827,14 @@ class HomeServiceController extends Controller
             }
 
             //khusus filter
+            if(isset($data['filter']['filter_province'])){
+                $homeServices = $homeServices->Where('home_services.province', $data['filter']['filter_provinc']);
+            }
             if(isset($data['filter']['filter_city'])){
                 $homeServices = $homeServices->Where('home_services.city', $data['filter']['filter_city']);
+            }
+            if(isset($data['filter']['filter_district'])){
+                $homeServices = $homeServices->Where('home_services.distric', $data['filter']['filter_district']);
             }
             if(isset($data['filter']['filter_branch'])){
                 $homeServices = $homeServices->Where('home_services.branch_id', $data['filter']['filter_branch']);
@@ -872,12 +898,12 @@ class HomeServiceController extends Controller
 
         $homeServices = $homeServices->leftjoin('branches', 'home_services.branch_id', '=', 'branches.id')
                         ->leftjoin('csos', 'home_services.cso_id', '=', 'csos.id')
-                        ->select('home_services.id', 'home_services.code as code', 'home_services.appointment', 'home_services.no_member as no_member', 'home_services.name as custommer_name', 'home_services.city as custommer_city', 'home_services.cash', 'home_services.cash_description','home_services.address as custommer_address','home_services.phone as custommer_phone', 'home_services.type_customer as type_customer', 'home_services.type_homeservices as type_homeservices', 'branches.id as branch_id', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name', 'csos.phone as cso_phone')->first();
+                        ->select('home_services.id', 'home_services.code as code', 'home_services.appointment', 'home_services.no_member as no_member', 'home_services.name as customer_name', 'home_services.city as customer_city', 'home_services.cash', 'home_services.cash_description','home_services.address as customer_address','home_services.phone as customer_phone', 'home_services.type_customer as type_customer', 'home_services.type_homeservices as type_homeservices', 'home_services.distric', 'branches.id as branch_id', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name', 'csos.phone as cso_phone')->first();
 
-        $homeServices['province_id'] = RajaOngkir::FetchProvinceByCity($homeServices['custommer_city'])['province_id'];
+        $homeServices['district'] = array($homeServices->getDistrict());
         $homeServices['URL'] = route('homeServices_success')."?code=".$homeServices['code'];
         $data = ['result' => 1,
-                 'data' => $homeServices
+                 'data' => array($homeServices)
                 ];
         return response()->json($data, 200);
     }

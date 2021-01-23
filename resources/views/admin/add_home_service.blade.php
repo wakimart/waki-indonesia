@@ -62,7 +62,7 @@
 							</div>
 							<div class="form-group">
 								<span>Type Home Service</span>
-  								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
+								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
                     <option value="Home service">Home Service</option>
                     <option value="Home Tele Voucher">Home Tele Voucher</option>
                     <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
@@ -74,7 +74,7 @@
                     <option value="Home Delivery">Home Delivery</option>
                     <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
                     <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
-  								</select>
+								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
 								</span>
@@ -179,7 +179,7 @@
               <div class="form_appoint_container">
                 <div class="form-group">
                   <label for="">Tanggal Janjian</label>
-  								  <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+  								  <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
   								<div class="validation"></div>
   								<span class="invalid-feedback">
   									<strong></strong>
@@ -187,7 +187,7 @@
   							</div>
   							<div class="form-group">
   								<label for="">Jam Janjian</label>
-  								<input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>
+  								<input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>
   								<div class="validation"></div>
   								<span class="invalid-feedback">
   									<strong></strong>
@@ -374,13 +374,13 @@
 	        console.log(hasil);
 
 	        for (var key of frmAdd.keys()) {
-	            $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
-	            $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
-	            $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
+	            $("#actionAdd").find("input[name="+key.name+"]").removeClass("is-invalid");
+	            $("#actionAdd").find("select[name="+key.name+"]").removeClass("is-invalid");
+	            $("#actionAdd").find("textarea[name="+key.name+"]").removeClass("is-invalid");
 
-	            $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
-	            $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
-	            $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
+	            $("#actionAdd").find("input[name="+key.name+"]").next().find("strong").text("");
+	            $("#actionAdd").find("select[name="+key.name+"]").next().find("strong").text("");
+	            $("#actionAdd").find("textarea[name="+key.name+"]").next().find("strong").text("");
 	        }
 
 	        if(hasil['errors'] != null){
@@ -398,7 +398,7 @@
 	                    $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
 	                }
 	            }
-	            alert("Input Error !!!");
+	            alert(hasil['errors']);
 	        } else if(hasil['validator'] != null){
               $("#modal-Error").modal("show");
 	            // alert("Appointment dengan nomer ini sudah ada!!");
@@ -447,10 +447,12 @@
             $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
             .done(function( result ) {
                 result = result['rajaongkir']['results'];
-                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                var arrCity = "<option selected disabled value=\"\">Pilihan Kabupaten</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
-                        arrCity += "<option value=\""+value['type']+" "+value['city_name']+"\">"+value['type']+" "+value['city_name']+"</option>";
+						if(value['type'] == "Kabupaten"){                            
+							arrCity += "<option value=\""+value['city_id']+"\">"+value['type']+" "+value['city_name']+"</option>";
+						}
                     });
                     $( "#city" ).append(arrCity);
                 }
@@ -466,8 +468,8 @@
                 var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
-                        if(value['type'] == "Kota"){
-                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                        if(value['type'] == "Kota"){                            
+                            arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                         }
                     });
                     $( "#city" ).append(arrCity);
@@ -483,8 +485,8 @@
 				console.log(result);
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
-                    $.each( result, function( key, value ) {
-                        arrSubDistsrict += "<option value=\""+value['subdistrict_name']+"\">"+value['subdistrict_name']+"</option>";
+                    $.each( result, function( key, value ) {                            
+                        arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
                     });
                     $( "#subDistrict" ).append(arrSubDistsrict);
                 }
@@ -494,7 +496,6 @@
 </script>
 <script>
   $(document).ready(function(){
-    var Limit = 1;
     $('#type_homeservices').change(function(){
     if($(this).val() == 'Home Eksklusif Therapy' || $(this).val() == 'Home Family Therapy'){
       if( Limit > 1){
@@ -502,10 +503,10 @@
       }
       else {
         Limit ++;
-        $('.form_appoint_container').append(
+       $('.form_appoint_container').append(
           '<div class="form-group optional_appointment">\
             <label for="">Tanggal Janjian 2 (Optional)</label>\
-              <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
@@ -513,7 +514,7 @@
           </div>\
           <div class="form-group optional_appointment">\
             <label for="">Jam Janjian 2 (Optional)</label>\
-            <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
@@ -521,7 +522,7 @@
           </div>\
           <div class="form-group optional_appointment">\
             <label for="">Tanggal Janjian 3 (Optional)</label>\
-              <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
@@ -538,6 +539,8 @@
       }
     }
     else if($(this).val() == 'Home WAKi di Rumah Aja'){
+      $('.optional_appointment').remove();
+      var Limit = 1;
       if( Limit > 1){
         return false;
       }
@@ -546,7 +549,7 @@
         $('.form_appoint_container').append(
           '<div class="form-group optional_appointment">\
             <label for="">Tanggal Janjian 2 (Optional)</label>\
-              <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
@@ -554,7 +557,7 @@
           </div>\
           <div class="form-group optional_appointment">\
             <label for="">Jam Janjian 2 (Optional)</label>\
-            <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
@@ -562,7 +565,7 @@
           </div>\
           <div class="form-group optional_appointment">\
             <label for="">Tanggal Janjian 3 (Optional)</label>\
-              <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
@@ -570,7 +573,39 @@
           </div>\
           <div class="form-group optional_appointment">\
             <label for="">Jam Janjian 3 (Optional)</label>\
-            <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Tanggal Janjian 4 (Optional)</label>\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Jam Janjian 4 (Optional)</label>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Tanggal Janjian 5 (Optional)</label>\
+              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
+            <div class="validation"></div>\
+            <span class="invalid-feedback">\
+              <strong></strong>\
+            </span>\
+          </div>\
+          <div class="form-group optional_appointment">\
+            <label for="">Jam Janjian 5 (Optional)</label>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
@@ -612,6 +647,7 @@
     }
     else{
         $('.optional_appointment').remove();
+        Limit = 1;
     }
     });
   });

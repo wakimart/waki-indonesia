@@ -963,6 +963,7 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
     },
     success: function(result){
       result = result['result'];
+      console.log(result);
       var tgl = new Date(result['appointment']);
       console.log(tgl.getHours());
       var tahun = tgl.getFullYear();
@@ -1021,7 +1022,7 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
       $('#edit-no_member').val(result['no_member']);
       $('#edit-name').val(result['name']);
       $('#edit-phone').val(result['phone']);
-      $('#edit-city').val(result['city']);
+      $('#edit-city').val(result['district']['city']);
       $('#edit-address').val(result['address']);
       $('#edit-cso_phone').val(result['cso_phone']);
       $('#edit-date').val(new Date(result['appointment']));

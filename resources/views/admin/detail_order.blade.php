@@ -74,7 +74,7 @@
                     </tr>
                     <tr>
                         <td>City : </td>
-                        <td>{{ $order['city'] }}</td>
+                        <td>{{ $order['district']['kota_kab'] }}</td>
                     </tr>
                     <tr>
                         <td>Address : </td>

@@ -11,7 +11,8 @@ class Order extends Model
 	static $CashUpgrade = [ '1'=>'CASH', '2'=>'UPGARDE' ];
 	static $PaymentType = [ '1'=>'CASH', '2'=>'CARD' ];
 	static $Banks = [ '1'=>'BCA', '2'=>'BNI', '3'=>'MEGA', '4'=>'HSBC', '5'=>'MANDIRI', '6'=>'DANAMON', '7'=>'CITIBANK', '8'=>'CIMB NIAGA', '9'=>'MAYBANK', '10'=>'OCBC', '11'=>'PANIN BANK', '12'=>'PERMATA BANK', '13'=>'STANDARD CHATER', '14'=>'BUKOPIN', '15'=>'BLIBLI.COM', '16'=>'Bank Jateng', '17'=>'TUNAI', ];
-
+    static $Know_From = ['1'=>'Pameran/Showroom WAKI', '2'=>'Facebook', '3'=>'Instagram', '4'=>'Waki/Wakimart Customer Service', '5'=>'MGM', '6'=>'Program Refrensi'];
+    
     protected $fillable = [
         'code', 'no_member', 'name', 'address', 'phone', 'cash_upgrade', 'product', 'old_product', 'prize', 'payment_type', 'bank', 'total_payment', 'down_payment', 'remaining_payment', 'customer_type', 'description', '30_cso_id', '70_cso_id', 'cso_id', 'branch_id', 'city', 'active','orderDate', 'distric', 'province', 'know_from',
     ];
@@ -37,5 +38,15 @@ class Order extends Model
     public function getCSO()
     {
         return Cso::where('id', $this->cso_id)->first();
+    }
+
+    public function getDistrict()
+    {
+        $district = RajaOngkir_Subdistrict::where('subdistrict_id', $this->distric)->first();
+        if ($district != null) {
+            $district['type_city'] = RajaOngkir_City::where('city_id', $district['city_id'])->first()['type'];
+            $district['kota_kab'] = $district['type_city'].' '.$district['city']; 
+        }
+        return $district;
     }
 }

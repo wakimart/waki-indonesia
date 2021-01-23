@@ -94,7 +94,7 @@
 	              			<div class="form-group">
 				                <label for="">Province</label>
 								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
-									<option selected disabled value="">{{$orders['province']}}</option>
+									<option selected value="{{$orders['district']['province_id']}}">{{$orders['district']['province']}}</option>
 
 									@php
 										$result = RajaOngkir::FetchProvince();
@@ -112,14 +112,14 @@
 							<div class="form-group">
 				                <label for="">City</label>
 								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
-									<option selected disabled value="">{{$orders['city']}}</option>
+									<option selected value="{{$orders['district']['city_id']}}">{{$orders['district']['kota_kab']}}</option>
 								</select>
 								<div class="validation"></div>
 							</div>
 							<div class="form-group">
 				                <label for="">Sub District</label>
 								<select class="form-control" id="subDistrict" name="distric" data-msg="Mohon Pilih Kecamatan" required>
-									<option selected disabled value="">{{$orders['distric']}}</option>
+									<option selected value="{{$orders['district']['subdistrict_id']}}">{{$orders['district']['subdistrict_name']}}</option>
 								</select>
 								<div class="validation"></div>
 	              			</div>
@@ -127,7 +127,17 @@
 				                <label for="exampleTextarea1">Address</label>
 				                <textarea class="form-control" id="address" name="address" rows="4">{{$orders['address']}}</textarea>
 				                <div class="validation"></div>
-	              			</div>
+							</div>
+							<div class="form-group">
+				                <label for="">Know From</label>
+								<select class="form-control" id="know_from" name="know_from" data-msg="Mohon Pilih Kecamatan" required>							
+									<option selected disabled value="">{{$orders['know_from']}}</option>
+									@foreach($from_know as $key=>$value)
+										<option value="{{ $value }}">{{ $value }}</option>
+									@endforeach
+								</select>
+								<div class="validation"></div>
+	              			</div>  
 	              			<br>
 
 	              			<div class="form-group">
@@ -454,11 +464,11 @@
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
                     	if(value['type'] == "Kabupaten"){
-                        	arrCity += "<option value=\"Kota "+value['city_name']+"\">Kabupaten "+value['city_name']+"</option>";
+                        	arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
                         }
 	                        
                         if(value['type'] == "Kota"){
-                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                            arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                         }
 
 
@@ -477,7 +487,7 @@
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {                            
-                        arrSubDistsrict += "<option value=\""+value['subdistrict_name']+"\">"+value['subdistrict_name']+"</option>";
+                        arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
                     });
                     $( "#subDistrict" ).append(arrSubDistsrict);
                 }
