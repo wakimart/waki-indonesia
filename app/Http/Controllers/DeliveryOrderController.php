@@ -125,7 +125,8 @@ class DeliveryOrderController extends Controller
             //     }
             // }
             $data['arr_product'] = json_encode($data['arr_product']);
-            $data['province'] = $data['province_id'];
+            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
+
             $deliveryOrder = DeliveryOrder::create($data);
 
             DB::commit();
@@ -169,10 +170,10 @@ class DeliveryOrderController extends Controller
             $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->get();
         }
         if($request->has('filter_city')){
-            $deliveryOrders = $deliveryOrders->where('city', $request->filter_city);
+            $deliveryOrders = $deliveryOrders->where('city', 'like', '%'.$request->filter_city.'%');
         }
         if($request->has('filter_district')){
-            $deliveryOrders = $deliveryOrders->where('distric', $request->filter_district);
+            $deliveryOrders = $deliveryOrders->where('distric', 'like', '%'.$request->filter_district.'%');
         }
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $deliveryOrders = $deliveryOrders->where('branch_id', $request->filter_branch);
@@ -202,7 +203,6 @@ class DeliveryOrderController extends Controller
     {
         if($request->has('id')){
             $deliveryOrders = DeliveryOrder::find($request->get('id'));
-            $deliveryOrders['district'] = $deliveryOrders->getDistrict();
             $promos = DeliveryOrder::$Promo;
             $branches = Branch::all();
             $csos = Cso::all();
@@ -250,7 +250,7 @@ class DeliveryOrderController extends Controller
             $deliveryOrders->cso_id = $request->input('idCSO');
             $deliveryOrders->branch_id = $request->input('branch_id');
             $deliveryOrders->city = $request->input('city');
-            $deliveryOrders->province = $request->input('province_id');//RajaOngkir_Province::where('province_id', (int)$request->input('province_id'))->first()['province'];;
+            $deliveryOrders->province = RajaOngkir_Province::where('province_id', (int)$request->input('province_id'))->first()['province'];;
             $deliveryOrders->distric = $request->input('distric');
             $deliveryOrders->save();
 
@@ -425,21 +425,15 @@ class DeliveryOrderController extends Controller
 
             $deliveryOrders = $deliveryOrders->leftjoin('branches', 'delivery_orders.branch_id', '=', 'branches.id')
                                 ->leftjoin('csos', 'delivery_orders.cso_id', '=', 'csos.id')
-                                ->select('delivery_orders.id', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.name as customer_name', 'delivery_orders.arr_product', 'delivery_orders.province', 'delivery_orders.city', 'delivery_orders.distric','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name');
+                                ->select('delivery_orders.id', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.name as customer_name', 'delivery_orders.arr_product', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name');
             if($request->has('filter_branch')){
                 $deliveryOrders = $deliveryOrders->where('delivery_orders.branch_id', $request->filter_branch);
             }
             if($request->has('filter_cso')){
                 $deliveryOrders = $deliveryOrders->where('delivery_orders.cso_id', $request->filter_cso);
             }
-            if($request->has('filter_province')){
-                $deliveryOrders = $deliveryOrders->where('delivery_orders.province', $request->filter_province);
-            }
             if($request->has('filter_city')){
-                $deliveryOrders = $deliveryOrders->where('delivery_orders.city', $request->filter_city);
-            }
-            if($request->has('filter_district')){
-                $deliveryOrders = $deliveryOrders->where('delivery_orders.distric', $request->filter_district);
+                $deliveryOrders = $deliveryOrders->where('delivery_orders.city', 'like', '%'.$request->filter_city.'%');
             }
             if($request->has('filter_startDate')&& $request->has('filter_endDate')){
                 $deliveryOrders = $deliveryOrders->whereBetween('delivery_orders.created_at', [$request->filter_startDate.' 00:00:00', $request->filter_endDate.' 23:59:59']);
@@ -461,7 +455,6 @@ class DeliveryOrderController extends Controller
                     array_push($tempArray, $tempArray2);
                 }
                 $doNya['arr_product'] = $tempArray;
-                $doNya['district'] = $doNya->getDistrict();
             }
 
             $data = ['result' => 1,
@@ -539,7 +532,7 @@ class DeliveryOrderController extends Controller
         $delivery_orders = DeliveryOrder::where([['delivery_orders.active', true], ['delivery_orders.id', $id]]);
         $delivery_orders = $delivery_orders->leftjoin('branches', 'delivery_orders.branch_id', '=', 'branches.id')
                             ->leftjoin('csos', 'delivery_orders.cso_id', '=', 'csos.id')
-                            ->select('delivery_orders.id','delivery_orders.city as city', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.no_member as no_member', 'delivery_orders.name as customer_name', 'delivery_orders.phone as customer_phone', 'delivery_orders.address as customer_address', 'delivery_orders.city as city', 'delivery_orders.arr_product','delivery_orders.distric','branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
+                            ->select('delivery_orders.id','delivery_orders.city as city', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.no_member as no_member', 'delivery_orders.name as customer_name', 'delivery_orders.phone as customer_phone', 'delivery_orders.address as customer_address', 'delivery_orders.city as city', 'delivery_orders.arr_product', 'branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->get();
 
         $kota = $delivery_orders[0]->city; 
@@ -576,7 +569,6 @@ class DeliveryOrderController extends Controller
             }else {
                 $doNya['province_id'] = $city->province_id;
             }
-            $doNya['district'] = array($doNya->getDistrict());
             $doNya['URL'] = route('successorder')."?code=".$doNya['code'];
         }
         $data = ['result' => 1,
