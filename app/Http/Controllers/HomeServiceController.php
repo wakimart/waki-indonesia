@@ -490,7 +490,7 @@ class HomeServiceController extends Controller
             $cso = $csos[0]['id'];
         }
         // dd(new HomeServicesExportByDate($date, $city, $branch, $cso, null));
-        return Excel::download(new HomeServicesExport($city, $branch, $cso, $search, null), 'Home Service.xlsx');
+        return Excel::download(new HomeServicesExport($date, $city, $branch, $cso, $search), 'Home Service.xlsx');
     }
 
     public function export_to_xls_byDate(Request $request)
