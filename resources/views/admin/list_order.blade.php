@@ -412,7 +412,7 @@
           if(result.length > 0){
               $.each( result, function( key, value ) {
                   if(value['type'] == "Kota"){
-                      arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                      arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                   }
               });
               $( "#filter_city" ).append(arrCity);
@@ -428,7 +428,7 @@
           var arrdistrict = "<option selected value=\"\">All District</option>";
           if(result.length > 0){
               $.each( result, function( key, value ) {
-                arrdistrict += "<option value=\""+value['subdistrict_name']+"\">Kota "+value['subdistrict_name']+"</option>";
+                arrdistrict += "<option value=\""+value['subdistrict_id']+"\">Kota "+value['subdistrict_name']+"</option>";
               });
               $( "#filter_district" ).append(arrdistrict);
             }
@@ -471,7 +471,7 @@
 			if(result.length > 0){
 				$.each( result, function( key, value ) {
 					if(value['type'] == "Kota"){
-						arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+						arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
 					}
 				});
 				$( "#city" ).append(arrCity);
