@@ -248,14 +248,12 @@
               <div class="modal-body">
                   <h5 style="text-align:center;"></h5>
                     {{ csrf_field() }}
-                      <h5>Data Pelanggan</h5>
                       <div class="form-group">
                         <span>Type Customer</span>
-                        <select id="view_type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_customer" value="" required>
-                            <option value="Tele Voucher">Tele Voucher</option>
-                            <option value="Tele Home Service">Tele Home Service</option>
-                            <option value="Home Office Voucher">Home Office Voucher</option>
-                            <option value="Home Voucher">Home Voucher</option>
+                        <select id="view_type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_customer" value="" readonly="" disabled="">
+                          <option value="VVIP (Type A)">VVIP (Type A)</option>
+                          <option value="WAKi Customer (Type B)">WAKi Customer (Type B)</option>
+                          <option value="New Customer (Type C)">New Customer (Type C)</option>
                         </select>
                         <span class="invalid-feedback">
                           <strong></strong>
@@ -263,14 +261,24 @@
                       </div>
                       <div class="form-group">
                         <span>Type Home Service</span>
-                        <select id="view_type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_homeservices" value="" required>
-                            <option value="Home service">Home service</option>
-                            <option value="Upgrade Member">Upgrade Member</option>
+                        <select id="view_type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_homeservices" value="" readonly="" disabled="">
+                          <option value="Home service">Home Service</option>
+                          <option value="Home Tele Voucher">Home Tele Voucher</option>
+                          <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                          <option value="Home Free Family Therapy">Home Free Family Therapy</option>
+                          <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
+                          <option value="Home Voucher">Home Voucher</option>
+                          <option value="Home Tele Free Gift">Home Tele Free Gift</option>
+                          <option value="Home Refrensi Product">Home Refrensi Product</option>
+                          <option value="Home Delivery">Home Delivery</option>
+                          <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
+                          <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
                         </select>
                         <span class="invalid-feedback">
                           <strong></strong>
                         </span>
                       </div>
+                      <h5>Data Pelanggan</h5>
                       <div class="form-group">
                           <input type="text" name="no_member" class="form-control input-view" id="view-no_member" value=""/>
                           <div class="validation"></div>
@@ -284,7 +292,15 @@
                           <div class="validation"></div>
                       </div>
                       <div class="form-group">
+                          <input type="text" class="form-control input-view" name="province" id="view-province" value=""/>
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
                           <input type="text" class="form-control input-view" name="city" id="view-city" value=""/>
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                          <input type="text" class="form-control input-view" name="distric" id="view-distric" value=""/>
                           <div class="validation"></div>
                       </div>
                       <div class="form-group">
@@ -306,10 +322,6 @@
                       <div class="form-group">
                           <input type="text" class="form-control input-view cso" name="cso_id" id="view-cso" value="" style="text-transform:uppercase"/>
                           <div class="validation" id="validation_cso"></div>
-                      </div>
-                      <div class="form-group">
-                          <input type="number" class="form-control input-view" name="cso_phone" id="view-cso_phone" value=""/>
-                          <div class="validation"></div>
                       </div>
                       <div class="form-group">
                           <input type="text" class="form-control input-view cso" name="cso2_id" id="view-cso2" value="" style="text-transform:uppercase"/>
@@ -350,14 +362,12 @@
               	<div class="modal-body">
                 		<h5 style="text-align:center;"></h5>
       					    	{{ csrf_field() }}
-                        <h5>Data Pelanggan</h5>
                         <div class="form-group">
                           <span>Type Customer</span>
-                          <select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
-                                  <option value="Tele Voucher">Tele Voucher</option>
-                                  <option value="Tele Home Service">Tele Home Service</option>
-                                  <option value="Home Office Voucher">Home Office Voucher</option>
-                                  <option value="Home Voucher">Home Voucher</option>
+                          <select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" readonly="" disabled="">
+                            <option value="VVIP (Type A)">VVIP (Type A)</option>
+                            <option value="WAKi Customer (Type B)">WAKi Customer (Type B)</option>
+                            <option value="New Customer (Type C)">New Customer (Type C)</option>
                           </select>
                           <span class="invalid-feedback">
                               <strong></strong>
@@ -365,14 +375,24 @@
                       </div>
                       <div class="form-group">
                           <span>Type Home Service</span>
-                          <select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
-                                  <option value="Home service">Home service</option>
-                                  <option value="Upgrade Member">Upgrade Member</option>
+                          <select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" readonly="" disabled="">
+                            <option value="Home service">Home Service</option>
+                            <option value="Home Tele Voucher">Home Tele Voucher</option>
+                            <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                            <option value="Home Free Family Therapy">Home Free Family Therapy</option>
+                            <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
+                            <option value="Home Voucher">Home Voucher</option>
+                            <option value="Home Tele Free Gift">Home Tele Free Gift</option>
+                            <option value="Home Refrensi Product">Home Refrensi Product</option>
+                            <option value="Home Delivery">Home Delivery</option>
+                            <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
+                            <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
                           </select>
                           <span class="invalid-feedback">
                               <strong></strong>
                           </span>
                       </div>
+                        <h5>Data Pelanggan</h5>
                         <div class="form-group">
                             <input type="text" name="no_member" class="form-control" id="edit-no_member" placeholder="No. Member (optional)"/>
                             <div class="validation"></div>
