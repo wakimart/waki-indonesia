@@ -122,12 +122,12 @@
                     <td>{{ $homeService['phone'] }}</td>
                 </tr>
                 <tr>
-                    <td>Kota : </td>
-                    <td>{{ $homeService['city'] }}</td>
-                </tr>
-                <tr>
                     <td>Alamat : </td>
                     <td>{{ $homeService['address'] }}</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>{{ $homeService['district'][0]['province'] }}, {{ $homeService['district'][0]['kota_kab'] }}, {{ $homeService['district'][0]['subdistrict_name'] }}</td>
                 </tr>
             </table>
             <table class="col-md-12">

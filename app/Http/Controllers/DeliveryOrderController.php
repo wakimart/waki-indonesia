@@ -71,6 +71,7 @@ class DeliveryOrderController extends Controller
 
     public function successorder(Request $request){
     	$deliveryOrder = DeliveryOrder::where('code', $request['code'])->first();
+        $deliveryOrder['district'] = array($deliveryOrder->getDistrict());
         $categoryProducts = CategoryProduct::all();
         return view('ordersuccess', compact('deliveryOrder', 'categoryProducts'));
     }
@@ -187,6 +188,7 @@ class DeliveryOrderController extends Controller
 
     public function admin_DetailDeliveryOrder(Request $request){
         $deliveryOrder = DeliveryOrder::where('code', $request['code'])->first();
+        $deliveryOrder['district'] = array($deliveryOrder->getDistrict());
         $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
         ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
         ->where('type_menu', 'Delivery Order')->where('menu_id', $deliveryOrder->id)->get();
