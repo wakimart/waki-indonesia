@@ -69,12 +69,12 @@
                         <td>{{ $deliveryOrder['phone'] }}</td>
                     </tr>
                     <tr>
-                        <td>Kota : </td>
-                        <td>{{ $deliveryOrder['city'] }}</td>
-                    </tr>
-                    <tr>
                         <td>Alamat : </td>
                         <td>{{ $deliveryOrder['address'] }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>{{ $deliveryOrder['district'][0]['province'] }}, {{ $deliveryOrder['district'][0]['kota_kab'] }}, {{ $deliveryOrder['district'][0]['subdistrict_name'] }}</td>
                     </tr>
                     <tr>
                         <td>Cabang Pembelian : </td>

@@ -78,6 +78,10 @@
                         <td>{{ $deliveryOrder['address'] }}</td>
                     </tr>
                     <tr>
+                        <td></td>
+                        <td>{{ $deliveryOrder['district'][0]['province'] }}, {{ $deliveryOrder['district'][0]['kota_kab'] }}, {{ $deliveryOrder['district'][0]['subdistrict_name'] }}</td>
+                    </tr>
+                    <tr>
                         <td>Registration Branch : </td>
                         <td>{{  $deliveryOrder->branch['code'] }} - {{  $deliveryOrder->branch['name'] }}</td>
                     </tr>

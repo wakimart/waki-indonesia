@@ -73,12 +73,12 @@
                         <td>{{ $order['phone'] }}</td>
                     </tr>
                     <tr>
-                        <td>City : </td>
-                        <td>{{ $order['district']['kota_kab'] }}</td>
-                    </tr>
-                    <tr>
                         <td>Address : </td>
                         <td>{{ $order['address'] }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>{{ $order['district']['province'] }}, {{ $order['district']['kota_kab'] }}, {{ $order['district']['subdistrict_name'] }}</td>
                     </tr>
                 </table>
                 <table class="col-md-12">

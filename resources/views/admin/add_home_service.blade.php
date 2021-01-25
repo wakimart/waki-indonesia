@@ -594,54 +594,6 @@
             <span class="invalid-feedback">\
               <strong></strong>\
             </span>\
-          </div>\
-          <div class="form-group optional_appointment">\
-            <label for="">Tanggal Janjian 5 (Optional)</label>\
-              <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
-            <div class="validation"></div>\
-            <span class="invalid-feedback">\
-              <strong></strong>\
-            </span>\
-          </div>\
-          <div class="form-group optional_appointment">\
-            <label for="">Jam Janjian 5 (Optional)</label>\
-            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
-            <div class="validation"></div>\
-            <span class="invalid-feedback">\
-              <strong></strong>\
-            </span>\
-          </div>\
-          <div class="form-group optional_appointment">\
-            <label for="">Tanggal Janjian 4 (Optional)</label>\
-              <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
-            <div class="validation"></div>\
-            <span class="invalid-feedback">\
-              <strong></strong>\
-            </span>\
-          </div>\
-          <div class="form-group optional_appointment">\
-            <label for="">Jam Janjian 4 (Optional)</label>\
-            <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
-            <div class="validation"></div>\
-            <span class="invalid-feedback">\
-              <strong></strong>\
-            </span>\
-          </div>\
-          <div class="form-group optional_appointment">\
-            <label for="">Tanggal Janjian 5 (Optional)</label>\
-              <input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal" />\
-            <div class="validation"></div>\
-            <span class="invalid-feedback">\
-              <strong></strong>\
-            </span>\
-          </div>\
-          <div class="form-group optional_appointment">\
-            <label for="">Jam Janjian 5 (Optional)</label>\
-            <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
-            <div class="validation"></div>\
-            <span class="invalid-feedback">\
-              <strong></strong>\
-            </span>\
           </div>');
       }
     }

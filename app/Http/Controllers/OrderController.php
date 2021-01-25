@@ -108,6 +108,7 @@ class OrderController extends Controller
 
     public function successorder(Request $request){
     	$order = Order::where('code', $request['code'])->first();
+        $order['district'] = array($order->getDistrict());
         return view('order_success', compact('order'));
     }
 

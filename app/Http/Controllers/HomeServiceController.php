@@ -138,6 +138,7 @@ class HomeServiceController extends Controller
 
     public function successRegister(Request $request){
         $homeService = HomeService::where('code', $request['code'])->first();
+        $homeService['district'] = array($homeService->getDistrict());
         $categoryProducts = CategoryProduct::all();
         return view('homeservicesuccess', compact('homeService', $categoryProducts));
     }
