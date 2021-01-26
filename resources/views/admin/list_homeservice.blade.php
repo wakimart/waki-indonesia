@@ -110,9 +110,34 @@
                         <label style="opacity: 0;" for=""> s</label>
                           <select class="form-control" id="filter_city" name="filter_city">
                             <option value="">All City</option>
-                            @if(isset($_GET['filter_city']))
-                              <option selected="" value="{{$_GET['filter_city']}}">{{$_GET['filter_city']}}</option>
-                            @endif
+                            @php
+                              if(isset($_GET['filter_province'])){
+                                $result = RajaOngkir::FetchCity($_GET['filter_province']);
+                                $result = $result['rajaongkir']['results'];
+                                $arrCity = [];
+                                $arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
+                                $arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
+                                if(sizeof($result) > 0){
+                                    foreach ($result as $value) {
+                                      $terpilihNya = "";
+                                      if(isset($_GET['filter_city'])){
+                                        if($_GET['filter_city'] == $value['city_id']){
+                                          $terpilihNya = "selected";
+                                        }
+                                      }
+
+                                      if($value['type'] == "Kabupaten"){
+                                        $arrCity[0] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
+                                      }
+                                      else{
+                                        $arrCity[1] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
+                                      }
+                                    }
+                                    echo $arrCity[0];
+                                    echo $arrCity[1];
+                                  }
+                                }
+                            @endphp
                           </select>
                           <div class="validation"></div>
                       </div>
@@ -122,9 +147,24 @@
                         <label style="opacity: 0;" for=""> s</label>
                           <select class="form-control" id="filter_district" name="filter_district">
                             <option value="">All District</option>
-                            @if(isset($_GET['filter_district']))
-                              <option selected="" value="{{$_GET['filter_district']}}">{{$_GET['filter_district']}}</option>
-                            @endif
+                            @php
+                              if(isset($_GET['filter_city'])){
+                                $result = RajaOngkir::FetchDistrict($_GET['filter_city']);
+                                $result = $result['rajaongkir']['results'];
+                                if(sizeof($result) > 0){
+                                  foreach ($result as $value) {
+                                    $terpilihNya = "";
+                                    if(isset($_GET['filter_district'])){
+                                      if($_GET['filter_district'] == $value['subdistrict_id']){
+                                        $terpilihNya = "selected";
+                                      }
+                                    }
+
+                                    echo "<option value=\"".$value['subdistrict_id']."\"".$terpilihNya.">".$value['subdistrict_name']."</option>";
+                                  }
+                                }
+                              }
+                            @endphp
                           </select>
                           <div class="validation"></div>
                       </div>
