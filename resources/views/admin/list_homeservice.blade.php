@@ -87,7 +87,13 @@
                                 $arrProvince = [];
                                 if(sizeof($result) > 0){
                                     foreach ($result as $value) {
-                                        echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+                                      $terpilihNya = "";
+                                      if(isset($_GET['filter_province'])){
+                                        if($_GET['filter_province'] == $value['province_id']){
+                                          $terpilihNya = "selected";
+                                        }
+                                      }  
+                                      echo "<option value=\"". $value['province_id']."\"".$terpilihNya.">".$value['province']."</option>";
                                     }
                                 }
                               @endphp
@@ -848,18 +854,26 @@ window.onload = function() {
     $("#filter_province").on("change", function(){
       var id = $(this).val();
       $( "#filter_city" ).html("");
+      $( "#filter_city" ).append("<option selected value=\"\">All City</option>");
       $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
       .done(function( result ) {
           result = result['rajaongkir']['results'];
-          var arrCity = "<option selected value=\"\">All City</option>";
+          var arrCity = [];
+          arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
+          arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
           if(result.length > 0){
-              $.each( result, function( key, value ) {
-                  if(value['type'] == "Kota"){                            
-                      arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
-                  }
-              });
-              $( "#filter_city" ).append(arrCity);
-            }
+            $.each( result, function( key, value ) {
+
+              if(value['type'] == "Kabupaten"){
+                arrCity[0] += "<option value=\""+value['city_id']+"\">"+value['type']+" "+value['city_name']+"</option>";
+              }
+              else{
+                arrCity[1] += "<option value=\""+value['city_id']+"\">"+value['type']+" "+value['city_name']+"</option>";
+              }
+            });
+            $( "#filter_city" ).append(arrCity[0]);
+            $( "#filter_city" ).append(arrCity[1]);
+          }
         });
     });
     $("#filter_city").on("change", function(){
@@ -870,32 +884,13 @@ window.onload = function() {
           result = result['rajaongkir']['results'];
           var arrdistrict = "<option selected value=\"\">All District</option>";
           if(result.length > 0){
-              $.each( result, function( key, value ) {                            
-                arrdistrict += "<option value=\""+value['subdistrict_id']+"\">Kota "+value['subdistrict_name']+"</option>";  
+              $.each( result, function( key, value ) {
+                arrdistrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";  
               });
               $( "#filter_district" ).append(arrdistrict);
             }
         });
     });
-
-    // $("#filter_branch").on("change", function(){
-    //   var id = $(this).val();
-    //   $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
-    //   .done(function( result ) {
-    //       $( "#filter_cso" ).html("");
-    //       var arrCSO = "<option selected value=\"\">All CSO</option>";
-    //       $( "#filter_cso" ).append(arrCSO);
-    //       if(result.length > 0){
-    //           $.each( result, function( key, value ) {
-    //             arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
-    //           });
-    //           $( "#filter_cso" ).append(arrCSO);
-    //         }
-    //     });
-    //   if(id == ""){
-    //     $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
-    //   }
-    // });
 
     $("#btn-exportByDate").on("click", function(){
       var urlParamArray = new Array();
@@ -1116,49 +1111,6 @@ $(document).on("click", ".btn-homeservice-view", function(e){
 
       tgl = tahun+"-"+bulan+"-"+hari;
 
-      //fetching cso
-      $.ajax({
-        headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-        type: 'get',
-        url: "{{ route('fetchCsoById') }}",
-        data: {
-            'id': result['cso_id'],
-        },
-        success: function(data1){
-          $('#view-cso').val(data1['code']);
-        },
-      });
-      //fetching cso2
-      $.ajax({
-        headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-        type: 'get',
-        url: "{{ route('fetchCsoById') }}",
-        data: {
-            'id': result['cso2_id'],
-        },
-        success: function(data1){
-          $('#view-cso2').val(data1['code']);
-        },
-      });
-      //fetching branch
-      $.ajax({
-        headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-        type: 'get',
-        url: "{{ route('fetchBranchById') }}",
-        data: {
-            'id': result['branch_id'],
-        },
-        success: function(data1){
-          $('#view-branch').val(data1['id']);
-        },
-      });
-
       $('#view_type_homeservices').html(result['type_homeservices']);
       $('#view_type_customer').html(result['type_customer']);
       $('#view-no_member').html(result['no_member']);
@@ -1213,6 +1165,9 @@ $(document).on("click", ".btn-homeservice-cash", function(e){
 $(document).on("click", "#btn-filter", function(e){
   var urlParamArray = new Array();
   var urlParamStr = "";
+  if($('#filter_province').val() != ""){
+    urlParamArray.push("filter_province=" + $('#filter_province').val());
+  }
   if($('#filter_city').val() != ""){
     urlParamArray.push("filter_city=" + $('#filter_city').val());
   }

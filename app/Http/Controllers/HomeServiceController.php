@@ -146,8 +146,8 @@ class HomeServiceController extends Controller
     public function admin_ListHomeService(Request $request){
         $branches = Branch::Where('active', true)->get();
         $csos = Cso::where('active', true)->get();
-        $awalBulan = Carbon::now()->startOfMonth()->subMonth(4);
-        $akhirBulan = Carbon::now()->startOfMonth()->addMonth(5);//5
+        $awalBulan = Carbon::now()->startOfMonth()->subMonth(1);
+        $akhirBulan = Carbon::now()->startOfMonth()->addMonth(2);//5
         $arrbranches = [];
 
         //khususu head-manager, head-admin, admin

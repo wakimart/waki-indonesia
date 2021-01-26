@@ -65,7 +65,7 @@
             @endphp
             
             <tr>
-                <td rowspan="8">{{ $index }}</td>
+                <td rowspan="9">{{ $index }}</td>
                 <td>Appointment</td>
                 @foreach($nowHomeService as $showHS)
                     @if($showHS != null)
@@ -73,6 +73,26 @@
                             $dt = new DateTime($showHS['appointment']);
                         @endphp
                         <td>{{ $dt->format('H:i') }}</td>                    
+                    @else
+                        <td></td>
+                    @endif
+                @endforeach
+            </tr>
+            <tr>
+                <td>Tipe Homeservice</td>
+                @foreach($nowHomeService as $showHS)
+                    @if($showHS != null)
+                        <td>{{ $showHS['type_homeservices'] }}</td>
+                    @else
+                        <td></td>
+                    @endif
+                @endforeach
+            </tr>
+            <tr>
+                <td>Tipe Customer</td>
+                @foreach($nowHomeService as $showHS)
+                    @if($showHS != null)
+                        <td>{{ $showHS['type_customer'] }}</td>
                     @else
                         <td></td>
                     @endif
@@ -109,10 +129,19 @@
                 @endforeach
             </tr>
             <tr>
-                <td>Address</td>
+                <td rowspan="2">Address</td>
                 @foreach($nowHomeService as $showHS)
                     @if($showHS != null)
-                        <td>{{ $showHS['address'] }} ( {{ $showHS['city'] }} )</td>
+                        <td>{{ $showHS['address'] }}</td>
+                    @else
+                        <td></td>
+                    @endif
+                @endforeach
+            </tr>
+            <tr>
+                @foreach($nowHomeService as $showHS)
+                    @if($showHS != null)
+                        <td>{{ $showHS->provinceObj['province'] }}, {!! $showHS->cityObj['type'].' '.$showHS->cityObj['city_name'] !!}, {{ $showHS->districObj['subdistrict_name'] }}</td>
                     @else
                         <td></td>
                     @endif
