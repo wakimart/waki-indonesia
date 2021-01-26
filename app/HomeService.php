@@ -35,4 +35,16 @@ class HomeService extends Model
         }
         return $district;
     }
+    public function provinceObj()
+    {
+        return $this->belongsTo('App\RajaOngkir_Province', 'province', 'province_id');
+    }
+    public function cityObj()
+    {
+        return $this->belongsTo('App\RajaOngkir_City', 'city', 'city_id');
+    }
+    public function districObj()
+    {
+        return $this->belongsTo('App\RajaOngkir_Subdistrict', 'distric', 'subdistrict_id');
+    }
 }

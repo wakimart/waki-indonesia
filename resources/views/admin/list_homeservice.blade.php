@@ -246,112 +246,70 @@
                   </button>
               </div>
               <div class="modal-body">
-                  <h5 style="text-align:center;"></h5>
-                    {{ csrf_field() }}
-                      <div class="form-group">
-                        <span>Type Customer</span>
-                        <select id="view_type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_customer" value="" readonly="" disabled="">
-                          <option value="VVIP (Type A)">VVIP (Type A)</option>
-                          <option value="WAKi Customer (Type B)">WAKi Customer (Type B)</option>
-                          <option value="New Customer (Type C)">New Customer (Type C)</option>
-                        </select>
-                        <span class="invalid-feedback">
-                          <strong></strong>
-                        </span>
-                      </div>
-                      <div class="form-group">
-                        <span>Type Home Service</span>
-                        <select id="view_type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_homeservices" value="" readonly="" disabled="">
-                          <option value="Home service">Home Service</option>
-                          <option value="Home Tele Voucher">Home Tele Voucher</option>
-                          <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
-                          <option value="Home Free Family Therapy">Home Free Family Therapy</option>
-                          <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
-                          <option value="Home Voucher">Home Voucher</option>
-                          <option value="Home Tele Free Gift">Home Tele Free Gift</option>
-                          <option value="Home Refrensi Product">Home Refrensi Product</option>
-                          <option value="Home Delivery">Home Delivery</option>
-                          <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
-                          <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
-                        </select>
-                        <span class="invalid-feedback">
-                          <strong></strong>
-                        </span>
-                      </div>
-                      <h5>Data Pelanggan</h5>
-                      <div class="form-group">
-                          <input type="text" name="no_member" class="form-control input-view" id="view-no_member" value=""/>
-                          <div class="validation"></div>
-                      </div>
-                      <div class="form-group">
-                          <input type="text" class="form-control input-view" name="name" id="view-name" value=""/>
-                          <div class="validation"></div>
-                      </div>
-                      <div class="form-group">
-                          <input type="number" class="form-control input-view" name="phone" id="view-phone" value=""/>
-                          <div class="validation"></div>
-                      </div>
-                      <div class="form-group">
-                          <select class="form-control input-view" id="view-province" name="province">
-                            <option selected disabled value="">Pilihan Provinsi</option>
-                            @php
-                              $result = RajaOngkir::FetchProvince();
-                              $result = $result['rajaongkir']['results'];
-                              $arrProvince = [];
-                              if(sizeof($result) > 0){
-                                foreach ($result as $value) {
-                                  echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
-                                }
-                              }
-                            @endphp
-                          </select>
-                          <div class="validation"></div>
-                      </div>
-                      <div class="form-group">
-                          <select class="form-control input-view" name="city" id="view-city" value=""/>
-                          </select>
-                          <div class="validation"></div>
-                      </div>
-                      <div class="form-group">
-                          <select class="form-control input-view" name="distric" id="view-distric" value=""/>
-                          </select>
-                          <div class="validation"></div>
-                      </div>
-                      <div class="form-group">
-                          <textarea class="form-control input-view" name="address" id="view-address" rows="5" value=""></textarea>
-                          <div class="validation"></div>
-                      </div>
-                      <br>
-                      <h5>Data CSO</h5>
-                      <div class="form-group">
-                          <select class="form-control input-view" id="view-branch" name="branch_id" value="">
-                              <option selected disabled value="">Pilihan Cabang</option>
+                <table style="width: 90%; margin: auto;">
+                  <tr>
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Customer : </td>
+                    <td id="view_type_customer" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr>
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Home Service : </td>
+                    <td id="view_type_homeservices" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
 
-                              @foreach($branches as $branch)
-                                  <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-                              @endforeach
-                          </select>
-                          <div class="validation"></div>
-                      </div>
-                      <div class="form-group">
-                          <input type="text" class="form-control input-view cso" name="cso_id" id="view-cso" value="" style="text-transform:uppercase"/>
-                          <div class="validation" id="validation_cso"></div>
-                      </div>
-                      <div class="form-group">
-                          <input type="text" class="form-control input-view cso" name="cso2_id" id="view-cso2" value="" style="text-transform:uppercase"/>
-                          <div class="validation" id="validation_cso2"></div>
-                      </div>
+                  <tr><td style="padding-top: 1em;"></td></tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Member : </td>
+                    <td id="view-no_member" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Nama : </td>
+                    <td id="view-name" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Telp : </td>
+                    <td id="view-phone" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Provinsi : </td>
+                    <td id="view-province" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kota/Kabupaten : </td>
+                    <td id="view-city" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kecamatan : </td>
+                    <td id="view-distric" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Alamat : </td>
+                    <td id="view-address" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
 
-                      <br>
-                      <h5>Waktu Home Service</h5>
-                      <div class="form-group">
-                          <input type="date" class="form-control input-view" name="date" id="view-date" value="" />
-                          <div class="validation"></div>
-                      </div>
-                      <div class="form-group">
-                          <input type="time" class="form-control input-view" name="time" id="view-time" value="" />
-                          <div class="validation"></div>
-                      </div>
+                  <tr><td style="padding-top: 1em;"></td></tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Cabang : </td>
+                    <td id="view-branch" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode CSO : </td>
+                    <td id="view-cso" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode Partner CSO : </td>
+                    <td id="view-cso2" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+
+                  <tr><td style="padding-top: 1em;"></td></tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Tanggal : </td>
+                    <td id="view-date" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Jam : </td>
+                    <td id="view-time" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                </table>
               </div>
               <div class="modal-footer">
                 <a id="url_share" href="" data-action="share/whatsapp/share" target="_blank"><button id="btn-share" type="button" class="btn btn-gradient-primary mr-2"><span class="mdi mdi-whatsapp" style="font-size: 18px;"></span> Share</button></a>
@@ -1200,61 +1158,21 @@ $(document).on("click", ".btn-homeservice-view", function(e){
           $('#view-branch').val(data1['id']);
         },
       });
-      //fetching City
-      $( "#view-city" ).html("");
-      $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+result['province'] )
-      .done(function( result ) {
-          result = result['rajaongkir']['results'];
-          var arrCity = [];
-          arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
-          arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
-          if(result.length > 0){
-            $.each( result, function( key, value ) {
-              var terpilih = ""
-              if(value['city_id'] == result['city']){
-                terpilih = "selected";
-              }
-              if(value['type'] == "Kabupaten"){
-                arrCity[0] += "<option value=\""+value['city_id']+"\""+terpilih+">"+value['type']+" "+value['city_name']+"</option>";
-              }
-              else{
-                arrCity[1] += "<option value=\""+value['city_id']+"\""+terpilih+">"+value['type']+" "+value['city_name']+"</option>";
-              }
-            });
-            $( "#view-city" ).append(arrCity[0]);
-            $( "#view-city" ).append(arrCity[1]);
-          }
-      });
-      //fetching Distric
-      $( "#view-distric" ).html("");
-      $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+result['city'] )
-      .done(function( result ) {
-          result = result['rajaongkir']['results'];
-          var arrSubDistsrict = "<option disabled value=\"\">Pilihan Kecamatan</option>";
-          if(result.length > 0){
-            $.each( result, function( key, value ) {
-              var terpilih = ""
-              if(value['subdistrict_id'] == result['distric']){
-                terpilih = "selected";
-              }                         
-              arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\""+terpilih+">"+value['subdistrict_name']+"</option>";
-            });
-            $( "#view-distric" ).append(arrSubDistsrict);
-          }
-      });
 
-      $('#view_type_homeservices').val(result['type_homeservices']);
-      $('#view_type_customer').val(result['type_customer']);
-      $('#view-no_member').val(result['no_member']);
-      $('#view-name').val(result['name']);
-      $('#view-phone').val(result['phone']);
-      $('#view-province').val(result['province']);
-      $('#view-address').val(result['address']);
-      $('#view-cso_phone').val(result['cso_phone']);
-      $('#view-date').val(tgl);
-      $('#view-time').val(jam+":"+menit);
-      $('.input-view').attr('readonly', true);
-      $('.input-view').attr('disabled', true);
+      $('#view_type_homeservices').html(result['type_homeservices']);
+      $('#view_type_customer').html(result['type_customer']);
+      $('#view-no_member').html(result['no_member']);
+      $('#view-name').html(result['name']);
+      $('#view-phone').html(result['phone']);
+      $('#view-province').html(result['province_name']);
+      $('#view-city').html(result['city_name']);
+      $('#view-distric').html(result['district_name']);
+      $('#view-address').html(result['address']);
+      $('#view-date').html(tgl);
+      $('#view-time').html(jam+":"+menit);
+      $('#view-cso').html(result['cso_code_name']);
+      $('#view-cso2').html(result['cso2_code_name']);
+      $('#view-branch').html(result['branch_code_name']);
       $('#url_share').attr('href', "whatsapp://send?text={{ Route('homeServices_success') }}?code="+result['code']);
     },
   });

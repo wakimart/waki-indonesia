@@ -363,12 +363,20 @@ class HomeServiceController extends Controller
             }
         }
     }
+
+
     
 
     public function edit(Request $request)
     {
         if($request->has('id')){
             $data = HomeService::find($request->id);
+            $data['province_name'] = $data->provinceObj['province'];
+            $data['city_name'] = $data->cityObj['type'].' '.$data->cityObj['city_name'];
+            $data['district_name'] = $data->districObj['subdistrict_name'];
+            $data['cso_code_name'] = $data->cso['code'].' - '.$data->cso['name'];
+            $data['cso2_code_name'] = $data->cso2['code'].' - '.$data->cso2['name'];
+            $data['branch_code_name'] = $data->branch['code'].' '.$data->branch['name'];
             return response()->json(['result' => $data]);
         }else{
             return response()->json(['result' => 'Gagal!!']);
