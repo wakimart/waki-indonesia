@@ -171,11 +171,14 @@ class HomeServiceController extends Controller
         }
 
         //kalau ada filter
+        if($request->has('filter_province')){
+            $homeServices = $homeServices->where('home_services.province', $request->filter_province);
+        }
         if($request->has('filter_city')){
-            $homeServices = $homeServices->where('home_services.city', 'like', '%'.$request->filter_city.'%');
+            $homeServices = $homeServices->where('home_services.city', $request->filter_city);
         }
         if($request->has('filter_district')){
-            $homeServices = $homeServices->where('home_services.distric', 'like', '%'.$request->filter_district.'%');
+            $homeServices = $homeServices->where('home_services.distric', $request->filter_district);
         }
         if($request->has('filter_search')){
             $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
@@ -424,7 +427,6 @@ class HomeServiceController extends Controller
             } catch (\Exception $ex) {
                 DB::rollback();
             }
-
         }
 
         $req = new Request();

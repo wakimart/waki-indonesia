@@ -481,7 +481,7 @@
                         <br>
                         <h5>Waktu Home Service</h5>
                         <div class="form-group">
-                            <input type="date" class="form-control" name="edit-date" id="edit-date" placeholder="Tanggal Janjian" required data-msg="Mohon Isi Tanggal" />
+                            <input type="date" class="form-control" name="date" id="edit-date" placeholder="Tanggal Janjian" required data-msg="Mohon Isi Tanggal" />
                             <div class="validation"></div>
                         </div>
                         <div class="form-group">
@@ -891,10 +891,18 @@ window.onload = function() {
       });
     });
 
-    $("#filter_province").on("change", function(){
+    $("#filter_province, #edit-province").on("change", function(){
       var id = $(this).val();
-      $( "#filter_city" ).html("");
-      $( "#filter_city" ).append("<option selected value=\"\">All City</option>");
+      var domCity = $( "#filter_city" );      
+      if(this.id == "edit-province"){
+        domCity = $( "#edit-city" );
+        $( domCity ).html("");
+      }
+      else{
+        $( domCity ).html("");
+        $( domCity ).append("<option selected value=\"\">All City</option>");
+      }
+
       $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
       .done(function( result ) {
           result = result['rajaongkir']['results'];
@@ -911,23 +919,33 @@ window.onload = function() {
                 arrCity[1] += "<option value=\""+value['city_id']+"\">"+value['type']+" "+value['city_name']+"</option>";
               }
             });
-            $( "#filter_city" ).append(arrCity[0]);
-            $( "#filter_city" ).append(arrCity[1]);
+            $( domCity ).append(arrCity[0]);
+            $( domCity ).append(arrCity[1]);
           }
         });
     });
-    $("#filter_city").on("change", function(){
+    $("#filter_city, #edit-city").on("change", function(){
       var id = $(this).val();
-      $( "#filter_district" ).html("");
+      var domDistrict = $( "#filter_district" );      
+      if(this.id == "edit-city"){
+        domDistrict = $( "#edit-distric" );
+        $( domDistrict ).html("");
+      }
+      else{
+        $( domDistrict ).html("");
+        $( domDistrict ).append("<option selected value=\"\">All District</option>");
+      }
+
+      $( domDistrict ).html("");
       $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
       .done(function( result ) {
           result = result['rajaongkir']['results'];
-          var arrdistrict = "<option selected value=\"\">All District</option>";
+          var arrdistrict = "";
           if(result.length > 0){
               $.each( result, function( key, value ) {
                 arrdistrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";  
               });
-              $( "#filter_district" ).append(arrdistrict);
+              $( domDistrict ).append(arrdistrict);
             }
         });
     });
@@ -1067,17 +1085,18 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
       //fetching City
       $( "#edit-city" ).html("");
       $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+result['province'] )
-      .done(function( result ) {
-          result = result['rajaongkir']['results'];
+      .done(function( resultCity ) {
+          resultCity = resultCity['rajaongkir']['results'];
           var arrCity = [];
           arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
           arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
-          if(result.length > 0){
-            $.each( result, function( key, value ) {
+          if(resultCity.length > 0){
+            $.each( resultCity, function( key, value ) {
               var terpilih = ""
               if(value['city_id'] == result['city']){
                 terpilih = "selected";
               }
+              console.log(result);
               if(value['type'] == "Kabupaten"){
                 arrCity[0] += "<option value=\""+value['city_id']+"\""+terpilih+">"+value['type']+" "+value['city_name']+"</option>";
               }
@@ -1092,11 +1111,11 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
       //fetching Distric
       $( "#edit-distric" ).html("");
       $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+result['city'] )
-      .done(function( result ) {
-          result = result['rajaongkir']['results'];
+      .done(function( resultDistrict ) {
+          resultDistrict = resultDistrict['rajaongkir']['results'];
           var arrSubDistsrict = "<option disabled value=\"\">Pilihan Kecamatan</option>";
-          if(result.length > 0){
-            $.each( result, function( key, value ) {
+          if(resultDistrict.length > 0){
+            $.each( resultDistrict, function( key, value ) {
               var terpilih = ""
               if(value['subdistrict_id'] == result['distric']){
                 terpilih = "selected";
