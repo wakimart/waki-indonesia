@@ -146,8 +146,8 @@ class HomeServiceController extends Controller
     public function admin_ListHomeService(Request $request){
         $branches = Branch::Where('active', true)->get();
         $csos = Cso::where('active', true)->get();
-        $awalBulan = Carbon::now()->startOfMonth()->subMonth(4);
-        $akhirBulan = Carbon::now()->startOfMonth()->addMonth(5);//5
+        $awalBulan = Carbon::now()->startOfMonth()->subMonth(1);
+        $akhirBulan = Carbon::now()->startOfMonth()->addMonth(2);//5
         $arrbranches = [];
 
         //khususu head-manager, head-admin, admin
@@ -171,11 +171,14 @@ class HomeServiceController extends Controller
         }
 
         //kalau ada filter
+        if($request->has('filter_province')){
+            $homeServices = $homeServices->where('home_services.province', $request->filter_province);
+        }
         if($request->has('filter_city')){
-            $homeServices = $homeServices->where('home_services.city', 'like', '%'.$request->filter_city.'%');
+            $homeServices = $homeServices->where('home_services.city', $request->filter_city);
         }
         if($request->has('filter_district')){
-            $homeServices = $homeServices->where('home_services.distric', 'like', '%'.$request->filter_district.'%');
+            $homeServices = $homeServices->where('home_services.distric', $request->filter_district);
         }
         if($request->has('filter_search')){
             $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
@@ -376,12 +379,20 @@ class HomeServiceController extends Controller
             }
         }
     }
+
+
     
 
     public function edit(Request $request)
     {
         if($request->has('id')){
             $data = HomeService::find($request->id);
+            $data['province_name'] = $data->provinceObj['province'];
+            $data['city_name'] = $data->cityObj['type'].' '.$data->cityObj['city_name'];
+            $data['district_name'] = $data->districObj['subdistrict_name'];
+            $data['cso_code_name'] = $data->cso['code'].' - '.$data->cso['name'];
+            $data['cso2_code_name'] = $data->cso2['code'].' - '.$data->cso2['name'];
+            $data['branch_code_name'] = $data->branch['code'].' '.$data->branch['name'];
             return response()->json(['result' => $data]);
         }else{
             return response()->json(['result' => 'Gagal!!']);
@@ -429,7 +440,6 @@ class HomeServiceController extends Controller
             } catch (\Exception $ex) {
                 DB::rollback();
             }
-
         }
 
         $req = new Request();
@@ -503,7 +513,7 @@ class HomeServiceController extends Controller
             $cso = $csos[0]['id'];
         }
         // dd(new HomeServicesExportByDate($date, $city, $branch, $cso, null));
-        return Excel::download(new HomeServicesExport($city, $branch, $cso, $search, null), 'Home Service.xlsx');
+        return Excel::download(new HomeServicesExport($date, $city, $branch, $cso, $search), 'Home Service.xlsx');
     }
 
     public function export_to_xls_byDate(Request $request)
