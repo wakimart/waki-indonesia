@@ -97,7 +97,7 @@
                             sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
                             atau perubahan jadwal {{$homeService->type_homeservices}}, dapat menghubungi WAKi
                             {{$homeService->type_homeservices}} Department kembali di nomor (+6281234511881) atau
-                            {{ $homeService->cso['name'] }}, {{ $homeService['cso_phone'] }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
+                            {{ $homeService->cso['name'] }}, {{ $homeService->cso['phone'] }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
                         @endif
                   </td>
               </tr>

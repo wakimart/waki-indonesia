@@ -42,10 +42,16 @@
 	        	</ol>
       		</nav>
     	</div>
+      
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
 	          		<div class="card-body">
+                  @if(session('errors'))
+                      <div class="alert alert-danger">
+                          {{ session('errors') }}
+                      </div>
+                  @endif
 						@if(Utils::$lang=='id')
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_homeService') }}">
 							{{ csrf_field() }}
@@ -87,8 +93,7 @@
           			</div>
           			<div class="form-group">
 	                <label for="">Name</label>
-	                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
-	                <div class="validation"></div>
+	                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
           			</div>
           			<div class="form-group">
 	                <label for="">Phone Number</label>
@@ -128,7 +133,7 @@
 							</div>
 							<div class="form-group">
                 <label for="exampleTextarea1">Alamat</label>
-                <textarea class="form-control" name="address" rows="5" required data-msg="Mohon Isi Alamat" placeholder="Alamat"></textarea>
+                <textarea class="form-control" name="address" rows="5" required data-msg="Mohon Isi Alamat" placeholder="Alamat" required></textarea>
                 <div class="validation"></div>
         			</div>
         			<br>
@@ -350,6 +355,22 @@
 	$(document).ready(function() {
       var frmAdd;
 
+      // $('#addHomeService').click(function(){
+      //       var appointment = 
+      //       $.ajax({
+      //           type: 'POST',
+      //           data: {
+      //               date: date
+      //           },
+      //           success: function(data){
+      //               console.log(data.data);
+      //           },
+      //           error: function(xhr){
+      //               console.log(xhr.responseText);
+      //           }
+      //       });
+      //   });
+
 	    $("#actionAdd").on("submit", function (e) {
 	        e.preventDefault();
 	        frmAdd = _("actionAdd");
@@ -371,7 +392,6 @@
 	    }
 	    function completeHandler(event){
 	        var hasil = JSON.parse(event.target.responseText);
-	        console.log(hasil);
 
 	        for (var key of frmAdd.keys()) {
 	            $("#actionAdd").find("input[name="+key.name+"]").removeClass("is-invalid");
@@ -398,15 +418,18 @@
 	                    $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
 	                }
 	            }
-	            alert(hasil['errors']);
-	        } else if(hasil['validator'] != null){
-              $("#modal-Error").modal("show");
-	            // alert("Appointment dengan nomer ini sudah ada!!");
-    			} else if (hasil['active'] != null){
-    	        alert("Apakah Appointment ini reschadule? Jika iya lakukan edit pada menu edit");
-    			}
+              if(hasil['errors']['type_homeservices'] != null){
+                alert(hasil['errors']['type_homeservices']);  
+              }else if(hasil['errors'] != null){
+                alert(hasil['errors']);
+              }
+	        }
 	        else{
-              $("#modal-Success").modal("show");
+            var kode = hasil.code[0].replace('/', "%2F");
+            var url = "{{ route('homeServices_success', ['code'=>"codeTmp"])}}";
+            url = url.replace('codeTmp', kode);
+            window.location.href = url;
+              //$("#modal-Success").modal("show");
 	            // alert("Input Success !!!");
 	            // window.location.reload()
 	        }
@@ -530,7 +553,7 @@
           </div>\
           <div class="form-group optional_appointment">\
             <label for="">Jam Janjian 3 (Optional)</label>\
-            <input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
+            <input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>\
             <div class="validation"></div>\
             <span class="invalid-feedback">\
               <strong></strong>\
