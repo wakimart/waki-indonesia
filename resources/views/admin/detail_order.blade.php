@@ -73,12 +73,12 @@
                         <td>{{ $order['phone'] }}</td>
                     </tr>
                     <tr>
-                        <td>City : </td>
-                        <td>{{ $order['city'] }}</td>
-                    </tr>
-                    <tr>
                         <td>Address : </td>
                         <td>{{ $order['address'] }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>{{ $order['district']['province'] }}, {{ $order['district']['kota_kab'] }}, {{ $order['district']['subdistrict_name'] }}</td>
                     </tr>
                 </table>
                 <table class="col-md-12">
@@ -89,19 +89,19 @@
                         <td>Product Name</td>
                         <td>Quantity</td>
                     </thead>
-
-                     @foreach(json_decode($order['product'], true) as $ProductPromo)
+                    
+                    @foreach(json_decode($order['product'], true) as $ProductPromo)
                         <tr>
-                            @if(is_numeric($ProductPromo['id']))
+                            @if(is_numeric($ProductPromo['id']) && $ProductPromo['id'] < 8)
                                 <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
                             @else
                                 <td>{{ $ProductPromo['id'] }}</td>
                             @endif
                             
                             <td>{{ $ProductPromo['qty'] }}</td>
-                            @php break; @endphp
                         </tr>
                     @endforeach
+                    
                     @if($order['old_product'] != null)
                         <thead style="background-color: #80808012 !important">
                             <td colspan="2">Old Product</td>
@@ -176,7 +176,16 @@
                         <td style="width:50%; text-align: center">{{ $order->cso['code'] }}</td>
                     </tr>
                 </table>
-
+                @if($order['customer_type'] != null)
+                    <table class="col-md-12">
+                        <thead>
+                            <td>Description</td>
+                        </thead>
+                        <tr>
+                            <td>{{ $order['customer_type'] }}</td>
+                        </tr>
+                    </table>
+                @endif
                 @if($order['description'] != null)
                     <table class="col-md-12">
                         <thead>

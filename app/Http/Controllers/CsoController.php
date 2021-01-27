@@ -221,8 +221,10 @@ class CsoController extends Controller
     }
 
     public function fetchCso(Request $request){
-        $csos = Cso::where([['code', $request->txt], ['active', true]])->get();
-        if(sizeof($csos) > 0){
+        $csos = Cso::where('code', $request->cso_code)
+                        ->where('active', '=', 1)
+                        ->get();
+        if(count($csos) > 0) {
             return [
                 'result' =>'true',
                 'data' => $csos

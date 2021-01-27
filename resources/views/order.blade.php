@@ -257,7 +257,13 @@
 
 
                 <div class="form-group">
-                    <input type="text" class="form-control" name="customer_type" id="customer_type" placeholder="Tipe Customer" data-msg="Mohon Isi Tipe Customer" />
+                    <span>Type Customer</span>
+                    <select id="customer_type" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="customer_type" value="" required>
+                        <option value="Tele Voucher">Tele Voucher</option>
+                        <option value="Tele Home Service">Tele Home Service</option>
+                        <option value="Home Office Voucher">Home Office Voucher</option>
+                        <option value="Home Voucher">Home Voucher</option>
+                    </select>
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
@@ -288,10 +294,32 @@
                     <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone Number" required data-msg="Please Fill the Phone Number" />
                     <div class="validation"></div>
                 </div>
+                
                 <div class="form-group">
-                    <input type="text" class="form-control" name="city" id="city" placeholder="City" required data-msg="Please Fill the City" />
+                    {{-- <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" /> --}}
+                    <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+                        <option selected disabled value="">Pilihan Provinsi</option>
+
+                        @php
+                            $result = RajaOngkir::FetchProvince();
+                            $result = $result['rajaongkir']['results'];
+                            $arrProvince = [];
+                            if(sizeof($result) > 0){
+                                foreach ($result as $value) {
+                                    echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+                                }
+                            }
+                        @endphp
+                    </select>
                     <div class="validation"></div>
                 </div>
+                <div class="form-group">
+                    <select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+                        <option selected disabled value="">Pilihan Kota</option>
+                    </select>
+                    <div class="validation"></div>
+                </div>
+                
                 <div class="form-group">
                     <textarea class="form-control" name="address" rows="5" required data-msg="Please Fill the Address" placeholder="Address"></textarea>
                     <div class="validation"></div>

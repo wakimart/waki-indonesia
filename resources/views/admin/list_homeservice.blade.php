@@ -111,6 +111,18 @@
                           <div class="validation"></div>
                       </div>
                     </div>
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+                        <label style="opacity: 0;" for=""> s</label>
+                          <select class="form-control" id="filter_district" name="filter_district">
+                            <option value="">All District</option>
+                            @if(isset($_GET['filter_district']))
+                              <option selected="" value="{{$_GET['filter_district']}}">{{$_GET['filter_district']}}</option>
+                            @endif
+                          </select>
+                          <div class="validation"></div>
+                      </div>
+                    </div>
                   @endif
 
                   @if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
@@ -138,24 +150,19 @@
                     <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                       <div class="form-group">
                         <label for="">Filter By CSO</label>
-                          <select class="form-control" id="filter_cso" name="filter_cso">
-                            <option value="">All CSO</option>
-                            @php
-                              if(isset($_GET['filter_branch'])){
-                                $csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+                          <input name="filter_cso" id="filter_cso" list="data_cso" class="text-uppercase form-control" placeholder="Search CSO" required="">
+                          <span class="invalid-feedback">
+                              <strong></strong>
+                          </span>
 
-                                foreach ($csos as $cso) {
-                                  if(isset($_GET['filter_cso'])){
-                                    if($_GET['filter_cso'] == $cso['id']){
-                                      echo "<option selected=\"\" value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                      continue;
-                                    }
-                                  }
-                                  echo "<option value=\"".$cso['id']."\">".$cso['code']." - ".$cso['name']."</option>";
-                                }
-                              }
-                            @endphp
-                          </select>
+                          <datalist id="data_cso">
+                              <select class="form-control">
+                                <option value="All CSO"></option>
+                                @foreach($csos as $cso)
+                                  <option value="{{$cso['code']}}-{{$cso['name']}}"></option>
+                                @endforeach
+                              </select>
+                          </datalist>
                           <div class="validation"></div>
                       </div>
                     </div>
@@ -241,14 +248,12 @@
               <div class="modal-body">
                   <h5 style="text-align:center;"></h5>
                     {{ csrf_field() }}
-                      <h5>Data Pelanggan</h5>
                       <div class="form-group">
                         <span>Type Customer</span>
-                        <select id="view_type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_customer" value="" required>
-                            <option value="Tele Voucher">Tele Voucher</option>
-                            <option value="Tele Home Service">Tele Home Service</option>
-                            <option value="Home Office Voucher">Home Office Voucher</option>
-                            <option value="Home Voucher">Home Voucher</option>
+                        <select id="view_type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_customer" value="" readonly="" disabled="">
+                          <option value="VVIP (Type A)">VVIP (Type A)</option>
+                          <option value="WAKi Customer (Type B)">WAKi Customer (Type B)</option>
+                          <option value="New Customer (Type C)">New Customer (Type C)</option>
                         </select>
                         <span class="invalid-feedback">
                           <strong></strong>
@@ -256,14 +261,24 @@
                       </div>
                       <div class="form-group">
                         <span>Type Home Service</span>
-                        <select id="view_type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_homeservices" value="" required>
-                            <option value="Home service">Home service</option>
-                            <option value="Upgrade Member">Upgrade Member</option>
+                        <select id="view_type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="view_type_homeservices" value="" readonly="" disabled="">
+                          <option value="Home service">Home Service</option>
+                          <option value="Home Tele Voucher">Home Tele Voucher</option>
+                          <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                          <option value="Home Free Family Therapy">Home Free Family Therapy</option>
+                          <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
+                          <option value="Home Voucher">Home Voucher</option>
+                          <option value="Home Tele Free Gift">Home Tele Free Gift</option>
+                          <option value="Home Refrensi Product">Home Refrensi Product</option>
+                          <option value="Home Delivery">Home Delivery</option>
+                          <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
+                          <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
                         </select>
                         <span class="invalid-feedback">
                           <strong></strong>
                         </span>
                       </div>
+                      <h5>Data Pelanggan</h5>
                       <div class="form-group">
                           <input type="text" name="no_member" class="form-control input-view" id="view-no_member" value=""/>
                           <div class="validation"></div>
@@ -277,7 +292,29 @@
                           <div class="validation"></div>
                       </div>
                       <div class="form-group">
-                          <input type="text" class="form-control input-view" name="city" id="view-city" value=""/>
+                          <select class="form-control input-view" id="view-province" name="province">
+                            <option selected disabled value="">Pilihan Provinsi</option>
+                            @php
+                              $result = RajaOngkir::FetchProvince();
+                              $result = $result['rajaongkir']['results'];
+                              $arrProvince = [];
+                              if(sizeof($result) > 0){
+                                foreach ($result as $value) {
+                                  echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+                                }
+                              }
+                            @endphp
+                          </select>
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                          <select class="form-control input-view" name="city" id="view-city" value=""/>
+                          </select>
+                          <div class="validation"></div>
+                      </div>
+                      <div class="form-group">
+                          <select class="form-control input-view" name="distric" id="view-distric" value=""/>
+                          </select>
                           <div class="validation"></div>
                       </div>
                       <div class="form-group">
@@ -299,10 +336,6 @@
                       <div class="form-group">
                           <input type="text" class="form-control input-view cso" name="cso_id" id="view-cso" value="" style="text-transform:uppercase"/>
                           <div class="validation" id="validation_cso"></div>
-                      </div>
-                      <div class="form-group">
-                          <input type="number" class="form-control input-view" name="cso_phone" id="view-cso_phone" value=""/>
-                          <div class="validation"></div>
                       </div>
                       <div class="form-group">
                           <input type="text" class="form-control input-view cso" name="cso2_id" id="view-cso2" value="" style="text-transform:uppercase"/>
@@ -343,14 +376,12 @@
               	<div class="modal-body">
                 		<h5 style="text-align:center;"></h5>
       					    	{{ csrf_field() }}
-                        <h5>Data Pelanggan</h5>
                         <div class="form-group">
                           <span>Type Customer</span>
-                          <select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
-                                  <option value="Tele Voucher">Tele Voucher</option>
-                                  <option value="Tele Home Service">Tele Home Service</option>
-                                  <option value="Home Office Voucher">Home Office Voucher</option>
-                                  <option value="Home Voucher">Home Voucher</option>
+                          <select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" readonly="" disabled="">
+                            <option value="VVIP (Type A)">VVIP (Type A)</option>
+                            <option value="WAKi Customer (Type B)">WAKi Customer (Type B)</option>
+                            <option value="New Customer (Type C)">New Customer (Type C)</option>
                           </select>
                           <span class="invalid-feedback">
                               <strong></strong>
@@ -358,14 +389,24 @@
                       </div>
                       <div class="form-group">
                           <span>Type Home Service</span>
-                          <select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
-                                  <option value="Home service">Home service</option>
-                                  <option value="Upgrade Member">Upgrade Member</option>
+                          <select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" readonly="" disabled="">
+                            <option value="Home service">Home Service</option>
+                            <option value="Home Tele Voucher">Home Tele Voucher</option>
+                            <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                            <option value="Home Free Family Therapy">Home Free Family Therapy</option>
+                            <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
+                            <option value="Home Voucher">Home Voucher</option>
+                            <option value="Home Tele Free Gift">Home Tele Free Gift</option>
+                            <option value="Home Refrensi Product">Home Refrensi Product</option>
+                            <option value="Home Delivery">Home Delivery</option>
+                            <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
+                            <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
                           </select>
                           <span class="invalid-feedback">
                               <strong></strong>
                           </span>
                       </div>
+                        <h5>Data Pelanggan</h5>
                         <div class="form-group">
                             <input type="text" name="no_member" class="form-control" id="edit-no_member" placeholder="No. Member (optional)"/>
                             <div class="validation"></div>
@@ -379,7 +420,29 @@
                             <div class="validation"></div>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="city" id="edit-city" placeholder="Kota" required data-msg="Mohon Isi Kota" />
+                          <select class="form-control" id="edit-province" name="province" required data-msg="Mohon Isi Provinsi">
+                            <option selected disabled value="">Pilihan Provinsi</option>
+                            @php
+                              $result = RajaOngkir::FetchProvince();
+                              $result = $result['rajaongkir']['results'];
+                              $arrProvince = [];
+                              if(sizeof($result) > 0){
+                                foreach ($result as $value) {
+                                  echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+                                }
+                              }
+                            @endphp
+                          </select>
+                          <div class="validation"></div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" name="city" id="edit-city" value=""/ required data-msg="Mohon Isi Kota">
+                            </select>
+                            <div class="validation"></div>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" name="distric" id="edit-distric" value=""/ required data-msg="Mohon Isi Kecamatan">
+                            </select>
                             <div class="validation"></div>
                         </div>
                         <div class="form-group">
@@ -551,12 +614,11 @@
 <script src="{{ asset('js/admin/calendarorganizer.js') }}"></script>
 
 <script>
+  console.log("masuk cook ");
 window.onload = function() {
   "use strict";
-
   // untuk pertama kali data di buka
   function onLoadDate(){
-    
     data = {};
     // data[new Date().getFullYear()] = {};
     // data[new Date().getFullYear()][new Date().getMonth()+1] = {};
@@ -634,12 +696,12 @@ window.onload = function() {
               });
       }
     @endforeach
-
     return data;
   }
 
   // creating the dummy static data
   var data = onLoadDate();
+  // var data = {};
 
   // stating variables in order for them to be global
   var calendar, organizer;
@@ -835,32 +897,48 @@ window.onload = function() {
           if(result.length > 0){
               $.each( result, function( key, value ) {
                   if(value['type'] == "Kota"){                            
-                      arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                      arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                   }
               });
               $( "#filter_city" ).append(arrCity);
             }
         });
     });
-
-    $("#filter_branch").on("change", function(){
+    $("#filter_city").on("change", function(){
       var id = $(this).val();
-      $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
+      $( "#filter_district" ).html("");
+      $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
       .done(function( result ) {
-          $( "#filter_cso" ).html("");
-          var arrCSO = "<option selected value=\"\">All CSO</option>";
-          $( "#filter_cso" ).append(arrCSO);
+          result = result['rajaongkir']['results'];
+          var arrdistrict = "<option selected value=\"\">All District</option>";
           if(result.length > 0){
-              $.each( result, function( key, value ) {
-                arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
+              $.each( result, function( key, value ) {                            
+                arrdistrict += "<option value=\""+value['subdistrict_id']+"\">Kota "+value['subdistrict_name']+"</option>";  
               });
-              $( "#filter_cso" ).append(arrCSO);
+              $( "#filter_district" ).append(arrdistrict);
             }
         });
-      if(id == ""){
-        $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
-      }
     });
+
+    // $("#filter_branch").on("change", function(){
+    //   var id = $(this).val();
+    //   $.get( '{{ route("fetchCsoByIdBranch", ['branch' => ""]) }}/'+id )
+    //   .done(function( result ) {
+    //       $( "#filter_cso" ).html("");
+    //       var arrCSO = "<option selected value=\"\">All CSO</option>";
+    //       $( "#filter_cso" ).append(arrCSO);
+    //       if(result.length > 0){
+    //           $.each( result, function( key, value ) {
+    //             arrCSO += "<option value=\""+value['id']+"\">"+value['code']+" - "+value['name']+"</option>";
+    //           });
+    //           $( "#filter_cso" ).append(arrCSO);
+    //         }
+    //     });
+    //   if(id == ""){
+    //     $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
+    //   }
+    // });
+
     $("#btn-exportByDate").on("click", function(){
       var urlParamArray = new Array();
       var urlParamStr = "";
@@ -871,7 +949,9 @@ window.onload = function() {
         urlParamArray.push("filter_branch=" + $('#filter_branch').val());
       }
       if($('#filter_cso').val() != ""){
-        urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+        var get_req = $('#filter_cso').val();
+        var get_code = get_req.split("-");
+        urlParamArray.push("filter_cso=" + get_code[0]);
       }
       if($('#search').val() != ""){
         urlParamArray.push("filter_search=" + $('#search').val());
@@ -899,7 +979,9 @@ window.onload = function() {
         urlParamArray.push("filter_branch=" + $('#filter_branch').val());
       }
       if($('#filter_cso').val() != ""){
-        urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+        var get_req = $('#filter_cso').val();
+        var get_code = get_req.split("-");
+        urlParamArray.push("filter_cso=" + get_code[0]);
       }
       if($('#search').val() != ""){
         urlParamArray.push("filter_search=" + $('#search').val());
@@ -989,16 +1071,58 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
           $('#edit-branch').val(data1['id']);
         },
       });
+      //fetching City
+      $( "#edit-city" ).html("");
+      $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+result['province'] )
+      .done(function( result ) {
+          result = result['rajaongkir']['results'];
+          var arrCity = [];
+          arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
+          arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
+          if(result.length > 0){
+            $.each( result, function( key, value ) {
+              var terpilih = ""
+              if(value['city_id'] == result['city']){
+                terpilih = "selected";
+              }
+              if(value['type'] == "Kabupaten"){
+                arrCity[0] += "<option value=\""+value['city_id']+"\""+terpilih+">"+value['type']+" "+value['city_name']+"</option>";
+              }
+              else{
+                arrCity[1] += "<option value=\""+value['city_id']+"\""+terpilih+">"+value['type']+" "+value['city_name']+"</option>";
+              }
+            });
+            $( "#edit-city" ).append(arrCity[0]);
+            $( "#edit-city" ).append(arrCity[1]);
+          }
+      });
+      //fetching Distric
+      $( "#edit-distric" ).html("");
+      $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+result['city'] )
+      .done(function( result ) {
+          result = result['rajaongkir']['results'];
+          var arrSubDistsrict = "<option disabled value=\"\">Pilihan Kecamatan</option>";
+          if(result.length > 0){
+            $.each( result, function( key, value ) {
+              var terpilih = ""
+              if(value['subdistrict_id'] == result['distric']){
+                terpilih = "selected";
+              }                         
+              arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\""+terpilih+">"+value['subdistrict_name']+"</option>";
+            });
+            $( "#edit-distric" ).append(arrSubDistsrict);
+          }
+      });
 
       $('#type_homeservices').val(result['type_homeservices']);
       $('#type_customer').val(result['type_customer']);
       $('#edit-no_member').val(result['no_member']);
       $('#edit-name').val(result['name']);
       $('#edit-phone').val(result['phone']);
-      $('#edit-city').val(result['city']);
+      $('#edit-province').val(result['province']);
       $('#edit-address').val(result['address']);
       $('#edit-cso_phone').val(result['cso_phone']);
-      $('#edit-date').val(new Date(result['appointment']));
+      $('#edit-date').val(tgl);
       $('#edit-time').val(jam+":"+menit);
       $('#btn-edit').val(result['id']);
 
@@ -1076,12 +1200,55 @@ $(document).on("click", ".btn-homeservice-view", function(e){
           $('#view-branch').val(data1['id']);
         },
       });
+      //fetching City
+      $( "#view-city" ).html("");
+      $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+result['province'] )
+      .done(function( result ) {
+          result = result['rajaongkir']['results'];
+          var arrCity = [];
+          arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
+          arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
+          if(result.length > 0){
+            $.each( result, function( key, value ) {
+              var terpilih = ""
+              if(value['city_id'] == result['city']){
+                terpilih = "selected";
+              }
+              if(value['type'] == "Kabupaten"){
+                arrCity[0] += "<option value=\""+value['city_id']+"\""+terpilih+">"+value['type']+" "+value['city_name']+"</option>";
+              }
+              else{
+                arrCity[1] += "<option value=\""+value['city_id']+"\""+terpilih+">"+value['type']+" "+value['city_name']+"</option>";
+              }
+            });
+            $( "#view-city" ).append(arrCity[0]);
+            $( "#view-city" ).append(arrCity[1]);
+          }
+      });
+      //fetching Distric
+      $( "#view-distric" ).html("");
+      $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+result['city'] )
+      .done(function( result ) {
+          result = result['rajaongkir']['results'];
+          var arrSubDistsrict = "<option disabled value=\"\">Pilihan Kecamatan</option>";
+          if(result.length > 0){
+            $.each( result, function( key, value ) {
+              var terpilih = ""
+              if(value['subdistrict_id'] == result['distric']){
+                terpilih = "selected";
+              }                         
+              arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\""+terpilih+">"+value['subdistrict_name']+"</option>";
+            });
+            $( "#view-distric" ).append(arrSubDistsrict);
+          }
+      });
+
       $('#view_type_homeservices').val(result['type_homeservices']);
       $('#view_type_customer').val(result['type_customer']);
       $('#view-no_member').val(result['no_member']);
       $('#view-name').val(result['name']);
       $('#view-phone').val(result['phone']);
-      $('#view-city').val(result['city']);
+      $('#view-province').val(result['province']);
       $('#view-address').val(result['address']);
       $('#view-cso_phone').val(result['cso_phone']);
       $('#view-date').val(tgl);
@@ -1131,11 +1298,20 @@ $(document).on("click", "#btn-filter", function(e){
   if($('#filter_city').val() != ""){
     urlParamArray.push("filter_city=" + $('#filter_city').val());
   }
+  if($('#filter_district').val() != ""){
+    urlParamArray.push("filter_district=" + $('#filter_district').val());
+  }
   if($('#filter_branch').val() != ""){
     urlParamArray.push("filter_branch=" + $('#filter_branch').val());
   }
   if($('#filter_cso').val() != ""){
-    urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+    var get_req = $('#filter_cso').val();
+    if(get_req != "All CSO"){
+      var get_code = get_req.split("-");
+      urlParamArray.push("filter_cso=" + get_code[0]);
+    }else{
+      console.log(urlParamArray);
+    }
   }
   if($('#search').val() != ""){
     urlParamArray.push("filter_search=" + $('#search').val());

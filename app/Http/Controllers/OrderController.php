@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
+use App\Exports\OrderExport;
 use App\DeliveryOrder;
 use App\Order;
+use App\RajaOngkir_Province;
 use App\Branch;
 use App\Cso;
 use App\CategoryProduct;
 use App\User;
 use App\RajaOngkir_City;
+use App\RajaOngkir_Subdistrict;
 use App\HistoryUpdate;
 use DB;
 use App\Utils;
@@ -21,8 +25,8 @@ class OrderController extends Controller
     public function index()
     {
     	$promos = DeliveryOrder::$Promo;
-    	$branches = Branch::all();
-    	$csos = Cso::all();
+    	$branches = Branch::where('active', true)->get();
+    	$csos = Cso::where('active', true)->get();
     	$cashUpgrades = Order::$CashUpgrade;
     	$paymentTypes = Order::$PaymentType;
         $banks = Order::$Banks;
@@ -104,75 +108,95 @@ class OrderController extends Controller
 
     public function successorder(Request $request){
     	$order = Order::where('code', $request['code'])->first();
+        $order['district'] = array($order->getDistrict());
         return view('order_success', compact('order'));
     }
 
     public function admin_AddOrder(){
         $promos = DeliveryOrder::$Promo;
-        $branches = Branch::all();
+        $branches = Branch::where('active', true)->get();
         $csos = Cso::all();
         $cashUpgrades = Order::$CashUpgrade;
         $paymentTypes = Order::$PaymentType;
         $banks = Order::$Banks;
-        return view('admin.add_order', compact('promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
+        $from_know = Order::$Know_From;
+        return view('admin.add_order', compact('promos', 'branches', 'csos', 'from_know','cashUpgrades', 'paymentTypes', 'banks'));
     }
 
     public function admin_StoreOrder(Request $request){
-        $data = $request->all();
-        // dd($data);
-        $data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
-        $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-        $data['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
-        $data['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            // dd($data);
+            $data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $data['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
+            $data['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
 
-        //pembentukan array product
-        $index = 0;
-        $data['arr_product'] = [];
-        foreach ($data as $key => $value) {
-            $arrKey = explode("_", $key);
-            if($arrKey[0] == 'product'){
-                if(isset($data['qty_'.$arrKey[1]])){
-                    $data['arr_product'][$index] = [];
-                    $data['arr_product'][$index]['id'] = $value;
+            //pembentukan array product
+            $index = 0;
+            $data['arr_product'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($data['qty_'.$arrKey[1]])){
+                        $data['arr_product'][$index] = [];
+                        $data['arr_product'][$index]['id'] = $value;
 
-                    // {{-- KHUSUS Philiphin --}}
-                    if($value == 'other'){
-                        $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
+                        // {{-- KHUSUS Philiphin --}}
+                        if($value == 'other'){
+                            $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
+                        }
+                        //===========================
+
+                        $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
+                        $index++;
                     }
-                    //===========================
-
-                    $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
-                    $index++;
                 }
             }
-        }
-        $data['product'] = json_encode($data['arr_product']);
 
-        //pembentukan array Bank
-        $index = 0;
-        $data['arr_bank'] = [];
-        foreach ($data as $key => $value) {
-            $arrKey = explode("_", $key);
-            if($arrKey[0] == 'bank'){
-                if(isset($data['cicilan_'.$arrKey[1]])){
-                    $data['arr_bank'][$index] = [];
-                    $data['arr_bank'][$index]['id'] = $value;
-                    $data['arr_bank'][$index]['cicilan'] = $data['cicilan_'.$arrKey[1]];
-                    $index++;
+            $data['product'] = json_encode($data['arr_product']);
+
+            //pembentukan array Bank
+            $index = 0;
+            $data['arr_bank'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'bank'){
+                    if(isset($data['cicilan_'.$arrKey[1]])){
+                        $data['arr_bank'][$index] = [];
+                        $data['arr_bank'][$index]['id'] = $value;
+                        $data['arr_bank'][$index]['cicilan'] = $data['cicilan_'.$arrKey[1]];
+                        $index++;
+                    }
                 }
             }
-        }
-        $data['bank'] = json_encode($data['arr_bank']);
-        $order = Order::create($data);
+            $data['bank'] = json_encode($data['arr_bank']);
+            $data['province'] = $data['province_id']; 
+            $order = Order::create($data);
+            DB::commit();
 
-        return response()->json(['success' => 'Berhasil']);
+            $code = $order['code'];
+            $url = "https://waki-indonesia.co.id/order-success?code=".$code."";
+            $phone = preg_replace('/[^A-Za-z0-9\-]/', '', $order['phone']);
+            if($phone[0]==0 || $phone[0]=="0"){
+               $phone =  substr($phone, 1);
+            }
+            $phone = "62".$phone;
+            Utils::sendSms($phone, "Terima kasih telah melakukan transaksi di WAKi Indonesia. Berikut link detail transaksi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
+            return redirect()->route('detail_order', ['code'=>$order['code']]);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['errors' => $ex]);
+        }
+        
     }
 
     public function admin_ListOrder(Request $request){
         $branches = Branch::Where('active', true)->get();
         //khususu head-manager, head-admin, admin
         $orders = Order::where('active', true);
-        $countOrders = Order::count();
+        $countOrders = Order::where('active', true)->count();
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
@@ -192,16 +216,27 @@ class OrderController extends Controller
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $orders = $orders->where('branch_id', $request->filter_branch);
         }
+        if($request->has('filter_city')){
+            $orders = $orders->where('city', 'like', '%'.$request->filter_city.'%');
+        }
+        if($request->has('filter_district')){
+            $orders = $orders->where('distric', 'like', '%'.$request->filter_district.'%');
+        }
         if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
             $orders = $orders->where('cso_id', $request->filter_cso);
         }
+        if($request->has('filter_type') && Auth::user()->roles[0]['slug'] != 'cso'){
+            $orders = $orders->where('customer_type', $request->filter_type);
+        }
 
+        $categories = CategoryProduct::all();
         $orders = $orders->sortable(['orderDate' => 'desc'])->paginate(10);
-        return view('admin.list_order', compact('orders','countOrders','branches', $orders));
+        return view('admin.list_order', compact('orders','countOrders','branches', 'categories', $orders));
     }
 
     public function admin_DetailOrder(Request $request){
         $order = Order::where('code', $request['code'])->first();
+        $order['district'] = $order->getDistrict();
         $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
         ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
@@ -218,13 +253,15 @@ class OrderController extends Controller
     {
         if($request->has('id')){
             $orders = Order::find($request->get('id'));
+            $orders['district'] = $orders->getDistrict();
             $promos = DeliveryOrder::$Promo;
             $branches = Branch::all();
             $csos = Cso::all();
             $cashUpgrades = Order::$CashUpgrade;
             $paymentTypes = Order::$PaymentType;
             $banks = Order::$Banks;
-            return view('admin.update_order', compact('orders','promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
+            $from_know = Order::$Know_From;
+            return view('admin.update_order', compact('orders','promos', 'from_know','branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -290,16 +327,18 @@ class OrderController extends Controller
             }
         }
         $orders['bank'] = json_encode($data['arr_bank']);
-
         $orders['old_product'] = $request->input('old_product');
         $orders['prize'] = $request->input('prize');
         $orders['cso_id'] = $request->input('idCSO');
         $orders['30_cso_id'] = $request->input('idCSO30');
         $orders['70_cso_id'] = $request->input('idCSO70');
         $orders['branch_id'] = $request->input('branch_id');
-        $orders['city'] = $request->input('city');
+        $orders['province'] = $data['province_id'];
+        $orders['city'] = $data['city'];;
+        $orders['distric'] = $data['distric'];
         $orders['customer_type'] = $request->input('customer_type');
         $orders['description'] = $request->input('description');
+        $orders['know_from'] = $request->input('know_from');
         DB::beginTransaction();
         try{
             $orders->save();
@@ -350,6 +389,29 @@ class OrderController extends Controller
         }
     }
 
+    public function export_to_xls(Request $request){
+        $date = null;
+        $cso = null;
+        $city = null;
+        $category = null;
+        if($request->has('orderDate') && $request->orderDate != "undefined"){
+            $date = $request->orderDate;
+        }
+        if($request->has('cso') && $request->cso != "undefined"){
+            $cso = $request->cso;
+        }
+        if($request->has('city') && $request->city != "undefined"){
+            $city = $request->city;
+        }
+        if($request->has('category') && $request->category != "undefined"){
+            $category = $request->category;
+        }
+
+        return Excel::download(new OrderExport($date, $city, $category, $cso), 'Order Report.xlsx'); 
+    }
+
+
+
     //KHUSUS API APPS
     public function fetchBanksApi(){
         $data = Order::$Banks;
@@ -366,6 +428,23 @@ class OrderController extends Controller
         return response()->json($data, 200);
     }
 
+    public function fetchKnowFromApi(){
+        $data = Order::$Know_From;
+        $know_From = [];
+        foreach($data as $key => $value) {
+            $tmp = [];
+            $tmp['id'] = $key;
+            $tmp['know_from'] = $value;
+            array_push($know_From, $tmp);
+        }
+
+        $data = ['result' => count($know_From),
+                 'data' => $know_From
+                ];
+
+        return response()->json($data, 200);
+    }
+
     public function addApi(Request $request)
     {
         $messages = array(
@@ -379,9 +458,12 @@ class OrderController extends Controller
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
+            'distric' => 'required',
             'city' => 'required',
+            'province' => 'required',
             'cash_upgrade' => 'required',
             'product_0' => 'required',
+            'know_from' => 'required',
             'qty_0' => 'required',
             'old_product' => 'required_if:cash_upgrade,==,2',
             'payment_type' => 'required',
@@ -406,9 +488,9 @@ class OrderController extends Controller
             $data = $request->all();
             $data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $data['cso_id_30'] = Cso::where('code', $data['cso_id_30'])->first()['id'];
-            $data['cso_id_70'] = Cso::where('code', $data['cso_id_70'])->first()['id'];
-
+            $data['30_cso_id'] = Cso::where('code', $data['cso_id_30'])->first()['id'];
+            $data['70_cso_id'] = Cso::where('code', $data['cso_id_70'])->first()['id'];
+            $data['prize'] = $data['gift_product'];
             //pembentukan array product
             $index = 0;
             $data['arr_product'] = [];
@@ -466,6 +548,10 @@ class OrderController extends Controller
 
             $order['URL'] = route('order_success')."?code=".$order['code'];
 
+            $order['cso_id_30'] = $order['30_cso_id'];
+            $order['cso_id_70'] = $order['70_cso_id'];
+            $order['prize_product'] = $order['prize'];
+
             $data = ['result' => 1,
                      'data' => $order
                     ];
@@ -513,7 +599,7 @@ class OrderController extends Controller
             }
             $orders = $orders->leftjoin('branches', 'orders.branch_id', '=', 'branches.id')
                                 ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
-                                ->select('orders.id', 'orders.code', 'orders.created_at', 'orders.name as customer_name', 'orders.product', 'branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name');
+                                ->select('orders.id', 'orders.code', 'orders.created_at', 'orders.name as customer_name', 'orders.product', 'orders.province','orders.city', 'orders.distric','branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name');
             // dd($orders);
             if($request->has('filter_branch')){
                 $orders = $orders->where('orders.branch_id', $request->filter_branch);
@@ -524,8 +610,14 @@ class OrderController extends Controller
             if($request->has('filter_startDate')&& $request->has('filter_endDate')){
                 $orders = $orders->whereBetween('orders.orderDate', [date($request->filter_startDate), date($request->filter_endDate)]);
             }
+            if($request->has('filter_province')){
+                $orders = $orders->where('orders.province', $request->filter_province);
+            }
             if($request->has('filter_city')){
-                $orders = $orders->where('orders.city', 'like', '%'.$request->filter_city.'%');
+                $orders = $orders->where('orders.city', $request->filter_city);
+            }
+            if($request->has('filter_district')){
+                $orders = $orders->where('orders.distric', $request->filter_district);
             }
             $orders = $orders->orderBy('orderDate', 'DESC');
             $orders = $orders->paginate($request->limit);
@@ -542,6 +634,7 @@ class OrderController extends Controller
                     $tempArray[$j]['qty'] = $product['qty'];
                 }
                 $doNya['product'] = $tempArray;
+                $doNya['district'] = $doNya->getDistrict();
             }
 
             $data = ['result' => 1,
@@ -567,9 +660,12 @@ class OrderController extends Controller
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
+            'distric' => 'required',
             'city' => 'required',
+            'province' => 'required',
             'cash_upgrade' => 'required',
             'product_0' => 'required',
+            'know_from' => 'required',
             'qty_0' => 'required',
             'old_product' => 'required_if:cash_upgrade,==,2',
             'payment_type' => 'required',
@@ -579,8 +675,8 @@ class OrderController extends Controller
             'down_payment' => 'required',
             'remaining_payment' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
-            '30_cso_id' => ['required', 'exists:csos,code'],
-            '70_cso_id' => ['required', 'exists:csos,code'],
+            'cso_id_30' => ['required', 'exists:csos,code'],
+            'cso_id_70' => ['required', 'exists:csos,code'],
             'branch_id' => 'required'
         ], $messages);
 
@@ -593,8 +689,9 @@ class OrderController extends Controller
         else{
             $data = $request->all();
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $data['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
-            $data['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
+            $data['30_cso_id'] = Cso::where('code', $data['cso_id_30'])->first()['id'];
+            $data['70_cso_id'] = Cso::where('code', $data['cso_id_70'])->first()['id'];
+            $data['prize'] = $data['gift_product'];
 
             //pembentukan array product
             $index = 0;
@@ -651,7 +748,7 @@ class OrderController extends Controller
         $orders = Order::where([['orders.active', true], ['orders.id', $id]]);
         $orders = $orders->leftjoin('branches', 'orders.branch_id', '=', 'branches.id')
                             ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
-                            ->select('orders.id', 'orders.code', 'orders.orderDate', 'orders.no_member', 'orders.name as customer_name', 'orders.phone as customer_phone', 'orders.city as customer_city', 'orders.address as customer_address','orders.product', 'orders.old_product as old_product', 'orders.prize as prize_product', 'orders.payment_type as payment_type', 'orders.total_payment as total_payment', 'orders.cash_upgrade as cash_upgrade', 'orders.down_payment as down_payment', 'orders.remaining_payment as remaining_payment', 'orders.bank as bank','branches.code as branch_code', 'orders.customer_type as customer_type', 'orders.30_cso_id as cso_30_id', 'orders.70_cso_id as cso_70_id','orders.description as description','branches.id as branch_id', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
+                            ->select('orders.id', 'orders.code', 'orders.orderDate', 'orders.no_member', 'orders.name as customer_name', 'orders.phone as customer_phone', 'orders.city as customer_city', 'orders.address as customer_address','orders.product', 'orders.old_product as old_product', 'orders.prize as prize_product', 'orders.payment_type as payment_type', 'orders.total_payment as total_payment', 'orders.cash_upgrade as cash_upgrade', 'orders.down_payment as down_payment', 'orders.remaining_payment as remaining_payment', 'orders.bank as bank','branches.code as branch_code', 'orders.customer_type as customer_type','orders.30_cso_id as cso_30_id', 'orders.70_cso_id as cso_70_id','orders.description as description', 'orders.know_from as know_from', 'orders.distric','branches.id as branch_id', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->get();
         $kota = $orders[0]->customer_city; 
         if (strpos($kota, 'Kota') !== false) {
@@ -660,13 +757,19 @@ class OrderController extends Controller
             $kota = str_replace('Kabupaten ', '',$kota);
         }
         $city = RajaOngkir_City::where('city_name', 'like', '%'.$kota.'%')->first();
+        
         foreach ($orders as $i => $doNya) {
             $tempId = json_decode($doNya['product'], true);
             $tempArray = $doNya['product'];
             $tempArray = [];
             foreach ($tempId as $j => $product) {
                 $tempArray[$j] = [];
-                $tempArray[$j]['name'] = $product['id'];
+                if (gettype($product['id']) == gettype(1)){
+                    $tempArray[$j]['id'] = $product['id'];    
+                }else {
+                    $tempArray[$j]['id'] = 8;
+                    $tempArray[$j]['name'] = $product['id'];
+                }
                 if(isset(DeliveryOrder::$Promo[$product['id']])){
                     $tempArray[$j]['name'] = DeliveryOrder::$Promo[$product['id']]['name'];
                 }
@@ -675,9 +778,12 @@ class OrderController extends Controller
             $doNya['product'] = $tempArray;
 
             //khusus 
-            $doNya['cso_30_code'] = Cso::where('id', $doNya['cso_30_id'])->first()['code'];
-            $doNya['cso_70_code'] = Cso::where('id', $doNya['cso_70_id'])->first()['code'];
-
+            $cso_30 =  Cso::where('id', $doNya['cso_30_id'])->first();
+            $cso_70 = Cso::where('id', $doNya['cso_70_id'])->first();
+            $doNya['cso_30_code'] =$cso_30['code'];
+            $doNya['cso_30_name'] =$cso_30['name'];
+            $doNya['cso_70_code'] = $cso_70['code'];
+            $doNya['cso_70_name'] =$cso_70['name'];
             $tempId = json_decode($doNya['bank'], true);
             $tempArray = [];
             foreach ($tempId as $j => $bank) {
@@ -692,6 +798,7 @@ class OrderController extends Controller
             }else {
                 $doNya['province_id'] = $city->province_id;
             }
+            $doNya['district'] = array($doNya->getDistrict());
             $doNya['URL'] = route('order_success')."?code=".$doNya['code'];
         }
         $data = ['result' => 1,

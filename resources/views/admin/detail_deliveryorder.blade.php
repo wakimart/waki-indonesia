@@ -78,6 +78,10 @@
                         <td>{{ $deliveryOrder['address'] }}</td>
                     </tr>
                     <tr>
+                        <td></td>
+                        <td>{{ $deliveryOrder['district'][0]['province'] }}, {{ $deliveryOrder['district'][0]['kota_kab'] }}, {{ $deliveryOrder['district'][0]['subdistrict_name'] }}</td>
+                    </tr>
+                    <tr>
                         <td>Registration Branch : </td>
                         <td>{{  $deliveryOrder->branch['code'] }} - {{  $deliveryOrder->branch['name'] }}</td>
                     </tr>
@@ -95,10 +99,15 @@
                         <td>Quantity</td>
                     </thead>
 
-                    @foreach(json_decode($deliveryOrder['arr_product']) as $promo)
+                    @foreach(json_decode($deliveryOrder['arr_product'], true) as $promo)
                         <tr>
-                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
-                            <td>{{ $promo->qty }}</td>
+                            @if(is_numeric($promo['id']) && $promo['id'] < 8)
+                              <td>{{ App\DeliveryOrder::$Promo[$promo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo['id']]['harga'] }} )</td>
+                            @else
+                              <td>{{ $promo['id'] }}</td>
+                            @endif
+                            
+                            <td>{{ $promo['qty'] }}</td>
                         </tr>
                     @endforeach
                 </table>
