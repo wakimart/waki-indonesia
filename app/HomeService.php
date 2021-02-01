@@ -35,4 +35,8 @@ class HomeService extends Model
         }
         return $district;
     }
+    public function getToken(){
+        $user = User::where('cso_id', $this->cso_id)->first();
+        return $user;
+    }
 }
