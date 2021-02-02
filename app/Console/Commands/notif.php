@@ -70,17 +70,19 @@ class notif extends Command
         $this->info($formatted_dateStart);
         $homeservices = HomeService::where('active', true)->limit(1)->get();   //->whereBetween('appointment', [$formatted_dateStart, $formatted_dateEnd])
         foreach($homeservices as $homeservice){
-            $body = ['registration_ids'=>($homeservice->getToken()['fmc_token']),
-             'collapse_key'=>"type_a",
-             "notification" => [
-                "body" => "Pada ".$homeservice->appointment." Di rumah ".$homeservice->name." Alamat ".$homeservice->address,
-                "title" => "Jadwal Home Service 2",
-                "icon" => "ic_launcher"
-              ],
-             'data'=> $homeservice];
-             $body = json_encode($body);
-             $this->sendFCM($body);
-            $this->info(json_encode($homeservice->getToken()['fmc_token'])); 
+            if ($homeservice->getToken()['fmc_token'] != null && count($homeservice->getToken()['fmc_token'])>0){
+                $body = ['registration_ids'=>($homeservice->getToken()['fmc_token']),
+                 'collapse_key'=>"type_a",
+                 "notification" => [
+                    "body" => "Pada ".$homeservice->appointment." Di rumah ".$homeservice->name." Alamat ".$homeservice->address,
+                    "title" => "Jadwal Home Service 2",
+                    "icon" => "ic_launcher"
+                  ],
+                 'data'=> $homeservice];
+                 $body = json_encode($body);
+                 $this->sendFCM($body);
+                $this->info(json_encode($homeservice->getToken()['fmc_token']));   
+            }
         }
         $this->info('List Home Service :'.count($homeservices));
     }
