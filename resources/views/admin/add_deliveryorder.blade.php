@@ -48,19 +48,32 @@
 	          		<div class="card-body">
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_deliveryorder') }}">
 	            			{{ csrf_field() }}
+	            			<div class="form-group">
+								<span>Type Register</span>
+  								<select id="type_register" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_register" value="" required>
+				                    <option value="Normal Register">Normal Register</option>
+				                    <option value="MGM">MGM</option>
+				                    <option value="Refrensi">Refrensi</option>
+				                    <option value="Take Away">Take Away</option>
+  								</select>
+								<span class="invalid-feedback">
+									<strong></strong>
+								</span>
+							</div>
 	              			<div class="form-group">
-	                			<label for="">No. Member (optional)</label>
-	                			<input type="text" class="form-control" id="no_member" name="no_member" placeholder="No. Member">
+								<label for=""><h2>Data Pelanggan</h2></label><br/>
+	                			<label id="member_label" for="">No. MPC (optional)</label>
+	                			<input id="member_input" type="text" class="form-control" id="no_member" name="no_member" placeholder="No. Member">
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
 				                <label for="">Name</label>
-				                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+				                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
 				                <label for="">Phone Number</label>
-				                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number">
+				                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
@@ -102,7 +115,7 @@
 	              			</div>
 
 	              			@for($j=0;$j<2;$j++)
-	              			<div class="form-group">
+	              			<div class="form-group product-group">
 	                			<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
 	                  				<div class="col-xs-10 col-sm-10" style="padding: 0;display: inline-block;">
 					                    <label for="">Promo {{$j+1}}</label>
@@ -381,6 +394,26 @@
                 }
             });
         @endif
+
+        $("#type_register").on('change', function (e) {
+        	if($(this).val() != "Normal Register"){
+        		$(".product-group").hide();
+        		$("#member_label").html("No. MPC");
+        		$("#member_input").attr("required", true);
+        		console.log($(".product-group select"));
+        		$(".product-group select").each(function () {
+        			$(this).removeAttr("required");
+        		});
+        	}
+        	else{
+        		$(".product-group").show();
+        		$("#member_label").html("No. MPC (optional)");
+        		$("#member_input").removeAttr("required");
+        		$(".product-group select").each(function () {
+        			$(this).attr("required", true);
+        		});
+        	}
+        });
     });
 </script>
 

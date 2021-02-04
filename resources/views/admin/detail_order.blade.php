@@ -53,7 +53,7 @@
                     </thead>
                     <tr>
                         <td>{{ $order['code'] }}</td>
-                        <td class="right">{{ date("d/m/Y H:i:s", strtotime($order['created_at'])) }}</td>
+                        <td class="right">{{ date("d/m/Y", strtotime($order['orderDate'])) }}</td>
                     </tr>
                 </table>
                 <table class="col-md-12">

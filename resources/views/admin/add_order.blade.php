@@ -183,7 +183,7 @@
 			                        </select>
 			                        <div class="validation"></div>
 			                    </div>
-			                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+			                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
 
 			                    @if(true)
 			                        <div class="form-group d-none">

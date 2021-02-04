@@ -112,7 +112,34 @@
 							<div class="form-group">
 				                <label for="">City</label>
 								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
-									<option selected value="{{$orders['district']['city_id']}}">{{$orders['district']['kota_kab']}}</option>
+									@php
+		                              if(isset($orders['district']['province_id'])){
+		                                $result = RajaOngkir::FetchCity($orders['district']['province_id']);
+		                                $result = $result['rajaongkir']['results'];
+		                                $arrCity = [];
+		                                $arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
+		                                $arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
+		                                if(sizeof($result) > 0){
+		                                    foreach ($result as $value) {
+		                                      $terpilihNya = "";
+		                                      if(isset($orders['district']['city_id'])){
+		                                        if($orders['district']['city_id'] == $value['city_id']){
+		                                          $terpilihNya = "selected";
+		                                        }
+		                                      }
+
+		                                      if($value['type'] == "Kabupaten"){
+		                                        $arrCity[0] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
+		                                      }
+		                                      else{
+		                                        $arrCity[1] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
+		                                      }
+		                                    }
+		                                    echo $arrCity[0];
+		                                    echo $arrCity[1];
+		                                  }
+		                                }
+		                            @endphp
 								</select>
 								<div class="validation"></div>
 							</div>
@@ -120,6 +147,24 @@
 				                <label for="">Sub District</label>
 								<select class="form-control" id="subDistrict" name="distric" data-msg="Mohon Pilih Kecamatan" required>
 									<option selected value="{{$orders['district']['subdistrict_id']}}">{{$orders['district']['subdistrict_name']}}</option>
+									@php
+		                              if(isset($orders['district']['city_id'])){
+		                                $result = RajaOngkir::FetchDistrict($orders['district']['city_id']);
+		                                $result = $result['rajaongkir']['results'];
+		                                if(sizeof($result) > 0){
+		                                  foreach ($result as $value) {
+		                                    $terpilihNya = "";
+		                                    if(isset($orders['district']['subdistrict_id'])){
+		                                      if($orders['district']['subdistrict_id'] == $value['subdistrict_id']){
+		                                        $terpilihNya = "selected";
+		                                      }
+		                                    }
+
+		                                    echo "<option value=\"".$value['subdistrict_id']."\"".$terpilihNya.">".$value['subdistrict_name']."</option>";
+		                                  }
+		                                }
+		                              }
+		                            @endphp
 								</select>
 								<div class="validation"></div>
 	              			</div>
@@ -234,13 +279,13 @@
 
 			                    @if($orders['cash_upgrade'] == 2)
 			                    <div class="form-group">
-			                        <input type="text" class="form-control" name="old_product" id="old_product" value="{{$orders['old_product']}}" data-msg="Mohon Isi Produk Lama" style="text-transform:uppercase"/>
+			                        <input type="text" class="form-control" name="old_product" id="old_product" placeholder="Old Product" value="{{$orders['old_product']}}" data-msg="Mohon Isi Produk Lama" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    @endif
 
 			                    <div class="form-group">
-			                        <input type="text" class="form-control" name="prize" id="prize" value="{{$orders['prize']}}" data-msg="Mohon Isi Hadiah" style="text-transform:uppercase"/>
+			                        <input type="text" class="form-control" name="prize" id="prize" placeholder="Prize Product" value="{{$orders['prize']}}" data-msg="Mohon Isi Hadiah" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                </div>
@@ -457,6 +502,8 @@
 		$("#province").on("change", function(){
             var id = $(this).val();
             $( "#city" ).html("");
+			$( "#subDistrict" ).html("");
+			$( "#subDistrict" ).html("<option selected disabled value=\"\">Pilihan Kecamatan</option>");
             $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
             .done(function( result ) {
                 result = result['rajaongkir']['results'];

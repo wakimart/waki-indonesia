@@ -15,8 +15,10 @@ class DeliveryOrder extends Model
 						'7'=> ['code'=>'PW10007I', 'name'=>'Promo HEPA', 'harga'=> '-'],
 						];
 
+    static $type_register = ['Normal Register', "MGM", "Refrensi", "Take Away"];
+
     protected $fillable = [
-        'code', 'no_member', 'name', 'address', 'phone', 'arr_product', 'cso_id', 'branch_id', 'city',  'active', 'distric', 'province',
+        'code', 'no_member', 'name', 'address', 'phone', 'arr_product', 'cso_id', 'branch_id', 'city',  'active', 'distric', 'province', 'type_register',
     ];
 
     public function cso()

@@ -113,7 +113,21 @@
       </div>
 			@endif
 
+
       <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+        <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
+          <div class="form-group">
+            <label for="">Filter By Type Register</label>
+            <select class="form-control" id="filter_type_register" name="filter_type_register">
+              <option value="" selected="">All Type</option>
+              <option {{ isset($_GET['filter_type_register']) ? ($_GET['filter_type_register'] == "Normal Register" ? "selected" : "") : "" }} value="Normal Register">Normal Register</option>
+              <option {{ isset($_GET['filter_type_register']) ? ($_GET['filter_type_register'] == "MGM" ? "selected" : "") : "" }} value="MGM">MGM</option>
+              <option {{ isset($_GET['filter_type_register']) ? ($_GET['filter_type_register'] == "Refrensi" ? "selected" : "") : "" }} value="Refrensi">Refrensi</option>
+              <option {{ isset($_GET['filter_type_register']) ? ($_GET['filter_type_register'] == "Take Away" ? "selected" : "") : "" }} value="Take Away">Take Away</option>
+            </select>
+            <div class="validation"></div>
+          </div>
+        </div>
 				<div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
 					<div class="form-group">
 						<label for="">Filter By Team</label>
@@ -191,7 +205,7 @@
 				              	<th> Registration Code </th>
 				              	<th> Registration Date </th>
 				              	<th> Member Name </th>
-				              	<th colspan="2"> Product </th>
+				              	<th> Type Register </th>
 				              	<th> Branch </th>
 				              	<th> CSO </th>
 				              	@if(Gate::check('edit-deliveryorder') || Gate::check('delete-deliveryorder'))
@@ -201,53 +215,21 @@
       						</thead>
       						<tbody>
       							@foreach($deliveryOrders as $key => $deliveryOrder)
-  	                        @php
-  	                            $ProductPromos = json_decode($deliveryOrder['arr_product'], true);
-  	                            $totalProduct = count($ProductPromos);
-  	                        @endphp
   	                        <tr>
-  	                        	<td rowspan="{{ $totalProduct }}">{{$key+1}}</td>
-  	                            <td rowspan="{{ $totalProduct }}"><a href="{{ route('detail_deliveryorder') }}?code={{ $deliveryOrder['code'] }}">{{ $deliveryOrder['code'] }}</a></td>
-  	                            <td rowspan="{{ $totalProduct }}">{{ date("d/m/Y", strtotime($deliveryOrder['created_at'])) }}</td>
-  	                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder['name'] }}</td>
-
-  	                            @foreach($ProductPromos as $ProductPromo)
-  	                                @if(is_numeric($ProductPromo['id']))
-  		                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
-  		                            @else
-  		                                <td>{{ $ProductPromo['id'] }}</td>
-  		                            @endif
-
-  	                                <td>{{ $ProductPromo['qty'] }}</td>
-  	                                @php break; @endphp
-  	                            @endforeach
-  	                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder->branch['code'] }} - {{ $deliveryOrder->branch['name'] }}</td>
-  	                            <td rowspan="{{ $totalProduct }}">{{ $deliveryOrder->cso['code'] }} - {{ $deliveryOrder->cso['name'] }}</td>
+  	                        	<td>{{$key+1}}</td>
+  	                            <td><a href="{{ route('detail_deliveryorder') }}?code={{ $deliveryOrder['code'] }}">{{ $deliveryOrder['code'] }}</a></td>
+  	                            <td>{{ date("d/m/Y", strtotime($deliveryOrder['created_at'])) }}</td>
+  	                            <td>{{ $deliveryOrder['name'] }}</td>
+                                <td>{{ $deliveryOrder['type_register'] }}</td>
+  	                            <td>{{ $deliveryOrder->branch['code'] }} - {{ $deliveryOrder->branch['name'] }}</td>
+  	                            <td>{{ $deliveryOrder->cso['code'] }} - {{ $deliveryOrder->cso['name'] }}</td>
   	                            @can('edit-deliveryorder')
-  		                            <td rowspan="{{ $totalProduct }}" style="text-align: center;"><a href="{{ route('edit_deliveryorder', ['id' => $deliveryOrder['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+  		                            <td style="text-align: center;"><a href="{{ route('edit_deliveryorder', ['id' => $deliveryOrder['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
   	                            @endcan
   	                            @can('delete-deliveryorder')
-                        					<td rowspan="{{ $totalProduct }}" style="text-align: center;"><button value="{{ route('delete_deliveryorder', ['id' => $deliveryOrder['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btn-delete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></button></td>
+                        					<td style="text-align: center;"><button value="{{ route('delete_deliveryorder', ['id' => $deliveryOrder['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btn-delete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></button></td>
                         				@endcan
   	                        </tr>
-  	                        @php $first = true; @endphp
-  	                        @foreach($ProductPromos as $ProductPromo)
-  	                            @php
-  	                                if($first){
-  	                                    $first = false;
-  	                                    continue;
-  	                                }
-  	                            @endphp
-  	                            <tr>
-  	                               @if(is_numeric($ProductPromo['id']))
-  		                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
-  		                            @else
-  		                                <td>{{ $ProductPromo['id'] }}</td>
-  		                            @endif
-
-  	                                <td>{{ $ProductPromo['qty'] }}</td>
-  	                            </tr>
-  	                        @endforeach
   	                    @endforeach
       						</tbody>
 							</table>
