@@ -155,7 +155,6 @@ class DeliveryOrderController extends Controller
 
         //khususu head-manager, head-admin, admin
         $deliveryOrders = DeliveryOrder::where('delivery_orders.active', true);
-        $countDeliveryOrders = DeliveryOrder::count();
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
@@ -170,11 +169,16 @@ class DeliveryOrderController extends Controller
             }
             $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->get();
         }
+
+        //filter
+        if($request->has('filter_province')){
+            $deliveryOrders = $deliveryOrders->where('province', $request->filter_province);
+        }
         if($request->has('filter_city')){
-            $deliveryOrders = $deliveryOrders->where('city', 'like', '%'.$request->filter_city.'%');
+            $deliveryOrders = $deliveryOrders->where('city', $request->filter_city);
         }
         if($request->has('filter_district')){
-            $deliveryOrders = $deliveryOrders->where('distric', 'like', '%'.$request->filter_district.'%');
+            $deliveryOrders = $deliveryOrders->where('distric', $request->filter_district);
         }
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $deliveryOrders = $deliveryOrders->where('branch_id', $request->filter_branch);
@@ -182,6 +186,8 @@ class DeliveryOrderController extends Controller
         if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
             $deliveryOrders = $deliveryOrders->where('cso_id', $request->filter_cso);
         }
+
+        $countDeliveryOrders = $deliveryOrders->count();
         $deliveryOrders = $deliveryOrders->paginate(10);
         return view('admin.list_deliveryorder', compact('deliveryOrders', 'countDeliveryOrders', 'branches','url'));
     }

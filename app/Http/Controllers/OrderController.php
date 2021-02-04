@@ -196,7 +196,6 @@ class OrderController extends Controller
         $branches = Branch::Where('active', true)->get();
         //khususu head-manager, head-admin, admin
         $orders = Order::where('active', true);
-        $countOrders = Order::where('active', true)->count();
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
@@ -216,11 +215,14 @@ class OrderController extends Controller
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
             $orders = $orders->where('branch_id', $request->filter_branch);
         }
+        if($request->has('filter_province')){
+            $orders = $orders->where('province', $request->filter_province);
+        }
         if($request->has('filter_city')){
-            $orders = $orders->where('city', 'like', '%'.$request->filter_city.'%');
+            $orders = $orders->where('city', $request->filter_city);
         }
         if($request->has('filter_district')){
-            $orders = $orders->where('distric', 'like', '%'.$request->filter_district.'%');
+            $orders = $orders->where('distric', $request->filter_district);
         }
         if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
             $orders = $orders->where('cso_id', $request->filter_cso);
@@ -228,7 +230,7 @@ class OrderController extends Controller
         if($request->has('filter_type') && Auth::user()->roles[0]['slug'] != 'cso'){
             $orders = $orders->where('customer_type', $request->filter_type);
         }
-
+        $countOrders = $orders->count();
         $categories = CategoryProduct::all();
         $orders = $orders->sortable(['orderDate' => 'desc'])->paginate(10);
         return view('admin.list_order', compact('orders','countOrders','branches', 'categories', $orders));

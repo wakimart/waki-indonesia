@@ -27,15 +27,21 @@
     					<select class="form-control" id="filter_province" name="filter_province">
     						<option value="" selected="">All Province</option>
     						@php
-    						$result = RajaOngkir::FetchProvince();
-    						$result = $result['rajaongkir']['results'];
-    						$arrProvince = [];
-    						if(sizeof($result) > 0){
-    							foreach ($result as $value) {
-    								echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
-    							}
-    						}
-    						@endphp
+                  $result = RajaOngkir::FetchProvince();
+                  $result = $result['rajaongkir']['results'];
+                  $arrProvince = [];
+                  if(sizeof($result) > 0){
+                      foreach ($result as $value) {
+                        $terpilihNya = "";
+                        if(isset($_GET['filter_province'])){
+                          if($_GET['filter_province'] == $value['province_id']){
+                            $terpilihNya = "selected";
+                          }
+                        }  
+                        echo "<option value=\"". $value['province_id']."\"".$terpilihNya.">".$value['province']."</option>";
+                      }
+                  }
+                @endphp
     						</select>
     					<div class="validation"></div>
     				</div>
@@ -45,9 +51,34 @@
     			<label style="opacity: 0;" for=""> s</label>
     				<select class="form-control" id="filter_city" name="filter_city">
     				<option value="">All City</option>
-    				@if(isset($_GET['filter_city']))
-    					<option selected="" value="{{$_GET['filter_city']}}">{{$_GET['filter_city']}}</option>
-    				@endif
+    				@php
+              if(isset($_GET['filter_province'])){
+                $result = RajaOngkir::FetchCity($_GET['filter_province']);
+                $result = $result['rajaongkir']['results'];
+                $arrCity = [];
+                $arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
+                $arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
+                if(sizeof($result) > 0){
+                    foreach ($result as $value) {
+                      $terpilihNya = "";
+                      if(isset($_GET['filter_city'])){
+                        if($_GET['filter_city'] == $value['city_id']){
+                          $terpilihNya = "selected";
+                        }
+                      }
+
+                      if($value['type'] == "Kabupaten"){
+                        $arrCity[0] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
+                      }
+                      else{
+                        $arrCity[1] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
+                      }
+                    }
+                    echo $arrCity[0];
+                    echo $arrCity[1];
+                  }
+                }
+            @endphp
     				</select>
     				<div class="validation"></div>
     			</div>
@@ -57,9 +88,24 @@
     			<label style="opacity: 0;" for=""> s</label>
     				<select class="form-control" id="filter_district" name="filter_district">
     				<option value="">All District</option>
-    				@if(isset($_GET['filter_district']))
-    					<option selected="" value="{{$_GET['filter_district']}}">{{$_GET['filter_district']}}</option>
-    				@endif
+    				@php
+              if(isset($_GET['filter_city'])){
+                $result = RajaOngkir::FetchDistrict($_GET['filter_city']);
+                $result = $result['rajaongkir']['results'];
+                if(sizeof($result) > 0){
+                  foreach ($result as $value) {
+                    $terpilihNya = "";
+                    if(isset($_GET['filter_district'])){
+                      if($_GET['filter_district'] == $value['subdistrict_id']){
+                        $terpilihNya = "selected";
+                      }
+                    }
+
+                    echo "<option value=\"".$value['subdistrict_id']."\"".$terpilihNya.">".$value['subdistrict_name']."</option>";
+                  }
+                }
+              }
+            @endphp
     				</select>
     				<div class="validation"></div>
     			</div>
@@ -260,45 +306,77 @@
 		  $( "#filter_cso" ).html("<option selected value=\"\">All CSO</option>");
 	  }
 		});
-		$("#filter_province").on("change", function(){
+
+    $("#filter_province, #edit-province").on("change", function(){
       var id = $(this).val();
-      $( "#filter_city" ).html("");
+      var domCity = $( "#filter_city" );      
+      if(this.id == "edit-province"){
+        domCity = $( "#edit-city" );
+        $( domCity ).html("");
+      }
+      else{
+        $( domCity ).html("");
+        $( domCity ).append("<option selected value=\"\">All City</option>");
+      }
+
       $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
       .done(function( result ) {
           result = result['rajaongkir']['results'];
-          var arrCity = "<option selected value=\"\">All City</option>";
+          var arrCity = [];
+          arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
+          arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
           if(result.length > 0){
-              $.each( result, function( key, value ) {
-                  if(value['type'] == "Kota"){
-                      arrCity += "<option value=\"Kota "+value['city_id']+"\">Kota "+value['city_name']+"</option>";
-                  }
-              });
-              $( "#filter_city" ).append(arrCity);
-            }
+            $.each( result, function( key, value ) {
+
+              if(value['type'] == "Kabupaten"){
+                arrCity[0] += "<option value=\""+value['city_id']+"\">"+value['type']+" "+value['city_name']+"</option>";
+              }
+              else{
+                arrCity[1] += "<option value=\""+value['city_id']+"\">"+value['type']+" "+value['city_name']+"</option>";
+              }
+            });
+            $( domCity ).append(arrCity[0]);
+            $( domCity ).append(arrCity[1]);
+          }
         });
     });
-    $("#filter_city").on("change", function(){
+
+    $("#filter_city, #edit-city").on("change", function(){
       var id = $(this).val();
-      $( "#filter_district" ).html("");
+      var domDistrict = $( "#filter_district" );      
+      if(this.id == "edit-city"){
+        domDistrict = $( "#edit-distric" );
+        $( domDistrict ).html("");
+      }
+      else{
+        $( domDistrict ).html("");
+        $( domDistrict ).append("<option selected value=\"\">All District</option>");
+      }
+
+      $( domDistrict ).html("");
       $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
       .done(function( result ) {
           result = result['rajaongkir']['results'];
-          var arrdistrict = "<option selected value=\"\">All District</option>";
+          var arrdistrict = "";
           if(result.length > 0){
               $.each( result, function( key, value ) {
-                arrdistrict += "<option value=\""+value['subdistrict_id']+"\">Kota "+value['subdistrict_name']+"</option>";
+                arrdistrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";  
               });
-              $( "#filter_district" ).append(arrdistrict);
+              $( domDistrict ).append(arrdistrict);
             }
         });
     });
+
 	  $(".btn-delete").click(function(e) {
-		$("#frmDelete").attr("action",  $(this).val());
+		  $("#frmDelete").attr("action",  $(this).val());
 		});
 	});
 	$(document).on("click", "#btn-filter", function(e){
 	  var urlParamArray = new Array();
 	  var urlParamStr = "";
+    if($('#filter_province').val() != ""){
+      urlParamArray.push("filter_province=" + $('#filter_province').val());
+    }
 	  if($('#filter_city').val() != ""){
 		urlParamArray.push("filter_city=" + $('#filter_city').val());
 	  }
