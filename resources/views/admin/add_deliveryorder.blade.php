@@ -27,6 +27,55 @@
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
+
+    #regForm {
+	  background-color: #ffffff;
+	  margin: 100px auto;
+	  padding: 40px;
+	  width: 70%;
+	  min-width: 300px;
+	}
+
+	/* Style the input fields */
+	input {
+	  padding: 10px;
+	  width: 100%;
+	  font-size: 17px;
+	  font-family: Raleway;
+	  border: 1px solid #aaaaaa;
+	}
+
+	/* Mark input boxes that gets an error on validation: */
+	input.invalid {
+	  background-color: #ffdddd;
+	}
+
+	/* Hide all steps by default: */
+	.tab {
+	  display: none;
+	}
+
+	/* Make circles that indicate the steps of the form: */
+	.step {
+	  height: 15px;
+	  width: 15px;
+	  margin: 0 2px;
+	  background-color: #bbbbbb;
+	  border: none;
+	  border-radius: 50%;
+	  display: inline-block;
+	  opacity: 0.5;
+	}
+
+	/* Mark the active step: */
+	.step.active {
+	  opacity: 1;
+	}
+
+	/* Mark the steps that are finished and valid: */
+	.step.finish {
+	  background-color: #4CAF50;
+	}
 </style>
 @endsection
 
@@ -172,8 +221,73 @@
                     			<div class="validation" id="validation_cso"></div>
 	              			</div>
 
-	              			<div id="errormessage"></div>
+	              			<div id="refrensiForm" class="form-group">
+	              				<h3>Refrensi:</h3><br>
 
+								<!-- One "tab" for each step in the form: -->
+								@for($x = 0; $x < 10; $x++)
+									<div class="tab">
+										<label for="">Member {{$x + 1}}</label>
+										<div class="form-group">
+							                <label for="">Name</label>
+							                <input type="text" class="form-control" name="name_ref[]" placeholder="Name" oninput="this.className = ''" required>
+							                <div class="validation"></div>
+				              			</div>
+				              			<div class="form-group">
+							                <label for="">Age</label>
+							                <input type="text" class="form-control" name="age_ref[]" placeholder="Age" oninput="this.className = ''" required>
+							                <div class="validation"></div>
+				              			</div>
+				              			<div class="form-group">
+							                <label for="">Phone Number</label>
+							                <input type="number" class="form-control" name="phone_ref[]" placeholder="Phone Number" oninput="this.className = ''" required>
+							                <div class="validation"></div>
+				              			</div>
+				              			<div class="form-group">
+							                <label for="">Province</label>
+											<select class="form-control changeProvince" id="province-{{$x}}" name="province_ref[]" data-msg="Mohon Pilih Provinsi" required>
+												<option selected disabled value="">Pilihan Provinsi</option>
+												@php
+													$result = RajaOngkir::FetchProvince();
+													$result = $result['rajaongkir']['results'];
+													$arrProvince = [];
+													if(sizeof($result) > 0){
+														foreach ($result as $value) {
+															echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+														}
+													}
+												@endphp
+											</select>
+											<div class="validation"></div>
+										  </div>
+										<div class="form-group">
+							                <label for="">City</label>
+											<select class="form-control" id="city-{{$x}}" name="city_ref[]" data-msg="Mohon Pilih Kota" onselect="this.className = ''" required>
+												<option selected disabled value="">Pilihan Kota</option>
+											</select>
+											<div class="validation"></div>
+										</div>
+									</div>
+								@endfor
+								
+
+								<div style="overflow:auto;">
+								  <div style="float:right;">
+								    <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+								    <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+								  </div>
+								</div>
+
+								<!-- Circles which indicates the steps of the form: -->
+								<div style="text-align:center;margin-top:40px;">
+									@for($x = 0; $x < 10; $x++)
+								  		<span class="step"></span>
+								  	@endfor
+								</div>
+
+	              			</div>
+
+	              			<div id="errormessage"></div>
 	              			<div class="form-group">
 	              				<button id="addDeliveryOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
 	              				<button class="btn btn-light">Cancel</button>
@@ -229,6 +343,108 @@
 
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script type="text/javascript">
+	var currentTab = 0; // Current tab is set to be the first tab (0)
+	showTab(currentTab); // Display the current tab
+
+	function showTab(n) {
+	  // This function will display the specified tab of the form ...
+	  var x = document.getElementsByClassName("tab");
+	  x[n].style.display = "block";
+	  // ... and fix the Previous/Next buttons:
+	  if (n == 0) {
+	    document.getElementById("prevBtn").style.display = "none";
+	  } else {
+	    document.getElementById("prevBtn").style.display = "inline";
+	  }
+	  if (n == (x.length - 1)) {
+	    document.getElementById("nextBtn").innerHTML = "Submit";
+	  } else {
+	    document.getElementById("nextBtn").innerHTML = "Next";
+	  }
+	  // ... and run a function that displays the correct step indicator:
+	  fixStepIndicator(n)
+	}
+
+	function nextPrev(n) {
+	  // This function will figure out which tab to display
+	  var x = document.getElementsByClassName("tab");
+	  // Exit the function if any field in the current tab is invalid:
+	  if (n == 1 && !validateForm()) return false;
+	  // Hide the current tab:
+	  x[currentTab].style.display = "none";
+	  // Increase or decrease the current tab by 1:
+	  currentTab = currentTab + n;
+	  // if you have reached the end of the form... :
+	  if (currentTab >= x.length) {
+	    //...the form gets submitted:
+	    document.getElementById("regForm").submit();
+	    return false;
+	  }
+	  // Otherwise, display the correct tab:
+	  showTab(currentTab);
+	}
+
+	function validateForm() {
+	  // This function deals with validation of the form fields
+	  var x, y, i, valid = true;
+	  x = document.getElementsByClassName("tab");
+	  y = x[currentTab].getElementsByTagName("input");
+	  // A loop that checks every input field in the current tab:
+	  for (i = 0; i < y.length; i++) {
+	    // If a field is empty...
+	    if (y[i].value == "") {
+	      // add an "invalid" class to the field:
+	      y[i].className += " invalid";
+	      // and set the current valid status to false:
+	      valid = false;
+	    }
+	  }
+	  // If the valid status is true, mark the step as finished and valid:
+	  if (valid) {
+	    document.getElementsByClassName("step")[currentTab].className += " finish";
+	  }
+	  return valid; // return the valid status
+	}
+
+	function fixStepIndicator(n) {
+	  // This function removes the "active" class of all steps...
+	  var i, x = document.getElementsByClassName("step");
+	  for (i = 0; i < x.length; i++) {
+	    x[i].className = x[i].className.replace(" active", "");
+	  }
+	  //... and adds the "active" class to the current step:
+	  x[n].className += " active";
+	}
+
+	//function load city
+	$(document).on("change", ".changeProvince", function(){
+		var get_index = $(this).attr('id');
+		var index = get_index.slice(-1);
+
+		var id = $(this).val();
+
+		$("#city-" + index).html("");
+        $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+        .done(function( result ) {
+            result = result['rajaongkir']['results'];
+            var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+            if(result.length > 0){
+                $.each( result, function( key, value ) {
+                	if(value['type'] == "Kabupaten"){
+                    	arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
+                    }
+                    
+                    if(value['type'] == "Kota"){                            
+                        arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
+                    }
+                });
+                $("#city-" + index).append(arrCity);
+            }
+        });
+		//console.log(id);
+	})
+</script>
 <script type="text/javascript">
 	// $(document).ready(function() {
  //        var frmAdd;

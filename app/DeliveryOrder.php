@@ -18,7 +18,7 @@ class DeliveryOrder extends Model
     static $type_register = ['Normal Register', "MGM", "Refrensi", "Take Away"];
 
     protected $fillable = [
-        'code', 'no_member', 'name', 'address', 'phone', 'arr_product', 'cso_id', 'branch_id', 'city',  'active', 'distric', 'province', 'type_register',
+        'code', 'no_member', 'name', 'address', 'phone', 'arr_product', 'cso_id', 'branch_id', 'city',  'active', 'distric', 'province', 'type_register', 'image',
     ];
 
     public function cso()
