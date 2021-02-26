@@ -69,12 +69,12 @@
                           <div class="col-xs-12 col-sm-12 col-md-12" style="padding: 0;">
                             <div class="input-group">
                               <span class="usericon">
-                                  <input class="form-control" id="name" name="name" placeholder="First Name" />
+                                  <input class="form-control" id="name" name="name" placeholder="Nama Depan" />
                               </span>
                             </div>
                             <div class="input-group">
                               <span class="usericon">
-                                  <input class="form-control" id="name" name="name" placeholder="Last Name" />
+                                  <input class="form-control" id="name" name="name" placeholder="Nama Akhir" />
                               </span>
                             </div>
                             <div class="input-group">
@@ -362,7 +362,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
 <script>
 // set the date we're counting down to
-var target_date = new Date('Februari, 28, 2021').getTime();
+var target_date = new Date('Feb 28, 2021 06:00:00').getTime();
 
 // variables for time units
 var days, hours, minutes, seconds;

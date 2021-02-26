@@ -19,7 +19,7 @@ Route::get('/term_cond', 'IndexController@termNCondition')->name('term_cond');
 Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category/{id}', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
-
+Route::get('/firebase','FirebaseController@index');
 //DO Register
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
 Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
@@ -58,7 +58,8 @@ Route::get('/fetchDistrict/{city}', function ($city) {
 //KHUSUS WEB SERVICE APPS (for non CSRF)
 Route::group(['prefix' => 'api-apps'], function () {
     Route::post('login','Auth\LoginController@loginApi'); //login
-    Route::post('loginqr','Auth\LoginController@loginQRApi'); //login QR
+	Route::post('loginqr','Auth\LoginController@loginQRApi'); //login QR
+	Route::post('logout','Auth\LoginController@logoutApi'); //logout
     Route::get('fetchbranch', 'BranchController@fetchBranchApi'); //fetching all active branch
     Route::get('fetchcso/{branchId}', 'CsoController@fetchCsoApi'); //fetching all active Cso by branch
     Route::get('fetchPromosApi', 'DeliveryOrderController@fetchPromosApi'); //fetching all promo
