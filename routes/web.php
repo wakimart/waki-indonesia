@@ -37,6 +37,8 @@ Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeService
 Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
+Route::get('wakidirumahaja', function (){return view('landingwaki');})->name('landing_waki');
+
 //fetching data - data
 Route::get('/fetchCso', 'CsoController@fetchCso')->name('fetchCso');
 Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
@@ -71,7 +73,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 		}); //fetching all province
     Route::get('fetchcityapi/{province}',function ($province) {
 			return RajaOngkir::FetchCityApi($province);
-		}); //fetching all city from province  
+		}); //fetching all city from province
 	Route::get('fetchallcityapi/{province}',function ($province) {
 		return RajaOngkir::FetchAllCityApi($province);
 	});
@@ -327,14 +329,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    Route::post('/{BranchNya}', 'BranchController@delete')
 	    	->name('delete_branch');
 	});
-	
+
 
 	Route::group(['prefix' => 'appVersion', 'middleware' => 'auth'], function(){
     	//Add Form App Version
     	Route::get('/', 'VersionController@create')
 	    	->name('add_appVersion')
 	    	->middleware('can:add-app');
-	    //Create App Version 
+	    //Create App Version
 	    Route::post('/', 'VersionController@store')
 	    	->name('store_appVersion')
 	    	->middleware('can:add-app');
