@@ -31,8 +31,11 @@ class CreateHistoryUpdatesTable extends Migration
      */
     public function down()
     {
-        $table->dropForeign(['user_id']);
-        $table->dropColumn('user_id');
-        Schema::dropIfExists('history_updates');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('user_id');
+            Schema::dropIfExists('history_updates');
+        });
+        
     }
 }
