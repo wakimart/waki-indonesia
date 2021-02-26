@@ -47,4 +47,8 @@ class HomeService extends Model
     {
         return $this->belongsTo('App\RajaOngkir_Subdistrict', 'distric', 'subdistrict_id');
     }
+    public function getToken(){
+        $user = User::where('cso_id', $this->cso_id)->first();
+        return $user;
+    }
 }

@@ -91,7 +91,7 @@ class LoginController extends Controller
     {
         $messages = array(
                 'username.exists' => 'The username is invalid.',
-            );
+        );
 
         $validator = \Validator::make($request->all(), [
             'username' => ['required', 'exists:users,username'],
@@ -108,9 +108,18 @@ class LoginController extends Controller
             $user = User::Where('username', strtoupper($request->username))->first();
             $user->roles;
             $user->cso;
-            $user['list_branches'] = $user->listBranches();
         
-            if(Hash::check($request->password, $user->password)){              
+            if(Hash::check($request->password, $user->password)){   
+                //update FMC token
+                $token = array();
+                if ($user->fmc_token == null){
+                    $user->fmc_token = array();
+                }
+                $token = $user->fmc_token;
+                array_push($token, $request->fcm_token);
+                $user->fmc_token = $token;
+                $user->save();           
+                $user['list_branches'] = $user->listBranches();
                 $data = ['result' => 1,
                          'data' => $user
                         ];
@@ -124,11 +133,62 @@ class LoginController extends Controller
             return response()->json($data,401);
         }
     }
+
+
+
+    public function logoutApi(Request $request)
+    {
+        $messages = array(
+                'username.exists' => 'The username is invalid.',
+        );
+
+        $validator = \Validator::make($request->all(), [
+            'username' => ['required', 'exists:users,username'],
+            'fcm_token' => 'required'
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $user = User::Where('username', strtoupper($request->username))->first();
+            $tmpToken = [];
+            if($user != null && $user->fmc_token != null){
+                foreach ($user->fmc_token as $token){
+                    if($token != $request->fcm_token && $token != null){
+                        array_push($tmpToken, $token);
+                    }
+                }
+                $user->fmc_token = $tmpToken;
+                $user->save();
+                $data = ['result' => 1,
+                             'data' => $user
+                            ];
+                return response()->json($data,200);
+                
+            }
+            $data = ['result' => 0,
+                     'data' => 'user not found'
+                    ];
+            return response()->json($data,401);
+        }
+    }
     
     public function loginQRApi(Request $request){
         $user = User::where('qrcode', $request['hash'])->first();
         $user->roles;
         $user->cso;
+        $token = array();
+        if ($user->fmc_token == null){
+            $user->fmc_token = array();
+        }
+        $token = $user->fmc_token;
+        array_push($token, $request->fcm_token);
+        $user->fmc_token = $token;
+        $user->save();           
         $user['list_branches'] = $user->listBranches();
 
         if($user != null){
