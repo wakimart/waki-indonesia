@@ -362,7 +362,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
 <script>
 // set the date we're counting down to
-var target_date = new Date('Feb 28, 2021 06:00:00').getTime();
+var target_date = new Date('Feb 28, 2021 00:00:00').getTime();
 
 // variables for time units
 var days, hours, minutes, seconds;
@@ -390,9 +390,9 @@ setInterval(function () {
     // format countdown string + set tag value
     countdown.innerHTML = ''
       + '<span class="h1 font-weight-bold">' + days +  ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + hours + ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + minutes + ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + seconds + ' </span>';
+      + '<span class="h1 font-weight-bold">' + (hours<10 ? "0" + hours : hours) + ' </span><span class="separator">: </span>'
+      + '<span class="h1 font-weight-bold">' + (minutes<10 ? "0" + minutes : minutes) + ' </span><span class="separator">: </span>'
+      + '<span class="h1 font-weight-bold">' + (seconds<10 ? "0" + seconds : seconds) + ' </span>';
 }, 1000);
 </script>
 
