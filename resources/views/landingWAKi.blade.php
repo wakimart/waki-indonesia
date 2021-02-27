@@ -20,7 +20,7 @@
 <link href="{{asset('css/landing/external.css')}}" rel="stylesheet">
 <link href="{{asset('css/landing/cons.css')}}" rel="stylesheet">
 <link href="{{asset('css/landing/bootstrap.min.css')}}" rel="stylesheet">
-<link href="{{asset('css/landing/style.css')}}" rel="stylesheet">
+<link href="{{asset('css/landing/style.css')}}?ver=1.0" rel="stylesheet">
 
 <!-- Document Title
 ============================================= -->
@@ -117,7 +117,7 @@
                 <div class="heading mb-70">
                     <h1 class="heading--title">Apa itu WAKi?</h2>
                     <p class="heading--subtitle">WAKi adalah perusahaan alat kesehatan yang mengunggulkan kualitas terjamin, untuk membantu keluarga menuju kehidupan yang lebih baik.
-                      <br><em>Bukan Janji Tapi Pasti !</em></p>
+                      <br><span class="diff" style="font-family: 'Brush Script Std'; font-size: 1.5em;">Bukan Janji Tapi Pasti !</span></p>
                 </div>
             </div>
         </div>
@@ -294,7 +294,7 @@
     <div class="container">
         <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center">
             <div class="col-xs-12 col-sm-12 col-md-12 heading">
-                <h2 class="heading--title" style="margin: 10px 0;">Daftar sekarang untuk<br> sehat di rumah aja!</h2>
+                <h2 class="heading--title" style="margin: 10px 0;">Mulai Hidup Sehat<br> Sekarang Juga!</h2>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <a class="btn btn--customwk btn--rounded" href="#">Daftar Sekarang</a>
