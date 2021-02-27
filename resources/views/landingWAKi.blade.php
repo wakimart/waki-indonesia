@@ -364,17 +364,17 @@
 <div class="modal fade" role="dialog" tabindex="-1" id="modal-Success">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Input Success</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <div class="modal-header heading" style="display: flex; flex-direction: row;">
+                <h4 class="modal-title heading--title" style="width: 90%; margin: 0;">Terima Kasih</h4>
+                <button type="button" style="width: 10%; float: right" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <p id="txt-success">Appointment telah berhasil dibuat. Terima kasih telah menggunakan layanan kami, petugas kami akan segera menghubungi Anda.</p>
+            <div class="modal-body heading">
+                <p id="txt-success" class="heading--subtitle">Pendaftaran anda telah berhasil. Terima kasih telah mendaftar, petugas kami akan segera menghubungi Anda.</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-gradient-primary" type="button" data-dismiss="modal">OK</button>
+                <button class="btn btn--customwk btn--rounded" type="button" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
@@ -426,7 +426,9 @@ setInterval(function () {
       + '<span class="h1 font-weight-bold">' + (seconds<10 ? "0" + seconds : seconds) + ' </span>';
 }, 1000);
 </script>
-
+<script type="text/javascript">
+    $("#modal-Success").modal("show");
+</script>
 @if(Session::has('success_registration'))
     <script type="text/javascript">
         $("#modal-Success").modal("show");
