@@ -17,7 +17,7 @@
 
 <!-- Stylesheets
 ============================================= -->
-<link href="{{asset('css/landing/external.css')}}" rel="stylesheet">
+<link href="{{asset('css/landing/external.css')}}?ver=1.0" rel="stylesheet">
 <link href="{{asset('css/landing/cons.css')}}" rel="stylesheet">
 <link href="{{asset('css/landing/bootstrap.min.css')}}" rel="stylesheet">
 <link href="{{asset('css/landing/style.css')}}?ver=1.0" rel="stylesheet">
@@ -312,13 +312,13 @@
     <div class="footer-bar">
         <div class="container">
             <div class="row">
-                <div class="col-xs-4 col-sm-4 col-md-4">
+                <div class="col-xs-12 col-sm-4 col-md-4">
                   <div class="logoWKbawahcon">
                     <img src="https://waki-indonesia.co.id/sources/Logo Since.png" alt="" class="img-fluid logoWKbawah">
                   </div>
                 </div>
                 <!-- .col-md-6 end -->
-                <div class="col-xs-8 col-sm-8 col-md-8">
+                <div class="col-xs-12 col-sm-8 col-md-8">
 
                     <div class="footer--content">
                         <p>WAKi Darmo Park 1, Blok 2B no 1-6, Jalan Mayjend Sungkono, Surabaya 60225.</p>
