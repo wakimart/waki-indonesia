@@ -29,10 +29,17 @@
 <style>
 .WAKI{
   color: #00844a;
-    font-size: 36px;
+    font-size: 68px;
     line-height: 1;
     font-weight: bolder;
-    -webkit-text-stroke: 1px black;
+    -webkit-text-stroke: 1.5px black;
+}
+@media (min-width: 768px) {
+  .mobadjust {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>
 <body class="body-scroll">
@@ -196,7 +203,7 @@
 <section id="cta2" class="section cta cta-2 bg-theme">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-12 col-sm-12 col-md-12 mobadjust">
                 <div class="col-xs-12 col-sm-7 col-md-7 heading" style="text-align: center;">
                     <h2 class="heading--title" style="margin: 10px 0;">SEHAT DI RUMAH AJA!</h2>
                 </div>
@@ -294,7 +301,7 @@
 ============================================= -->
 <section id="cta2" class="section cta cta-2 bg-theme">
     <div class="container">
-        <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center">
+        <div class="col-xs-12 col-sm-12 col-md-12 mobadjust" style="text-align: center">
             <div class="col-xs-12 col-sm-12 col-md-12 heading">
                 <h2 class="heading--title" style="margin: 10px 0;">Mulai Hidup Sehat<br> Sekarang Juga!</h2>
             </div>
@@ -381,7 +388,6 @@
 <!-- Footer Scripts
 ============================================= -->
 <script src="{{asset('js/landing/jquery-2.2.4.min.js')}}"></script>
-<script src="{{asset('js/landing/bootstrap.js')}}"></script>
 <script src="{{asset('js/landing/plugins.js')}}"></script>
 <script src="{{asset('js/landing/functions.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
