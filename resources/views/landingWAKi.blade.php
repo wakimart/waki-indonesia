@@ -17,10 +17,10 @@
 
 <!-- Stylesheets
 ============================================= -->
-<link href="{{asset('css/landing/external.css')}}" rel="stylesheet">
+<link href="{{asset('css/landing/external.css')}}?ver=1.0" rel="stylesheet">
 <link href="{{asset('css/landing/cons.css')}}" rel="stylesheet">
 <link href="{{asset('css/landing/bootstrap.min.css')}}" rel="stylesheet">
-<link href="{{asset('css/landing/style.css')}}" rel="stylesheet">
+<link href="{{asset('css/landing/style.css')}}?ver=1.0" rel="stylesheet">
 
 <!-- Document Title
 ============================================= -->
@@ -119,7 +119,7 @@
                 <div class="heading mb-70">
                     <h1 class="heading--title">Apa itu WAKi?</h2>
                     <p class="heading--subtitle">WAKi adalah perusahaan alat kesehatan yang mengunggulkan kualitas terjamin, untuk membantu keluarga menuju kehidupan yang lebih baik.
-                      <br><em>Bukan Janji Tapi Pasti !</em></p>
+                      <br><span class="diff" style="font-family: 'Brush Script Std'; font-size: 1.5em;">Bukan Janji Tapi Pasti !</span></p>
                 </div>
             </div>
         </div>
@@ -296,7 +296,7 @@
     <div class="container">
         <div class="col-xs-12 col-sm-12 col-md-12" style="text-align: center">
             <div class="col-xs-12 col-sm-12 col-md-12 heading">
-                <h2 class="heading--title" style="margin: 10px 0;">Daftar sekarang untuk<br> sehat di rumah aja!</h2>
+                <h2 class="heading--title" style="margin: 10px 0;">Mulai Hidup Sehat<br> Sekarang Juga!</h2>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <a class="btn btn--customwk btn--rounded" href="#">Daftar Sekarang</a>
@@ -314,13 +314,13 @@
     <div class="footer-bar">
         <div class="container">
             <div class="row">
-                <div class="col-xs-4 col-sm-4 col-md-4">
+                <div class="col-xs-12 col-sm-4 col-md-4">
                   <div class="logoWKbawahcon">
                     <img src="https://waki-indonesia.co.id/sources/Logo Since.png" alt="" class="img-fluid logoWKbawah">
                   </div>
                 </div>
                 <!-- .col-md-6 end -->
-                <div class="col-xs-8 col-sm-8 col-md-8">
+                <div class="col-xs-12 col-sm-8 col-md-8">
 
                     <div class="footer--content">
                         <p>WAKi Darmo Park 1, Blok 2B no 1-6, Jalan Mayjend Sungkono, Surabaya 60225.</p>
@@ -387,7 +387,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
 <script>
 // set the date we're counting down to
-var target_date = new Date('Feb 28, 2021 06:00:00').getTime();
+var target_date = new Date('Feb 28, 2021 00:00:00').getTime();
 
 // variables for time units
 var days, hours, minutes, seconds;
@@ -415,9 +415,9 @@ setInterval(function () {
     // format countdown string + set tag value
     countdown.innerHTML = ''
       + '<span class="h1 font-weight-bold">' + days +  ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + hours + ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + minutes + ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + seconds + ' </span>';
+      + '<span class="h1 font-weight-bold">' + (hours<10 ? "0" + hours : hours) + ' </span><span class="separator">: </span>'
+      + '<span class="h1 font-weight-bold">' + (minutes<10 ? "0" + minutes : minutes) + ' </span><span class="separator">: </span>'
+      + '<span class="h1 font-weight-bold">' + (seconds<10 ? "0" + seconds : seconds) + ' </span>';
 }, 1000);
 </script>
 
