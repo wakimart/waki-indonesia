@@ -37,7 +37,9 @@ Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeService
 Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
-Route::get('wakidirumahaja', 'RegistrationPromotionController@index')->name('landing_waki');
+//WAKi Di Rumah Aja
+Route::get('/wakidirumahaja', 'RegistrationPromotionController@index')->name('landing_waki');
+Route::post('/wakidirumahaja', 'RegistrationPromotionController@store')->name('store_registrationPromotion');
 
 //fetching data - data
 Route::get('/fetchCso', 'CsoController@fetchCso')->name('fetchCso');

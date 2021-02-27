@@ -65,38 +65,40 @@
                       </h5>
                       <p class="form--para">Dapatkan ekstra bonus voucher wakimart senilai 280.000 untuk 100 orang pendaftar pertama. <br>Promo berakhir dalam</p>
                       <div id="countdown" class="countdown py-4 form--title" style="margin: 0;"></div>
-                      <form>
+                      <form id="actionAdd" action="{{ route('store_registrationPromotion') }}" method="POST">
+                          @csrf
                           <div class="col-xs-12 col-sm-12 col-md-12" style="padding: 0;">
                             <div class="input-group">
                               <span class="usericon">
-                                  <input class="form-control" id="name" name="name" placeholder="Nama Depan" />
+                                  <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Nama Depan" required />
                               </span>
                             </div>
                             <div class="input-group">
                               <span class="usericon">
-                                  <input class="form-control" id="name" name="name" placeholder="Nama Akhir" />
+                                  <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Nama Akhir" required/>
                               </span>
                             </div>
                             <div class="input-group">
                               <span class="usericon2">
-                                  <input class="form-control" id="name" name="name" placeholder="Alamat" />
+                                  <input type="text" class="form-control" id="address" name="address" placeholder="Alamat" required/>
                               </span>
                             </div>
                             <div class="input-group">
                               <span class="usericon3">
-                                  <input class="form-control" id="name" name="name" placeholder="Email" />
+                                  <input type="email" class="form-control" id="email" name="email" placeholder="Email" required/>
                               </span>
                             </div>
                             <div class="input-group">
                               <span class="usericon4">
-                                  <input class="form-control" id="name" name="name" placeholder="No Telp" />
+                                  <input type="phone" class="form-control" id="phone" name="phone" placeholder="No Telp" required/>
                               </span>
                             </div>
                           </div>
+
+                          <div class="col-xs-12 col-sm-12 col-md-12" style="margin: auto;">
+                            <button id="addRegistrationPromo" type="submit" class="btn btn--customwk btn--rounded">Daftar</button>
+                          </div>
                       </form>
-                      <div class="col-xs-12 col-sm-12 col-md-12" style="margin: auto;">
-                          <a class="btn btn--customwk btn--rounded" href="#">Daftar</a>
-                      </div>
                     </div>
                 </div>
                 <!-- .col-md-10 end -->
@@ -351,12 +353,35 @@
 </footer>
 <!-- #footer9 end -->
 
+<!-- modal success -->
+<div class="modal fade" role="dialog" tabindex="-1" id="modal-Success">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Input Success</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="txt-success">Appointment telah berhasil dibuat. Terima kasih telah menggunakan layanan kami, petugas kami akan segera menghubungi Anda.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-gradient-primary" type="button" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </div>
 <!-- #wrapper end -->
+
+
 
 <!-- Footer Scripts
 ============================================= -->
 <script src="{{asset('js/landing/jquery-2.2.4.min.js')}}"></script>
+<script src="{{asset('js/landing/bootstrap.js')}}"></script>
 <script src="{{asset('js/landing/plugins.js')}}"></script>
 <script src="{{asset('js/landing/functions.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
@@ -395,6 +420,15 @@ setInterval(function () {
       + '<span class="h1 font-weight-bold">' + seconds + ' </span>';
 }, 1000);
 </script>
+
+@if(Session::has('success_registration'))
+    <script type="text/javascript">
+        $("#modal-Success").modal("show");
+    </script>
+    @php
+        Session::forget('success_registration');
+    @endphp
+@endif
 
 </body>
 

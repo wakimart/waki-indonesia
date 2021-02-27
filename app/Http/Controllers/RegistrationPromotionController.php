@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\RegistrationPromotion;
+use DB;
 
 class RegistrationPromotionController extends Controller
 {
@@ -24,6 +26,7 @@ class RegistrationPromotionController extends Controller
     public function create()
     {
         //
+        
     }
 
     /**
@@ -34,7 +37,37 @@ class RegistrationPromotionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = \Validator::make($request->all(), [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'address' => 'required',
+            'email' => 'required',
+            'phone' => 'required|min:7',
+        ]);
+        if($validator->fails()){
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json(['errors' => $arr_Hasil]);
+        }else{
+            DB::beginTransaction();
+            try {
+                $data = $request->all();
+                $registrationPromotions = RegistrationPromotion::create($data);    
+                $request->session()->put('success_registration', "1");
+                DB::commit();
+                
+                return redirect()->route('landing_waki');
+                //return redirect()->intended(route('landingWAKi'));
+            } catch (\Exception $ex) {
+                DB::rollback();
+                return response()->json(['errors' => $ex]);
+            }
+        }
+        
     }
 
     /**
