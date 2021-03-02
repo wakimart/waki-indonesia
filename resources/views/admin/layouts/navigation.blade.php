@@ -31,6 +31,9 @@
       @if(Gate::check('browse-deliveryorder'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_deliveryorder'? 'active': '' }}" href="{{ route('list_deliveryorder') }}">List Registration</a></li>
       @endif
+      @if(Gate::check('browse-deliveryorder'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_regispromo'? 'active': '' }}" href="{{ route('list_regispromo') }}">List Registration Promotion</a></li>
+      @endif
     </ul>
   </div>
 </li>

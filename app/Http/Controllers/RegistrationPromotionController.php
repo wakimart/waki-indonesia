@@ -2,9 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\RegistrationPromotion;
+use App\DeliveryOrder;
+use App\Branch;
+use App\Cso;
+use App\User;
+use Illuminate\Validation\Rule;
+use Validator;
+use App\RajaOngkir_City;
+use App\RajaOngkir_Province;
+use App\HistoryUpdate;
+use App\CategoryProduct;
 use DB;
+use App\Utils;
 
 class RegistrationPromotionController extends Controller
 {
@@ -68,6 +80,20 @@ class RegistrationPromotionController extends Controller
             }
         }
         
+    }
+
+    public function admin_ListRegistrationPromo(Request $request){
+        $promotions = RegistrationPromotion::where('active', true);
+        $countPromotions = RegistrationPromotion::where('active', true)->count();
+
+        if($request->has('search')){
+            $promotions = $promotions->where( 'first_name', 'LIKE', '%'.$request->search.'%' )
+                                    ->orWhere( 'last_name', 'LIKE', '%'.$request->search.'%' )
+                                    ->orWhere( 'phone', 'LIKE', '%'.$request->search.'%' )
+                                    ->orWhere( 'email', 'LIKE', '%'.$request->search.'%' );
+        }
+        $promotions = $promotions->paginate(10);
+        return view('admin.list_registrationpromotion', compact('promotions', 'countPromotions'));
     }
 
     /**
