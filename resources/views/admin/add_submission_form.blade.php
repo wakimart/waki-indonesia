@@ -1,3 +1,7 @@
+<?php
+  $menu_item_page = "submission";
+  $menu_item_second = "add_submission_form";
+?>
 @extends('admin.layouts.template')
 
 @section('style')
@@ -86,7 +90,7 @@
 <div class="main-panel">
       <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Add Registration</h3>
+            <h3 class="page-title">Add Submmission</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -94,11 +98,11 @@
                             href="#"
                             aria-expanded="false"
                             aria-controls="deliveryorder-dd">
-                            Registration
+                            Submmission
                         </a>
                     </li>
                       <li class="breadcrumb-item active" aria-current="page">
-                        Add Registration
+                        Add Submmission
                     </li>
                 </ol>
             </nav>
@@ -381,7 +385,7 @@
                                             <label for="member-age-{{ $x }}">
                                                 Age
                                             </label>
-                                            <input type="text"
+                                            <input type="number"
                                                 id="member-age-{{ $x }}"
                                                 class="form-control"
                                                 name="age_ref[]"

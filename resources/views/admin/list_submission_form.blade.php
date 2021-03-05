@@ -1,9 +1,13 @@
+<?php
+  $menu_item_page = "submission";
+  $menu_item_second = "list_submission_form";
+?>
 @extends('admin.layouts.template')
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">List Registration</h3>
+            <h3 class="page-title">List Submmission</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -11,12 +15,12 @@
                             href="#"
                             aria-expanded="false"
                             aria-controls="deliveryorder-dd">
-                            Registration
+                            Submmission
                         </a>
                     </li>
                     <li class="breadcrumb-item active"
                         aria-current="page">
-                        List Registration
+                        List Submmission
                     </li>
                 </ol>
             </nav>

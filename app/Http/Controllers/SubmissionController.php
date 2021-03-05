@@ -29,7 +29,7 @@ class SubmissionController extends Controller
         $url = $request->all();
 
         // Query dari tabel delivery_orders, dan menampilkan 10 data per halaman
-        $deliveryOrders = DeliveryOrder::all()->paginate(10);
+        $deliveryOrders = DeliveryOrder::where([['active', true],['type_register', '!=', 'Normal Register']])->paginate(10);
 
         return view(
             "admin.list_submission_form",
@@ -153,21 +153,6 @@ class SubmissionController extends Controller
             }
 
             DB::commit();
-
-            $phone = preg_replace('/[^A-Za-z0-9\-]/', '', $deliveryOrder['phone']);
-
-            if($phone[0] == 0 || $phone[0] == "0"){
-               $phone =  substr($phone, 1);
-            }
-
-            $phone = "62" . $phone;
-            $code = $deliveryOrder['code'];
-            $url = "https://waki-indonesia.co.id/register-success?code=" . $code . "";
-            Utils::sendSms(
-                $phone,
-                "Terima kasih telah melakukan registrasi di WAKi Indonesia. Berikut link detail registrasi anda (" . $url . "). Info lebih lanjut, hubungi 082138864962."
-            );
-
             return redirect()->route('add_submission_form');
         } catch (\Exception $ex) {
             DB::rollback();
