@@ -443,6 +443,27 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    Route::post('/{PromoNya}', 'PromoController@delete')
 	    	->name('delete_promo');
     });
+
+    Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
+        // Create submission form
+        Route::get("/", "SubmissionController@create")
+            ->name("add_submission_form");
+
+        Route::post("/", "SubmissionController@store")
+            ->name("store_submission_form");
+
+        Route::get("/list", "SubmissionController@listSubmission")
+            ->name("list_submission_form");
+
+        Route::get("/list_reference", "SubmissionController@listReference")
+            ->name("list_reference");
+
+        Route::get("/edit/", "SubmissionController@edit")
+            ->name("edit_submission_form");
+
+        Route::get("/update/", "SubmissionController@update")
+            ->name("update_submission_form");
+    });
 });
 
 Auth::routes();
