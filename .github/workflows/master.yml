@@ -40,3 +40,5 @@ jobs:
           - index.php
           - robots.txt
           - web.config
+    - name: ⌛ Run Migrate
+      run: php artisan migrate
