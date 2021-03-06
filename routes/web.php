@@ -448,21 +448,31 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Create submission form page
         Route::get("/", "SubmissionController@create")
             ->name("add_submission_form");
+
         // Process new submission form
         Route::post("/", "SubmissionController@store")
             ->name("store_submission_form");
+
         // Show submission list
         Route::get("/list", "SubmissionController@listSubmission")
             ->name("list_submission_form");
+
         // Show reference list
         Route::get("/list_reference", "SubmissionController@listReference")
             ->name("list_reference");
+
+        // Show detail of submission
+        Route::get("/detail", "SubmissionController@detailSubmission")
+            ->name("detail_submission");
+
         // Edit submission form page
         Route::get("/edit/", "SubmissionController@edit")
             ->name("edit_submission_form");
+
         // Process submission form edit
         Route::post("/update/", "SubmissionController@update")
             ->name("update_submission_form");
+
         // Process submission form delete
         Route::post("/{id}", "SubmissionController@destroy")
             ->name("delete_submission_form");

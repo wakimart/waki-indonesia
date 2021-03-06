@@ -6,8 +6,8 @@ use App\Branch;
 use App\Cso;
 use App\DeliveryOrder;
 use App\HistoryUpdate;
+use App\RajaOngkir_City;
 use App\Reference;
-use App\Utils;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -58,6 +58,57 @@ class SubmissionController extends Controller
         $references = Reference::all()->paginate(10);
 
         return view("admin.list_reference", compact("references", "url"));
+    }
+
+    public function detailSubmission(Request $request)
+    {
+        $deliveryOrder = DeliveryOrder::where("id", $request["id"])->first();
+        $deliveryOrder["district"] = array($deliveryOrder->getDistrict());
+        $references = Reference::where(
+            "deliveryorder_id",
+            $request["id"]
+        )
+        ->orderBy("id", "asc")
+        ->get();
+
+        // Melakukan query nama kota dan provinsi untuk referensi
+        $referencesCityAndProvince = [];
+        foreach ($references as $reference) {
+            $getCityAndProvince = RajaOngkir_City::where("city_id", $reference->city)->first();
+
+            $referencesCityAndProvince[] = $getCityAndProvince->type
+                . " "
+                . $getCityAndProvince->city_name
+                . ", "
+                . $getCityAndProvince->province;
+        }
+
+        // Melakukan query riwayat dari tabel history_updates
+        $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin(
+            'users',
+            'users.id',
+            '=',
+            'history_updates.user_id'
+        )
+        ->select(
+            'history_updates.method',
+            'history_updates.created_at',
+            'history_updates.meta AS meta',
+            'users.name AS name'
+        )
+        ->where('type_menu', 'Delivery Order')
+        ->where('menu_id', $deliveryOrder->id)
+        ->get();
+
+        return view(
+            "admin.detail_submission",
+            compact(
+                "deliveryOrder",
+                "historyUpdateDeliveryOrder",
+                "references",
+                "referencesCityAndProvince",
+            )
+        );
     }
 
     /**
@@ -150,7 +201,8 @@ class SubmissionController extends Controller
             $deliveryOrder = DeliveryOrder::create($data);
 
             // Memasukkan data referensi ke tabel Reference
-            for ($i = 0; $i < count($data["name_ref"]); $i++) {
+            $dataCount = count($data["name_ref"]);
+            for ($i = 0; $i < $dataCount; $i++) {
                 $reference = new Reference();
                 $reference->name = $data["name_ref"][$i];
                 $reference->age = $data["age_ref"][$i];
@@ -163,7 +215,7 @@ class SubmissionController extends Controller
 
             DB::commit();
 
-            return redirect()->route('add_submission_form');
+            return redirect()->route("detail_submission_form", ["id" => $deliveryOrder->id]);
         } catch (Exception $ex) {
             DB::rollback();
 
@@ -330,7 +382,8 @@ class SubmissionController extends Controller
             // Menyimpan riwayat pembaruan data delivery_orders ke tabel history_updates
             HistoryUpdate::create($historyDeliveryOrder);
 
-            for ($i = 0; $i < count($data["name_ref"]); $i++) {
+            $dataCount = count($data["name_ref"]);
+            for ($i = 0; $i < $dataCount; $i++) {
                 $reference = Reference::find($data["id_reference"][$i]);
 
                 $reference->name = $data["name_ref"][$i];
