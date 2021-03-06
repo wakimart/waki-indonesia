@@ -445,24 +445,27 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
-        // Create submission form
+        // Create submission form page
         Route::get("/", "SubmissionController@create")
             ->name("add_submission_form");
-
+        // Process new submission form
         Route::post("/", "SubmissionController@store")
             ->name("store_submission_form");
-
+        // Show submission list
         Route::get("/list", "SubmissionController@listSubmission")
             ->name("list_submission_form");
-
+        // Show reference list
         Route::get("/list_reference", "SubmissionController@listReference")
             ->name("list_reference");
-
+        // Edit submission form page
         Route::get("/edit/", "SubmissionController@edit")
             ->name("edit_submission_form");
-
-        Route::get("/update/", "SubmissionController@update")
+        // Process submission form edit
+        Route::post("/update/", "SubmissionController@update")
             ->name("update_submission_form");
+        // Process submission form delete
+        Route::post("/{id}", "SubmissionController@destroy")
+            ->name("delete_submission_form");
     });
 });
 

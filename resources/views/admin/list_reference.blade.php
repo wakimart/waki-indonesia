@@ -1,3 +1,7 @@
+<?php
+$menu_item_page = "submission";
+$menu_item_second = "list_reference";
+?>
 @extends('admin.layouts.template')
 @section('content')
 <div class="main-panel">

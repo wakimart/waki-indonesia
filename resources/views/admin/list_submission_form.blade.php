@@ -1,3 +1,7 @@
+<?php
+$menu_item_page = "submission";
+$menu_item_second = "list_submission_form";
+?>
 @extends('admin.layouts.template')
 @section('content')
 <div class="main-panel">
@@ -75,7 +79,7 @@
                                                 <button class="btn-delete"
                                                     data-toggle="modal"
                                                     data-target="#deleteDoModal"
-                                                    value="{{ route('delete_deliveryorder', ['id' => $deliveryOrder->id]) }}">
+                                                    value="{{ route('delete_submission_form', ['id' => $deliveryOrder->id]) }}">
                                                     <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                 </button>
                                             </td>
@@ -132,8 +136,8 @@
 
 @section('script')
 <script>
-$(document).ready(function(e){
-    $(".btn-delete").click(function(e) {
+$(document).ready(function (e) {
+    $(".btn-delete").click(function (e) {
         $("#frmDelete").attr("action",  $(this).val());
     });
 });
