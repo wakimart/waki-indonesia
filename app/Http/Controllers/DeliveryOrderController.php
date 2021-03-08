@@ -126,7 +126,7 @@ class DeliveryOrderController extends Controller
             //     }
             // }
             $data['arr_product'] = json_encode($data['arr_product']);
-            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
+            //$data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
 
             $deliveryOrder = DeliveryOrder::create($data);
 
