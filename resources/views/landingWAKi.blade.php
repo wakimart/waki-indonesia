@@ -182,6 +182,9 @@ touch-action: none;
  .modal-close:hover {
 	 color: black;
 }
+.displaynone {
+  display: none;
+}
 
 @media (min-width: 768px) {
   .mobadjust {
@@ -621,9 +624,9 @@ touch-action: none;
     </div>
 </div>
 
-<div class="container">
+<div class="container displaynone">
   <div class="interior">
-    <a class="btn regisnotif" href="#open-modal">Basic CSS-Only Modal</a>
+    <a class="btn regisnotif" href="#open-modal"></a>
   </div>
 </div>
 <div id="open-modal" class="modal-window">
@@ -704,14 +707,14 @@ setInterval(function () {
 }, 1000);
 </script>
 
-<script>
+<!-- <script>
 setInterval(function () {
    document.querySelector("a.regisnotif").click();
 }, 5000);
 setInterval(function () {
    document.querySelector("a.modal-close").click();
 }, 6000);
-</script>
+</script> -->
 
 @if(Session::has('success_registration'))
     <script type="text/javascript">
