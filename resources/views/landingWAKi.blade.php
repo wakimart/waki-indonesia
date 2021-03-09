@@ -632,7 +632,8 @@ touch-action: none;
 <div id="open-modal" class="modal-window">
   <div>
     <a href="#" title="Close" class="modal-close">X</a>
-    <h5>Jatmiko Gunawan telah berhasil mendaftar WAKi dirumah saja !</h5>
+    <h5 id="notif-name">Albert - Surabaya</h5>
+    <h5 style="font-weight: 100;" id="notif-time">Telah mendaftar 5 menit yang lalu</h5>
     <!-- <div>A CSS-only modal based on the :target pseudo-class. Hope you find it helpful.</div> -->
     </div>
 </div>
@@ -708,12 +709,26 @@ setInterval(function () {
 </script>
 
 <script>
-setInterval(function () {
-   document.querySelector("a.regisnotif").click();
-}, 5000);
-setInterval(function () {
-   document.querySelector("a.modal-close").click();
-}, 6000);
+  var arrName = ['Tagi Muhammad', 'Firmansyah', 'Andre', 'Johanes', 'Abimana', 'Charles Wijaya', 'Cokroaminoto', 'Eric Sanjaya', 'Endang', 'Mahmud Muhsin'];
+  var arrKota = ['Surabaya', 'Jakarta Utara', 'Jakarta Pusat', 'Jakarta Selatan', 'Bandung', 'Semarang', 'Medan', 'Jakarta Timur'];
+  var i = 0;
+  var timeClose = 0;
+  setInterval(function () {
+      if(i < arrName.length){
+        $("#notif-name").html(arrName[i]+" - "+arrKota[Math.floor(Math.random() * arrKota.length)]);
+        $("#notif-time").html("Telah mendaftar "+(arrName.length-i)+" menit yang lalu");
+        document.querySelector("a.regisnotif").click();
+        console.log("buka"+arrName[i]);
+        i++;
+      }
+  }, (Math.floor(Math.random() * 10) + 5)*1000);
+
+  // setInterval(function () {
+  //   if(timeClose == 3)
+  //   document.querySelector("a.modal-close").click();
+  //   console.log("close");
+  // }, 1000);
+  
 </script>
 
 @if(Session::has('success_registration'))
