@@ -41,5 +41,5 @@ jobs:
           - robots.txt
           - web.config
     - name: ⌛ Run Migrate
-      working-directory: /laravel_wakiindonesia_betatester/
+      working-directory: ./
       run: php artisan migrate
