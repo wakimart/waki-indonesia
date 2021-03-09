@@ -126,7 +126,7 @@ class DeliveryOrderController extends Controller
             //     }
             // }
             $data['arr_product'] = json_encode($data['arr_product']);
-            $data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
+            //$data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
 
             $deliveryOrder = DeliveryOrder::create($data);
 
@@ -154,11 +154,11 @@ class DeliveryOrderController extends Controller
         $branches = Branch::Where('active', true)->get();
 
         //khususu head-manager, head-admin, admin
-        $deliveryOrders = DeliveryOrder::where('delivery_orders.active', true);
+        $deliveryOrders = DeliveryOrder::where([['delivery_orders.active', true], ['delivery_orders.type_register', 'Normal Register']]);
 
         //khusus akun CSO
         if(Auth::user()->roles[0]['slug'] == 'cso'){
-            $deliveryOrders = Auth::user()->cso->deliveryOrder;
+            $deliveryOrders = DeliveryOrder::where([['delivery_orders.active', true], ['delivery_orders.type_register', 'Normal Register'], ['cso_id', Auth::user()->cso['id']]]);
         }
 
         //khusus akun branch dan area-manager
@@ -167,7 +167,7 @@ class DeliveryOrderController extends Controller
             foreach (Auth::user()->listBranches() as $value) {
                 array_push($arrbranches, $value['id']);
             }
-            $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->get();
+            $deliveryOrders = DeliveryOrder::WhereIn('branch_id', $arrbranches)->where([['delivery_orders.active', true], ['delivery_orders.type_register', 'Normal Register']])->get();
         }
 
         //filter

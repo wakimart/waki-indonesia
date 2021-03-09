@@ -79,6 +79,29 @@
 </li>
 @endif
 
+@if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'submission'? 'active': '' }}">
+  <a class="nav-link" data-toggle="collapse" href="#submission-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'submission'? 'true': '' }}" aria-controls="submission-dd">
+    <span class="menu-title">Submission Registration</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-calendar-text menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'submission'? 'show': '' }}" id="submission-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-deliveryorder'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_submission_form'? 'active': '' }}" href="{{ route('add_submission_form')}}">Add Submmission</a></li>
+      @endif
+      @if(Gate::check('browse-deliveryorder'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_submission_form'? 'active': '' }}" href="{{ route('list_submission_form') }}">List Submmission</a></li>
+      @endif
+      @if(Gate::check('browse-deliveryorder'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_reference'? 'active': '' }}" href="{{ route('list_reference') }}">List Refrence</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
 @if(Gate::check('add-cso') || Gate::check('browse-cso'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'cso'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#cso-dd" aria-expanded="false" aria-controls="cso-dd">
