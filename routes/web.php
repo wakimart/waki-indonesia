@@ -116,6 +116,24 @@ Route::group(['prefix' => 'api-apps'], function () {
 		Route::get('view/{id}','AcceptanceController@viewApi'); //view single acceptance
 		Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
 	});
+
+    // Submission form API
+    Route::group(["prefix" => "submission"], function () {
+        // Create submission API
+        Route::post("add", "SubmissionController@addApi");
+
+        // Show submission list API
+        Route::post("list_submission", "SubmissionController@listSubmissionApi");
+
+        // Show reference list API
+        Route::post("list_reference", "SubmissionController@listReferenceApi");
+
+        // Update submission API
+        Route::post("update", "SubmissionController@updateApi");
+
+        // Delete submission API
+        Route::post("delete", "SubmissionController@deleteApi");
+    });
 });
 
 Auth::routes(['verify' => true]);
