@@ -11,6 +11,7 @@
 |
 */
 
+
 Auth::routes(['verify' => true]);
 Route::resource('gcalendar', 'gCalendarController');
 Route::get('oauth', ['as' => 'oauthCallback', 'uses' => 'gCalendarController@oauth'])->name('oauthCallback');
@@ -213,6 +214,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	   	//Delete DO
 	    Route::post('/{deliveryOrderNya}', 'DeliveryOrderController@delete')
 	    	->name('delete_deliveryorder');
+
+
+	    //WAKi Di Rumah Aja
+	    Route::get('/list_regispromo', 'RegistrationPromotionController@admin_ListRegistrationPromo')
+	    	->name('list_regispromo')
+	    	->middleware('can:browse-deliveryorder');
     });
 
     Route::group(['prefix' => 'order', 'middleware' => 'auth'], function(){
