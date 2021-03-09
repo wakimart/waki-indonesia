@@ -11,6 +11,7 @@
 |
 */
 
+
 Auth::routes(['verify' => true]);
 Route::resource('gcalendar', 'gCalendarController');
 Route::get('oauth', ['as' => 'oauthCallback', 'uses' => 'gCalendarController@oauth'])->name('oauthCallback');
