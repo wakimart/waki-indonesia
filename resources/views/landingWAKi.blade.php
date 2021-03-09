@@ -182,6 +182,9 @@ touch-action: none;
  .modal-close:hover {
 	 color: black;
 }
+.displaynone {
+  display: none;
+}
 
 @media (min-width: 768px) {
   .mobadjust {
@@ -621,7 +624,7 @@ touch-action: none;
     </div>
 </div>
 
-<div class="container">
+<div class="container displaynone">
   <div class="interior">
     <a class="btn regisnotif" href="#open-modal"></a>
   </div>
