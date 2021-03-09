@@ -707,14 +707,14 @@ setInterval(function () {
 }, 1000);
 </script>
 
-<!-- <script>
+<script>
 setInterval(function () {
    document.querySelector("a.regisnotif").click();
 }, 5000);
 setInterval(function () {
    document.querySelector("a.modal-close").click();
 }, 6000);
-</script> -->
+</script>
 
 @if(Session::has('success_registration'))
     <script type="text/javascript">
