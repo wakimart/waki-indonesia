@@ -37,9 +37,9 @@
     }
 </style>
 @endsection
+
+
 @section('content')
-
-
 @if( $deliveryOrder['code'] != null)
     <section id="intro" class="clearfix">
         <div class="container">
@@ -78,6 +78,10 @@
                         <td>{{ $deliveryOrder['address'] }}</td>
                     </tr>
                     <tr>
+                        <td></td>
+                        <td>{{ $deliveryOrder['district'][0]['province'] }}, {{ $deliveryOrder['district'][0]['kota_kab'] }}, {{ $deliveryOrder['district'][0]['subdistrict_name'] }}</td>
+                    </tr>
+                    <tr>
                         <td>Registration Branch : </td>
                         <td>{{  $deliveryOrder->branch['code'] }} - {{  $deliveryOrder->branch['name'] }}</td>
                     </tr>
@@ -95,10 +99,15 @@
                         <td>Quantity</td>
                     </thead>
 
-                    @foreach(json_decode($deliveryOrder['arr_product']) as $promo)
+                    @foreach(json_decode($deliveryOrder['arr_product'], true) as $promo)
                         <tr>
-                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
-                            <td>{{ $promo->qty }}</td>
+                            @if(is_numeric($promo['id']) && $promo['id'] < 8)
+                              <td>{{ App\DeliveryOrder::$Promo[$promo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo['id']]['harga'] }} )</td>
+                            @else
+                              <td>{{ $promo['id'] }}</td>
+                            @endif
+                            
+                            <td>{{ $promo['qty'] }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -121,14 +130,44 @@
                 <a href="whatsapp://send?text={{ Route('successorder') }}?code={{ $deliveryOrder['code'] }}" data-action="share/whatsapp/share">Share to Whatsapp</a>
             </div>
         </div>
-    </section>
-@else
-    <section id="intro" class="clearfix">
-        <div class="container">
-            <div class="row justify-content-center">
-                <h2>CANNOT FIND DELIVERY ORDER</h2>
-            </div>
+
+        <div class="row justify-content-center" style="margin-top: 2em;">
+          <h2>REGISTRATION HISTORY LOG</h2>
         </div>
-    </section>
-@endif
+        <div class="row justify-content-center">
+          <table class="col-md-12">
+              <thead>
+                  <td>No.</td>
+                  <td>Action</td>
+                  <td>User</td>
+                  <td>Change</td>
+                  <td>Time</td>
+              </thead>
+              @if($historyUpdateDeliveryOrder != null)
+              @foreach($historyUpdateDeliveryOrder as $key => $historyUpdateDeliveryOrder)
+              <tr>
+                  <td>{{$key+1}}</td>
+                  <td>{{$historyUpdateDeliveryOrder->method}}</td>
+                  <td>{{$historyUpdateDeliveryOrder->name}}</td>
+                  <?php $dataChange = json_decode($historyUpdateDeliveryOrder->meta, true);?>
+                  <td>
+                      @foreach ($dataChange['dataChange'] as $key=>$value)
+                          <b>{{$key}}</b>: {{$value}}<br/>
+                      @endforeach
+                  </td>
+                  <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateDeliveryOrder->created_at)) }}</td>
+              </tr>
+              @endforeach
+              @endif
+          </table>
+      </div>
+          @else
+          <div class="row justify-content-center">
+              <h2>CANNOT FIND DELIVERY ORDER</h2>
+          </div>
+          @endif
+    </div>
+
+  </section>
+
 @endsection

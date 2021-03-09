@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use \Illuminate\Http\Request;
-
+use App\User;
 
 class LoginController extends Controller
 {
@@ -82,5 +84,118 @@ class LoginController extends Controller
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
         return $this->sendFailedLoginResponse($request);
+    }
+    
+    //KHUSUS API REST
+    public function loginApi(Request $request)
+    {
+        $messages = array(
+                'username.exists' => 'The username is invalid.',
+        );
+
+        $validator = \Validator::make($request->all(), [
+            'username' => ['required', 'exists:users,username'],
+            'password' => 'required|min:4'
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $user = User::Where('username', strtoupper($request->username))->first();
+            $user->roles;
+            $user->cso;
+        
+            if(Hash::check($request->password, $user->password)){   
+                //update FMC token
+                $token = array();
+                if ($user->fmc_token == null){
+                    $user->fmc_token = array();
+                }
+                $token = $user->fmc_token;
+                array_push($token, $request->fcm_token);
+                $user->fmc_token = $token;
+                $user->save();           
+                $user['list_branches'] = $user->listBranches();
+                $data = ['result' => 1,
+                         'data' => $user
+                        ];
+                return response()->json($data,200);
+            }
+            
+            $err = ['password' => ["The password is invalid."]];
+            $data = ['result' => 0,
+                     'data' => $err
+                    ];
+            return response()->json($data,401);
+        }
+    }
+
+
+
+    public function logoutApi(Request $request)
+    {
+        $messages = array(
+                'username.exists' => 'The username is invalid.',
+        );
+
+        $validator = \Validator::make($request->all(), [
+            'username' => ['required', 'exists:users,username'],
+            'fcm_token' => 'required'
+        ], $messages);
+
+        if ($validator->fails()){
+            $data = ['result' => 0,
+                     'data' => $validator->errors()
+                    ];
+            return response()->json($data, 401);
+        }
+        else{
+            $user = User::Where('username', strtoupper($request->username))->first();
+            $tmpToken = [];
+            if($user != null && $user->fmc_token != null){
+                foreach ($user->fmc_token as $token){
+                    if($token != $request->fcm_token && $token != null){
+                        array_push($tmpToken, $token);
+                    }
+                }
+                $user->fmc_token = $tmpToken;
+                $user->save();
+                $data = ['result' => 1,
+                             'data' => $user
+                            ];
+                return response()->json($data,200);
+                
+            }
+            $data = ['result' => 0,
+                     'data' => 'user not found'
+                    ];
+            return response()->json($data,401);
+        }
+    }
+    
+    public function loginQRApi(Request $request){
+        $user = User::where('qrcode', $request['hash'])->first();
+        $user->roles;
+        $user->cso;
+        $token = array();
+        if ($user->fmc_token == null){
+            $user->fmc_token = array();
+        }
+        $token = $user->fmc_token;
+        array_push($token, $request->fcm_token);
+        $user->fmc_token = $token;
+        $user->save();           
+        $user['list_branches'] = $user->listBranches();
+
+        if($user != null){
+            $data = ['result' => 1,
+                     'data' => $user
+                    ];
+            return response()->json($data,200);
+        }
     }
 }

@@ -40,4 +40,8 @@ return [
         ],
     ],
 
+    'firebase' => [
+        'key' => 'AAAA5dN4wnE:APA91bG8q1wl3zLjxfVJd5auKvwA6e0Zf8cetZteBLpoC8oLlFSCDoufz2ozZMskcIRbSQ7Akbup4Lr06hB1N6fk018On_r4YHNNKidDnNmTDA27-J6KdeM26OV8ZypcYfK2jGby9w2_',
+    ],
+
 ];

@@ -39,7 +39,16 @@
         <div class="row justify-content-center">
             <form action="{{ Route('store_order') }}" method="post" role="form" class="contactForm col-md-9">
                 @csrf
+                <h6>Waktu Order</h6>
+                <div class="form-group">
+                    <input type="date" class="form-control" name="orderDate" id="orderDate" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+                    <div class="validation"></div>
+                    <span class="invalid-feedback">
+                        <strong></strong>
+                    </span>
+                </div>
                 <h5 class="add-customer d-none">Customer 1</h5>
+                
                 <div class="form-group">
                     <input type="text" name="no_member" class="form-control" id="no_member" placeholder="No. Member (optional)"/>
                     <div class="validation"></div>
@@ -53,7 +62,27 @@
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" />
+                    {{-- <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" /> --}}
+                    <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+                        <option selected disabled value="">Pilihan Provinsi</option>
+
+                        @php
+                            $result = RajaOngkir::FetchProvince();
+                            $result = $result['rajaongkir']['results'];
+                            $arrProvince = [];
+                            if(sizeof($result) > 0){
+                                foreach ($result as $value) {
+                                    echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+                                }
+                            }
+                        @endphp
+                    </select>
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+                        <option selected disabled value="">Pilihan Kota</option>
+                    </select>
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
@@ -228,7 +257,13 @@
 
 
                 <div class="form-group">
-                    <input type="text" class="form-control" name="customer_type" id="customer_type" placeholder="Tipe Customer" data-msg="Mohon Isi Tipe Customer" />
+                    <span>Type Customer</span>
+                    <select id="customer_type" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="customer_type" value="" required>
+                        <option value="Tele Voucher">Tele Voucher</option>
+                        <option value="Tele Home Service">Tele Home Service</option>
+                        <option value="Home Office Voucher">Home Office Voucher</option>
+                        <option value="Home Voucher">Home Voucher</option>
+                    </select>
                     <div class="validation"></div>
                 </div>
                 <div class="form-group">
@@ -259,10 +294,32 @@
                     <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone Number" required data-msg="Please Fill the Phone Number" />
                     <div class="validation"></div>
                 </div>
+                
                 <div class="form-group">
-                    <input type="text" class="form-control" name="city" id="city" placeholder="City" required data-msg="Please Fill the City" />
+                    {{-- <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" /> --}}
+                    <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+                        <option selected disabled value="">Pilihan Provinsi</option>
+
+                        @php
+                            $result = RajaOngkir::FetchProvince();
+                            $result = $result['rajaongkir']['results'];
+                            $arrProvince = [];
+                            if(sizeof($result) > 0){
+                                foreach ($result as $value) {
+                                    echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+                                }
+                            }
+                        @endphp
+                    </select>
                     <div class="validation"></div>
                 </div>
+                <div class="form-group">
+                    <select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+                        <option selected disabled value="">Pilihan Kota</option>
+                    </select>
+                    <div class="validation"></div>
+                </div>
+                
                 <div class="form-group">
                     <textarea class="form-control" name="address" rows="5" required data-msg="Please Fill the Address" placeholder="Address"></textarea>
                     <div class="validation"></div>
@@ -454,7 +511,7 @@
         $("#tambah_bank").click(function(e){
             e.preventDefault();
             total_bank++;
-            strIsi = "<div class=\"form-group bank_select\" style=\"width: 62%; display: inline-block;\" id=\"bank_"+total_bank+"\"><select class=\"form-control bank_name\" name=\"bank_"+total_bank+"\" data-msg=\"Mohon Pilih Bank\"><option selected disabled value=\"\">Pilihan Bank</option> @foreach($banks as $key=>$bank) <option value=\"{{ $key }}\">{{ $bank }}</option> @endforeach </select><div class=\"validation\"></div></div><div class=\"form-group bank_select\" style=\"width: 26%; display: inline-block;\" id=\"cicilan_"+total_bank+"\"><select class=\"form-control bank_cicilan\" name=\"cicilan_"+total_bank+"\" data-msg=\"Mohon Pilih Jumlah Cicilan\"><option selected value=\"1\">1X</option> @for($i=2; $i<=12;$i+=2) <option class=\"other_valCicilan\" value=\"{{ $i }}\">{{ $i }}X</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_bank\" value=\""+total_bank+"\" title=\"Hapus Bank\" style=\"padding: 0.4em 0.7em; background-color: red\"><i class=\"fas fa-minus\"></i></button></div>";
+            strIsi = "<div class=\"form-group bank_select\" style=\"width: 62%; display: inline-block;\" id=\"bank_"+total_bank+"\"><select class=\"form-control bank_name\" name=\"bank_"+total_bank+"\" data-msg=\"Mohon Pilih Bank\"><option selected disabled value=\"\">Pilihan Bank</option> @foreach($banks as $key=>$bank) <option value=\"{{ $key }}\">{{ $bank }}</option> @endforeach </select><div class=\"validation\"></div></div><div class=\"form-group bank_select\" style=\"width: 26%; display: inline-block;\" id=\"cicilan_"+total_bank+"\"><select class=\"form-control bank_cicilan\" name=\"cicilan_"+total_bank+"\" data-msg=\"Mohon Pilih Jumlah Cicilan\"><option selected value=\"1\">1X</option> <option class=\"other_valCicilan\" value=\"3\">3X</option> @for($i=6; $i<=24;$i+=6) <option class=\"other_valCicilan\" value=\"{{ $i }}\">{{ $i }}X</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_bank\" value=\""+total_bank+"\" title=\"Hapus Bank\" style=\"padding: 0.4em 0.7em; background-color: red\"><i class=\"fas fa-minus\"></i></button></div>";
             $('#tambahan_bank').html($('#tambahan_bank').html()+strIsi);
 
 
@@ -492,6 +549,23 @@
             $('#product_'+$(this).val()).remove();
             $('#qty_'+$(this).val()).remove();
             $(this).remove();
+        });
+        $("#province").on("change", function(){
+            var id = $(this).val();
+            $( "#city" ).html("");
+            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+            .done(function( result ) {
+                result = result['rajaongkir']['results'];
+                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {
+                        if(value['type'] == "Kota"){                            
+                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                        }
+                    });
+                    $( "#city" ).append(arrCity);
+                }
+            });
         });
 
         $("#cash_upgarde").change( function(e){
@@ -548,6 +622,21 @@
             $(".add-customer").removeClass("d-none");
             $(".cust-2").attr('required', '');
             $(this).hide();
+        });
+        $('#submit').click(function(){
+            var appointment = 
+            $.ajax({
+                type: 'POST',
+                data: {
+                    date: date
+                },
+                success: function(data){
+                    console.log(data.data);
+                },
+                error: function(xhr){
+                    console.log(xhr.responseText);
+                }
+            });
         });
     });
 </script>

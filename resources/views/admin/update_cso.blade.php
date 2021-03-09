@@ -6,7 +6,7 @@
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="page-header">
-  			<h3 class="page-title">Edit CSO</h3>
+              <h3 class="page-title">Edit CSO</h3>
   				<nav aria-label="breadcrumb">
     				<ol class="breadcrumb">
       					<li class="breadcrumb-item"><a data-toggle="collapse" href="#cso-dd" aria-expanded="false" aria-controls="cso-dd">CSO</a></li>
@@ -93,9 +93,9 @@
                           <strong></strong>
                       </span>
           					</div>
-          					<div class="form-group d-none">
+          					<div class="form-group">
 					            <label for="">Phone Number</label>
-					            <input type="text" class="form-control" name="phone" placeholder="No. Telepon">
+					            <input type="text" class="form-control" name="phone" placeholder="No. Telepon" value="{{$csos['phone']}}">
           					</div>
           					<div class="form-group d-none">
 					            <label for="exampleTextarea1">Address</label>

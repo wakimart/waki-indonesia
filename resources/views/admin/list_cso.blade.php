@@ -20,10 +20,59 @@
 		</div>
 
 		<div class="row">
+			<div class="col-12 grid-margin stretch-card">
+				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+                        <label for="">Filter By Team</label>
+                          <select class="form-control" id="filter_branch" name="filter_branch">
+                            <option value="" selected="">All Branch</option>
+                            @foreach($branches as $branch)
+                              @php
+                                $selected = "";
+                                if(isset($_GET['filter_branch'])){
+                                  if($_GET['filter_branch'] == $branch['id']){
+                                    $selected = "selected=\"\"";
+                                  }
+                                }
+                              @endphp
+
+                              <option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                            @endforeach
+                          </select>
+                          <div class="validation"></div>
+                      </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                      <div class="form-group">
+						<label for="">Search By Name, Code, and Phone</label>
+                        <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
+                          <div class="validation"></div>
+                      </div>
+					</div>
+				@endif
+
+				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
+				  <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+						<label for=""></label>
+						<div class="form-group">
+						<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+					  </div>
+					</div>
+				  </div>
+				@endif
+
+				<div class="col-sm-12 col-md-12" style="padding: 0; border: 1px solid #ebedf2;">
+					<div class="col-xs-12 col-sm-11 col-md-6 table-responsive" id="calendarContainer" style="padding: 0; float: left;"></div>
+					<div class="col-xs-12 col-sm-11 col-md-6" id="organizerContainer" style="padding: 0; float: left;"></div>
+				</div>
+
+			</div>
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
-      					<h5 style="margin-bottom: 0.5em;">Total : {{ sizeof($csos) }} data</h5>
+      					<h5 style="margin-bottom: 0.5em;">Total : {{ $countCso }} data</h5>
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
         					<table class="table table-bordered">
           						<thead>
@@ -41,13 +90,15 @@
 				                        	<td>{{$key+1}}</td>
 				                            <td>{{$cso['code']}}</td>
 				                            <td>{{$cso['name']}}</td>
-				                            <td>{{$cso->branch['name']}}</td>
+											<td>{{$cso->branch['name']}}</td> 
 				                            <td style="text-align: center;"><a href="{{ route('edit_cso', ['id' => $cso['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
                           					<td style="text-align: center;"><a href="{{ route('delete_cso', ['id' => $cso['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
 				                        </tr>
 				                    @endforeach
           						</tbody>
-        					</table>
+							</table>
+							<br />
+							{{ $csos->appends($url)->Links()}}
         				</div>
       				</div>
     			</div>
@@ -65,7 +116,7 @@
               		</button>
             	</div>
             	<div class="modal-body">
-              		<h5 style="text-align:center;">Are You Sure to Delete this Delivery Order ?</h5>
+              		<h5 style="text-align:center;">Are You Sure to Delete this CSO ?</h5>
             	</div>
             	<div class="modal-footer">
             		<form id="frmDelete" method="post" action="">
@@ -82,4 +133,29 @@
 @endsection
 
 @section('script')
+
+<script>
+	$(document).on("click", "#btn-filter", function(e){
+	  var urlParamArray = new Array();
+	  var urlParamStr = "";
+	  if($('#filter_branch').val() != ""){
+		urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+	  }
+	  if($('#search').val() != ""){
+		urlParamArray.push("search=" + $('#search').val());
+	  }
+	  for (var i = 0; i < urlParamArray.length; i++) {
+		if (i === 0) {
+		  urlParamStr += "?" + urlParamArray[i]
+		} else {
+		  urlParamStr += "&" + urlParamArray[i]
+		}
+	  }
+
+	  window.location.href = "{{route('list_cso')}}" + urlParamStr;
+	});
+	$(document).on("click", ".btnDelete", function(e){
+		$("#frmDelete").attr("action", $(this).attr('href'));
+	});
+</script>
 @endsection

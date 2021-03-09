@@ -31,6 +31,9 @@
       @if(Gate::check('browse-deliveryorder'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_deliveryorder'? 'active': '' }}" href="{{ route('list_deliveryorder') }}">List Registration</a></li>
       @endif
+      @if(Gate::check('browse-deliveryorder'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_regispromo'? 'active': '' }}" href="{{ route('list_regispromo') }}">List Registration Promotion</a></li>
+      @endif
     </ul>
   </div>
 </li>
@@ -66,10 +69,33 @@
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'homeservice'? 'show': '' }}" id="homeservice-dd">
     <ul class="nav flex-column sub-menu">
       @if(Gate::check('add-home_service'))
-      {{-- <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_homeservice' ? 'active': '' }}" href="{{ route('admin_add_order')}}">Add Home Service</a></li> --}}
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_homeservice' ? 'active': '' }}" href="{{ route('admin_add_homeService')}}">Add Home Service</a></li>
       @endif
       @if(Gate::check('browse-home_service'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_homeservice' ? 'active': '' }}" href="{{  route('admin_list_homeService') }}">List Home Service</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
+@if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'submission'? 'active': '' }}">
+  <a class="nav-link" data-toggle="collapse" href="#submission-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'submission'? 'true': '' }}" aria-controls="submission-dd">
+    <span class="menu-title">Submission Registration</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-calendar-text menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'submission'? 'show': '' }}" id="submission-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-deliveryorder'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_submission_form'? 'active': '' }}" href="{{ route('add_submission_form')}}">Add Submmission</a></li>
+      @endif
+      @if(Gate::check('browse-deliveryorder'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_submission_form'? 'active': '' }}" href="{{ route('list_submission_form') }}">List Submmission</a></li>
+      @endif
+      @if(Gate::check('browse-deliveryorder'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_reference'? 'active': '' }}" href="{{ route('list_reference') }}">List Refrence</a></li>
       @endif
     </ul>
   </div>
@@ -210,6 +236,26 @@
       @endif
       @if(Gate::check('browse-user'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_user'? 'active': '' }}" href="{{route('list_useradmin')}}">List Admin</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
+@if(Gate::check('add-app') || Gate::check('browse-app'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'app'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#app-dd" aria-expanded="false" aria-controls="app-dd">
+    <span class="menu-title">App Version</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-account-multiple menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'app'? 'show': '' }}" id="app-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-app'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_appver'? 'active': '' }}" href="{{route('add_appVersion')}}">Add App Version</a></li>
+      @endif 
+      @if(Gate::check('browse-app'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_appver'? 'active': '' }}" href="{{route('list_appVersion')}}">List App Version</a></li>
       @endif
     </ul>
   </div>

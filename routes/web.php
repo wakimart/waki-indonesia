@@ -11,17 +11,20 @@
 |
 */
 
+
 Auth::routes(['verify' => true]);
+Route::resource('gcalendar', 'gCalendarController');
+Route::get('oauth', ['as' => 'oauthCallback', 'uses' => 'gCalendarController@oauth'])->name('oauthCallback');
+Route::get('/term_cond', 'IndexController@termNCondition')->name('term_cond');
 
 Route::get('/', 'IndexController@index')->name('index');
-Route::get('/product_category', 'CategoryProductController@index')->name('product_category');
+Route::get('/product_category/{id}', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
-
+Route::get('/firebase','FirebaseController@index');
 //DO Register
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
 Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
 Route::get('/register-success', 'DeliveryOrderController@successorder')->name('successorder');
-Route::get('/fetchCso', 'DeliveryOrderController@fetchCso')->name('fetchCso');
 Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
 //Order
@@ -35,7 +38,12 @@ Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeService
 Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
+//WAKi Di Rumah Aja
+Route::get('/wakidirumahaja', 'RegistrationPromotionController@index')->name('landing_waki');
+Route::post('/wakidirumahaja', 'RegistrationPromotionController@store')->name('store_registrationPromotion');
+
 //fetching data - data
+Route::get('/fetchCso', 'CsoController@fetchCso')->name('fetchCso');
 Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
 Route::get('/fetchCsoByIdBranch/{branch}', 'CsoController@fetchCsoByIdBranch')->name('fetchCsoByIdBranch');
 Route::get('/fetchBranchById', 'BranchController@fetchBranchById')->name('fetchBranchById');
@@ -43,6 +51,73 @@ Route::get('/fetchCity/{province}', function ($province) {
 		return RajaOngkir::FetchCity($province);
 	})->name('fetchCity');
 
+Route::get('/fetchDistrict/{city}', function ($city) {
+	$kotaOrKab = array("Kota ", "Kabupaten ");
+	$city = str_replace($kotaOrKab, '', $city);
+		return RajaOngkir::FetchDistrict($city);
+	})->name('fetchDistrict');
+
+
+//KHUSUS WEB SERVICE APPS (for non CSRF)
+Route::group(['prefix' => 'api-apps'], function () {
+    Route::post('login','Auth\LoginController@loginApi'); //login
+	Route::post('loginqr','Auth\LoginController@loginQRApi'); //login QR
+	Route::post('logout','Auth\LoginController@logoutApi'); //logout
+    Route::get('fetchbranch', 'BranchController@fetchBranchApi'); //fetching all active branch
+    Route::get('fetchcso/{branchId}', 'CsoController@fetchCsoApi'); //fetching all active Cso by branch
+    Route::get('fetchPromosApi', 'DeliveryOrderController@fetchPromosApi'); //fetching all promo
+	Route::get('fetchBanksApi', 'OrderController@fetchBanksApi'); //fetching all banks
+	Route::post('fetchCSOFIlter', 'HomeServiceController@fetchCSOFIlter');
+	Route::post('addVersion', 'VersionController@storeVersion');
+	Route::get('listVersion', 'VersionController@listVersion');
+	Route::get('/fetchAllTypeHS', 'HomeServiceController@listAllTypeHS');
+	Route::get('fetchKnowFromApi', 'OrderController@fetchKnowFromApi'); //fetching all know from
+    Route::get('fetchprovinceapi', function () {
+			return RajaOngkir::FetchProvinceApi();
+		}); //fetching all province
+    Route::get('fetchcityapi/{province}',function ($province) {
+			return RajaOngkir::FetchCityApi($province);
+		}); //fetching all city from province
+	Route::get('fetchallcityapi/{province}',function ($province) {
+		return RajaOngkir::FetchAllCityApi($province);
+	});
+	Route::get('fetchdistrictapi/{city}',function ($city) {
+		return RajaOngkir::FetchAllDistrictAPI($city);
+		}); //fetching all district from province
+	Route::group(['prefix' => 'homeservice'], function () {
+	    Route::post('add','HomeServiceController@addApi'); //add home service
+		Route::post('update','HomeServiceController@updateApi'); //update home service
+		Route::post('reportHomeService','HomeServiceController@reportHomeService'); //reportHomeService home service
+	    Route::post('delete','HomeServiceController@deleteApi'); //delete home service
+	    Route::post('list','HomeServiceController@listApi'); //list home service
+		Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
+		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
+	});
+
+	Route::group(['prefix' => 'register'], function () {
+	    Route::post('add','DeliveryOrderController@addApi'); //add register DO
+	    Route::post('list','DeliveryOrderController@listApi'); //list register DO
+		Route::post('update','DeliveryOrderController@updateApi'); //update register DO
+		Route::get('view/{id}','DeliveryOrderController@viewApi'); //view single register DO
+		Route::post('delete','DeliveryOrderController@deleteApi'); //delete register DO
+	});
+
+	Route::group(['prefix' => 'order'], function () {
+	    Route::post('add','OrderController@addApi'); //add order
+		Route::post('list','OrderController@listApi'); //list order
+		Route::post('update','OrderController@updateApi'); //update order
+		Route::get('view/{id}','OrderController@viewApi'); //view single order
+		Route::post('delete','OrderController@deleteApi'); //delete order
+	});
+
+	Route::group(['prefix' => 'acceptance'], function () {
+	    Route::post('add','AcceptanceController@addApi'); //add acceptance
+		Route::post('list','AcceptanceController@listApi'); //list acceptance
+		Route::post('update','AcceptanceController@updateApi'); //update acceptance
+		Route::get('view/{id}','AcceptanceController@viewApi'); //view single acceptance
+		Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
+	});
+});
 
 Auth::routes(['verify' => true]);
 Route::group(['prefix' => 'cms-admin'], function () {
@@ -74,11 +149,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //update frontendcms
     Route::post('/frontend-cms/update', 'FrontendCmsController@update')
 	    	->name('update_frontendcms');
-	    	
-	//change password admin    
+
+	//change password admin
 	Route::post('/changePassword','UserAdminController@changePassword')
 			->name('changePassword');
-    //Check change password admin    
+    //Check change password admin
     Route::post('/checkChangePassword', 'UserAdminController@checkChangePassword')
     		->name('check-change-password');
 
@@ -139,6 +214,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	   	//Delete DO
 	    Route::post('/{deliveryOrderNya}', 'DeliveryOrderController@delete')
 	    	->name('delete_deliveryorder');
+
+
+	    //WAKi Di Rumah Aja
+	    Route::get('/list_regispromo', 'RegistrationPromotionController@admin_ListRegistrationPromo')
+	    	->name('list_regispromo')
+	    	->middleware('can:browse-deliveryorder');
     });
 
     Route::group(['prefix' => 'order', 'middleware' => 'auth'], function(){
@@ -168,11 +249,22 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->middleware('can:edit-order');
 	    //Delete Order
 	    Route::post('/{OrderNya}', 'OrderController@delete')
-	    	->name('delete_order');
+			->name('delete_order');
+		//Export to XLS By Date
+        Route::get('/report-to-xls-by-date', 'OrderController@export_to_xls')
+                ->name('order_export-to-xls');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function(){
-	    //List Home Service
+		//Add Form home service
+    	Route::get('/', 'HomeServiceController@indexAdmin')
+	    	->name('admin_add_homeService')
+	    	->middleware('can:add-home_service');
+		//Add Home Service
+	    Route::post('/', 'HomeServiceController@admin_addHomeService')
+	    	->name('admin_store_homeService')
+	    	->middleware('can:add-home_service');
+		//List Home Service
 	    Route::get('/list', 'HomeServiceController@admin_ListHomeService')
 	    	->name('admin_list_homeService')
 	    	->middleware('can:browse-home_service');
@@ -190,7 +282,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
 		    	->middleware('can:edit-home_service');
         //Export to XLS
         Route::get('/export-to-xls', 'HomeServiceController@export_to_xls')
-                ->name('homeservice_export-to-xls');
+				->name('homeservice_export-to-xls');
+		//Export to XLS By Date
+        Route::get('/export-to-xls-by-date', 'HomeServiceController@export_to_xls_byDate')
+                ->name('homeservice_export-to-xls-by-date');
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
@@ -203,7 +298,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('store_cso')
 	    	->middleware('can:add-cso');
 	    //List CSO
-	    Route::get('/list', 'CsoController@index')
+	    Route::get('/list', 'CsoController@admin_ListCso')
 	    	->name('list_cso')
 	    	->middleware('can:browse-cso');
 	    //Edit CSO
@@ -243,6 +338,33 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    //Delete Branch
 	    Route::post('/{BranchNya}', 'BranchController@delete')
 	    	->name('delete_branch');
+	});
+
+
+	Route::group(['prefix' => 'appVersion', 'middleware' => 'auth'], function(){
+    	//Add Form App Version
+    	Route::get('/', 'VersionController@create')
+	    	->name('add_appVersion')
+	    	->middleware('can:add-app');
+	    //Create App Version
+	    Route::post('/', 'VersionController@store')
+	    	->name('store_appVersion')
+	    	->middleware('can:add-app');
+	    //List App Version
+	    Route::get('/list', 'VersionController@index')
+	    	->name('list_appVersion')
+	    	->middleware('can:browse-app');
+	    //Edit App Version
+	    Route::get('/edit/', 'VersionController@edit')
+	    	->name('edit_app')
+	    	->middleware('can:edit-app');
+	    //Update Branch
+	    Route::post('/update/', 'VersionController@update')
+	    	->name('update_app')
+	    	->middleware('can:edit-app');
+	    //Delete Branch
+	    Route::post('/{AppNya}', 'VersionController@delete')
+	    	->name('delete_app');
     });
 
     Route::group(['prefix' => 'category_products', 'middleware' => 'auth'], function(){
@@ -321,6 +443,40 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    //Delete Promo
 	    Route::post('/{PromoNya}', 'PromoController@delete')
 	    	->name('delete_promo');
+    });
+
+    Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
+        // Create submission form page
+        Route::get("/", "SubmissionController@create")
+            ->name("add_submission_form");
+
+        // Process new submission form
+        Route::post("/", "SubmissionController@store")
+            ->name("store_submission_form");
+
+        // Show submission list
+        Route::get("/list", "SubmissionController@listSubmission")
+            ->name("list_submission_form");
+
+        // Show reference list
+        Route::get("/list_reference", "SubmissionController@listReference")
+            ->name("list_reference");
+
+        // Show detail of submission
+        Route::get("/detail", "SubmissionController@detailSubmission")
+            ->name("detail_submission");
+
+        // Edit submission form page
+        Route::get("/edit/", "SubmissionController@edit")
+            ->name("edit_submission_form");
+
+        // Process submission form edit
+        Route::post("/update/", "SubmissionController@update")
+            ->name("update_submission_form");
+
+        // Process submission form delete
+        Route::post("/{id}", "SubmissionController@destroy")
+            ->name("delete_submission_form");
     });
 });
 

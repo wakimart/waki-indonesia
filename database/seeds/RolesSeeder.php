@@ -80,6 +80,13 @@ class RolesSeeder extends Seeder
                 'browse-user' => true,
         		'edit-user' => true,
                 'delete-user' => true,
+
+                //app version
+                'add-app' => true,
+                'browse-app' => true,
+        		'edit-app' => true,
+                'delete-app' => true,
+
         	]),
         ]);
 
@@ -151,6 +158,12 @@ class RolesSeeder extends Seeder
                 'browse-user' => false,
         		'edit-user' => false,
                 'delete-user' => false,
+
+                //app version
+                'add-app' => true,
+                'browse-app' => true,
+        		'edit-app' => true,
+                'delete-app' => true,
         	]),
         ]);
 
@@ -506,6 +519,12 @@ class RolesSeeder extends Seeder
                 'browse-user' => false,
                 'edit-user' => false,
                 'delete-user' => false,
+
+                //app version
+                'add-app' => true,
+                'browse-app' => true,
+        		'edit-app' => true,
+                'delete-app' => true,
             ]),
         ]);
     }

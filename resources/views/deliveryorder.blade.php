@@ -50,7 +50,27 @@
                         <div class="validation"></div>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" />
+                        {{-- <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" /> --}}
+                        <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+                            <option selected disabled value="">Pilihan Provinsi</option>
+    
+                            @php
+                                $result = RajaOngkir::FetchProvince();
+                                $result = $result['rajaongkir']['results'];
+                                $arrProvince = [];
+                                if(sizeof($result) > 0){
+                                    foreach ($result as $value) {
+                                        echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+                                    }
+                                }
+                            @endphp
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+                            <option selected disabled value="">Pilihan Kota</option>
+                        </select>
                         <div class="validation"></div>
                     </div>
                     <div class="form-group">
@@ -131,7 +151,27 @@
                         <div class="validation"></div>
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="city" id="city" placeholder="City" required data-msg="Please Fill the City" />
+                        {{-- <input type="text" class="form-control" name="city" id="city" placeholder="Kota" required data-msg="Mohon Isi Kota" /> --}}
+                        <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+                            <option selected disabled value="">Pilihan Provinsi</option>
+    
+                            @php
+                                $result = RajaOngkir::FetchProvince();
+                                $result = $result['rajaongkir']['results'];
+                                $arrProvince = [];
+                                if(sizeof($result) > 0){
+                                    foreach ($result as $value) {
+                                        echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+                                    }
+                                }
+                            @endphp
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+                            <option selected disabled value="">Pilihan Kota</option>
+                        </select>
                         <div class="validation"></div>
                     </div>
                     <div class="form-group">
@@ -215,6 +255,24 @@
                     $('#validation_cso').html('Kode CSO Salah');
                     $('#validation_cso').css('color', 'red');
                     $('#submit').attr('disabled',"");
+                }
+            });
+        });
+
+        $("#province").on("change", function(){
+            var id = $(this).val();
+            $( "#city" ).html("");
+            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+            .done(function( result ) {
+                result = result['rajaongkir']['results'];
+                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {
+                        if(value['type'] == "Kota"){                            
+                            arrCity += "<option value=\"Kota "+value['city_name']+"\">Kota "+value['city_name']+"</option>";
+                        }
+                    });
+                    $( "#city" ).append(arrCity);
                 }
             });
         });

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Branch;
+use App\HistoryUpdate;
 use Illuminate\Validation\Rule;
 use Validator;
+use DB;
 
 class BranchController extends Controller
 {
@@ -14,10 +17,17 @@ class BranchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {   
-        $branches = Branch::all();
-        return view('admin.list_branch', compact('branches'));
+        $branches = Branch::where('branches.active', true);
+        $countBranches = Branch::where('branches.active', true)->count();
+
+        if($request->has('search')){
+            $branches = $branches->where( 'name', 'LIKE', '%'.$request->search.'%' )
+                                    ->orWhere( 'code', 'LIKE', '%'.$request->search.'%' );
+        }
+        $branches = $branches->paginate(10);
+        return view('admin.list_branch', compact('branches', 'countBranches'));
     }
 
     /**
@@ -116,12 +126,27 @@ class BranchController extends Controller
             }
             return response()->json(['errors' => $arr_Hasil]);
         }else{
-            $branches = Branch::find($request->input('idBranch'));
-            $branches->code = $request->input('code');
-            $branches->name = $request->input('name');
-            $branches->save();
+            DB:beginTransaction();
+            try{
+                $branches = Branch::find($request->input('idBranch'));
+                $branches->code = $request->input('code');
+                $branches->name = $request->input('name');
+                $branches->save();
 
-            return response()->json(['success' => 'Berhasil!']);
+                $user = Auth::user();
+                $historyUpdate= [];
+                $historyUpdate['type_menu'] = "Branch";
+                $historyUpdate['method'] = "Update";
+                $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $branches];
+                $historyUpdate['user_id'] = $user['id'];
+
+                $createData = HistoryUpdate::create($historyUpdate);
+                DB::commit();
+                return response()->json(['success' => 'Berhasil!']);
+            }catch (\Exception $ex) {
+                DB::rollback();
+                return response()->json(['error' => $ex->getMessage()], 500);
+            }
         }
     }
 
@@ -136,8 +161,41 @@ class BranchController extends Controller
         //
     }
 
+    public function delete($id){
+        DB::beginTransaction();
+        try{
+            $branch = Branch::where('id', $id)->first();
+            $branch->active = false;
+            $branch->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Branch";
+            $historyUpdate['method'] = "Delete";
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> json_encode(array('Active'=>$branch->active))]);
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $id;
+
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return redirect()->route('list_branch')->with('success', 'Data Berhasil Di Hapus');
+        }catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' =>  $ex->getMessage(), 500]);
+        }
+    }
+
     public function fetchBranchById(Request $request){
         $branch = Branch::where('id', $request->id)->first();
         return response()->json($branch);
+    }
+
+    //KHUSUS API APPS
+    public function fetchBranchApi(){
+        $branches = Branch::where('active', true)->get();
+        $data = ['result' => 1,
+                 'data' => $branches
+                ];
+        return response()->json($data,200);
     }
 }

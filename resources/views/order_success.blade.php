@@ -49,7 +49,7 @@
                     </thead>
                     <tr>
                         <td>{{ $order['code'] }}</td>
-                        <td class="right">{{ date("d/m/Y H:i:s", strtotime($order['created_at'])) }}</td>
+                        <td class="right">{{ date("d/m/Y", strtotime($order['orderDate'])) }}</td>
                     </tr>
                 </table>
                 <table class="col-md-12">
@@ -69,12 +69,12 @@
                         <td>{{ $order['phone'] }}</td>
                     </tr>
                     <tr>
-                        <td>Kota : </td>
-                        <td>{{ $order['city'] }}</td>
-                    </tr>
-                    <tr>
                         <td>Alamat : </td>
                         <td>{{ $order['address'] }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>{{ $order['district'][0]['province'] }}, {{ $order['district'][0]['kota_kab'] }}, {{ $order['district'][0]['subdistrict_name'] }}</td>
                     </tr>
                 </table>
                 <table class="col-md-12">

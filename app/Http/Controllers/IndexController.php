@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Banner;
 use App\OurGallery;
-
+use App\CategoryProduct;
+use App\Product;
+use App\Version;
 class IndexController extends Controller
 {
     /**
@@ -15,12 +17,17 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $banners = Banner::all()[0];
-        $galleries = OurGallery::all()[0];
-
-        return view('index', compact('banners', 'galleries'));
+        $banners = Banner::all();
+        $galleries = OurGallery::all();
+        $categoryProducts = CategoryProduct::all();
+        return view('index', compact('banners', 'galleries', 'categoryProducts'));
     }
 
+
+    public function fetchProductByCategoryProductId(Request $request){
+        $cso = Product::Where('category_id', $request->categoryId)->first();
+        return response()->json($cso);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -85,5 +92,29 @@ class IndexController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    public function termNCondition()
+    {
+        $vartest = "TESTING";
+        return view('term_cond', compact('vartest'));
+    }
+
+    public function storeVersion(Request $request){
+        $data = $request->all();
+        $version = Version::create($data);
+
+        $result = ['result'=> 1,
+                   'data' => $version
+        ];
+        return response()->json($result, 200);
+    }
+
+    public function listVersion(){
+        $version = Version::orderBy('id', 'desc')->first();
+        $result = ['result'=> 1,
+                   'data' => $version
+        ];
+        return response()->json($result, 200);
     }
 }

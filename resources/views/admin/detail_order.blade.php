@@ -53,7 +53,7 @@
                     </thead>
                     <tr>
                         <td>{{ $order['code'] }}</td>
-                        <td class="right">{{ date("d/m/Y H:i:s", strtotime($order['created_at'])) }}</td>
+                        <td class="right">{{ date("d/m/Y", strtotime($order['orderDate'])) }}</td>
                     </tr>
                 </table>
                 <table class="col-md-12">
@@ -73,12 +73,12 @@
                         <td>{{ $order['phone'] }}</td>
                     </tr>
                     <tr>
-                        <td>City : </td>
-                        <td>{{ $order['city'] }}</td>
-                    </tr>
-                    <tr>
                         <td>Address : </td>
                         <td>{{ $order['address'] }}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>{{ $order['district']['province'] }}, {{ $order['district']['kota_kab'] }}, {{ $order['district']['subdistrict_name'] }}</td>
                     </tr>
                 </table>
                 <table class="col-md-12">
@@ -89,13 +89,19 @@
                         <td>Product Name</td>
                         <td>Quantity</td>
                     </thead>
-
-                    @foreach(json_decode($order['product']) as $promo)
+                    
+                    @foreach(json_decode($order['product'], true) as $ProductPromo)
                         <tr>
-                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
-                            <td>{{ $promo->qty }}</td>
+                            @if(is_numeric($ProductPromo['id']) && $ProductPromo['id'] < 8)
+                                <td>{{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )</td>
+                            @else
+                                <td>{{ $ProductPromo['id'] }}</td>
+                            @endif
+                            
+                            <td>{{ $ProductPromo['qty'] }}</td>
                         </tr>
                     @endforeach
+                    
                     @if($order['old_product'] != null)
                         <thead style="background-color: #80808012 !important">
                             <td colspan="2">Old Product</td>
@@ -170,7 +176,16 @@
                         <td style="width:50%; text-align: center">{{ $order->cso['code'] }}</td>
                     </tr>
                 </table>
-
+                @if($order['customer_type'] != null)
+                    <table class="col-md-12">
+                        <thead>
+                            <td>Description</td>
+                        </thead>
+                        <tr>
+                            <td>{{ $order['customer_type'] }}</td>
+                        </tr>
+                    </table>
+                @endif
                 @if($order['description'] != null)
                     <table class="col-md-12">
                         <thead>
@@ -181,18 +196,51 @@
                         </tr>
                     </table>
                 @endif
+                <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share"
+                class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
+            </div>
 
-                <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share">Share to Whatsapp</a>
+
+            <div class="row justify-content-center" style="margin-top: 2em;">
+                <h2>ORDER HISTORY LOG</h2>
             </div>
-        </div>
-    </section>
-@else
-    <section id="intro" class="clearfix">
-        <div class="container">
             <div class="row justify-content-center">
-                <h2>CANNOT FIND ORDER</h2>
+              <table class="col-md-12">
+                  <thead>
+                      <td>No.</td>
+                      <td>Action</td>
+                      <td>User</td>
+                      <td>Change</td>
+                      <td>Time</td>
+                  </thead>
+                  @if($historyUpdateOrder != null)
+                  @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
+                  @php
+
+                  @endphp
+                  <tr>
+                      <td>{{$key+1}}</td>
+                      <td>{{$historyUpdateOrder->method}}</td>
+                      <td>{{$historyUpdateOrder->name}}</td>
+                      <?php $dataChange = json_decode($historyUpdateOrder->meta, true);?>
+                      <td>
+                      @foreach ($dataChange['dataChange'] as $key=>$value)
+                          <b>{{$key}}</b>: {{$value}}<br/>
+                      @endforeach
+                      </td>
+                      <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
+                  </tr>
+                  @endforeach
+                  @endif
+              </table>
             </div>
+                @else
+                <div class="row justify-content-center">
+                    <h2>CANNOT FIND ORDER</h2>
+                </div>
+                @endif
         </div>
+
     </section>
-@endif
+
 @endsection
