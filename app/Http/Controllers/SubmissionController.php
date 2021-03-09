@@ -73,14 +73,27 @@ class SubmissionController extends Controller
 
         // Melakukan query nama kota dan provinsi untuk referensi
         $referencesCityAndProvince = [];
-        foreach ($references as $reference) {
-            $getCityAndProvince = RajaOngkir_City::where("city_id", $reference->city)->first();
+        $getReferencesCityAndProvince = RajaOngkir_City::leftJoin(
+            "references",
+            "references.city",
+            "=",
+            "raja_ongkir__cities.city_id"
+        )
+        ->select(
+            "raja_ongkir__cities.province",
+            "raja_ongkir__cities.type",
+            "raja_ongkir__cities.city_name",
+        )
+        ->where("references.deliveryorder_id", $request["id"])
+        ->orderBy("references.id")
+        ->get();
 
-            $referencesCityAndProvince[] = $getCityAndProvince->type
+        foreach ($getReferencesCityAndProvince as $refCityAndProvince) {
+            $referencesCityAndProvince[] = $refCityAndProvince->type
                 . " "
-                . $getCityAndProvince->city_name
+                . $refCityAndProvince->city_name
                 . ", "
-                . $getCityAndProvince->province;
+                . $refCityAndProvince->province;
         }
 
         // Melakukan query riwayat dari tabel history_updates
@@ -138,7 +151,7 @@ class SubmissionController extends Controller
         try {
             $data = $request->all();
 
-            $data['code'] = "DO_BOOK/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
+            $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
 
             // Pembentukan array product
