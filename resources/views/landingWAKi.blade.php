@@ -623,7 +623,7 @@ touch-action: none;
 
 <div class="container">
   <div class="interior">
-    <a class="btn regisnotif" href="#open-modal">Basic CSS-Only Modal</a>
+    <a class="btn regisnotif" href="#open-modal"></a>
   </div>
 </div>
 <div id="open-modal" class="modal-window">
