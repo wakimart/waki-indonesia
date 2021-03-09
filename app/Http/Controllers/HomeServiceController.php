@@ -11,21 +11,16 @@ use App\User;
 use App\CategoryProduct;
 use App\Utils;
 use App\HistoryUpdate;
-use App\RajaOngkir_Province;
 use App\DeliveryOrder;
 use App\Order;
 use Carbon\Carbon;
 use App\Exports\HomeServicesExport;
 use App\Exports\HomeServicesExportByDate;
 use Maatwebsite\Excel\Facades\Excel;
-use Google_Service_Calendar_Event;
 use DB;
 use Validator;
-use Google_Client;
-use Google_Service_Calendar;
 use App\Http\Controllers\gCalendarController;
 use DateTime;
-use RajaOngkir;
 
 class HomeServiceController extends Controller
 {
@@ -369,22 +364,22 @@ class HomeServiceController extends Controller
                     DB::rollback();
                     //return redirect()->back()->with("errors",$ex->getMessage());
                     return response()->json(['errors' => $ex->getMessage()], 500);
-                }    
+                }
             }
 
-            
+
 
             // if(count($get_dateAppointment) != count(array_unique($get_dateAppointment))){
             //     return response()->json(['errors' => "Tanggal appointment tidak boleh sama!!"]);
             //     // return redirect()->back()->with("errors","Tanggal appointment tidak boleh sama!!");
             // }else{
-                
+
             // }
         }
     }
 
 
-    
+
 
     public function edit(Request $request)
     {
@@ -727,23 +722,23 @@ class HomeServiceController extends Controller
                          'data' => $all_homeservice[0]
                         ];
                 return response()->json($data, 200);
-            } 
+            }
         }
     }
 
     public function updateApi(Request $request)
     {
         $messages = array(
-                'id.required' => 'There\'s an error with the data.',
-                'id.exists' => 'There\'s an error with the data.',
-                'cso_id.required' => 'The CSO Code field is required.',
-                'cso_id.exists' => 'Wrong CSO Code.',
-                'branch_id.required' => 'The Branch must be selected.',
-                'cso2_id.required' => 'The CSO Code field is required.',
-                'cso2_id.exists' => 'Wrong CSO Code.'
-            );
+            'id.required' => 'There\'s an error with the data.',
+            'id.exists' => 'There\'s an error with the data.',
+            'cso_id.required' => 'The CSO Code field is required.',
+            'cso_id.exists' => 'Wrong CSO Code.',
+            'branch_id.required' => 'The Branch must be selected.',
+            'cso2_id.required' => 'The CSO Code field is required.',
+            'cso2_id.exists' => 'Wrong CSO Code.'
+        );
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'id' => ['required', 'exists:home_services,id,active,1'],
             'name' => 'required',
             'address' => 'required',
@@ -756,26 +751,49 @@ class HomeServiceController extends Controller
             'cso2_id' => ['exists:csos,code']
         ], $messages);
 
-        if ($validator->fails()){
-            $data = ['result' => 0,
-                     'data' => $validator->errors()
-                    ];
+        if ($validator->fails()) {
+            $data = [
+                'result' => 0,
+                'data' => $validator->errors(),
+            ];
+
             return response()->json($data, 401);
-        }
-        else{
+        } else {
+            $appointmentBefore = HomeService::find($request->id);
+
             $data = $request->all();
+
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
             $data['cso_phone'] = Cso::where('id', $data['cso_id'])->first()['phone'];
-            if($request->has('cso2_id')){
+
+            if ($request->has('cso2_id')) {
                 $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
             }
+
             $data['appointment'] = $data['date']." ".$data['time'];
             $homeservice = HomeService::find($data['id']);
             $homeservice->fill($data)->save();
 
-            $data = ['result' => 1,
-                     'data' => $homeservice
-                    ];
+            // Menyimpan riwayat pembaruan ke tabel history_updates
+            $historyHomeService = [];
+            $historyHomeService["type_menu"] = "Home Service";
+            $historyHomeService["method"] = "Update";
+            $historyHomeService["meta"] = [
+                "user" => $request->user_id,
+                "createdAt" => date("Y-m-d h:i:s"),
+                'dataChange'=> $data,
+                'appointmentBefore'=>$appointmentBefore->appointment,
+            ];
+            $historyHomeService["user_id"] = $request->user_id;
+            $historyHomeService["menu_id"] = $request->id;
+
+            HistoryUpdate::create($historyHomeService);
+
+            $data = [
+                'result' => 1,
+                'data' => $homeservice,
+            ];
+
             return response()->json($data, 200);
         }
     }
@@ -834,29 +852,46 @@ class HomeServiceController extends Controller
     public function deleteApi(Request $request)
     {
         $messages = array(
-                'id.required' => 'There\'s an error with the data.',
-                'id.exists' => 'There\'s an error with the data.'
-            );
+            'id.required' => 'There\'s an error with the data.',
+            'id.exists' => 'There\'s an error with the data.'
+        );
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'id' => ['required', 'exists:home_services,id,active,1']
         ], $messages);
 
-        if ($validator->fails()){
-            $data = ['result' => 0,
-                     'data' => $validator->errors()
-                    ];
-            return response()->json($data, 401);
-        }
-        else{
-            $homeservice = HomeService::find($request->id);
-            $homeservice->active = false;
-            $homeservice->save();
+        if ($validator->fails()) {
+            $data = [
+                'result' => 0,
+                'data' => $validator->errors()
+            ];
 
-            $data = ['result' => 1,
-                     'data' => $homeservice
-                    ];
-            return response()->json($data, 200);
+            return response()->json($data, 401);
+        } else {
+                $homeservice = HomeService::find($request->id);
+                $homeservice->active = false;
+                $homeservice->save();
+
+                // Menyimpan riwayat penghapusan ke tabel history_orders
+                $historyHomeService = [];
+                $historyHomeService["type_menu"] = "Home Service";
+                $historyHomeService["method"] = "Delete";
+                $historyHomeService["meta"] = [
+                    "user" => $request->user_id,
+                    "createdAt" => date("Y-m-d h:i:s"),
+                    'dataChange'=> $homeservice->getChanges(),
+                ];
+                $historyHomeService["user_id"] = $request->user_id;
+                $historyHomeService["menu_id"] = $request->id;
+
+                HistoryUpdate::create($historyHomeService);
+
+                $data = [
+                    'result' => 1,
+                    'data' => $homeservice
+                ];
+
+                return response()->json($data, 200);
         }
     }
 

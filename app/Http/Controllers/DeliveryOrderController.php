@@ -8,7 +8,6 @@ use App\DeliveryOrder;
 use App\Branch;
 use App\Cso;
 use App\User;
-use Illuminate\Validation\Rule;
 use Validator;
 use App\RajaOngkir_City;
 use App\RajaOngkir_Province;
@@ -146,7 +145,7 @@ class DeliveryOrderController extends Controller
             DB::rollback();
             return response()->json(['errors' => $ex]);
         }
-        
+
     }
 
     public function admin_ListDeliveryOrder(Request $request){
@@ -320,7 +319,7 @@ class DeliveryOrderController extends Controller
             $value['id'] = $key;
             array_push($promos, $value);
         }
-        
+
         $other = ['id'=>sizeof($data)+1, 'name'=>"OTHER", 'harga'=>"-"];
         array_push($promos, $other);
 
@@ -446,7 +445,7 @@ class DeliveryOrderController extends Controller
             if($request->has('filter_startDate')&& $request->has('filter_endDate')){
                 $deliveryOrders = $deliveryOrders->whereBetween('delivery_orders.created_at', [$request->filter_startDate.' 00:00:00', $request->filter_endDate.' 23:59:59']);
             }
-            $deliveryOrders = $deliveryOrders->orderBy('created_at', 'DESC');                     
+            $deliveryOrders = $deliveryOrders->orderBy('created_at', 'DESC');
             $deliveryOrders = $deliveryOrders->paginate($request->limit);
 
             foreach ($deliveryOrders as $i => $doNya) {
@@ -469,19 +468,19 @@ class DeliveryOrderController extends Controller
                      'data' => $deliveryOrders
                     ];
             return response()->json($data, 200);
-        }        
+        }
     }
 
     public function updateApi(Request $request)
     {
         $messages = array(
-                'cso_id.required' => 'The CSO Code field is required.',
-                'cso_id.exists' => 'Wrong CSO Code.',
-                'branch_id.required' => 'The Branch must be selected.',
-                'branch_id.exists' => 'Please choose the branch.',
-            );
+            'cso_id.required' => 'The CSO Code field is required.',
+            'cso_id.exists' => 'Wrong CSO Code.',
+            'branch_id.required' => 'The Branch must be selected.',
+            'branch_id.exists' => 'Please choose the branch.',
+        );
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
@@ -492,13 +491,14 @@ class DeliveryOrderController extends Controller
             'qty_0' => 'required'
         ], $messages);
 
-        if ($validator->fails()){
-            $data = ['result' => 0,
-                     'data' => $validator->errors()
-                    ];
+        if ($validator->fails()) {
+            $data = [
+                'result' => 0,
+                'data' => $validator->errors(),
+            ];
+
             return response()->json($data, 401);
-        }
-        else{
+        } else {
             $data = $request->all();
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
 
@@ -511,11 +511,11 @@ class DeliveryOrderController extends Controller
                         $data['arr_product'][$key] = [];
                         $data['arr_product'][$key]['id'] = $value;
 
-                        // {{-- KHUSUS Philiphin --}}
+                        // KHUSUS Philiphin
                         if($value == 'other'){
                             $data['arr_product'][$key]['id'] = $data['product_other_'.$arrKey[1]];
                         }
-                        //===========================
+                        // ===========================
 
                         $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
                     }
@@ -526,11 +526,27 @@ class DeliveryOrderController extends Controller
             $deliveryOrder = DeliveryOrder::find($data['id']);
             $deliveryOrder->fill($data)->save();
 
+            // Menyimpan riwayat pembaruan ke tabel history_updates
+            $historyDeliveryOrder = [];
+            $historyDeliveryOrder["type_menu"] = "Delivery Order";
+            $historyDeliveryOrder["method"] = "Update";
+            $historyDeliveryOrder["meta"] = [
+                "user" => $request->user_id,
+                "createdAt" => date("Y-m-d h:i:s"),
+                'dataChange'=> $deliveryOrder->getChanges(),
+            ];
+            $historyDeliveryOrder["user_id"] = $request->user_id;
+            $historyDeliveryOrder["menu_id"] = $request->id;
+
+            HistoryUpdate::create($historyDeliveryOrder);
+
             $deliveryOrder['URL'] = route('successorder')."?code=".$deliveryOrder['code'];
 
-            $data = ['result' => 1,
-                     'data' => $deliveryOrder
-                    ];
+            $data = [
+                'result' => 1,
+                'data' => $deliveryOrder,
+            ];
+
             return response()->json($data, 200);
         }
     }
@@ -543,12 +559,12 @@ class DeliveryOrderController extends Controller
                             ->select('delivery_orders.id','delivery_orders.city as city', 'delivery_orders.code', 'delivery_orders.created_at', 'delivery_orders.no_member as no_member', 'delivery_orders.name as customer_name', 'delivery_orders.phone as customer_phone', 'delivery_orders.address as customer_address', 'delivery_orders.city as city', 'delivery_orders.arr_product', 'branches.id as branch_id','branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->get();
 
-        $kota = $delivery_orders[0]->city; 
+        $kota = $delivery_orders[0]->city;
         if (strpos($kota, 'Kota') !== false) {
             $kota = str_replace('Kota ', '',$kota);
         }elseif (strpos($kota, 'Kabupaten') !== false){
             $kota = str_replace('Kabupaten ', '',$kota);
-        }                    
+        }
         $city = RajaOngkir_City::where('city_name', 'like', '%'.$kota.'%')->first();
         foreach ($delivery_orders as $i => $doNya) {
             $tempId = json_decode($doNya['arr_product'], true);
@@ -567,7 +583,7 @@ class DeliveryOrderController extends Controller
                     $tempArray2['id'] = 8;
                     $tempArray2['name'] = $product['id'];
                 }
-                               
+
                 $tempArray2['qty'] = $product['qty'];
                 array_push($tempArray, $tempArray2);
             }
@@ -592,24 +608,41 @@ class DeliveryOrderController extends Controller
             'id.exists' => 'There\'s an error with the data.'
         );
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'id' => ['required', 'exists:orders,id,active,1']
         ], $messages);
 
-        if ($validator->fails()){
-            $data = ['result' => 0,
-                     'data' => $validator->errors()
-                    ];
+        if ($validator->fails()) {
+            $data = [
+                'result' => 0,
+                'data' => $validator->errors(),
+            ];
+
             return response()->json($data, 401);
-        }
-        else{
+        } else {
             $order = DeliveryOrder::find($request->id);
             $order->active = false;
             $order->save();
 
-            $data = ['result' => 1,
-                     'data' => $order
-                    ];
+            // Menyimpan riwayat penghapusan ke tabel history_orders
+            $historyDeliveryOrder = [];
+            $historyDeliveryOrder["type_menu"] = "Delivery Order";
+            $historyDeliveryOrder["method"] = "Delete";
+            $historyDeliveryOrder["meta"] = [
+                "user" => $request->user_id,
+                "createdAt" => date("Y-m-d h:i:s"),
+                'dataChange'=> $order->getChanges(),
+            ];
+            $historyDeliveryOrder["user_id"] = $request->user_id;
+            $historyDeliveryOrder["menu_id"] = $request->id;
+
+            HistoryUpdate::create($historyDeliveryOrder);
+
+            $data = [
+                'result' => 1,
+                'data' => $order,
+            ];
+
             return response()->json($data, 200);
         }
     }

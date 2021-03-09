@@ -8,13 +8,11 @@ use Illuminate\Http\Request;
 use App\Exports\OrderExport;
 use App\DeliveryOrder;
 use App\Order;
-use App\RajaOngkir_Province;
 use App\Branch;
 use App\Cso;
 use App\CategoryProduct;
 use App\User;
 use App\RajaOngkir_City;
-use App\RajaOngkir_Subdistrict;
 use App\HistoryUpdate;
 use DB;
 use App\Utils;
@@ -172,7 +170,7 @@ class OrderController extends Controller
                 }
             }
             $data['bank'] = json_encode($data['arr_bank']);
-            $data['province'] = $data['province_id']; 
+            $data['province'] = $data['province_id'];
             $order = Order::create($data);
             DB::commit();
 
@@ -189,7 +187,7 @@ class OrderController extends Controller
             DB::rollback();
             return response()->json(['errors' => $ex]);
         }
-        
+
     }
 
     public function admin_ListOrder(Request $request){
@@ -409,7 +407,7 @@ class OrderController extends Controller
             $category = $request->category;
         }
 
-        return Excel::download(new OrderExport($date, $city, $category, $cso), 'Order Report.xlsx'); 
+        return Excel::download(new OrderExport($date, $city, $category, $cso), 'Order Report.xlsx');
     }
 
 
@@ -643,20 +641,20 @@ class OrderController extends Controller
                      'data' => $orders
                     ];
             return response()->json($data, 200);
-        }        
+        }
     }
 
 
     public function updateApi(Request $request)
     {
         $messages = array(
-                'id.required' => 'There\'s an error with the data.',
-                'id.exists' => 'There\'s an error with the data.',
-                'cso_id.required' => 'The CSO Code field is required.',
-                'cso_id.exists' => 'Wrong CSO Code.',
-                'branch_id.required' => 'The Branch must be selected.',
-                'old_product.required_if' => 'The old product field is required when upgrade.'
-            );
+            'id.required' => 'There\'s an error with the data.',
+            'id.exists' => 'There\'s an error with the data.',
+            'cso_id.required' => 'The CSO Code field is required.',
+            'cso_id.exists' => 'Wrong CSO Code.',
+            'branch_id.required' => 'The Branch must be selected.',
+            'old_product.required_if' => 'The old product field is required when upgrade.'
+        );
 
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
@@ -682,20 +680,21 @@ class OrderController extends Controller
             'branch_id' => 'required'
         ], $messages);
 
-        if ($validator->fails()){
-            $data = ['result' => 0,
-                     'data' => $validator->errors()
-                    ];
+        if ($validator->fails()) {
+            $data = [
+                'result' => 0,
+                'data' => $validator->errors(),
+            ];
+
             return response()->json($data, 401);
-        }
-        else{
+        } else {
             $data = $request->all();
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
             $data['30_cso_id'] = Cso::where('code', $data['cso_id_30'])->first()['id'];
             $data['70_cso_id'] = Cso::where('code', $data['cso_id_70'])->first()['id'];
             $data['prize'] = $data['gift_product'];
 
-            //pembentukan array product
+            // Pembentukan array product
             $index = 0;
             $data['arr_product'] = [];
             foreach ($data as $key => $value) {
@@ -718,7 +717,7 @@ class OrderController extends Controller
             }
             $data['product'] = json_encode($data['arr_product']);
 
-            //pembentukan array Bank
+            // Pembentukan array Bank
             $index = 0;
             $data['arr_bank'] = [];
             foreach ($data as $key => $value) {
@@ -736,9 +735,25 @@ class OrderController extends Controller
             $order = Order::find($data['id']);
             $order->fill($data)->save();
 
-            $data = ['result' => 1,
-                     'data' => $order
-                    ];
+            // Menyimpan riwayat pembaruan ke tabel history_updates
+            $historyOrder = [];
+            $historyOrder["type_menu"] = "Order";
+            $historyOrder["method"] = "Update";
+            $historyOrder["meta"] = [
+                "user" => $request->user_id,
+                "createdAt" => date("Y-m-d h:i:s"),
+                'dataChange'=> $order->getChanges(),
+            ];
+            $historyOrder["user_id"] = $request->user_id;
+            $historyOrder["menu_id"] = $request->id;
+
+            HistoryUpdate::create($historyOrder);
+
+            $data = [
+                'result' => 1,
+                'data' => $order,
+            ];
+
             return response()->json($data, 200);
         }
     }
@@ -752,14 +767,14 @@ class OrderController extends Controller
                             ->leftjoin('csos', 'orders.cso_id', '=', 'csos.id')
                             ->select('orders.id', 'orders.code', 'orders.orderDate', 'orders.no_member', 'orders.name as customer_name', 'orders.phone as customer_phone', 'orders.city as customer_city', 'orders.address as customer_address','orders.product', 'orders.old_product as old_product', 'orders.prize as prize_product', 'orders.payment_type as payment_type', 'orders.total_payment as total_payment', 'orders.cash_upgrade as cash_upgrade', 'orders.down_payment as down_payment', 'orders.remaining_payment as remaining_payment', 'orders.bank as bank','branches.code as branch_code', 'orders.customer_type as customer_type','orders.30_cso_id as cso_30_id', 'orders.70_cso_id as cso_70_id','orders.description as description', 'orders.know_from as know_from', 'orders.distric','branches.id as branch_id', 'branches.code as branch_code', 'branches.name as branch_name', 'csos.code as cso_code', 'csos.name as cso_name')
                             ->get();
-        $kota = $orders[0]->customer_city; 
+        $kota = $orders[0]->customer_city;
         if (strpos($kota, 'Kota') !== false) {
             $kota = str_replace('Kota ', '',$kota);
         }elseif (strpos($kota, 'Kabupaten') !== false){
             $kota = str_replace('Kabupaten ', '',$kota);
         }
         $city = RajaOngkir_City::where('city_name', 'like', '%'.$kota.'%')->first();
-        
+
         foreach ($orders as $i => $doNya) {
             $tempId = json_decode($doNya['product'], true);
             $tempArray = $doNya['product'];
@@ -767,7 +782,7 @@ class OrderController extends Controller
             foreach ($tempId as $j => $product) {
                 $tempArray[$j] = [];
                 if (gettype($product['id']) == gettype(1)){
-                    $tempArray[$j]['id'] = $product['id'];    
+                    $tempArray[$j]['id'] = $product['id'];
                 }else {
                     $tempArray[$j]['id'] = 8;
                     $tempArray[$j]['name'] = $product['id'];
@@ -779,7 +794,7 @@ class OrderController extends Controller
             }
             $doNya['product'] = $tempArray;
 
-            //khusus 
+            //khusus
             $cso_30 =  Cso::where('id', $doNya['cso_30_id'])->first();
             $cso_70 = Cso::where('id', $doNya['cso_70_id'])->first();
             $doNya['cso_30_code'] =$cso_30['code'];
@@ -821,20 +836,37 @@ class OrderController extends Controller
             'id' => ['required', 'exists:orders,id,active,1']
         ], $messages);
 
-        if ($validator->fails()){
-            $data = ['result' => 0,
-                     'data' => $validator->errors()
-                    ];
+        if ($validator->fails()) {
+            $data = [
+                'result' => 0,
+                'data' => $validator->errors(),
+            ];
+
             return response()->json($data, 401);
-        }
-        else{
-            $order = order::find($request->id);
+        } else {
+            $order = Order::find($request->id);
             $order->active = false;
             $order->save();
 
-            $data = ['result' => 1,
-                     'data' => $order
-                    ];
+            // Menyimpan riwayat penghapusan ke tabel history_orders
+            $historyOrder = [];
+            $historyOrder["type_menu"] = "Order";
+            $historyOrder["method"] = "Delete";
+            $historyOrder["meta"] = [
+                "user" => $request->user_id,
+                "createdAt" => date("Y-m-d h:i:s"),
+                'dataChange'=> $order->getChanges(),
+            ];
+            $historyOrder["user_id"] = $request->user_id;
+            $historyOrder["menu_id"] = $request->id;
+
+            HistoryUpdate::create($historyOrder);
+
+            $data = [
+                'result' => 1,
+                'data' => $order,
+            ];
+
             return response()->json($data, 200);
         }
     }
