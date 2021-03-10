@@ -14,4 +14,16 @@ class Reference extends Model
     {
         return $this->belongsTo('App\DeliveryOrder');
     }
+
+    public function getCityName()
+    {
+        return RajaOngkir_City::where("city_id", $this->city)->first()->city_name;
+    }
+
+    public function getCityFullName()
+    {
+        $queryCity = RajaOngkir_City::where("city_id", $this->city)->first();
+
+        return $queryCity->type . " " . $queryCity->city_name;
+    }
 }

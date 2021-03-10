@@ -136,6 +136,7 @@
 	          <li><a href="{{route('index')}}#footer">Contact Us</a></li>
 	          @endif
 
+	          <li><a href="{{route('login')}}">Login</a></li>
 
 	          <li><a href="#" class="searchtxtmob"> </a>
 	            <div class="searchicon">

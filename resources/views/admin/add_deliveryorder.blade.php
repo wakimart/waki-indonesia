@@ -97,18 +97,6 @@
 	          		<div class="card-body">
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_deliveryorder') }}">
 	            			{{ csrf_field() }}
-	            			<div class="form-group">
-								<span>Type Register</span>
-  								<select id="type_register" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_register" value="" required>
-				                    <option value="Normal Register">Normal Register</option>
-				                    <option value="MGM">MGM</option>
-				                    <option value="Refrensi">Refrensi</option>
-				                    <option value="Take Away">Take Away</option>
-  								</select>
-								<span class="invalid-feedback">
-									<strong></strong>
-								</span>
-							</div>
 	              			<div class="form-group">
 								<label for=""><h2>Data Pelanggan</h2></label><br/>
 	                			<label id="member_label" for="">No. MPC (optional)</label>
@@ -221,72 +209,6 @@
                     			<div class="validation" id="validation_cso"></div>
 	              			</div>
 
-	              			<div id="refrensiForm" class="form-group">
-	              				<h3>Refrensi:</h3><br>
-
-								<!-- One "tab" for each step in the form: -->
-								@for($x = 0; $x < 10; $x++)
-									<div class="tab">
-										<label for="">Member {{$x + 1}}</label>
-										<div class="form-group">
-							                <label for="">Name</label>
-							                <input type="text" class="form-control" name="name_ref[]" placeholder="Name" oninput="this.className = ''" required>
-							                <div class="validation"></div>
-				              			</div>
-				              			<div class="form-group">
-							                <label for="">Age</label>
-							                <input type="text" class="form-control" name="age_ref[]" placeholder="Age" oninput="this.className = ''" required>
-							                <div class="validation"></div>
-				              			</div>
-				              			<div class="form-group">
-							                <label for="">Phone Number</label>
-							                <input type="number" class="form-control" name="phone_ref[]" placeholder="Phone Number" oninput="this.className = ''" required>
-							                <div class="validation"></div>
-				              			</div>
-				              			<div class="form-group">
-							                <label for="">Province</label>
-											<select class="form-control changeProvince" id="province-{{$x}}" name="province_ref[]" data-msg="Mohon Pilih Provinsi" required>
-												<option selected disabled value="">Pilihan Provinsi</option>
-												@php
-													$result = RajaOngkir::FetchProvince();
-													$result = $result['rajaongkir']['results'];
-													$arrProvince = [];
-													if(sizeof($result) > 0){
-														foreach ($result as $value) {
-															echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
-														}
-													}
-												@endphp
-											</select>
-											<div class="validation"></div>
-										  </div>
-										<div class="form-group">
-							                <label for="">City</label>
-											<select class="form-control" id="city-{{$x}}" name="city_ref[]" data-msg="Mohon Pilih Kota" onselect="this.className = ''" required>
-												<option selected disabled value="">Pilihan Kota</option>
-											</select>
-											<div class="validation"></div>
-										</div>
-									</div>
-								@endfor
-								
-
-								<div style="overflow:auto;">
-								  <div style="float:right;">
-								    <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
-								    <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
-								  </div>
-								</div>
-
-								<!-- Circles which indicates the steps of the form: -->
-								<div style="text-align:center;margin-top:40px;">
-									@for($x = 0; $x < 10; $x++)
-								  		<span class="step"></span>
-								  	@endfor
-								</div>
-
-	              			</div>
-
 	              			<div id="errormessage"></div>
 	              			<div class="form-group">
 	              				<button id="addDeliveryOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
@@ -344,79 +266,6 @@
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript">
-	var currentTab = 0; // Current tab is set to be the first tab (0)
-	showTab(currentTab); // Display the current tab
-
-	function showTab(n) {
-	  // This function will display the specified tab of the form ...
-	  var x = document.getElementsByClassName("tab");
-	  x[n].style.display = "block";
-	  // ... and fix the Previous/Next buttons:
-	  if (n == 0) {
-	    document.getElementById("prevBtn").style.display = "none";
-	  } else {
-	    document.getElementById("prevBtn").style.display = "inline";
-	  }
-	  if (n == (x.length - 1)) {
-	    document.getElementById("nextBtn").innerHTML = "Submit";
-	  } else {
-	    document.getElementById("nextBtn").innerHTML = "Next";
-	  }
-	  // ... and run a function that displays the correct step indicator:
-	  fixStepIndicator(n)
-	}
-
-	function nextPrev(n) {
-	  // This function will figure out which tab to display
-	  var x = document.getElementsByClassName("tab");
-	  // Exit the function if any field in the current tab is invalid:
-	  if (n == 1 && !validateForm()) return false;
-	  // Hide the current tab:
-	  x[currentTab].style.display = "none";
-	  // Increase or decrease the current tab by 1:
-	  currentTab = currentTab + n;
-	  // if you have reached the end of the form... :
-	  if (currentTab >= x.length) {
-	    //...the form gets submitted:
-	    document.getElementById("regForm").submit();
-	    return false;
-	  }
-	  // Otherwise, display the correct tab:
-	  showTab(currentTab);
-	}
-
-	function validateForm() {
-	  // This function deals with validation of the form fields
-	  var x, y, i, valid = true;
-	  x = document.getElementsByClassName("tab");
-	  y = x[currentTab].getElementsByTagName("input");
-	  // A loop that checks every input field in the current tab:
-	  for (i = 0; i < y.length; i++) {
-	    // If a field is empty...
-	    if (y[i].value == "") {
-	      // add an "invalid" class to the field:
-	      y[i].className += " invalid";
-	      // and set the current valid status to false:
-	      valid = false;
-	    }
-	  }
-	  // If the valid status is true, mark the step as finished and valid:
-	  if (valid) {
-	    document.getElementsByClassName("step")[currentTab].className += " finish";
-	  }
-	  return valid; // return the valid status
-	}
-
-	function fixStepIndicator(n) {
-	  // This function removes the "active" class of all steps...
-	  var i, x = document.getElementsByClassName("step");
-	  for (i = 0; i < x.length; i++) {
-	    x[i].className = x[i].className.replace(" active", "");
-	  }
-	  //... and adds the "active" class to the current step:
-	  x[n].className += " active";
-	}
-
 	//function load city
 	$(document).on("change", ".changeProvince", function(){
 		var get_index = $(this).attr('id');
