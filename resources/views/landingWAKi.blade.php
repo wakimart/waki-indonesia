@@ -228,7 +228,7 @@ touch-action: none;
                         <div class="clearfix"></div>
                         <h1 class="hero--headline">WAKi semakin dekat dengan anda, langsung ke RUMAH!</h1>
                         <p class="hero--bio">Dapatkan fisioterapi gratis selama <strong>5 hari</strong> di rumah anda!</p>
-                        <div class="col-xs-12 col-sm-12 col-md-12 row" style="text-align: left;padding: 0;">
+                        <div class="col-xs-12 col-sm-12 col-md-12 row" style="text-align: left;padding: 0;margin-bottom: 30px;">
                           <div class="col-xs-12 col-sm-4 col-md-4">
                             <i class="fas fa-check-circle" style="color:#6ac159; font-size: 32px;"></i>
                             <p class="hero--sub">Protokol Kesehatan Terjamin</p>
