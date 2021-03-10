@@ -87,6 +87,13 @@ class RolesSeeder extends Seeder
         		'edit-app' => true,
                 'delete-app' => true,
 
+                // Submission (Head Admin)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
         	]),
         ]);
 
@@ -164,6 +171,14 @@ class RolesSeeder extends Seeder
                 'browse-app' => true,
         		'edit-app' => true,
                 'delete-app' => true,
+
+                // Submission (Admin)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
         	]),
         ]);
 
@@ -235,6 +250,14 @@ class RolesSeeder extends Seeder
                 'browse-user' => false,
                 'edit-user' => false,
                 'delete-user' => false,
+
+                // Submission (CSO)
+                "add-submission" => true,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
             ]),
         ]);
 
@@ -306,6 +329,14 @@ class RolesSeeder extends Seeder
                 'browse-user' => false,
                 'edit-user' => false,
                 'delete-user' => false,
+
+                // Submission (Branch)
+                "add-submission" => true,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => true,
+                "delete-submission" => true,
             ]),
         ]);
 
@@ -377,6 +408,14 @@ class RolesSeeder extends Seeder
                 'browse-user' => false,
                 'edit-user' => false,
                 'delete-user' => false,
+
+                // Submission (Area Manager)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => true,
+                "delete-submission" => true,
             ]),
         ]);
 
@@ -448,6 +487,14 @@ class RolesSeeder extends Seeder
                 'browse-user' => false,
                 'edit-user' => false,
                 'delete-user' => false,
+
+                // Submission (Head Manager)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
             ]),
         ]);
 
@@ -525,6 +572,14 @@ class RolesSeeder extends Seeder
                 'browse-app' => true,
         		'edit-app' => true,
                 'delete-app' => true,
+
+                // Submission (Admin Management)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
             ]),
         ]);
     }

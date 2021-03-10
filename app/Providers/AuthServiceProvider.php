@@ -162,7 +162,7 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-promo']);
         });
 
-        
+
         //-- REPORT --//
 
         //-- USER ADMIN --//
@@ -178,8 +178,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-user', function ($user) {
             return $user->hasAccess(['delete-user']);
         });
-        
-        
+
+
         //-- APP VERSION --//
         Gate::define('add-app', function ($user) {
             return $user->hasAccess(['add-app']);
@@ -192,11 +192,37 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('delete-app', function ($user) {
             return $user->hasAccess(['delete-app']);
-        }); 
-        
+        });
+
         //-- COMPANY INFO --//
         Gate::define('browse-company_info', function ($user) {
             return $user->hasAccess(['browse-company_info']);
+        });
+
+        //-- SUBMISSION --//
+        // Add submission
+        Gate::define("add-submission", function ($user) {
+            return $user->hasAccess(["add-submission"]);
+        });
+        // Browse submission
+        Gate::define("browse-submission", function ($user) {
+            return $user->hasAccess(["browse-submission"]);
+        });
+        // Browse reference
+        Gate::define("browse-reference", function ($user) {
+            return $user->hasAccess(["browse-reference"]);
+        });
+        // View detail submission
+        Gate::define("detail-submission", function ($user) {
+            return $user->hasAccess(["detail-submission"]);
+        });
+        // Edit submission
+        Gate::define("edit-submission", function ($user) {
+            return $user->hasAccess(["edit-submission"]);
+        });
+        // Delete submission
+        Gate::define("delete-submission", function ($user) {
+            return $user->hasAccess(["delete-submission"]);
         });
     }
 }
