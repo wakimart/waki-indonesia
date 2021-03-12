@@ -12,17 +12,17 @@ use App\User;
 use App\Utils;
 use DB;
 
-use App\DeliveryOrder;
+use App\Product;
 
 
 class AcceptanceController extends Controller
 {
     public function create()
     {
-        $promos = DeliveryOrder::$Promo;
+        $products = Product::all();
         $branches = Branch::where('active', true)->get();
         $csos = Cso::all();
-    	return view('admin.add_acceptance', compact('promos', 'branches', 'csos'));
+    	return view('admin.add_acceptance', compact('products', 'branches', 'csos'));
     }
 
     public function addApi(Request $request)
