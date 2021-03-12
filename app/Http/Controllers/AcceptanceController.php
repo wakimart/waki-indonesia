@@ -25,6 +25,11 @@ class AcceptanceController extends Controller
     	return view('admin.add_acceptance', compact('products', 'branches', 'csos'));
     }
 
+    public function store(Request $request){
+
+        return response()->json(['success' => $request->all()]);
+    }
+
     public function addApi(Request $request)
     {
         $messages = array(
