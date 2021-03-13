@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Acceptance;
 use App\AcceptanceStatusLog;
@@ -10,9 +11,9 @@ use App\Branch;
 use App\Cso;
 use App\User;
 use App\Utils;
-use DB;
-
+use Carbon\Carbon;
 use App\Product;
+use DB;
 
 
 class AcceptanceController extends Controller
@@ -26,8 +27,70 @@ class AcceptanceController extends Controller
     }
 
     public function store(Request $request){
+         $messages = array(
+            'cso_id.required' => 'The CSO Code field is required.',
+            'cso_id.exists' => 'Wrong CSO Code.',
+            'branch_id.required' => 'The Branch must be selected.',
+            'branch_id.exists' => 'Please choose the branch.'
+        );
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required',
+            'cso_id' => ['required', 'exists:csos,code'],
+            'branch_id' => ['required', 'exists:branches,id'],
+            'phone' => 'required|string|min:7',
+        ], $messages);
 
-        return response()->json(['success' => $request->all()]);
+        if($validator->fails()){
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json(['errors' => $arr_Hasil]);
+        }
+        else {
+            DB::beginTransaction();
+             try{
+                $data = $request->all();
+                $branch = Branch::find($data['branch_id']);
+                $cso = Cso::where('code', $data['cso_id'])->first();
+                $data['branch_id'] = $branch['id'];
+                $data['cso_id'] = $cso['id'];
+                $data['user_id'] = Auth::user()['id'];
+                $data['status'] = "new";
+                $data['code'] = "ACC/UPGRADE/".$branch->code."/".$data['cso_id']."/".date("Ymd");
+                $data['arr_condition'] = ['kelengkapan' => json_encode($data['kelengkapan']), 'kondisi' => $data['kondisi'], 'tampilan' => $data['tampilan']];
+
+                if ($request->hasFile("image")) {
+                    $image = $request->file("image");
+                    $data['image'] = [];
+                    $path = "sources/acceptance";
+
+                    if (!is_dir($path)) {
+                        File::makeDirectory($path, 0777, true, true);
+                    }
+
+                    $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . "_upgrade." . $image->getClientOriginalExtension();
+                    $image->move($path, $fileName);
+                    $data["image"] = [$fileName];
+                }
+
+                $acc = Acceptance::create($data);
+
+                $accStatusLog['acceptance_id'] = $acc->id;
+                $accStatusLog['user_id'] =  $data['user_id'];
+                $accStatusLog['status'] = "complete";
+                $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
+
+                DB::commit();
+
+                return response()->json(['success' => $acc]);
+            } catch (\Exception $ex) {
+                DB::rollback();
+                return response()->json(['errors' => $ex], 500);
+            }
+        }
     }
 
     public function addApi(Request $request)

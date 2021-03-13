@@ -117,7 +117,7 @@
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-	              				<label for="">Upgrade Date</label>
+	              				<label for="">Upgrade Date (Bulan/Tanggal/Tahun)</label>
 	              				<input type="date" class="form-control" name="upgrade_date" id="upgrade_date" placeholder="Upgrade Date" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal"/>
 	              				<div class="validation"></div>
 	              			</div>
@@ -125,7 +125,7 @@
 	              			<div class="form-group">
 								<label for=""><h2>Data Pelanggan</h2></label><br/>
 	                			<label for="">No. MPC (optional)</label>
-	                			<input type="text" class="form-control" id="no_member" name="no_member" placeholder="No. Member">
+	                			<input type="text" class="form-control" id="no_mpc" name="no_mpc" placeholder="No. Member">
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
@@ -140,7 +140,7 @@
 	              			</div>
 	              			<div class="form-group">
 				                <label for="">Province</label>
-								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+								<select class="form-control" id="province" name="province" data-msg="Mohon Pilih Provinsi" required>
 									<option selected disabled value="">Pilihan Provinsi</option>
 
 									@php
@@ -165,7 +165,7 @@
 							</div>
 							<div class="form-group">
 				                <label for="">Sub District</label>
-								<select class="form-control" id="subDistrict" name="distric" data-msg="Mohon Pilih Kecamatan" required>
+								<select class="form-control" id="subDistrict" name="district" data-msg="Mohon Pilih Kecamatan" required>
 									<option selected disabled value="">Pilihan Kecamatan</option>
 								</select>
 								<div class="validation"></div>
@@ -198,7 +198,7 @@
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-	              				<label for="">Purchase Date Old Product</label>
+	              				<label for="">Purchase Date Old Product (Bulan/Tanggal/Tahun)</label>
 	              				<input type="date" class="form-control" name="purchase_date" id="purchase_date" placeholder="Purchase Date" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
 	              				<div class="validation"></div>
 	              			</div>
@@ -217,19 +217,19 @@
 	              				<label for="">Kelengkapan</label>
 		                        <div class="div-CheckboxGroup" required>
 		                        	<div class="form-check form-check">
-		                                <input class="form-check-input" type="checkbox" id="kelengkapan-mesin" name="kelengkapan" value="mesin">
+		                                <input class="form-check-input" type="checkbox" id="kelengkapan-mesin" name="kelengkapan[]" value="mesin">
 		                                <label class="form-check-label" for="kelengkapan-mesin">Mesin</label>
 		                            </div>
 		                            <div class="form-check form-check">
-		                                <input class="form-check-input" type="checkbox" id="kelengkapan-filter" name="kelengkapan" value="filter">
+		                                <input class="form-check-input" type="checkbox" id="kelengkapan-filter" name="kelengkapan[]" value="filter">
 		                                <label class="form-check-label" for="kelengkapan-filter">Filter</label>
 		                            </div>
 		                            <div class="form-check form-check">
-		                                <input class="form-check-input" type="checkbox" id="kelengkapan-aksesoris" name="kelengkapan" value="aksesoris">
+		                                <input class="form-check-input" type="checkbox" id="kelengkapan-aksesoris" name="kelengkapan[]" value="aksesoris">
 		                                <label class="form-check-label" for="kelengkapan-aksesoris">Aksesoris</label>
 		                            </div>
 		                            <div class="form-check form-check">
-		                                <input class="form-check-input" type="checkbox" id="kelengkapan-kabel" name="kelengkapan" value="kabel">
+		                                <input class="form-check-input" type="checkbox" id="kelengkapan-kabel" name="kelengkapan[]" value="kabel">
 		                                <label class="form-check-label" for="kelengkapan-kabel">Kabel</label>
 		                            </div>
 		                    	</div>
@@ -426,9 +426,11 @@
         				$("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
         			}
         		}
+                alert("Terdapat kesalahan pada inputan !");
         	}
         	else{
-        		console.log(hasil);
+                alert("Data berhasil disimpan !");
+	            window.location.href = "{{ route('add_acceptance_form') }}";
 	        }
 	        document.getElementById("addAcceptance").innerHTML = "SAVE";
 	    }
