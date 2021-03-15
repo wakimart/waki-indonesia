@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Acceptance;
 use App\AcceptanceStatusLog;
 use App\Branch;
 use App\Cso;
 use App\User;
 use App\Utils;
-use Carbon\Carbon;
 use App\Product;
+use App\Upgrade;
 use DB;
 
 
@@ -58,7 +59,7 @@ class AcceptanceController extends Controller
                 $data['branch_id'] = $branch['id'];
                 $data['cso_id'] = $cso['id'];
                 $data['user_id'] = Auth::user()['id'];
-                $data['status'] = "new";
+                $data['status'] = "complete";
                 $data['code'] = "ACC/UPGRADE/".$branch->code."/".$data['cso_id']."/".date("Ymd");
                 $data['arr_condition'] = ['kelengkapan' => json_encode($data['kelengkapan']), 'kondisi' => $data['kondisi'], 'tampilan' => $data['tampilan']];
 
@@ -82,6 +83,10 @@ class AcceptanceController extends Controller
                 $accStatusLog['user_id'] =  $data['user_id'];
                 $accStatusLog['status'] = "complete";
                 $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
+
+                $upgrade['acceptance_id'] = $acc->id;
+                $upgrade['status'] = "New";
+                Upgrade::create($upgrade);
 
                 DB::commit();
 
