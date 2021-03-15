@@ -79,6 +79,33 @@
 </li>
 @endif
 
+
+@if(Gate::check('add-order') || Gate::check('browse-order'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'service'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#service-dd" aria-expanded="false" aria-controls="service-dd">
+    <span class="menu-title">Service</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-calendar-text menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'service'? 'show': '' }}" id="service-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-order'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_service'? 'active': '' }}" href="{{ route('add_service')}}">Add Service</a></li>
+      @endif
+      @if(Gate::check('browse-order'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_service'? 'active': '' }}" href="{{  route('admin_list_order') }}">List Service</a></li>
+      @endif
+      @if(Gate::check('add-order'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_sparepart'? 'active': '' }}" href="{{ route('add_service')}}">Add Sparepart</a></li>
+      @endif
+      @if(Gate::check('browse-order'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_sparepart'? 'active': '' }}" href="{{  route('admin_list_order') }}">List Sparepart</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
 @if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'submission'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#submission-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'submission'? 'true': '' }}" aria-controls="submission-dd">
@@ -143,6 +170,7 @@
   </div>
 </li>
 {{-- @endif --}}
+
 
 @if(Gate::check('add-cso') || Gate::check('browse-cso'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'cso'? 'active': '' }} nav-item">

@@ -288,6 +288,28 @@ Route::group(['prefix' => 'cms-admin'], function () {
                 ->name('homeservice_export-to-xls-by-date');
     });
 
+    Route::group(['prefix' => 'service','middleware' => 'auth'], function(){
+    	//Add Form Service
+    	Route::get('/', 'ServiceController@create')
+	    	->name('add_service')
+	    	->middleware('can:add-order');
+	    //Store Service
+	    Route::post('/', 'ServiceController@store')
+	    	->name('store_service')
+	    	->middleware('can:add-order');
+    });
+
+    Route::group(['prefix' => 'sparepart','middleware' => 'auth'], function(){
+    	//Add Form Service
+    	Route::get('/', 'SparepartController@create')
+	    	->name('add_sparepart')
+	    	->middleware('can:add-order');
+	    //Store Service
+	    Route::post('/', 'SparepartController@store')
+	    	->name('store_sparepart')
+	    	->middleware('can:add-order');
+    });
+
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
     	//Add Form CSO
     	Route::get('/', 'CsoController@create')
