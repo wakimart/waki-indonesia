@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Service;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use DB;
+use App\Product;
+use App\Sparepart;
 
 class ServiceController extends Controller
 {
@@ -24,7 +27,9 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        //
+        $products = Product::all();
+        $spareparts = Sparepart::where('active', true)->get();
+        return view('admin.add_service', compact('products', 'spareparts'));
     }
 
     /**
