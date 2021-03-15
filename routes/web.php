@@ -466,6 +466,100 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    Route::post('/{PromoNya}', 'PromoController@delete')
 	    	->name('delete_promo');
     });
+
+    Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
+        // Create submission form page
+        Route::get("/", "SubmissionController@create")
+            ->name("add_submission_form");
+
+        // Process new submission form
+        Route::post("/", "SubmissionController@store")
+            ->name("store_submission_form");
+
+        // Show submission list
+        Route::get("/list", "SubmissionController@listSubmission")
+            ->name("list_submission_form");
+
+        // Show reference list
+        Route::get("/list_reference", "SubmissionController@listReference")
+            ->name("list_reference");
+
+        // Show detail of submission
+        Route::get("/detail", "SubmissionController@detailSubmission")
+            ->name("detail_submission");
+
+        // Edit submission form page
+        Route::get("/edit/", "SubmissionController@edit")
+            ->name("edit_submission_form");
+
+        // Process submission form edit
+        Route::post("/update/", "SubmissionController@update")
+            ->name("update_submission_form");
+
+        // Process submission form delete
+        Route::post("/{id}", "SubmissionController@destroy")
+            ->name("delete_submission_form");
+    });
+
+    Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {
+        // Create submission form page
+        Route::get("/", "AcceptanceController@create")
+            ->name("add_acceptance_form");
+
+        // Process new submission form
+        Route::post("/", "AcceptanceController@store")
+            ->name("store_acceptance_form");
+
+        // Show submission list
+        Route::get("/list", "AcceptanceController@list")
+            ->name("list_acceptance_form");
+
+        // Show detail of submission
+        Route::get("/detail", "AcceptanceController@detail")
+            ->name("detail_acceptance_form");
+
+        // Edit submission form page
+        Route::get("/edit/", "AcceptanceController@edit")
+            ->name("edit_acceptance_form");
+
+        // Process submission form edit
+        Route::post("/update/", "AcceptanceController@update")
+            ->name("update_acceptance_form");
+
+        // Process submission form delete
+        Route::post("/{id}", "AcceptanceController@destroy")
+            ->name("delete_acceptance_form");
+    });
+
+    Route::group(["prefix" => "upgrade", "middleware" => "auth"], function () {
+        // Create submission form page
+        Route::get("/new", "UpgradeController@create")
+            ->name("add_upgrade_form");
+
+        // Process new submission form
+        Route::post("/", "UpgradeController@store")
+            ->name("store_upgrade_form");
+
+        // Show submission list
+        Route::get("/list", "UpgradeController@list")
+            ->name("list_upgrade_form");
+
+        // Show detail of submission
+        Route::get("/detail", "UpgradeController@detail")
+            ->name("detail_upgrade_form");
+
+        // Edit submission form page
+        Route::get("/edit/", "UpgradeController@edit")
+            ->name("edit_upgrade_form");
+
+        // Process submission form edit
+        Route::post("/update/", "UpgradeController@update")
+            ->name("update_upgrade_form");
+
+        // Process submission form delete
+        Route::post("/{id}", "UpgradeController@destroy")
+            ->name("delete_upgrade_form");
+    });
 });
 
 Auth::routes();

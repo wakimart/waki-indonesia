@@ -115,19 +115,6 @@
 
 
       <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-        <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
-          <div class="form-group">
-            <label for="">Filter By Type Register</label>
-            <select class="form-control" id="filter_type_register" name="filter_type_register">
-              <option value="" selected="">All Type</option>
-              <option {{ isset($_GET['filter_type_register']) ? ($_GET['filter_type_register'] == "Normal Register" ? "selected" : "") : "" }} value="Normal Register">Normal Register</option>
-              <option {{ isset($_GET['filter_type_register']) ? ($_GET['filter_type_register'] == "MGM" ? "selected" : "") : "" }} value="MGM">MGM</option>
-              <option {{ isset($_GET['filter_type_register']) ? ($_GET['filter_type_register'] == "Refrensi" ? "selected" : "") : "" }} value="Refrensi">Refrensi</option>
-              <option {{ isset($_GET['filter_type_register']) ? ($_GET['filter_type_register'] == "Take Away" ? "selected" : "") : "" }} value="Take Away">Take Away</option>
-            </select>
-            <div class="validation"></div>
-          </div>
-        </div>
 				<div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
 					<div class="form-group">
 						<label for="">Filter By Team</label>
@@ -205,7 +192,6 @@
 				              	<th> Registration Code </th>
 				              	<th> Registration Date </th>
 				              	<th> Member Name </th>
-				              	<th> Type Register </th>
 				              	<th> Branch </th>
 				              	<th> CSO </th>
 				              	@if(Gate::check('edit-deliveryorder') || Gate::check('delete-deliveryorder'))
@@ -220,7 +206,6 @@
   	                            <td><a href="{{ route('detail_deliveryorder') }}?code={{ $deliveryOrder['code'] }}">{{ $deliveryOrder['code'] }}</a></td>
   	                            <td>{{ date("d/m/Y", strtotime($deliveryOrder['created_at'])) }}</td>
   	                            <td>{{ $deliveryOrder['name'] }}</td>
-                                <td>{{ $deliveryOrder['type_register'] }}</td>
   	                            <td>{{ $deliveryOrder->branch['code'] }} - {{ $deliveryOrder->branch['name'] }}</td>
   	                            <td>{{ $deliveryOrder->cso['code'] }} - {{ $deliveryOrder->cso['name'] }}</td>
   	                            @can('edit-deliveryorder')
