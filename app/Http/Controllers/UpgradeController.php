@@ -12,6 +12,13 @@ class UpgradeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function indexNew(Request $request)
+    {
+        $url = $request->all();
+        $upgrades = Upgrade::where('active', true)->paginate(10);
+        return view('admin.list_upgrade_new', compact('upgrades', 'url'));
+    }
+
     public function index()
     {
         //
@@ -22,9 +29,10 @@ class UpgradeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        $upgrade = Upgrade::find($id);
+        return view('admin.add_upgrade', compact('upgrade'));
     }
 
     /**

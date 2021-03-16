@@ -61,7 +61,7 @@ class AcceptanceController extends Controller
                 $data['user_id'] = Auth::user()['id'];
                 $data['status'] = "complete";
                 $data['code'] = "ACC/UPGRADE/".$branch->code."/".$data['cso_id']."/".date("Ymd");
-                $data['arr_condition'] = ['kelengkapan' => json_encode($data['kelengkapan']), 'kondisi' => $data['kondisi'], 'tampilan' => $data['tampilan']];
+                $data['arr_condition'] = ['kelengkapan' => $data['kelengkapan'], 'kondisi' => $data['kondisi'], 'tampilan' => $data['tampilan']];
 
                 if ($request->hasFile("image")) {
                     $image = $request->file("image");

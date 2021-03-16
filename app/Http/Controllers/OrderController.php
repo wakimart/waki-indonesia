@@ -233,7 +233,7 @@ class OrderController extends Controller
         $countOrders = $orders->count();
         $categories = CategoryProduct::all();
         $orders = $orders->sortable(['orderDate' => 'desc'])->paginate(10);
-        return view('admin.list_order', compact('orders','countOrders','branches', 'categories', $orders));
+        return view('admin.list_order', compact('orders','countOrders','branches', 'categories'));
     }
 
     public function admin_DetailOrder(Request $request){

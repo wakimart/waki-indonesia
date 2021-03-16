@@ -161,10 +161,10 @@
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'upgrade'? 'show': '' }}" id="upgrade-dd">
     <ul class="nav flex-column sub-menu">
       {{-- @if(Gate::check('add-deliveryorder')) --}}
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'new_upgrade_form'? 'active': '' }}" href="{{ route('add_submission_form')}}">New Upgrade</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'new_upgrade_form'? 'active': '' }}" href="{{ route('list_new_upgrade_form')}}">New Upgrade</a></li>
       {{-- @endif --}}
       {{-- @if(Gate::check('browse-deliveryorder')) --}}
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_upgrade_form'? 'active': '' }}" href="{{ route('list_submission_form') }}">List Upgrade</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_upgrade_form'? 'active': '' }}" href="{{ route('list_upgrade_form') }}">List Upgrade</a></li>
       {{-- @endif --}}
     </ul>
   </div>

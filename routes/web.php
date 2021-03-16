@@ -532,31 +532,35 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(["prefix" => "upgrade", "middleware" => "auth"], function () {
-        // Create submission form page
-        Route::get("/new", "UpgradeController@create")
+        // List new upgrade form page
+        Route::get("/list_new", "UpgradeController@indexNew")
+            ->name("list_new_upgrade_form");
+
+        // Create upgrade form page
+        Route::get("/new/{id}", "UpgradeController@create")
             ->name("add_upgrade_form");
 
-        // Process new submission form
+        // Process new upgrade form
         Route::post("/", "UpgradeController@store")
             ->name("store_upgrade_form");
 
-        // Show submission list
+        // Show upgrade list
         Route::get("/list", "UpgradeController@list")
             ->name("list_upgrade_form");
 
-        // Show detail of submission
+        // Show detail of upgrade
         Route::get("/detail", "UpgradeController@detail")
             ->name("detail_upgrade_form");
 
-        // Edit submission form page
+        // Edit upgrade form page
         Route::get("/edit/", "UpgradeController@edit")
             ->name("edit_upgrade_form");
 
-        // Process submission form edit
+        // Process upgrade form edit
         Route::post("/update/", "UpgradeController@update")
             ->name("update_upgrade_form");
 
-        // Process submission form delete
+        // Process upgrade form delete
         Route::post("/{id}", "UpgradeController@destroy")
             ->name("delete_upgrade_form");
     });
