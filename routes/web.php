@@ -303,6 +303,19 @@ Route::group(['prefix' => 'cms-admin'], function () {
 		//Export to XLS By Date
         Route::get('/export-to-xls-by-date', 'HomeServiceController@export_to_xls_byDate')
                 ->name('homeservice_export-to-xls-by-date');
+
+        // List Home Service (Revisi)
+        Route::get("/list_new", "HomeServiceController@listHomeServiceNew")
+            ->name("list_homeservice_new");
+
+        // Print home service daily data count per month
+        Route::post("/homeservice_print_data_count", "HomeServiceController@printAppointmentCount")
+            ->name("homeservice_print_data_count");
+
+        // Print home service data detail on a selected day
+        Route::post("/homeservice_print_appointment", "HomeServiceController@printDayData")
+            ->name("homeservice_print_appointment");
+
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
