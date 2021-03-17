@@ -59,8 +59,11 @@ class AcceptanceController extends Controller
                 $data['branch_id'] = $branch['id'];
                 $data['cso_id'] = $cso['id'];
                 $data['user_id'] = Auth::user()['id'];
-                $data['status'] = "complete";
+                $data['status'] = "new";
                 $data['code'] = "ACC/UPGRADE/".$branch->code."/".$data['cso_id']."/".date("Ymd");
+                if(in_array('other', $data['kelengkapan'])){
+                    $data['kelengkapan']['other'][] = $data['other_kelengkapan'];
+                }
                 $data['arr_condition'] = ['kelengkapan' => $data['kelengkapan'], 'kondisi' => $data['kondisi'], 'tampilan' => $data['tampilan']];
 
                 if ($request->hasFile("image")) {
@@ -81,11 +84,12 @@ class AcceptanceController extends Controller
 
                 $accStatusLog['acceptance_id'] = $acc->id;
                 $accStatusLog['user_id'] =  $data['user_id'];
-                $accStatusLog['status'] = "complete";
+                $accStatusLog['status'] = "new";
                 $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
 
                 $upgrade['acceptance_id'] = $acc->id;
                 $upgrade['status'] = "New";
+                $upgrade['due_date'] = $acc['created_at'];
                 Upgrade::create($upgrade);
 
                 DB::commit();
@@ -96,6 +100,16 @@ class AcceptanceController extends Controller
                 return response()->json(['errors' => $ex], 500);
             }
         }
+    }
+
+    public function list(Request $request){
+        $url = $request->all();
+        $acceptances = Acceptance::where('active', true);
+        if(isset($url['status'])){
+            $acceptances = $acceptances->where('status', $url['status']);
+        }
+        $acceptances = $acceptances->orderBy('id', 'DESC')->paginate(10);
+        return view('admin.list_acceptance', compact('acceptances', 'url'));
     }
 
     public function addApi(Request $request)

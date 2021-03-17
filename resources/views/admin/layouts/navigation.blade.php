@@ -143,7 +143,7 @@
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_acceptance_form'? 'active': '' }}" href="{{ route('add_acceptance_form')}}">Add Acceptance</a></li>
       {{-- @endif --}}
       {{-- @if(Gate::check('browse-deliveryorder')) --}}
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_acceptance_form'? 'active': '' }}" href="{{ route('list_acceptance_form') }}">List Acceptance</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_acceptance_form'? 'active': '' }}" href="{{ route('list_acceptance_form') }}?status=new">List Acceptance</a></li>
       {{-- @endif --}}
     </ul>
   </div>

@@ -194,7 +194,7 @@
 									@foreach($products as $product)
 		                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
 		                            @endforeach
-	                                <option value="-">Other</option>
+	                                <option value="">Other</option>
 								</select>
 	                			<div class="validation"></div>
 	              			</div>
@@ -391,7 +391,7 @@
         };
 
         $("#oldproduct_id").on("change", function(){
-            if($(this).val() == '-'){
+            if($(this).val() == ''){
             	$('#other_product_group').attr('style', 'display: inherit;');
             	$('#other_product_group').attr('required', true);
             }
@@ -433,6 +433,7 @@
         }
         function completeHandler(event){
         	var hasil = JSON.parse(event.target.responseText);
+        	console.log(hasil);
 
         	for (var key of frmAdd.keys()) {
         		$("#actionAdd").find("input[name="+key.name+"]").removeClass("is-invalid");

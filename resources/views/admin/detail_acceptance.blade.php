@@ -1,6 +1,6 @@
 <?php
-    $menu_item_page = "upgrade";
-    $menu_item_second = "new_upgrade_form";
+	$menu_item_page = "acceptance";
+	$menu_item_second = "list_acceptance_form";
 ?>
 @extends('admin.layouts.template')
 

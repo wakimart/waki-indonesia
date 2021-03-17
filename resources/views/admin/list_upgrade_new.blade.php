@@ -59,13 +59,13 @@ $menu_item_second = "new_upgrade_form";
                                             {{ $upgrade->acceptance->name }}
                                         </td>
                                         <td>
-                                            {{ $upgrade->acceptance->oldproduct['code'] }} - {{ $upgrade->acceptance->oldproduct['name'] }}
+                                            {{ $upgrade->acceptance['other_product'] == null ? $upgrade->acceptance->oldproduct['code'] : $upgrade->acceptance['other_product'] }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ $upgrade->acceptance->newproduct['code'] }}
                                         </td>
                                         <td>
-                                            {{ $upgrade->acceptance->branch->code }} - {{ $upgrade->acceptance->branch->name }}
+                                            {{ $upgrade->acceptance->branch->code }}
                                         </td>
                                         <td>
-                                            {{ $upgrade->acceptance->cso->code }} - {{ $upgrade->acceptance->cso->name }}
+                                            {{ $upgrade->acceptance->cso->code }}
                                         </td>
                                         {{-- @can('edit-deliveryorder') --}}
                                             <td style="text-align: center;">

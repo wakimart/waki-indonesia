@@ -515,7 +515,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("list_acceptance_form");
 
         // Show detail of submission
-        Route::get("/detail", "AcceptanceController@detail")
+        Route::get("/detail/{id}", "AcceptanceController@detail")
             ->name("detail_acceptance_form");
 
         // Edit submission form page
