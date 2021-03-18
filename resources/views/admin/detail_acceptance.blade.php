@@ -122,11 +122,11 @@
 <div class="main-panel">
   	<div class="content-wrapper">
     	<div class="page-header">
-      		<h3 class="page-title">Add Upgrade</h3>
+      		<h3 class="page-title">Detail Acceptance</h3>
       		<nav aria-label="breadcrumb">
 	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="upgrade-dd">Upgrade</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Add Upgrade</li>
+	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="acceptance-dd">Acceptance</a></li>
+	          		<li class="breadcrumb-item active" aria-current="page">Detail Acceptance</li>
 	        	</ol>
       		</nav>
     	</div>
@@ -136,7 +136,7 @@
 	        	<div class="card">
 	          		<div class="card-body">
 	          			<div class="row justify-content-center">
-	          				<h2>Detail Upgrade</h2>
+	          				<h2>Detail Acceptance</h2>
 	          			</div>
 	          			<div class="row justify-content-center">
 	          				<table class="col-md-12">
