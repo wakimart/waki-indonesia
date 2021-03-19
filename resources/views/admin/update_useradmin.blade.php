@@ -1,5 +1,5 @@
 <?php
-    $menu_item_page = "user";
+$menu_item_page = "user";
 ?>
 @extends('admin.layouts.template')
 
@@ -20,7 +20,7 @@
 	  padding:10px;
 	  border-radius:3px;
 	}
-   
+
   .del {
       position: absolute;
       top: 0px;
@@ -123,7 +123,7 @@
 							<input type="hidden" name="role_id" id="role_id" value="{{$get_roleId}}">
 		                    <input type="hidden" name="total_branch" id="total_branch" value="{{$total_branch}}">
 							<!-- Branch -->
-							
+
 					        <div id="form-branch" class="container-branch">
 					        	@for($i = 0; $i < $total_branch; $i++)
 
@@ -154,7 +154,7 @@
 			                    @endfor
 			                    <div id="tambahan_branch"></div>
 					        </div>
-					        
+
 					        <!-- End Branch -->
 							@endif
 
@@ -421,6 +421,284 @@
 		                        </div>
 		                    </div>
 
+                            <div class="form-group" id="group-product">
+                                <span style="display: block;">ACCEPTANCE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-acceptance">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-acceptance"
+                                                value="add-acceptance" />
+                                            Add Acceptance
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-acceptance">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="browse-acceptance"
+                                                value="browse-acceptance" />
+                                            Browse Acceptance
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-acceptance">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="detail-acceptance"
+                                                value="detail-acceptance" />
+                                            Detail Acceptance
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-acceptance">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-acceptance"
+                                                value="edit-acceptance" />
+                                            Edit Acceptance
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-approval-acceptance">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-approval-acceptance"
+                                                value="change-status-approval-acceptance" />
+                                            Change Status Approval Acceptance
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-complete-acceptance">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-complete-acceptance"
+                                                value="change-status-complete-acceptance" />
+                                            Change Status Complete Acceptance
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-reject-acceptance">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-reject-acceptance"
+                                                value="change-status-reject-acceptance" />
+                                            Change Status Reject Acceptance
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-acceptance">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-acceptance"
+                                                value="delete-acceptance" />
+                                            Delete Acceptance
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display: block;">UPGRADE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-upgrade">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="browse-upgrade"
+                                                value="browse-upgrade" />
+                                            Browse Upgrade
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-upgrade">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="detail-upgrade"
+                                                value="detail-upgrade" />
+                                            Detail Upgrade
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-upgrade">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-upgrade"
+                                                value="edit-upgrade" />
+                                            Edit Upgrade
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-approval-upgrade">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-approval-upgrade"
+                                                value="change-status-approval-upgrade" />
+                                            Change Status Approval Upgrade
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="-change-status-processupgrade">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-process-upgrade"
+                                                value="change-status-process-upgrade" />
+                                            Change Status Process Upgrade
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-complete-upgrade">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-complete-upgrade"
+                                                value="change-status-complete-upgrade" />
+                                            Change Status Complete Upgrade
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-reject-upgrade">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-reject-upgrade"
+                                                value="change-status-reject-upgrade" />
+                                            Change Status Reject Upgrade
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-upgrade">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-upgrade"
+                                                value="delete-upgrade" />
+                                            Delete Upgrade
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display: block;">SERVICE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-service">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-service"
+                                                value="add-service" />
+                                            Add Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-service">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="browse-service"
+                                                value="browse-service" />
+                                            Browse Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-service">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="detail-service"
+                                                value="detail-service" />
+                                            Detail Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-service">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-service"
+                                                value="edit-service" />
+                                            Edit Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-process-service">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-process-service"
+                                                value="change-status-process-service" />
+                                            Change Status Process Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-repaired-service">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-repaired-service"
+                                                value="change-status-repaired-service" />
+                                            Change Status Repaired Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-qc-service">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-qc-service"
+                                                value="change-status-qc-service" />
+                                            Change Status QC Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-delivery-service">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-delivery-service"
+                                                value="change-status-delivery-service" />
+                                            Change Status Delivery Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-complete-service">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-complete-service"
+                                                value="change-status-complete-service" />
+                                            Change Status Complete Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-service">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-service"
+                                                value="delete-service" />
+                                            Delete Service
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
 		                    <input type="hidden" name="idUserAdmin" id="idUserAdmin" value="{{$users['id']}}">
 							<button id="updateUserAdmin" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
 							<button class="btn btn-light">Batal</button>
@@ -446,7 +724,7 @@
 
 		//list checkbox
 	    $(".form-check-input").each(function(e) {
-	        $(this)[0].checked = permissions[$(this)[0].id]; 
+	        $(this)[0].checked = permissions[$(this)[0].id];
 	    });
 
 	});
@@ -476,7 +754,7 @@
 				}else{
 					alert("Maksimum choice of Branch is 5");
 				}
-			}	
+			}
 		});
 
 		$(document).on("click",".hapus_branch", function(e){
@@ -535,7 +813,7 @@
 	        if(hasil['errors'] != null){
 	            for (var key of frmUpdate.keys()) {
 	                if(typeof hasil['errors'][key] === 'undefined') {
-	                    
+
 	                }
 	                else {
 	                    $("#actionUpdate").find("input[name="+key+"]").addClass("is-invalid");
