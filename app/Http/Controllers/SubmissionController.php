@@ -32,14 +32,42 @@ class SubmissionController extends Controller
         // Menyimpan request ke dalam variabel $url untuk pagination
         $url = $request->all();
 
-        // Query dari tabel delivery_orders, dan menampilkan 10 data per halaman
-        $deliveryOrders = DeliveryOrder::where(
-            [
-                ['active', true],
-                ['type_register', '!=', 'Normal Register'],
-            ]
-        )
-        ->paginate(10);
+        // Memasukkan klausa WHERE yang digunakan berkali-kali ke dalam array
+        $whereArray = [];
+        $whereArray[] = ["active", true];
+        $whereArray[] = ["type_register", "!=", "Normal Register"];
+
+        if (Auth::user()->roles[0]->slug === "cso") {
+            // Jika user adalah CSO
+            // Push klausa WHERE untuk CSO ke dalam array
+            $whereArray[] = [
+                "cso_id",
+                Auth::user()->cso["id"],
+            ];
+
+            $deliveryOrders = DeliveryOrder::where($whereArray)->paginate(10);
+        } elseif (
+            Auth::user()->roles[0]->slug === "branch"
+            || Auth::user()->roles[0]->slug === "area-manager"
+        ) {
+            // Jika user adalah BRANCH atau AREA MANAGER
+            // Inisialisasi variabel $arrBranches untuk menyimpan hasil query
+            $arrBranches = [];
+
+            // Menyimpan BRANCH yang dipegang oleh user ke dalam $arrBranches
+            foreach (Auth::user()->listBranches() as $value) {
+                array_push($arrBranches, $value['id']);
+            }
+
+            $deliveryOrders = DeliveryOrder::WhereIn(
+                "branch_id",
+                $arrBranches
+            )
+            ->where($whereArray)
+            ->paginate(10);
+        } else {
+            $deliveryOrders = DeliveryOrder::where($whereArray)->paginate(10);
+        }
 
         return view(
             "admin.list_submission_form",

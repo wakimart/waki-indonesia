@@ -138,60 +138,678 @@ class HomeServiceController extends Controller
         return view('homeservicesuccess', compact('homeService', $categoryProducts));
     }
 
-    public function admin_ListHomeService(Request $request){
-        $branches = Branch::Where('active', true)->get();
-        $csos = Cso::where('active', true)->get();
-        $awalBulan = Carbon::now()->startOfMonth()->subMonth(1);
-        $akhirBulan = Carbon::now()->startOfMonth()->addMonth(2);//5
-        $arrbranches = [];
+    // public function admin_ListHomeService(Request $request){
+    //     $branches = Branch::Where('active', true)->get();
+    //     $csos = Cso::where('active', true)->get();
+    //     $awalBulan = Carbon::now()->startOfMonth()->subMonth(1);
+    //     $akhirBulan = Carbon::now()->startOfMonth()->addMonth(2); // 5
+    //     // $awalBulan = "2020-10-01 00:00:00";
+    //     // $akhirBulan = "2021-01-01 00:00:00";
+    //     $arrbranches = [];
 
-        //khususu head-manager, head-admin, admin
-        $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-                     ->where('active', true);
+    //     //khususu head-manager, head-admin, admin
+    //     $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
+    //                  ->where('active', true);
 
-        //khusus akun CSO
-        if(Auth::user()->roles[0]['slug'] == 'cso'){
-            // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
-            $homeServices = $homeServices->where('home_services.cso_id', Auth::user()->cso['id']);
-        }
+    //     //khusus akun CSO
+    //     if(Auth::user()->roles[0]['slug'] == 'cso'){
+    //         // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
+    //         $homeServices = $homeServices->where('home_services.cso_id', Auth::user()->cso['id']);
+    //     }
 
-        //khusus akun branch dan area-manager
-        if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
+    //     //khusus akun branch dan area-manager
+    //     if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
+    //         foreach (Auth::user()->listBranches() as $value) {
+    //             array_push($arrbranches, $value['id']);
+    //         }
+    //         // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
+    //         //          ->whereIn('branch_id', $arrbranches)->where('active', true);
+    //         $homeServices = $homeServices->whereIn('home_services.branch_id', $arrbranches);
+    //     }
+
+    //     //kalau ada filter
+    //     if($request->has('filter_province')){
+    //         $homeServices = $homeServices->where('home_services.province', $request->filter_province);
+    //     }
+    //     if($request->has('filter_city')){
+    //         $homeServices = $homeServices->where('home_services.city', $request->filter_city);
+    //     }
+    //     if($request->has('filter_district')){
+    //         $homeServices = $homeServices->where('home_services.distric', $request->filter_district);
+    //     }
+    //     if($request->has('filter_search')){
+    //         $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
+    //         ->orWhere('home_services.phone', 'like', '%'.$request->filter_search.'%')
+    //         ->orWhere('home_services.code', 'like', '%'.$request->filter_search.'%');
+    //     }
+    //     if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+    //         $homeServices = $homeServices->where('home_services.branch_id', $request->filter_branch);
+    //     }
+    //     if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
+    //         $cso_id = Cso::where('code', $request->filter_cso)->get();
+    //         $homeServices = $homeServices->where('home_services.cso_id', $cso_id[0]['id']);
+    //     }
+
+    //     $homeServices = $homeServices->get();
+
+    //     return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches', 'csos'));
+    // }
+
+    public function admin_ListHomeService(Request $request)
+    {
+        // Inisialisasi variabel $branches dan diisi dengan data dari tabel "branches"
+        $branches = Branch::select(
+            [
+                "id",
+                "code",
+                "name",
+            ]
+        )
+        ->where("active", true)
+        ->get();
+
+        // Inisialisasi variabel $csos dan diisi dengan data dari tabel "csos"
+        $csos = Cso::select(
+            [
+                "code",
+                "name",
+            ]
+        )
+        ->where("active", true)
+        ->get();
+
+        // Inisialisasi variabel $arrBranches
+        $arrBranches = [];
+        // Jika user memiliki peran sebagai "branch" atau "area-manager"
+        if (
+            Auth::user()->roles[0]['slug'] === 'branch'
+            || Auth::user()->roles[0]['slug'] === 'area-manager'
+        ) {
+            // Mengisi variabel $arrBranches dengan branch_id
             foreach (Auth::user()->listBranches() as $value) {
-                array_push($arrbranches, $value['id']);
+                $arrBranches[] = $value["id"];
             }
-            // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-            //          ->whereIn('branch_id', $arrbranches)->where('active', true);
-            $homeServices = $homeServices->whereIn('home_services.branch_id', $arrbranches);
         }
 
-        //kalau ada filter
-        if($request->has('filter_province')){
-            $homeServices = $homeServices->where('home_services.province', $request->filter_province);
-        }
-        if($request->has('filter_city')){
-            $homeServices = $homeServices->where('home_services.city', $request->filter_city);
-        }
-        if($request->has('filter_district')){
-            $homeServices = $homeServices->where('home_services.distric', $request->filter_district);
-        }
-        if($request->has('filter_search')){
-            $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
-            ->orWhere('home_services.phone', 'like', '%'.$request->filter_search.'%')
-            ->orWhere('home_services.code', 'like', '%'.$request->filter_search.'%');
-        }
-        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
-            $homeServices = $homeServices->where('home_services.branch_id', $request->filter_branch);
-        }
-        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
-            $cso_id = Cso::where('code', $request->filter_cso)->get();
-            $homeServices = $homeServices->where('home_services.cso_id', $cso_id[0]['id']);
+        // Jika filter_branch memiliki value dan user tidak memiliki peran sebagai "branch"
+        if (
+            $request->filled('filter_branch')
+            && Auth::user()->roles[0]['slug'] !== 'branch'
+        ) {
+            if (!empty($request->filter_branch)) {
+                $arrBranches = [];
+
+                // Push value dari filter_branch ke dalam variabel $arrBranches
+                $arrBranches[] = $request->filter_branch;
+            }
         }
 
+        // Jika user memiliki peran sebagai "cso"
+        if (Auth::user()->roles[0]['slug'] === "cso") {
+            // Query ke tabel "csos" menggunakan cso_id yang dimiliki user
+            $getCSOCode = Cso::where("id", Auth::user()->cso["id"])->first();
 
-        $homeServices = $homeServices->get();
+            // Re-assign $request->filter_cso dengan kode CSO yang didapat dari query
+            $request->filter_cso = $getCSOCode->code;
+        }
 
-        return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches', 'csos'));
+        // Mendapatkan count appointment
+        $currentMonthDataCount = $this->getCountAppointment(
+            date("Y-m-01"),
+            $request->filter_province,
+            $request->filter_city,
+            $request->filter_district,
+            $arrBranches,
+            $request->filter_cso,
+            $request->filter_search
+        );
+
+        // Inisialisasi variabel $todayDate dan mengisi dengan tanggal hari ini
+        $todayDate = date("Y-m-d");
+
+        $currentDayData = $this->getDayData(
+            $todayDate,
+            $request->filter_province,
+            $request->filter_city,
+            $request->filter_district,
+            $arrBranches,
+            $request->filter_cso,
+            $request->filter_search
+        );
+
+        return view(
+            "admin.list_homeservice_new",
+            compact(
+                "currentMonthDataCount",
+                "currentDayData",
+                "branches",
+                "csos",
+            )
+        );
+    }
+
+    private function getCountAppointment(
+        $startdate,
+        $filterProvince = null,
+        $filterCity = null,
+        $filterDistrict = null,
+        $filterBranch = null,
+        $filterCSO = null,
+        $filterSearch = null
+    ) {
+        // Inisialisasi tanggal awal bulan dari variabel $startDate
+        $start = date("Y-m-01 00:00:00", strtotime($startdate));
+
+        // Inisialisasi tanggal akhir bulan dari $startDate
+        $end = date("Y-m-t 23:59:59", strtotime($startdate));
+
+        $currentMonthDataCount = DB::table("home_services")
+        ->select(
+            [
+                DB::raw("DATE(appointment) AS appointment_date"),
+                DB::raw("COUNT(id) AS data_count"),
+            ]
+        )
+        ->where("active", 1);
+
+        if (!empty($filterProvince)) {
+            $currentMonthDataCount = $currentMonthDataCount->where(
+                "province",
+                $filterProvince
+            );
+        }
+
+        if (!empty($filterCity)) {
+            $currentMonthDataCount = $currentMonthDataCount->where(
+                "city",
+                $filterCity
+            );
+        }
+
+        if (!empty($filterDistrict)) {
+            $currentMonthDataCount = $currentMonthDataCount->where(
+                "distric",
+                $filterDistrict
+            );
+        }
+
+        if (!empty($filterBranch)) {
+            $currentMonthDataCount = $currentMonthDataCount->whereIn(
+                "branch_id",
+                $filterBranch
+            );
+        }
+
+        if (!empty($filterCSO)) {
+            $cso_id = Cso::where('code', $filterCSO)->first();
+
+            $currentMonthDataCount = $currentMonthDataCount->where(
+                "cso_id",
+                $cso_id->id
+            );
+        }
+
+        if (!empty($filterSearch)) {
+            $currentMonthDataCount = $currentMonthDataCount->where(
+                "name",
+                "like",
+                "%" . $filterSearch . "%"
+            )
+            ->orWhere(
+                "phone",
+                "like",
+                "%" . $filterSearch . "%"
+            )
+            ->orWhere(
+                "code",
+                "like",
+                "%" . $filterSearch . "%"
+            );
+        }
+
+        $currentMonthDataCount = $currentMonthDataCount->whereBetween("appointment", [$start, $end])
+        ->groupBy(DB::raw("DATE(appointment)"))
+        ->get();
+
+        return $currentMonthDataCount;
+    }
+
+    public function printAppointmentCount(Request $request)
+    {
+        // Inisialisasi variabel $arrBranches
+        $arrBranches = [];
+        // Jika user memiliki peran sebagai "branch" atau "area-manager"
+        if (
+            Auth::user()->roles[0]['slug'] === 'branch'
+            || Auth::user()->roles[0]['slug'] === 'area-manager'
+        ) {
+            // Mengisi variabel $arrBranches dengan branch_id
+            foreach (Auth::user()->listBranches() as $value) {
+                $arrBranches[] = $value["id"];
+            }
+        }
+
+        // Jika filter_branch memiliki value dan user tidak memiliki peran sebagai "branch"
+        if (
+            $request->has('filter_branch')
+            && Auth::user()->roles[0]['slug'] !== 'branch'
+        ) {
+            if (!empty($request->filter_branch)) {
+                $arrBranches = [];
+
+                // Push value dari filter_branch ke dalam variabel $arrBranches
+                $arrBranches[] = $request->filter_branch;
+            }
+        }
+
+        $branchCode = "";
+        $branchCode = implode(", ", $arrBranches);
+
+
+        // Jika user memiliki peran sebagai "cso"
+        if (Auth::user()->roles[0]['slug'] === "cso") {
+            // Query ke tabel "csos" menggunakan cso_id yang dimiliki user
+            $getCSOCode = Cso::where("id", Auth::user()->cso["id"])->first();
+
+            // Re-assign $request->filter_cso dengan kode CSO yang didapat dari query
+            $request->filter_cso = $getCSOCode->code;
+        }
+
+        $currentMonthDataCount = $this->getCountAppointment(
+            $request->date,
+            $request->filter_province,
+            $request->filter_city,
+            $request->filter_district,
+            $arrBranches,
+            $request->filter_cso,
+            $request->filter_search
+        );
+
+        $requestedMonth = strtotime($request->date);
+
+        $startDay = (int) date("w", $requestedMonth);
+        $maxDate = (int) date("t", $requestedMonth);
+
+        $month = date("m", $requestedMonth);
+        $year = date("Y", $requestedMonth);
+
+        $todayDate = 0;
+
+        $currentDate = date("Y-m");
+        $requestedYearAndMonth = $month . "-" . $month;
+
+        if ($requestedYearAndMonth === $currentDate) {
+            $todayDate = date("j");
+        }
+
+        $dayCounter = 1;
+
+        $echoSwitch = false;
+
+        $rowCount = 0;
+        $result = "";
+
+        $iMax = 28;
+        $startMonthStartDay = $startDay + $maxDate;
+        if ($startMonthStartDay > 28) {
+            $iMax = 35;
+        }
+        if ($startMonthStartDay > 35) {
+            $iMax = 42;
+        }
+
+        for ($i = 0; $i < $iMax; $i++) {
+            if ($rowCount === 0) {
+                $result .= '<div class="cjslib-row" data-i-value="' . $i . '">';
+            }
+
+            if ($i === $startDay) {
+                $echoSwitch = true;
+            }
+
+            if (!$echoSwitch) {
+                $result .= '<label class="calendarContainer cjslib-day cjslib-day-diluted" data-i-value="' . $i . '">'
+                    . '</label>';
+            }
+
+            if ($echoSwitch) {
+                if ($dayCounter <= $maxDate) {
+                    $result .= '<input class="cjslib-day-radios" '
+                        . 'type="radio" '
+                        . 'name="calendarContainer-day-radios" '
+                        . 'id="calendarContainer-day-radio-' . $dayCounter . '"'
+                        . 'data-date="' . $dayCounter . '"'
+                        . 'data-month="' . $month . '"'
+                        . 'data-year="' . $year . '"'
+                        . 'data-province="' . $request->filter_province . '" '
+                        . 'data-city="' . $request->filter_city . '" '
+                        . 'data-district="' . $request->filter_district . '" '
+                        . 'data-search="' . $request->filter_search . '" '
+                        . 'data-branch="' . $branchCode . '" '
+                        . 'data-cso="' . $request->filter_cso . '" '
+                        . 'onclick="changeDate(this)"'
+                        . '/>';
+
+                    $result .= '<label class="calendarContainer cjslib-day cjslib-day-listed';
+
+                    if ($dayCounter === $todayDate) {
+                        $result .= ' cjslib-day-today';
+                    }
+
+                    $result .= '" for="calendarContainer-day-radio-' . $dayCounter . '" '
+                        . 'id="calendarContainer-day-' . $dayCounter . '">';
+
+                    $result .= '<span class="cjslib-day-num" '
+                        . 'id="calendarContainer-day-num-' . $dayCounter . '">'
+                        . $dayCounter
+                        . '</span>';
+
+                    $dayWithZero = $dayCounter;
+                    if ($dayCounter < 10) {
+                        $dayWithZero = "0" . $dayCounter;
+                    }
+
+                    if (!empty($currentMonthDataCount)) {
+                        foreach ($currentMonthDataCount as $key => $value) {
+                            if ($value->appointment_date === $year . "-" . $month . "-" . $dayWithZero) {
+                                $result .= '<span class="cjslib-day-indicator cjslib-indicator-pos-bottom cjslib-indicator-type-numeric" '
+                                    . 'id="calendarContainer-day-indicator-' . $dayCounter . '">';
+                                $result .= $value->data_count;
+                                $result .= '</span>';
+
+                                unset($currentMonthDataCount[$key]);
+
+                                break 1;
+                            }
+                        }
+                    }
+
+                    $result .= "</label>";
+
+                    $dayCounter++;
+                }
+
+                if ($dayCounter > $maxDate) {
+                    $echoSwitch = false;
+                }
+            }
+
+            $rowCount++;
+
+            if ($rowCount === 7) {
+                $result .= '</div>';
+                $rowCount = 0;
+            }
+        }
+
+        return response($result, 200)->header("Content-Type", "text/plain");
+
+    }
+
+    private function getDayData(
+        $requestedDate,
+        $filterProvince = null,
+        $filterCity = null,
+        $filterDistrict = null,
+        $filterBranch = null,
+        $filterCSO = null,
+        $filterSearch = null
+    ) {
+        $todayDate = date("Y-m-d", strtotime($requestedDate));
+        $beginDay = $todayDate . " 00:00:00";
+        $endDay = $todayDate . " 23:59:59";
+
+        $currentDayData = HomeService::select(
+            "h.id AS hs_id",
+            "h.code AS hs_code",
+            "h.name AS customer_name",
+            "h.phone AS customer_phone",
+            "h.appointment AS appointment",
+            "b.code AS branch_code",
+            "b.name AS branch_name",
+            "c.name AS cso_name",
+            "h.created_at AS created_at",
+            "h.updated_at AS updated_at"
+        )
+        ->from("home_services AS h")
+        ->join(
+            "branches AS b",
+            "b.id",
+            "=",
+            "h.branch_id"
+        )
+        ->join(
+            "csos AS c",
+            "c.id",
+            "=",
+            "h.cso_id"
+        )
+        ->where("h.active", true);
+
+        if (!empty($filterProvince)) {
+            $currentDayData = $currentDayData->where(
+                "province",
+                $filterProvince
+            );
+        }
+
+        if (!empty($filterCity)) {
+            $currentDayData = $currentDayData->where(
+                "city",
+                $filterCity
+            );
+        }
+
+        if (!empty($filterDistrict)) {
+            $currentDayData = $currentDayData->where(
+                "distric",
+                $filterDistrict
+            );
+        }
+
+        if (!empty($filterBranch)) {
+            $currentDayData = $currentDayData->whereIn(
+                "branch_id",
+                $filterBranch
+            );
+        }
+
+        if (!empty($filterCSO)) {
+            $cso_id = Cso::where('code', $filterCSO)->first();
+
+            $currentDayData = $currentDayData->where(
+                "cso_id",
+                $cso_id->id
+            );
+        }
+
+        if (!empty($filterSearch)) {
+            $currentDayData = $currentDayData->where(
+                "name",
+                "like",
+                "%" . $filterSearch . "%"
+            )
+            ->orWhere(
+                "phone",
+                "like",
+                "%" . $filterSearch . "%"
+            )
+            ->orWhere(
+                "code",
+                "like",
+                "%" . $filterSearch . "%"
+            );
+        }
+
+        $currentDayData = $currentDayData->whereBetween(
+            "h.appointment",
+            [
+                $beginDay,
+                $endDay,
+            ]
+        )
+        ->orderBy("h.appointment", "ASC")
+        ->get();
+
+        return $currentDayData;
+    }
+
+    public function printDayData(Request $request)
+    {
+        // Inisialisasi variabel $arrBranches
+        $arrBranches = [];
+        // Jika user memiliki peran sebagai "branch" atau "area-manager"
+        if (
+            Auth::user()->roles[0]['slug'] === 'branch'
+            || Auth::user()->roles[0]['slug'] === 'area-manager'
+        ) {
+            // Mengisi variabel $arrBranches dengan branch_id
+            foreach (Auth::user()->listBranches() as $value) {
+                $arrBranches[] = $value["id"];
+            }
+        }
+
+        // Jika filter_branch memiliki value dan user tidak memiliki peran sebagai "branch"
+        if (
+            $request->has('filter_branch')
+            && Auth::user()->roles[0]['slug'] !== 'branch'
+        ) {
+            if (!empty($request->filter_branch)) {
+                $arrBranches = [];
+
+                // Push value dari filter_branch ke dalam variabel $arrBranches
+                $arrBranches[] = $request->filter_branch;
+            }
+        }
+
+        // Jika user memiliki peran sebagai "cso"
+        if (Auth::user()->roles[0]['slug'] === "cso") {
+            // Query ke tabel "csos" menggunakan cso_id yang dimiliki user
+            $getCSOCode = Cso::where("id", Auth::user()->cso["id"])->first();
+
+            // Re-assign $request->filter_cso dengan kode CSO yang didapat dari query
+            $request->filter_cso = $getCSOCode->code;
+        }
+
+        $currentDayData = $this->getDayData(
+            $request->date,
+            $request->filter_province,
+            $request->filter_city,
+            $request->filter_district,
+            $arrBranches,
+            $request->filter_cso,
+            $request->filter_search
+        );
+
+        $result = "";
+        if ($currentDayData->isEmpty()) {
+            $result .= '<tr>';
+            $result .= '<td colspan="7">'
+                . '<div class="cjslib-rows" id="organizerContainer-list-container">'
+                . '<ol class="cjslib-list" id="organizerContainer-list">'
+                . '<div class="cjslib-list-placeholder">'
+                . '<li style="text-align:center; margin-top: 1em;">'
+                . 'No appointments on this day.'
+                . '</li>'
+                . '</div>'
+                . '</ol>'
+                . '</div>'
+                . '</td>';
+            $result .= '</tr>';
+        } else {
+            $i = 1;
+            foreach ($currentDayData as $dayData) {
+                $result .= '<tr>'
+                    . '<td style="text-align: center">'
+                    . $i
+                    . '</td>'
+                    . '<td style="text-align: center">';
+
+                $time = new DateTime($dayData->appointment);
+                $result .= $time->format("H:i");
+
+                $result .= '</td>'
+                    . '<td>'
+                    . '<p class="titleAppoin">'
+                    . '<a href="'
+                    . route('homeServices_success')
+                    . '?code='
+                    . $dayData->hs_code
+                    . '" target="_blank">'
+                    . $dayData->hs_code
+                    . '</a>'
+                    . '</p>'
+                    . '<p class="descAppoin">'
+                    . $dayData->customer_name . ' - ' . $dayData->customer_phone
+                    . '<br>'
+                    . 'Branch: '
+                    . $dayData->branch_code . ' - ' . $dayData->branch_name
+                    . '<br>'
+                    . 'CSO: ' . $dayData->cso_name
+                    . '<br>'
+                    . 'Created at: ' . $dayData->created_at
+                    . '<br>'
+                    . 'Last update: ' . $dayData->updated_at
+                    . '</p>'
+                    . '</td>'
+                    . '<td style="text-align: center">';
+
+                $result .= '<button '
+                    . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                    . 'type="button" '
+                    . 'data-toggle="modal" '
+                    . 'data-target="#viewHomeServiceModal" '
+                    . 'onclick="clickView(this)" '
+                    . 'value="' . $dayData->hs_id . '">'
+                    . '</button>'
+                    . '</td>'
+                    . '<td style="text-align: center">';
+
+                $result .= '<button '
+                    . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
+                    . 'type="button" '
+                    . 'data-toggle="modal" '
+                    . 'data-target="#cashHomeServiceModal" '
+                    . 'onclick=clickCash(this) '
+                    . 'value="' . $dayData->hs_id . '">'
+                    . '</button>'
+                    . '</td>'
+                    . '<td style="text-align: center">';
+
+                $result .= '<button '
+                    . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
+                    . 'type="button" '
+                    . 'data-toggle="modal" '
+                    . 'data-target="#editHomeServiceModal" ';
+
+                if (Auth::user()->roles[0]["slug"] === "cso") {
+                    $result .= 'data-cso="true" ';
+                } else {
+                    $result .= 'data-cso="false" ';
+                }
+
+                $result .= 'onclick="clickEdit(this)" '
+                    . 'value="' . $dayData->hs_id . '">'
+                    . '</button>'
+                    . '</td>'
+                    . '<td style="text-align: center">';
+
+                $result .= '<button '
+                    . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
+                    . 'type="button" '
+                    . 'data-toggle="modal" '
+                    . 'data-target="#deleteHomeServiceModal" '
+                    . 'onclick="clickCancel(this)" '
+                    . 'value="' . $dayData->hs_id . '">'
+                    . '</button>'
+                    . '</td>'
+                    . '</tr>';
+
+                $i++;
+            }
+        }
+
+        return response($result, 200)->header("Content-Type", "text/plain");
     }
 
     public function admin_fetchHomeService(Request $request){
