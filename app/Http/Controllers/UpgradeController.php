@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Upgrade;
 use Illuminate\Http\Request;
 
@@ -15,13 +16,15 @@ class UpgradeController extends Controller
     public function indexNew(Request $request)
     {
         $url = $request->all();
-        $upgrades = Upgrade::where('active', true)->paginate(10);
+        $upgrades = Upgrade::where([['active', true], ['status', 'new']])->paginate(10);
         return view('admin.list_upgrade_new', compact('upgrades', 'url'));
     }
 
-    public function index()
+    public function list(Request $request)
     {
-        //
+        $url = $request->all();
+        $upgrades = Upgrade::where([['active', true], ['status', '!=', 'new']])->paginate(10);
+        return view('admin.list_upgrade', compact('upgrades', 'url'));
     }
 
     /**
@@ -43,7 +46,18 @@ class UpgradeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $upgrade = Upgrade::find($data['upgrade_id']);
+        $upgrade['task'] = $data['task'];
+        $upgrade['due_date'] = $data['due_date'];
+        $upgrade['status'] = "process";
+        $tempHistoryStatus = [];
+        if($upgrade['history_status'] != null){
+            $tempHistoryStatus = $upgrade['history_status'];
+        }
+        array_push($tempHistoryStatus, ['user_id' => Auth::user()['id'], 'status' => $upgrade['status'], 'updated_at' => date("Y-m-d h:i:s")]);
+        $upgrade['history_status'] = $tempHistoryStatus;
+        $upgrade->save();
     }
 
     /**
@@ -52,9 +66,10 @@ class UpgradeController extends Controller
      * @param  \App\Upgrade  $upgrade
      * @return \Illuminate\Http\Response
      */
-    public function show(Upgrade $upgrade)
+    public function detail($id)
     {
-        //
+        $upgrade = Upgrade::find($id);
+        return view('admin.detail_upgrade', compact('upgrade'));
     }
 
     /**
@@ -65,7 +80,7 @@ class UpgradeController extends Controller
      */
     public function edit(Upgrade $upgrade)
     {
-        //
+
     }
 
     /**

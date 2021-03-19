@@ -136,18 +136,28 @@
 	        	<div class="card">
 	          		<div class="card-body">
 	          			<div class="row justify-content-center">
-	          				<h2>Detail Acceptance</h2>
+	          				<h2>Detail Acceptance (Upgrade)</h2>
 	          			</div>
 	          			<div class="row justify-content-center">
 	          				<table class="col-md-12">
 	          					<thead>
-	          						<td>Acc Code</td>
-	          						<td>Upgrade Date</td>
+	          						<td>Status</td>
+	          						<td>Acceptance Code</td>
+	          						<td>Acceptance Date</td>
 	          					</thead>
 	          					<tr>
-	          						<td>{{ $upgrade->acceptance['code'] }}</td>
+	          						<td style="text-align: center;">
+	          							@if(strtolower($acceptance['status']) == "new")
+	                                        <span class="badge badge-primary">New</span>
+	                                    @elseif(strtolower($acceptance['status']) == "approved")
+	                                        <span class="badge badge-success">Approved by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
+	                                    @elseif(strtolower($acceptance['status']) == "rejected")
+	                                        <span class="badge badge-danger">Rejected by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
+	                                    @endif
+	          						</td>	          						
+	          						<td>{{ $acceptance['code'] }}</td>
 	          						<td>
-	          							{{ date("d/m/Y", strtotime($upgrade->acceptance['upgrade_date'])) }}
+	          							{{ date("d/m/Y", strtotime($acceptance['created_at'])) }}
 	          						</td>
 	          					</tr>
 	          				</table>
@@ -155,23 +165,31 @@
 	          			<div class="row justify-content-center">
 	          				<table class="col-md-12">
 	          					<thead>
-	          						<td colspan="2">Data Upgrade</td>
+	          						<td colspan="2">Data Acceptance</td>
 	          					</thead>
 	          					<tr>
+	          						<td>Upgrade Date : </td>
+	          						<td>{{ date("d/m/Y", strtotime($acceptance['upgrade_date'])) }}</td>
+	          					</tr>
+	          					<tr>
 	          						<td>Customer Name : </td>
-	          						<td>{{ $upgrade->acceptance['name'] }}</td>
+	          						<td>{{ $acceptance['name'] }}</td>
 	          					</tr>
 	          					<tr>
 	          						<td>Customer Phone : </td>
-	          						<td>{{ $upgrade->acceptance['phone'] }}</td>
+	          						<td>{{ $acceptance['phone'] }}</td>
 	          					</tr>
 	          					<tr>
-	          						<td>Branch : </td>
-	          						<td>{{ $upgrade->acceptance->branch->code }} - {{ $upgrade->acceptance->branch->name }}</td>
+	          						<td>Customer Address : </td>
+	          						<td>
+		          						{{ $acceptance['address'] }}
+		          						<br>
+		          						{{$acceptance->provinceObj['province']}}, {{$acceptance->cityObj['city_name']}}, {{$acceptance->districObj['subdistrict_name']}}
+		          					</td>
 	          					</tr>
 	          					<tr>
-	          						<td>CSO : </td>
-	          						<td>{{ $upgrade->acceptance->cso->code }} - {{ $upgrade->acceptance->cso->name }}</td>
+	          						<td>Branch - CSO : </td>
+	          						<td>{{ $acceptance->branch->code }} - {{ $acceptance->cso->code }} ({{ $acceptance->cso->name }})</td>
 	          					</tr>
 	          				</table>
 	          			</div>
@@ -182,61 +200,65 @@
 	          					</thead>
 	          					<tr>
 	          						<td>New Product : </td>
-	          						<td>{{ $upgrade->acceptance->newproduct['code'] }} - {{ $upgrade->acceptance->newproduct['name'] }}</td>
+	          						<td>{{ $acceptance->newproduct['code'] }} - {{ $acceptance->newproduct['name'] }}</td>
 	          					</tr>
 	          					<tr>
 	          						<td>Old Product : </td>
-	          						@if($upgrade->acceptance['oldproduct_id'] != null)
-		          						<td>{{ $upgrade->acceptance->oldproduct['code'] }} - {{ $upgrade->acceptance->oldproduct['name'] }}</td>
+	          						@if($acceptance['oldproduct_id'] != null)
+		          						<td>{{ $acceptance->oldproduct['code'] }} - {{ $acceptance->oldproduct['name'] }}</td>
 		          					@else
-		          						<td>{{ $upgrade->acceptance['other_product'] }}</td>
+		          						<td>{{ $acceptance['other_product'] }}</td>
 		          					@endif
 	          					</tr>
 	          					<tr>
 	          						<td>Purchase Date : </td>
-	          						<td>{{ date("d/m/Y", strtotime($upgrade->acceptance['purchase_date'])) }}</td>
+	          						<td>{{ date("d/m/Y", strtotime($acceptance['purchase_date'])) }}</td>
+	          					</tr>
+	          					<tr>
+	          						<td>Request Price : </td>
+	          						<td>{{ number_format($acceptance->request_price) }}</td>
 	          					</tr>
 
 	          					<tr>
 	          						<td rowspan="5">Kelengkapan : </td>
-	          						<td><i class="mdi {{ in_array("mesin", $upgrade->acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Mesin
+	          						<td><i class="mdi {{ in_array("mesin", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Mesin
 	          						</td>
 	          					</tr>
 	          					<tr>
 	          						<td>
-	          							<i class="mdi {{ in_array("filter", $upgrade->acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Filter
+	          							<i class="mdi {{ in_array("filter", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Filter
 	          						</td>
 	          					</tr>
 	          					<tr>
 	          						<td>
-	          							<i class="mdi {{ in_array("aksesoris", $upgrade->acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Aksesoris
+	          							<i class="mdi {{ in_array("aksesoris", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Aksesoris
 	          						</td>
 	          					</tr>
 	          					<tr>
 	          						<td>
-	          							<i class="mdi {{ in_array("kabel", $upgrade->acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Kabel
+	          							<i class="mdi {{ in_array("kabel", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Kabel
 	          						</td>
 	          					</tr>
 	          					<tr>
 	          						<td>
-	          							<i class="mdi {{ in_array("other", $upgrade->acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Other : {{ isset($upgrade->acceptance['arr_condition']['kelengkapan']['other']) ? $upgrade->acceptance['arr_condition']['kelengkapan']['other'][0] : "-" }}
+	          							<i class="mdi {{ in_array("other", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Other : {{ isset($acceptance['arr_condition']['kelengkapan']['other']) ? $acceptance['arr_condition']['kelengkapan']['other'][0] : "-" }}
 	          						</td></tr>
 	          					<tr>
 	          						<td>Kondisi Mesin : </td>
-	          						<td>{{ ucwords($upgrade->acceptance['arr_condition']['kondisi']) }}</td>
+	          						<td>{{ ucwords($acceptance['arr_condition']['kondisi']) }}</td>
 	          					</tr>
 	          					<tr>
 	          						<td>Tampilan : </td>
-	          						<td>{{ ucwords($upgrade->acceptance['arr_condition']['tampilan']) }}</td>
+	          						<td>{{ ucwords($acceptance['arr_condition']['tampilan']) }}</td>
 	          					</tr>
 	          					<tr>
 	          						<td>Description : </td>
-	          						<td>{{ $upgrade->acceptance['description']}}</td>
+	          						<td>{{ $acceptance['description']}}</td>
 	          					</tr>
 	          					<tr>
 	          						<td>Photo : </td>
 	          						<td>
-	          							@foreach($upgrade->acceptance['image'] as $imgAcc)
+	          							@foreach($acceptance['image'] as $imgAcc)
 		          							<img src="{{asset('sources/acceptance/').'/'.$imgAcc}}" height="300px">
 		          						@endforeach
 	          						</td>
@@ -248,33 +270,66 @@
 	      	</div>
 	    </div>
 
-	    <div class="row">
-	      	<div class="col-12 grid-margin stretch-card">
-	        	<div class="card">
-	          		<div class="card-body">
-	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_upgrade_form') }}">
-	            			{{ csrf_field() }}
-	              			<div class="form-group">
-	              				<label for="">Due Date</label>
-	              				<input type="date" class="form-control" name="due_date" id="due_date" placeholder="Due Date" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal"/>
-	              				<div class="validation"></div>
-	              			</div>
-			                <div class="form-group">
-			                	<label for="">Task</label>
-			                    <textarea class="form-control" name="task" rows="10" data-msg="Mohon Isi Task" placeholder="Task"></textarea>
-			                    <div class="validation"></div>
-			                </div>
+		@if(strtolower($acceptance['status']) == "new")
+		    <div class="row">
+		      	<div class="col-12 grid-margin stretch-card">
+		        	<div class="card">
+		          		<div class="card-body">	          			
+		          			<div class="row justify-content-center">
+		          				<h2>Status Acceptance</h2>
+		          			</div>
+		            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('update_acceptance_form') }}">
+		            			{{ csrf_field() }}
+		            			<input type="text" name="id" value="{{ $acceptance['id'] }}" hidden="">
+		              			<div class="form-group row justify-content-center">
+		              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-primary mr-2 btn-lg" name="status" value="approved">Approved</button>
+		              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-danger mr-2 btn-lg" name="status" value="rejected">Reject</button>
+		              			</div>
+		            		</form>
+		          		</div>
+		        	</div>
+		      	</div>
+		    </div>
+		@endif
 
-	              			<div id="errormessage"></div>
-	              			<div class="form-group">
-	              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-primary mr-2" name="status" value="process">Process</button>
-	              			</div>
-	            		</form>
-
-	          		</div>
-	        	</div>
-	      	</div>
-	    </div>
+		@if(sizeof($historyUpdate) > 0)
+			<div class="row">
+		      	<div class="col-12 grid-margin stretch-card">
+		        	<div class="card">
+		          		<div class="card-body">	          			
+		          			<div class="row justify-content-center">
+		          				<h2>Acceptance History Log</h2>
+		          			</div>
+		            		<div class="row justify-content-center">
+		          				<table class="col-md-12">
+		          					<thead>
+		          						<td>No.</td>
+		          						<td>Action</td>
+		          						<td>User</td>
+		          						<td>Change</td>
+		          						<td>Time</td>
+		          					</thead>
+		          					@foreach($historyUpdate as $key => $historyNya)
+			          					<tr>
+			          						<td>{{$key+1}}</td>
+			          						<td>{{$historyNya->method}}</td>
+			          						<td>{{$historyNya->user['name']}}</td>
+			          						<?php $dataChange = json_decode($historyNya->meta, true);?>
+			          						<td>
+			          							@foreach ($dataChange['dataChange'] as $key=>$value)
+				          							<b>{{$key}}</b>: {{$value}}<br/>
+			          							@endforeach
+			          						</td>
+			          						<td>{{ date("d/m/Y H:i:s", strtotime($historyNya->created_at)) }}</td>
+			          					</tr>
+		          					@endforeach
+		          				</table>
+		          			</div>
+		          		</div>
+		        	</div>
+		      	</div>
+		    </div>
+	    @endif
 	</div>
 </div>
 @endsection
@@ -282,74 +337,4 @@
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
-<script type="text/javascript">
-    for (let input of document.querySelectorAll('#tags')) {
-        tagsInput(input);
-    }
-</script>
-<script>
-    $(document).ready(function(){
-        $("#actionAdd").on("submit", function (e) {
-        	e.preventDefault();
-        	if($('.div-CheckboxGroup :checkbox:checked').length < 1){
-        		alert("Kelengkapan minimal tercentang 1 !");
-        	}
-
-        	frmAdd = _("actionAdd");
-        	frmAdd = new FormData(document.getElementById("actionAdd"));
-        	frmAdd.enctype = "multipart/form-data";
-        	var URLNya = $("#actionAdd").attr('action');
-
-        	var ajax = new XMLHttpRequest();
-        	ajax.upload.addEventListener("progress", progressHandler, false);
-        	ajax.addEventListener("load", completeHandler, false);
-        	ajax.addEventListener("error", errorHandler, false);
-        	ajax.open("POST", URLNya);
-        	ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
-        	ajax.send(frmAdd);
-        });
-        function progressHandler(event){
-        	document.getElementById("addUpgrade").innerHTML = "UPLOADING...";
-        }
-        function completeHandler(event){
-        	var hasil = JSON.parse(event.target.responseText);
-
-        	for (var key of frmAdd.keys()) {
-        		$("#actionAdd").find("input[name="+key.name+"]").removeClass("is-invalid");
-        		$("#actionAdd").find("select[name="+key.name+"]").removeClass("is-invalid");
-        		$("#actionAdd").find("textarea[name="+key.name+"]").removeClass("is-invalid");
-
-        		$("#actionAdd").find("input[name="+key.name+"]").next().find("strong").text("");
-        		$("#actionAdd").find("select[name="+key.name+"]").next().find("strong").text("");
-        		$("#actionAdd").find("textarea[name="+key.name+"]").next().find("strong").text("");
-        	}
-
-        	if(hasil['errors'] != null){
-        		for (var key of frmAdd.keys()) {
-        			if(typeof hasil['errors'][key] === 'undefined') {
-        			}
-        			else {
-        				$("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
-        				$("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
-        				$("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
-
-        				$("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-        				$("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-        				$("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-        			}
-        		}
-                alert("Terdapat kesalahan pada inputan !");
-        	}
-        	else{
-                alert("Data berhasil disimpan !");
-	            window.location.href = "{{ route('add_acceptance_form') }}";
-	        }
-	        document.getElementById("addUpgrade").innerHTML = "SAVE";
-	    }
-	    function errorHandler(event){
-	    	document.getElementById("addUpgrade").innerHTML = "SAVE";
-	    }
-    });
-</script>
-
 @endsection

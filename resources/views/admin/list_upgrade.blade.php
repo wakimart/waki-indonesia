@@ -1,61 +1,36 @@
 <?php
-$menu_item_page = "acceptance";
-$menu_item_second = "list_acceptance_form";
+$menu_item_page = "upgrade";
+$menu_item_second = "list_upgrade_form";
 ?>
 @extends('admin.layouts.template')
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Acceptances List</h3>
+            <h3 class="page-title">Upgrade List</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a data-toggle="collapse"
                             href="#"
                             aria-expanded="false"
-                            aria-controls="acceptance-dd">
-                            Acceptances
+                            aria-controls="upgrade-dd">
+                            Upgrade
                         </a>
                     </li>
                     <li class="breadcrumb-item active"
                         aria-current="page">
-                        Acceptances List
+                        Upgrade List
                     </li>
                 </ol>
             </nav>
-        </div>
-        <div class="col-12" style="padding: 0;">
-            <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-                <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
-                    <div class="form-group">
-                        <label for="">Filter By Status</label>
-                        <select class="form-control" id="filter_status" name="filter_status">
-                            <option value="">All</option>
-                            <option value="new" {{ isset($_GET['status']) ? ($_GET['status'] == "new" ? "selected" : "") : ""}}>New</option>
-                            <option value="approved" {{ isset($_GET['status']) ? ($_GET['status'] == "approved" ? "selected" : "") : ""}}>Approved</option>
-                            <option value="rejected" {{ isset($_GET['status']) ? ($_GET['status'] == "rejected" ? "selected" : "") : ""}}>Rejected</option>
-                        </select>
-                        <div class="validation"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-            <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-                <label for=""></label>
-                <div class="form-group">
-                    <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-                </div>
-            </div>
         </div>
 
         <div class="col-12 grid-margin stretch-card" style="padding: 0;">
             <div class="card">
                 <div class="card-body">
                     <h5 style="margin-bottom: 0.5em;">
-                        Total: {{ $acceptances->count() }} data
+                        Total: {{ $upgrades->count() }} data
                     </h5>
                     <div class="table-responsive"
                         style="border: 1px solid #ebedf2;">
@@ -63,10 +38,9 @@ $menu_item_second = "list_acceptance_form";
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Acceptance Date</th>
+                                    <th>Upgrade Date</th>
                                     <th>Member Name</th>
-                                    <th>Acc Type</th>
-                                    <th>Acceptance Product</th>
+                                    <th>Upgrade Product</th>
                                     <th>Branch - CSO</th>
                                     <th>Status</th>
                                     {{-- @if(Gate::check('edit-deliveryorder') || Gate::check('delete-deliveryorder')) --}}
@@ -75,51 +49,52 @@ $menu_item_second = "list_acceptance_form";
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($acceptances as $key => $acceptance)
+                                @foreach($upgrades as $key => $upgrade)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>
-                                            {{ date("d/m/Y", strtotime($acceptance->upgrade_date)) }}
+                                            {{ date("d/m/Y", strtotime($upgrade->acceptance->upgrade_date)) }}
                                         </td>
                                         <td>
-                                            {{ $acceptance->name }}
+                                            {{ $upgrade->acceptance->name }}
                                         </td>
                                         <td>
-                                            Upgrade
+                                            {{ $upgrade->acceptance['other_product'] == null ? $upgrade->acceptance->oldproduct['code'] : $upgrade->acceptance['other_product'] }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ $upgrade->acceptance->newproduct['code'] }}
                                         </td>
                                         <td>
-                                            {{ $acceptance['other_product'] == null ? $acceptance->oldproduct['code'] : $acceptance['other_product'] }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ $acceptance->newproduct['code'] }}
+                                            {{ $upgrade->acceptance->branch->code }} - {{ $upgrade->acceptance->cso->code }}
                                         </td>
                                         <td>
-                                            {{ $acceptance->branch->code }} - {{ $acceptance->cso->code }}
-                                        </td>
-                                        <td>
-                                            @if(strtolower($acceptance['status']) == "new")
-                                                <span class="badge badge-primary">New</span>
-                                            @elseif(strtolower($acceptance['status']) == "approved")
-                                                <span class="badge badge-success">Approved by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
-                                            @elseif(strtolower($acceptance['status']) == "rejected")
-                                                <span class="badge badge-danger">Rejected by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
+                                            @if(strtolower($upgrade['status']) == "new")
+                                                <span class="badge badge-secondary">New</span>
+                                            @elseif(strtolower($upgrade['status']) == "process")
+                                                <span class="badge badge-primary">Process by : {{ $upgrade->statusBy("process")['user_id']['name'] }}</span>
+                                            @elseif(strtolower($upgrade['status']) == "repaired")
+                                                <span class="badge badge-warning">Repaired by : {{ $upgrade->statusBy("repaired")['user_id']['name'] }}</span>
+                                            @elseif(strtolower($upgrade['status']) == "approved")
+                                                <span class="badge badge-info">Approved by : {{ $upgrade->statusBy("approved")['user_id']['name'] }}</span>
+                                            @elseif(strtolower($upgrade['status']) == "completed")
+                                                <span class="badge badge-Success">Completed by : {{ $upgrade->statusBy("completed")['user_id']['name'] }}</span>
                                             @endif
                                         </td>
                                         {{-- @can('edit-deliveryorder') --}}
                                             <td style="text-align: center;">
-                                                <a href="{{ route('detail_acceptance_form' ,['id' => $acceptance['id']]) }}">
+                                                <a href="{{ route('detail_upgrade_form' ,['id' => $upgrade['id']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
                                         {{-- @endcan --}}
                                         {{-- @can('edit-deliveryorder') --}}
                                             <td style="text-align: center;">
-                                                <a href="{{ route('detail_acceptance_form' ,['id' => $acceptance['id']]) }}">
+                                                <a href="{{ route('detail_upgrade_form' ,['id' => $upgrade['id']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>
                                         {{-- @endcan --}}
                                         {{-- @can('edit-deliveryorder') --}}
                                             <td style="text-align: center;">
-                                                @if(strtolower($acceptance['status']) == "new")
-                                                    <a class="btn-delete disabled" data-toggle="modal" href="#deleteDoModal" value="{{ route('delete_acceptance_form', ['id' => $acceptance->id]) }}">
+                                                @if(strtolower($upgrade['status']) == "new")
+                                                    <a class="btn-delete disabled" data-toggle="modal" href="#deleteDoModal" value="{{ route('delete_upgrade_form', ['id' => $upgrade->id]) }}">
                                                         <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                     </a>
                                                 @endif
@@ -130,7 +105,7 @@ $menu_item_second = "list_acceptance_form";
                             </tbody>
                         </table>
                         <br>
-                        {{ $acceptances->appends($url)->links() }}
+                        {{ $upgrades->appends($url)->links() }}
                     </div>
                 </div>
             </div>
@@ -178,21 +153,6 @@ $menu_item_second = "list_acceptance_form";
 @section('script')
 <script>
 $(document).ready(function (e) {
-    $("#btn-filter").click(function (e) {
-        var urlParamArray = new Array();
-        var urlParamStr = "";
-        if($('#filter_status').val() != ""){
-            urlParamArray.push("status=" + $('#filter_status').val());
-        }
-        for (var i = 0; i < urlParamArray.length; i++) {
-            if (i === 0) {
-                urlParamStr += "?" + urlParamArray[i]
-            } else {
-                urlParamStr += "&" + urlParamArray[i]
-            }
-        }
-        window.location.href = "{{route('list_acceptance_form')}}" + urlParamStr;
-    });
     $(".btn-delete").click(function (e) {
         $("#frmDelete").attr("action",  $(this).attr('value'));
     });

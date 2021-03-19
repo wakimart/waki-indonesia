@@ -14,6 +14,7 @@ use App\User;
 use App\Utils;
 use App\Product;
 use App\Upgrade;
+use App\HistoryUpdate;
 use DB;
 
 
@@ -87,11 +88,6 @@ class AcceptanceController extends Controller
                 $accStatusLog['status'] = "new";
                 $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
 
-                $upgrade['acceptance_id'] = $acc->id;
-                $upgrade['status'] = "New";
-                $upgrade['due_date'] = $acc['created_at'];
-                Upgrade::create($upgrade);
-
                 DB::commit();
 
                 return response()->json(['success' => $acc]);
@@ -110,6 +106,77 @@ class AcceptanceController extends Controller
         }
         $acceptances = $acceptances->orderBy('id', 'DESC')->paginate(10);
         return view('admin.list_acceptance', compact('acceptances', 'url'));
+    }
+
+    public function detail($id){
+        $acceptance = Acceptance::find($id);
+        $historyUpdate = HistoryUpdate::where([['type_menu', 'Acceptance'], ['method', 'Update'], ['menu_id', $id]])->get();
+        return view('admin.detail_acceptance', compact('acceptance', 'historyUpdate'));
+    }
+
+
+    public function update(Request $request){
+        $data = $request->all();
+        if(isset($data['status'])){
+            DB::beginTransaction();
+            try{
+                $acceptance = Acceptance::find($data['id']);
+                $acceptance['status'] = $data['status'];
+                $acceptance->save();
+
+
+                $accStatusLog['acceptance_id'] = $data['id'];
+                $accStatusLog['user_id'] =  Auth::user()['id'];
+                $accStatusLog['status'] =  $data['status'];
+                $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
+
+                if(strtolower($data['status']) == "approved"){
+                    $upgrade['acceptance_id'] = $data['id'];
+                    $upgrade['status'] = "New";
+                    $upgrade['due_date'] = date("Y-m-d h:i:s");
+                    Upgrade::create($upgrade);
+                }
+
+                $historyUpdate['type_menu'] = "Acceptance";
+                $historyUpdate['method'] = "Update";
+                $historyUpdate["meta"] = json_encode(["dataChange" => $acceptance->getChanges()]);
+                $historyUpdate['user_id'] = Auth::user()['id'];
+                $historyUpdate['menu_id'] = $acceptance->id;
+                $createData = HistoryUpdate::create($historyUpdate);
+                
+                DB::commit();
+                return redirect()->route('detail_acceptance_form', ['id'=>$data['id']]);
+            }
+            catch (\Exception $ex) {
+                DB::rollback();
+                return redirect()->route('detail_acceptance_form', ['id'=>$data['id']]);
+            }
+        }
+    }
+
+    public function destroy($id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $acceptance = Acceptance::find($data['id']);
+            $acceptance['active'] = false;
+            $acceptance->save();
+
+            $historyUpdate['type_menu'] = "Acceptance";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate["meta"] = json_encode(["dataChange" => $acceptance->getChanges()]);
+            $historyUpdate['user_id'] = Auth::user()['id'];
+            $historyUpdate['menu_id'] = $acceptance->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+
+            DB::commit();
+            return redirect()->route('list_acceptance_form');
+        }
+        catch (Exception $e) {
+            DB::rollback();
+            return redirect()->route('list_acceptance_form');
+        }
     }
 
     public function addApi(Request $request)

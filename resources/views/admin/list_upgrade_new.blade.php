@@ -41,10 +41,10 @@ $menu_item_second = "new_upgrade_form";
                                     <th>Upgrade Date</th>
                                     <th>Member Name</th>
                                     <th>Upgrade Product</th>
-                                    <th>Branch</th>
-                                    <th>CSO</th>
+                                    <th>Branch - CSO</th>
+                                    <th>Status</th>
                                     {{-- @if(Gate::check('edit-deliveryorder') || Gate::check('delete-deliveryorder')) --}}
-                                        <th colspan="2">Process</th>
+                                        <th colspan="2">Detail/Delete</th>
                                     {{-- @endif --}}
                                 </tr>
                             </thead>
@@ -62,16 +62,35 @@ $menu_item_second = "new_upgrade_form";
                                             {{ $upgrade->acceptance['other_product'] == null ? $upgrade->acceptance->oldproduct['code'] : $upgrade->acceptance['other_product'] }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ $upgrade->acceptance->newproduct['code'] }}
                                         </td>
                                         <td>
-                                            {{ $upgrade->acceptance->branch->code }}
+                                            {{ $upgrade->acceptance->branch->code }} - {{ $upgrade->acceptance->cso->code }}
                                         </td>
                                         <td>
-                                            {{ $upgrade->acceptance->cso->code }}
+                                            @if(strtolower($upgrade['status']) == "new")
+                                                <span class="badge badge-secondary">New</span>
+                                            @elseif(strtolower($upgrade['status']) == "process")
+                                                <span class="badge badge-primary">Process by : </span>
+                                            @elseif(strtolower($upgrade['status']) == "repaired")
+                                                <span class="badge badge-warning">Repaired by : </span>
+                                            @elseif(strtolower($upgrade['status']) == "approved")
+                                                <span class="badge badge-info">Approved by : </span>
+                                            @elseif(strtolower($upgrade['status']) == "completed")
+                                                <span class="badge badge-Success">Completed by : </span>
+                                            @endif
                                         </td>
                                         {{-- @can('edit-deliveryorder') --}}
                                             <td style="text-align: center;">
                                                 <a href="{{ route('add_upgrade_form' ,['id' => $upgrade['id']]) }}">
-                                                    <i class="mdi mdi-timer-sand" style="font-size: 24px; color: #fed713;"></i>
+                                                    <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
+                                            </td>
+                                        {{-- @endcan --}}
+                                        {{-- @can('edit-deliveryorder') --}}
+                                            <td style="text-align: center;">
+                                                @if(strtolower($upgrade['status']) == "new")
+                                                    <a class="btn-delete disabled" data-toggle="modal" href="#deleteDoModal" value="{{ route('delete_upgrade_form', ['id' => $upgrade->id]) }}">
+                                                        <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                    </a>
+                                                @endif
                                             </td>
                                         {{-- @endcan --}}
                                     </tr>
@@ -87,13 +106,48 @@ $menu_item_second = "new_upgrade_form";
     </div>
 </div>
 <!-- partial -->
+
+<!-- Modal Delete -->
+<div class="modal fade"
+    id="deleteDoModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 style="text-align:center;">
+                    Are you sure you want to delete this?
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <form id="frmDelete" method="post" action="">
+                    {{csrf_field()}}
+                    <button type="submit" class="btn btn-gradient-danger mr-2">
+                        Yes
+                    </button>
+                </form>
+                <button class="btn btn-light">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Delete -->
 @endsection
 
 @section('script')
 <script>
 $(document).ready(function (e) {
     $(".btn-delete").click(function (e) {
-        $("#frmDelete").attr("action",  $(this).val());
+        $("#frmDelete").attr("action",  $(this).attr('value'));
     });
 });
 </script>

@@ -1,6 +1,6 @@
 <?php
     $menu_item_page = "upgrade";
-    $menu_item_second = "new_upgrade_form";
+    $menu_item_second = "list_upgrade_form";
 ?>
 @extends('admin.layouts.template')
 
@@ -141,12 +141,24 @@
 	          			<div class="row justify-content-center">
 	          				<table class="col-md-12">
 	          					<thead>
-	          						<td>Acc By</td>
+	          						<td>Status</td>
 	          						<td>Acc Code</td>
 	          						<td>Upgrade Date</td>
 	          					</thead>
 	          					<tr>
-	          						<td style="text-align: center;"><span class="badge badge-success">Approved by : {{ $upgrade->acceptance->acceptanceLog[sizeof($upgrade->acceptance->acceptanceLog)-1]->user['name'] }}</span></td>
+	          						<td style="text-align: center;">
+	          							@if(strtolower($upgrade['status']) == "new")
+                                            <span class="badge badge-secondary">New</span>
+                                        @elseif(strtolower($upgrade['status']) == "process")
+                                            <span class="badge badge-primary">Process by : {{ $upgrade->statusBy("process")['user_id']['name'] }}</span>
+                                        @elseif(strtolower($upgrade['status']) == "repaired")
+                                            <span class="badge badge-warning">Repaired by : {{ $upgrade->statusBy("repaired")['user_id']['name'] }}</span>
+                                        @elseif(strtolower($upgrade['status']) == "approved")
+                                            <span class="badge badge-info">Approved by : {{ $upgrade->statusBy("approved")['user_id']['name'] }}</span>
+                                        @elseif(strtolower($upgrade['status']) == "completed")
+                                            <span class="badge badge-Success">Completed by : {{ $upgrade->statusBy("completed")['user_id']['name'] }}</span>
+                                        @endif
+	          						</td>
 	          						<td>{{ $upgrade->acceptance['code'] }}</td>
 	          						<td>
 	          							{{ date("d/m/Y", strtotime($upgrade->acceptance['upgrade_date'])) }}
@@ -254,24 +266,24 @@
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
 	          		<div class="card-body">
-	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_upgrade_form') }}">
-	            			{{ csrf_field() }}
-	              			<div class="form-group">
-	              				<label for="">Due Date</label>
-	              				<input type="date" class="form-control" name="due_date" id="due_date" placeholder="Due Date" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal"/>
-	              				<div class="validation"></div>
-	              			</div>
-			                <div class="form-group">
-			                	<label for="">Task</label>
-			                    <textarea class="form-control" name="task" rows="10" data-msg="Mohon Isi Task" placeholder="Task"></textarea>
-			                    <div class="validation"></div>
-			                </div>
-
-	              			<div class="form-group">
-	              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-primary mr-2" name="upgrade_id" value="{{ $upgrade->id }}">Process</button>
-	              			</div>
-	            		</form>
-
+	          			<div class="row justify-content-center">
+	          				<h2>Detail Process</h2>
+	          			</div>
+	          			<div class="row justify-content-center">
+	          				<table class="col-md-12">
+	          					<thead>
+	          						<td colspan="2">Process Detail</td>
+	          					</thead>
+	          					<tr>
+	          						<td>Due Date : </td>
+	          						<td>{{ date("d/m/Y", strtotime($upgrade->due_date)) }}</td>
+	          					</tr>
+	          					<tr>
+	          						<td>Task : </td>
+	          						<td>{{ $upgrade->task }}</td>
+	          					</tr>
+	          				</table>
+	          			</div>
 	          		</div>
 	        	</div>
 	      	</div>

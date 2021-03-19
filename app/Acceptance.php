@@ -41,4 +41,20 @@ class Acceptance extends Model
     {
         return $this->belongsTo('App\Branch');
     }
+    public function provinceObj()
+    {
+        return $this->belongsTo('App\RajaOngkir_Province', 'province', 'province_id');
+    }
+    public function cityObj()
+    {
+        return $this->belongsTo('App\RajaOngkir_City', 'city', 'city_id');
+    }
+    public function districObj()
+    {
+        return $this->belongsTo('App\RajaOngkir_Subdistrict', 'district', 'subdistrict_id');
+    }
+    public function acceptanceLog()
+    {
+        return $this->hasMany('App\AcceptanceStatusLog');
+    }
 }

@@ -549,7 +549,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("list_upgrade_form");
 
         // Show detail of upgrade
-        Route::get("/detail", "UpgradeController@detail")
+        Route::get("/detail/{id}", "UpgradeController@detail")
             ->name("detail_upgrade_form");
 
         // Edit upgrade form page
