@@ -118,6 +118,14 @@ class RolesSeeder extends Seeder
                 "change-status-delivery-service" => false,
                 "change-status-complete-service" => false,
                 "delete-service" => false,
+
+                // Submission (Head Admin)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
         	]),
         ]);
 
@@ -227,6 +235,14 @@ class RolesSeeder extends Seeder
                 "change-status-delivery-service" => false,
                 "change-status-complete-service" => false,
                 "delete-service" => false,
+
+                // Submission (Admin)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
         	]),
         ]);
 
@@ -330,6 +346,14 @@ class RolesSeeder extends Seeder
                 "change-status-delivery-service" => false,
                 "change-status-complete-service" => false,
                 "delete-service" => false,
+
+                // Submission (CSO)
+                "add-submission" => true,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
             ]),
         ]);
 
@@ -433,6 +457,14 @@ class RolesSeeder extends Seeder
                 "change-status-delivery-service" => false,
                 "change-status-complete-service" => false,
                 "delete-service" => false,
+
+                // Submission (Branch)
+                "add-submission" => true,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => true,
+                "delete-submission" => true,
             ]),
         ]);
 
@@ -536,6 +568,14 @@ class RolesSeeder extends Seeder
                 "change-status-delivery-service" => false,
                 "change-status-complete-service" => false,
                 "delete-service" => false,
+
+                // Submission (Area Manager)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => true,
+                "delete-submission" => true,
             ]),
         ]);
 
@@ -639,6 +679,14 @@ class RolesSeeder extends Seeder
                 "change-status-delivery-service" => false,
                 "change-status-complete-service" => false,
                 "delete-service" => false,
+
+                // Submission (Head Manager)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
             ]),
         ]);
 
@@ -748,6 +796,14 @@ class RolesSeeder extends Seeder
                 "change-status-delivery-service" => true,
                 "change-status-complete-service" => true,
                 "delete-service" => true,
+
+                // Submission (Admin Management)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
             ]),
         ]);
     }
