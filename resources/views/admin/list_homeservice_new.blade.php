@@ -1495,7 +1495,7 @@ function submitExportXLS() {
 
     const fullDate = year + "-" + month + "-" + date;
 
-    window.location.href = "<?php echo route('admin_list_homeService'); ?>" + "?date=" + fullDate + "&" + urlParamStr;
+    window.location.href = "<?php echo route('homeservice_export-to-xls'); ?>" + "?date=" + fullDate + "&" + urlParamStr;
 }
 
 {{-- Export XLS With Date --}}
