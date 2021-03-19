@@ -855,7 +855,7 @@ class SubmissionController extends Controller
                 $historyDeliveryOrder["meta"] = json_encode(
                     [
                         "user" => $request->input("user_id"),
-                        "createdAt" => date("Y-m-d h:i:s"),
+                        "createdAt" => date("Y-m-d H:i:s"),
                         "dataChange" => $deliveryOrder->getChanges(),
                     ]
                 );
@@ -889,7 +889,7 @@ class SubmissionController extends Controller
                     $historyReference["meta"] = json_encode(
                         [
                             "user" => $request->input("user_id"),
-                            "createdAt" => date("Y-m-d h:i:s"),
+                            "createdAt" => date("Y-m-d H:i:s"),
                             "dataChange" => $reference->getChanges(),
                         ]
                     );
@@ -1164,7 +1164,7 @@ class SubmissionController extends Controller
                 $historyDeleteDeliveryOrder["meta"] = json_encode(
                     [
                         "user" => $request->user_id,
-                        "createdAt" => date("Y-m-d h:i:s"),
+                        "createdAt" => date("Y-m-d H:i:s"),
                         "dataChange" => $deliveryOrder->getChanges(),
                     ]
                 );
