@@ -117,6 +117,24 @@ Route::group(['prefix' => 'api-apps'], function () {
 		Route::get('view/{id}','AcceptanceController@viewApi'); //view single acceptance
 		Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
 	});
+
+    // Submission form API
+    Route::group(["prefix" => "submission"], function () {
+        // Create submission API
+        Route::post("add", "SubmissionController@addApi");
+
+        // Show submission list API
+        Route::post("list_submission", "SubmissionController@listSubmissionApi");
+
+        // Show reference list API
+        Route::post("list_reference", "SubmissionController@listReferenceApi");
+
+        // Update submission API
+        Route::post("update", "SubmissionController@updateApi");
+
+        // Delete submission API
+        Route::post("delete", "SubmissionController@deleteApi");
+    });
 });
 
 Auth::routes(['verify' => true]);
@@ -286,6 +304,19 @@ Route::group(['prefix' => 'cms-admin'], function () {
 		//Export to XLS By Date
         Route::get('/export-to-xls-by-date', 'HomeServiceController@export_to_xls_byDate')
                 ->name('homeservice_export-to-xls-by-date');
+
+        // List Home Service (Revisi)
+        Route::get("/list_new", "HomeServiceController@listHomeServiceNew")
+            ->name("list_homeservice_new");
+
+        // Print home service daily data count per month
+        Route::post("/homeservice_print_data_count", "HomeServiceController@printAppointmentCount")
+            ->name("homeservice_print_data_count");
+
+        // Print home service data detail on a selected day
+        Route::post("/homeservice_print_appointment", "HomeServiceController@printDayData")
+            ->name("homeservice_print_appointment");
+
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
