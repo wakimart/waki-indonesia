@@ -193,7 +193,13 @@ touch-action: none;
 .displaynone {
   display: none;
 }
-
+@media (max-width: 460px) {
+  .modal-window > div {
+    width: 90%;
+    margin: 0 1em;
+    left: 0;
+ }
+}
 @media (min-width: 768px) {
   .mobadjust {
     display: flex;
