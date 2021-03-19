@@ -10,20 +10,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="Html5 Construction Landing Page">
 <link href="{{asset('sources/landing/favicon/favicon.ico')}}" rel="icon">
-
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
 <!-- Fonts
 ============================================= -->
 <link href="https://fonts.googleapis.com/css?family=Poppins:300i,400,400i,500,600,700,800%7CLora:400,400i,700,700i%7COpen+Sans:800" rel="stylesheet">
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MMM76L65PE"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-MTXL2H0TEK"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-MMM76L65PE');
+  gtag('config', 'G-MTXL2H0TEK');
 </script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MSXJGPP');</script>
+<!-- End Google Tag Manager -->
 
 <!-- Stylesheets
 ============================================= -->
@@ -182,6 +190,9 @@ touch-action: none;
  .modal-close:hover {
 	 color: black;
 }
+.displaynone {
+  display: none;
+}
 
 @media (min-width: 768px) {
   .mobadjust {
@@ -192,6 +203,11 @@ touch-action: none;
 }
 </style>
 <body class="body-scroll">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MSXJGPP"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
 <!-- Document Wrapper
 ============================================= -->
 <div id="wrapper" class="wrapper clearfix">
@@ -211,7 +227,21 @@ touch-action: none;
                         <img src="https://waki-indonesia.co.id/sources/Logo Since.png" alt="" class="img-fluid logoWK">
                         <div class="clearfix"></div>
                         <h1 class="hero--headline">WAKi semakin dekat dengan anda, langsung ke RUMAH!</h1>
-                        <p class="hero--bio">Dapatkan fisioterapi gratis<br> selama <strong>5 hari</strong> di rumah anda!</p>
+                        <p class="hero--bio">Dapatkan fisioterapi gratis selama <strong>5 hari</strong> di rumah anda!</p>
+                        <div class="col-xs-12 col-sm-12 col-md-12 row" style="text-align: left;padding: 0;margin-bottom: 30px;">
+                          <div class="col-xs-12 col-sm-4 col-md-4">
+                            <i class="fas fa-check-circle" style="color:#6ac159; font-size: 32px;"></i>
+                            <p class="hero--sub">Protokol Kesehatan Terjamin</p>
+                          </div>
+                          <div class="col-xs-12 col-sm-4 col-md-4">
+                            <i class="fas fa-check-circle" style="color:#6ac159; font-size: 32px;"></i>
+                            <p class="hero--sub">Aman dan Nyaman</p>
+                          </div>
+                          <div class="col-xs-12 col-sm-4 col-md-4">
+                            <i class="fas fa-check-circle" style="color:#6ac159; font-size: 32px;"></i>
+                            <p class="hero--sub">Tanpa Biaya Apapun</p>
+                          </div>
+                        </div>
                         <!-- <a href="#" class="btn btn--primary btn--rounded">Get A Quote</a> -->
                     </div>
 
@@ -621,15 +651,16 @@ touch-action: none;
     </div>
 </div>
 
-<div class="container">
+<div class="container displaynone">
   <div class="interior">
-    <a class="btn regisnotif" href="#open-modal">Basic CSS-Only Modal</a>
+    <a class="btn regisnotif" href="#open-modal"></a>
   </div>
 </div>
 <div id="open-modal" class="modal-window">
   <div>
     <a href="#" title="Close" class="modal-close">X</a>
-    <h5>Jatmiko Gunawan telah berhasil mendaftar WAKi dirumah saja !</h5>
+    <h5 id="notif-name">Albert - Surabaya</h5>
+    <h5 style="font-weight: 100;" id="notif-time">Telah mendaftar 5 menit yang lalu</h5>
     <!-- <div>A CSS-only modal based on the :target pseudo-class. Hope you find it helpful.</div> -->
     </div>
 </div>
@@ -705,12 +736,26 @@ setInterval(function () {
 </script>
 
 <script>
-setInterval(function () {
-   document.querySelector("a.regisnotif").click();
-}, 5000);
-setInterval(function () {
-   document.querySelector("a.modal-close").click();
-}, 6000);
+  var arrName = ['Tagi Muhammad', 'Firmansyah', 'Andre', 'Johanes', 'Abimana', 'Charles Wijaya', 'Cokroaminoto', 'Eric Sanjaya', 'Endang', 'Mahmud Muhsin'];
+  var arrKota = ['Surabaya', 'Jakarta Utara', 'Jakarta Pusat', 'Jakarta Selatan', 'Bandung', 'Semarang', 'Medan', 'Jakarta Timur'];
+  var i = 0;
+  var timeClose = 0;
+  setInterval(function () {
+      if(i < arrName.length){
+        $("#notif-name").html(arrName[i]+" - "+arrKota[Math.floor(Math.random() * arrKota.length)]);
+        $("#notif-time").html("Telah mendaftar "+(arrName.length-i)+" menit yang lalu");
+        document.querySelector("a.regisnotif").click();
+        console.log("buka"+arrName[i]);
+        i++;
+      }
+  }, (Math.floor(Math.random() * 10) + 5)*1000);
+
+  // setInterval(function () {
+  //   if(timeClose == 3)
+  //   document.querySelector("a.modal-close").click();
+  //   console.log("close");
+  // }, 1000);
+
 </script>
 
 @if(Session::has('success_registration'))

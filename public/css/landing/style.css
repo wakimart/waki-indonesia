@@ -2218,12 +2218,18 @@ li a:hover,
 .hero .hero--bio {
 	font-family: "Montserrat", sans-serif;
 	color: #413e66;
-	font-size: 24px;
+	font-size: 20px;
 	font-weight: 400;
 	line-height: 28px;
 	margin-bottom: 53px;
 	text-align: left;
-	letter-spacing: 0.5px;
+}
+.hero .hero--sub {
+	font-family: "Montserrat", sans-serif;
+	color: #2d2d2d;
+	font-size: 16px;
+	font-weight: 400;
+	display:inline;
 }
 
 .hero--action .form-control {
@@ -3466,12 +3472,12 @@ li a:hover,
 .countdown span {
 	font-size: 1.8em;
 	font-weight: 600;
-	color: #413e66;
+	color: #cb2d2d;
 }
 .countdown .separator {
 	font-size: 2em;
 	font-weight: 600;
-	color: #413e66;
+	color: #cb2d2d;
 }
 .countdown-section {
 	display: block;
