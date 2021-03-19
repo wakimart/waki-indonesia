@@ -306,6 +306,7 @@ class AuthServiceProvider extends ServiceProvider
         // Delete service
         Gate::define("delete-service", function ($user) {
             return $user->hasAccess(["delete-service"]);
+        });
 
         //-- SUBMISSION --//
         // Add submission
