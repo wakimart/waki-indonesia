@@ -270,7 +270,7 @@
 	      	</div>
 	    </div>
 
-		@if(strtolower($acceptance['status']) == "new")
+		@if(strtolower($acceptance['status']) == "new" && Gate::check('change-status-approval-acceptance') && Gate::check('change-status-reject-acceptance'))
 		    <div class="row">
 		      	<div class="col-12 grid-margin stretch-card">
 		        	<div class="card">

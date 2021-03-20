@@ -553,7 +553,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("detail_acceptance_form");
 
         // Edit submission form page
-        Route::get("/edit/", "AcceptanceController@edit")
+        Route::get("/edit/{id}", "AcceptanceController@edit")
             ->name("edit_acceptance_form");
 
         // Process submission form edit

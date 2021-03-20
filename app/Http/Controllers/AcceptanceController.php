@@ -15,6 +15,7 @@ use App\Utils;
 use App\Product;
 use App\Upgrade;
 use App\HistoryUpdate;
+use App\Role;
 use DB;
 
 
@@ -29,7 +30,7 @@ class AcceptanceController extends Controller
     }
 
     public function store(Request $request){
-         $messages = array(
+        $messages = array(
             'cso_id.required' => 'The CSO Code field is required.',
             'cso_id.exists' => 'Wrong CSO Code.',
             'branch_id.required' => 'The Branch must be selected.',
@@ -90,6 +91,7 @@ class AcceptanceController extends Controller
 
                 DB::commit();
 
+                $this->sendNotif($acc);                
                 return response()->json(['success' => $acc]);
             } catch (\Exception $ex) {
                 DB::rollback();
@@ -114,6 +116,14 @@ class AcceptanceController extends Controller
         return view('admin.detail_acceptance', compact('acceptance', 'historyUpdate'));
     }
 
+    public function edit($id){        
+        $acceptance = Acceptance::find($id);
+        $products = Product::all();
+        $branches = Branch::where('active', true)->get();
+        $csos = Cso::all();
+        // dd(date_format(date_create($acceptance['upgrade_date']), 'm-d-Y'));
+        return view('admin.update_acceptance', compact('acceptance','products', 'branches', 'csos'));
+    }
 
     public function update(Request $request){
         $data = $request->all();
@@ -133,7 +143,7 @@ class AcceptanceController extends Controller
                 if(strtolower($data['status']) == "approved"){
                     $upgrade['acceptance_id'] = $data['id'];
                     $upgrade['status'] = "New";
-                    $upgrade['due_date'] = date("Y-m-d h:i:s");
+                    $upgrade['due_date'] = date("Y-m-d H:i:s");
                     Upgrade::create($upgrade);
                 }
 
@@ -150,6 +160,78 @@ class AcceptanceController extends Controller
             catch (\Exception $ex) {
                 DB::rollback();
                 return redirect()->route('detail_acceptance_form', ['id'=>$data['id']]);
+            }
+        }
+        else{
+            $messages = array(
+                'cso_id.required' => 'The CSO Code field is required.',
+                'cso_id.exists' => 'Wrong CSO Code.',
+                'branch_id.required' => 'The Branch must be selected.',
+                'branch_id.exists' => 'Please choose the branch.'
+            );
+            $validator = \Validator::make($request->all(), [
+                'name' => 'required',
+                'cso_id' => ['required', 'exists:csos,code'],
+                'branch_id' => ['required', 'exists:branches,id'],
+                'phone' => 'required|string|min:7',
+            ], $messages);
+
+            if($validator->fails()){
+                $arr_Errors = $validator->errors()->all();
+                $arr_Keys = $validator->errors()->keys();
+                $arr_Hasil = [];
+                for ($i = 0; $i < count($arr_Keys); $i++) {
+                    $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+                }
+                return response()->json(['errors' => $arr_Hasil]);
+            }
+            else{
+                DB::beginTransaction();
+                try{
+                    $acceptance = Acceptance::find($data['id']);
+
+                    $branch = Branch::find($data['branch_id']);
+                    $cso = Cso::where('code', $data['cso_id'])->first();
+                    $data['branch_id'] = $branch['id'];
+                    $data['cso_id'] = $cso['id'];
+                    $data['user_id'] = Auth::user()['id'];
+                    $data['status'] = "new";
+                    $data['code'] = "ACC/UPGRADE/".$branch->code."/".$data['cso_id']."/".date("Ymd");
+                    if(in_array('other', $data['kelengkapan'])){
+                        $data['kelengkapan']['other'][] = $data['other_kelengkapan'];
+                    }
+                    $data['arr_condition'] = ['kelengkapan' => $data['kelengkapan'], 'kondisi' => $data['kondisi'], 'tampilan' => $data['tampilan']];
+
+                    if ($request->hasFile("image")) {
+                        $image = $request->file("image");
+                        $data['image'] = [];
+                        $path = "sources/acceptance";
+
+                        if (!is_dir($path)) {
+                            File::makeDirectory($path, 0777, true, true);
+                        }
+
+                        $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . "_upgrade." . $image->getClientOriginalExtension();
+                        $image->move($path, $fileName);
+                        $data["image"] = [$fileName];
+                    }
+
+                    $acceptance->fill($data)->save();
+
+                    $historyUpdate['type_menu'] = "Acceptance";
+                    $historyUpdate['method'] = "Update";
+                    $historyUpdate["meta"] = json_encode(["dataChange" => $acceptance->getChanges()]);
+                    $historyUpdate['user_id'] = Auth::user()['id'];
+                    $historyUpdate['menu_id'] = $acceptance->id;
+                    $createData = HistoryUpdate::create($historyUpdate);
+                    
+                    DB::commit();
+                    return response()->json(['success' => $acceptance]);
+                }
+                catch (\Exception $ex) {
+                    DB::rollback();
+                    return response()->json(['errors' => $ex], 500);
+                }
             }
         }
     }
@@ -178,6 +260,60 @@ class AcceptanceController extends Controller
             return redirect()->route('list_acceptance_form');
         }
     }
+
+    //================ Khusus Notifikasi ================//
+    function sendFCM($body){
+        
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Authorization: key=AAAAfcgwZss:APA91bGg7XK9XjDvLLqR36mKsC-HwEx_l5FPGXDE3bKiysfZ2yzUKczNcAuKED6VCQ619Q8l55yVh4VQyyH2yyzwIJoVajaK4t3TJV-x-4f_a9WUzIcnOYzixPIUB5DeuWRIAh1v8Yld',
+            'Content-Type: application/json'
+        ));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+
+        $result = curl_exec($curl);
+        if ($result === FALSE) {
+            die('Oops! FCM Send Error: ' . curl_error($curl));
+            $this->info(curl_error($curl));
+        }
+        curl_close($curl);
+        return $result;
+    }
+
+    public function sendNotif($acceptance){
+        $fcm_tokenNya = [];
+        $userNya = Role::where('slug', 'head-admin')->first()->users;
+        foreach ($userNya as $value) {
+            if($value['fmc_token'] != null){
+                $fcm_tokenNya = array_merge($fcm_tokenNya, $value['fmc_token']);
+            }
+        }
+
+        $newProduct = $acceptance->newproduct['code'];
+        $oldProduct = $acceptance['other_product'];
+        if($oldProduct == null){
+            $oldProduct = $acceptance->oldproduct['code'];
+        }
+        $branch = $acceptance->branch['code'];
+        $cso = $acceptance->cso['code'];
+
+        $body = ['registration_ids'=>$fcm_tokenNya,
+            'collapse_key'=>"type_a",
+            "notification" => [
+                "body" => "Upgrade from ".$oldProduct." to ".$newProduct.". By ".$branch."-".$cso,
+                "title" => "New Acceptance [Upgrade]",
+                "icon" => "ic_launcher"
+            ]];
+            // 'data'=> $homeservice];
+
+        $this->sendFCM(json_encode($body));
+    }
+    //===================================================//
 
     public function addApi(Request $request)
     {
