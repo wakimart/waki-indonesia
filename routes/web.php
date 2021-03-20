@@ -331,6 +331,21 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    Route::post('/', 'ServiceController@store')
 	    	->name('store_service')
 	    	->middleware('can:add-order');
+	    //List Service
+	    Route::get('/list', 'ServiceController@index')
+	    	->name('list_service')
+	    	->middleware('can:browse-order');
+    });
+
+    Route::group(['prefix' => 'product_service', 'middleware' => 'auth'], function(){
+    	//List Task Product Service
+	    Route::get('/list', 'ProductServiceController@index')
+	    	->name('list_taskservice')
+	    	->middleware('can:browse-order');
+	    //Edit Product Service
+	    Route::get('/edit/', 'ProductServiceController@edit')
+	    	->name('edit_taskservice')
+	    	->middleware('can:edit-order');
     });
 
     Route::group(['prefix' => 'sparepart','middleware' => 'auth'], function(){

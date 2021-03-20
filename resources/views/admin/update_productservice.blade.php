@@ -1,6 +1,6 @@
 <?php
-    $menu_item_page = "service";
-    $menu_item_second = "add_service";
+    $menu_item_page = "technician";
+    $menu_item_second = "update_task";
 ?>
 @extends('admin.layouts.template')
 
@@ -34,11 +34,11 @@
 <div class="main-panel">
   	<div class="content-wrapper">
     	<div class="page-header">
-      		<h3 class="page-title">Add Service</h3>
+      		<h3 class="page-title">Update Product Service</h3>
       		<nav aria-label="breadcrumb">
 	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#service-dd" aria-expanded="false" aria-controls="service-dd">Service</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Add Service</li>
+	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">Technician</a></li>
+	          		<li class="breadcrumb-item active" aria-current="page">Update Product Service</li>
 	        	</ol>
       		</nav>
     	</div>
@@ -48,55 +48,25 @@
 	          		<div class="card-body">
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_service') }}">
 							{{ csrf_field() }}
-							<div class="form-group">
-								<label for="">Service Date</label>
-								<input type="date" class="form-control" name="service_date" id="service_date" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
-								<div class="validation"></div>
-								<span class="invalid-feedback">
-									<strong></strong>
-								</span>
-							</div>
-	              			<div class="form-group">
-	                			<label for="">No. MPC (optional)</label>
-	                			<input type="number" class="form-control" id="no_mpc" name="no_mpc" placeholder="No. MPC">
-	                			<div class="validation"></div>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="">Name</label>
-				                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
-				                <div class="validation"></div>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="exampleTextarea1">Address</label>
-				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address" required></textarea>
-				                <div class="validation"></div>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="">Phone Number</label>
-				                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
-				                <div class="validation"></div>
-	              			</div>
 
-	              			<label for="">PRODUCT SERVICE</label>
-	              			<div class="text-center" style="display: inline-block;background: #4caf3ab3;float: right;margin-bottom: 20px;">
-	              				<button class="btn btn-gradient-primary mr-2" id="tambah_productservice" type="button">Add Product Service</button>
-	              			</div>
-	              			</br>
-
-	              			<label for="">Product Service 1</label>
+	              			<label for="">Product Service</label>
 	              			<div class="form-group" id="container-productservice-0">
 			                    <div class="form-group">
-			                        <select class="form-control pilihan-product" id="product_service-0" data-msg="Mohon Pilih Product" required>
+			                        <select class="form-control pilihan-product" id="product_service-0" data-msg="Mohon Pilih Product" required disabled>
 			                            <option selected disabled value="">Choose PRODUCT SERVICE</option>
 
 			                            @foreach($products as $product)
-			                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
+			                            	@if($product_services['product_id'] == $product['id'])
+			                                	<option value="{{ $product['id'] }}" selected>{{ $product['code'] }} - {{ $product['name'] }}</option>
+			                                @else
+			                                	<option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
+			                                @endif
 			                            @endforeach
 			                        </select>
 			                        <div class="validation"></div>
 			                    </div>
 
-			                    <div id="container-sparepart-0" class="d-none">
+			                    <div id="container-sparepart-0">
 			                    	<div id="detailSparepart-0">
 			                    		<div class="form-group" style="width: 72%; display: inline-block;">
 					                        <select id="idSparepart-0-0" class="form-control pilihan-product" data-msg="Mohon Pilih Product">
@@ -116,42 +86,44 @@
 			                    	</div>
 			                    </div>
 
+			                    @php
+			                    	$issues = json_decode($product_services['issues']);
+
+			                    	$due_date = explode(' ',$product_services['due_date']);
+									$due_date = $due_date[0];
+
+									$cbx_issues = ["Kerusakan Listrik", "Bersuara/Bergetar", "Heating", "Jatuh, Pecah, Unit Lepas", "Kerusakan Mekanik", "Lainnya..."];
+			                    @endphp
+
 			                    <div class="form-group">
 				                	<label for="">Issues</label>
 				                	<br>
-				                	<label style="margin-right: 20%;" class="checkbox-inline">
-								      	<input id="cbx_issue-0-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Kerusakan Listrik">Kerusakan Listrik
-								    </label>
-								    <label style="margin-right: 20%;" class="checkbox-inline">
-								      	<input id="cbx_issue-1-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Bersuara/Bergetar">Bersuara/Bergetar
-								    </label>
-								    <label style="margin-right: 20%;" class="checkbox-inline">
-								      	<input id="cbx_issue-2-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Heating">Heating
-								    </label>
-								    <br>
-								    <label style="margin-right: 20%;" class="checkbox-inline">
-								      	<input id="cbx_issue-3-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Jatuh, Pecah, Unit Lepas">Jatuh, Pecah, Unit Lepas
-								    </label>
-								    <label style="margin-right: 20%;" class="checkbox-inline">
-								      	<input id="cbx_issue-4-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Kerusakan Mekanik">Kerusakan Mekanik
-								    </label>
-								    <label style="margin-right: 20%;" class="checkbox-inline">
-								      	<input id="cbx_issue-5-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Lainnya...">Lainnya...
-								    </label>
+				                	@for($i = 0; $i < count($cbx_issues); $i++)
+				                		@if(!isset($issues[0]->issues[$i]))
+				                			@if($issues[0]->issues[$i] == $cbx_issues[$i])
+					                		<label style="margin-right: 20%;" class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true">{{$cbx_issues[$i]}}
+										    </label>
+										    @endif
+									    @else
+									    <label style="margin-right: 20%;" class="checkbox-inline">
+									      	<input id="cbx_issue-{{$i}}-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}">{{$cbx_issues[$i]}}
+									    </label>
+									    @endif
+				                	@endfor
 
-				                    <textarea class="form-control" id="issues-0" rows="5" data-msg="Mohon Isi Issues" placeholder="Description" required=""></textarea>
+				                    <textarea class="form-control" id="issues-0" rows="5" data-msg="Mohon Isi Issues" placeholder="Description" required="" disabled="">{{$issues[1]->desc}}</textarea>
 				                    <div class="validation"></div>
 				                </div>
 
 			                    <div class="form-group">
 									<label for="">Due Date</label>
-									<input type="date" class="form-control" id="due_date-0" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+									<input type="date" class="form-control" id="due_date-0" placeholder="Tanggal Order" value="{{$due_date}}" required data-msg="Mohon Isi Tanggal" disabled="" />
 									<div class="validation"></div>
 									<span class="invalid-feedback">
 										<strong></strong>
 									</span>
 								</div>
-								<br>
 
 			                    <div id="tambahan_productservice"></div>
 			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}			                    
@@ -160,8 +132,7 @@
 	              			<div id="errormessage"></div>
 
 	              			<div class="form-group">
-	              				<button id="addService" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
-	              				<button class="btn btn-light">Cancel</button>
+	              				<button id="addService" type="submit" class="btn btn-gradient-primary mr-2">Process</button>
 	              			</div>
 	            		</form>
 
@@ -243,7 +214,7 @@
 							</select>\
 							<div class="validation"></div>\
 						</div>\
-						<div id="container-sparepart-'+detailSparepart+'" class="d-none">\
+						<div id="container-sparepart-'+detailSparepart+'">\
 							<div id="detailSparepart-'+detailSparepart+'">\
 								<div class="form-group" style="width: 72%; display: inline-block;">\
 									<select id="idSparepart-0-'+detailSparepart+'" class="form-control pilihan-product" name="sparepart[]" data-msg="Mohon Pilih Sparepart">\
