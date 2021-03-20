@@ -117,6 +117,27 @@ Route::group(['prefix' => 'api-apps'], function () {
 		Route::get('view/{id}','AcceptanceController@viewApi'); //view single acceptance
 		Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
 	});
+
+    // Submission form API
+    Route::group(["prefix" => "submission"], function () {
+        // Create submission API
+        Route::post("add", "SubmissionController@addApi");
+
+        // Show submission list API
+        Route::post("list_submission", "SubmissionController@listSubmissionApi");
+
+        // Show reference list API
+        Route::post("list_reference", "SubmissionController@listReferenceApi");
+
+        // View detail submission API
+        Route::post("detail", "SubmissionController@detailSubmissionApi");
+
+        // Update submission API
+        Route::post("update", "SubmissionController@updateApi");
+
+        // Delete submission API
+        Route::post("delete", "SubmissionController@deleteApi");
+    });
 });
 
 Auth::routes(['verify' => true]);
@@ -286,6 +307,19 @@ Route::group(['prefix' => 'cms-admin'], function () {
 		//Export to XLS By Date
         Route::get('/export-to-xls-by-date', 'HomeServiceController@export_to_xls_byDate')
                 ->name('homeservice_export-to-xls-by-date');
+
+        // List Home Service (Revisi)
+        Route::get("/list_new", "HomeServiceController@listHomeServiceNew")
+            ->name("list_homeservice_new");
+
+        // Print home service daily data count per month
+        Route::post("/homeservice_print_data_count", "HomeServiceController@printAppointmentCount")
+            ->name("homeservice_print_data_count");
+
+        // Print home service data detail on a selected day
+        Route::post("/homeservice_print_appointment", "HomeServiceController@printDayData")
+            ->name("homeservice_print_appointment");
+
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function(){
@@ -530,7 +564,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("list_acceptance_form");
 
         // Show detail of submission
-        Route::get("/detail", "AcceptanceController@detail")
+        Route::get("/detail/{id}", "AcceptanceController@detail")
             ->name("detail_acceptance_form");
 
         // Edit submission form page
@@ -547,31 +581,35 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(["prefix" => "upgrade", "middleware" => "auth"], function () {
-        // Create submission form page
-        Route::get("/new", "UpgradeController@create")
+        // List new upgrade form page
+        Route::get("/list_new", "UpgradeController@indexNew")
+            ->name("list_new_upgrade_form");
+
+        // Create upgrade form page
+        Route::get("/new/{id}", "UpgradeController@create")
             ->name("add_upgrade_form");
 
-        // Process new submission form
+        // Process new upgrade form
         Route::post("/", "UpgradeController@store")
             ->name("store_upgrade_form");
 
-        // Show submission list
+        // Show upgrade list
         Route::get("/list", "UpgradeController@list")
             ->name("list_upgrade_form");
 
-        // Show detail of submission
-        Route::get("/detail", "UpgradeController@detail")
+        // Show detail of upgrade
+        Route::get("/detail/{id}", "UpgradeController@detail")
             ->name("detail_upgrade_form");
 
-        // Edit submission form page
+        // Edit upgrade form page
         Route::get("/edit/", "UpgradeController@edit")
             ->name("edit_upgrade_form");
 
-        // Process submission form edit
+        // Process upgrade form edit
         Route::post("/update/", "UpgradeController@update")
             ->name("update_upgrade_form");
 
-        // Process submission form delete
+        // Process upgrade form delete
         Route::post("/{id}", "UpgradeController@destroy")
             ->name("delete_upgrade_form");
     });

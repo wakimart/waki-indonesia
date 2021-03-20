@@ -194,9 +194,15 @@
 									@foreach($products as $product)
 		                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
 		                            @endforeach
+	                                <option value="">Other</option>
 								</select>
 	                			<div class="validation"></div>
 	              			</div>
+		                    <div class="form-group" id="other_product_group" style="display: none;">
+	              				<label for="">Old Product Name</label>
+		                        <input type="text" class="form-control" name="other_product" id="other_product" placeholder="Old Product Name" data-msg="Mohon Isi Nama Produk" style="text-transform:uppercase"/>
+		                        <div class="validation"></div>
+		                    </div>
 	              			<div class="form-group">
 	              				<label for="">Purchase Date Old Product (Bulan/Tanggal/Tahun)</label>
 	              				<input type="date" class="form-control" name="purchase_date" id="purchase_date" placeholder="Purchase Date" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
@@ -218,7 +224,7 @@
 		                        <div class="div-CheckboxGroup" required>
 		                        	<div class="form-check form-check">
 		                                <input class="form-check-input" type="checkbox" id="kelengkapan-mesin" name="kelengkapan[]" value="mesin">
-		                                <label class="form-check-label" for="kelengkapan-mesin">Mesin</label>
+		                                <label class="form-check-label" for="kelengkapan-mesin">Machine</label>
 		                            </div>
 		                            <div class="form-check form-check">
 		                                <input class="form-check-input" type="checkbox" id="kelengkapan-filter" name="kelengkapan[]" value="filter">
@@ -226,29 +232,36 @@
 		                            </div>
 		                            <div class="form-check form-check">
 		                                <input class="form-check-input" type="checkbox" id="kelengkapan-aksesoris" name="kelengkapan[]" value="aksesoris">
-		                                <label class="form-check-label" for="kelengkapan-aksesoris">Aksesoris</label>
+		                                <label class="form-check-label" for="kelengkapan-aksesoris">Accessories</label>
 		                            </div>
 		                            <div class="form-check form-check">
 		                                <input class="form-check-input" type="checkbox" id="kelengkapan-kabel" name="kelengkapan[]" value="kabel">
-		                                <label class="form-check-label" for="kelengkapan-kabel">Kabel</label>
+		                                <label class="form-check-label" for="kelengkapan-kabel">cabel</label>
 		                            </div>
+		                            <div class="form-check form-check">
+		                                <input class="form-check-input" type="checkbox" id="kelengkapan-other" name="kelengkapan[]" value="other">
+		                                <label class="form-check-label" for="kelengkapan-other">Other</label>
+		                            </div>
+				                    <div class="form-group" id="other_kelengkapan_group" style="display: none;">
+				                        <input type="text" class="form-control" name="other_kelengkapan" id="other_kelengkapan" placeholder="Other Accessories"/>
+				                    </div>
 		                    	</div>
 		                    </div>
 		                    <div class="form-group" >
-	              				<label for="">Kondisi Mesin</label>
+	              				<label for="">Machine Condition</label>
 		                        <div class="div-CheckboxGroup" required>
 		                        	<div class="form-check form-check">
 		                                <input class="form-check-input" type="radio" id="kondisi-normal" name="kondisi" checked="" value="normal">
 		                                <label class="form-check-label" for="kondisi-normal">Normal</label>
 		                            </div>
 		                            <div class="form-check form-check">
-		                                <input class="form-check-input" type="radio" id="kondisi-extra_care" name="kondisi" value="extra_care">
-		                                <label class="form-check-label" for="kondisi-extra_care">Extra Care</label>
+		                                <input class="form-check-input" type="radio" id="kondisi-need_repair" name="kondisi" value="need_repair">
+		                                <label class="form-check-label" for="kondisi-need_repair">Need Repair</label>
 		                            </div>
 		                    	</div>
 		                    </div>
 		                    <div class="form-group" >
-	              				<label for="">Tampilan</label>
+	              				<label for="">Body Condition</label>
 		                        <div class="div-CheckboxGroup" required>
 		                        	<div class="form-check">
 		                                <input class="form-check-input" type="radio" id="tampilan-new" name="tampilan" checked="" value="new">
@@ -256,11 +269,11 @@
 		                            </div>
 		                            <div class="form-check">
 		                                <input class="form-check-input" type="radio" id="tampilan-medium" name="tampilan" value="medium">
-		                                <label class="form-check-label" for="tampilan-medium">Medium</label>
+		                                <label class="form-check-label" for="tampilan-medium">Moderate</label>
 		                            </div>
 		                            <div class="form-check">
-		                                <input class="form-check-input" type="radio" id="tampilan-extra_care" name="tampilan" value="extra_care">
-		                                <label class="form-check-label" for="tampilan-extra_care">Extra Care</label>
+		                                <input class="form-check-input" type="radio" id="tampilan-need_repair" name="tampilan" value="need_repair">
+		                                <label class="form-check-label" for="tampilan-need_repair">Need Repair</label>
 		                            </div>
 		                    	</div>
 		                    </div>
@@ -377,6 +390,25 @@
         	};
         };
 
+        $("#oldproduct_id").on("change", function(){
+            if($(this).val() == ''){
+            	$('#other_product_group').attr('style', 'display: inherit;');
+            	$('#other_product_group').attr('required', true);
+            }
+            else{
+            	$('#other_product_group').attr('style', 'display: none;');
+            	$('#other_product_group').removeAttr('required');
+            }
+		});
+        $("#kelengkapan-other").on("change", function(){
+            if($(this)[0].checked){
+            	$('#other_kelengkapan_group').attr('style', 'display: inherit;');
+            }
+            else{
+            	$('#other_kelengkapan_group').attr('style', 'display: none;');
+            }
+		});
+
         $("#actionAdd").on("submit", function (e) {
         	e.preventDefault();
         	if($('.div-CheckboxGroup :checkbox:checked').length < 1){
@@ -401,6 +433,7 @@
         }
         function completeHandler(event){
         	var hasil = JSON.parse(event.target.responseText);
+        	console.log(hasil);
 
         	for (var key of frmAdd.keys()) {
         		$("#actionAdd").find("input[name="+key.name+"]").removeClass("is-invalid");

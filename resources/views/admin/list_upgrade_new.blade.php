@@ -1,26 +1,26 @@
 <?php
-$menu_item_page = "submission";
-$menu_item_second = "list_submission_form";
+$menu_item_page = "upgrade";
+$menu_item_second = "new_upgrade_form";
 ?>
 @extends('admin.layouts.template')
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">List Submmission</h3>
+            <h3 class="page-title">New Upgrade List</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a data-toggle="collapse"
                             href="#"
                             aria-expanded="false"
-                            aria-controls="deliveryorder-dd">
-                            Submmission
+                            aria-controls="upgrade-dd">
+                            Upgrade
                         </a>
                     </li>
                     <li class="breadcrumb-item active"
                         aria-current="page">
-                        List Submmission
+                        New Upgrade List
                     </li>
                 </ol>
             </nav>
@@ -30,7 +30,7 @@ $menu_item_second = "list_submission_form";
             <div class="card">
                 <div class="card-body">
                     <h5 style="margin-bottom: 0.5em;">
-                        Total: {{ $deliveryOrders->count() }} data
+                        Total: {{ $upgrades->count() }} data
                     </h5>
                     <div class="table-responsive"
                         style="border: 1px solid #ebedf2;">
@@ -38,58 +38,67 @@ $menu_item_second = "list_submission_form";
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Registration Date</th>
+                                    <th>Upgrade Date</th>
                                     <th>Member Name</th>
-                                    <th>Type Register</th>
-                                    <th>Branch</th>
-                                    <th>CSO</th>
-                                    @if (Gate::check('edit-submission') || Gate::check('delete-submission'))
-                                        <th colspan="2">Edit / Delete</th>
-                                    @endif
+                                    <th>Upgrade Product</th>
+                                    <th>Branch - CSO</th>
+                                    <th>Status</th>
+                                    {{-- @if(Gate::check('edit-deliveryorder') || Gate::check('delete-deliveryorder')) --}}
+                                        <th colspan="2">Detail/Delete</th>
+                                    {{-- @endif --}}
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($deliveryOrders as $key => $deliveryOrder)
+                                @foreach($upgrades as $key => $upgrade)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>
-                                            {{ date("d/m/Y", strtotime($deliveryOrder->created_at)) }}
+                                            {{ date("d/m/Y", strtotime($upgrade->acceptance->upgrade_date)) }}
                                         </td>
                                         <td>
-                                            {{ $deliveryOrder->name }}
+                                            {{ $upgrade->acceptance->name }}
                                         </td>
                                         <td>
-                                            {{ $deliveryOrder->type_register }}
+                                            {{ $upgrade->acceptance['other_product'] == null ? $upgrade->acceptance->oldproduct['code'] : $upgrade->acceptance['other_product'] }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ $upgrade->acceptance->newproduct['code'] }}
                                         </td>
                                         <td>
-                                            {{ $deliveryOrder->branch->code }} - {{ $deliveryOrder->branch->name }}
+                                            {{ $upgrade->acceptance->branch->code }} - {{ $upgrade->acceptance->cso->code }}
                                         </td>
                                         <td>
-                                            {{ $deliveryOrder->cso->code }} - {{ $deliveryOrder->cso->name }}
+                                            @if(strtolower($upgrade['status']) == "new")
+                                                <span class="badge badge-secondary">New</span>
+                                            @elseif(strtolower($upgrade['status']) == "process")
+                                                <span class="badge badge-primary">Process by : </span>
+                                            @elseif(strtolower($upgrade['status']) == "repaired")
+                                                <span class="badge badge-warning">Repaired by : </span>
+                                            @elseif(strtolower($upgrade['status']) == "approved")
+                                                <span class="badge badge-info">Approved by : </span>
+                                            @elseif(strtolower($upgrade['status']) == "completed")
+                                                <span class="badge badge-Success">Completed by : </span>
+                                            @endif
                                         </td>
-                                        @can('edit-submission')
+                                        {{-- @can('edit-deliveryorder') --}}
                                             <td style="text-align: center;">
-                                                <a href="{{ route('edit_submission_form', ['id' => $deliveryOrder->id]) }}">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                <a href="{{ route('add_upgrade_form' ,['id' => $upgrade['id']]) }}">
+                                                    <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
-                                        @endcan
-                                        @can('delete-submission')
+                                        {{-- @endcan --}}
+                                        {{-- @can('edit-deliveryorder') --}}
                                             <td style="text-align: center;">
-                                                <button class="btn-delete"
-                                                    data-toggle="modal"
-                                                    data-target="#deleteDoModal"
-                                                    value="{{ route('delete_submission_form', ['id' => $deliveryOrder->id]) }}">
-                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                </button>
+                                                @if(strtolower($upgrade['status']) == "new")
+                                                    <a class="btn-delete disabled" data-toggle="modal" href="#deleteDoModal" value="{{ route('delete_upgrade_form', ['id' => $upgrade->id]) }}">
+                                                        <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                    </a>
+                                                @endif
                                             </td>
-                                        @endcan
+                                        {{-- @endcan --}}
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                         <br>
-                        {{ $deliveryOrders->appends($url)->links() }}
+                        {{ $upgrades->appends($url)->links() }}
                     </div>
                 </div>
             </div>
@@ -138,7 +147,7 @@ $menu_item_second = "list_submission_form";
 <script>
 $(document).ready(function (e) {
     $(".btn-delete").click(function (e) {
-        $("#frmDelete").attr("action",  $(this).val());
+        $("#frmDelete").attr("action",  $(this).attr('value'));
     });
 });
 </script>

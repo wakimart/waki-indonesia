@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Acceptance extends Model
 {
     protected $fillable = [
-        'code', 'no_do', 'no_mpc', 'name', 'address', 'phone', 'upgrade_date', 'oldproduct_id', 'newproduct_id', 'purchase_date', 'arr_condition', 'request_price', 'description', 'image', 'user_id', 'order_id', 'branch_id', 'cso_id', 'status', 'active', 'province', 'city', 'district'
+        'code', 'no_do', 'no_mpc', 'name', 'address', 'phone', 'upgrade_date', 'oldproduct_id', 'newproduct_id', 'purchase_date', 'arr_condition', 'request_price', 'description', 'image', 'user_id', 'order_id', 'branch_id', 'cso_id', 'status', 'active', 'province', 'city', 'district', 'other_product'
     ];
 
     protected $casts = [
@@ -40,5 +40,21 @@ class Acceptance extends Model
     public function branch()
     {
         return $this->belongsTo('App\Branch');
+    }
+    public function provinceObj()
+    {
+        return $this->belongsTo('App\RajaOngkir_Province', 'province', 'province_id');
+    }
+    public function cityObj()
+    {
+        return $this->belongsTo('App\RajaOngkir_City', 'city', 'city_id');
+    }
+    public function districObj()
+    {
+        return $this->belongsTo('App\RajaOngkir_Subdistrict', 'district', 'subdistrict_id');
+    }
+    public function acceptanceLog()
+    {
+        return $this->hasMany('App\AcceptanceStatusLog');
     }
 }

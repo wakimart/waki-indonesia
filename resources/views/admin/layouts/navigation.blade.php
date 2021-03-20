@@ -79,7 +79,6 @@
 </li>
 @endif
 
-
 @if(Gate::check('add-order') || Gate::check('browse-order'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'service'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#service-dd" aria-expanded="false" aria-controls="service-dd">
@@ -106,6 +105,7 @@
 </li>
 @endif
 
+
 @if(Gate::check('add-order') || Gate::check('browse-order'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'technician'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">
@@ -130,16 +130,32 @@
     <i class="menu-arrow"></i>
     <i class="mdi mdi-calendar-text menu-icon"></i>
   </a>
-  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'submission'? 'show': '' }}" id="submission-dd">
+  <div class="collapse {{ isset($menu_item_page) && $menu_item_page == 'submission' ? 'show' : '' }}"
+    id="submission-dd">
     <ul class="nav flex-column sub-menu">
-      @if(Gate::check('add-deliveryorder'))
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_submission_form'? 'active': '' }}" href="{{ route('add_submission_form')}}">Add Submmission</a></li>
+      @if (Gate::check('add-submission'))
+      <li class="nav-item">
+        <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'add_submission_form' ? 'active' : '' }}"
+          href="{{ route('add_submission_form')}}">
+          Add Submmission
+        </a>
+      </li>
       @endif
-      @if(Gate::check('browse-deliveryorder'))
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_submission_form'? 'active': '' }}" href="{{ route('list_submission_form') }}">List Submmission</a></li>
+      @if (Gate::check('browse-submission'))
+      <li class="nav-item">
+        <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form' ? 'active' : '' }}"
+          href="{{ route('list_submission_form') }}">
+          List Submmission
+        </a>
+      </li>
       @endif
-      @if(Gate::check('browse-deliveryorder'))
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_reference'? 'active': '' }}" href="{{ route('list_reference') }}">List Refrence</a></li>
+      @if (Gate::check('browse-reference'))
+      <li class="nav-item">
+        <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_reference' ? 'active' : '' }}"
+          href="{{ route('list_reference') }}">
+          List Reference
+        </a>
+      </li>
       @endif
     </ul>
   </div>
@@ -160,7 +176,7 @@
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_acceptance_form'? 'active': '' }}" href="{{ route('add_acceptance_form')}}">Add Acceptance</a></li>
       {{-- @endif --}}
       {{-- @if(Gate::check('browse-deliveryorder')) --}}
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_acceptance_form'? 'active': '' }}" href="{{ route('list_acceptance_form') }}">List Acceptance</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_acceptance_form'? 'active': '' }}" href="{{ route('list_acceptance_form') }}?status=new">List Acceptance</a></li>
       {{-- @endif --}}
     </ul>
   </div>
@@ -178,10 +194,10 @@
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'upgrade'? 'show': '' }}" id="upgrade-dd">
     <ul class="nav flex-column sub-menu">
       {{-- @if(Gate::check('add-deliveryorder')) --}}
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'new_upgrade_form'? 'active': '' }}" href="{{ route('add_submission_form')}}">New Upgrade</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'new_upgrade_form'? 'active': '' }}" href="{{ route('list_new_upgrade_form')}}">New Upgrade</a></li>
       {{-- @endif --}}
       {{-- @if(Gate::check('browse-deliveryorder')) --}}
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_upgrade_form'? 'active': '' }}" href="{{ route('list_submission_form') }}">List Upgrade</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_upgrade_form'? 'active': '' }}" href="{{ route('list_upgrade_form') }}">List Upgrade</a></li>
       {{-- @endif --}}
     </ul>
   </div>
@@ -340,7 +356,7 @@
     <ul class="nav flex-column sub-menu">
       @if(Gate::check('add-app'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_appver'? 'active': '' }}" href="{{route('add_appVersion')}}">Add App Version</a></li>
-      @endif 
+      @endif
       @if(Gate::check('browse-app'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_appver'? 'active': '' }}" href="{{route('list_appVersion')}}">List App Version</a></li>
       @endif
