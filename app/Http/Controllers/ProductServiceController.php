@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\ProductService;
+use App\Product;
+use App\Sparepart;
 use Illuminate\Http\Request;
 
 class ProductServiceController extends Controller
@@ -14,7 +16,9 @@ class ProductServiceController extends Controller
      */
     public function index()
     {
-        //
+        $product_services = ProductService::all();
+        $countServices = $product_services->count();
+        return view('admin.list_taskservice', compact('product_services', 'countServices'));
     }
 
     /**
@@ -55,9 +59,15 @@ class ProductServiceController extends Controller
      * @param  \App\ProductService  $productService
      * @return \Illuminate\Http\Response
      */
-    public function edit(ProductService $productService)
-    {
-        //
+    public function edit(Request $request)
+    {   
+        if($request->has('id')){
+            $product_services = ProductService::find($request->get('id'));
+            $products = Product::all();
+            $spareparts = Sparepart::where('active', true)->get();
+            return view('admin.update_productservice', compact('product_services','products', 'spareparts'));    
+        }
+        
     }
 
     /**

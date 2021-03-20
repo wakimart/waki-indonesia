@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductService extends Model
 {
     protected $fillable = [
-        'service_id', 'product_id', 'sparepart', 'due_date', 'issues',
+        'service_id', 'product_id', 'sparepart', 'due_date', 'issues', 'upgrade_id',
     ];
 
     public function service()
@@ -18,5 +18,10 @@ class ProductService extends Model
     public function product()
     {
         return $this->belongsTo('App\Product');
+    }
+
+    public function upgrade()
+    {
+        return $this->belongsTo('App\Upgrade');
     }
 }

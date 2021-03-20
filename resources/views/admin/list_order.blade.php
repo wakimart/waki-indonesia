@@ -240,7 +240,6 @@
 		                            @else
 		                                <td>{{ $ProductPromo['id'] }}</td>
 		                            @endif
-
 	                                <td>{{ $ProductPromo['qty'] }}</td>
 	                                @php break; @endphp
 	                            @endforeach
