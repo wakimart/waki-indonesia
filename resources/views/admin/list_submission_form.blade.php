@@ -43,7 +43,7 @@ $menu_item_second = "list_submission_form";
                                     <th>Type Register</th>
                                     <th>Branch</th>
                                     <th>CSO</th>
-                                    @if(Gate::check('edit-deliveryorder') || Gate::check('delete-deliveryorder'))
+                                    @if (Gate::check('edit-submission') || Gate::check('delete-submission'))
                                         <th colspan="2">Edit / Delete</th>
                                     @endif
                                 </tr>
@@ -67,14 +67,14 @@ $menu_item_second = "list_submission_form";
                                         <td>
                                             {{ $deliveryOrder->cso->code }} - {{ $deliveryOrder->cso->name }}
                                         </td>
-                                        @can('edit-deliveryorder')
+                                        @can('edit-submission')
                                             <td style="text-align: center;">
                                                 <a href="{{ route('edit_submission_form', ['id' => $deliveryOrder->id]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>
                                         @endcan
-                                        @can('delete-deliveryorder')
+                                        @can('delete-submission')
                                             <td style="text-align: center;">
                                                 <button class="btn-delete"
                                                     data-toggle="modal"

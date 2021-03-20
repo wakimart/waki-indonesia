@@ -162,7 +162,7 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-promo']);
         });
 
-        
+
         //-- REPORT --//
 
         //-- USER ADMIN --//
@@ -178,8 +178,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-user', function ($user) {
             return $user->hasAccess(['delete-user']);
         });
-        
-        
+
         //-- APP VERSION --//
         Gate::define('add-app', function ($user) {
             return $user->hasAccess(['add-app']);
@@ -192,11 +191,147 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('delete-app', function ($user) {
             return $user->hasAccess(['delete-app']);
-        }); 
-        
+        });
+
         //-- COMPANY INFO --//
         Gate::define('browse-company_info', function ($user) {
             return $user->hasAccess(['browse-company_info']);
+        });
+
+        //-- ACCEPTANCE --//
+        // Add acceptance
+        Gate::define("add-acceptance", function ($user) {
+            return $user->hasAccess(["add-acceptance"]);
+        });
+        // Browse acceptance
+        Gate::define("browse-acceptance", function ($user) {
+            return $user->hasAccess(["browse-acceptance"]);
+        });
+        // View detail acceptance
+        Gate::define("detail-acceptance", function ($user) {
+            return $user->hasAccess(["detail-acceptance"]);
+        });
+        // Edit acceptance
+        Gate::define("edit-acceptance", function ($user) {
+            return $user->hasAccess(["edit-acceptance"]);
+        });
+        // Change status approval acceptance
+        Gate::define("change-status-approval-acceptance", function ($user) {
+            return $user->hasAccess(["change-status-approval-acceptance"]);
+        });
+        // Change status complete acceptance
+        Gate::define("change-status-complete-acceptance", function ($user) {
+            return $user->hasAccess(["change-status-complete-acceptance"]);
+        });
+        // Change status reject acceptance
+        Gate::define("change-status-reject-acceptance", function ($user) {
+            return $user->hasAccess(["change-status-reject-acceptance"]);
+        });
+        // Delete acceptance
+        Gate::define("delete-acceptance", function ($user) {
+            return $user->hasAccess(["delete-acceptance"]);
+        });
+
+        //-- UPGRADE --//
+        // Browse upgrade
+        Gate::define("browse-upgrade", function ($user) {
+            return $user->hasAccess(["browse-upgrade"]);
+        });
+        // View detail upgrade
+        Gate::define("detail-upgrade", function ($user) {
+            return $user->hasAccess(["detail-upgrade"]);
+        });
+        // Edit upgrade
+        Gate::define("edit-upgrade", function ($user) {
+            return $user->hasAccess(["edit-upgrade"]);
+        });
+        // Change status approval upgrade
+        Gate::define("change-status-approval-upgrade", function ($user) {
+            return $user->hasAccess(["change-status-approval-upgrade"]);
+        });
+        // Change status process upgrade
+        Gate::define("change-status-process-upgrade", function ($user) {
+            return $user->hasAccess(["change-status-process-upgrade"]);
+        });
+        // Change status complete upgrade
+        Gate::define("change-status-complete-upgrade", function ($user) {
+            return $user->hasAccess(["change-status-complete-upgrade"]);
+        });
+        // Change status reject upgrade
+        Gate::define("change-status-reject-upgrade", function ($user) {
+            return $user->hasAccess(["change-status-reject-upgrade"]);
+        });
+        // Delete upgrade
+        Gate::define("delete-upgrade", function ($user) {
+            return $user->hasAccess(["delete-upgrade"]);
+        });
+
+        //-- SERVICE --//
+        // Add service
+        Gate::define("add-service", function ($user) {
+            return $user->hasAccess(["add-service"]);
+        });
+        // Browse service
+        Gate::define("browse-service", function ($user) {
+            return $user->hasAccess(["browse-service"]);
+        });
+        // Detail service
+        Gate::define("detail-service", function ($user) {
+            return $user->hasAccess(["detail-service"]);
+        });
+        // Edit service
+        Gate::define("edit-service", function ($user) {
+            return $user->hasAccess(["edit-service"]);
+        });
+        // Change status process service
+        Gate::define("change-status-process-service", function ($user) {
+            return $user->hasAccess(["change-status-process-service"]);
+        });
+        // Change status repaired service
+        Gate::define("change-status-repaired-service", function ($user) {
+            return $user->hasAccess(["change-status-repaired-service"]);
+        });
+        // Change status QC service
+        Gate::define("change-status-qc-service", function ($user) {
+            return $user->hasAccess(["change-status-qc-service"]);
+        });
+        // Change status delivery order
+        Gate::define("change-status-delivery-service", function ($user) {
+            return $user->hasAccess(["change-status-delivery-service"]);
+        });
+        // Change status compelte service
+        Gate::define("change-status-complete-service", function ($user) {
+            return $user->hasAccess(["change-status-complete-service"]);
+        });
+        // Delete service
+        Gate::define("delete-service", function ($user) {
+            return $user->hasAccess(["delete-service"]);
+        });
+
+        //-- SUBMISSION --//
+        // Add submission
+        Gate::define("add-submission", function ($user) {
+            return $user->hasAccess(["add-submission"]);
+        });
+        // Browse submission
+        Gate::define("browse-submission", function ($user) {
+            return $user->hasAccess(["browse-submission"]);
+        });
+        // Browse reference
+        Gate::define("browse-reference", function ($user) {
+            return $user->hasAccess(["browse-reference"]);
+        });
+        // View detail submission
+        Gate::define("detail-submission", function ($user) {
+            return $user->hasAccess(["detail-submission"]);
+        });
+        // Edit submission
+        Gate::define("edit-submission", function ($user) {
+            return $user->hasAccess(["edit-submission"]);
+        });
+        // Delete submission
+        Gate::define("delete-submission", function ($user) {
+            return $user->hasAccess(["delete-submission"]);
         });
     }
 }

@@ -87,6 +87,45 @@ class RolesSeeder extends Seeder
         		'edit-app' => true,
                 'delete-app' => true,
 
+                // Acceptance (Head Admin)
+                "add-acceptance" => false,
+                "browse-acceptance" => true,
+                "detail-acceptance" => true,
+                "edit-acceptance" => false,
+                "change-status-approval-acceptance" => false,
+                "change-status-complete-acceptance" => false,
+                "change-status-reject-acceptance" => false,
+                "delete-acceptance" => false,
+
+                // Upgrade (Head Admin)
+                "browse-upgrade" => false,
+                "detail-upgrade" => false,
+                "edit-upgrade" => false,
+                "change-status-approval-upgrade" => false,
+                "change-status-process-upgrade" => false,
+                "change-status-complete-upgrade" => false,
+                "change-status-reject-upgrade" => false,
+                "delete-upgrade" => false,
+
+                // Service (Head Admin)
+                "add-service" => false,
+                "browse-service" => true,
+                "detail-service" => true,
+                "edit-service" => false,
+                "change-status-process-service" => false,
+                "change-status-repaired-service" => false,
+                "change-status-qc-service" => false,
+                "change-status-delivery-service" => false,
+                "change-status-complete-service" => false,
+                "delete-service" => false,
+
+                // Submission (Head Admin)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
         	]),
         ]);
 
@@ -164,6 +203,46 @@ class RolesSeeder extends Seeder
                 'browse-app' => true,
         		'edit-app' => true,
                 'delete-app' => true,
+
+                // Acceptance (Admin)
+                "add-acceptance" => false,
+                "browse-acceptance" => true,
+                "detail-acceptance" => true,
+                "edit-acceptance" => false,
+                "change-status-approval-acceptance" => false,
+                "change-status-complete-acceptance" => false,
+                "change-status-reject-acceptance" => false,
+                "delete-acceptance" => false,
+
+                // Upgrade (Admin)
+                "browse-upgrade" => false,
+                "detail-upgrade" => false,
+                "edit-upgrade" => false,
+                "change-status-approval-upgrade" => false,
+                "change-status-process-upgrade" => false,
+                "change-status-complete-upgrade" => false,
+                "change-status-reject-upgrade" => false,
+                "delete-upgrade" => false,
+
+                // Service (Admin)
+                "add-service" => false,
+                "browse-service" => true,
+                "detail-service" => true,
+                "edit-service" => false,
+                "change-status-process-service" => false,
+                "change-status-repaired-service" => false,
+                "change-status-qc-service" => false,
+                "change-status-delivery-service" => false,
+                "change-status-complete-service" => false,
+                "delete-service" => false,
+
+                // Submission (Admin)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
         	]),
         ]);
 
@@ -235,6 +314,46 @@ class RolesSeeder extends Seeder
                 'browse-user' => false,
                 'edit-user' => false,
                 'delete-user' => false,
+
+                // Acceptance (CSO)
+                "add-acceptance" => true,
+                "browse-acceptance" => true,
+                "detail-acceptance" => true,
+                "edit-acceptance" => true,
+                "change-status-approval-acceptance" => false,
+                "change-status-complete-acceptance" => false,
+                "change-status-reject-acceptance" => false,
+                "delete-acceptance" => true,
+
+                // Upgrade (CSO)
+                "browse-upgrade" => false,
+                "detail-upgrade" => false,
+                "edit-upgrade" => false,
+                "change-status-approval-upgrade" => false,
+                "change-status-process-upgrade" => false,
+                "change-status-complete-upgrade" => false,
+                "change-status-reject-upgrade" => false,
+                "delete-upgrade" => false,
+
+                // Service (CSO)
+                "add-service" => false,
+                "browse-service" => false,
+                "detail-service" => false,
+                "edit-service" => false,
+                "change-status-process-service" => false,
+                "change-status-repaired-service" => false,
+                "change-status-qc-service" => false,
+                "change-status-delivery-service" => false,
+                "change-status-complete-service" => false,
+                "delete-service" => false,
+
+                // Submission (CSO)
+                "add-submission" => true,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
             ]),
         ]);
 
@@ -306,6 +425,46 @@ class RolesSeeder extends Seeder
                 'browse-user' => false,
                 'edit-user' => false,
                 'delete-user' => false,
+
+                // Acceptance (Branch)
+                "add-acceptance" => true,
+                "browse-acceptance" => true,
+                "detail-acceptance" => true,
+                "edit-acceptance" => true,
+                "change-status-approval-acceptance" => false,
+                "change-status-complete-acceptance" => false,
+                "change-status-reject-acceptance" => false,
+                "delete-acceptance" => true,
+
+                // Upgrade (Branch)
+                "browse-upgrade" => false,
+                "detail-upgrade" => false,
+                "edit-upgrade" => false,
+                "change-status-approval-upgrade" => false,
+                "change-status-process-upgrade" => false,
+                "change-status-complete-upgrade" => false,
+                "change-status-reject-upgrade" => false,
+                "delete-upgrade" => false,
+
+                // Service (Branch)
+                "add-service" => false,
+                "browse-service" => false,
+                "detail-service" => false,
+                "edit-service" => false,
+                "change-status-process-service" => false,
+                "change-status-repaired-service" => false,
+                "change-status-qc-service" => false,
+                "change-status-delivery-service" => false,
+                "change-status-complete-service" => false,
+                "delete-service" => false,
+
+                // Submission (Branch)
+                "add-submission" => true,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => true,
+                "delete-submission" => true,
             ]),
         ]);
 
@@ -377,6 +536,46 @@ class RolesSeeder extends Seeder
                 'browse-user' => false,
                 'edit-user' => false,
                 'delete-user' => false,
+
+                // Acceptance (Area Manager)
+                "add-acceptance" => false,
+                "browse-acceptance" => true,
+                "detail-acceptance" => true,
+                "edit-acceptance" => false,
+                "change-status-approval-acceptance" => false,
+                "change-status-complete-acceptance" => false,
+                "change-status-reject-acceptance" => false,
+                "delete-acceptance" => false,
+
+                // Upgrade (Area Manager)
+                "browse-upgrade" => false,
+                "detail-upgrade" => false,
+                "edit-upgrade" => false,
+                "change-status-approval-upgrade" => false,
+                "change-status-process-upgrade" => false,
+                "change-status-complete-upgrade" => false,
+                "change-status-reject-upgrade" => false,
+                "delete-upgrade" => false,
+
+                // Service (Area Manager)
+                "add-service" => false,
+                "browse-service" => false,
+                "detail-service" => false,
+                "edit-service" => false,
+                "change-status-process-service" => false,
+                "change-status-repaired-service" => false,
+                "change-status-qc-service" => false,
+                "change-status-delivery-service" => false,
+                "change-status-complete-service" => false,
+                "delete-service" => false,
+
+                // Submission (Area Manager)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => true,
+                "delete-submission" => true,
             ]),
         ]);
 
@@ -448,6 +647,46 @@ class RolesSeeder extends Seeder
                 'browse-user' => false,
                 'edit-user' => false,
                 'delete-user' => false,
+
+                // Acceptance (Head Manager)
+                "add-acceptance" => false,
+                "browse-acceptance" => true,
+                "detail-acceptance" => true,
+                "edit-acceptance" => false,
+                "change-status-approval-acceptance" => true,
+                "change-status-complete-acceptance" => true,
+                "change-status-reject-acceptance" => true,
+                "delete-acceptance" => false,
+
+                // Upgrade (Head Manager)
+                "browse-upgrade" => true,
+                "detail-upgrade" => true,
+                "edit-upgrade" => true,
+                "change-status-approval-upgrade" => true,
+                "change-status-process-upgrade" => false,
+                "change-status-complete-upgrade" => false,
+                "change-status-reject-upgrade" => false,
+                "delete-upgrade" => true,
+
+                // Service (Head Manager)
+                "add-service" => false,
+                "browse-service" => true,
+                "detail-service" => true,
+                "edit-service" => false,
+                "change-status-process-service" => false,
+                "change-status-repaired-service" => false,
+                "change-status-qc-service" => true,
+                "change-status-delivery-service" => false,
+                "change-status-complete-service" => false,
+                "delete-service" => false,
+
+                // Submission (Head Manager)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
             ]),
         ]);
 
@@ -525,6 +764,46 @@ class RolesSeeder extends Seeder
                 'browse-app' => true,
         		'edit-app' => true,
                 'delete-app' => true,
+
+                // Acceptance (Admin Management)
+                "add-acceptance" => false,
+                "browse-acceptance" => true,
+                "detail-acceptance" => true,
+                "edit-acceptance" => false,
+                "change-status-approval-acceptance" => false,
+                "change-status-complete-acceptance" => false,
+                "change-status-reject-acceptance" => false,
+                "delete-acceptance" => false,
+
+                // Upgrade (Admin Management)
+                "browse-upgrade" => true,
+                "detail-upgrade" => true,
+                "edit-upgrade" => false,
+                "change-status-approval-upgrade" => true,
+                "change-status-process-upgrade" => true,
+                "change-status-complete-upgrade" => true,
+                "change-status-reject-upgrade" => true,
+                "delete-upgrade" => true,
+
+                // Service (Admin Management)
+                "add-service" => true,
+                "browse-service" => true,
+                "detail-service" => true,
+                "edit-service" => true,
+                "change-status-process-service" => true,
+                "change-status-repaired-service" => true,
+                "change-status-qc-service" => true,
+                "change-status-delivery-service" => true,
+                "change-status-complete-service" => true,
+                "delete-service" => true,
+
+                // Submission (Admin Management)
+                "add-submission" => false,
+                "browse-submission" => true,
+                "browse-reference" => true,
+                "detail-submission" => true,
+                "edit-submission" => false,
+                "delete-submission" => false,
             ]),
         ]);
     }
