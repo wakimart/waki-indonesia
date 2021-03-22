@@ -54,65 +54,57 @@
 					              	<th> Service Date </th>
 					              	<th> Due Date </th>
 					              	<th> Status </th>
-					              	@if(Gate::check('edit-order') || Gate::check('delete-order'))
-						              	<th colspan="2"> Edit / Delete </th>
+					              	@if(Gate::check('edit-order'))
+						              	<th colspan="2"> Edit </th>
 						            @endif
 				            	</tr>
 							</thead>
 							<tbody>
-								@foreach($product_services as $key => $product_service)
+								@foreach($services as $key => $service)
 									@php
-										$issues = json_decode($product_service['issues']);
-										$count_main_issue = count($issues[0]->issues);
+										$service_date = explode(' ',$service['service_date']);
+										$service_date = $service_date[0];
 
-										$service_date = "";
-										$due_date= "";
-										if($product_service['service_id'] != null){
-											$service_date = explode(' ',$product_service->service['service_date']);
-											$service_date = $service_date[0];
-										}										
-
-										$due_date = explode(' ',$product_service['due_date']);
-										$due_date = $due_date[0];
+										$count_productservices = count($service->product_services);
 									@endphp
 									<tr>
-										<td rowspan="{{$count_main_issue}}">{{$key+1}}</td>
-										@if($product_service['service_id'] != null)
-											<td rowspan="{{$count_main_issue}}">Service</td>
-										@elseif($product_service['upgrade_id'] != null)
-											<td rowspan="{{$count_main_issue}}">Upgrade</td>
-										@endif
-										<td rowspan="{{$count_main_issue}}">{{$product_service->product['name']}}</td>
-										@for($i = 0; $i < $count_main_issue; $i++)
-											@if($issues[0]->issues[$i] != "Lainnya...")
-												<td>{{$issues[0]->issues[$i]}}</td>
-											@else
-												<td>{{$issues[1]->desc}}</td>
-											@endif
-											
+										<td rowspan="{{$count_productservices}}">{{$key+1}}</td>
+										<td rowspan="{{$count_productservices}}">Service</td>
+										@foreach($service->product_services as $product_service)
+											@php
+												$issues = json_decode($product_service['issues']);
+												$count_main_issue = count($issues[0]->issues);								
+
+												$due_date = explode(' ',$product_service['due_date']);
+												$due_date = $due_date[0];
+											@endphp
+											<td rowspan="{{$count_main_issue}}">{{$product_service->product['name']}}</td>
+											<td>{{implode(",",$issues[0]->issues)}}</td>
+											<td rowspan="{{$count_main_issue}}">{{$service_date}}</td>
+											<td rowspan="{{$count_main_issue}}">{{$due_date}}</td>
 											@php break; @endphp
-										@endfor
-										<td rowspan="{{$count_main_issue}}">{{$service_date}}</td>
-										<td rowspan="{{$count_main_issue}}">{{$due_date}}</td>
-										<td rowspan="{{$count_main_issue}}">{{$product_service->service['status']}}</td>
+										@endforeach
+										<td rowspan="{{$count_productservices}}">{{$service['status']}}</td>
 										@can('edit-order')
-				                            <td rowspan="{{ $count_main_issue }}" style="text-align: center;"><a href="{{ route('edit_taskservice', ['id' => $product_service['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+				                            <td rowspan="{{ $count_productservices }}" style="text-align: center;"><a href="{{ route('edit_taskservice', ['id' => $service['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
 			                            @endcan
 									</tr>
 									@php $first = true; @endphp
-			                        @for($i = 0; $i < $count_main_issue; $i++)
+			                        @for($i = 0; $i < $count_productservices; $i++)
 			                            @php
 			                                if($first){
 			                                    $first = false;
 			                                    continue;
 			                                }
+			                                $issues_sec = json_decode($service->product_services[$i]['issues']);
+			                                $due_date_sec = explode(' ',$service->product_services[$i]['due_date']);
+											$due_date_sec = $due_date_sec[0];
 			                            @endphp
 			                            <tr>
-			                                @if($issues[0]->issues[$i] != "Lainnya...")
-												<td>{{$issues[0]->issues[$i]}}</td>
-											@else
-												<td>{{$issues[1]->desc}}</td>
-											@endif
+			                                <td>{{$service->product_services[$i]->product['name']}}</td>
+			                                <td>{{implode(",",$issues_sec[0]->issues)}}</td>
+			                                <td>{{$service_date}}</td>
+			                                <td>{{$due_date_sec}}</td>
 			                            </tr>
 			                        @endfor
 								@endforeach

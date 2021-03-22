@@ -86,15 +86,26 @@
 	              			<label for="">Product Service 1</label>
 	              			<div class="form-group" id="container-productservice-0">
 			                    <div class="form-group">
-			                        <select class="form-control pilihan-product" id="product_service-0" data-msg="Mohon Pilih Product" required>
+			                        <select class="form-control pilihan-productservice" id="product_service-0" data-msg="Mohon Pilih Product" required>
 			                            <option selected disabled value="">Choose PRODUCT SERVICE</option>
 
 			                            @foreach($products as $product)
 			                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
 			                            @endforeach
+			                            
+			                            @if(true)
+			                                <option value="other">OTHER</option>
+			                            @endif
 			                        </select>
 			                        <div class="validation"></div>
 			                    </div>
+
+			                    @if(true)
+			                        <div class="form-group d-none">
+			                            <input type="text" class="form-control" name="productservice_other_0" placeholder="Product Name" data-msg="Please fill in the product" />
+			                            <div class="validation"></div>
+			                        </div>
+			                    @endif
 
 			                    <div id="container-sparepart-0" class="d-none">
 			                    	<div id="detailSparepart-0">
@@ -240,9 +251,14 @@
 								<option selected disabled value="">Choose PRODUCT SERVICE</option>\
 									@foreach($products as $product)<option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>@endforeach\
 								</option>\
+								@if(true)<option value="OTHER">OTHER</option>@endif\
 							</select>\
 							<div class="validation"></div>\
 						</div>\
+						@if(true)<div class="form-group d-none">\
+			                <input type="text" class="form-control" name="productservice_other_'+detailProductService+'" placeholder="Product Name" data-msg="Please fill in the product" />\
+			            	<div class="validation"></div>\
+			            </div>@endif\
 						<div id="container-sparepart-'+detailSparepart+'" class="d-none">\
 							<div id="detailSparepart-'+detailSparepart+'">\
 								<div class="form-group" style="width: 72%; display: inline-block;">\
@@ -336,7 +352,6 @@
 
 
 		var frmAdd;
-
         var arr_productService = [];
 
 	    $("#actionAdd").on("submit", function (e) {
