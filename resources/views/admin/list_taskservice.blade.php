@@ -120,15 +120,15 @@
 												$due_date = explode(' ',$product_service['due_date']);
 												$due_date = $due_date[0];
 											@endphp
-											<td rowspan="{{$count_main_issue}}">{{$product_service->product['name']}}</td>
+											<td>{{$product_service->product['name']}}</td>
 											<td>{{implode(",",$issues[0]->issues)}}</td>
-											<td rowspan="{{$count_main_issue}}">{{$service_date}}</td>
-											<td rowspan="{{$count_main_issue}}">{{$due_date}}</td>
+											<td>{{$service_date}}</td>
+											<td>{{$due_date}}</td>
 											@php break; @endphp
 										@endforeach
 										<td rowspan="{{$count_productservices}}">{{$service['status']}}</td>
 										@can('edit-order')
-				                            <td rowspan="{{ $count_productservices }}" style="text-align: center;"><a href="{{ route('edit_taskservice', ['id' => $service['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+				                            <td rowspan="{{$count_productservices}}" style="text-align: center;"><a href="{{ route('edit_taskservice', ['id' => $service['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
 			                            @endcan
 									</tr>
 									@php $first = true; @endphp
