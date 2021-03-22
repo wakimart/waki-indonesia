@@ -123,7 +123,7 @@
 </li>
 @endif
 
-@if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
+@if(Gate::check('add-submission') || Gate::check('browse-submission') || Gate::check('browse-reference'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'submission'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#submission-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'submission'? 'true': '' }}" aria-controls="submission-dd">
     <span class="menu-title">Submission Registration</span>
