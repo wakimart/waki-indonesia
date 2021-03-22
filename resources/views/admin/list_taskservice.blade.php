@@ -5,6 +5,38 @@
 
 @extends('admin.layouts.template')
 
+@section('style')
+<style type="text/css">
+	.nav {
+	  display: -webkit-box;
+	  display: -ms-flexbox;
+	  display: flex;
+	  -ms-flex-wrap: wrap;
+	  flex-wrap: wrap;
+	  padding-left: 0;
+	  margin-bottom: 0;
+	  list-style: none; }
+
+	.nav-tabs .nav-link {
+  background-color: #ececec;
+  color :#5c5c5c;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+  font-style: normal;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.nav-tabs{
+  max-width: 660px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 0px 20px;
+}
+</style>
+@endsection
+
 @section('content')
 <div class="main-panel">
 	<div class="content-wrapper">
@@ -37,6 +69,16 @@
 					</div>
 				</div>
 			</div>
+		</div>
+
+		<div class="form-group">
+			<span>SELECT PRODUCT</span>
+            <ul class="nav nav-tabs" style="width: 100%;">
+                <li class="nav-pt active"><a data-toggle="tab" href="#WAKimart">WAKimart</a></li>
+                <li class="nav-pt"><a data-toggle="tab" href="#Serba50000">Serba 50000</a></li>
+                <li class="nav-pt"><a data-toggle="tab" href="#Serba100000">Serba 100000</a></li>
+                <li class="nav-pt"><a data-toggle="tab" href="#Promo">Promo</a></li>
+            </ul>
 		</div>
 
 		<div class="col-12 grid-margin stretch-card" style="padding: 0;">
