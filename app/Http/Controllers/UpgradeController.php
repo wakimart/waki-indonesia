@@ -55,7 +55,7 @@ class UpgradeController extends Controller
         if($upgrade['history_status'] != null){
             $tempHistoryStatus = $upgrade['history_status'];
         }
-        array_push($tempHistoryStatus, ['user_id' => Auth::user()['id'], 'status' => $upgrade['status'], 'updated_at' => date("Y-m-d h:i:s")]);
+        array_push($tempHistoryStatus, ['user_id' => Auth::user()['id'], 'status' => $upgrade['status'], 'updated_at' => date("Y-m-d H:i:s")]);
         $upgrade['history_status'] = $tempHistoryStatus;
         $upgrade->save();
     }

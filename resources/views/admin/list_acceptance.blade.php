@@ -102,21 +102,21 @@ $menu_item_second = "list_acceptance_form";
                                                 <span class="badge badge-danger">Rejected by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
                                             @endif
                                         </td>
-                                        {{-- @can('edit-deliveryorder') --}}
+                                        @can('detail-acceptance')
                                             <td style="text-align: center;">
                                                 <a href="{{ route('detail_acceptance_form' ,['id' => $acceptance['id']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
-                                        {{-- @endcan --}}
-                                        {{-- @can('edit-deliveryorder') --}}
+                                        @endcan
+                                        @can('edit-acceptance')
                                             <td style="text-align: center;">
-                                                <a href="{{ route('detail_acceptance_form' ,['id' => $acceptance['id']]) }}">
+                                                <a href="{{ route('edit_acceptance_form' ,['id' => $acceptance['id']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>
-                                        {{-- @endcan --}}
-                                        {{-- @can('edit-deliveryorder') --}}
+                                        @endcan
+                                        @can('delete-acceptance')
                                             <td style="text-align: center;">
                                                 @if(strtolower($acceptance['status']) == "new")
                                                     <a class="btn-delete disabled" data-toggle="modal" href="#deleteDoModal" value="{{ route('delete_acceptance_form', ['id' => $acceptance->id]) }}">
@@ -124,7 +124,7 @@ $menu_item_second = "list_acceptance_form";
                                                     </a>
                                                 @endif
                                             </td>
-                                        {{-- @endcan --}}
+                                        @endcan
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -140,38 +140,40 @@ $menu_item_second = "list_acceptance_form";
 <!-- partial -->
 
 <!-- Modal Delete -->
-<div class="modal fade"
-    id="deleteDoModal"
-    tabindex="-1"
-    role="dialog"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <h5 style="text-align:center;">
-                    Are you sure you want to delete this?
-                </h5>
-            </div>
-            <div class="modal-footer">
-                <form id="frmDelete" method="post" action="">
-                    {{csrf_field()}}
-                    <button type="submit" class="btn btn-gradient-danger mr-2">
-                        Yes
+@can('delete-acceptance')
+    <div class="modal fade"
+        id="deleteDoModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
                     </button>
-                </form>
-                <button class="btn btn-light">No</button>
+                </div>
+                <div class="modal-body">
+                    <h5 style="text-align:center;">
+                        Are you sure you want to delete this?
+                    </h5>
+                </div>
+                <div class="modal-footer">
+                    <form id="frmDelete" method="post" action="">
+                        {{csrf_field()}}
+                        <button type="submit" class="btn btn-gradient-danger mr-2">
+                            Yes
+                        </button>
+                    </form>
+                    <button class="btn btn-light">No</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+@endcan
 <!-- End Modal Delete -->
 @endsection
 
