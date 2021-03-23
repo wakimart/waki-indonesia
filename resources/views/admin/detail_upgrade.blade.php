@@ -1,17 +1,15 @@
 <?php
-    $menu_item_page = "upgrade";
-    $menu_item_second = "list_upgrade_form";
+$menu_item_page = "upgrade";
+$menu_item_second = "detail_upgrade_form";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-
 <style type="text/css">
     #intro {
         padding-top: 2em;
     }
-    button{
+    button {
         background: #1bb1dc;
         border: 0;
         border-radius: 3px;
@@ -19,75 +17,6 @@
         color: #fff;
         transition: 0.3s;
     }
-    .validation{
-        color: red;
-        font-size: 9pt;
-    }
-    input, select, textarea{
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        border: 1px solid #dce1ec !important;
-        font-size: 14px !important;
-    }
-
-    #regForm {
-	  background-color: #ffffff;
-	  margin: 100px auto;
-	  padding: 40px;
-	  width: 70%;
-	  min-width: 300px;
-	}
-
-	/* Style the input fields */
-	/*input {
-	  padding: 10px;
-	  width: 100%;
-	  font-size: 17px;
-	  font-family: Raleway;
-	  border: 1px solid #aaaaaa;
-	}*/
-
-	/* Mark input boxes that gets an error on validation: */
-	input.invalid {
-	  background-color: #ffdddd;
-	}
-
-	/* Hide all steps by default: */
-	.tab {
-	  display: none;
-	}
-
-	/* Make circles that indicate the steps of the form: */
-	.step {
-	  height: 15px;
-	  width: 15px;
-	  margin: 0 2px;
-	  background-color: #bbbbbb;
-	  border: none;
-	  border-radius: 50%;
-	  display: inline-block;
-	  opacity: 0.5;
-	}
-
-	/* Mark the active step: */
-	.step.active {
-	  opacity: 1;
-	}
-
-	/* Mark the steps that are finished and valid: */
-	.step.finish {
-	  background-color: #4CAF50;
-	}
-
-   .div-CheckboxGroup {
-	  border:solid 1px rgba(128, 128, 128, 0.32941);
-	  padding:0px 10px ;
-	  border-radius:3px;
-	}
-
-	input[type='checkbox'], input[type='radio']{
-		margin-left: 0px !important;
-	}
 
 	table {
         margin: 1em;
@@ -125,8 +54,18 @@
       		<h3 class="page-title">Add Upgrade</h3>
       		<nav aria-label="breadcrumb">
 	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="upgrade-dd">Upgrade</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Add Upgrade</li>
+	          		<li class="breadcrumb-item">
+                        <a data-toggle="collapse"
+                            href="#"
+                            aria-expanded="false"
+                            aria-controls="upgrade-dd">
+                            Upgrade
+                        </a>
+                    </li>
+	          		<li class="breadcrumb-item active"
+                        aria-current="page">
+                        Add Upgrade
+                    </li>
 	        	</ol>
       		</nav>
     	</div>
@@ -146,21 +85,33 @@
 	          						<td>Upgrade Date</td>
 	          					</thead>
 	          					<tr>
-	          						<td style="text-align: center;">
-	          							@if(strtolower($upgrade['status']) == "new")
-                                            <span class="badge badge-secondary">New</span>
-                                        @elseif(strtolower($upgrade['status']) == "process")
-                                            <span class="badge badge-primary">Process by : {{ $upgrade->statusBy("process")['user_id']['name'] }}</span>
-                                        @elseif(strtolower($upgrade['status']) == "repaired")
-                                            <span class="badge badge-warning">Repaired by : {{ $upgrade->statusBy("repaired")['user_id']['name'] }}</span>
-                                        @elseif(strtolower($upgrade['status']) == "approved")
-                                            <span class="badge badge-info">Approved by : {{ $upgrade->statusBy("approved")['user_id']['name'] }}</span>
-                                        @elseif(strtolower($upgrade['status']) == "completed")
-                                            <span class="badge badge-Success">Completed by : {{ $upgrade->statusBy("completed")['user_id']['name'] }}</span>
+	          						<td class="center">
+	          							@if (strtolower($upgrade['status']) == "new")
+                                            <span class="badge badge-secondary">
+                                                New
+                                            </span>
+                                        @elseif (strtolower($upgrade['status']) == "process")
+                                            <span class="badge badge-primary">
+                                                Process by: {{ $upgrade->statusBy("process")['user_id']['name'] }}
+                                            </span>
+                                        @elseif (strtolower($upgrade['status']) == "repaired")
+                                            <span class="badge badge-warning">
+                                                Repaired by: {{ $upgrade->statusBy("repaired")['user_id']['name'] }}
+                                            </span>
+                                        @elseif (strtolower($upgrade['status']) == "approved")
+                                            <span class="badge badge-info">
+                                                Approved by: {{ $upgrade->statusBy("approved")['user_id']['name'] }}
+                                            </span>
+                                        @elseif (strtolower($upgrade['status']) == "completed")
+                                            <span class="badge badge-success">
+                                                Completed by: {{ $upgrade->statusBy("completed")['user_id']['name'] }}
+                                            </span>
                                         @endif
 	          						</td>
-	          						<td>{{ $upgrade->acceptance['code'] }}</td>
-	          						<td>
+	          						<td class="center">
+                                        {{ $upgrade->acceptance['code'] }}
+                                    </td>
+	          						<td class="center">
 	          							{{ date("d/m/Y", strtotime($upgrade->acceptance['upgrade_date'])) }}
 	          						</td>
 	          					</tr>
@@ -172,19 +123,19 @@
 	          						<td colspan="2">Data Upgrade</td>
 	          					</thead>
 	          					<tr>
-	          						<td>Customer Name : </td>
+	          						<td>Customer Name: </td>
 	          						<td>{{ $upgrade->acceptance['name'] }}</td>
 	          					</tr>
 	          					<tr>
-	          						<td>Customer Phone : </td>
+	          						<td>Customer Phone: </td>
 	          						<td>{{ $upgrade->acceptance['phone'] }}</td>
 	          					</tr>
 	          					<tr>
-	          						<td>Branch : </td>
+	          						<td>Branch: </td>
 	          						<td>{{ $upgrade->acceptance->branch->code }} - {{ $upgrade->acceptance->branch->name }}</td>
 	          					</tr>
 	          					<tr>
-	          						<td>CSO : </td>
+	          						<td>CSO: </td>
 	          						<td>{{ $upgrade->acceptance->cso->code }} - {{ $upgrade->acceptance->cso->name }}</td>
 	          					</tr>
 	          				</table>
@@ -195,24 +146,24 @@
 	          						<td colspan="2">Data Product</td>
 	          					</thead>
 	          					<tr>
-	          						<td>New Product : </td>
+	          						<td>New Product: </td>
 	          						<td>{{ $upgrade->acceptance->newproduct['code'] }} - {{ $upgrade->acceptance->newproduct['name'] }}</td>
 	          					</tr>
 	          					<tr>
-	          						<td>Old Product : </td>
-	          						@if($upgrade->acceptance['oldproduct_id'] != null)
+	          						<td>Old Product: </td>
+	          						@if ($upgrade->acceptance['oldproduct_id'] != null)
 		          						<td>{{ $upgrade->acceptance->oldproduct['code'] }} - {{ $upgrade->acceptance->oldproduct['name'] }}</td>
 		          					@else
 		          						<td>{{ $upgrade->acceptance['other_product'] }}</td>
 		          					@endif
 	          					</tr>
 	          					<tr>
-	          						<td>Purchase Date : </td>
+	          						<td>Purchase Date: </td>
 	          						<td>{{ date("d/m/Y", strtotime($upgrade->acceptance['purchase_date'])) }}</td>
 	          					</tr>
 
 	          					<tr>
-	          						<td rowspan="5">Kelengkapan : </td>
+	          						<td rowspan="5">Kelengkapan: </td>
 	          						<td><i class="mdi {{ in_array("mesin", $upgrade->acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Mesin
 	          						</td>
 	          					</tr>
@@ -233,22 +184,22 @@
 	          					</tr>
 	          					<tr>
 	          						<td>
-	          							<i class="mdi {{ in_array("other", $upgrade->acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Other : {{ isset($upgrade->acceptance['arr_condition']['kelengkapan']['other']) ? $upgrade->acceptance['arr_condition']['kelengkapan']['other'][0] : "-" }}
+	          							<i class="mdi {{ in_array("other", $upgrade->acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Other: {{ isset($upgrade->acceptance['arr_condition']['kelengkapan']['other']) ? $upgrade->acceptance['arr_condition']['kelengkapan']['other'][0] : "-" }}
 	          						</td></tr>
 	          					<tr>
-	          						<td>Kondisi Mesin : </td>
+	          						<td>Kondisi Mesin: </td>
 	          						<td>{{ ucwords($upgrade->acceptance['arr_condition']['kondisi']) }}</td>
 	          					</tr>
 	          					<tr>
-	          						<td>Tampilan : </td>
+	          						<td>Tampilan: </td>
 	          						<td>{{ ucwords($upgrade->acceptance['arr_condition']['tampilan']) }}</td>
 	          					</tr>
 	          					<tr>
-	          						<td>Description : </td>
+	          						<td>Description: </td>
 	          						<td>{{ $upgrade->acceptance['description']}}</td>
 	          					</tr>
 	          					<tr>
-	          						<td>Photo : </td>
+	          						<td>Photo: </td>
 	          						<td>
 	          							@foreach($upgrade->acceptance['image'] as $imgAcc)
 		          							<img src="{{asset('sources/acceptance/').'/'.$imgAcc}}" height="300px">
@@ -275,11 +226,11 @@
 	          						<td colspan="2">Process Detail</td>
 	          					</thead>
 	          					<tr>
-	          						<td>Due Date : </td>
+	          						<td>Due Date: </td>
 	          						<td>{{ date("d/m/Y", strtotime($upgrade->due_date)) }}</td>
 	          					</tr>
 	          					<tr>
-	          						<td>Task : </td>
+	          						<td>Task: </td>
 	          						<td>{{ $upgrade->task }}</td>
 	          					</tr>
 	          				</table>
@@ -288,11 +239,75 @@
 	        	</div>
 	      	</div>
 	    </div>
+
+        <?php if (strtolower($upgrade->status) === "repaired"): ?>
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Upgrade Status</h2>
+                            </div>
+                            <div class="row justify-content-center">
+                                <form id="actionAdd"
+                                    class="forms-sample"
+                                    method="POST"
+                                    action="<?php echo route("update_upgrade_status"); ?>">
+                                    <?php echo csrf_field(); ?>
+                                    <input type="hidden"
+                                        name="id"
+                                        value="<?php echo $upgrade->id; ?>" />
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-primary btn-lg"
+                                        name="status"
+                                        value="approved">
+                                        Approved
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php elseif (strtolower($upgrade->status) === "approved"): ?>
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Upgrade Status</h2>
+                            </div>
+                            <div class="row justify-content-center">
+                                <form id="actionAdd"
+                                    class="forms-sample"
+                                    method="POST"
+                                    action="<?php echo route("update_upgrade_status"); ?>">
+                                    <?php echo csrf_field(); ?>
+                                    <input type="hidden"
+                                        name="id"
+                                        value="<?php echo $upgrade->id; ?>" />
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-primary btn-lg"
+                                        name="status"
+                                        value="display">
+                                        Display
+                                    </button>
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-success btn-lg"
+                                        name="status"
+                                        value="ready">
+                                        Ready
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
 	</div>
 </div>
-@endsection
-
-@section('script')
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
 @endsection

@@ -613,6 +613,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("/update/", "UpgradeController@update")
             ->name("update_upgrade_form");
 
+        // Update/change upgrade status
+        Route::post("/updatestatus", "UpgradeController@updateStatus")
+            ->name("update_upgrade_status");
+
         // Process upgrade form delete
         Route::post("/{id}", "UpgradeController@destroy")
             ->name("delete_upgrade_form");

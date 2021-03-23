@@ -75,34 +75,157 @@ class UpgradeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Upgrade  $upgrade
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
      */
-    public function edit(Upgrade $upgrade)
+    public function edit(Request $request)
     {
+        if (!empty($request->id)) {
+            $upgrade = Upgrade::find($request->id);
 
+            return view('admin.update_upgrade', compact('upgrade'));
+        }
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Upgrade  $upgrade
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Upgrade $upgrade)
+    public function update(Request $request)
     {
-        //
+        if (!empty($request->id)) {
+            DB::beginTransaction();
+
+            try {
+                $upgrade = Upgrade::find($request->id);
+                $upgrade = $upgrade->fill($request->all());
+                $upgrade->save();
+
+                $user = Auth::user();
+                $historyUpdateUpgrade["type_menu"] = "Upgrade";
+                $historyUpdateUpgrade["method"] = "Update";
+                $historyUpdateUpgrade["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $upgrade->getChanges(),
+                    ]
+                );
+                $historyUpdateUpgrade["user_id"] = $user["id"];
+                $historyUpdateUpgrade["menu_id"] = $request->id;
+                HistoryUpdate::create($historyUpdateUpgrade);
+
+                DB::commit();
+
+                return redirect()->route("detail_upgrade_form", ["id" => $upgrade->id]);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    "error" => $e,
+                ]);
+            }
+        }
+    }
+
+    public function updateStatus(Request $request)
+    {
+        if (!empty($request->id)) {
+            DB::beginTransaction();
+
+            try {
+                $upgrade = Upgrade::find($request->id);
+
+                // TODO: Ganti "IF" bagian ini jika bagian lain yang dibutuhkan sudah selesai
+                if (
+                    $request->status === "display"
+                    || $request->status === "ready"
+                ) {
+                    $request->status = "completed";
+                }
+
+                // Memperbarui status
+                $upgrade->status = $request->status;
+
+                $user = Auth::user();
+                // Memperbarui history_status
+                $historyStatus = $upgrade->history_status;
+                $historyStatus[] = [
+                    "user_id" => $user["id"],
+                    "status" => $request->status,
+                    "updated_at" => date("Y-m-d H:i:s"),
+                ];
+                $upgrade->history_status = $historyStatus;
+                $upgrade->save();
+
+                // Menambahkan riwayat pembaruan ke tabel history_updates
+                $historyUpdateUpgrade["type_menu"] = "Upgrade";
+                $historyUpdateUpgrade["method"] = "Update";
+                $historyUpdateUpgrade["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $upgrade->getChanges(),
+                    ]
+                );
+                $historyUpdateUpgrade["user_id"] = $user["id"];
+                $historyUpdateUpgrade["menu_id"] = $request->id;
+                HistoryUpdate::create($historyUpdateUpgrade);
+
+                DB::commit();
+
+                return redirect()->route("detail_upgrade_form", ["id" => $upgrade->id]);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    "error" => $e,
+                ]);
+            }
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Upgrade  $upgrade
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Upgrade $upgrade)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $upgrade = Upgrade::find($id);
+            $upgrade["active"] = false;
+            $upgrade->save();
+
+            $user = Auth::user();
+            $historyDeleteUpgrade["type_menu"] = "Upgrade";
+            $historyDeleteUpgrade["method"] = "delete";
+            $historyDeleteUpgrade["meta"] = json_encode(
+                [
+                    "user" => $user["id"],
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "dataChange" => $upgrade->getChanges(),
+                ]
+            );
+            $historyDeleteUpgrade["user_id"] = $user['id'];
+            $historyDeleteUpgrade["menu_id"] = $id;
+
+            HistoryUpdate::create($historyDeleteUpgrade);
+
+            DB::commit();
+
+            return redirect()->route("list_new_upgrade_form")->with(
+                "success",
+                "Data berhasil dihapus!"
+            );
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                "error" => $e,
+            ]);
+        }
     }
 }
