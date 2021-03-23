@@ -496,7 +496,7 @@ touch-action: none;
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
-                <div class="heading text-center mb-70">
+                <div class="heading text-center">
                     <h2 class="heading--title">Testimonial WAKi</h2>
                 </div>
             </div>
