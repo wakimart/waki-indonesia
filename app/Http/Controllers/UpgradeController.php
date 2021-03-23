@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
+use App\HistoryUpdate;
 use App\Upgrade;
+use DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class UpgradeController extends Controller
@@ -98,7 +100,7 @@ class UpgradeController extends Controller
 
             try {
                 $upgrade = Upgrade::find($request->id);
-                $upgrade = $upgrade->fill($request->all());
+                $upgrade = $upgrade->fill($request->only("due_date", "task"));
                 $upgrade->save();
 
                 $user = Auth::user();
