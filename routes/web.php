@@ -129,6 +129,9 @@ Route::group(['prefix' => 'api-apps'], function () {
         // Show reference list API
         Route::post("list_reference", "SubmissionController@listReferenceApi");
 
+        // View detail submission API
+        Route::post("detail", "SubmissionController@detailSubmissionApi");
+
         // Update submission API
         Route::post("update", "SubmissionController@updateApi");
 

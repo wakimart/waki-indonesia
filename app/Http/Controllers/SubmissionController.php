@@ -413,7 +413,7 @@ class SubmissionController extends Controller
             $historyDeliveryOrder["meta"] = json_encode(
                 [
                     "user" => $user["id"],
-                    "createdAt" => date("Y-m-d h:i:s"),
+                    "createdAt" => date("Y-m-d H:i:s"),
                     "dataChange" => $deliveryOrder->getChanges(),
                 ]
             );
@@ -444,7 +444,7 @@ class SubmissionController extends Controller
                 $historyReference["meta"] = json_encode(
                     [
                         "user" => $user["id"],
-                        "createdAt" => date("Y-m-d h:i:s"),
+                        "createdAt" => date("Y-m-d H:i:s"),
                         "dataChange" => $reference->getChanges(),
                     ]
                 );
@@ -491,7 +491,7 @@ class SubmissionController extends Controller
             $historyDeleteDeliveryOrder["meta"] = json_encode(
                 [
                     "user" => $user["id"],
-                    "createdAt" => date("Y-m-d h:i:s"),
+                    "createdAt" => date("Y-m-d H:i:s"),
                     "dataChange" => $deliveryOrder->getChanges(),
                 ]
             );
@@ -855,7 +855,7 @@ class SubmissionController extends Controller
                 $historyDeliveryOrder["meta"] = json_encode(
                     [
                         "user" => $request->input("user_id"),
-                        "createdAt" => date("Y-m-d h:i:s"),
+                        "createdAt" => date("Y-m-d H:i:s"),
                         "dataChange" => $deliveryOrder->getChanges(),
                     ]
                 );
@@ -889,7 +889,7 @@ class SubmissionController extends Controller
                     $historyReference["meta"] = json_encode(
                         [
                             "user" => $request->input("user_id"),
-                            "createdAt" => date("Y-m-d h:i:s"),
+                            "createdAt" => date("Y-m-d H:i:s"),
                             "dataChange" => $reference->getChanges(),
                         ]
                     );
@@ -1131,6 +1131,126 @@ class SubmissionController extends Controller
         }
     }
 
+    public function detailSubmissionApi(Request $request)
+    {
+        try {
+            $deliveryOrder = DeliveryOrder::select(
+                "delivery_orders.id AS id",
+                "delivery_orders.code AS code",
+                "delivery_orders.no_member AS no_member",
+                "delivery_orders.name AS customer_name",
+                "delivery_orders.address AS address",
+                "delivery_orders.phone AS customer_phone",
+                "delivery_orders.arr_product AS arr_product",
+                "csos.code AS cso_code",
+                "csos.name AS cso_name",
+                "branches.code AS branch_code",
+                "branches.name AS branch_name",
+                "raja_ongkir__cities.province AS province",
+                "raja_ongkir__cities.type AS city_type",
+                "raja_ongkir__cities.city_name AS city_name",
+                "raja_ongkir__subdistricts.subdistrict_name AS district",
+            )
+            ->leftJoin(
+                "raja_ongkir__cities",
+                "raja_ongkir__cities.city_id",
+                "=",
+                "delivery_orders.city"
+            )
+            ->leftJoin(
+                "raja_ongkir__subdistricts",
+                "raja_ongkir__subdistricts.subdistrict_id",
+                "=",
+                "delivery_orders.distric",
+            )
+            ->leftJoin(
+                "branches",
+                "branches.id",
+                "=",
+                "delivery_orders.branch_id"
+            )
+            ->leftJoin(
+                "csos",
+                "csos.id",
+                "=",
+                "delivery_orders.cso_id"
+            )
+            ->where("delivery_orders.id", $request->id)
+            ->where("delivery_orders.active", true)
+            ->where("delivery_orders.type_register", "!=", "Normal Register")
+            ->first();
+
+            $getPromo = json_decode($deliveryOrder->arr_product);
+            $arrayPromo = [];
+            foreach ($getPromo as $key => $promoItem) {
+                $getIndex = explode("_", $key);
+                $getPromoName = DeliveryOrder::$Promo[$promoItem->id];
+                $arrayPromo[] = [
+                    "id" => $getIndex[1],
+                    "name" => $getPromoName["name"],
+                    "qty" => $promoItem->qty,
+                ];
+            }
+
+            $deliveryOrder->promo = $arrayPromo;
+
+            $city = $deliveryOrder->city_type . " " . $deliveryOrder->city_name;
+            $deliveryOrder->city = $city;
+
+            unset(
+                $deliveryOrder->arr_product,
+                $deliveryOrder->city_type,
+                $deliveryOrder->city_name,
+            );
+
+            $references = Reference::select(
+                "references.name AS name",
+                "references.age AS age",
+                "references.phone AS phone",
+                "raja_ongkir__cities.province AS province",
+                "raja_ongkir__cities.type AS city_type",
+                "raja_ongkir__cities.city_name AS city_name",
+            )
+            ->leftJoin(
+                "raja_ongkir__cities",
+                "raja_ongkir__cities.city_id",
+                "=",
+                "references.city"
+            )
+            ->where("references.deliveryorder_id", $request->id)
+            ->get();
+
+            $referenceArray = [];
+            foreach ($references as $ref) {
+                $referenceArray[] = [
+                    "name" => $ref->name,
+                    "age" => $ref->age,
+                    "phone" => $ref->phone,
+                    "province" => $ref->province,
+                    "city" => $ref->city_type . " " . $ref->city_name,
+                ];
+            }
+
+            $data = [
+                "result" => 1,
+                "dataSubmission" => $deliveryOrder,
+                "dataReference" => $referenceArray,
+            ];
+
+            return response()->json($data, 200);
+        } catch (Exception $e) {
+            $data = [
+                "result" => 0,
+                "error" => $e,
+                "error line" => $e->getLine(),
+                "error messages" => $e->getMessage(),
+            ];
+
+            return response()->json($data, 501);
+        }
+
+    }
+
     public function deleteApi(Request $request)
     {
         $messages = array(
@@ -1164,7 +1284,7 @@ class SubmissionController extends Controller
                 $historyDeleteDeliveryOrder["meta"] = json_encode(
                     [
                         "user" => $request->user_id,
-                        "createdAt" => date("Y-m-d h:i:s"),
+                        "createdAt" => date("Y-m-d H:i:s"),
                         "dataChange" => $deliveryOrder->getChanges(),
                     ]
                 );
