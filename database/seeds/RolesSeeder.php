@@ -126,6 +126,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Sparepart (Head Admin)
+                "add-sparepart" => true,
+                "browse-sparepart" => true,
+                "edit-sparepart" => true,
+                "delete-sparepart" => true,
         	]),
         ]);
 
@@ -243,6 +249,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Sparepart (Admin)
+                "add-sparepart" => true,
+                "browse-sparepart" => true,
+                "edit-sparepart" => true,
+                "delete-sparepart" => true,
         	]),
         ]);
 
@@ -354,6 +366,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Sparepart (CSO)
+                "add-sparepart" => false,
+                "browse-sparepart" => false,
+                "edit-sparepart" => false,
+                "delete-sparepart" => false,
             ]),
         ]);
 
@@ -465,6 +483,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => true,
                 "delete-submission" => true,
+
+                // Sparepart (Branch)
+                "add-sparepart" => false,
+                "browse-sparepart" => false,
+                "edit-sparepart" => false,
+                "delete-sparepart" => false,
             ]),
         ]);
 
@@ -576,6 +600,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => true,
                 "delete-submission" => true,
+
+                // Sparepart (Area Manager)
+                "add-sparepart" => false,
+                "browse-sparepart" => false,
+                "edit-sparepart" => false,
+                "delete-sparepart" => false,
             ]),
         ]);
 
@@ -687,6 +717,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Sparepart (Head Manager)
+                "add-sparepart" => false,
+                "browse-sparepart" => false,
+                "edit-sparepart" => false,
+                "delete-sparepart" => false,
             ]),
         ]);
 
@@ -804,6 +840,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Sparepart (Admin Management)
+                "add-sparepart" => true,
+                "browse-sparepart" => true,
+                "edit-sparepart" => true,
+                "delete-sparepart" => true,
             ]),
         ]);
     }

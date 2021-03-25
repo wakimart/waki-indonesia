@@ -352,15 +352,32 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->middleware('can:edit-order');
     });
 
-    Route::group(['prefix' => 'sparepart','middleware' => 'auth'], function(){
-    	//Add Form Service
-    	Route::get('/', 'SparepartController@create')
+    Route::group(['prefix' => 'sparepart', 'middleware' => 'auth'], function() {
+    	// Add Sparepart
+    	Route::get('/add', 'SparepartController@create')
 	    	->name('add_sparepart')
 	    	->middleware('can:add-order');
-	    //Store Service
-	    Route::post('/', 'SparepartController@store')
+
+        // Store Sparepart
+	    Route::post('/store', 'SparepartController@store')
 	    	->name('store_sparepart')
 	    	->middleware('can:add-order');
+
+        // List sparepart
+        Route::get("/list", "SparepartController@index")
+            ->name("list_sparepart");
+
+        // Edit sparepart page
+        Route::get("/edit/", "SparepartController@edit")
+            ->name("edit_sparepart");
+
+        // Update sparepart
+        Route::post("/update/", "SparepartController@update")
+            ->name("update_sparepart");
+
+        // Delete sparepart
+        Route::post("/delete/", "SparepartController@destroy")
+            ->name("delete_sparepart");
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
@@ -550,7 +567,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("update_submission_form");
 
         // Process submission form delete
-        Route::post("/{id}", "SubmissionController@destroy")
+        Route::post("/delete/", "SubmissionController@destroy")
             ->name("delete_submission_form");
     });
 
