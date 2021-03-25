@@ -50,13 +50,23 @@ class ServiceController extends Controller
         try {
             $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date');
             $data['status'] = 'New';
+            $temp_id = DB::select("SHOW TABLE STATUS LIKE 'services'");
+            $data['code'] = "SERVICE/".$temp_id[0]->Auto_increment."/".date("Ymd");
             $service = Service::create($data);
 
             $get_allProductService = json_decode($request->productservices);
 
             foreach ($get_allProductService as $key => $value) {
                 $data['service_id'] = $service->id;
-                $data['product_id'] = $value[0];
+
+                $data['product_id'] = null;
+                $data['other_product'] = null;
+                if($value[0] != "other"){
+                    $data['product_id'] = $value[0];
+                }else{
+                    $data['other_product'] = $value[4];
+                }
+                
                 
                 // $index = 0;
                 // $data['arr_sparepart'] = [];

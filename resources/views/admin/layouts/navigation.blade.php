@@ -79,7 +79,7 @@
 </li>
 @endif
 
-@if(Gate::check('add-order') || Gate::check('browse-order'))
+@if(Gate::check('add-service') || Gate::check('browse-service'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'service'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#service-dd" aria-expanded="false" aria-controls="service-dd">
     <span class="menu-title">Service</span>
@@ -88,16 +88,16 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'service'? 'show': '' }}" id="service-dd">
     <ul class="nav flex-column sub-menu">
-      @if(Gate::check('add-order'))
+      @if(Gate::check('add-service'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_service'? 'active': '' }}" href="{{ route('add_service')}}">Add Service</a></li>
       @endif
-      @if(Gate::check('browse-order'))
+      @if(Gate::check('browse-service'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_service'? 'active': '' }}" href="{{  route('list_service') }}">List Service</a></li>
       @endif
-      @if(Gate::check('add-order'))
+      @if(Gate::check('add-service'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_sparepart'? 'active': '' }}" href="{{ route('add_service')}}">Add Sparepart</a></li>
       @endif
-      @if(Gate::check('browse-order'))
+      @if(Gate::check('browse-service'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_sparepart'? 'active': '' }}" href="{{  route('admin_list_order') }}">List Sparepart</a></li>
       @endif
     </ul>
@@ -106,7 +106,7 @@
 @endif
 
 
-@if(Gate::check('add-order') || Gate::check('browse-order'))
+@if(Gate::check('add-service') || Gate::check('browse-service'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'technician'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">
     <span class="menu-title">Technician</span>
@@ -115,8 +115,8 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'technician'? 'show': '' }}" id="technician-dd">
     <ul class="nav flex-column sub-menu">
-      @if(Gate::check('add-order'))
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_task'? 'active': '' }}" href="{{ route('list_taskservice')}}">List Product Service </a></li>
+      @if(Gate::check('add-service'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_task'? 'active': '' }}" href="{{ route('list_taskservice')}}">List Product Service/Upgrade </a></li>
       @endif
     </ul>
   </div>

@@ -6,6 +6,7 @@ use App\ProductService;
 use App\Product;
 use App\Sparepart;
 use App\Service;
+use App\Upgrade;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,8 +21,10 @@ class ProductServiceController extends Controller
     public function index()
     {   
         $services = Service::where('active', true)->get();
+        $upgrades = Upgrade::where('active', true)->get();
         $countServices = $services->count();
-        return view('admin.list_taskservice', compact('countServices', 'services'));
+        $countUpgrades = $upgrades->count();
+        return view('admin.list_taskservice', compact('countServices', 'services', 'upgrades', 'countUpgrades'));
     }
 
     /**
@@ -73,6 +76,17 @@ class ProductServiceController extends Controller
         
     }
 
+    public function editUpgrade(Request $request)
+    {   
+        if($request->has('id')){
+            $product_services = ProductService::where('upgrade_id',$request->get('id'))->get();
+            $products = Product::all();
+            $spareparts = Sparepart::where('active', true)->get();
+            return view('admin.update_productupgrade', compact('product_services','products', 'spareparts'));    
+        }
+        
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -88,8 +102,6 @@ class ProductServiceController extends Controller
             $get_allProductService = json_decode($request->productservices);
 
             foreach ($get_allProductService as $key => $item_productservice) {
-
-
                 $data = $request->all();
                 $product_services = ProductService::find($item_productservice[0]);
 
@@ -102,18 +114,68 @@ class ProductServiceController extends Controller
                     $index++;
                 }
 
-                $product_services['sparepart'] = json_encode($data['arr_sparepart']);
+                $product_services->sparepart = json_encode($data['arr_sparepart']);
                 $product_services->save();
             }
 
+            $services = Service::find($get_allProductService[0][2]);
 
+            if($request->repairedservices == "true"){
+                
+                $arr_history = json_decode($services['history_status']);
+                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "Repaired", 'updated_at' => date("Y-m-d h:i:s")]);
+                $services->history_status = json_encode($arr_history);
+                $services->status = "Repaired";
+                $services->save();
+            }else if($request->repairedservices == "false"){
+                $arr_history = array();
+                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "Process", 'updated_at' => date("Y-m-d h:i:s")]);
+                $services->history_status = json_encode($arr_history);
+                $services->status = "Process";
+                $services->save();      
+            }       
             
-            $services = Service::find($get_allProductService[0][0]);
-            $arr_history = [];
-            array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "Process", 'updated_at' => date("Y-m-d h:i:s")]);
-            $services['history_status'] = json_encode($arr_history);
-            $services['status'] = "Process";
-            $services->save();
+            DB::commit();
+            return response()->json(['success' => 'Berhasil!!!']);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['errors' => $ex]);
+        }
+    }
+
+    public function updateUpgrade(Request $request)
+    {
+        //UPDATE KHUSUS SERVICE
+        DB::beginTransaction();
+        try {
+            $get_allProductService = json_decode($request->productservices);
+
+            foreach ($get_allProductService as $key => $item_productservice) {
+                $data = $request->all();
+                $product_services = ProductService::find($item_productservice[0]);
+
+                $index = 0;
+                $data['arr_sparepart'] = [];
+                foreach ($item_productservice[1] as $item_sparepart) {
+                    $data['arr_sparepart'][$index] = [];
+                    $data['arr_sparepart'][$index]['id'] = $item_sparepart[0];
+                    $data['arr_sparepart'][$index]['qty'] = $item_sparepart[1];
+                    $index++;
+                }
+
+                $product_services->sparepart = json_encode($data['arr_sparepart']);
+                $product_services->save();
+            }
+            
+            $upgrades = Upgrade::find($get_allProductService[0][2]);
+
+            $arr_old_history = $upgrades['history_status'];
+
+            array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => "Repaired", 'updated_at' => date("Y-m-d h:i:s")]);
+
+            $upgrades->history_status = $arr_old_history;
+            $upgrades->status = "Repaired";
+            $upgrades->save();
 
             DB::commit();
             return response()->json(['success' => 'Berhasil!!!']);

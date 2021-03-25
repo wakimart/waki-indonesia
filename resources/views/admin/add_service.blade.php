@@ -88,24 +88,20 @@
 			                    <div class="form-group">
 			                        <select class="form-control pilihan-productservice" id="product_service-0" data-msg="Mohon Pilih Product" required>
 			                            <option selected disabled value="">Choose PRODUCT SERVICE</option>
-
-			                            @foreach($products as $product)
-			                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
-			                            @endforeach
-			                            
 			                            @if(true)
 			                                <option value="other">OTHER</option>
 			                            @endif
+			                            @foreach($products as $product)
+			                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
+			                            @endforeach
 			                        </select>
 			                        <div class="validation"></div>
 			                    </div>
 
-			                    @if(true)
-			                        <div class="form-group d-none">
-			                            <input type="text" class="form-control" name="productservice_other_0" placeholder="Product Name" data-msg="Please fill in the product" />
-			                            <div class="validation"></div>
-			                        </div>
-			                    @endif
+			                   	<div class="form-group d-none">
+		                            <input type="text" class="form-control" id="productservice_other_0" placeholder="Product Name" data-msg="Please fill in the product" />
+		                            <div class="validation"></div>
+		                        </div>
 
 			                    <div id="container-sparepart-0" class="d-none">
 			                    	<div id="detailSparepart-0">
@@ -247,18 +243,19 @@
 						</div>\
 						<label for="">Product Service '+counter_service+'</label>\
 						<div class="form-group">\
-							<select class="form-control pilihan-product" id="product_service-'+detailProductService+'" data-msg="Mohon Pilih Product" required>\
+							<select class="form-control pilihan-productservice" id="product_service-'+detailProductService+'" data-msg="Mohon Pilih Product" required>\
 								<option selected disabled value="">Choose PRODUCT SERVICE</option>\
+									@if(true)<option value="other">OTHER</option>@endif\
 									@foreach($products as $product)<option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>@endforeach\
 								</option>\
 								@if(true)<option value="OTHER">OTHER</option>@endif\
 							</select>\
 							<div class="validation"></div>\
 						</div>\
-						@if(true)<div class="form-group d-none">\
-			                <input type="text" class="form-control" name="productservice_other_'+detailProductService+'" placeholder="Product Name" data-msg="Please fill in the product" />\
+						<div class="form-group d-none">\
+			                <input type="text" class="form-control" id="productservice_other_'+detailProductService+'" placeholder="Product Name" data-msg="Please fill in the product" />\
 			            	<div class="validation"></div>\
-			            </div>@endif\
+			            </div>\
 						<div id="container-sparepart-'+detailSparepart+'" class="d-none">\
 							<div id="detailSparepart-'+detailSparepart+'">\
 								<div class="form-group" style="width: 72%; display: inline-block;">\
@@ -350,6 +347,19 @@
 			idQtySparepart--;
 		});
 
+		@if(true)
+            $(document).on("change", ".pilihan-productservice", function(e){
+                if($(this).val() == 'other'){
+                    $(this).parent().next().removeClass("d-none");
+                    $(this).parent().next().children().attr('required', '');
+                }
+                else{
+                    $(this).parent().next().addClass("d-none");
+                    $(this).parent().next().children().removeAttr('required', '');
+                }
+            });
+        @endif
+
 
 		var frmAdd;
         var arr_productService = [];
@@ -362,6 +372,11 @@
 
 	        for (var i = 0; i < idService + 1 ; i++) {
 	        	var product = $("#product_service-" + i).val();
+
+	        	var other = "";
+	        	if(product == "other"){
+	        		other = $("#productservice_other_" + i).val();
+	        	}
 	        	var issues = $("#issues-" + i).val();
 	        	var due_date = $("#due_date-" + i).val();
 
@@ -381,10 +396,12 @@
 				});
 
 	        	//arr_productService.push([product, arr_sparepart, arr_issues, issues, due_date]);
-	        	arr_productService.push([product, arr_issues, issues, due_date]);
+	        	arr_productService.push([product, arr_issues, issues, due_date, other]);
 	        }
 
 	        var arr_jsonproductservice = JSON.stringify(arr_productService);
+
+	        console.log(arr_productService);
 
 	        frmAdd.append('productservices', arr_jsonproductservice);
 
@@ -433,7 +450,8 @@
 	        }
 	        else{ 
 	            alert("Input Success !!!");
-	            // window.location.reload()
+	            var route_to_list = "{{route('list_service')}}";
+	           	window.location.href = route_to_list;
 	        }
 
 	        document.getElementById("addService").innerHTML = "SAVE";

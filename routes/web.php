@@ -326,41 +326,49 @@ Route::group(['prefix' => 'cms-admin'], function () {
     	//Add Form Service
     	Route::get('/', 'ServiceController@create')
 	    	->name('add_service')
-	    	->middleware('can:add-order');
+	    	->middleware('can:add-service');
 	    //Store Service
 	    Route::post('/', 'ServiceController@store')
 	    	->name('store_service')
-	    	->middleware('can:add-order');
+	    	->middleware('can:add-service');
 	    //List Service
 	    Route::get('/list', 'ServiceController@index')
 	    	->name('list_service')
-	    	->middleware('can:browse-order');
+	    	->middleware('can:browse-service');
     });
 
     Route::group(['prefix' => 'product_service', 'middleware' => 'auth'], function(){
     	//List Task Product Service
 	    Route::get('/list', 'ProductServiceController@index')
 	    	->name('list_taskservice')
-	    	->middleware('can:browse-order');
+	    	->middleware('can:browse-service');
 	    //Edit Product Service
 	    Route::get('/edit/', 'ProductServiceController@edit')
 	    	->name('edit_taskservice')
-	    	->middleware('can:edit-order');
+	    	->middleware('can:edit-service');
+	    //Edit Product Service (Upgrade)
+	    Route::get('/edit_upgrade/', 'ProductServiceController@editUpgrade')
+	    	->name('edit_taskupgrade')
+	    	->middleware('can:edit-service');
 	    //Update Product Service
 	    Route::post('/update/', 'ProductServiceController@update')
 	    	->name('update_taskservice')
-	    	->middleware('can:edit-order');
+	    	->middleware('can:edit-service');
+	    //Update Product Service (Upgrade)
+	    Route::post('/update_upgrade/', 'ProductServiceController@updateUpgrade')
+	    	->name('update_taskupgrade')
+	    	->middleware('can:edit-service');
     });
 
     Route::group(['prefix' => 'sparepart','middleware' => 'auth'], function(){
     	//Add Form Service
     	Route::get('/', 'SparepartController@create')
 	    	->name('add_sparepart')
-	    	->middleware('can:add-order');
+	    	->middleware('can:add-service');
 	    //Store Service
 	    Route::post('/', 'SparepartController@store')
 	    	->name('store_sparepart')
-	    	->middleware('can:add-order');
+	    	->middleware('can:add-service');
     });
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){

@@ -34,11 +34,11 @@
 <div class="main-panel">
   	<div class="content-wrapper">
     	<div class="page-header">
-      		<h3 class="page-title">Update Product Service</h3>
+      		<h3 class="page-title">Update Product Upgrade</h3>
       		<nav aria-label="breadcrumb">
 	        	<ol class="breadcrumb">
 	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">Technician</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Update Product Service</li>
+	          		<li class="breadcrumb-item active" aria-current="page">Update Product Upgrade</li>
 	        	</ol>
       		</nav>
     	</div>
@@ -46,12 +46,8 @@
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
 	          		<div class="card-body">
-	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('update_taskservice') }}">
+	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('update_taskupgrade') }}">
 							{{ csrf_field() }}
-
-							@php
-								$counterSparepart = -1;
-							@endphp
 
 							@foreach($product_services as $key => $product_service)
 							<label for="">Product Service {{$key+1}}</label>
@@ -83,19 +79,17 @@
 			                    @if($product_service['sparepart'] != null)
 			                    @php
 	                            	$arr_sparepart = json_decode($product_service['sparepart']);
-	                            	$count_sparepart = count($arr_sparepart);
 	                            @endphp
 
 	                            <label for="">Sparepart</label>
 			                    <div id="container-sparepart-{{$key}}">
 			                    	@foreach($arr_sparepart as $index => $item)
-			                    	@php $counterSparepart++; @endphp
 			                    	<div id="detailSparepart-{{$key}}">
 			                    		<div class="form-group" style="width: 72%; display: inline-block;">
 					                        <select id="idSparepart-{{$index}}-{{$key}}" class="form-control pilihan-product" data-msg="Mohon Pilih Product" required>
 					                            <option selected disabled value="">Choose SPAREPART</option>
 				                            	@foreach($spareparts as $sparepart)
-				                            		@if($arr_sparepart[$index]->id == $sparepart['id'])
+				                            		@if($arr_sparepart[0]->id == $sparepart['id'])
 					                                	<option value="{{ $sparepart['id'] }}" selected>{{ $sparepart['name'] }}</option>
 					                                @else
 					                                	<option value="{{ $sparepart['id'] }}">{{ $sparepart['name'] }}</option>
@@ -105,7 +99,7 @@
 					                        <div class="validation"></div>
 					                    </div>
 					                    <div class="form-group" style="width: 16%; display: inline-block;">
-					                        <input id="idQtySparepart-{{$index}}-{{$key}}" type="number" class="form-control" placeholder="Qty" value="{{$arr_sparepart[$index]->qty}}">
+					                        <input id="idQtySparepart-{{$index}}-{{$key}}" type="number" class="form-control" placeholder="Qty" value="{{$arr_sparepart[0]->qty}}">
 					                        <div class="validation"></div>
 					                    </div>
 
@@ -119,7 +113,6 @@
 			                    	@endforeach
 			                    </div>
 			                    @else
-			                    @php $counterSparepart++; @endphp
 		                    	<div id="container-sparepart-{{$key}}">
 			                    	<div id="detailSparepart-{{$key}}">
 			                    		<div class="form-group" style="width: 72%; display: inline-block;">
@@ -143,31 +136,15 @@
 			                    
 
 			                    @php
-			                    	$issues = json_decode($product_service['issues']);
-			                    	$count_main_issue = count($issues[0]->issues);
-
 			                    	$due_date = explode(' ',$product_service['due_date']);
 									$due_date = $due_date[0];
-
-									$cbx_issues = ["Kerusakan Listrik", "Bersuara/Bergetar", "Heating", "Jatuh, Pecah, Unit Lepas", "Kerusakan Mekanik", "Lainnya..."];
 			                    @endphp
 
 			                    <div class="form-group">
-				                	<label for="">Issues</label>
+				                	<label for="">Task</label>
 				                	<br>
-				                	@for($i = 0; $i < count($cbx_issues); $i++)
-			                			@if(in_array($cbx_issues[$i], $issues[0]->issues))
-				                			<label style="margin-right: 20%;" class="checkbox-inline">
-										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true" disabled="">{{$cbx_issues[$i]}}
-										    </label>
-										@else
-											<label style="margin-right: 20%;" class="checkbox-inline">
-										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" disabled="">{{$cbx_issues[$i]}}
-										    </label>
-			                			@endif
-			                		@endfor
 
-				                    <textarea class="form-control" id="issues-{{$key}}" rows="5" data-msg="Mohon Isi Issues" placeholder="Description" required="" disabled="">{{$issues[1]->desc}}</textarea>
+				                    <textarea class="form-control" id="issues-{{$key}}" rows="5" data-msg="Mohon Isi Task" placeholder="Task" required="" disabled="">{{$product_service->upgrade['task']}}</textarea>
 				                    <div class="validation"></div>
 				                </div>
 
@@ -181,25 +158,23 @@
 								</div>
 								<hr>			                    
 			                </div>
-			                <input type="hidden" id="id_productservice-{{$key}}" name="id_productservice" value="{{$product_service['id']}}">
-			                <input type="hidden" id="id_service-{{$key}}" name="id_service" value="{{$product_service['service_id']}}">
-							@endforeach
 
-							<input type="hidden" id="lastIdSparepart" value="{{$counterSparepart}}">
-			                
+			                <input type="hidden" id="id_productservice-{{$key}}" name="id_productservice" value="{{$product_service['id']}}">
+			                <input type="hidden" id="id_upgrade-{{$key}}" name="id_upgrade" value="{{$product_service['upgrade_id']}}">
+							@endforeach
 	              			<div id="errormessage"></div>
 
 	              			@php $total_productservice = count($product_services); @endphp
 	              			<div class="form-group">
 	              				<input type="hidden" id="total_productservice" value="{{$total_productservice}}">
-	              				@if($product_services[0]->service['status'] == "New")
-	              					@can('change-status-process-service')
+	              				@if($product_services[0]->upgrade['status'] == "New")
+	              					@can('change-status-process-upgrade')
 	              						<button id="updateService" type="submit" class="btn btn-gradient-primary mr-2">Process</button>
 	              					@endcan
-	              				@elseif($product_services[0]->service['status'] == "Process")
+	              				@elseif($product_services[0]->upgrade['status'] == "Process")
 	              					<button id="updateService" type="submit" class="btn btn-light">Save</button>
-	              					@can('change-status-repaired-service')
-	              					<button id="updateServiceRepaired" type="submit" class="btn btn-gradient-primary mr-2 updateServiceRepaired">Repaired</button>
+	              					@can('change-status-process-upgrade')
+	              					<button id="updateServiceRepaired" type="submit" class="btn btn-gradient-primary mr-2">Repaired</button>
 	              					@endcan
 	              				@endif
 	              			</div>
@@ -258,8 +233,8 @@
 	$(document).ready(function(){
 		var idService = $('#total_productservice').val();		
 
-		var idSparepart = $('#lastIdSparepart').val();
-		var idQtySparepart = $('#lastIdSparepart').val();
+		var idSparepart = 0;
+		var idQtySparepart = 0;
 		$(document).on("click", ".add_sparepart", function(){
 			var getIdParent = $(this).parent().parent().attr('id');
 			var id_parent = getIdParent.slice(-1);
@@ -281,11 +256,6 @@
 
 
 		var frmAdd;
-		var repaired = false;
-
-		$(document).on("click", ".updateServiceRepaired", function(){
-			repaired = true;
-		});
 
 	    $("#actionAdd").on("submit", function (e) {
 	        e.preventDefault();
@@ -296,7 +266,7 @@
 	        var arr_productservice = [];
 	        for (var i = 0; i < idService; i++) {
 	        	var id_product_service = $("#id_productservice-" + i).val();
-	        	var id_service = $("#id_service-" + i).val();
+	        	var id_upgrade = $("#id_upgrade-" + i).val();
 
 	        	var arr_sparepart = [];
 	        	for (var s = 0; s < idSparepart + 1; s++) {
@@ -307,15 +277,12 @@
 	        			arr_sparepart.push([sparepart, qty]);
 	        		}
 	        	}
-	        	arr_productservice.push([id_product_service, arr_sparepart, id_service]);
+	        	arr_productservice.push([id_product_service, arr_sparepart, id_upgrade]);
 	        }
 
 	        var arr_jsonproductservice = JSON.stringify(arr_productservice);
 
-	        console.log(repaired);
-
 	        frmAdd.append('productservices', arr_jsonproductservice);
-	        frmAdd.append('repairedservices', repaired);
 
 	        var URLNya = $("#actionAdd").attr('action');
 	        var ajax = new XMLHttpRequest();

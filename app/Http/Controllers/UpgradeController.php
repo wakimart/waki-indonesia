@@ -50,7 +50,7 @@ class UpgradeController extends Controller
         $upgrade = Upgrade::find($data['upgrade_id']);
         $upgrade['task'] = $data['task'];
         $upgrade['due_date'] = $data['due_date'];
-        $upgrade['status'] = "process";
+        $upgrade['status'] = "Process";
         $tempHistoryStatus = [];
         if($upgrade['history_status'] != null){
             $tempHistoryStatus = $upgrade['history_status'];
