@@ -125,7 +125,7 @@
             </ul>
 
             <div class="tab-content" name="list_tab">
-            	<div id="tab_services" class="tab-pane fade in active" style="overflow-x:auto;">
+            	<div id="tab_services" class="tab-pane fade in active show" style="overflow-x:auto;">
             		<div class="col-12 grid-margin stretch-card" style="padding: 0;">
 						<div class="card">
 				  			<div class="card-body">
@@ -223,7 +223,7 @@
 								              	<th> Type </th>
 								              	<th> Product </th>
 								              	<th> Task </th>
-								              	<th> Update Date </th>
+								              	<th> Upgrade Date </th>
 								              	<th> Due Date </th>
 								              	<th> Status </th>
 								              	@if(Gate::check('edit-order'))
@@ -234,48 +234,30 @@
 										<tbody>
 											@foreach($upgrades as $key => $upgrade)
 												@php
-													$upgrade_date = explode(' ',$service['created_at']);
+													$upgrade_date = explode(' ',$upgrade['created_at']);
 													$upgrade_date = $upgrade_date[0];
 
-													$count_productservices = count($upgrade->product_services);
+													$due_date = explode(' ',$upgrade['due_date']);
+													$due_date = $due_date[0];
 												@endphp
 												<tr>
-													<td rowspan="{{$count_productservices}}">{{$key+1}}</td>
-													<td rowspan="{{$count_productservices}}">Upgrade</td>
-													@foreach($upgrade->product_services as $product_service)
-														@php					
-															$due_date = explode(' ',$product_service['due_date']);
-															$due_date = $due_date[0];
-														@endphp
-														<td>{{$product_service->product['name']}}</td>
-														<td>{{$upgrade['task']}}</td>
-														<td>{{$upgrade_date}}</td>
-														<td>{{$due_date}}</td>
-														@php break; @endphp
-													@endforeach
-													<td rowspan="{{$count_productservices}}">{{$upgrade['status']}}</td>
+													<td>{{$key+1}}</td>
+													<td>Upgrade</td>
+
+													@if($upgrade->acceptance['oldproduct_id'] != null)
+														<td>{{$upgrade->acceptance->oldproduct['name']}}</td>
+													@elseif($upgrade->acceptance['oldproduct_id'] == null)
+														<td>{{$upgrade->acceptance['other_product']}}</td>
+													@endif
+
+													<td>{{$upgrade['task']}}</td>
+													<td>{{$upgrade_date}}</td>
+													<td>{{$due_date}}</td>
+													<td>{{$upgrade['status']}}</td>
 													@can('edit-order')
-							                            <td rowspan="{{$count_productservices}}" style="text-align: center;"><a href="{{ route('edit_taskupgrade', ['id' => $upgrade['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+							                            <td style="text-align: center;"><a href="{{ route('edit_taskupgrade', ['id' => $upgrade['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
 						                            @endcan
 												</tr>
-												@php $first = true; @endphp
-						                        @for($i = 0; $i < $count_productservices; $i++)
-						                            @php
-						                                if($first){
-						                                    $first = false;
-						                                    continue;
-						                                }
-						                                
-						                                $due_date_sec = explode(' ',$upgrade->product_services[$i]['due_date']);
-														$due_date_sec = $due_date_sec[0];
-						                            @endphp
-						                            <tr>
-						                                <td>{{$upgrade->product_services[$i]->product['name']}}</td>
-						                                <td>{{$upgrade['task']}}</td>
-						                                <td>{{$upgrade_date}}</td>
-						                                <td>{{$due_date_sec}}</td>
-						                            </tr>
-						                        @endfor
 											@endforeach
 										</tbody>
 									</table>

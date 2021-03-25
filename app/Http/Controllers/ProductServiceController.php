@@ -79,10 +79,11 @@ class ProductServiceController extends Controller
     public function editUpgrade(Request $request)
     {   
         if($request->has('id')){
+            $upgrades = Upgrade::where('id', $request->get('id'))->get();
             $product_services = ProductService::where('upgrade_id',$request->get('id'))->get();
             $products = Product::all();
             $spareparts = Sparepart::where('active', true)->get();
-            return view('admin.update_productupgrade', compact('product_services','products', 'spareparts'));    
+            return view('admin.update_productupgrade', compact('upgrades', 'product_services','products', 'spareparts'));    
         }
         
     }
@@ -167,16 +168,16 @@ class ProductServiceController extends Controller
                 $product_services->save();
             }
             
-            $upgrades = Upgrade::find($get_allProductService[0][2]);
+            if($request->repairedservices == "true"){
+                $upgrades = Upgrade::find($get_allProductService[0][2]);
+                $arr_old_history = $upgrades['history_status'];
+                array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => "Repaired", 'updated_at' => date("Y-m-d h:i:s")]);
 
-            $arr_old_history = $upgrades['history_status'];
-
-            array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => "Repaired", 'updated_at' => date("Y-m-d h:i:s")]);
-
-            $upgrades->history_status = $arr_old_history;
-            $upgrades->status = "Repaired";
-            $upgrades->save();
-
+                $upgrades->history_status = $arr_old_history;
+                $upgrades->status = "Repaired";
+                $upgrades->save();
+            }
+            
             DB::commit();
             return response()->json(['success' => 'Berhasil!!!']);
         } catch (\Exception $ex) {

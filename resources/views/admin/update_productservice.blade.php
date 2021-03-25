@@ -275,8 +275,8 @@
 		$(document).on("click", ".remove_sparepart", function(){
 			$(this).parent().parent().remove();
 
-			idSparepart--;
-			idQtySparepart--;
+			// idSparepart--;
+			// idQtySparepart--;
 		});
 
 
@@ -299,7 +299,7 @@
 	        	var id_service = $("#id_service-" + i).val();
 
 	        	var arr_sparepart = [];
-	        	for (var s = 0; s < idSparepart + 1; s++) {
+	        	for (var s = 0; s < idSparepart + 2; s++) {
 	        		var sparepart = $("#idSparepart-"+s+"-"+i).val();
 	        		var qty = $("#idQtySparepart-"+s+"-"+i).val();
 

@@ -49,6 +49,10 @@
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('update_taskupgrade') }}">
 							{{ csrf_field() }}
 
+							@php
+								$counterSparepart = -1;
+							@endphp
+
 							@foreach($product_services as $key => $product_service)
 							<label for="">Product Service {{$key+1}}</label>
 	              			<div class="form-group" id="container-productservice-{{$key}}">
@@ -57,9 +61,9 @@
 			                            <option selected disabled value="">Choose PRODUCT SERVICE</option>
 
 			                            @foreach($products as $product)
-			                            	@if($product_service['product_id'] == $product['id'])
+			                            	@if($product_service->upgrade->acceptance['oldproduct_id'] == $product['id'])
 			                                	<option value="{{ $product['id'] }}" selected>{{ $product['code'] }} - {{ $product['name'] }}</option>
-			                                @elseif($product_service['product_id'] == null)
+			                                @elseif($product_service->upgrade->acceptance['oldproduct_id'] == null)
 			                                	<option value="other" selected>OTHER</option>
 			                                @else
 			                                	<option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
@@ -69,7 +73,7 @@
 			                        <div class="validation"></div>
 			                    </div>
 
-			                    @if($product_service['product_id'] == null)
+			                    @if($product_service->upgrade->acceptance['oldproduct_id'] == null)
 			                    <div class="form-group">
 		                            <input type="text" class="form-control" id="productservice_other_{{$key}}" placeholder="Product Name" data-msg="Please fill in the product"  value="{{$product_service['other_product']}}" disabled />
 		                            <div class="validation"></div>
@@ -84,12 +88,13 @@
 	                            <label for="">Sparepart</label>
 			                    <div id="container-sparepart-{{$key}}">
 			                    	@foreach($arr_sparepart as $index => $item)
+			                    	@php $counterSparepart++; @endphp
 			                    	<div id="detailSparepart-{{$key}}">
 			                    		<div class="form-group" style="width: 72%; display: inline-block;">
 					                        <select id="idSparepart-{{$index}}-{{$key}}" class="form-control pilihan-product" data-msg="Mohon Pilih Product" required>
 					                            <option selected disabled value="">Choose SPAREPART</option>
 				                            	@foreach($spareparts as $sparepart)
-				                            		@if($arr_sparepart[0]->id == $sparepart['id'])
+				                            		@if($arr_sparepart[$index]->id == $sparepart['id'])
 					                                	<option value="{{ $sparepart['id'] }}" selected>{{ $sparepart['name'] }}</option>
 					                                @else
 					                                	<option value="{{ $sparepart['id'] }}">{{ $sparepart['name'] }}</option>
@@ -99,7 +104,7 @@
 					                        <div class="validation"></div>
 					                    </div>
 					                    <div class="form-group" style="width: 16%; display: inline-block;">
-					                        <input id="idQtySparepart-{{$index}}-{{$key}}" type="number" class="form-control" placeholder="Qty" value="{{$arr_sparepart[0]->qty}}">
+					                        <input id="idQtySparepart-{{$index}}-{{$key}}" type="number" class="form-control" placeholder="Qty" value="{{$arr_sparepart[$index]->qty}}">
 					                        <div class="validation"></div>
 					                    </div>
 
@@ -113,6 +118,7 @@
 			                    	@endforeach
 			                    </div>
 			                    @else
+			                    @php $counterSparepart++; @endphp
 		                    	<div id="container-sparepart-{{$key}}">
 			                    	<div id="detailSparepart-{{$key}}">
 			                    		<div class="form-group" style="width: 72%; display: inline-block;">
@@ -136,7 +142,7 @@
 			                    
 
 			                    @php
-			                    	$due_date = explode(' ',$product_service['due_date']);
+			                    	$due_date = explode(' ',$product_service->upgrade['due_date']);
 									$due_date = $due_date[0];
 			                    @endphp
 
@@ -162,6 +168,8 @@
 			                <input type="hidden" id="id_productservice-{{$key}}" name="id_productservice" value="{{$product_service['id']}}">
 			                <input type="hidden" id="id_upgrade-{{$key}}" name="id_upgrade" value="{{$product_service['upgrade_id']}}">
 							@endforeach
+
+							<input type="hidden" id="lastIdSparepart" value="{{$counterSparepart}}">
 	              			<div id="errormessage"></div>
 
 	              			@php $total_productservice = count($product_services); @endphp
@@ -169,12 +177,12 @@
 	              				<input type="hidden" id="total_productservice" value="{{$total_productservice}}">
 	              				@if($product_services[0]->upgrade['status'] == "New")
 	              					@can('change-status-process-upgrade')
-	              						<button id="updateService" type="submit" class="btn btn-gradient-primary mr-2">Process</button>
+	              						<button id="updateUpgrade" type="submit" class="btn btn-gradient-primary mr-2">Process</button>
 	              					@endcan
 	              				@elseif($product_services[0]->upgrade['status'] == "Process")
-	              					<button id="updateService" type="submit" class="btn btn-light">Save</button>
+	              					<button id="updateUpgrade" type="submit" class="btn btn-light">Save</button>
 	              					@can('change-status-process-upgrade')
-	              					<button id="updateServiceRepaired" type="submit" class="btn btn-gradient-primary mr-2">Repaired</button>
+	              					<button id="updateUpgradeRepaired" type="submit" class="btn btn-gradient-primary mr-2 updateUpgradeRepaired">Repaired</button>
 	              					@endcan
 	              				@endif
 	              			</div>
@@ -233,8 +241,8 @@
 	$(document).ready(function(){
 		var idService = $('#total_productservice').val();		
 
-		var idSparepart = 0;
-		var idQtySparepart = 0;
+		var idSparepart = $('#lastIdSparepart').val();
+		var idQtySparepart = $('#lastIdSparepart').val();
 		$(document).on("click", ".add_sparepart", function(){
 			var getIdParent = $(this).parent().parent().attr('id');
 			var id_parent = getIdParent.slice(-1);
@@ -250,12 +258,17 @@
 		$(document).on("click", ".remove_sparepart", function(){
 			$(this).parent().parent().remove();
 
-			idSparepart--;
-			idQtySparepart--;
+			// idSparepart--;
+			// idQtySparepart--;
 		});
 
 
 		var frmAdd;
+		var repaired = false;
+
+		$(document).on("click", ".updateUpgradeRepaired", function(){
+			repaired = true;
+		});
 
 	    $("#actionAdd").on("submit", function (e) {
 	        e.preventDefault();
@@ -283,6 +296,7 @@
 	        var arr_jsonproductservice = JSON.stringify(arr_productservice);
 
 	        frmAdd.append('productservices', arr_jsonproductservice);
+	        frmAdd.append('repairedservices', repaired);
 
 	        var URLNya = $("#actionAdd").attr('action');
 	        var ajax = new XMLHttpRequest();
@@ -294,7 +308,7 @@
 	        ajax.send(frmAdd);
 	    });
 	    function progressHandler(event){
-	        document.getElementById("updateService").innerHTML = "UPLOADING...";
+	        document.getElementById("updateUpgrade").innerHTML = "UPLOADING...";
 	    }
 	    function completeHandler(event){
 	        var hasil = JSON.parse(event.target.responseText);
@@ -332,10 +346,10 @@
 	            window.location.reload()
 	        }
 
-	        document.getElementById("updateService").innerHTML = "SAVE";
+	        document.getElementById("updateUpgrade").innerHTML = "SAVE";
 	    }
 	    function errorHandler(event){
-	        document.getElementById("updateService").innerHTML = "SAVE";
+	        document.getElementById("updateUpgrade").innerHTML = "SAVE";
 	    }
 	});
 	
