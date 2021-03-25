@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HistoryUpdate;
+use App\ProductService;
 use App\Upgrade;
 use DB;
 use Illuminate\Support\Facades\Auth;
@@ -48,18 +49,36 @@ class UpgradeController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $upgrade = Upgrade::find($data['upgrade_id']);
-        $upgrade['task'] = $data['task'];
-        $upgrade['due_date'] = $data['due_date'];
-        $upgrade['status'] = "process";
-        $tempHistoryStatus = [];
-        if($upgrade['history_status'] != null){
-            $tempHistoryStatus = $upgrade['history_status'];
+        DB::beginTransaction();
+
+        try {
+            $data = $request->all();
+            $upgrade = Upgrade::find($data['upgrade_id']);
+            $upgrade['task'] = $data['task'];
+            $upgrade['due_date'] = $data['due_date'];
+            $upgrade['status'] = "process";
+            $tempHistoryStatus = [];
+            if ($upgrade['history_status'] != null) {
+                $tempHistoryStatus = $upgrade['history_status'];
+            }
+            array_push($tempHistoryStatus, ['user_id' => Auth::user()['id'], 'status' => $upgrade['status'], 'updated_at' => date("Y-m-d H:i:s")]);
+            $upgrade['history_status'] = $tempHistoryStatus;
+            $upgrade->save();
+
+            $productService = new ProductService();
+            $productService->upgrade_id = $upgrade->id;
+            $productService->save();
+
+            DB::commit();
+
+            return redirect()->route("detail_upgrade_form", ["id" => $upgrade->id]);
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                "error" => $e,
+            ]);
         }
-        array_push($tempHistoryStatus, ['user_id' => Auth::user()['id'], 'status' => $upgrade['status'], 'updated_at' => date("Y-m-d H:i:s")]);
-        $upgrade['history_status'] = $tempHistoryStatus;
-        $upgrade->save();
     }
 
     /**
