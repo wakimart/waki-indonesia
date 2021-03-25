@@ -333,5 +333,23 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define("delete-submission", function ($user) {
             return $user->hasAccess(["delete-submission"]);
         });
+
+        //-- SPAREPART --//
+        // Add sparepart
+        Gate::define("add-sparepart", function ($user) {
+            return $user->hasAccess(["add-sparepart"]);
+        });
+        // Browse sparepart
+        Gate::define("browse-sparepart", function ($user) {
+            return $user->hasAccess(["browse-sparepart"]);
+        });
+        // Edit sparepart
+        Gate::define("edit-sparepart", function ($user) {
+            return $user->hasAccess(["edit-sparepart"]);
+        });
+        // Delete sparepart
+        Gate::define("delete-sparepart", function ($user) {
+            return $user->hasAccess(["delete-sparepart"]);
+        });
     }
 }

@@ -94,11 +94,21 @@
       @if(Gate::check('browse-service'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_service'? 'active': '' }}" href="{{  route('list_service') }}">List Service</a></li>
       @endif
-      @if(Gate::check('add-service'))
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_sparepart'? 'active': '' }}" href="{{ route('add_service')}}">Add Sparepart</a></li>
+      @if (Gate::check('add-sparepart'))
+      <li class="nav-item">
+        <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'add_sparepart'? 'active': '' }}"
+          href="{{ route('add_sparepart')}}">
+          Add Sparepart
+        </a>
+      </li>
       @endif
-      @if(Gate::check('browse-service'))
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_sparepart'? 'active': '' }}" href="{{  route('admin_list_order') }}">List Sparepart</a></li>
+      @if (Gate::check('browse-sparepart'))
+      <li class="nav-item">
+        <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_sparepart'? 'active': '' }}"
+          href="{{  route('list_sparepart') }}">
+          List Sparepart
+        </a>
+      </li>
       @endif
     </ul>
   </div>
