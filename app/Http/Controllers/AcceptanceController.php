@@ -564,7 +564,7 @@ class AcceptanceController extends Controller
             }
         }
     }
-
+    
     public function listApi(Request $request)
     {
         $messages = [
