@@ -699,6 +699,52 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+                            <div class="form-group" id="group-product">
+                                <span style="display: block;">SPAREPART</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-sparepart">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-sparepart"
+                                                value="add-sparepart" />
+                                            Add Sparepart
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-sparepart">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="browse-sparepart"
+                                                value="browse-sparepart" />
+                                            Browse Sparepart
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-sparepart">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-sparepart"
+                                                value="edit-sparepart" />
+                                            Edit Sparepart
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-sparepart">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-sparepart"
+                                                value="delete-sparepart" />
+                                            Delete Sparepart
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
 		                    <input type="hidden" name="idUserAdmin" id="idUserAdmin" value="{{$users['id']}}">
 							<button id="updateUserAdmin" type="submit" class="btn btn-gradient-primary mr-2">Simpan</button>
 							<button class="btn btn-light">Batal</button>

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class AcceptanceStatusLog extends Model
 {
-    protected $table = 'acceptance_status_log';
     protected $fillable = [
         'acceptance_id', 'status', 'user_id'
     ];

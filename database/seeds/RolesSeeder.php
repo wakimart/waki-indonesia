@@ -103,6 +103,7 @@ class RolesSeeder extends Seeder
                 "edit-upgrade" => false,
                 "change-status-approval-upgrade" => false,
                 "change-status-process-upgrade" => false,
+                "change-status-repaired-upgrade" => false,
                 "change-status-complete-upgrade" => false,
                 "change-status-reject-upgrade" => false,
                 "delete-upgrade" => false,
@@ -126,6 +127,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Sparepart (Head Admin)
+                "add-sparepart" => true,
+                "browse-sparepart" => true,
+                "edit-sparepart" => true,
+                "delete-sparepart" => true,
         	]),
         ]);
 
@@ -220,6 +227,7 @@ class RolesSeeder extends Seeder
                 "edit-upgrade" => false,
                 "change-status-approval-upgrade" => false,
                 "change-status-process-upgrade" => false,
+                "change-status-repaired-upgrade" => false,
                 "change-status-complete-upgrade" => false,
                 "change-status-reject-upgrade" => false,
                 "delete-upgrade" => false,
@@ -243,6 +251,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Sparepart (Admin)
+                "add-sparepart" => true,
+                "browse-sparepart" => true,
+                "edit-sparepart" => true,
+                "delete-sparepart" => true,
         	]),
         ]);
 
@@ -331,6 +345,7 @@ class RolesSeeder extends Seeder
                 "edit-upgrade" => false,
                 "change-status-approval-upgrade" => false,
                 "change-status-process-upgrade" => false,
+                "change-status-repaired-upgrade" => false,
                 "change-status-complete-upgrade" => false,
                 "change-status-reject-upgrade" => false,
                 "delete-upgrade" => false,
@@ -354,6 +369,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Sparepart (CSO)
+                "add-sparepart" => false,
+                "browse-sparepart" => false,
+                "edit-sparepart" => false,
+                "delete-sparepart" => false,
             ]),
         ]);
 
@@ -442,6 +463,7 @@ class RolesSeeder extends Seeder
                 "edit-upgrade" => false,
                 "change-status-approval-upgrade" => false,
                 "change-status-process-upgrade" => false,
+                "change-status-repaired-upgrade" => false,
                 "change-status-complete-upgrade" => false,
                 "change-status-reject-upgrade" => false,
                 "delete-upgrade" => false,
@@ -465,6 +487,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => true,
                 "delete-submission" => true,
+
+                // Sparepart (Branch)
+                "add-sparepart" => false,
+                "browse-sparepart" => false,
+                "edit-sparepart" => false,
+                "delete-sparepart" => false,
             ]),
         ]);
 
@@ -553,6 +581,7 @@ class RolesSeeder extends Seeder
                 "edit-upgrade" => false,
                 "change-status-approval-upgrade" => false,
                 "change-status-process-upgrade" => false,
+                "change-status-repaired-upgrade" => false,
                 "change-status-complete-upgrade" => false,
                 "change-status-reject-upgrade" => false,
                 "delete-upgrade" => false,
@@ -576,6 +605,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => true,
                 "delete-submission" => true,
+
+                // Sparepart (Area Manager)
+                "add-sparepart" => false,
+                "browse-sparepart" => false,
+                "edit-sparepart" => false,
+                "delete-sparepart" => false,
             ]),
         ]);
 
@@ -664,6 +699,7 @@ class RolesSeeder extends Seeder
                 "edit-upgrade" => true,
                 "change-status-approval-upgrade" => true,
                 "change-status-process-upgrade" => false,
+                "change-status-repaired-upgrade" => false,
                 "change-status-complete-upgrade" => false,
                 "change-status-reject-upgrade" => false,
                 "delete-upgrade" => true,
@@ -687,6 +723,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Sparepart (Head Manager)
+                "add-sparepart" => false,
+                "browse-sparepart" => false,
+                "edit-sparepart" => false,
+                "delete-sparepart" => false,
             ]),
         ]);
 
@@ -781,6 +823,7 @@ class RolesSeeder extends Seeder
                 "edit-upgrade" => false,
                 "change-status-approval-upgrade" => true,
                 "change-status-process-upgrade" => true,
+                "change-status-repaired-upgrade" => false,
                 "change-status-complete-upgrade" => true,
                 "change-status-reject-upgrade" => true,
                 "delete-upgrade" => true,
@@ -804,6 +847,12 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Sparepart (Admin Management)
+                "add-sparepart" => true,
+                "browse-sparepart" => true,
+                "edit-sparepart" => true,
+                "delete-sparepart" => true,
             ]),
         ]);
     }

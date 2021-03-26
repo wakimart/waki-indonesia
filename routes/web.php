@@ -322,6 +322,72 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
     });
 
+    Route::group(['prefix' => 'service','middleware' => 'auth'], function(){
+    	//Add Form Service
+    	Route::get('/', 'ServiceController@create')
+	    	->name('add_service')
+	    	->middleware('can:add-service');
+	    //Store Service
+	    Route::post('/', 'ServiceController@store')
+	    	->name('store_service')
+	    	->middleware('can:add-service');
+	    //List Service
+	    Route::get('/list', 'ServiceController@index')
+	    	->name('list_service')
+	    	->middleware('can:browse-service');
+    });
+
+    Route::group(['prefix' => 'product_service', 'middleware' => 'auth'], function(){
+    	//List Task Product Service
+	    Route::get('/list', 'ProductServiceController@index')
+	    	->name('list_taskservice')
+	    	->middleware('can:browse-service');
+	    //Edit Product Service
+	    Route::get('/edit/', 'ProductServiceController@edit')
+	    	->name('edit_taskservice')
+	    	->middleware('can:edit-service');
+	    //Edit Product Service (Upgrade)
+	    Route::get('/edit_upgrade/', 'ProductServiceController@editUpgrade')
+	    	->name('edit_taskupgrade')
+	    	->middleware('can:edit-service');
+	    //Update Product Service
+	    Route::post('/update/', 'ProductServiceController@update')
+	    	->name('update_taskservice')
+	    	->middleware('can:edit-service');
+	    //Update Product Service (Upgrade)
+	    Route::post('/update_upgrade/', 'ProductServiceController@updateUpgrade')
+	    	->name('update_taskupgrade')
+	    	->middleware('can:edit-service');
+    });
+
+    Route::group(['prefix' => 'sparepart', 'middleware' => 'auth'], function() {
+    	// Add Sparepart
+    	Route::get('/add', 'SparepartController@create')
+	    	->name('add_sparepart')
+	    	->middleware('can:add-sparepart');
+
+        // Store Sparepart
+	    Route::post('/store', 'SparepartController@store')
+	    	->name('store_sparepart')
+	    	->middleware('can:add-sparepart');
+
+        // List sparepart
+        Route::get("/list", "SparepartController@index")
+            ->name("list_sparepart");
+
+        // Edit sparepart page
+        Route::get("/edit/", "SparepartController@edit")
+            ->name("edit_sparepart");
+
+        // Update sparepart
+        Route::post("/update/", "SparepartController@update")
+            ->name("update_sparepart");
+
+        // Delete sparepart
+        Route::post("/delete/", "SparepartController@destroy")
+            ->name("delete_sparepart");
+    });
+
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function(){
     	//Add Form CSO
     	Route::get('/', 'CsoController@create')
@@ -509,8 +575,76 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("update_submission_form");
 
         // Process submission form delete
-        Route::post("/{id}", "SubmissionController@destroy")
+        Route::post("/delete/", "SubmissionController@destroy")
             ->name("delete_submission_form");
+    });
+
+    Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {
+        // Create submission form page
+        Route::get("/", "AcceptanceController@create")
+            ->name("add_acceptance_form");
+
+        // Process new submission form
+        Route::post("/", "AcceptanceController@store")
+            ->name("store_acceptance_form");
+
+        // Show submission list
+        Route::get("/list", "AcceptanceController@list")
+            ->name("list_acceptance_form");
+
+        // Show detail of submission
+        Route::get("/detail/{id}", "AcceptanceController@detail")
+            ->name("detail_acceptance_form");
+
+        // Edit submission form page
+        Route::get("/edit/{id}", "AcceptanceController@edit")
+            ->name("edit_acceptance_form");
+
+        // Process submission form edit
+        Route::post("/update/", "AcceptanceController@update")
+            ->name("update_acceptance_form");
+
+        // Process submission form delete
+        Route::post("/{id}", "AcceptanceController@destroy")
+            ->name("delete_acceptance_form");
+    });
+
+    Route::group(["prefix" => "upgrade", "middleware" => "auth"], function () {
+        // List new upgrade form page
+        Route::get("/list_new", "UpgradeController@indexNew")
+            ->name("list_new_upgrade_form");
+
+        // Create upgrade form page
+        Route::get("/new/{id}", "UpgradeController@create")
+            ->name("add_upgrade_form");
+
+        // Process new upgrade form
+        Route::post("/", "UpgradeController@store")
+            ->name("store_upgrade_form");
+
+        // Show upgrade list
+        Route::get("/list", "UpgradeController@list")
+            ->name("list_upgrade_form");
+
+        // Show detail of upgrade
+        Route::get("/detail/{id}", "UpgradeController@detail")
+            ->name("detail_upgrade_form");
+
+        // Edit upgrade form page
+        Route::get("/edit/", "UpgradeController@edit")
+            ->name("edit_upgrade_form");
+
+        // Process upgrade form edit
+        Route::post("/update/", "UpgradeController@update")
+            ->name("update_upgrade_form");
+
+        // Update/change upgrade status
+        Route::post("/updatestatus", "UpgradeController@updateStatus")
+            ->name("update_upgrade_status");
+
+        // Process upgrade form delete
+        Route::post("/{id}", "UpgradeController@destroy")
+            ->name("delete_upgrade_form");
     });
 });
 
