@@ -261,7 +261,7 @@ $menu_item_second = "detail_upgrade_form";
                                         type="submit"
                                         class="btn btn-gradient-primary btn-lg"
                                         name="status"
-                                        value="approved">
+                                        value="Approved">
                                         Approved
                                     </button>
                                 </form>
@@ -291,14 +291,14 @@ $menu_item_second = "detail_upgrade_form";
                                         type="submit"
                                         class="btn btn-gradient-primary btn-lg"
                                         name="status"
-                                        value="display">
+                                        value="Display">
                                         Display
                                     </button>
                                     <button id="upgradeProcess"
                                         type="submit"
                                         class="btn btn-gradient-success btn-lg"
                                         name="status"
-                                        value="ready">
+                                        value="Ready">
                                         Ready
                                     </button>
                                 </form>

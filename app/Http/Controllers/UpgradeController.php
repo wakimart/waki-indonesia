@@ -159,10 +159,10 @@ class UpgradeController extends Controller
 
                 // TODO: Ganti "IF" bagian ini jika bagian lain yang dibutuhkan sudah selesai
                 if (
-                    $request->status === "display"
-                    || $request->status === "ready"
+                    $request->status === "Display"
+                    || $request->status === "Ready"
                 ) {
-                    $request->status = "completed";
+                    $request->status = "Completed";
                 }
 
                 // Memperbarui status
@@ -173,7 +173,7 @@ class UpgradeController extends Controller
                 $historyStatus = $upgrade->history_status;
                 $historyStatus[] = [
                     "user_id" => $user["id"],
-                    "status" => $request->status,
+                    "status" => strtolower($request->status),
                     "updated_at" => date("Y-m-d H:i:s"),
                 ];
                 $upgrade->history_status = $historyStatus;

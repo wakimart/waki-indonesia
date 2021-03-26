@@ -75,7 +75,7 @@
 
 			                    @if($product_service->upgrade->acceptance['oldproduct_id'] == null)
 			                    <div class="form-group">
-		                            <input type="text" class="form-control" id="productservice_other_{{$key}}" placeholder="Product Name" data-msg="Please fill in the product"  value="{{$product_service['other_product']}}" disabled />
+		                            <input type="text" class="form-control" id="productservice_other_{{$key}}" placeholder="Product Name" data-msg="Please fill in the product"  value="{{$product_service->upgrade->acceptance['other_product']}}" disabled />
 		                            <div class="validation"></div>
 		                        </div>
 			                    @endif
@@ -180,8 +180,9 @@
 	              						<button id="updateUpgrade" type="submit" class="btn btn-gradient-primary mr-2">Process</button>
 	              					@endcan
 	              				@elseif($product_services[0]->upgrade['status'] == "Process")
+
 	              					<button id="updateUpgrade" type="submit" class="btn btn-light">Save</button>
-	              					@can('change-status-process-upgrade')
+	              					@can('change-status-repaired-upgrade')
 	              					<button id="updateUpgradeRepaired" type="submit" class="btn btn-gradient-primary mr-2 updateUpgradeRepaired">Repaired</button>
 	              					@endcan
 	              				@endif

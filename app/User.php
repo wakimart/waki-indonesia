@@ -62,7 +62,7 @@ class User extends Authenticatable
         // return false;
     }
 
-    protected function hasPermission(string $permission) : bool
+    public function hasPermission(string $permission) : bool
     {
         // return $this->permissions[$permission] ?? false;
         $permissions = json_decode($this->permissions, true);

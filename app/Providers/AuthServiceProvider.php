@@ -253,6 +253,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define("change-status-process-upgrade", function ($user) {
             return $user->hasAccess(["change-status-process-upgrade"]);
         });
+        // Change status process upgrade
+        Gate::define("change-status-repaired-upgrade", function ($user) {
+            return $user->hasAccess(["change-status-repaired-upgrade"]);
+        });
         // Change status complete upgrade
         Gate::define("change-status-complete-upgrade", function ($user) {
             return $user->hasAccess(["change-status-complete-upgrade"]);

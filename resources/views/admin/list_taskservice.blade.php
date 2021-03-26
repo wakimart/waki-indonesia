@@ -193,7 +193,12 @@
 														$due_date_sec = $due_date_sec[0];
 						                            @endphp
 						                            <tr>
-						                                <td>{{$service->product_services[$i]->product['name']}}</td>
+						                            	@if($service->product_services[$i]['product_id'] != null)
+						                            		<td>{{$service->product_services[$i]->product['name']}}</td>
+						                            	@elseif($service->product_services[$i]['product_id'] == null)
+						                            		<td>{{$service->product_services[$i]['other_product']}}</td>
+						                            	@endif
+						                                
 						                                <td>{{implode(",",$issues_sec[0]->issues)}}</td>
 						                                <td>{{$service_date}}</td>
 						                                <td>{{$due_date_sec}}</td>

@@ -171,7 +171,7 @@ class ProductServiceController extends Controller
             if($request->repairedservices == "true"){
                 $upgrades = Upgrade::find($get_allProductService[0][2]);
                 $arr_old_history = $upgrades['history_status'];
-                array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => "Repaired", 'updated_at' => date("Y-m-d h:i:s")]);
+                array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => "repaired", 'updated_at' => date("Y-m-d h:i:s")]);
 
                 $upgrades->history_status = $arr_old_history;
                 $upgrades->status = "Repaired";
