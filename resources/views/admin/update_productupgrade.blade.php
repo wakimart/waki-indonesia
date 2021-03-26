@@ -181,7 +181,7 @@
 	              					@endcan
 	              				@elseif($product_services[0]->upgrade['status'] == "Process")
 	              					<button id="updateUpgrade" type="submit" class="btn btn-light">Save</button>
-	              					@can('change-status-process-upgrade')
+	              					@can('change-status-repaired-upgrade')
 	              					<button id="updateUpgradeRepaired" type="submit" class="btn btn-gradient-primary mr-2 updateUpgradeRepaired">Repaired</button>
 	              					@endcan
 	              				@endif
