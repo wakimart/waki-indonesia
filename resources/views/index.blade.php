@@ -358,12 +358,6 @@
               <div class="member-info-content">
                 <h4>Teo Choo Guan</h4>
                 <span>Chairman of WAKi International Group</span>
-                <!-- <div class="social">
-                  <a href=""><i class="fa fa-twitter"></i></a>
-                  <a href=""><i class="fa fa-facebook"></i></a>
-                  <a href=""><i class="fa fa-google-plus"></i></a>
-                  <a href=""><i class="fa fa-linkedin"></i></a>
-                </div> -->
               </div>
             </div>
           </div>
