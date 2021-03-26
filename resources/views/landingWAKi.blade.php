@@ -60,7 +60,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   position: relative;
   border-radius: 1em;
 }
-
 .testimonial .icon {
   display: inline-block;
   font-size: 80px;
@@ -68,20 +67,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   margin-bottom: 20px;
   opacity: 0.6;
 }
-
 .testimonial .description {
   font-size: 14px;
   color: #777;
   text-align: justify;
   margin-bottom: 30px;
 }
-
 .testimonial .testimonial-content {
   width: 100%;
   left: 0;
   position: absolute;
 }
-
 .testimonial .pic {
   display: inline-block;
   border: 4px solid white;
@@ -89,12 +85,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   z-index: 1;
   position: relative;
 }
-
 .testimonial .pic img {
   width: 100%;
   height: auto;
 }
-
 .testimonial .name {
   font-size: 15px;
   font-weight: bold;
@@ -102,7 +96,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   text-transform: capitalize;
   margin: 10px 0 5px 0;
 }
-
 .testimonial .title {
   display: block;
   font-size: 14px;
@@ -112,7 +105,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 .owl-controls {
   margin-top: 20px;
 }
-
 .owl-pagination {
   display: flex;
   justify-content: center;
@@ -193,7 +185,13 @@ touch-action: none;
 .displaynone {
   display: none;
 }
-
+@media (max-width: 460px) {
+  .modal-window > div {
+    width: 90%;
+    margin: 0 1em;
+    left: 0;
+ }
+}
 @media (min-width: 768px) {
   .mobadjust {
     display: flex;
@@ -498,7 +496,7 @@ touch-action: none;
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
-                <div class="heading text-center mb-70">
+                <div class="heading text-center">
                     <h2 class="heading--title">Testimonial WAKi</h2>
                 </div>
             </div>
@@ -509,69 +507,75 @@ touch-action: none;
             <div id="testimonial-slider" class="owl-carousel">
               <div class="testimonial">
                 <div class="pic">
-                  <img src="{{asset('sources/landing/testimonials/1.jpg')}}" alt="">
+                  <img src="{{asset('sources/landing/testimonials/testi1.jpg')}}" alt="">
                 </div>
                 <p class="description">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                  Sebelum menggunakan WAKi High Potential Therapy, berdiri dari duduk saja mata berkunang - kunang, susah BAB, kolesterol tinggi, sakit pinggang dan pinggul.
+                  Setelah menggunakan, berdiri sudah berkunang-kunang, BAB lancar, Kolesterol menurun, pinggang sudah dapat digerakkan ke segala penjuru.
                 </p>
                 <div class="testimonial-content">
-                  <h3 class="name">Michele Miller</h3>
+                  <h3 class="name">Bapak Suprapto</h3>
                 </div>
               </div>
               <div class="testimonial">
                 <div class="pic">
-                  <img src="{{asset('sources/landing/testimonials/2.jpg')}}" alt="">
+                  <img src="{{asset('sources/landing/testimonials/testi2.jpg')}}" alt="">
                 </div>
                 <p class="description">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                  Sebelum menggunakan WAKi High Potential Therapy, sering insomnia, sakit lutut, jari tangan sering keram.
+                  Setelah menggunakan, Insomnia sudah hilang dan bisa tidur seperti biasa, lutut sudah membaik, jari tangan sudah tidak keram karena lancar peredaran darah
                 </p>
                 <div class="testimonial-content">
-                  <h3 class="name">Patricia Knott</h3>
+                  <h3 class="name">Ibu Meiske</h3>
                 </div>
               </div>
               <div class="testimonial">
                 <div class="pic">
-                  <img src="{{asset('sources/landing/testimonials/3.jpg')}}" alt="">
+                  <img src="{{asset('sources/landing/testimonials/testi3.jpg')}}" alt="">
                 </div>
                 <p class="description">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                  Sebelum menggunakan WAKi High Potential Therapy, darah tinggi 160/90, kolesterol 260, asam urat 7,6, kaki dan tangan kaku bekas stroke.
+                  Setelah menggunakan, tensi sudah normal 120/80, kolesterol turun ke 180, asam urat 4, kaki dan tangan sudah tidak kaku dan bisa digerakkan dengan mudah.
                 </p>
                 <div class="testimonial-content">
 
-                  <h3 class="name">Justin Ramos</h3>
+                  <h3 class="name">Ibu Yenny</h3>
                 </div>
               </div>
               <div class="testimonial">
                 <div class="pic">
-                  <img src="{{asset('sources/landing/testimonials/4.jpg')}}" alt="">
+                  <img src="{{asset('sources/landing/testimonials/testi4.jpg')}}" alt="">
                 </div>
                 <p class="description">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                  Sebelum menggunakan WAKi High Potential Therapy, tangan kanan kesemutan, lutut sering sakit, gampang pusing, darah tinggi.
+                  Setelah menggunakan, kesemutan sudah hilang, lutut sudah membaik, pusing sudah jarang, darah tinggi sudah menurun.
                 </p>
                 <div class="testimonial-content">
-                  <h3 class="name">Mary Huntley</h3>
+                  <h3 class="name">Ibu Wiwik Sulastri</h3>
                 </div>
               </div>
               <div class="testimonial">
                 <div class="pic">
-                  <img src="{{asset('sources/landing/testimonials/5.jpg')}}" alt="">
+                  <img src="{{asset('sources/landing/testimonials/testi5.jpg')}}" alt="">
                 </div>
                 <p class="description">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                  Sebelum menggunakan WAKi High Potential Therapy, tidak bisa tidur, badan pegal dan sering pusing, dan sering kesemutan di kaki.
+                  Setelah menggunakan 3 hari bisa tidur nyenyak, setelah 10 hari badan terasa lebih enak, setelah melanjutkan terapi, kesemutan hilang, badan enak dan tidur nyenyak.
                 </p>
                 <div class="testimonial-content">
-                  <h3 class="name">Aaron Newell</h3>
+                  <h3 class="name">Bapak Samsul Arifin</h3>
                 </div>
               </div>
               <div class="testimonial">
                 <div class="pic">
-                  <img src="{{asset('sources/landing/testimonials/6.jpg')}}" alt="">
+                  <img src="{{asset('sources/landing/testimonials/testi6.jpg')}}" alt="">
                 </div>
                 <p class="description">
-                  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                  Sebelum menggunakan WAKi High Potential Therapy, gampang capek, berat badan berlebih, telapak kaki sakit, menstruasi tidak lancar.
+                  Setelah menggunakan 3 hari bisa tidur nyenyak, badan sudah tidak gampang capek, berat badan turun setelah 2 bulan terapi, telapak sudah tidak sakit, menstruasi sudah normal.
                 </p>
                 <div class="testimonial-content">
-                  <h3 class="name">Lizzie Geren</h3>
+                  <h3 class="name">Ibu Imas Dedeh</h3>
                 </div>
               </div>
             </div>
@@ -736,19 +740,19 @@ setInterval(function () {
 </script>
 
 <script>
-  var arrName = ['Tagi Muhammad', 'Firmansyah', 'Andre', 'Johanes', 'Abimana', 'Charles Wijaya', 'Cokroaminoto', 'Eric Sanjaya', 'Endang', 'Mahmud Muhsin'];
-  var arrKota = ['Surabaya', 'Jakarta Utara', 'Jakarta Pusat', 'Jakarta Selatan', 'Bandung', 'Semarang', 'Medan', 'Jakarta Timur'];
-  var i = 0;
-  var timeClose = 0;
-  setInterval(function () {
-      if(i < arrName.length){
-        $("#notif-name").html(arrName[i]+" - "+arrKota[Math.floor(Math.random() * arrKota.length)]);
-        $("#notif-time").html("Telah mendaftar "+(arrName.length-i)+" menit yang lalu");
-        document.querySelector("a.regisnotif").click();
-        console.log("buka"+arrName[i]);
-        i++;
-      }
-  }, (Math.floor(Math.random() * 10) + 5)*1000);
+  // var arrName = ['Tagi Muhammad', 'Firmansyah', 'Andre', 'Johanes', 'Abimana', 'Charles Wijaya', 'Cokroaminoto', 'Eric Sanjaya', 'Endang', 'Mahmud Muhsin'];
+  // var arrKota = ['Surabaya', 'Jakarta Utara', 'Jakarta Pusat', 'Jakarta Selatan', 'Bandung', 'Semarang', 'Medan', 'Jakarta Timur'];
+  // var i = 0;
+  // var timeClose = 0;
+  // setInterval(function () {
+  //     if(i < arrName.length){
+  //       $("#notif-name").html(arrName[i]+" - "+arrKota[Math.floor(Math.random() * arrKota.length)]);
+  //       $("#notif-time").html("Telah mendaftar "+(arrName.length-i)+" menit yang lalu");
+  //       document.querySelector("a.regisnotif").click();
+  //       console.log("buka"+arrName[i]);
+  //       i++;
+  //     }
+  // }, (Math.floor(Math.random() * 10) + 5)*5000);
 
   // setInterval(function () {
   //   if(timeClose == 3)

@@ -4,10 +4,10 @@
 @section('content')
 <!--==========================Intro Section============================-->
 <section id="intro" class="clearfix">
-    
+
     <div class="carousel-inner ">
       @foreach ($banners as $banner )
-      @php 
+      @php
         $img = json_decode($banner->image, true);
       @endphp
 
@@ -17,7 +17,7 @@
       </div>
       @endif
     @endforeach
-    </div>      
+    </div>
     <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="sr-only">Previous</span>
@@ -36,13 +36,15 @@
         @if(Utils::$lang=='id')
           <h2>Selamat datang di WAKi International Group</h2>
 
-          <p>Sejak 1995, Bapak Teo Choo Guan telah mendirikan "Metrowealth International Group". Sejak itu, Perusahaan telah dengan cepat memperluas jaringan bisnis internasional-nya, dan merambah ke negara-negara Asia Pasifik dan Eropa. Dimulai sejak tahun 1995, Tuan Teo Choo Guan telah menjabat sebagai Ketua Eksekutif Grup.</p>
-          <p>Pada tahun 2008, untuk melakukan strategi ulang dalam pemasaran global, Perusahaan telah mengubah nama merek semua produk menjadi "WAKi". Oleh karena itu, Perusahaan berganti nama menjadi "WAKi International Group". Saat ini, "WAKi" telah menjadi merek populer untuk produk kesehatan. Untuk mengembangkan cetak biru bisnis, WAKi telah mendirikan cabang dan perusahaan patungannya di Malaysia, Indonesia, Filipina, Thailand, Singapura, Brunei, Vietnam, Kamboja, Myanmar, Hongkong, Jepang, Korea, dan Cina. WAKi International Headquarter berlokasi di Gedung WAKi, Kuala Lumpur, Malaysia.</p>
+          <p>"Metrowealth International Group" telah didirikan pada tahun 1995. Sejak saat itu, perusahaan telah berkembang pesat di kawasan Asia Pasifik dan negara-negara Eropa. Pada tahun 2008, untuk menyusun strategi pemasaran global, perusahaan memutuskan untuk mengubah nama menjadi "WAKi". Oleh karena itu, perusahaan ini terdaftar sebagai "WAKi International Group".</p>
+          <p>Saat ini, WAKi telah berkembang di Malaysia, Indonesia, Filipina, Thailand, Singapura, Vietnam, Kamboja, Myanmar, Hong Kong dan Cina. Kantor pusat WAKi terletak di Menara WAKi, Kuala Lumpur, Malaysia.</p>
+          <p>Pada tahun 2019, Teo Choo Guan dianugerahi "Penghargaan Perdamaian Dunia Sweeden" dan dinominasikan sebagai Duta Perdamaian Dunia di Blue Hall of Stockholm City Hall, Swedia. Serta mendapat liputan luas oleh media sosial dan media video dari seluruh dunia yang menerbitkan berita ucapan selamat khususnya iklan di layar raksasa Nasdaq di New York Times Square. Ini menunjukkan kekuatan perdamaian di seluruh dunia.</p>
         @elseif(Utils::$lang=='eng')
           <h2>Welcome to WAKi International Group</h2>
 
-          <p>Since 1995, Mr. Teo Choo Guan has established the “Metrowealth International Group”. Since then, the Company has rapidly expanded its international business network, and venturing into Asia Pacific countries and Europe countries. Started from year 1995, Mr. Teo Choo Guan has been serving as Group Executive Chairman.</p>
-          <p>In year 2008, in order to restrategize in global marketing, the Company has changed all products’ brand name to “WAKi”. Therefore, the Company renamed as “WAKi International Group”. Nowadays, “WAKi” has become a popular brand for health products. For expanding business blueprint, WAKi has established it’s branches and joint-venture companies in Malaysia, Indonesia, Philippines, Thailand, Singapore, Brunei, Vietnam, Cambodia, Myanmar, Hongkong, Japan, Korea and China. WAKi International Headquarter is located in WAKi Building, Kuala Lumpur, Malaysia.</p>
+          <p>"Metrowealth International Group" has been established in 1995. Since then, the company has been expanding rapidly in the Asia Pacific region and European countries. At year 2008, in order to strategize global marketing, the company decided to change its branding to "WAKi". Therefore, the company is renamed as "WAKi International Group".</p>
+          <p>In the present, WAKi has developed its marked in Malaysia, Indonesia, Philippines, Thailand, Singapore, Vietnam, Cambodia, Myanmar, Hong Kong and China. WAKi headqarter is located at WAKi Tower, Kuala Lumpur, Malaysia.</p>
+          <p>In year 2019, Mr Teo Choo Guan was awarded the "Sweeden World Peace Award" and nominated as te World Peace AMbassador in the Blue Hall of Stockholm City Hall, Sweden. And gets wide coverage by the social media and video media from around the world that publishes congratulation news especialy the advertising on the giant screen Nasdaq in New York Times Square. This shows the strength of peace all across the world.</p>
         @endif
       </div>
       <div class="row">
@@ -88,18 +90,18 @@
 
                 <h3>WAKI INTERNATIONAL GROUP</h3>
 
-                <p>Sejak 1995, Bapak Teo Choo Guan telah mendirikan "Metrowealth International Group". Sejak itu, Perusahaan telah dengan cepat memperluas jaringan bisnis internasional-nya, dan merambah ke negara-negara Asia Pasifik dan Eropa. Dimulai sejak tahun 1995 Tuan Teo Choo Guan telah menjabat sebagai Ketua Eksekutif Grup.
-                  <br><br>
-                  Pada tahun 2008, untuk melakukan strategi ulang dalam pemasaran global, Perusahaan telah mengubah nama merek semua produk menjadi "WAKi". Oleh karena itu, Perusahaan berganti nama menjadi "WAKi International Group". Saat ini, "WAKi" telah menjadi merek populer untuk produk kesehatan. Untuk mengembangkan cetak biru bisnis, WAKi telah mendirikan cabang dan perusahaan patungannya di Malaysia, Indonesia, Filipina, Thailand, Singapura, Brunei, Vietnam, Kamboja, Myanmar, Hongkong, Jepang, Korea, dan Cina. WAKi International Headquarter berlokasi di Gedung WAKi, Kuala Lumpur, Malaysia.</p>
+                <p>"Metrowealth International Group" telah didirikan pada tahun 1995. Sejak saat itu, perusahaan telah berkembang pesat di kawasan Asia Pasifik dan negara-negara Eropa. Pada tahun 2008, untuk menyusun strategi pemasaran global, perusahaan memutuskan untuk mengubah nama menjadi "WAKi". Oleh karena itu, perusahaan ini terdaftar sebagai "WAKi International Group".
+                  <br>
+                  Saat ini, "WAKi" telah menjadi merek populer untuk produk kesehatan. Untuk mengembangkan cetak biru bisnis, WAKi telah mendirikan cabang dan perusahaan patungannya di Malaysia, Indonesia, Filipina, Thailand, Singapura, Brunei, Vietnam, Kamboja, Myanmar, Hongkong, Jepang, Korea, dan Cina. WAKi International Headquarter berlokasi di Gedung WAKi, Kuala Lumpur, Malaysia.</p>
                 </p>
               @elseif(Utils::$lang=='eng')
                 <h2>About Us</h2>
 
                 <h3>WAKI INTERNATIONAL GROUP</h3>
 
-                <p>Since 1995, Mr. Teo Choo Guan has established the “Metrowealth International Group”. Since then, the Company has rapidly expanded its international business network, and venturing into Asia Pacific countries and Europe countries. Started from year 1995, Mr. Teo Choo Guan has been serving as Group Executive Chairman.
-                  <br><br>
-                  In year 2008, in order to restrategize in global marketing, the Company has changed all products’ brand name to “WAKi”. Therefore, the Company renamed as “WAKi International Group”. Nowadays, “WAKi” has become a popular brand for health products. For expanding business blueprint, WAKi has established it’s branches and joint-venture companies in Malaysia, Indonesia, Philippines, Thailand, Singapore, Brunei, Vietnam, Cambodia, Myanmar, Hongkong, Japan, Korea and China. WAKi International Headquarter is located in WAKi Building, Kuala Lumpur, Malaysia.</p>
+                <p>"Metrowealth International Group" has been established in 1995. Since then, the company has been expanding rapidly in the Asia Pacific region and European countries. At year 2008, in order to strategize global marketing, the company decided to change its branding to "WAKi". Therefore, the company is renamed as "WAKi International Group".
+                  <br>
+                  Therefore, the Company renamed as “WAKi International Group”. Nowadays, “WAKi” has become a popular brand for health products. For expanding business blueprint, WAKi has established it’s branches and joint-venture companies in Malaysia, Indonesia, Philippines, Thailand, Singapore, Brunei, Vietnam, Cambodia, Myanmar, Hongkong, Japan, Korea and China. WAKi International Headquarter is located in WAKi Building, Kuala Lumpur, Malaysia.</p>
                 </p>
               @endif
             </div>
@@ -303,7 +305,7 @@
       <div class="row portfolio-container">
         @php
         foreach($galleries as $gallerie){
-          $photos = json_decode($gallerie->photo, true); 
+          $photos = json_decode($gallerie->photo, true);
           $photoPath = asset('sources/portfolio/');
           $videos = json_decode($gallerie->url_youtube, true);
 
@@ -335,7 +337,7 @@
           </div>
         </div>
         @endfor
-        
+
       </div>
     </div>
   </section><!-- #portfolio -->
