@@ -1,5 +1,4 @@
 <?php
-dd($countSparepart);
 $menu_item_page = "service";
 $menu_item_second = "list_sparepart";
 ?>
@@ -125,7 +124,9 @@ $menu_item_second = "list_sparepart";
                 </h5>
             </div>
             <div class="modal-footer">
-                <form id="frmDelete" method="POST" action="<?php echo route("delete_sparepart"); ?>">
+                <form id="frmDelete"
+                    method="POST"
+                    action="<?php echo route("delete_sparepart"); ?>">
                     <?php echo csrf_field(); ?>
                     <input type="hidden" name="id" id="id-delete" />
                     <button type="submit" class="btn btn-gradient-danger mr-2">
