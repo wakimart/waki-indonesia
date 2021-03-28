@@ -335,6 +335,22 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    Route::get('/list', 'ServiceController@index')
 	    	->name('list_service')
 	    	->middleware('can:browse-service');
+	    //Detail Service
+        Route::get("/detail/{id}", "ServiceController@show")
+            ->name("detail_service")
+            ->middleware('can:detail-service');
+        // Update/change upgrade status
+        Route::post("/updatestatus", "ServiceController@updateStatus")
+            ->name("update_service_status")
+            ->middleware('can:detail-service');
+	    //Edit Service
+	    Route::get('/edit/', 'ServiceController@edit')
+	    	->name('edit_service')
+	    	->middleware('can:edit-service');
+	    //Update Service
+	    Route::post('/update/', 'ServiceController@update')
+	    	->name('update_service')
+	    	->middleware('can:edit-service');
     });
 
     Route::group(['prefix' => 'product_service', 'middleware' => 'auth'], function(){
