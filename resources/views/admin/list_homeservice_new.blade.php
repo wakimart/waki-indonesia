@@ -88,7 +88,7 @@ $menu_item_second = "list_homeservice";
                         </a>
                     </li>
       				<li class="breadcrumb-item active" aria-current="page">
-                          List Home Service
+                        List Home Service
                     </li>
     			</ol>
   			</nav>
@@ -101,7 +101,12 @@ $menu_item_second = "list_homeservice";
       					<h5 style="margin-bottom: 0.5em;">Appointment</h5>
                         <div class="col-xs-12 col-sm-12 row"
                             style="margin: 0; padding: 0;">
-                            @if (Utils::$lang === 'id')
+                            <?php
+                            if (
+                                Utils::$lang === 'id'
+                                && Auth::user()->roles[0]["slug"] !== "admin-management"
+                            ):
+                            ?>
                                 <div class="col-xs-6 col-sm-3"
                                     style="padding: 0; display: inline-block;">
                                     <div class="form-group">
@@ -249,9 +254,15 @@ $menu_item_second = "list_homeservice";
                                         <div class="validation"></div>
                                     </div>
                                 </div>
-                            @endif
+                            <?php endif; ?>
 
-                            @if (Auth::user()->roles[0]['slug'] !== 'branch' && Auth::user()->roles[0]['slug'] !== 'cso')
+                            <?php
+                            if (
+                                Auth::user()->roles[0]['slug'] !== 'branch'
+                                && Auth::user()->roles[0]['slug'] !== 'cso'
+                                && Auth::user()->roles[0]["slug"] !== "admin-management"
+                            ):
+                            ?>
                                 <div class="col-xs-6 col-sm-3"
                                     style="padding: 0;display: inline-block;">
                                     <div class="form-group">
@@ -307,10 +318,17 @@ $menu_item_second = "list_homeservice";
                                         <div class="validation"></div>
                                     </div>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
 
-                        @if (Auth::user()->roles[0]['slug'] !== 'branch' && Auth::user()->roles[0]['slug'] !== 'cso' && Auth::user()->roles[0]['slug'] !== 'area-manager')
+                        <?php
+                        if (
+                            Auth::user()->roles[0]['slug'] !== 'branch'
+                            && Auth::user()->roles[0]['slug'] !== 'cso'
+                            && Auth::user()->roles[0]['slug'] !== 'area-manager'
+                            && Auth::user()->roles[0]["slug"] !== "admin-management"
+                        ):
+                        ?>
                             <div class="col-xs-12 col-sm-12 row"
                                 style="margin: 0;padding: 0;">
                                 <div class="col-xs-6 col-sm-6"
@@ -359,8 +377,7 @@ $menu_item_second = "list_homeservice";
                                     </div>
                                 </div>
                             </div>
-                        @endif
-
+                        <?php endif; ?>
                         <?php
                         $province = null;
                         $city = null;
@@ -413,8 +430,6 @@ $menu_item_second = "list_homeservice";
                             $getCSOCode = Cso::where("id", Auth::user()->cso["id"])->first();
                             $CSOCode = $getCSOCode->code;
                         }
-
-
                         ?>
 
                         <div class="col-xs-12 col-sm-12 col-md-12 table-responsive"
@@ -653,6 +668,13 @@ $menu_item_second = "list_homeservice";
                                             </table>
                                         </div>
                                     <?php else: ?>
+                                        <?php
+                                        if (Auth::user()->roles[0]["slug"] === "admin-management") {
+                                            $isAdminManagement = true;
+                                        } else {
+                                            $isAdminManagement = false;
+                                        }
+                                        ?>
                                         <div class="table-responsive">
                                             <table class="table table-bordered">
                                                 <thead>
@@ -686,22 +708,26 @@ $menu_item_second = "list_homeservice";
                                                                 ?>
                                                             </td>
                                                             <td>
-                                                                <p class="titleAppoin">
-                                                                    <?php
-                                                                    echo '<a href="'
-                                                                        . route('homeServices_success')
-                                                                        . '?code='
-                                                                        . $dayData->hs_code
-                                                                        . '" target="_blank">';
-                                                                    echo $dayData->hs_code;
-                                                                    echo '</a>';
-                                                                    ?>
-                                                                </p>
+                                                                <?php if (!$isAdminManagement): ?>
+                                                                    <p class="titleAppoin">
+                                                                        <?php
+                                                                        echo '<a href="'
+                                                                            . route('homeServices_success')
+                                                                            . '?code='
+                                                                            . $dayData->hs_code
+                                                                            . '" target="_blank">';
+                                                                        echo $dayData->hs_code;
+                                                                        echo '</a>';
+                                                                        ?>
+                                                                    </p>
+                                                                <?php endif; ?>
                                                                 <p class="descAppoin">
                                                                     <?php
-                                                                    echo $dayData->customer_name
-                                                                        . ' - '
-                                                                        . $dayData->customer_phone;
+                                                                    if (!$isAdminManagement) {
+                                                                        echo $dayData->customer_name
+                                                                            . ' - '
+                                                                            . $dayData->customer_phone;
+                                                                    }
                                                                     ?>
                                                                     <br>
                                                                     <?php
@@ -716,69 +742,80 @@ $menu_item_second = "list_homeservice";
                                                                     ?>
                                                                     <br>
                                                                     <?php
-                                                                    echo 'Created at: ' . $dayData->created_at;
+                                                                    if (!$isAdminManagement) {
+                                                                        echo 'Created at: ' . $dayData->created_at;
+                                                                    }
                                                                     ?>
                                                                     <br>
                                                                     <?php
-                                                                    echo 'Last update: ' . $dayData->updated_at;
+                                                                    if (!$isAdminManagement) {
+                                                                        echo 'Last update: ' . $dayData->updated_at;
+                                                                    }
                                                                     ?>
                                                                 </p>
                                                             </td>
-                                                            <td style="text-align: center">
-                                                                <?php
-                                                                echo '<button '
-                                                                    . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
-                                                                    . 'type="button" '
-                                                                    . 'data-toggle="modal" '
-                                                                    . 'data-target="#viewHomeServiceModal" '
-                                                                    . 'onclick="clickView(this)" '
-                                                                    . 'value="' . $dayData->hs_id . '">'
-                                                                    . '</button>';
-                                                                ?>
-                                                            </td>
-                                                            <td style="text-align: center">
-                                                                <?php
-                                                                echo '<button '
-                                                                    . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
-                                                                    . 'type="button" '
-                                                                    . 'data-toggle="modal" '
-                                                                    . 'data-target="#cashHomeServiceModal" '
-                                                                    . 'onclick="clickCash(this)" '
-                                                                    . 'value="' . $dayData->hs_id . '">'
-                                                                    . '</button>';
-                                                                ?>
-                                                            </td>
-                                                            <td style="text-align: center">
-                                                                <?php
-                                                                echo '<button '
-                                                                    . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
-                                                                    . 'type="button" '
-                                                                    . 'data-toggle="modal" '
-                                                                    . 'data-target="#editHomeServiceModal" ';
+                                                            <?php if (!$isAdminManagement): ?>
+                                                                <td style="text-align: center">
+                                                                    <?php
+                                                                    echo '<button '
+                                                                        . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                                                                        . 'type="button" '
+                                                                        . 'data-toggle="modal" '
+                                                                        . 'data-target="#viewHomeServiceModal" '
+                                                                        . 'onclick="clickView(this)" '
+                                                                        . 'value="' . $dayData->hs_id . '">'
+                                                                        . '</button>';
+                                                                    ?>
+                                                                </td>
+                                                                <td style="text-align: center">
+                                                                    <?php
+                                                                    echo '<button '
+                                                                        . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
+                                                                        . 'type="button" '
+                                                                        . 'data-toggle="modal" '
+                                                                        . 'data-target="#cashHomeServiceModal" '
+                                                                        . 'onclick="clickCash(this)" '
+                                                                        . 'value="' . $dayData->hs_id . '">'
+                                                                        . '</button>';
+                                                                    ?>
+                                                                </td>
+                                                                <td style="text-align: center">
+                                                                    <?php
+                                                                    echo '<button '
+                                                                        . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
+                                                                        . 'type="button" '
+                                                                        . 'data-toggle="modal" '
+                                                                        . 'data-target="#editHomeServiceModal" ';
 
-                                                                if (Auth::user()->roles[0]["slug"] === "cso") {
-                                                                    echo 'data-cso="true" ';
-                                                                } else {
-                                                                    echo 'data-cso="false" ';
-                                                                }
+                                                                    if (Auth::user()->roles[0]["slug"] === "cso") {
+                                                                        echo 'data-cso="true" ';
+                                                                    } else {
+                                                                        echo 'data-cso="false" ';
+                                                                    }
 
-                                                                echo 'onclick="clickEdit(this)" '
-                                                                    . 'value="' . $dayData->hs_id . '">'
-                                                                    . '</button>';
-                                                                ?>
-                                                            </td>
-                                                            <td style="text-align: center">
-                                                                <?php
-                                                                echo '<button '
-                                                                    . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
-                                                                    . 'type="button" '
-                                                                    . 'data-toggle="modal" '
-                                                                    . 'data-target="#deleteHomeServiceModal" '
-                                                                    . 'onclick="clickCancel(this)" '
-                                                                    . 'value="' . $dayData->hs_id . '">'
-                                                                    . '</button>';
-                                                                ?>
-                                                            </td>
+                                                                    echo 'onclick="clickEdit(this)" '
+                                                                        . 'value="' . $dayData->hs_id . '">'
+                                                                        . '</button>';
+                                                                    ?>
+                                                                </td>
+                                                                <td style="text-align: center">
+                                                                    <?php
+                                                                    echo '<button '
+                                                                        . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
+                                                                        . 'type="button" '
+                                                                        . 'data-toggle="modal" '
+                                                                        . 'data-target="#deleteHomeServiceModal" '
+                                                                        . 'onclick="clickCancel(this)" '
+                                                                        . 'value="' . $dayData->hs_id . '">'
+                                                                        . '</button>';
+                                                                    ?>
+                                                                </td>
+                                                            <?php else: ?>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            <?php endif; ?>
                                                         </tr>
                                                         <?php $i++; ?>
                                                     <?php endforeach; ?>
@@ -1622,6 +1659,7 @@ function changeDate(click) {
         }
     ).then(function (response) {
         if (!response.ok) {
+            console.log(response);
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 

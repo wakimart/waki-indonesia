@@ -64,8 +64,13 @@ $menu_item_second = "add_sparepart";
                                     id="name"
                                     name="name"
                                     placeholder="Nama"
+                                    maxlength="191"
                                     required />
-                                <div class="validation"></div>
+                                <?php if ($errors->has("name")): ?>
+                                    <div class="validation">
+                                        <?php echo $errors->first("name"); ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                             <div class="form-group">
                                 <label for="price">Price</label>
@@ -75,7 +80,11 @@ $menu_item_second = "add_sparepart";
                                     name="price"
                                     placeholder="Harga"
                                     required />
-                                <div class="validation"></div>
+                                <?php if ($errors->has("price")): ?>
+                                    <div class="validation">
+                                        <?php echo $errors->first("price") ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                             <div class="form-group">
                                 <button id="add-sparepart"
