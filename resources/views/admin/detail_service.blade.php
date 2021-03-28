@@ -438,7 +438,7 @@ $menu_item_second = "detail_service";
                     </div>
                 </div>
             </div>
-        <?php elseif (strtolower($services->status) === "delivery" || strtolower($services->status) === "take_away"): ?>
+        <?php elseif (strtolower($services->status) === "delivery" || strtolower($services->status) === "take away"): ?>
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">

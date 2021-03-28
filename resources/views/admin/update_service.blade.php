@@ -482,7 +482,7 @@
 	        }
 	        else{ 
 	            alert("Input Success !!!");
-	            windows.location.reload()
+	            window.location.reload()
 	        }
 
 	        document.getElementById("addService").innerHTML = "SAVE";

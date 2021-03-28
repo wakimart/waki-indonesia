@@ -362,7 +362,7 @@
 	        }
 	        else{ 
 	            alert("Input Success !!!");
-	            window.location.reload()
+	           	window.location.reload()
 	        }
 
 	        document.getElementById("updateService").innerHTML = "SAVE";

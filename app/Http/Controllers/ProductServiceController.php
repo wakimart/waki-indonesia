@@ -124,13 +124,13 @@ class ProductServiceController extends Controller
             if($request->repairedservices == "true"){
                 
                 $arr_history = json_decode($services['history_status']);
-                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "Repaired", 'updated_at' => date("Y-m-d h:i:s")]);
+                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "repaired", 'updated_at' => date("Y-m-d h:i:s")]);
                 $services->history_status = json_encode($arr_history);
                 $services->status = "Repaired";
                 $services->save();
             }else if($request->repairedservices == "false"){
                 $arr_history = array();
-                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "Process", 'updated_at' => date("Y-m-d h:i:s")]);
+                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "process", 'updated_at' => date("Y-m-d h:i:s")]);
                 $services->history_status = json_encode($arr_history);
                 $services->status = "Process";
                 $services->save();      
