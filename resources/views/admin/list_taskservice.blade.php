@@ -275,21 +275,21 @@
             	</div>
             </div>
 		</div>
-
-		
-
 	</div>
 </div>
 @endsection
 
 @section('script')
 <script>
-    $('.nav-tabs').on('click', 'li', function() {
-        $('.nav-tabs li.active').removeClass('active');
-        $(this).addClass('active');
-        $('.dataTables_scrollHeadInner').css({"width": "100%"});
-        $('.dtDynamicVerticalScrollExample').css({"width": "100%"});
-        console.log("dhuaaarr");
-    });
+	$(document).ready(function(){
+		$('.nav-tabs').on('click', 'li', function() {
+	        $('.nav-tabs li.active').removeClass('active');
+	        $(this).addClass('active');
+	        // $('.dataTables_scrollHeadInner').css({"width": "100%"});
+	        // $('.dtDynamicVerticalScrollExample').css({"width": "100%"});
+	        console.log("dhuaaarr");
+	    });
+	});
+    
 </script>
 @endsection

@@ -9,6 +9,8 @@ use App\ProductService;
 use App\Sparepart;
 use App\Service;
 use App\Product;
+use App\Branch;
+use App\Cso;
 
 class ServiceController extends Controller
 {
@@ -103,9 +105,11 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function show(Service $service)
+    public function show($id)
     {
-        //
+        $services = Service::find($id);
+        $branches = Branch::where('active', true)->get();
+        return view('admin.detail_service', compact('services', 'branches'));
     }
 
     /**
@@ -114,9 +118,14 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function edit(Service $service)
+    public function edit(Request $request)
     {
-        //
+        if($request->has('id')){
+            $services = Service::find($request->get('id'));
+            $products = Product::all();
+            $spareparts = Sparepart::where('active', true)->get();
+            return view('admin.update_service', compact('services','products', 'spareparts'));
+        }
     }
 
     /**
@@ -126,9 +135,91 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $get_allProductService = json_decode($request->productservices);
+
+            $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date');
+            $service = Service::find($get_allProductService[0][0]);
+            $service->no_mpc = $data['no_mpc'];
+            $service->name = $data['name'];
+            $service->address = $data['address'];
+            $service->phone = $data['phone'];
+            $service->service_date = $data['service_date'];
+            $service->save();
+
+            foreach ($get_allProductService as $key => $value) {
+                $product_services = ProductService::find($value[1]);
+
+                if($value[2] != 'other'){
+                    $product_services->product_id = $value[2];
+                }else{
+                    $product_services->other_product = $value[6];
+                }
+
+                $data['arr_issues'] = [];
+                $data['arr_issues'][0]['issues'] = $value[3];
+                $data['arr_issues'][1]['desc'] = $value[4];
+                $product_services->issues = json_encode($data['arr_issues']);
+
+                $product_services->due_date = $value[5];
+                $product_services->save();
+            }
+            DB::commit();
+            return response()->json(['success' => 'Berhasil!!!']);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['errors' => $ex]);
+        }
+    }
+
+
+    public function updateStatus(Request $request){
+        if(!empty($request->id)){
+            DB::beginTransaction();
+            try {
+                $service = Service::find($request->id);
+
+                if($request->status == "Quality_Control" || $request->status == "Completed"){
+                    $service->status = str_replace('_', ' ', $request->status);
+
+                    $user = Auth::user();
+                    $arr_old_history = json_decode($service->history_status);
+
+                    array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => strtolower($request->status), 'updated_at' => date("Y-m-d H:i:s")]);
+                    $service->history_status = json_encode($arr_old_history);
+                    $service->save();
+                }else if($request->status == "Delivery" || $request->status == "Take_Away"){
+                    $arr_serviceoption = [];
+                    $cso = Cso::where('code', $request->input('cso_id'))->first();
+                    array_push($arr_serviceoption, 
+                        [
+                            'recipient_name' => $request->input('name'),
+                            'address' => $request->input('address'),
+                            'recipient_phone' => $request->input('phone'),
+                            'branch_id' => $request->input('branch_id'),
+                            'cso_id' => $cso['id']
+                        ]
+                    );
+                    $service->service_option = json_encode($arr_serviceoption);
+
+                    $service->status = str_replace('_', ' ', $request->status);
+                    $user = Auth::user();
+                    $arr_old_history = json_decode($service->history_status);
+                    array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => strtolower($request->status), 'updated_at' => date("Y-m-d H:i:s")]);
+                    $service->history_status = json_encode($arr_old_history);
+                    $service->save();
+                }
+                
+                DB::commit();
+                return redirect()->route("detail_service", ["id" => $service->id]);
+            } catch (\Exception $ex) {
+                DB::rollback();
+                return response()->json(['errors' => $ex]);
+            }
+        }
     }
 
     /**
