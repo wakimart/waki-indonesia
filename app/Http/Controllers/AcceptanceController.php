@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
@@ -308,6 +309,9 @@ class AcceptanceController extends Controller
                 "body" => "Upgrade from ".$oldProduct." to ".$newProduct.". By ".$branch."-".$cso,
                 "title" => "New Acceptance [Upgrade]",
                 "icon" => "ic_launcher"
+            ],
+            "data" => [
+                "url" => URL::to(route('detail_acceptance_form', ['id'=>$acceptance['id']])),
             ]];
             // 'data'=> $homeservice];
 
@@ -564,7 +568,7 @@ class AcceptanceController extends Controller
             }
         }
     }
-
+    
     public function listApi(Request $request)
     {
         $messages = [

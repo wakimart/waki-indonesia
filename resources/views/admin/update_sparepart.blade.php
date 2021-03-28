@@ -68,9 +68,14 @@ $menu_item_page = "service";
                                     id="name"
                                     name="name"
                                     placeholder="Name"
+                                    maxlength="191"
                                     value="<?php echo $sparepart->name; ?>"
                                     required />
-                                <div class="validation"></div>
+                                <?php if ($errors->has("name")): ?>
+                                    <div class="validation">
+                                        <?php echo $errors->first("name"); ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                             <div class="form-group">
                                 <label for="price">Price</label>
@@ -81,7 +86,11 @@ $menu_item_page = "service";
                                     placeholder="Price"
                                     value="<?php echo (int) $sparepart->price; ?>"
                                     required />
-                                <div class="validation"></div>
+                                <?php if ($errors->has("price")): ?>
+                                    <div class="validation">
+                                        <?php echo $errors->first("price") ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                             <div class="form-group">
                                 <button id="add-sparepart"
