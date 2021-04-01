@@ -50,6 +50,7 @@
 
 	  <!-- Google Fonts -->
 	  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,600,700,700i|Montserrat:300,400,500,600,700" rel="stylesheet">
+	  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 	  <!-- Bootstrap CSS File -->
 	  <link href="{{asset('css/lib/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
@@ -70,7 +71,7 @@
 	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<!-- End Google Tag Manager (noscript) -->
 	<!--==========================Header============================-->
-	<header id="header" style="background-color: #fff;">
+	<header id="header" class="fixed-top header-transparent">
 	  <!-- <div id="topbar">
 	    <div class="container">
 	      <div class="social-links">
@@ -318,6 +319,7 @@
   	<!-- <div id="preloader"></div> -->
 
   	<!-- JavaScript Libraries -->
+  	<script src="{{asset('css/lib/owlcarousel/owl.carousel.min.js')}}"></script>
   	<script src="{{asset('css/lib/jquery/jquery.min.js')}}"></script>
   	<script src="{{asset('css/lib/jquery/jquery-migrate.min.js')}}"></script>
   	<script src="{{asset('css/lib/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
@@ -326,7 +328,6 @@
   	<script src="{{asset('css/lib/wow/wow.min.js')}}"></script>
   	<script src="{{asset('css/lib/waypoints/waypoints.min.js')}}"></script>
   	<script src="{{asset('css/lib/counterup/counterup.min.js')}}"></script>
-  	<script src="{{asset('css/lib/owlcarousel/owl.carousel.min.js')}}"></script>
   	<script src="{{asset('css/lib/isotope/isotope.pkgd.min.js')}}"></script>
   	<script src="{{asset('css/lib/lightbox/js/lightbox.min.js')}}"></script>
   	<!-- Contact Form JavaScript File -->
