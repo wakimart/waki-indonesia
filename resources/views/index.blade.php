@@ -288,7 +288,7 @@
   <!-- #product -->
 
   <!--==========================Why Us Section============================-->
-  <section id="why-us" class="wow fadeIn">
+  {{-- <section id="why-us" class="wow fadeIn">
     <div class="container">
       <div class="container-fluid">
 
@@ -306,11 +306,27 @@
             <img src="{{ asset ('sources/testi-icon.png') }}" class="img-fluid" alt="" style="width: 60px; height: 60px;" />
 
            </div>
-        </header>
+        </header> --}}
 
          <!-- ======= Testimonials Section ======= -->
-         <section id="testimonials" class="testimonials">
-          <div class="container" data-aos="zoom-in">
+    <section id="testimonials" class="testimonials">
+      <div class="container" data-aos="zoom-in">
+
+            <header class="section-header">
+              @if(Utils::$lang=='id')
+                <h2 class="text-center" style="margin-bottom: 1em;">Kenapa Memilih Kami</h2>
+    
+                <h4 style="text-align: center;">Misi kami membawa pelanggan WAKian dan WAKi, menuju kehidupan yang lebih baik.<br>Bukan Janji, tapi Pasti!</h4>
+              @elseif(Utils::$lang=='eng')
+                <h3 style="margin-bottom: 10px;">Wy Choose Us</h3>
+    
+                <h4 style="text-align: center;">We bring WAKian and WAKi’s customers, towards a better life.<br>Not a promise, but sure!</h4>
+              @endif
+               <div class="text-center mt-2 mb-2">
+                <img src="{{ asset ('sources/testi-icon.png') }}" class="img-fluid" alt="" style="width: 60px; height: 60px;" />
+    
+               </div>
+            </header>
 
         <div class="row justify-content-center">
           <div class="col-lg-8">
@@ -318,30 +334,30 @@
             <div class="owl-carousel testimonials-carousel">
 
               <div class="testimonial-item">
-                <p>
+                <h5>
                   "Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper."
-                </p><br>
+                </h5><br>
                 <h4>- Saul Goodman, Ceo &amp; Founder</h4>
               </div>
 
               <div class="testimonial-item">
-                <p>
+                <h5>
                   "Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa."
-                </p><br>
+                </h5><br>
                 <h4>- Sara Wilsson, Designer</h4>
               </div>
 
               <div class="testimonial-item">
-                <p>
+                <h5>
                   "Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim."
-                </p><br> 
+                </h5><br> 
                 <h4>- Jena Karlis, Store Owner</h4>
               </div>
 
               <div class="testimonial-item">
-                <p>
+                <h5>
                   "Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam."
-                </p><br>
+                </h5><br>
                 <h4>- Matt Brandon, Freelancer</h4>
               </div>
 
@@ -420,13 +436,13 @@
             </div>
           </div>
         </div> --}}
-      </div>
+      {{-- </div>
     </div>
 
     <div class="container">
       <div class="row counters"></div>
     </div>
-  </section>
+  </section> --}}
 
 
   <!--==========================Our Business Section============================-->
@@ -637,16 +653,4 @@
   </section> --}}<!-- #team -->
 </main>
 
-@endsection
-
-@section("script")
-<script>
-  // Testimonials carousel (uses the Owl Carousel library)
-  $(".testimonials-carousel").owlCarousel({
-    autoplay: true,
-    dots: true,
-    loop: true,
-    items: 1
-  });
-</script>
 @endsection

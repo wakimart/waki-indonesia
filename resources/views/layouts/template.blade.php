@@ -59,8 +59,9 @@
 	  <link href="{{asset('css/lib/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
 	  <link href="{{asset('css/lib/animate/animate.min.css')}}" rel="stylesheet">
 	  <link href="{{asset('css/lib/ionicons/css/ionicons.min.css')}}" rel="stylesheet">
-	  <link href="{{asset('css/lib/owlcarousel/asset/owl.carousel.min.css')}}" rel="stylesheet">
+	  {{-- <link href="{{asset('css/lib/owlcarousel/asset/owl.carousel.min.css')}}" rel="stylesheet"> --}}
 	  <link href="{{asset('css/lib/lightbox/css/lightbox.min.css')}}" rel="stylesheet">
+	  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 
 	  <!-- Main Stylesheet File -->
 	  <link href="{{asset('css/style.css')}}" rel="stylesheet">
@@ -319,8 +320,10 @@
   	<!-- <div id="preloader"></div> -->
 
   	<!-- JavaScript Libraries -->
-  	<script src="{{asset('css/lib/owlcarousel/owl.carousel.min.js')}}"></script>
+	
   	<script src="{{asset('css/lib/jquery/jquery.min.js')}}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+	{{-- <script src="{{asset('css/lib/owlcarousel/owl.carousel.min.js')}}"></script> --}}
   	<script src="{{asset('css/lib/jquery/jquery-migrate.min.js')}}"></script>
   	<script src="{{asset('css/lib/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
   	<script src="{{asset('css/lib/easing/easing.min.js')}}"></script>
