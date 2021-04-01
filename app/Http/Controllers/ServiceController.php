@@ -28,6 +28,21 @@ class ServiceController extends Controller
         return view('admin.list_service', compact('services', 'countServices', 'url'));
     }
 
+    public function indexUser(Request $request)
+    {
+        $url = $request->all();
+        $services = Service::where('active', true)->get();
+        $countServices = $services->count();
+        $services = $services->paginate(10);
+        return view('service', compact('services', 'countServices', 'url'));
+    }
+
+    public function trackService($id){
+        $services = Service::find($id);
+        $branches = Branch::where('active', true)->get();
+        return view('track_service', compact('services', 'branches'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *

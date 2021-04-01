@@ -292,7 +292,7 @@ class HomeServiceController extends Controller
                 "currentMonthDataCount",
                 "currentDayData",
                 "branches",
-                "csos",
+                "csos"
             )
         );
     }

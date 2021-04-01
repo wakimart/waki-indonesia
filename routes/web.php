@@ -21,6 +21,11 @@ Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category/{id}', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
 Route::get('/firebase','FirebaseController@index');
+
+//Service Product
+Route::get('/service', 'ServiceController@indexUser')->name('service');
+Route::get('/trackservice/{id}', 'ServiceController@trackService')->name('track_service');
+
 //DO Register
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
 Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
