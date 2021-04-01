@@ -106,9 +106,9 @@ $menu_item_second = "detail_service";
                                             <span class="badge badge-info">
                                                 Delivery by: {{ $services->statusBy("delivery")->user_id['name'] }}
                                             </span>
-                                        @elseif (strtolower($services['status']) == "take away")
+                                        @elseif (strtolower($services['status']) == "pickup")
                                             <span class="badge badge-info">
-                                                Take Away by: {{ $services->statusBy("take_away")->user_id['name'] }}
+                                                Take Away by: {{ $services->statusBy("pickup")->user_id['name'] }}
                                             </span>
                                         @elseif (strtolower($services['status']) == "completed")
                                             <span class="badge badge-success">
@@ -364,19 +364,28 @@ $menu_item_second = "detail_service";
                 </div>
             </div>
         <?php elseif (strtolower($services->status) === "quality control"): ?>
-            <div class="row">
-                <div class="col-12 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                        	<div class="row justify-content-center">
-                                <h3>Delivery / Take Away Detail</h3>
-                            </div>
-                            <div class="row justify-content-center">
+            @can('change-status-delivery-service')
+	            <div class="row">
+	                <div class="col-12 grid-margin stretch-card">
+	                    <div class="card">
+	                        <div class="card-body">
+	                        	<div class="row justify-content-center" style="margin-bottom: 1em">
+	                                <h3>Delivery / Pickup Detail</h3>
+	                            </div>
                                 <form id="actionAdd"
                                     class="forms-sample"
                                     method="POST"
                                     action="<?php echo route("update_service_status"); ?>">
                                     <?php echo csrf_field(); ?>
+
+                                    <div class="form-group">
+						                <label for="">Delivery / Pickup</label>
+						                <select class="form-control" id="status" name="status" data-msg="Mohon Pilih Tipe" required>
+				                            <option value="Delivery">Delivery</option>
+				                            <option value="Pickup">Pickup</option>
+			                			</select>
+			                			<div class="validation"></div>
+			              			</div>
 
 
                                     <div class="form-group">
@@ -385,18 +394,69 @@ $menu_item_second = "detail_service";
 						                <div class="validation"></div>
 			              			</div>
 			              			<div class="form-group">
+			              				<label for="">Province</label>
+			              				<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+			              					<option selected disabled value="">Pilihan Provinsi</option>
+			              					@php
+				              					$result = RajaOngkir::FetchProvince();
+				              					$result = $result['rajaongkir']['results'];
+				              					$arrProvince = [];
+				              					if(sizeof($result) > 0){
+				              						foreach ($result as $value) {
+				              							echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+				              						}
+				              					}
+			              					@endphp
+			              				</select>
+			              				<div class="validation"></div>
+			              			</div>
+			              			<div class="form-group">
+			              				<label for="">City</label>
+			              				<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+			              					<option selected disabled value="">Pilihan Kota</option>
+			              				</select>
+			              				<div class="validation"></div>
+			              			</div>
+			              			<div class="form-group">
+			              				<label for="">Sub-District</label>
+			              				<select class="form-control" id="subDistrict" name="subDistrict" data-msg="Mohon Pilih Kecamatan" required>
+			              					<option selected disabled value="">Pilihan Kecamatan</option>
+			              				</select>
+			              				<div class="validation"></div>
+			              			</div>
+			              			<div class="form-group">
 						                <label for="exampleTextarea1">Address</label>
 						                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address" required></textarea>
 						                <div class="validation"></div>
 			              			</div>
 			              			<div class="form-group">
-						                <label for="">Recipient's Phone Number</label>
+						                <label for="">Phone Number</label>
 						                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
 						                <div class="validation"></div>
 			              			</div>
 
+			              			<div class="form_appoint_container" style="display: initial;">
+										<label for="" style="margin-top: 1em;"><h2>Data Schedule </h2></label><br/>
+			              				<div class="form-group">
+			              					<label for="">Tanggal Janjian</label>
+			              					<input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+			              					<div class="validation"></div>
+			              					<span class="invalid-feedback">
+			              						<strong></strong>
+			              					</span>
+			              				</div>
+			              				<div class="form-group">
+			              					<label for="">Jam Janjian</label>
+			              					<input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>
+			              					<div class="validation"></div>
+			              					<span class="invalid-feedback">
+			              						<strong></strong>
+			              					</span>
+			              				</div>
+			              			</div>
+
 			              			<div class="form-group">
-										<label for=""><h2>Data Sales </h2></label><br/>
+										<label for="" style="margin-top: 1em;"><h2>Data Sales </h2></label><br/>
 						                <label for="">Branch</label>
 						                <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
 						                  	<option selected disabled value="">Choose Branch</option>
@@ -416,28 +476,19 @@ $menu_item_second = "detail_service";
                                     <input type="hidden"
                                         name="id"
                                         value="<?php echo $services->id; ?>" />
-                                    @can('change-status-delivery-service')
                                     <button id="upgradeProcess"
                                         type="submit"
                                         class="btn btn-gradient-primary btn-lg"
-                                        name="status"
-                                        value="Delivery">
-                                        Delivery
+                                        name="submit"
+                                        value="-">
+                                        Save
                                     </button>
-                                    <button id="upgradeProcess"
-                                        type="submit"
-                                        class="btn btn-gradient-success btn-lg"
-                                        name="status"
-                                        value="Take_Away">
-                                        Take Away
-                                    </button>
-                                    @endcan
                                 </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+            @endcan
         <?php elseif (strtolower($services->status) === "delivery" || strtolower($services->status) === "take away"): ?>
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
@@ -495,6 +546,61 @@ $menu_item_second = "detail_service";
                 }
             });
         };
+
+        $("#province").on("change", function(){
+        	var id = $(this).val();
+        	$( "#city" ).html("");
+			$( "#subDistrict" ).html("<option selected disabled value=\"\">Pilihan Kecamatan</option>");
+        	$.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
+        	.done(function( result ) {
+        		result = result['rajaongkir']['results'];
+        		var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+        		if(result.length > 0){
+        			$.each( result, function( key, value ) {
+        				if(value['type'] == "Kota"){                            
+        					arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
+        				}
+        			});
+        			$( "#city" ).append(arrCity);
+        		}
+        	});
+        });
+
+        $("#city").on("change", function(){
+            var id = $(this).val();
+			$( "#subDistrict" ).html("");
+            $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
+            .done(function( result ) {
+				result = result['rajaongkir']['results'];
+				console.log(result);
+                var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+                if(result.length > 0){
+                    $.each( result, function( key, value ) {                            
+                        arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
+                    });
+                    $( "#subDistrict" ).append(arrSubDistsrict);
+                }
+            });
+        });
+
+        $("#status").on("change", function () {
+        	if($(this).val() == "Pickup"){
+	        	$(".form_appoint_container").hide();
+	        	$("#date").removeAttr('required');
+	        	$("#time").removeAttr('required');
+        	}
+        	else{
+	        	$(".form_appoint_container").show();
+	        	$("#date").attr('required', 'true');
+	        	$("#time").attr('required', 'true');
+        	}
+        });
+
+        @if($request->all() != null)
+        	alert("{{ $request->errMessage }}");
+        	$(".status").val("{{ $request->input['status'] }}");
+        	$(".name").val("{{ $request->input['name'] }}");
+        @endif
 	});
 </script>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use DB;
+use App\HomeService;
 use App\ProductService;
 use App\Sparepart;
 use App\Service;
@@ -120,11 +121,11 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
         $services = Service::find($id);
         $branches = Branch::where('active', true)->get();
-        return view('admin.detail_service', compact('services', 'branches'));
+        return view('admin.detail_service', compact('services', 'branches', 'request'));
     }
 
     /**
@@ -206,18 +207,32 @@ class ServiceController extends Controller
                     array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => strtolower($request->status), 'updated_at' => date("Y-m-d H:i:s")]);
                     $service->history_status = json_encode($arr_old_history);
                     $service->save();
-                }else if($request->status == "Delivery" || $request->status == "Take_Away"){
+                }else if($request->status == "Delivery" || $request->status == "Pickup"){
                     $arr_serviceoption = [];
                     $cso = Cso::where('code', $request->input('cso_id'))->first();
-                    array_push($arr_serviceoption, 
-                        [
-                            'recipient_name' => $request->input('name'),
-                            'address' => $request->input('address'),
-                            'recipient_phone' => $request->input('phone'),
-                            'branch_id' => $request->input('branch_id'),
-                            'cso_id' => $cso['id']
-                        ]
-                    );
+
+                    if($request->status == "Pickup"){
+                        array_push($arr_serviceoption, 
+                            [
+                                'recipient_name' => $request->input('name'),
+                                'address' => $request->input('address'),
+                                'recipient_phone' => $request->input('phone'),
+                                'branch_id' => $request->input('branch_id'),
+                                'cso_id' => $cso['id']
+                            ]
+                        );
+                    }
+                    else if($request->status == "Delivery"){
+                        $tglJamNya = $request->date." ".$request->time;
+                        $checkHS = HomeService::where([['cso_id', $cso['id']], ['appointment', $tglJamNya], ['active', true]])->get();
+                        if(sizeof($checkHS) > 0){
+                            $reqError = new Request;
+                            $reqError->replace(['input' => $request->all(), 'errMessage' => "Jadwal Home Lapangan Tidak Valid !"]);
+                            return $this->show($request->id, $reqError);
+                        }
+                    }
+
+                    
                     $service->service_option = json_encode($arr_serviceoption);
 
                     $service->status = str_replace('_', ' ', $request->status);

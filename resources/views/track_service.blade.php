@@ -291,7 +291,7 @@
                                                 <p>{{$service_option['recipient_name']}}<br>{{$service_option['address']}}</p> --}}
                                         </div>
                                     </div>
-                                    @elseif (strtolower($history_status['status']) == "take_away")
+                                    @elseif (strtolower($history_status['status']) == "pickup")
                                     <div class="timeline-content">
                                         <div class="card-body">
                                             <h6 style="color: #048b32; font-weight: 700;">Take Away</h6>
