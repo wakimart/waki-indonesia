@@ -464,7 +464,7 @@
                     WAKimart
                   </div>
                   <a href="" class="link-business">Lihat</a>
-                </div>
+                </div><br>
   
               </div>
             </div>
@@ -476,7 +476,7 @@
                     WAKishop
                   </div>
                   <a href="" class="link-business">Lihat</a>
-                </div>
+                </div><br>
               </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3">
@@ -487,7 +487,7 @@
                     WAKi F&B
                   </div>
                   <a href="" class="link-business">Lihat</a>
-                </div>
+                </div><br>
               </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3">
@@ -498,7 +498,7 @@
                     WAKi 3D Printing
                   </div>
                   <a href="" class="link-business">Lihat</a>
-                </div>
+                </div><br>
               </div>
             </div>
             
