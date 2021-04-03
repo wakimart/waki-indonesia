@@ -199,95 +199,95 @@
   </section><!-- #about -->
 
   <!--==========================Product Section============================-->
-  <section id="product"
+  <section id="product">
     <div class="container">
-      <div class="col-lg-12 col-md-12 col-sm-12" style="padding-bottom: 1.5em; padding-top: 2em;">
 
-        <h2>Produk Kami</h2>
-        <div class="row">
-          <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
-            <div class="card white-bg shadow mb-3">
-              <div class="container product-img">
-                <img src="{{ asset ('sources/hpt.jpg') }}" class="img-fluid" alt="" />
-              </div>
-              <div class="card-body">
-                <div data-equal-height="card">
-                    <span class="category">Massager</span>
-                    <p>
-                      WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                    </p>
-                </div><hr>
-                <div class="row justify-content-center align-self-center">
-                  <div>
-                    <a href="" class="btn-link">Lihat Semua</a>
+        <header class="section-header">
+          <h2>Produk Kami</h2>
+        </header>
+      <div class="row justify-content-center">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="owl-carousel product-carousel">
+              <div class="card white-bg cstm-shadow mb-3 item">
+                <div class="container product-img">
+                  <img src="{{ asset ('sources/hpt.jpg')}}" class="img-fluid" />
+                </div>
+                <div class="card-body">
+                  <div data-equal-height="card">
+                      <span class="category">Massager</span>
+                      <p>
+                        WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                      </p>
+                  </div><hr>
+                  <div class="row justify-content-center align-self-center">
+                    <div>
+                      <a href="" class="btn-link">Lihat Semua</a>
+                    </div>
                   </div>
+                </div>
               </div>
+              <div class="card white-bg cstm-shadow mb-3 item">
+                <div class="container product-img">
+                  <img src="{{ asset ('sources/hpthome.jpg') }}" class="img-fluid" alt="" />
+                </div>
+                <div class="card-body">
+                  <div data-equal-height="card">
+                      <span class="category">Massager</span>
+                      <p>
+                        WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                      </p>
+                  </div><hr>
+                  <div class="row justify-content-center align-self-center">
+                    <div>
+                      <a href="" class="btn-link">Lihat Semua</a>
+                    </div>
+                </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
-            <div class="card white-bg shadow mb-3 ">
-              <div class="container product-img">
-                <img src="{{ asset ('sources/hpthome.jpg') }}" class="img-fluid" alt="" />
+              <div class="card white-bg cstm-shadow mb-3 item">
+                <div class="container product-img">
+                  <img src="{{ asset ('sources/hpt2079.jpg') }}" class="img-fluid" alt="" />
+                </div>
+                <div class="card-body">
+                  <div data-equal-height="card">
+                      <span class="category">Massager</span>
+                      <p>
+                        WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                      </p>
+                  </div><hr>
+                  <div class="row justify-content-center align-self-center">
+                    <div>
+                      <a href="" class="btn-link">Lihat Semua</a>
+                    </div>
+                </div>
+                </div>
               </div>
-              <div class="card-body">
-                <div data-equal-height="card">
-                    <span class="category">Massager</span>
-                    <p>
-                      WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                    </p>
-                </div><hr>
-                <div class="row justify-content-center align-self-center">
-                  <div>
-                    <a href="" class="btn-link">Lihat Semua</a>
-                  </div>
+              <div class="card white-bg cstm-shadow mb-3 item">
+                <div class="container product-img">
+                  <img src="{{ asset ('sources/hpt2076i.jpg') }}" class="img-fluid" alt="" />
+                </div>
+                <div class="card-body">
+                  <div data-equal-height="card">
+                      <span class="category">Massager</span>
+                      <p>
+                        WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                      </p>
+                  </div><hr>
+                  <div class="row justify-content-center align-self-center">
+                    <div>
+                      <a href="" class="btn-link">Lihat Semua</a>
+                    </div>
+                </div>
+                </div>
               </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
-            <div class="card white-bg shadow  mb-3 ">
-              <div class="container product-img">
-                <img src="{{ asset ('sources/hpt2079.jpg') }}" class="img-fluid" alt="" />
-              </div>
-              <div class="card-body">
-                <div data-equal-height="card">
-                    <span class="category">Massager</span>
-                    <p>
-                      WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                    </p>
-                </div><hr>
-                <div class="row justify-content-center align-self-center">
-                  <div>
-                    <a href="" class="btn-link">Lihat Semua</a>
-                  </div>
-              </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-3">
-            <div class="card white-bg shadow  mb-3 ">
-              <div class="container product-img">
-                <img src="{{ asset ('sources/hpt2076i.jpg') }}" class="img-fluid" alt="" />
-              </div>
-              <div class="card-body">
-                <div data-equal-height="card">
-                    <span class="category">Massager</span>
-                    <p>
-                      WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                    </p>
-                </div><hr>
-                <div class="row justify-content-center align-self-center">
-                  <div>
-                    <a href="" class="btn-link">Lihat Semua</a>
-                  </div>
-              </div>
-              </div>
-            </div>
-          </div>
 
-        </div>
 
+          </div>
+          <div class="row card-group">
+
+
+          </div>
+      </div>
       </div>
     </div>
   </section>
@@ -338,7 +338,6 @@
           <div class="col-lg-8">
 
             <div class="owl-carousel testimonials-carousel">
-
               <div class="testimonial-item">
                 <h5>
                   "Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper."
@@ -450,74 +449,8 @@
     </div>
   </section> --}}
 
-
-  <!--==========================Our Business Section============================-->
-  <section id="business" class="business">
-    <div class="container" data-aos="zoom-in">
-
-      <header class="section-header text-center">
-        <h2>Bisnis Kami</h2>
-      </header>
-
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="row card-group">
-            <div class="col-lg-3 col-md-3 col-sm-3">
-
-              <div class="card-business text-center">
-                <img class="card-img-top" src="" />
-                <div class="card-body">
-                  <div class="card-title">
-                    WAKimart
-                  </div>
-                  <a href="" class="link-business">Lihat</a>
-                </div>
-
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-3">
-              <div class="card-business text-center">
-                <img class="card-img-top" src="" />
-                <div class="card-body">
-                  <div class="card-title">
-                    WAKishop
-                  </div>
-                  <a href="" class="link-business">Lihat</a>
-                </div><br>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-3">
-              <div class="card-business text-center">
-                <img class="card-img-top" src="" />
-                <div class="card-body">
-                  <div class="card-title">
-                    WAKi F&B
-                  </div>
-                  <a href="" class="link-business">Lihat</a>
-                </div><br>
-              </div>
-            </div>
-            <div class="col-lg-3 col-md-3 col-sm-3">
-              <div class="card-business text-center">
-                <img class="card-img-top" src="" />
-                <div class="card-body">
-                  <div class="card-title">
-                    WAKi 3D Printing
-                  </div>
-                  <a href="" class="link-business">Lihat</a>
-                </div><br>
-              </div>
-            </div>
-
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- #business -->
-
   <!--==========================Portfolio Section============================-->
-<section id="portfolio">
+  <section id="portfolio">
     <div class="container">
 
       <header class="section-header">
@@ -649,6 +582,115 @@
 
     </div>
   </section> --}}<!-- #team -->
+  <!-- #portfolio -->
+
+  <!--==========================Our Business Section============================-->
+  <section id="business" class="business section-bg">
+    <div class="container" data-aos="zoom-in">
+
+      <header class="section-header text-center">
+        <h2>Bisnis Kami</h2>
+      </header>
+
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="row card-group">
+            <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
+              <div class="card card-business white-bg mb-3">
+                <div class="container">
+                  <img src="{{ asset ('sources/hpt.jpg')}}" class="img-fluid" />
+                </div>
+                <div class="card-body">
+                  <div class="card-title text-center">
+                    WAKimart
+                  </div>
+                  <div data-equal-height="card">
+                      <p>
+                        WAKimart adalah supermarket bergerak yang menyediakan 5000 produk untuk kebutuhan keluarga anda dalam menuju kehidupan yang lebih baik.
+                      </p>
+                  </div><hr>
+                  <div class="row justify-content-center align-self-center">
+                    <div>
+                      <a href="" class="btn-link">Lihat</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
+              <div class="card card-business white-bg mb-3">
+                <div class="container">
+                  <img src="{{ asset ('sources/hpt.jpg')}}" class="img-fluid" />
+                </div>
+                <div class="card-body">
+                  <div class="card-title text-center">
+                    WAKiShop
+                  </div>
+                  <div data-equal-height="card">
+                    <p>
+                      WAKimart adalah supermarket bergerak yang menyediakan 5000 produk untuk kebutuhan keluarga anda dalam menuju kehidupan yang lebih baik.
+                    </p>
+                  </div><hr>
+                  <div class="row justify-content-center align-self-center">
+                    <div>
+                      <a href="" class="btn-link">Lihat</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
+              <div class="card card-business white-bg mb-3">
+                <div class="container">
+                  <img src="{{ asset ('sources/hpt.jpg')}}" class="img-fluid" />
+                </div>
+                <div class="card-body">
+                  <div class="card-title text-center">
+                    WAKi F&B
+                  </div>
+                  <div data-equal-height="card">
+                    <p>
+                      WAKimart adalah supermarket bergerak yang menyediakan 5000 produk untuk kebutuhan keluarga anda dalam menuju kehidupan yang lebih baik.
+                    </p>
+                  </div><hr>
+                  <div class="row justify-content-center align-self-center">
+                    <div>
+                      <a href="" class="btn-link">Lihat</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
+              <div class="card card-business white-bg mb-3">
+                <div class="container">
+                  <img src="{{ asset ('sources/hpt.jpg')}}" class="img-fluid" />
+                </div>
+                <div class="card-body">
+                  <div class="card-title text-center">
+                    WAKi 3D Printing
+                  </div>
+                  <div data-equal-height="card">
+                    <p>
+                      WAKimart adalah supermarket bergerak yang menyediakan 5000 produk untuk kebutuhan keluarga anda dalam menuju kehidupan yang lebih baik.
+                    </p>
+                  </div><hr>
+                  <div class="row justify-content-center align-self-center">
+                    <div>
+                      <a href="" class="btn-link">Lihat</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+  <!-- #business -->
 </main>
+
+
 
 @endsection

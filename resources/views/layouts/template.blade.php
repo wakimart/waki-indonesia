@@ -59,7 +59,7 @@
 	  <link href="{{asset('css/lib/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
 	  <link href="{{asset('css/lib/animate/animate.min.css')}}" rel="stylesheet">
 	  <link href="{{asset('css/lib/ionicons/css/ionicons.min.css')}}" rel="stylesheet">
-	  {{-- <link href="{{asset('css/lib/owlcarousel/asset/owl.carousel.min.css')}}" rel="stylesheet"> --}}
+	  {{-- <link href="{{asset('css/lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet"> --}}
 	  <link href="{{asset('css/lib/lightbox/css/lightbox.min.css')}}" rel="stylesheet">
 	  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 
@@ -338,5 +338,25 @@
 
   	<!-- Template Main Javascript File -->
   	<script src="{{asset('js/main.js')}}"></script>
+		<script>
+		$(document).ready(function() {
+		  $(".product-carousel").owlCarousel({
+		    items: 4,
+				margin:20,
+		    pagination: true,
+		    autoplay: true,
+		    loop: true,
+		    navigation: true,
+		    dots: false,
+		    responsive:{
+		      1000: {items: 4},
+		      768: {items: 3},
+		      640: {items: 2},
+		      370: {items: 1}
+		    }
+		  });
+		  $("#success-alert").show();
+		});
+		</script>
 </body>
 </html>

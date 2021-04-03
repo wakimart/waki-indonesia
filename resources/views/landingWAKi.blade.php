@@ -301,7 +301,7 @@ touch-action: none;
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
                 <div class="heading mb-70">
-                    <h1 class="heading--title">Apa itu WAKi?</h2>
+                    <h1 class="heading--title">Apa itu WAKi?</h1>
                     <p class="heading--subtitle">WAKi adalah perusahaan alat kesehatan yang mengunggulkan kualitas terjamin, untuk membantu keluarga menuju kehidupan yang lebih baik.
                       <br><span class="diff" style="font-family: 'Brush Script Std'; font-size: 1.5em;">Bukan Janji Tapi Pasti !</span></p>
                 </div>
@@ -405,7 +405,7 @@ touch-action: none;
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
                 <div class="heading mb-70">
-                    <h1 class="heading--title">Apa yang anda dapatkan selama 5 hari?</h2>
+                    <h1 class="heading--title">Apa yang anda dapatkan selama 5 hari?</h1>
                     <p class="heading--subtitle">Kami membantu anda untuk merawat kesehatan keluarga anda dengan berbagai jagkauan mulai dari pemurni udara, air minum, hingga pemijatan tubuh teknologi modern.</p>
                 </div>
             </div>
