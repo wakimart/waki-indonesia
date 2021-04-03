@@ -248,7 +248,7 @@ touch-action: none;
                         Isi Form Kami
                       </h5>
                       <p class="form--para">Dapatkan ekstra bonus voucher wakimart senilai 280.000 untuk 100 orang pendaftar pertama. <br>Promo berakhir dalam</p>
-                      <div id="countdown" class="countdown py-4 form--title" style="margin: 0;"></div>
+                      <div id="countdown-timer" class="countdown py-4 form--title" style="margin: 0;"></div>
                       <form id="actionAdd" action="{{ route('store_registrationPromotion') }}" method="POST">
                           @csrf
                           <div class="col-xs-12 col-sm-12 col-md-12" style="padding: 0;">
@@ -672,8 +672,6 @@ touch-action: none;
 </div>
 <!-- #wrapper end -->
 
-
-
 <!-- Footer Scripts
 ============================================= -->
 <script src="{{asset('js/landing/jquery-2.2.4.min.js')}}"></script>
@@ -698,68 +696,48 @@ $(document).ready(function() {
   });
 
   $("#success-alert").show();
-  // $("#myWish").click(function showAlert() {
-  //   $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
-  //     $("#success-alert").slideUp(500);
-  //   });
-  // });
 });
-// set the date we're counting down to
-var target_date = new Date('Mar 25, 2021 00:00:00').getTime();
 
-// variables for time units
-var days, hours, minutes, seconds;
+const countDownDate = new Date("Mar 25, 2021 00:00:00").getTime();
+const intervalId = setInterval(function () {
+    const now = new Date().getTime();
+    const distance = countDownDate - now;
 
-// get tag element
-var countdown = document.getElementById('countdown');
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-// update the tag with id "countdown" every 1 second
-setInterval(function () {
+    let countDownHtml = "";
+    if (days > 0) {
+        countDownHtml += '<span class="h1 font-weight-bold">'
+            + days
+            + ' </span><span class="h1 font-weight-bold">hari </span>';
+    }
 
-    // find the amount of "seconds" between now and target
-    var current_date = new Date().getTime();
-    var seconds_left = (target_date - current_date) / 1000;
+    if (hours > 0) {
+        countDownHtml += '<span class="h1 font-weight-bold">'
+            + ("0" + hours).slice(-2)
+            + ' </span><span class="h1 font-weight-bold">jam </span>';
+    }
 
-    // do some time calculations
-    days = parseInt(seconds_left / 86400);
-    seconds_left = seconds_left % 86400;
+    if (minutes > 0) {
+        countDownHtml += '<span class="h1 font-weight-bold">'
+            + ("0" + minutes).slice(-2)
+            + ' </span><span class="h1 font-weight-bold">menit </span>';
+    }
 
-    hours = parseInt(seconds_left / 3600);
-    seconds_left = seconds_left % 3600;
+    countDownHtml += '<span class="h1 font-weight-bold">'
+        + ("0" + seconds).slice(-2)
+        + ' </span><span class="h1 font-weight-bold">detik</span>';
 
-    minutes = parseInt(seconds_left / 60);
-    seconds = parseInt(seconds_left % 60);
+    if (days <= 0 && hours <= 0 && minutes < 0) {
+        clearInterval(intervalId);
+        countDownHtml = '<span class="h1 font-weight-bold">Promo telah berakhir</span>';
+    }
 
-    // format countdown string + set tag value
-    countdown.innerHTML = ''
-      + '<span class="h1 font-weight-bold">' + days +  ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + (hours<10 ? "0" + hours : hours) + ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + (minutes<10 ? "0" + minutes : minutes) + ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + (seconds<10 ? "0" + seconds : seconds) + ' </span>';
+    document.getElementById("countdown-timer").innerHTML = countDownHtml;
 }, 1000);
-</script>
-
-<script>
-  // var arrName = ['Tagi Muhammad', 'Firmansyah', 'Andre', 'Johanes', 'Abimana', 'Charles Wijaya', 'Cokroaminoto', 'Eric Sanjaya', 'Endang', 'Mahmud Muhsin'];
-  // var arrKota = ['Surabaya', 'Jakarta Utara', 'Jakarta Pusat', 'Jakarta Selatan', 'Bandung', 'Semarang', 'Medan', 'Jakarta Timur'];
-  // var i = 0;
-  // var timeClose = 0;
-  // setInterval(function () {
-  //     if(i < arrName.length){
-  //       $("#notif-name").html(arrName[i]+" - "+arrKota[Math.floor(Math.random() * arrKota.length)]);
-  //       $("#notif-time").html("Telah mendaftar "+(arrName.length-i)+" menit yang lalu");
-  //       document.querySelector("a.regisnotif").click();
-  //       console.log("buka"+arrName[i]);
-  //       i++;
-  //     }
-  // }, (Math.floor(Math.random() * 10) + 5)*5000);
-
-  // setInterval(function () {
-  //   if(timeClose == 3)
-  //   document.querySelector("a.modal-close").click();
-  //   console.log("close");
-  // }, 1000);
-
 </script>
 
 @if(Session::has('success_registration'))
@@ -772,5 +750,4 @@ setInterval(function () {
 @endif
 
 </body>
-
 </html>
