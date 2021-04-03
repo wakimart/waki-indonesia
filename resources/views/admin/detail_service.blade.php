@@ -1,6 +1,7 @@
 <?php
 $menu_item_page = "service";
 $menu_item_second = "detail_service";
+//dd(date_format(date_create($request->input['date']), "Y-m-d"));
 ?>
 @extends('admin.layouts.template')
 
@@ -108,7 +109,7 @@ $menu_item_second = "detail_service";
                                             </span>
                                         @elseif (strtolower($services['status']) == "pickup")
                                             <span class="badge badge-info">
-                                                Take Away by: {{ $services->statusBy("pickup")->user_id['name'] }}
+                                                Pickup by: {{ $services->statusBy("pickup")->user_id['name'] }}
                                             </span>
                                         @elseif (strtolower($services['status']) == "completed")
                                             <span class="badge badge-success">
@@ -237,9 +238,9 @@ $menu_item_second = "detail_service";
 	      	</div>
 	    </div>
 
-	    @if($services['status'] == 'Delivery' || $services['status'] == 'Take Away')
+	    @if($services['status'] == 'Delivery' || $services['status'] == 'Pickup')
 	    @php
-	    	$arr_serviceoption = json_decode($services['service_option']);
+	    	$arr_serviceoption = $services->ServiceOptionDelivery();
 	    @endphp
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
@@ -252,24 +253,34 @@ $menu_item_second = "detail_service";
 	          					</thead>
 	          					<tr>
 	          						<td>Recipient's Name: </td>
-	          						<td>{{ $arr_serviceoption[0]->recipient_name }}</td>
+	          						<td>{{ $arr_serviceoption->recipient_name }}</td>
 	          					</tr>
 	          					<tr>
 	          						<td>Recipient's Phone: </td>
-	          						<td>{{ $arr_serviceoption[0]->recipient_phone }}</td>
+	          						<td>{{ $arr_serviceoption->recipient_phone }}</td>
 	          					</tr>
 	          					<tr>
 	          						<td>Address: </td>
-	          						<td>{{ $arr_serviceoption[0]->address }}</td>
+	          						<td>{{ $arr_serviceoption->address }}</td>
 	          					</tr>
 	          					<tr>
 	          						<td>Branch: </td>
-	          						<td>{{ $services->getDetailSales($arr_serviceoption[0]->branch_id, $arr_serviceoption[0]->cso_id)->branch_id['code'] }} - {{ $services->getDetailSales($arr_serviceoption[0]->branch_id, $arr_serviceoption[0]->cso_id)->branch_id['name'] }}</td>
+	          						<td>{{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['name'] }}</td>
 	          					</tr>
 	          					<tr>
 	          						<td>CSO: </td>
-	          						<td>{{ $services->getDetailSales($arr_serviceoption[0]->branch_id, $arr_serviceoption[0]->cso_id)->cso_id['code'] }} - {{ $services->getDetailSales($arr_serviceoption[0]->branch_id, $arr_serviceoption[0]->cso_id)->cso_id['name'] }}</td>
+	          						<td>{{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['name'] }}</td>
 	          					</tr>
+	          					@if(isset($arr_serviceoption->appointment))
+		          					<tr>
+		          						<td>Tanggal: </td>
+		          						<td>{{ date("d/m/Y", strtotime($arr_serviceoption->appointment)) }}</td>
+		          					</tr>
+		          					<tr>
+		          						<td>Jam: </td>
+		          						<td>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</td>
+		          					</tr>
+		          				@endif
 	          				</table>
 	          			</div>
 	          		</div>
@@ -312,9 +323,9 @@ $menu_item_second = "detail_service";
                                             <span class="badge badge-info">
                                                 Delivery
                                             </span>
-                                        @elseif (strtolower($history_status['status']) == "take_away")
+                                        @elseif (strtolower($history_status['status']) == "pickup")
                                             <span class="badge badge-info">
-                                                Take Away
+                                                Pickup
                                             </span>
                                         @elseif (strtolower($history_status['status']) == "completed")
                                             <span class="badge badge-success">
@@ -381,8 +392,8 @@ $menu_item_second = "detail_service";
                                     <div class="form-group">
 						                <label for="">Delivery / Pickup</label>
 						                <select class="form-control" id="status" name="status" data-msg="Mohon Pilih Tipe" required>
-				                            <option value="Delivery">Delivery</option>
-				                            <option value="Pickup">Pickup</option>
+				                            <option value="Delivery" {{ isset($request->input['status']) ? ( $request->input['status'] == "Delivery" ? "selected" : "" ) : "" }}>Delivery</option>
+				                            <option value="Pickup" {{ isset($request->input['status']) ? ( $request->input['status'] == "Pickup" ? "selected" : "" ) : "" }}>Pickup</option>
 			                			</select>
 			                			<div class="validation"></div>
 			              			</div>
@@ -390,7 +401,7 @@ $menu_item_second = "detail_service";
 
                                     <div class="form-group">
 						                <label for="">Recipient's Name</label>
-						                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+						                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required {{ isset($request->input['name']) ? "value=".$request->input['name'] : "" }}>
 						                <div class="validation"></div>
 			              			</div>
 			              			<div class="form-group">
@@ -400,10 +411,15 @@ $menu_item_second = "detail_service";
 			              					@php
 				              					$result = RajaOngkir::FetchProvince();
 				              					$result = $result['rajaongkir']['results'];
-				              					$arrProvince = [];
 				              					if(sizeof($result) > 0){
 				              						foreach ($result as $value) {
-				              							echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+				              							$selected = "";
+				              							if(isset($request->input['province_id'])){
+					              							if($value['province_id'] == $request->input['province_id']){
+					              								$selected = "selected";
+					              							}				              								
+				              							}
+				              							echo "<option ".$selected." value=\"". $value['province_id']."\">".$value['province']."</option>";
 				              						}
 				              					}
 			              					@endphp
@@ -414,6 +430,21 @@ $menu_item_second = "detail_service";
 			              				<label for="">City</label>
 			              				<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
 			              					<option selected disabled value="">Pilihan Kota</option>
+			              					@php
+			              						if(isset($request->input['city']) && isset($request->input['province_id'])){
+			              							$result = RajaOngkir::FetchCity($request->input['province_id']);
+					              					$result = $result['rajaongkir']['results'];
+					              					if(sizeof($result) > 0){
+					              						foreach ($result as $value) {
+					              							$selected = "";
+					              							if($value['city_id'] == $request->input['city']){
+					              								$selected = "selected";
+					              							}	
+					              							echo "<option ".$selected." value=\"".$value['city_id']."\">".$value['type']." ".$value['city_name']."</option>";
+					              						}
+					              					}
+			              						}
+			              					@endphp
 			              				</select>
 			              				<div class="validation"></div>
 			              			</div>
@@ -421,17 +452,32 @@ $menu_item_second = "detail_service";
 			              				<label for="">Sub-District</label>
 			              				<select class="form-control" id="subDistrict" name="subDistrict" data-msg="Mohon Pilih Kecamatan" required>
 			              					<option selected disabled value="">Pilihan Kecamatan</option>
+			              					@php
+			              						if(isset($request->input['subDistrict']) && isset($request->input['city'])){
+			              							$result = RajaOngkir::FetchDistrict($request->input['city']);
+					              					$result = $result['rajaongkir']['results'];
+					              					if(sizeof($result) > 0){
+					              						foreach ($result as $value) {
+					              							$selected = "";
+					              							if($value['subdistrict_id'] == $request->input['subDistrict']){
+					              								$selected = "selected";
+					              							}
+					              							echo "<option ".$selected." value=\"".$value['subdistrict_id']."\">".$value['subdistrict_name']."</option>";
+					              						}
+					              					}
+			              						}
+			              					@endphp
 			              				</select>
 			              				<div class="validation"></div>
 			              			</div>
 			              			<div class="form-group">
 						                <label for="exampleTextarea1">Address</label>
-						                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address" required></textarea>
+						                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address" required> {{ isset($request->input['address']) ? $request->input['address'] : "" }}</textarea>
 						                <div class="validation"></div>
 			              			</div>
 			              			<div class="form-group">
 						                <label for="">Phone Number</label>
-						                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
+						                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required {{ isset($request->input['phone']) ? "value=".$request->input['phone'] : "" }}>
 						                <div class="validation"></div>
 			              			</div>
 
@@ -439,7 +485,7 @@ $menu_item_second = "detail_service";
 										<label for="" style="margin-top: 1em;"><h2>Data Schedule </h2></label><br/>
 			              				<div class="form-group">
 			              					<label for="">Tanggal Janjian</label>
-			              					<input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+			              					<input type="date" class="form-control" name="date" id="date" placeholder="Tanggal Janjian" required data-msg="Mohon Isi Tanggal" value="{{ isset($request->input['date']) ? $request->input['date'] : date('Y-m-d') }}" />
 			              					<div class="validation"></div>
 			              					<span class="invalid-feedback">
 			              						<strong></strong>
@@ -447,7 +493,7 @@ $menu_item_second = "detail_service";
 			              				</div>
 			              				<div class="form-group">
 			              					<label for="">Jam Janjian</label>
-			              					<input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>
+			              					<input type="time" class="form-control" name="time" id="time" placeholder="Jam Janjian" required data-msg="Mohon Isi Jam" min="10:00" max="20:00" value="{{ isset($request->input['time']) ? $request->input['time'] : date('H:i') }}" />
 			              					<div class="validation"></div>
 			              					<span class="invalid-feedback">
 			              						<strong></strong>
@@ -460,16 +506,15 @@ $menu_item_second = "detail_service";
 						                <label for="">Branch</label>
 						                <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
 						                  	<option selected disabled value="">Choose Branch</option>
-
 					                        @foreach($branches as $branch)
-					                            <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+					                            <option {{ isset($request->input['branch_id']) ? ( $request->input['branch_id'] == $branch['id'] ? "selected" : "" ) : "" }} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
 					                        @endforeach
 			                			</select>
 			                			<div class="validation"></div>
 			              			</div>
 			              			<div class="form-group">
 			                			<label for="">CSO Code</label>
-			               			 	<input type="text" class="form-control" name="cso_id" id="cso" placeholder="CSO Code" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['code'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
+			               			 	<input type="text" class="form-control" name="cso_id" id="cso" placeholder="CSO Code" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" value="{{ isset($request->input['cso_id']) ? $request->input['cso_id'] : (Auth::user()->roles[0]['slug'] == 'cso' ? Auth::user()->cso['code'] : "") }}"  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
 		                    			<div class="validation" id="validation_cso"></div>
 			              			</div>
 
@@ -489,7 +534,7 @@ $menu_item_second = "detail_service";
 	                </div>
 	            </div>
             @endcan
-        <?php elseif (strtolower($services->status) === "delivery" || strtolower($services->status) === "take away"): ?>
+        <?php elseif (strtolower($services->status) === "delivery" || strtolower($services->status) === "pickup"): ?>
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -557,9 +602,7 @@ $menu_item_second = "detail_service";
         		var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
         		if(result.length > 0){
         			$.each( result, function( key, value ) {
-        				if(value['type'] == "Kota"){                            
-        					arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
-        				}
+    					arrCity += "<option value=\""+value['city_id']+"\">"+value['type']+" "+value['city_name']+"</option>";
         			});
         			$( "#city" ).append(arrCity);
         		}
@@ -598,8 +641,6 @@ $menu_item_second = "detail_service";
 
         @if($request->all() != null)
         	alert("{{ $request->errMessage }}");
-        	$(".status").val("{{ $request->input['status'] }}");
-        	$(".name").val("{{ $request->input['name'] }}");
         @endif
 	});
 </script>

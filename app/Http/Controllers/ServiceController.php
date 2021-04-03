@@ -230,6 +230,26 @@ class ServiceController extends Controller
                             $reqError->replace(['input' => $request->all(), 'errMessage' => "Jadwal Home Lapangan Tidak Valid !"]);
                             return $this->show($request->id, $reqError);
                         }
+                        else{
+                            $data = $request->all();
+                            $data['no_member'] = $service->no_mpc;
+                            $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+                            $data['province'] = $data['province_id'];
+                            $data['distric'] = $data['subDistrict'];
+                            $data['type_customer'] = "WAKi Customer (Type B)";
+                            $data['type_homeservices'] = "Home Delivery";
+                            $data['appointment'] = $data['date']." ".$data['time'];
+                            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+                            $data['cso_phone'] = Cso::where('code', $data['cso_id'])->first()['phone'];
+                            $data['cso2_id'] = (Cso::where('code', 'SERVICE')->first() != null ? Cso::where('code', 'SERVICE')->first()['id'] : null );
+
+                            $homeService = HomeService::create($data);
+                            array_push($arr_serviceoption, 
+                                [
+                                    'homeService' => $homeService['id']
+                                ]
+                            );
+                        }
                     }
 
                     
