@@ -22,7 +22,7 @@
 
     </div>
   </section><!-- End Hero -->
-{{-- 
+{{--
     <div class="carousel-inner ">
       @foreach ($banners as $banner )
       @php
@@ -35,7 +35,7 @@
       </div>
       @endif
     @endforeach
-    
+
     <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="sr-only">Previous</span>
@@ -111,6 +111,12 @@
   <section id="about" style="position: relative; z-index: -1;">
     <div class="container">
       <div class="col-lg-12 col-md-12" style="padding-bottom: 1.5em; padding-top: 2em;">
+        @if(Utils::$lang=='id')
+          <h2>Tentang Kami</h2>
+        @elseif(Utils::$lang=='eng')
+          <h2>About Us</h2>
+        @endif
+
         <div class="row">
 
           <div class="col-lg-5 col-md-6">
@@ -122,18 +128,16 @@
           <div class="col-lg-7 col-md-6">
             <div class="about-content">
               @if(Utils::$lang=='id')
-                <h2>Tentang Kami</h2>
 
-                <h3>WAKI INTERNATIONAL GROUP</h3>
+                <h3>WAKi International Group</h3>
 
                 <p>"Metrowealth International Group" telah didirikan pada tahun 1995. Sejak saat itu, perusahaan telah berkembang pesat di kawasan Asia Pasifik dan negara-negara Eropa.</p>
-                  
+
                   <p>Pada tahun 2008, untuk menyusun strategi pemasaran global, perusahaan memutuskan untuk mengubah nama menjadi "WAKi". Oleh karena itu, perusahaan ini terdaftar sebagai "WAKi International Group".
                 </p>
               @elseif(Utils::$lang=='eng')
-                <h2>About Us</h2>
 
-                <h3>WAKI INTERNATIONAL GROUP</h3>
+                <h3>WAKi International Group</h3>
 
                 <p>"Metrowealth International Group" has been established in 1995. Since then, the company has been expanding rapidly in the Asia Pacific region and European countries. At year 2008, in order to strategize global marketing, the company decided to change its branding to "WAKi". Therefore, the company is renamed as "WAKi International Group".
                   <br>
@@ -144,7 +148,7 @@
           </div>
         </div>
       </div>
-      <div class="row" style="padding-top: 2em;">
+      <div class="row">
         <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
           <div class="box col-md-12">
             <div class="icon" style="background: #eafde7;"><h1 class="WAKI">W</h1></div>
@@ -195,100 +199,102 @@
   </section><!-- #about -->
 
   <!--==========================Product Section============================-->
-  <section id="product" class="section-bg">
-    <div class="col-lg-12 col-md-12 col-sm-12" style="padding-bottom: 1.5em; padding-top: 2em;">
-      
-      <h2>Produk Kami</h2>
-      <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch"">
-          <div class="card white-bg shadow  mb-3 ">
-            <div class="container product-img">
-              <img src="{{ asset ('sources/hpt.jpg') }}" class="" alt="" />
-            </div>
-            <div class="card-body">
-              <div data-equal-height="card">
-                  <span class="category">Massager</span>
-                  <p>
-                    WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                  </p>
-              </div><hr>
-              <div class="row justify-content-center align-self-center">
-                <div>
-                  <a href="" class="btn-link">Lihat Semua</a>
-                </div>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
-          <div class="card white-bg shadow  mb-3 ">
-            <div class="container product-img">
-              <img src="{{ asset ('sources/hpthome.jpg') }}" class="" alt="" />
-            </div>
-            <div class="card-body">
-              <div data-equal-height="card">
-                  <span class="category">Massager</span>
-                  <p>
-                    WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                  </p>
-              </div><hr>
-              <div class="row justify-content-center align-self-center">
-                <div>
-                  <a href="" class="btn-link">Lihat Semua</a>
-                </div>
-            </div>
+  <section id="product"
+    <div class="container">
+      <div class="col-lg-12 col-md-12 col-sm-12" style="padding-bottom: 1.5em; padding-top: 2em;">
+
+        <h2>Produk Kami</h2>
+        <div class="row">
+          <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
+            <div class="card white-bg shadow mb-3">
+              <div class="container product-img">
+                <img src="{{ asset ('sources/hpt.jpg') }}" class="img-fluid" alt="" />
+              </div>
+              <div class="card-body">
+                <div data-equal-height="card">
+                    <span class="category">Massager</span>
+                    <p>
+                      WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                    </p>
+                </div><hr>
+                <div class="row justify-content-center align-self-center">
+                  <div>
+                    <a href="" class="btn-link">Lihat Semua</a>
+                  </div>
+              </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
-          <div class="card white-bg shadow  mb-3 ">
-            <div class="container product-img">
-              <img src="{{ asset ('sources/hpt2079.jpg') }}" class="" alt="" />
-            </div>
-            <div class="card-body">
-              <div data-equal-height="card">
-                  <span class="category">Massager</span>
-                  <p>
-                    WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                  </p>
-              </div><hr>
-              <div class="row justify-content-center align-self-center">
-                <div>
-                  <a href="" class="btn-link">Lihat Semua</a>
-                </div>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-md-3 col-sm-3">
-          <div class="card white-bg shadow  mb-3 ">
-            <div class="container product-img">
-              <img src="{{ asset ('sources/hpt2076i.jpg') }}" class="" alt="" />
-            </div>
-            <div class="card-body">
-              <div data-equal-height="card">
-                  <span class="category">Massager</span>
-                  <p>
-                    WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                  </p>
-              </div><hr>
-              <div class="row justify-content-center align-self-center">
-                <div>
-                  <a href="" class="btn-link">Lihat Semua</a>
-                </div>
-            </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
+            <div class="card white-bg shadow mb-3 ">
+              <div class="container product-img">
+                <img src="{{ asset ('sources/hpthome.jpg') }}" class="img-fluid" alt="" />
+              </div>
+              <div class="card-body">
+                <div data-equal-height="card">
+                    <span class="category">Massager</span>
+                    <p>
+                      WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                    </p>
+                </div><hr>
+                <div class="row justify-content-center align-self-center">
+                  <div>
+                    <a href="" class="btn-link">Lihat Semua</a>
+                  </div>
+              </div>
+              </div>
             </div>
           </div>
+          <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
+            <div class="card white-bg shadow  mb-3 ">
+              <div class="container product-img">
+                <img src="{{ asset ('sources/hpt2079.jpg') }}" class="img-fluid" alt="" />
+              </div>
+              <div class="card-body">
+                <div data-equal-height="card">
+                    <span class="category">Massager</span>
+                    <p>
+                      WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                    </p>
+                </div><hr>
+                <div class="row justify-content-center align-self-center">
+                  <div>
+                    <a href="" class="btn-link">Lihat Semua</a>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="card white-bg shadow  mb-3 ">
+              <div class="container product-img">
+                <img src="{{ asset ('sources/hpt2076i.jpg') }}" class="img-fluid" alt="" />
+              </div>
+              <div class="card-body">
+                <div data-equal-height="card">
+                    <span class="category">Massager</span>
+                    <p>
+                      WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                    </p>
+                </div><hr>
+                <div class="row justify-content-center align-self-center">
+                  <div>
+                    <a href="" class="btn-link">Lihat Semua</a>
+                  </div>
+              </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>
-
     </div>
   </section>
   <!-- #product -->
 
   <!--==========================Why Us Section============================-->
-  {{-- <section id="why-us" class="wow fadeIn">
+  {{-- <section id="why-us" class="wow fadeIn" >
     <div class="container">
       <div class="container-fluid">
 
@@ -298,7 +304,7 @@
 
             <h4 style="text-align: center;">Misi kami membawa pelanggan WAKian dan WAKi, menuju kehidupan yang lebih baik.<br>Bukan Janji, tapi Pasti!</h4>
           @elseif(Utils::$lang=='eng')
-            <h3 style="margin-bottom: 10px;">Wy Choose Us</h3>
+            <h2 style="margin-bottom: 10px;">Wy Choose Us</h3>
 
             <h4 style="text-align: center;">We bring WAKian and WAKi’s customers, towards a better life.<br>Not a promise, but sure!</h4>
           @endif
@@ -308,23 +314,23 @@
            </div>
         </header> --}}
 
-         <!-- ======= Testimonials Section ======= -->
-    <section id="testimonials" class="testimonials">
+    <!-- ======= Testimonials Section ======= -->
+    <section id="testimonials" class="testimonials section-bg">
       <div class="container" data-aos="zoom-in">
 
             <header class="section-header">
               @if(Utils::$lang=='id')
                 <h2 class="text-center" style="margin-bottom: 1em;">Kenapa Memilih Kami</h2>
-    
+
                 <h4 style="text-align: center;">Misi kami membawa pelanggan WAKian dan WAKi, menuju kehidupan yang lebih baik.<br>Bukan Janji, tapi Pasti!</h4>
               @elseif(Utils::$lang=='eng')
-                <h3 style="margin-bottom: 10px;">Wy Choose Us</h3>
-    
+                <h2 style="margin-bottom: 10px;">Wy Choose Us</h2>
+
                 <h4 style="text-align: center;">We bring WAKian and WAKi’s customers, towards a better life.<br>Not a promise, but sure!</h4>
               @endif
                <div class="text-center mt-2 mb-2">
                 <img src="{{ asset ('sources/testi-icon.png') }}" class="img-fluid" alt="" style="width: 60px; height: 60px;" />
-    
+
                </div>
             </header>
 
@@ -350,7 +356,7 @@
               <div class="testimonial-item">
                 <h5>
                   "Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim."
-                </h5><br> 
+                </h5><br>
                 <h4>- Jena Karlis, Store Owner</h4>
               </div>
 
@@ -465,7 +471,7 @@
                   </div>
                   <a href="" class="link-business">Lihat</a>
                 </div>
-  
+
               </div>
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3">
@@ -501,9 +507,6 @@
                 </div>
               </div>
             </div>
-            
-            
-            
 
         </div>
       </div>
@@ -514,14 +517,14 @@
   <!-- #business -->
 
   <!--==========================Portfolio Section============================-->
-{{--   <section id="portfolio" class="section-bg">
+<section id="portfolio">
     <div class="container">
 
       <header class="section-header">
         @if(Utils::$lang=='id')
-        <h3 class="section-title">Galeri Kami</h3>
+        <h2 class="section-title">Galeri Kami</h2>
         @elseif(Utils::$lang=='eng')
-        <h3 class="section-title">Our Gallery</h3>
+        <h2 class="section-title">Our Gallery</h2>
         @endif
       </header>
 
@@ -537,9 +540,9 @@
             @endif
           </ul>
         </div>
-      </div> --}}
+      </div>
 
-   {{--    <div class="row portfolio-container">
+      <div class="row portfolio-container">
         @php
         foreach($galleries as $gallerie){
           $photos = json_decode($gallerie->photo, true);
@@ -564,9 +567,9 @@
             </div>
           </div>
         </div>
-        @endfor --}}
+        @endfor
 
-     {{--    @for($v = 0; $v < sizeof($videos) ; $v++)
+        @for($v = 0; $v < sizeof($videos) ; $v++)
         <div class="col-lg-4 col-md-6 portfolio-item filter-video">
           <div class="portfolio-wrap2">
             <h5 class="portfolio-video-title">{{$videos[$v]['title']}}</h5>
@@ -577,7 +580,7 @@
 
       </div>
     </div>
-  </section> --}}<!-- #portfolio -->
+  </section> <!-- #portfolio -->
 
   <!--==========================Team Section============================-->
  {{--  <section id="team" class="section-bg">
@@ -595,12 +598,7 @@
               <div class="member-info-content">
                 <h4>Teo Choo Guan</h4>
                 <span>Chairman of WAKi International Group</span>
-                <!-- <div class="social">
-                  <a href=""><i class="fa fa-twitter"></i></a>
-                  <a href=""><i class="fa fa-facebook"></i></a>
-                  <a href=""><i class="fa fa-google-plus"></i></a>
-                  <a href=""><i class="fa fa-linkedin"></i></a>
-                </div> -->
+
               </div>
             </div>
           </div>

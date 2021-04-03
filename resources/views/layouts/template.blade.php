@@ -93,24 +93,24 @@
 	      <nav class="main-nav float-right d-none d-lg-block">
 	        <ul>
 	          @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#intro">Beranda</a></li>
+	          <li><a href="{{route('index')}}#hero">Beranda</a></li>
 	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#intro">Home</a></li>
+	          <li><a href="{{route('index')}}#hero">Home</a></li>
 	          @endif
 						@if(Utils::$lang=='id' || Utils::$lang=='eng')
 	          <li class="drop-down"><a href="#product">Produk</a>
 	            <ul>
-					@foreach (App\CategoryProduct::all() as $categoryProduct)
-					<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
-						@if( ! $categoryProduct->product->isEmpty())
-							<ul>
-								@foreach($categoryProduct->product as $product)
-									<li><a href="{{route('single_product',['id'=>$product->id])}}">{{ $product->code }}</a></li>
+								@foreach (App\CategoryProduct::all() as $categoryProduct)
+								<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
+									@if( ! $categoryProduct->product->isEmpty())
+										<ul>
+											@foreach($categoryProduct->product as $product)
+												<li><a href="{{route('single_product',['id'=>$product->id])}}">{{ $product->code }}</a></li>
+											@endforeach
+										</ul>
+									@endif
+								  </li>
 								@endforeach
-							</ul>
-						@endif
-					  </li>
-					@endforeach
 	            </ul>
 	          </li>
 						@endif
@@ -320,7 +320,7 @@
   	<!-- <div id="preloader"></div> -->
 
   	<!-- JavaScript Libraries -->
-	
+
   	<script src="{{asset('css/lib/jquery/jquery.min.js')}}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 	{{-- <script src="{{asset('css/lib/owlcarousel/owl.carousel.min.js')}}"></script> --}}

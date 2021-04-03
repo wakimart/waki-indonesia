@@ -271,7 +271,7 @@ h6 {
 }
 
 #hero .hero-info h2 {
-  color: #413e66;
+  color: #3b3b3b;
   margin-bottom: 1em;
   padding-top: 3em;
   font-size: 3em;
@@ -292,7 +292,7 @@ h6 {
   position: absolute;
   top: 0px;
   width: 100%
-  
+
 }
 
 #hero .hero-info .btn-get-started{
@@ -762,11 +762,12 @@ p.titleprodcat{
 
 /* Sections Header
 --------------------------------*/
-.section-header h2{
+.section-header h2 {
   color: #048B32;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: 1.7em;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  font-size: 2.2em;
+  text-align: center;
 }
 
 .section-header h3 {
@@ -798,7 +799,7 @@ p.titleprodcat{
 --------------------------------*/
 
 .section-bg {
-  background: #f5f8fd;
+  background: #f1faf2;
 }
 
 /* About Us Section
@@ -812,15 +813,16 @@ p.titleprodcat{
   padding-top: 20px;
 }
 
-#about .about-content h2 {
+#about h2 {
   color: #048B32;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: 1.7em;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  font-size: 2.2em;
+  text-align: center;
 }
 
 #about .about-content h3 {
-  color: #4E4E4E; 
+  color: #4E4E4E;
   font-weight: 600;
   font-size: 20px;
   /* font-style: italic; */
@@ -924,30 +926,24 @@ p.titleprodcat{
 
 #product .card-img-top {
   width: 80%;
-  height: 15vw;  
+  height: 15vw;
   text-align: center;
   overflow: hidden;
 }
 
-#product .product-img img:hover{
-  -webkit-transform: scale(1.03);
-  transform: scale(1.03);
-}
-
-#product h2{
+#product h2 {
   color: #048B32;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: 1.7em;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  font-size: 2.2em;
   text-align: center;
-  padding-bottom: 1em;
 }
 
 #product .category {
   font-size: 0.8em;
-  color: #555186;
+  color: #7b7b7b;
   font-weight: 600;
-  background:#f5f8fd;
+  background:#fcf9ea;
   padding: 0.5em 0.8em;
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -961,8 +957,8 @@ p.titleprodcat{
   padding: 0;
   margin: 0 0 20px 0;
   font-family: "Poppins", sans-serif;
-  font-size: 0.9em;
-  color: #8a87b6;
+  font-size: 0.75em;
+  color: #5e5e5e;
 }
 
 #product .btn-link{
@@ -988,6 +984,14 @@ p.titleprodcat{
 
 #why-us {
   padding: 40px 0;
+}
+
+#why-us .section-header h2 {
+  color: #048B32;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  font-size: 2.2em;
+  text-align: center;
 }
 
 #why-us .why-us-content .features {
@@ -1099,7 +1103,7 @@ p.titleprodcat{
     text-align: center;
   }
 }
-/* 
+/*
 #testimonials .testimonial-item .testimonial-img {
   width: 120px;
   border-radius: 50%;
@@ -1113,7 +1117,7 @@ p.titleprodcat{
     margin: auto;
   }
 } */
-/* 
+/*
 #testimonials .testimonial-item h3 {
   font-size: 20px;
   font-weight: bold;
@@ -1241,22 +1245,29 @@ p.titleprodcat{
 
 #portfolio #portfolio-flters li {
   cursor: pointer;
-  margin: 15px 15px 15px 0;
   display: inline-block;
-  padding: 6px 10px;
+  padding: 10px 30px;
   font-size: 16px;
+  font-weight: 600;
   line-height: 20px;
-  color: #413e66;
+  color: #248d32;
   margin-bottom: 5px;
   transition: all 0.3s ease-in-out;
+  border: 1px solid #248d32;
 }
 
 #portfolio #portfolio-flters li:hover,
 #portfolio #portfolio-flters li.filter-active {
-  color: #1bb1dc;
+  color: #fff;
+  background-color: #248d32;
 }
 
+#portfolio #portfolio-flters li:first-child {
+  border-radius:2em 0 0 2em;
+  margin-right: -5px;
+}
 #portfolio #portfolio-flters li:last-child {
+  border-radius:0 2em 2em 0;
   margin-right: 0;
 }
 
@@ -1511,7 +1522,7 @@ p.titleprodcat{
 
 #footer .footer-top {
   padding: 60px 0 30px 0;
-  background: #f5f8fd;
+  /* background: #f5f8fd; */
 }
 
 #footer .footer-top .footer-info {
