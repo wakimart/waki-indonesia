@@ -109,6 +109,11 @@
         -ms-overflow-style: -ms-autohiding-scrollbar; 
     }
 
+    #mobile .align-numbers {
+    float: right;
+    
+    }
+
 }
 
 .td-product-name{
@@ -406,7 +411,55 @@
                                             <h6 style="color: #048b32; font-weight: 700;">Completed</h6>
                                             <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
                                             <hr>
-                                                        
+                                            <h6 class="text-center" style="font-weight: 600;">Biaya Service</h6>
+                                            @foreach($services->product_services as $key => $product_service)
+                                                <p class="card-title" style="font-weight: 600;">Product {{$key + 1}}</p>
+                                                @php
+                                                    $arr_sparepart = json_decode($product_service['sparepart']);
+                                                    $count_sparepart = count($arr_sparepart);
+                                                @endphp
+                                                <div class="row" style="padding-bottom: 1em;">
+                                                    @foreach($arr_sparepart as $index => $item)
+                                                    @php
+                                                        $unit_price = $product_service->getSparepart($item->id)->id['price'];
+                                                        $total_price = $item->qty * $unit_price;
+                                                    @endphp
+                                                        <div class="col-5">
+                                                           <span class="align-numbers"> {{number_format($unit_price)}}</span>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            {{$item->qty}}x
+                                                        </div>
+                                                        <div class="col-4 text-right">
+                                                            <span class="align-numbers">{{number_format($total_price)}}</span>
+                                                        </div>
+                                                    @php break; @endphp
+                                                    @endforeach
+                                                </div>
+                                                @php $first = true; @endphp
+                                                @for($i = 0; $i < $count_sparepart; $i++)
+                                                @php
+                                                    if($first){
+                                                        $first = false;
+                                                        continue;
+                                                    }
+                                                    $unit_price = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
+                                                    $total_price = $item->qty * $unit_price;
+                                                @endphp
+                                                <div class="row">
+                                                    <div class="col-5">
+                                                        <span class="align-numbers"> {{number_format($unit_price)}}</span>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        {{$arr_sparepart[$i]->qty}}x
+                                                    </div>
+                                                    <div class="col-4 text-right">
+                                                        <span class="align-numbers">{{number_format($total_price)}}</span>
+                                                    </div>
+                                                </div>
+                                                @endfor
+                                            @endforeach
+                                            <br><p style="font-weight: 600;">Total</p>    
                                                        
                                             {{-- <div class="table-responsive"> --}}
                                                             {{-- <table class="table table-responsive table-borderless">
