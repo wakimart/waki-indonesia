@@ -535,6 +535,13 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('delete_product');
     });
 
+    Route::group(['prefix' => 'stock', 'middleware' => 'auth'], function(){
+    	//List Stock
+	    Route::get('/list', 'StockController@index')
+	    	->name('list_stock')
+	    	->middleware('can:browse-product');
+    });
+
     Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){
     	//Add Form Promo
     	Route::get('/', 'PromoController@create')

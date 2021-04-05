@@ -200,7 +200,7 @@ $menu_item_second = "detail_service";
 		                            	@foreach($arr_sparepart as $index => $item)
 		                            		@php
 		                            			$unit_price = $product_service->getSparepart($item->id)->id['price'];
-		                            			$total_price = $item->qty * $unit_price;
+		                            			$total_price = (int)$item->qty * $unit_price;
 		                            		@endphp
 		                            		<td>{{$index+1}}</td>
 		                            		<td>{{$product_service->getSparepart($item->id)->id['name']}}</td>
@@ -217,15 +217,15 @@ $menu_item_second = "detail_service";
 			                                    $first = false;
 			                                    continue;
 			                                }
-			                                $unit_price = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
-		                            		$total_price = $item->qty * $unit_price;
+			                                $unit_price_two = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
+		                            		$total_price_two = (int)$arr_sparepart[$i]->qty * $unit_price_two;
 			                            @endphp
 			                            <tr>
 			                            	<td>{{$i+1}}</td>
 			                            	<td>{{$product_service->getSparepart($arr_sparepart[$i]->id)->id['name']}}</td>
 			                                <td>{{$arr_sparepart[$i]->qty}}</td>
-			                                <td>{{number_format($unit_price)}}</td>
-			                            	<td>{{number_format($total_price)}}</td>
+			                                <td>{{number_format($unit_price_two)}}</td>
+			                            	<td>{{number_format($total_price_two)}}</td>
 			                            </tr>
 			                        @endfor
 	          					@endif
