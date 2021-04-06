@@ -88,9 +88,9 @@
 	      <div class="logo float-left">
 	        <!-- Uncomment below if you prefer to use an image logo -->
 	        <!-- <h1 class="text-light"><a href="#intro" class="scrollto"><span>WAKi</span></a></h1> -->
-	        <a href="#header" class="scrollto"><img src="{{asset('sources/Logo Since.png')}}" alt="" class="img-fluid"></a>
+	        <a href="#header" class="scrollto"><img src="{{asset('sources/Logo Since.png')}}" alt="" class="img-fluid" style="margin-right: 4em;"></a>
 	      </div>
-	      <nav class="main-nav float-right d-none d-lg-block">
+	      <nav class="main-nav float-left d-none d-lg-block">
 	        <ul>
 	          @if(Utils::$lang=='id')
 	          <li><a href="{{route('index')}}#hero">Beranda</a></li>

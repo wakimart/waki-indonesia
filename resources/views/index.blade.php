@@ -16,11 +16,14 @@
         </div>
 
         <div class="col-md-6 hero-img">
-          <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
+          <div class="text-right">
+            <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
+          </div>
+          {{-- <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
             <video muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
               <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
             </video>
-          </div>
+          </div> --}}
         </div>
       </div>
 

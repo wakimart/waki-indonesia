@@ -265,9 +265,16 @@ h6 {
   width: 100%;
   height: 100vh;
   position: relative;
-  background: url("../sources/intro-bg.png") center top no-repeat;
+  background: url("../sources/hero.png") center top no-repeat;
   background-size: cover;
   padding: 0 0 60px 0;
+}
+
+#hero .icon-play{
+  width: 90px;
+  height: 90px;
+  position: relative;
+  top: 150px;
 }
 
 #hero .hero-info h2 {
