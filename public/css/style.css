@@ -811,7 +811,7 @@ p.titleprodcat{
 }
 
 #about .about-content {
-  padding-top: 20px;
+  padding-top: 90px;
 }
 
 #about h2 {
@@ -925,6 +925,26 @@ p.titleprodcat{
   padding: 40px 0;
 }
 
+/* #product .card-container{
+  display: flex; 
+  flex-flow: row wrap;
+}
+
+
+#product .card{
+  flex: 0 0 33.333%;
+  display: flex;
+}
+
+#product .product-img {
+  flex-grow: 1;
+  object-fit:contain;
+}
+ */
+/* #product .card-body{
+  flex-grow:0;
+} */
+
 #product .card-img-top {
   width: 80%;
   height: 15vw;
@@ -942,9 +962,9 @@ p.titleprodcat{
 
 #product .category {
   font-size: 0.8em;
-  color: #7b7b7b;
+  color: #555186;
   font-weight: 600;
-  background:#fcf9ea;
+  background:#f5f8fd;
   padding: 0.5em 0.8em;
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -952,6 +972,8 @@ p.titleprodcat{
   margin-bottom: 1em;
   border-radius: 10px;
   font-family: "Poppins", sans-serif;
+  width: 12em;
+  text-align: center;
 }
 
 #product p{
@@ -961,6 +983,23 @@ p.titleprodcat{
   font-size: 0.75em;
   color: #5e5e5e;
 }
+
+#product  .owl-stage {
+  display: flex;
+ }
+ #product .owl-item {
+  display: flex;
+  flex: 1 0 auto;
+ }
+
+ #product .card-body{
+	padding-bottom: 0;
+ }
+
+ #product .card-footer {
+   padding-top: 0;
+  border-top: 0;
+  }
 
 #product .btn-link{
   background: #fff;
@@ -979,9 +1018,37 @@ p.titleprodcat{
   display: inline-block;
 }
 
-#product .cstm-shadow {
-  box-shadow: 0 10px 29px 0 rgb(68 88 144 / 10%);
+#product .btn-link span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
 }
+
+#product .btn-link span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#product .btn-link:hover span {
+  padding-right: 25px;
+}
+
+#product .btn-link:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+#product .cstm-shadow {
+  box-shadow:  20px 20px 60px #bebebe,
+  -20px -20px 60px #ffffff;
+}
+
+
 
 
 /* Why Us Section
@@ -1231,10 +1298,11 @@ p.titleprodcat{
   color: #4e4e4e;
 }
 .card-group .card-business .card-img-top{
-  max-width: 100%;
-  opacity: 0.9;
-  transition: 0.3s;
-  padding: 15px 0;
+  width: 100%;
+    height: 6vw;
+    object-fit: cover;
+  padding: 15px 15px;
+  align-items: center;
 }
 
 .card-group .card-business .card-img-top img:hover {
@@ -1253,6 +1321,94 @@ p.titleprodcat{
   font-size: 0.9em;
   color: #048B32;
   margin-bottom: 1em;
+}
+
+
+/*
+=====
+DEPENDENCIES
+=====
+*/
+
+.r-link{
+	display: var(--rLinkDisplay, inline-flex) !important;
+}
+
+.r-link[href]{
+	color: var(--rLinkColor) !important;
+	text-decoration: var(--rLinkTextDecoration, none) !important;
+}
+
+.text-underlined{
+    /*
+        1. I use pixels units because others units (em, rem, vw, vh, etc) can
+        lead to the mistake of displaying a circumcised line
+    */
+
+    --uiTextUnderlinedLineHeight: var(--textUnderlinedLineHeight, 2px); /* 1 */
+    --uiTextUnderlinedLineGap: var(--textUnderlinedLineGap, .5rem);
+    --uiTextUnderlinedPaddingBottom: calc(var(--uiTextUnderlinedLineHeight) + var(--uiTextUnderlinedLineGap));
+
+    padding-bottom: var(--uiTextUnderlinedPaddingBottom) !important;
+    position: var(--textUnderlinedPosition, relative) !important;
+		z-index: var(--textUnderlinedZindex, 1) !important;
+}
+
+.text-underlined::after{
+    content: "";
+    width: var(--textUnderlinedLineWidht, 100%) !important;
+    height: var(--uiTextUnderlinedLineHeight) !important;
+		background-image: var(--textUnderlinedBackgroundImage, linear-gradient(to top, var(--textUnderlinedLineColor, currentColor) 30%, rgba(0, 0, 0, 0) 45%)) !important;
+
+    position: absolute;
+    left: var(--textUnderlinedLineLeft, 0) !important;
+    bottom: var(--textUnderlinedLineBottom, 0) !important;
+		z-index: var(--textUnderlinedLineZindex, -1) !important;
+}
+
+/*
+=====
+CORE
+=====
+*/
+
+.link{
+	--textUnderlinedLineHeight: 100%;
+	--textUnderlinedLineGap: 0;
+	--textUnderlinedLineColor: #fed330;
+	
+	padding-left: .75rem;
+	padding-right: .75rem;
+}
+
+.link::after{
+	will-change: width;
+	transition: width .1s ease-out;
+	transform: rotate(-2deg);
+	transform-origin: left bottom;
+}
+
+.link:hover{
+	--textUnderlinedLineWidht: 0;
+}
+
+.link:hover::after{
+	transition-duration: .15s;
+}
+
+/*
+* These styles for text decoration. The demo will be work without it
+*/
+
+.link{
+	font-weight: 600;
+  font-size: 0.9em;
+	text-transform: capitalize;
+}
+
+.link:focus{
+	outline: 2px solid #fed330;
+	outline-offset: .5rem;
 }
 
 /* Portfolio Section
@@ -1548,7 +1704,7 @@ p.titleprodcat{
 
 #footer .footer-top {
   padding: 60px 0 30px 0;
-  /* background: #f5f8fd; */
+  background: #f1faf2;
 }
 
 #footer .footer-top .footer-info {
@@ -1577,7 +1733,7 @@ p.titleprodcat{
 #footer .footer-top .social-links a {
   font-size: 18px;
   display: inline-block;
-  background: #1bb1dc;
+  background: #048b32;
   color: #fff;
   line-height: 1;
   padding: 8px 0;
@@ -1590,7 +1746,7 @@ p.titleprodcat{
 }
 
 #footer .footer-top .social-links a:hover {
-  background: #0a98c0;
+  background: #048b32;
   color: #fff;
 }
 
@@ -1625,7 +1781,7 @@ p.titleprodcat{
 }
 
 #footer .footer-top .footer-links ul a:hover {
-  color: #1bb1dc;
+  color: #048b32;
 }
 
 #footer .footer-top .footer-contact {
@@ -1652,7 +1808,7 @@ p.titleprodcat{
 
 #footer .footer-top .form #sendmessage {
   color: #fff;
-  background: #1bb1dc;
+  background: #048b32;
   display: none;
   text-align: center;
   padding: 15px;
@@ -1718,7 +1874,7 @@ p.titleprodcat{
 }
 
 #footer .footer-top .form button[type="submit"] {
-  background: #1bb1dc;
+  background: #048b32;
   border: 0;
   border-radius: 3px;
   padding: 8px 30px;
@@ -1727,7 +1883,7 @@ p.titleprodcat{
 }
 
 #footer .footer-top .form button[type="submit"]:hover {
-  background: #0a98c0;
+  background: #048b32;
   cursor: pointer;
 }
 
@@ -1747,11 +1903,11 @@ p.titleprodcat{
 }
 
 #footer .credits a {
-  color: #1bb1dc;
+  color: #048b32;
 }
 
 #footer .credits a:hover {
-  color: #0a98c0;
+  color: #048b32;
 }
 
 
