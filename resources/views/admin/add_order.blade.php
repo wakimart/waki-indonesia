@@ -1,10 +1,14 @@
 <?php
-    $menu_item_page = "order";
-    $menu_item_second = "add_order";
+
+use App\Product;
+
+$menu_item_page = "order";
+$menu_item_second = "add_order";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <style type="text/css">
     #intro {
         padding-top: 2em;
@@ -50,7 +54,7 @@
 							{{ csrf_field() }}
 							<div class="form-group">
 								<label for="">Waktu Order</label>
-								<input type="date" class="form-control" name="orderDate" id="orderDate" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+								<input type="date" class="form-control" name="orderDate" id="orderDate" placeholder="Tanggal Order" value="<?php echo date("Y-m-d"); ?>" required data-msg="Mohon Isi Tanggal" />
 								<div class="validation"></div>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -102,8 +106,8 @@
 									<option selected disabled value="">Pilihan Kecamatan</option>
 								</select>
 								<div class="validation"></div>
-	              			</div>  
-							   
+	              			</div>
+
 							<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
 				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address"></textarea>
@@ -111,14 +115,14 @@
 	              			</div>
 							<div class="form-group">
 				                <label for="">Know From</label>
-								<select class="form-control" id="know_from" name="know_from" data-msg="Mohon Pilih Kecamatan" required>							
+								<select class="form-control" id="know_from" name="know_from" data-msg="Mohon Pilih Kecamatan" required>
 									@foreach($from_know as $key=>$value)
 										<option value="{{ $value }}">{{ $value }}</option>
 									@endforeach
 								</select>
 								<div class="validation"></div>
-	              			</div> 
-							
+	              			</div>
+
 	              			<br>
 			                <h5 class="add-customer d-none">Customer 2</h5>
 			                <div class="form-group add-customer d-none">
@@ -149,7 +153,7 @@
 			                    <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Mohon Pilih Tipe" required>
 			                        <option selected disabled value="">Choose CASH/UPGRADE</option>
 
-			                        @foreach($cashUpgrades as $key=>$cashUpgrade)
+			                        @foreach ($cashUpgrades as $key=>$cashUpgrade)
 			                            <option value="{{ $key }}">{{ strtoupper($cashUpgrade) }}</option>
 			                        @endforeach
 			                    </select>
@@ -162,14 +166,47 @@
 			                        <select class="form-control pilihan-product" name="product_0" data-msg="Mohon Pilih Product" required="">
 			                            <option selected disabled value="">Choose Product</option>
 
-			                            @foreach($promos as $key=>$promo)
-			                                <option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
-			                            @endforeach
+			                            <?php foreach ($promos as $key => $promo): ?>
+			                                <option value="<?php echo $key; ?>">
+                                                <?php
+                                                $productPromo = json_decode($promo["product"]);
+                                                $arrayProductId = [];
+
+                                                foreach ($productPromo as $pp) {
+                                                    $arrayProductId[] = $pp->id;
+                                                }
+
+                                                $getProduct = Product::select("code")
+                                                ->whereIn(
+                                                    "id",
+                                                    $arrayProductId
+                                                )
+                                                ->get();
+
+                                                $arrayProductCode = [];
+
+                                                foreach ($getProduct as $product) {
+                                                    $arrayProductCode[] = $product->code;
+                                                }
+
+                                                $productCode = implode(", ", $arrayProductCode);
+
+                                                echo $promo["code"]
+                                                    . " - ("
+                                                    . $productCode
+                                                    . ") - Rp. "
+                                                    . number_format(
+                                                        (int) $promo["price"],
+                                                        0,
+                                                        null,
+                                                        ","
+                                                    );
+                                                ?>
+                                            </option>
+			                            <?php endforeach; ?>
 
 			                            {{-- KHUSUS Philiphin --}}
-			                            @if(true)
-			                                <option value="other">OTHER</option>
-			                            @endif
+										<option value="other">OTHER</option>
 			                        </select>
 			                        <div class="validation"></div>
 			                    </div>
@@ -177,7 +214,7 @@
 			                        <select class="form-control" name="qty_0" data-msg="Mohon Pilih Jumlah" required="">
 			                            <option selected value="1">1</option>
 
-			                            @for($i=2; $i<=10;$i++)
+			                            @for ($i=2; $i<=10;$i++)
 			                                <option value="{{ $i }}">{{ $i }}</option>
 			                            @endfor
 			                        </select>
@@ -185,12 +222,10 @@
 			                    </div>
 			                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
 
-			                    @if(true)
-			                        <div class="form-group d-none">
-			                            <input type="text" class="form-control" name="product_other_0" placeholder="Product Name" data-msg="Please fill in the product" />
-			                            <div class="validation"></div>
-			                        </div>
-			                    @endif
+                                <div class="form-group d-none">
+                                    <input type="text" class="form-control" name="product_other_0" placeholder="Product Name" data-msg="Please fill in the product" />
+                                    <div class="validation"></div>
+                                </div>
 
 			                    <div id="tambahan_product"></div>
 			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
@@ -359,8 +394,44 @@
 @endsection
 
 @section('script')
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script type="text/javascript">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="application/javascript">
+let promoOption = "";
+let quantityOption = "";
+
+document.addEventListener("DOMContentLoaded", function () {
+    const URL = '<?php echo route("fetch_promo_dropdown"); ?>';
+
+    fetch(
+        URL,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const dataPromo = response.data;
+
+        for (const promo in dataPromo) {
+            promoOption += `<option value="${promo}">${dataPromo[promo].product}</option>`;
+        }
+    }).catch(function (error) {
+        console.error(error);
+    });
+
+    for (let i = 1; i <= 10; i++) {
+        quantityOption += `<option value="${i}">${i}</option>`;
+    }
+}, false);
+</script>
+<script type="application/javascript">
 	// $(document).ready(function() {
  //        var frmAdd;
 
@@ -428,87 +499,83 @@
 	//     }
  //    });
 </script>
-<script>
+<script type="application/javascript">
     var total_bank = 0;
     var total_product = 0;
-    var arrBooleanCso = [ 'false', 'false', 'false' ];
+    var arrBooleanCso = ['false', 'false', 'false'];
 
-    $(document).ready(function(){
-        $(".cso").on("input", function(){
+    $(document).ready(function () {
+        $(".cso").on("input", function () {
             var txtCso = $(this).val();
             var temp = $(this);
             $.get( '{{route("fetchCso")}}', { cso_code: txtCso })
-            .done(function( result ) {
-                var bool = false;
+                .done(function( result ) {
+                    var bool = false;
 
-                if (result['result'] == 'true' && result['data'].length > 0){
-                    $(temp).parent().children('.validation').html('Kode CSO Benar');
-                    $(temp).parent().children('.validation').css('color', 'green');
-                    bool = true;
-                }
-                else{
-                    $(temp).parent().children('.validation').html('Kode CSO Salah');
-                    $(temp).parent().children('.validation').css('color', 'red');
-                }
-                if(temp.attr("id") == 'cso'){
-                    arrBooleanCso[0] = bool;
-                }
-                else if(temp.attr("id") == '30_cso'){
-                    arrBooleanCso[1] = bool;
-                }
-                else if(temp.attr("id") == '70_cso'){
-                    arrBooleanCso[2] = bool;
-                }
-                console.log(arrBooleanCso[0]+" "+arrBooleanCso[1]+" "+arrBooleanCso[2]);
-                if(arrBooleanCso[0] == true && arrBooleanCso[1] == true && arrBooleanCso[2] == true){
-                    $('#submit').removeAttr('disabled');
-                    console.log("masuk");
-                }
-                else{
-                    $('#submit').attr('disabled',"");
-                }
-            });
+                    if (result['result'] == 'true' && result['data'].length > 0) {
+                        $(temp).parent().children('.validation').html('Kode CSO Benar');
+                        $(temp).parent().children('.validation').css('color', 'green');
+                        bool = true;
+                    } else {
+                        $(temp).parent().children('.validation').html('Kode CSO Salah');
+                        $(temp).parent().children('.validation').css('color', 'red');
+                    }
+
+                    if(temp.attr("id") == 'cso') {
+                        arrBooleanCso[0] = bool;
+                    } else if(temp.attr("id") == '30_cso') {
+                        arrBooleanCso[1] = bool;
+                    } else if(temp.attr("id") == '70_cso') {
+                        arrBooleanCso[2] = bool;
+                    }
+
+                    if (arrBooleanCso[0] == true && arrBooleanCso[1] == true && arrBooleanCso[2] == true) {
+                        $('#submit').removeAttr('disabled');
+                        console.log("masuk");
+                    } else {
+                        $('#submit').attr('disabled',"");
+                    }
+                });
         });
 
 		$("#province").on("change", function(){
             var id = $(this).val();
-            $( "#city" ).html("");
-            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
-            .done(function( result ) {
-                result = result['rajaongkir']['results'];
-                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
-                if(result.length > 0){
-                    $.each( result, function( key, value ) {
-                    	if(value['type'] == "Kabupaten"){
-                        	arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
-                        }
-	                        
-                        if(value['type'] == "Kota"){
-                            arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
-                        }
+            $("#city").html("");
+            $.get('{{ route("fetchCity", ['province' => ""]) }}/' + id)
+                .done(function( result ) {
+                    result = result['rajaongkir']['results'];
+                    var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+                    if(result.length > 0){
+                        $.each( result, function( key, value ) {
+                            if(value['type'] == "Kabupaten"){
+                                arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
+                            }
+
+                            if(value['type'] == "Kota"){
+                                arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
+                            }
 
 
-                    });
-                    $( "#city" ).append(arrCity);
-                }
-            });
+                        });
+                        $("#city").append(arrCity);
+                    }
+                });
 		});
 		$("#city").on("change", function(){
             var id = $(this).val();
 			$( "#subDistrict" ).html("");
-            $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
-            .done(function( result ) {
-				result = result['rajaongkir']['results'];
-				console.log(result);
-                var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
-                if(result.length > 0){
-                    $.each( result, function( key, value ) {                            
-                        arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
-                    });
-                    $( "#subDistrict" ).append(arrSubDistsrict);
-                }
-            });
-		});  
+            $.get('{{ route("fetchDistrict", ['city' => ""]) }}/' + id)
+                .done(function( result ) {
+                    result = result['rajaongkir']['results'];
+                    var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+                    if(result.length > 0){
+                        $.each( result, function( key, value ) {
+                            arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
+                        });
+                        $("#subDistrict").append(arrSubDistsrict);
+                    }
+                });
+		});
         $("#tambah_bank").click(function(e){
             e.preventDefault();
             total_bank++;
@@ -516,11 +583,10 @@
             $('#tambahan_bank').html($('#tambahan_bank').html()+strIsi);
 
 
-            if($("#payment_type").val() == 1){
+            if ($("#payment_type").val() == 1) {
                 $(".other_valCicilan").attr('disabled', "");
                 $(".other_valCicilan").hide();
-            }
-            else{
+            } else {
                 $(".other_valCicilan").removeAttr('disabled');
                 $(".other_valCicilan").show();
             }
@@ -533,17 +599,38 @@
             $(this).remove();
         });
 
-        $("#tambah_product").click(function(e){
+        $("#tambah_product").click(function (e) {
             e.preventDefault();
             total_product++;
 
-            strIsi = "<div id=\"product_"+total_product+"\" class=\"form-group\" style=\"width: 72%; display: inline-block;\"><select class=\"form-control pilihan-product\" name=\"product_"+total_product+"\" data-msg=\"Mohon Pilih Product\" required=\"\"><option selected disabled value=\"\">Pilihan Product</option> @foreach($promos as $key=>$promo) <option value=\"{{ $key }}\">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option> @endforeach {!! true ? "<option value="."other".">OTHER</option>" : "" !!} </select><div class=\"validation\"></div></div><div id=\"qty_"+total_product+"\" class=\"form-group\" style=\"width: 16%; display: inline-block;\"><select class=\"form-control\" name=\"qty_"+total_product+"\" data-msg=\"Mohon Pilih Jumlah\" required=\"\"><option selected value=\"1\">1</option> @for($i=2; $i<=10;$i++) <option value=\"{{ $i }}\">{{ $i }}</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_product\" value=\""+total_product+"\" title=\"Tambah Product\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
+            let strIsi = `<div id="product_${total_product}" class="form-group" style="width: 72%; display: inline-block;">`
+                + `<select class="form-control pilihan-product" name="product_${total_product}" data-msg="Mohon Pilih Product" required>`
+                + promoOption
+                + `</select>`
+                + `<div class="validation"></div>`
+                + `</div>`
+                + `<div id="qty_${total_product}" class="form-group" style="width: 16%; display: inline-block;">`
+                + `<select class="form-control" name="qty_${total_product}" data-msg="Mohon Pilih Jumlah" required>`
+                + quantityOption
+                + `</select>`
+                + `<div class="validation"></div>`
+                + `</div>`
+                + `<div class="text-center" style="display: inline-block; float: right;">`
+                + `<button class="hapus_product" value="${total_product}" title="Tambah Product" style="padding: 0.4em 0.7em; background-color: red;">`
+                + `<i class="fas fa-minus"></i>`
+                + `</button>`
+                + `</div>`;
 
-            @if(true)
-                strIsi += "<div class=\"form-group d-none\"><input type=\"text\" class=\"form-control\" name=\"product_other_"+total_product+"\" placeholder=\"Product Name\" data-msg=\"Please fill in the product\" /><div class=\"validation\"></div></div>";
-            @endif
-            $('#tambahan_product').html($('#tambahan_product').html()+strIsi);
+			strIsi += '<div class="form-group d-none"><input type="text" class="form-control" name="product_other_'
+				+ total_product
+				+ '" placeholder="Product Name" data-msg="Please fill in the product" /><div class="validation"></div></div>';
+
+            let tambahanProduct = document.getElementById("tambahan_product").innerHTML;
+            tambahanProduct += strIsi;
+
+            document.getElementById("tambahan_product").innerHTML = tambahanProduct;
         });
+
         $(document).on("click",".hapus_product", function(e){
             e.preventDefault();
             total_product--;
@@ -583,18 +670,16 @@
         });
 
         {{-- KHUSUS Philiphin --}}
-        @if(true)
-            $(document).on("change", ".pilihan-product", function(e){
-                if($(this).val() == 'other'){
-                    $(this).parent().next().next().next().removeClass("d-none");
-                    $(this).parent().next().next().next().children().attr('required', '');
-                }
-                else{
-                    $(this).parent().next().next().next().addClass("d-none");
-                    $(this).parent().next().next().next().children().removeAttr('required', '');
-                }
-            });
-        @endif
+        $(document).on("change", ".pilihan-product", function(e){
+            if($(this).val() == 'other'){
+                $(this).parent().next().next().next().removeClass("d-none");
+                $(this).parent().next().next().next().children().attr('required', '');
+            }
+            else{
+                $(this).parent().next().next().next().addClass("d-none");
+                $(this).parent().next().next().next().children().removeAttr('required', '');
+            }
+        });
 
         //KHUSUS Untuk tambah customer indo
         $("#tambah_member").click(function(e){
@@ -604,7 +689,7 @@
         });
 
         $('#submit').click(function(){
-            var appointment = 
+            var appointment =
             $.ajax({
                 type: 'POST',
                 data: {
@@ -620,8 +705,8 @@
         });
     });
 </script>
-<script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
-<script type="text/javascript">
+<script type="application/javascript" src="{{ asset('js/tags-input.js') }}"></script>
+<script type="application/javascript">
     for (let input of document.querySelectorAll('#tags')) {
         tagsInput(input);
     }

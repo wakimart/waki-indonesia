@@ -10,7 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+use App\RajaOngkir;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 Auth::routes(['verify' => true]);
 Route::resource('gcalendar', 'gCalendarController');
@@ -536,29 +538,38 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){
-    	//Add Form Promo
+    	// Add Form Promo
     	Route::get('/', 'PromoController@create')
 	    	->name('add_promo')
 	    	->middleware('can:add-promo');
-	    //Create Promo
+
+	    // Create Promo
 	    Route::post('/', 'PromoController@store')
 	    	->name('store_promo')
 	    	->middleware('can:add-promo');
-	    //List Promo
+
+	    // List Promo
 	    Route::get('/list', 'PromoController@index')
 	    	->name('list_promo')
 	    	->middleware('can:browse-promo');
-	    //Edit Promo
+
+	    // Edit Promo
 	    Route::get('/edit/', 'PromoController@edit')
 	    	->name('edit_promo')
 	    	->middleware('can:edit-promo');
-	    //Update Promo
+
+	    // Update Promo
 	    Route::post('/update/', 'PromoController@update')
 	    	->name('update_promo')
 	    	->middleware('can:edit-promo');
-	    //Delete Promo
+
+	    // Delete Promo
 	    Route::post('/{PromoNya}', 'PromoController@delete')
 	    	->name('delete_promo');
+
+        // Fetch List Promo
+        Route::get("/fetchPromoDropdown", "PromoController@fetchPromoDropdown")
+            ->name("fetch_promo_dropdown");
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
