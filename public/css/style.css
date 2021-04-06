@@ -273,7 +273,6 @@ h6 {
 #hero .hero-info h2 {
   color: #3b3b3b;
   margin-bottom: 1em;
-  padding-top: 3em;
   font-size: 3em;
   font-weight: 600;
   font-family: 'Poppins', sans-serif;
@@ -926,7 +925,7 @@ p.titleprodcat{
 }
 
 /* #product .card-container{
-  display: flex; 
+  display: flex;
   flex-flow: row wrap;
 }
 
@@ -1375,7 +1374,7 @@ CORE
 	--textUnderlinedLineHeight: 100%;
 	--textUnderlinedLineGap: 0;
 	--textUnderlinedLineColor: #fed330;
-	
+
 	padding-left: .75rem;
 	padding-right: .75rem;
 }

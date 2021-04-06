@@ -16,7 +16,11 @@
         </div>
 
         <div class="col-md-6 hero-img">
-          <img src="" alt="" class="img-fluid">
+          <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
+            <video muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
+              <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
+            </video>
+          </div>
         </div>
       </div>
 
@@ -207,7 +211,7 @@
         </header>
       <div class="row justify-content-center">
         <div class="col-lg-12 col-md-12 col-sm-12">
-          
+
           <div class="owl-carousel product-carousel">
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
@@ -232,7 +236,7 @@
                   <img src="{{ asset ('sources/theraphy.jpg') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body ">
-                  <div data-equal-height="card" class="caption">   
+                  <div data-equal-height="card" class="caption">
                   <span class="category">High Potential Therapy</span>
                       <p>
                         WAKi Multi Functional ULTRA Potential Therapy Healthcare Device is able to help modern people in improving their health problems in modern life effectively. Successfully invented the new generation of high potential therapeutic equipment. </p>
@@ -249,7 +253,7 @@
                   <img src="{{ asset ('sources/bioenergy.jpg') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body">
-                  <div data-equal-height="card" class="caption">   
+                  <div data-equal-height="card" class="caption">
                   <span class="category">Bio Energy</span>
                       <p>
                        WAKi Bio Energy-π Water is high energetic low alkaline water. It is very suitable for the human body because its molecule is very small. Therefore, it is easier to be absorbed by the human body.</p>
@@ -266,7 +270,7 @@
                   <img src="{{ asset ('sources/air.png') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body ">
-                  <div data-equal-height="card" class="caption"> 
+                  <div data-equal-height="card" class="caption">
                   <span class="category">Air Humidifier</span>
                       <p>
                         WAKi Multi Functional Ion Air Humidifier is multi-functional air purification and humidifier health care equipment. It helps to reduce air pollution in room and provide healthy environment in house and office. </p>
@@ -283,7 +287,7 @@
                   <img src="{{ asset ('sources/household.jpg') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body">
-                  <div data-equal-height="card" class="caption">   
+                  <div data-equal-height="card" class="caption">
                   <span class="category">Household</span>
                       <p>
                         WAKi Multi Functional Dishwasher is a multi functional automatic super clean and hygienic dishwasher. With the latest technology where energy-save function is included. A neccesary electrical appliance in every household. </p>
