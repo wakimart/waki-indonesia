@@ -539,15 +539,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </div>
               <div class="testimonial">
                 <div class="pic">
-                  <img src="{{asset('sources/landing/testimonials/testi3.jpg')}}" alt="">
+                  <img src="{{asset('sources/landing/testimonials/testi7.jpg')}}" alt="">
                 </div>
                 <p class="description">
-                  Sebelum menggunakan WAKi High Potential Therapy, darah tinggi 160/90, kolesterol 260, asam urat 7,6, kaki dan tangan kaku bekas stroke.
-                  Setelah menggunakan, tensi sudah normal 120/80, kolesterol turun ke 180, asam urat 4, kaki dan tangan sudah tidak kaku dan bisa digerakkan dengan mudah.
+                  Sebelum menggunakan WAKi High Potential Therapy, sering insomnia, tekanan darah tinggi, kolesterol 260, dan sering kelelahan.
+                  Setelah menggunakan, tensi sudah normal 120/80, kolesterol menurun dan stabil, badan lebih energik dan bugar.
                 </p>
                 <div class="testimonial-content">
 
-                  <h3 class="name">Ibu Yenny</h3>
+                  <h3 class="name">Bapak Moh. Lontara</h3>
                 </div>
               </div>
               <div class="testimonial">
