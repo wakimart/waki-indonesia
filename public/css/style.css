@@ -273,8 +273,7 @@ h6 {
 #hero .icon-play{
   width: 90px;
   height: 90px;
-  position: relative;
-  top: 150px;
+  margin-right: 2em;
 }
 
 #hero .hero-info h2 {
@@ -953,7 +952,7 @@ p.titleprodcat{
 
 #product .card-img-top {
   width: 100%;
-  height: 15vw;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -999,7 +998,7 @@ p.titleprodcat{
 
  #product .card-body{
 	padding-bottom: 0;
-  height: 15vw;
+  min-height: 15vw;
  }
 
  #product .card-footer {
@@ -1305,8 +1304,7 @@ p.titleprodcat{
 }
 .card-group .card-business .card-img-top{
   width: 100%;
-    height: 6vw;
-    object-fit: cover;
+  object-fit: cover;
   padding: 15px 15px;
   align-items: center;
 }
@@ -1995,6 +1993,9 @@ CORE
 @media (max-width: 768px) {
   .back-to-top {
     bottom: 15px;
+  }
+  #hero .icon-play{
+    display: none;
   }
 
   #faq #faq-list a {

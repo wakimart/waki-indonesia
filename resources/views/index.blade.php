@@ -15,8 +15,8 @@
           </div>
         </div>
 
-        <div class="col-md-6 hero-img">
-          <div class="text-right">
+        <div class="col-md-6" style="flex: none;">
+          <div class="text-right" style="position: relative; top: 50%; transform: translateY(-50%);">
             <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
           </div>
           {{-- <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
