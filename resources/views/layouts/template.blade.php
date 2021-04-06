@@ -97,6 +97,13 @@
 	          @elseif(Utils::$lang=='eng')
 	          <li><a href="{{route('index')}}#hero">Home</a></li>
 	          @endif
+
+			  @if(Utils::$lang=='id')
+	          <li><a href="{{route('index')}}#about">Tentang</a></li>
+	          @elseif(Utils::$lang=='eng')
+	          <li><a href="{{route('index')}}#about">About Us</a></li>
+	          @endif
+
 						@if(Utils::$lang=='id' || Utils::$lang=='eng')
 	          <li class="drop-down"><a href="#product">Produk</a>
 	            <ul>
@@ -116,12 +123,6 @@
 						@endif
 
 	          @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#about">Tentang</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#about">About Us</a></li>
-	          @endif
-
-	          @if(Utils::$lang=='id')
 	          <li><a href="{{route('index')}}#portfolio">Galeri</a></li>
 	          @elseif(Utils::$lang=='eng')
 	          <li><a href="{{route('index')}}#portfolio">Gallery</a></li>
@@ -138,11 +139,11 @@
 						</li>
 						@endif --}}
 
-						@if(Utils::$lang=='id')
+					{{-- 	@if(Utils::$lang=='id')
 	          <li><a href="{{route('index')}}#team">World Peace</a></li>
 	          @elseif(Utils::$lang=='eng')
 	          <li><a href="{{route('index')}}#team">World Peace</a></li>
-	          @endif
+	          @endif --}}
 
 	          @if(Utils::$lang=='id')
 	          <li><a href="{{route('index')}}#footer">Kontak</a></li>

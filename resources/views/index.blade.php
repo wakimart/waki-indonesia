@@ -207,94 +207,91 @@
         </header>
       <div class="row justify-content-center">
         <div class="col-lg-12 col-md-12 col-sm-12">
+          
           <div class="owl-carousel product-carousel">
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/hpt.jpg')}}" class="img-fluid" />
+                  <img src="{{ asset ('sources/massager.jpg')}}" class="card-img-top img-fluid" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
                       <span class="category">Massager</span>
                       <p>
-                        WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                      </p>
+                        WAKi Multi Functional Massage Belt is the world's first smallest massage slimming belt that well designed for customers by Metrowealth WAKi International Group. Applies the traditional massage theory as foundation, applies the latest core vibration technology for inner operation system. </p>
                     </div>
                 </div>
                 <div class="card-footer" style="background: initial;">
                   <div class="text-center pb-2"><hr>
-                    <button class="btn-link"><span>Lihat Semua </span></button>
+                    {{-- <button class="btn-link"><span>Lihat Semua </span></button> --}}
+                    <a href="" class="btn-link"><span>Lihat Semua </span></a>
                   </div>
                 </div>
               </div>
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/hpthome.jpg') }}" class="img-fluid" alt="" />
+                  <img src="{{ asset ('sources/theraphy.jpg') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body ">
                   <div data-equal-height="card" class="caption">   
                   <span class="category">High Potential Therapy</span>
                       <p>
-                        WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                      </p>
+                        WAKi Multi Functional ULTRA Potential Therapy Healthcare Device is able to help modern people in improving their health problems in modern life effectively. Successfully invented the new generation of high potential therapeutic equipment. </p>
                     </div>
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
-                    <button class="btn-link"><span>Lihat Semua </span></button>
+                    <a href="" class="btn-link"><span>Lihat Semua </span></a>
                   </div>
                 </div>
               </div>
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/hpt2079.jpg') }}" class="img-fluid" alt="" />
+                  <img src="{{ asset ('sources/bioenergy.jpg') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">   
                   <span class="category">Bio Energy</span>
                       <p>
-                        WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                      </p>
+                       WAKi Bio Energy-π Water is high energetic low alkaline water. It is very suitable for the human body because its molecule is very small. Therefore, it is easier to be absorbed by the human body.</p>
                     </div>
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
-                    <button class="btn-link"><span>Lihat Semua </span></button>
+                    <a href="" class="btn-link"><span>Lihat Semua </span></a>
                   </div>
                 </div>
               </div>
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/hpt2076i.jpg') }}" class="img-fluid" alt="" />
+                  <img src="{{ asset ('sources/air.png') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body ">
                   <div data-equal-height="card" class="caption"> 
                   <span class="category">Air Humidifier</span>
                       <p>
-                        WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                      </p>
+                        WAKi Multi Functional Ion Air Humidifier is multi-functional air purification and humidifier health care equipment. It helps to reduce air pollution in room and provide healthy environment in house and office. </p>
                     </div>
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
-                    <button class="btn-link"><span>Lihat Semua </span></button>
+                    <a href="" class="btn-link"><span>Lihat Semua </span></a>
                   </div>
                 </div>
               </div>
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/hpt2076i.jpg') }}" class="img-fluid" alt="" />
+                  <img src="{{ asset ('sources/household.jpg') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">   
                   <span class="category">Household</span>
                       <p>
-                        WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
-                      </p>
+                        WAKi Multi Functional Dishwasher is a multi functional automatic super clean and hygienic dishwasher. With the latest technology where energy-save function is included. A neccesary electrical appliance in every household. </p>
                     </div>
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
-                    <button class="btn-link"><span>Lihat Semua </span></button>
+                    <a href="" class="btn-link"><span>Lihat Semua </span></a>
                   </div>
                 </div>
               </div>
@@ -358,30 +355,51 @@
             <div class="owl-carousel testimonials-carousel">
               <div class="testimonial-item">
                 <h5>
-                  "Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper."
+                  "Sebelum menggunakan WAKi High Potential Therapy, sering insomnia, tekanan darah tinggi, kolesterol 260, dan sering kelelahan.
+                  Setelah menggunakan, tensi sudah normal 120/80, kolesterol menurun dan stabil, badan lebih energik dan bugar."
                 </h5><br>
-                <h4>- Saul Goodman, Ceo &amp; Founder</h4>
+                <h4>- Bapak Moh. Lontara</h4>
               </div>
 
               <div class="testimonial-item">
                 <h5>
-                  "Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa."
+                  "Sebelum menggunakan WAKi High Potential Therapy, tangan kanan kesemutan, lutut sering sakit, gampang pusing, darah tinggi.
+                  Setelah menggunakan, kesemutan sudah hilang, lutut sudah membaik, pusing sudah jarang, darah tinggi sudah menurun."
                 </h5><br>
-                <h4>- Sara Wilsson, Designer</h4>
+                <h4>- Ibu Wiwik Sulastri</h4>
               </div>
 
               <div class="testimonial-item">
                 <h5>
-                  "Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim."
+                  "Sebelum menggunakan WAKi High Potential Therapy, tidak bisa tidur, badan pegal dan sering pusing, dan sering kesemutan di kaki.
+                  Setelah menggunakan 3 hari bisa tidur nyenyak, setelah 10 hari badan terasa lebih enak, setelah melanjutkan terapi, kesemutan hilang, badan enak dan tidur nyenyak."
+
                 </h5><br>
-                <h4>- Jena Karlis, Store Owner</h4>
+                <h4>- Bapak Samsul Arifin</h4>
               </div>
 
               <div class="testimonial-item">
                 <h5>
-                  "Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam."
+                  "Sebelum menggunakan WAKi High Potential Therapy, gampang capek, berat badan berlebih, telapak kaki sakit, menstruasi tidak lancar.
+                  Setelah menggunakan 3 hari bisa tidur nyenyak, badan sudah tidak gampang capek, berat badan turun setelah 2 bulan terapi, telapak sudah tidak sakit, menstruasi sudah normal."
                 </h5><br>
-                <h4>- Matt Brandon, Freelancer</h4>
+                <h4>- Ibu Imas Dedeh</h4>
+              </div>
+
+              <div class="testimonial-item">
+                <h5>
+                  " Sebelum menggunakan WAKi High Potential Therapy, berdiri dari duduk saja mata berkunang - kunang, susah BAB, kolesterol tinggi, sakit pinggang dan pinggul.
+                  Setelah menggunakan, berdiri sudah berkunang-kunang, BAB lancar, Kolesterol menurun, pinggang sudah dapat digerakkan ke segala penjuru."
+                </h5><br>
+                <h4>- Bapak Suprapto</h4>
+              </div>
+
+              <div class="testimonial-item">
+                <h5>
+                  "Sebelum menggunakan WAKi High Potential Therapy, sering insomnia, sakit lutut, jari tangan sering keram.
+                  Setelah menggunakan, Insomnia sudah hilang dan bisa tidur seperti biasa, lutut sudah membaik, jari tangan sudah tidak keram karena lancar peredaran darah."
+                </h5><br>
+                <h4>- Ibu Meiske</h4>
               </div>
 
             </div>
@@ -493,7 +511,7 @@
         </div>
       </div>
 
-     {{--  <div class="row portfolio-container">
+      <div class="row portfolio-container">
         @php
         foreach($galleries as $gallerie){
           $photos = json_decode($gallerie->photo, true);
@@ -528,7 +546,7 @@
         </div>
         @endfor
 
-      </div> --}}
+      </div>
     </div>
   </section> <!-- #portfolio -->
 
