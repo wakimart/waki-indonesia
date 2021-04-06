@@ -993,6 +993,7 @@ p.titleprodcat{
 
  #product .card-body{
 	padding-bottom: 0;
+  height: 15vw;
  }
 
  #product .card-footer {
