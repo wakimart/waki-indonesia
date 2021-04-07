@@ -18,13 +18,10 @@
         </div>
 
         <div class="col-md-6" style="flex: none;">
-          <div class="text-right" style="position: relative; top: 50%; transform: translateY(-50%);" data-toggle="modal" data-target="#myModal">
-              <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
-         
-            
+          <div class="text-right" style="position: relative; top: 50%; transform: translateY(-50%);" data-toggle="modal" data-target="#video2">
+            <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
           </div>
 
-          
           {{-- <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
             <video muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
               <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
@@ -32,25 +29,26 @@
           </div> --}}
         </div>
 
-        <div id="myModal" class="modal fade" role="dialog">
+        <div id="video2" class="modal fade videoModal" role="dialog">
           <div class="modal-dialog">
-              <div class="modal-content">
-      
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  </div> 
-      
-                  <div class="modal-body">
-                          <iframe width="100%" height="480" src="{{asset('sources/Introduction of WAKi short.mp4')}}" frameborder="0" allowfullscreen autoplay></iframe>
-                  </div>
-      
-                  {{-- <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal"></button>
-                  </div> --}}
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
-      
+
+              <div class="modal-body">
+                <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
+                  <video id="video-2" muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
+                    <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
+                  </video>
+                </div>
+
+              </div>
+
+            </div>
           </div>
-      </div>
+        </div>
 
       </div>
 
@@ -758,7 +756,6 @@
   </section>
   <!-- #business -->
 </main>
-
 
 
 @endsection
