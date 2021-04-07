@@ -75,17 +75,17 @@ Route::group(['prefix' => 'api-apps'], function () {
 	Route::get('/fetchAllTypeHS', 'HomeServiceController@listAllTypeHS');
 	Route::get('fetchKnowFromApi', 'OrderController@fetchKnowFromApi'); //fetching all know from
     Route::get('fetchprovinceapi', function () {
-			return RajaOngkir::FetchProvinceApi();
-		}); //fetching all province
-    Route::get('fetchcityapi/{province}',function ($province) {
-			return RajaOngkir::FetchCityApi($province);
-		}); //fetching all city from province
-	Route::get('fetchallcityapi/{province}',function ($province) {
+        return RajaOngkir::FetchProvinceApi();
+    }); //fetching all province
+    Route::get('fetchcityapi/{province}', function ($province) {
+        return RajaOngkir::FetchCityApi($province);
+    }); //fetching all city from province
+	Route::get('fetchallcityapi/{province}', function ($province) {
 		return RajaOngkir::FetchAllCityApi($province);
 	});
-	Route::get('fetchdistrictapi/{city}',function ($city) {
-		return RajaOngkir::FetchAllDistrictAPI($city);
-		}); //fetching all district from province
+	Route::get('fetchdistrictapi/{city}', function ($city) {
+        return RajaOngkir::FetchAllDistrictAPI($city);
+    }); //fetching all district from province
 	Route::group(['prefix' => 'homeservice'], function () {
 	    Route::post('add','HomeServiceController@addApi'); //add home service
 		Route::post('update','HomeServiceController@updateApi'); //update home service
@@ -126,19 +126,22 @@ Route::group(['prefix' => 'api-apps'], function () {
         Route::post("add", "SubmissionController@addApi");
 
         // Show submission list API
-        Route::post("list_submission", "SubmissionController@listSubmissionApi");
-
-        // Show reference list API
-        Route::post("list_reference", "SubmissionController@listReferenceApi");
+        Route::post("list_submission", "SubmissionController@listApi");
 
         // View detail submission API
-        Route::post("detail", "SubmissionController@detailSubmissionApi");
+        Route::post("detail", "SubmissionController@detailApi");
 
         // Update submission API
         Route::post("update", "SubmissionController@updateApi");
 
         // Delete submission API
         Route::post("delete", "SubmissionController@deleteApi");
+    });
+
+    // Reference API
+    Route::group(["prefix" => "reference"], function () {
+        // List reference API
+        Route::post("list_reference", "ReferenceController@listApi");
     });
 });
 
@@ -458,7 +461,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('delete_branch');
 	});
 
-
 	Route::group(['prefix' => 'appVersion', 'middleware' => 'auth'], function(){
     	//Add Form App Version
     	Route::get('/', 'VersionController@create')
@@ -582,15 +584,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("store_submission_form");
 
         // Show submission list
-        Route::get("/list", "SubmissionController@listSubmission")
+        Route::get("/list", "SubmissionController@index")
             ->name("list_submission_form");
 
-        // Show reference list
-        Route::get("/list_reference", "SubmissionController@listReference")
-            ->name("list_reference");
-
         // Show detail of submission
-        Route::get("/detail", "SubmissionController@detailSubmission")
+        Route::get("/detail", "SubmissionController@show")
             ->name("detail_submission");
 
         // Edit submission form page
@@ -604,6 +602,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Process submission form delete
         Route::post("/delete/", "SubmissionController@destroy")
             ->name("delete_submission_form");
+    });
+
+    Route::group(["prefix" => "reference", "middleware" => "auth"], function () {
+        // List reference
+        Route::get("/list", "ReferenceController@index")
+            ->name("list_reference");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {

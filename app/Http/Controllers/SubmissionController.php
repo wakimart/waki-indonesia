@@ -20,14 +20,10 @@ class SubmissionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
      */
-    public function index()
-    {
-        //
-    }
-
-    public function listSubmission(Request $request)
+    public function index(Request $request)
     {
         // Menyimpan request ke dalam variabel $url untuk pagination
         $url = $request->all();
@@ -78,81 +74,6 @@ class SubmissionController extends Controller
         );
     }
 
-    public function listReference(Request $request)
-    {
-        // Menyimpan request ke dalam variabel $url untuk pagination
-        $url = $request->all();
-
-        // Query dari tabel references, dan menampilkan 10 data per halaman
-        $references = Reference::all()->paginate(10);
-
-        return view("admin.list_reference", compact("references", "url"));
-    }
-
-    public function detailSubmission(Request $request)
-    {
-        $deliveryOrder = DeliveryOrder::where("id", $request["id"])->first();
-        $deliveryOrder["district"] = array($deliveryOrder->getDistrict());
-        $references = Reference::where(
-            "deliveryorder_id",
-            $request["id"]
-        )
-        ->orderBy("id", "asc")
-        ->get();
-
-        // Melakukan query nama kota dan provinsi untuk referensi
-        $referencesCityAndProvince = [];
-        $getReferencesCityAndProvince = RajaOngkir_City::leftJoin(
-            "references",
-            "references.city",
-            "=",
-            "raja_ongkir__cities.city_id"
-        )
-        ->select(
-            "raja_ongkir__cities.province",
-            "raja_ongkir__cities.type",
-            "raja_ongkir__cities.city_name",
-        )
-        ->where("references.deliveryorder_id", $request["id"])
-        ->orderBy("references.id")
-        ->get();
-
-        foreach ($getReferencesCityAndProvince as $refCityAndProvince) {
-            $referencesCityAndProvince[] = $refCityAndProvince->type
-                . " "
-                . $refCityAndProvince->city_name
-                . ", "
-                . $refCityAndProvince->province;
-        }
-
-        // Melakukan query riwayat dari tabel history_updates
-        $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin(
-            'users',
-            'users.id',
-            '=',
-            'history_updates.user_id'
-        )
-        ->select(
-            'history_updates.method',
-            'history_updates.created_at',
-            'history_updates.meta AS meta',
-            'users.name AS name'
-        )
-        ->where('type_menu', 'Delivery Order')
-        ->where('menu_id', $deliveryOrder->id)
-        ->get();
-
-        return view(
-            "admin.detail_submission",
-            compact(
-                "deliveryOrder",
-                "historyUpdateDeliveryOrder",
-                "references",
-                "referencesCityAndProvince",
-            )
-        );
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -171,7 +92,7 @@ class SubmissionController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -271,19 +192,78 @@ class SubmissionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $deliveryOrder = DeliveryOrder::where("id", $request["id"])->first();
+        $deliveryOrder["district"] = array($deliveryOrder->getDistrict());
+        $references = Reference::where(
+            "deliveryorder_id",
+            $request["id"]
+        )
+        ->orderBy("id", "asc")
+        ->get();
+
+        // Melakukan query nama kota dan provinsi untuk referensi
+        $referencesCityAndProvince = [];
+        $getReferencesCityAndProvince = RajaOngkir_City::leftJoin(
+            "references",
+            "references.city",
+            "=",
+            "raja_ongkir__cities.city_id"
+        )
+        ->select(
+            "raja_ongkir__cities.province",
+            "raja_ongkir__cities.type",
+            "raja_ongkir__cities.city_name",
+        )
+        ->where("references.deliveryorder_id", $request["id"])
+        ->orderBy("references.id")
+        ->get();
+
+        foreach ($getReferencesCityAndProvince as $refCityAndProvince) {
+            $referencesCityAndProvince[] = $refCityAndProvince->type
+                . " "
+                . $refCityAndProvince->city_name
+                . ", "
+                . $refCityAndProvince->province;
+        }
+
+        // Melakukan query riwayat dari tabel history_updates
+        $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin(
+            'users',
+            'users.id',
+            '=',
+            'history_updates.user_id'
+        )
+        ->select(
+            'history_updates.method',
+            'history_updates.created_at',
+            'history_updates.meta AS meta',
+            'users.name AS name'
+        )
+        ->where('type_menu', 'Delivery Order')
+        ->where('menu_id', $deliveryOrder->id)
+        ->get();
+
+        return view(
+            "admin.detail_submission",
+            compact(
+                "deliveryOrder",
+                "historyUpdateDeliveryOrder",
+                "references",
+                "referencesCityAndProvince",
+            )
+        );
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
      */
     public function edit(Request $request)
     {
@@ -328,7 +308,7 @@ class SubmissionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function update(Request $request)
     {
@@ -459,7 +439,8 @@ class SubmissionController extends Controller
 
             DB::commit();
 
-            return redirect()->route('list_submission_form')
+            return redirect()
+                ->route('list_submission_form')
                 ->with('success', 'Data berhasil diperbarui');
         } catch (Exception $e) {
             DB::rollback();
@@ -474,7 +455,7 @@ class SubmissionController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
@@ -504,7 +485,8 @@ class SubmissionController extends Controller
 
             DB::commit();
 
-            return redirect()->route('list_submission_form')
+            return redirect()
+                ->route('list_submission_form')
                 ->with('success', 'Data berhasil dihapus');
         } catch (Exception $e) {
             DB::rollback();
@@ -515,6 +497,10 @@ class SubmissionController extends Controller
         }
     }
 
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function addApi(Request $request)
     {
         $messages = array(
@@ -752,6 +738,10 @@ class SubmissionController extends Controller
         }
     }
 
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateApi(Request $request)
     {
         $messages = array(
@@ -1033,7 +1023,11 @@ class SubmissionController extends Controller
         }
     }
 
-    public function listSubmissionApi(Request $request)
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function listApi(Request $request)
     {
         try {
             // Menyimpan request ke dalam variabel $url untuk pagination
@@ -1086,68 +1080,11 @@ class SubmissionController extends Controller
         }
     }
 
-    public function listReferenceApi(Request $request)
-    {
-        try {
-            // Menyimpan request ke dalam variabel $url untuk pagination
-            $url = $request->all();
-
-            // Query dari tabel references, dan menampilkan 10 data per halaman
-            $references = Reference::select(
-                "references.name AS name",
-                "references.age AS age",
-                "references.phone AS phone",
-                "raja_ongkir__cities.province AS province",
-                "raja_ongkir__cities.type AS type",
-                "raja_ongkir__cities.city_name AS city_name",
-                "souvenirs.name AS souvenir",
-                "references.link_hs AS link_hs",
-                "references.status AS status",
-            )
-            ->leftJoin(
-                "raja_ongkir__cities",
-                "raja_ongkir__cities.city_id",
-                "=",
-                "references.city"
-            )
-            ->leftJoin(
-                "souvenirs",
-                "souvenirs.id",
-                "=",
-                "references.souvenir_id"
-            )
-            ->paginate(10);
-
-            $i = 0;
-            foreach ($references as $refItem) {
-                $references[$i]->city = $refItem->type . " " . $refItem->city_name;
-
-                unset(
-                    $references[$i]->type,
-                    $references[$i]->city_name,
-                );
-
-                $i++;
-            }
-
-            $data = [
-                "result" => 1,
-                "data" => $references,
-                "url" => $url,
-            ];
-
-            return response()->json($data, 200);
-        } catch (Exception $e) {
-            $data = [
-                "result" => 0,
-                "data" => $e->getMessage(),
-            ];
-
-            return response()->json($data, 401);
-        }
-    }
-
-    public function detailSubmissionApi(Request $request)
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function detailApi(Request $request)
     {
         try {
             $deliveryOrder = DeliveryOrder::select(
@@ -1276,6 +1213,10 @@ class SubmissionController extends Controller
 
     }
 
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteApi(Request $request)
     {
         $messages = array(
