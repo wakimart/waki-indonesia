@@ -673,6 +673,32 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("/{id}", "UpgradeController@destroy")
             ->name("delete_upgrade_form");
     });
+
+    Route::group(["prefix" => "souvenir", "middleware" => "auth"], function () {
+        // List souvenir
+        Route::get("/list", "SouvenirController@index")
+            ->name("list_souvenir");
+
+        // Create souvenir
+        Route::get("/add", "SouvenirController@create")
+            ->name("add_souvenir");
+
+        // Store souvenir
+        Route::post("/add", "SouvenirController@store")
+            ->name("store_souvenir");
+
+        // Edit souvenir
+        Route::get("/edit", "SouvenirController@edit")
+            ->name("edit_souvenir");
+
+        // Update souvenir
+        Route::post("/update", "SouvenirController@update")
+            ->name("update_souvenir");
+
+        // Delete souvenir
+        Route::post("/delete", "SouvenirController@destroy")
+            ->name("delete_souvenir");
+    });
 });
 
 Auth::routes();
