@@ -975,7 +975,7 @@ p.titleprodcat{
 
 #product .card-img-top {
   width: 100%;
-  height: 100%;
+  height: 15vw;
   object-fit: cover;
 }
 
@@ -1021,7 +1021,7 @@ p.titleprodcat{
 
  #product .card-body{
 	padding-bottom: 0;
-  min-height: 15vw;
+  height: 17vw;
  }
 
  #product .card-footer {
@@ -2082,20 +2082,92 @@ CORE
 
 /*-- mobile --*/
 @media (min-width: 768px){
-  #desktop {
-      display: block;
-  }
-  #mobile {
-      display: none;
+  #hero .btn-mobile {
+    display: none;
   }
 }
 
 
 @media (max-width: 768px){
-  #desktop {
-      display: none;
+  #hero {
+    background: url("../sources/intro-bg.png") center top no-repeat;
+    padding: 80px 0 60px 0;
   }
-  #mobile {
-      display: block;
+
+  #hero .btn-mobile {
+    display: inline-block;
+    background: transparent;
+    transition: 0.5s;
+    border: 1px solid #048b32;
+    color: #048b32;
+    font-size: 0.9em;
+    letter-spacing: 0.05rem;
+    padding: 0.5em 1.5em;
+    border-radius: 2rem;
+    text-transform: capitalize;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    margin-top: 1em;
   }
+
+  #hero .hero-info h2 {
+    color: #3b3b3b;
+    margin-bottom: 1em;
+    margin-top: 1.75em;
+    font-size: 2.5em;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  #hero .hero-info p {
+    margin-bottom: 3em;
+    font-weight: 500;
+    font-size: 0.9em;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  #hero .hero-info .btn-get-started{
+    background: #048b32;
+    transition: 0.5s;
+    color: #fff;
+    font-size: 1.1em;
+    letter-spacing: 0.05rem;
+    padding: 0.4em 3em;
+    border-radius: 2rem;
+    text-transform: capitalize;
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1em;
+    margin-top: 1em;
+    border: 1px solid transparent;
+  }
+
+  #about .section-header h2 {
+    font-size: 2em;
+  }
+
+  #product .section-header h2 {
+    font-size: 2em;
+  }
+  #portfolio .section-header h2 {
+    font-size: 2em;
+  }
+
+  #business .section-header h2 {
+    font-size: 2em;
+  }
+
+  #testimonials .section-header h2 {
+    font-size: 2em;
+  }
+
+  #testimonials .section-header h4 {
+    font-size: 18px;
+  }
+
+  #testimonials h5 {
+    font-size: 0.9em;
+  }
+  
 }

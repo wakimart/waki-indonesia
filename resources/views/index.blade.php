@@ -13,6 +13,7 @@
           <p>WAKi adalah perusahaan alat kesehatan yang mengunggulkan kualitas terjamin, untuk membantu keluarga menuju kehidupan yang lebih baik. </p>
           <div>
             <a href="#main" class="btn-get-started scrollto">Mulai</a>
+            <a href="#myModal" class="btn-mobile" data-toggle="modal" style="margin-left: 0.5em;">Lihat Video<span style="padding-left: 0.5em;"><i class="far fa-play-circle"></i></span></a>
           </div>
         </div>
 
@@ -22,6 +23,7 @@
          
             
           </div>
+
           
           {{-- <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
             <video muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
@@ -238,7 +240,7 @@
           <h2>Produk Kami</h2>
         </header>
       <div class="row justify-content-center">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12">
 
           <div class="owl-carousel product-carousel">
               <div class="card white-bg mb-3 item">
@@ -248,9 +250,12 @@
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
                       <span class="category">Massager</span>
-                      <p>
-                        WAKi Multi Functional Massage Belt is the world's first smallest massage slimming belt that well designed for customers by Metrowealth WAKi International Group. Applies the traditional massage theory as foundation, applies the latest core vibration technology for inner operation system. </p>
-                    </div>
+                      @if(Utils::$lang=='id')
+                      <p> WAKi Multi Functional Massage Belt adalah sabuk pelangsing pijat terkecil pertama di dunia yang dirancang dengan baik untuk pelanggan oleh Metrowealth WAKi International Group. Menerapkan teori pijat tradisional sebagai fondasi, menerapkan teknologi getaran inti terbaru untuk bagian dalam sistem operasi.</p>
+                      @elseif(Utils::$lang=='eng')
+                      <p>WAKi Multi Functional Massage Belt is the world's first smallest massage slimming belt that well designed for customers by Metrowealth WAKi International Group. Applies the traditional massage theory as foundation, applies the latest core vibration technology for inner operation system. </p>
+                      @endif
+                      </div>
                 </div>
                 <div class="card-footer" style="background: initial;">
                   <div class="text-center pb-2"><hr>
@@ -266,9 +271,13 @@
                 <div class="card-body ">
                   <div data-equal-height="card" class="caption">
                   <span class="category">High Potential Therapy</span>
+                    @if(Utils::$lang=='id')
+                      <p> WAKi Multi Functional ULTRA Potential Therapy Healthcare Device dapat membantu masyarakat modern memperbaiki masalah kesehatanya dalam kehidupan modern secara efektif. Berhasil menciptakan generasi baru dari peralatan terapi yang berpotensi tinggi.</p>
+                      @elseif(Utils::$lang=='eng')
                       <p>
                         WAKi Multi Functional ULTRA Potential Therapy Healthcare Device is able to help modern people in improving their health problems in modern life effectively. Successfully invented the new generation of high potential therapeutic equipment. </p>
-                    </div>
+                       @endif
+                      </div>
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
@@ -283,9 +292,13 @@
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
                   <span class="category">Bio Energy</span>
+                      @if(Utils::$lang=='id')
+                      <p> WAKi Bio Energy-π Air adalah bio energi air alkali rendah yang berenergi tinggi. Sangat cocok untuk tubuh manusia karena molekulnya yang sangat kecil sehingga lebih mudah diserap oleh tubuh manusia. </p>
+                      @elseif(Utils::$lang=='eng')
                       <p>
-                       WAKi Bio Energy-π Water is high energetic low alkaline water. It is very suitable for the human body because its molecule is very small. Therefore, it is easier to be absorbed by the human body.</p>
-                    </div>
+                         WAKi Bio Energy-π Water is high energetic low alkaline water. It is very suitable for the human body because its molecule is very small. Therefore, it is easier to be absorbed by the human body. </p>
+                       @endif
+                      </div>
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
@@ -300,9 +313,13 @@
                 <div class="card-body ">
                   <div data-equal-height="card" class="caption">
                   <span class="category">Air Humidifier</span>
+                      @if(Utils::$lang=='id')
+                      <p>  WAKi Multi Functional Ion Air Humidifier adalah peralatan perawatan kesehatan pemurni udara dan pelembab udara multifungsi. Dapat membantu mengurangi polusi udara di dalam ruangan dan menyediakan lingkungan yang sehat di rumah dan kantor.</p>
+                      @elseif(Utils::$lang=='eng')
                       <p>
-                        WAKi Multi Functional Ion Air Humidifier is multi-functional air purification and humidifier health care equipment. It helps to reduce air pollution in room and provide healthy environment in house and office. </p>
-                    </div>
+                        WAKi Multi Functional Ion Air Humidifier is multi-functional air purification and humidifier health care equipment. It helps to reduce air pollution in room and provide healthy environment in house and office.  </p>
+                       @endif
+                  </div>
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
@@ -317,9 +334,13 @@
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
                   <span class="category">Household</span>
+                     @if(Utils::$lang=='id')
+                      <p>   WAKi Multi Functional Dishwasher adalah mesin pencuci piring otomatis multi fungsi yang super bersih dan higienis. Dengan teknologi terbaru dimana fungsi hemat energi disertakan. Peralatan listrik yang diperlukan di setiap rumah tangga. </p>
+                      @elseif(Utils::$lang=='eng')
                       <p>
-                        WAKi Multi Functional Dishwasher is a multi functional automatic super clean and hygienic dishwasher. With the latest technology where energy-save function is included. A neccesary electrical appliance in every household. </p>
-                    </div>
+                       WAKi Multi Functional Dishwasher is a multi functional automatic super clean and hygienic dishwasher. With the latest technology where energy-save function is included. A neccesary electrical appliance in every household.  </p>
+                       @endif
+                      </div>
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
@@ -672,7 +693,7 @@
                   </div>
                   <div class="row justify-content-center align-self-center">
                     <div>
-                      <a href="#0" class="r-link link text-underlined">Lihat</a>
+                      <a href="https://wakimart.co.id/" class="r-link link text-underlined" target="_blank" rel="noopener noreferrer">Lihat</a>
                     </div>
                   </div>
                 </div>
@@ -689,7 +710,7 @@
                   </div>
                   <div class="row justify-content-center align-self-center">
                     <div>
-                      <a href="#0" class="r-link link text-underlined">Lihat</a>
+                      <a href="https://www.facebook.com/WAKiShopMalaysia/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
                     </div>
                   </div>
                 </div>
@@ -723,7 +744,7 @@
                   </div>
                   <div class="row justify-content-center align-self-center">
                     <div>
-                      <a href="#0" class="r-link link text-underlined">Lihat</a>
+                      <a href="https://www.facebook.com/waki3Dprintingindustries/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
                     </div>
                   </div>
                 </div>
