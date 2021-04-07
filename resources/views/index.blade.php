@@ -258,7 +258,7 @@
                 <div class="card-footer" style="background: initial;">
                   <div class="text-center pb-2"><hr>
                     {{-- <button class="btn-link"><span>Lihat Semua </span></button> --}}
-                    <a href="" class="btn-link"><span>Lihat Semua </span></a>
+                    <a href="/product_category/5" class="btn-link"><span>Lihat Semua </span></a>
                   </div>
                 </div>
               </div>
@@ -279,7 +279,7 @@
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
-                    <a href="" class="btn-link"><span>Lihat Semua </span></a>
+                    <a href="/product_category/5" class="btn-link"><span>Lihat Semua </span></a>
                   </div>
                 </div>
               </div>
@@ -300,7 +300,7 @@
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
-                    <a href="" class="btn-link"><span>Lihat Semua </span></a>
+                    <a href="/product_category/4" class="btn-link"><span>Lihat Semua </span></a>
                   </div>
                 </div>
               </div>
@@ -321,7 +321,7 @@
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
-                    <a href="" class="btn-link"><span>Lihat Semua </span></a>
+                    <a href="/product_category/3" class="btn-link"><span>Lihat Semua </span></a>
                   </div>
                 </div>
               </div>
@@ -342,7 +342,7 @@
                 </div>
                 <div class="card-footer"  style="background: initial;">
                   <div class="text-center pb-2"><hr>
-                    <a href="" class="btn-link"><span>Lihat Semua </span></a>
+                    <a href="/product_category/6" class="btn-link"><span>Lihat Semua </span></a>
                   </div>
                 </div>
               </div>
