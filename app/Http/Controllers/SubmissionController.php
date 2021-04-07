@@ -8,12 +8,12 @@ use App\DeliveryOrder;
 use App\HistoryUpdate;
 use App\RajaOngkir_City;
 use App\Reference;
-use DB;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class SubmissionController extends Controller
 {
@@ -194,11 +194,11 @@ class SubmissionController extends Controller
 
                         // {{-- KHUSUS Philiphin --}}
                         if($value == 'other'){
-                            $data['arr_product'][$key]['id'] = $data['product_other_'.$arrKey[1]];
+                            $data['arr_product'][$key]['id'] = $data['product_other_' . $arrKey[1]];
                         }
                         // ===========================
 
-                        $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+                        $data['arr_product'][$key]['qty'] = $data['qty_' . $arrKey[1]];
                     }
                 }
             }
@@ -252,6 +252,7 @@ class SubmissionController extends Controller
                 $reference->province = $data["province_ref"][$i];
                 $reference->city = $data["city_ref"][$i];
                 $reference->deliveryorder_id = $deliveryOrder->id;
+                $reference->status = "pending";
                 $reference->save();
             }
 
@@ -560,11 +561,11 @@ class SubmissionController extends Controller
 
                             // KHUSUS Philiphin
                             if($value == 'other'){
-                                $data['arr_product'][$key]['id'] = $data['product_other_'.$arrKey[1]];
+                                $data['arr_product'][$key]['id'] = $data['product_other_' . $arrKey[1]];
                             }
                             // ===========================
 
-                            $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+                            $data['arr_product'][$key]['qty'] = $data['qty_' . $arrKey[1]];
                         }
                     }
                 }
@@ -617,6 +618,9 @@ class SubmissionController extends Controller
                     $reference->province = $data["province_ref"][$i];
                     $reference->city = $data["city_ref"][$i];
                     $reference->deliveryorder_id = $deliveryOrder->id;
+                    $reference->souvenir_id = $data["souvenir_id"][$i];
+                    $reference->link_hs = $data["link_hs"][$i];
+                    $reference->status = "pending";
                     $reference->save();
 
                     $referenceArray[] = $reference;
@@ -876,6 +880,9 @@ class SubmissionController extends Controller
                     $reference->phone = $data["phone_ref"][$i];
                     $reference->province = $data["province_ref"][$i];
                     $reference->city = $data["city_ref"][$i];
+                    $reference->souvenir_id = $data["souvenir_id"][$i];
+                    $reference->link_hs = $data["link_hs"][$i];
+                    $reference->status = $data["status"][$i];
 
                     // Menyimpan pembaruan data references
                     $reference->save();
@@ -1093,12 +1100,21 @@ class SubmissionController extends Controller
                 "raja_ongkir__cities.province AS province",
                 "raja_ongkir__cities.type AS type",
                 "raja_ongkir__cities.city_name AS city_name",
+                "souvenirs.name AS souvenir",
+                "references.link_hs AS link_hs",
+                "references.status AS status",
             )
             ->leftJoin(
                 "raja_ongkir__cities",
                 "raja_ongkir__cities.city_id",
                 "=",
                 "references.city"
+            )
+            ->leftJoin(
+                "souvenirs",
+                "souvenirs.id",
+                "=",
+                "references.souvenir_id"
             )
             ->paginate(10);
 
@@ -1210,12 +1226,21 @@ class SubmissionController extends Controller
                 "raja_ongkir__cities.province AS province",
                 "raja_ongkir__cities.type AS city_type",
                 "raja_ongkir__cities.city_name AS city_name",
+                "souvenirs.name AS souvenir",
+                "references.link_hs AS link_hs",
+                "references.status AS status",
             )
             ->leftJoin(
                 "raja_ongkir__cities",
                 "raja_ongkir__cities.city_id",
                 "=",
                 "references.city"
+            )
+            ->leftJoin(
+                "souvenirs",
+                "souvenirs.id",
+                "=",
+                "references.souvenir_id"
             )
             ->where("references.deliveryorder_id", $request->id)
             ->get();
