@@ -2,6 +2,7 @@
 @extends('layouts.template')
 
 @section('content')
+
 <!--==========================Hero Section============================-->
 <section id="hero" class="clearfix">
   {{-- <img class="video-bg" src="{{ asset ('sources/video-bg.png') }}"/> --}}
@@ -16,15 +17,39 @@
         </div>
 
         <div class="col-md-6" style="flex: none;">
-          <div class="text-right" style="position: relative; top: 50%; transform: translateY(-50%);">
-            <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
+          <div class="text-right" style="position: relative; top: 50%; transform: translateY(-50%);" data-toggle="modal" data-target="#myModal">
+              <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
+         
+            
           </div>
+          
           {{-- <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
             <video muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
               <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
             </video>
           </div> --}}
         </div>
+
+        <div id="myModal" class="modal fade" role="dialog">
+          <div class="modal-dialog">
+              <div class="modal-content">
+      
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  </div> 
+      
+                  <div class="modal-body">
+                          <iframe width="100%" height="480" src="{{asset('sources/Introduction of WAKi short.mp4')}}" frameborder="0" allowfullscreen autoplay></iframe>
+                  </div>
+      
+                  {{-- <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal"></button>
+                  </div> --}}
+              </div>
+      
+          </div>
+      </div>
+
       </div>
 
     </div>
@@ -213,7 +238,7 @@
           <h2>Produk Kami</h2>
         </header>
       <div class="row justify-content-center">
-        <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
           <div class="owl-carousel product-carousel">
               <div class="card white-bg mb-3 item">
@@ -645,11 +670,6 @@
                   <div class="card-title text-center">
                     WAKimart
                   </div>
-                  {{-- <div data-equal-height="card">
-                      <p>
-                        WAKimart adalah supermarket bergerak yang menyediakan 5000 produk untuk kebutuhan keluarga anda dalam menuju kehidupan yang lebih baik.
-                      </p>
-                  </div><hr> --}}
                   <div class="row justify-content-center align-self-center">
                     <div>
                       <a href="#0" class="r-link link text-underlined">Lihat</a>
@@ -667,11 +687,6 @@
                   <div class="card-title text-center">
                     WAKiShop
                   </div>
-                  {{-- <div data-equal-height="card">
-                    <p>
-                      WAKimart adalah supermarket bergerak yang menyediakan 5000 produk untuk kebutuhan keluarga anda dalam menuju kehidupan yang lebih baik.
-                    </p>
-                  </div><hr> --}}
                   <div class="row justify-content-center align-self-center">
                     <div>
                       <a href="#0" class="r-link link text-underlined">Lihat</a>
@@ -689,11 +704,6 @@
                   <div class="card-title text-center">
                     WAKi F&B
                   </div>
-                 {{--  <div data-equal-height="card">
-                    <p>
-                      WAKimart adalah supermarket bergerak yang menyediakan 5000 produk untuk kebutuhan keluarga anda dalam menuju kehidupan yang lebih baik.
-                    </p>
-                  </div><hr> --}}
                   <div class="row justify-content-center align-self-center">
                     <div>
                       <a href="#0" class="r-link link text-underlined">Lihat</a>
@@ -711,11 +721,6 @@
                   <div class="card-title text-center">
                     WAKi 3D Printing
                   </div>
-                  {{-- <div data-equal-height="card">
-                    <p>
-                      WAKimart adalah supermarket bergerak yang menyediakan 5000 produk untuk kebutuhan keluarga anda dalam menuju kehidupan yang lebih baik.
-                    </p>
-                  </div><hr> --}}
                   <div class="row justify-content-center align-self-center">
                     <div>
                       <a href="#0" class="r-link link text-underlined">Lihat</a>
