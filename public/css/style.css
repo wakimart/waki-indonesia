@@ -274,6 +274,7 @@ h6 {
   width: 90px;
   height: 90px;
   margin-right: 2em;
+  cursor: pointer;
 }
 
 .modal-dialog {
@@ -282,19 +283,21 @@ h6 {
 }
 
 .modal-body {
-position:relative;
-padding:0px;
+  position:relative;
+  padding:0px;
 }
 
 .close {
-position:absolute;
-right:-30px;
-top:0;
-z-index:999;
-font-size:2rem;
-font-weight: normal;
-color:#fff;
-opacity:1;
+  position:absolute;
+  right:-30px;
+  top:0;
+  z-index:999;
+  font-size:2rem;
+  color:#fff;
+  opacity:1;
+}
+.close:hover{
+  color: #1bc554 !important;
 }
 
 
@@ -1937,6 +1940,17 @@ CORE
   color: #048b32;
 }
 
+/*------------------------------------
+# Modal Video
+--------------------------------------*/
+.videoModal .modal-header{
+  border: none !important;
+}
+
+.videoModal .modal-content{
+  border: none !important;
+  background-color: transparent !important;
+}
 
 /*--------------------------------------------------------------
 # Responsive Media Queries

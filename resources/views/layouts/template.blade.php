@@ -356,7 +356,13 @@
 		      370: {items: 1}
 		    }
 		  });
-		  $("#success-alert").show();
+		  console.log("test");
+			$('#video2').on('shown.bs.modal', function (event) {
+		    $('#video-2')[0].play();
+		  });
+		  $('#video2').on('hidden.bs.modal', function (event) {
+		    $('#video-2')[0].pause();
+		  });
 		});
 		</script>
 </body>
