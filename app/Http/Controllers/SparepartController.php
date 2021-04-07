@@ -30,7 +30,7 @@ class SparepartController extends Controller
             compact(
                 "countSparepart",
                 "sparepart",
-                "url",
+                "url"
             )
         )
         ->with('i', (request()->input('page', 1) - 1) * 10 + 1);
