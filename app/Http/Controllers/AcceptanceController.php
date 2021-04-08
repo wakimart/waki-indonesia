@@ -634,7 +634,7 @@ class AcceptanceController extends Controller
                     'csos.code AS cso_code',
                     "np.code AS new_product",
                     "op.name AS old_product",
-                    "acceptances.other_product AS other_product",
+                    "acceptances.other_product AS other_product"
                 )
                 ->leftJoin(
                     'branches',
@@ -715,7 +715,7 @@ class AcceptanceController extends Controller
             "raja_ongkir__subdistricts.subdistrict_name AS district_name",
             "acceptances.other_product AS other_product",
             "op.code AS old_product_code",
-            "op.name AS old_product_name",
+            "op.name AS old_product_name"
         )
         ->leftJoin(
             "products AS np",
@@ -745,7 +745,7 @@ class AcceptanceController extends Controller
             "raja_ongkir__subdistricts",
             "raja_ongkir__subdistricts.subdistrict_id",
             "=",
-            "acceptances.district",
+            "acceptances.district"
         )
         ->leftJoin(
             "products AS op",
@@ -762,7 +762,7 @@ class AcceptanceController extends Controller
         unset($acceptance->arr_condition);
 
         $statusLog = AcceptanceStatusLog::select(
-            'users.name AS user_name',
+            'users.name AS user_name'
         )
         ->leftjoin(
             'users',
