@@ -14,7 +14,8 @@ class StockController extends Controller
      */
     public function index()
     {
-        //
+        $stocks = Stock::where('active', true)->get();
+        return view('admin.list_stock', compact('stocks'));
     }
 
     /**

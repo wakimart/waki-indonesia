@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\HistoryUpdate;
 use App\ProductService;
 use App\Upgrade;
+use App\Stock;
+use App\HistoryStock;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -69,14 +71,126 @@ class UpgradeController extends Controller
             $productService->upgrade_id = $upgrade->id;
             $productService->save();
 
-            DB::commit();
 
+            //Pengecekan dan pembuatan stok
+            $getProductId = null;
+            $getOtherProduct = null;
+            if($upgrade->acceptance['oldproduct_id'] != null){
+                $getProductId = $upgrade->acceptance['oldproduct_id'];
+            }else{
+                $getOtherProduct = strtolower($upgrade->acceptance['other_product']);
+            }
+            
+            $stocks = Stock::where('active', true)->select('stocks.product_id', 'stocks.other_product')->get();
+
+            //pembuatan array isinya all product_id dan other_product yg ada
+            $arr_stockId = [];
+            $arr_stockOther = [];
+            foreach ($stocks as $key => $item) {
+                if($item->product_id != null){
+                    if($arr_stockId == null){
+                        array_push($arr_stockId, $item->product_id);
+                    }else{
+                        if(!in_array($item->product_id, $arr_stockId)){
+                            array_push($arr_stockId, $item->product_id);
+                        }            
+                    }    
+                }else if($item->other_product != null){
+                    if($arr_stockOther == null){
+                        array_push($arr_stockOther, strtolower($item->other_product));
+                    }else{
+                        if(!in_array(strtolower($item->other_product), $arr_stockOther)){
+                            array_push($arr_stockOther, strtolower($item->other_product));  
+                        }
+                    }
+                }
+            }
+
+            //cek di array
+            $temp_arrId = [];
+            if($getProductId != null){
+                if(!in_array($getProductId, $arr_stockId)){
+                    for ($i=0; $i < 2; $i++) { 
+                        $data['product_id'] = $getProductId;
+                        $data['quantity'] = 1;
+
+                        $data['type_warehouse'] = "Display";
+                        if($i > 0){
+                            $data['type_warehouse'] = "Ready";
+                        }
+                        
+                        $data['other_product'] = null;
+                        $stock = Stock::create($data);
+
+                        array_push($temp_arrId, $stock->id);
+                    }
+
+                    $history_stock['upgrade_id'] = $upgrade->id;
+                    $history_stock['type_warehouse'] = "Display";
+                    $history_stock['quantity'] = 1;
+                    $history_stock['stock_id'] = $temp_arrId[0];
+                    HistoryStock::create($history_stock);
+                }else{
+                    $stock = Stock::where([
+                        ['active', true],
+                        ['product_id', $getProductId],
+                        ['type_warehouse', "Display"]
+                    ])->get();
+
+                    $stock['quantity'] = $stock['quantity'] + 1;
+                    $stock->save();
+
+                    $history_stock['upgrade_id'] = $upgrade->id;
+                    $history_stock['type_warehouse'] = "Display";
+                    $history_stock['quantity'] = 1;
+                    $history_stock['stock_id'] = $stock['id'];
+                    HistoryStock::create($history_stock);
+                }
+            }elseif ($getOtherProduct != null) {
+                if(!in_array($getOtherProduct, $arr_stockOther)){
+                    for ($i=0; $i < 2; $i++) { 
+                        $data['product_id'] = null;
+                        $data['quantity'] = 1;
+                        
+                        $data['type_warehouse'] = "Display";
+                        if($i > 0){
+                            $data['type_warehouse'] = "Ready";
+                        }
+
+                        $data['other_product'] = $getOtherProduct;
+                        $stock = Stock::create($data);
+
+                        array_push($temp_arrId, $stock->id);
+                    }
+
+                    $history_stock['upgrade_id'] = $upgrade->id;
+                    $history_stock['type_warehouse'] = "Display";
+                    $history_stock['stock_id'] = $temp_arrId[0];
+                    HistoryStock::create($history_stock);
+                }else{
+                    $stock = Stock::where([
+                        ['active', true],
+                        ['other_product', 'like' , "%{$getOtherProduct}%"],
+                        ['type_warehouse', "Display"]
+                    ])->get();
+                    $stock['quantity'] = $stock['quantity'] + 1;
+                    $stock->save();
+
+                    $history_stock['upgrade_id'] = $upgrade->id;
+                    $history_stock['type_warehouse'] = "Display";
+                    $history_stock['quantity'] = 1;
+                    $history_stock['stock_id'] = $stock['id'];
+                    HistoryStock::create($history_stock);
+                }
+            }
+
+            DB::commit();
             return redirect()->route("detail_upgrade_form", ["id" => $upgrade->id]);
         } catch (\Exception $e) {
             DB::rollback();
 
             return response()->json([
-                "error" => $e,
+                "error" => $e
             ]);
         }
     }
@@ -122,6 +236,9 @@ class UpgradeController extends Controller
                 $upgrade = $upgrade->fill($request->only("due_date", "task"));
                 $upgrade->save();
 
+
+                return response()->json(["test" => "masuk"]);
+
                 $user = Auth::user();
                 $historyUpdateUpgrade["type_menu"] = "Upgrade";
                 $historyUpdateUpgrade["method"] = "Update";
@@ -137,7 +254,6 @@ class UpgradeController extends Controller
                 HistoryUpdate::create($historyUpdateUpgrade);
 
                 DB::commit();
-
                 return redirect()->route("detail_upgrade_form", ["id" => $upgrade->id]);
             } catch (\Exception $e) {
                 DB::rollback();
@@ -156,6 +272,66 @@ class UpgradeController extends Controller
 
             try {
                 $upgrade = Upgrade::find($request->id);
+
+                $getProductId = null;
+                $getOtherProduct = null;
+                if($upgrade->acceptance['oldproduct_id'] != null){
+                    $getProductId = $upgrade->acceptance['oldproduct_id'];
+                }else{
+                    $getOtherProduct = strtolower($upgrade->acceptance['other_product']);
+                }
+
+                //pembuatan history stock
+                if($request->status == "Ready" && $getProductId != null){
+                    $stocks = Stock::where('product_id', $getProductId)->get(); 
+
+                    foreach ($stocks as $key => $stock) {
+                        if($stock['type_warehouse'] == "Display"){
+                            $stock['quantity'] = $stock['quantity'] - 1;
+                            $stock->save();
+
+                            $history_stock['upgrade_id'] = $upgrade->id;
+                            $history_stock['type_warehouse'] = "Display";
+                            $history_stock['quantity'] = -1;
+                            $history_stock['stock_id'] = $stock['id'];
+                            HistoryStock::create($history_stock);
+                        }else if($stock['type_warehouse'] == "Ready") {
+                            $stock['quantity'] = $stock['quantity'] + 1;
+                            $stock->save();
+
+                            $history_stock['upgrade_id'] = $upgrade->id;
+                            $history_stock['type_warehouse'] = "Ready";
+                            $history_stock['quantity'] = 1;
+                            $history_stock['stock_id'] = $stock['id'];
+                            HistoryStock::create($history_stock);
+                        }
+                    }
+                }else if($request->status == "Ready" && $getOtherProduct != null){
+                    $stocks = Stock::where('other_product', 'like', '%$getProductId%')->get();
+
+                    foreach ($stocks as $key => $stock) {
+                        if($stock['type_warehouse'] == "Display"){
+                            $stock['quantity'] = $stock['quantity'] - 1;
+                            $stock->save();
+
+                            $history_stock['upgrade_id'] = $upgrade->id;
+                            $history_stock['type_warehouse'] = "Display";
+                            $history_stock['quantity'] = -1;
+                            $history_stock['stock_id'] = $stock['id'];
+                            HistoryStock::create($history_stock);
+                        }else if($stock['type_warehouse'] == "Ready") {
+                            $stock['quantity'] = $stock['quantity'] + 1;
+                            $stock->save();
+
+                            $history_stock['upgrade_id'] = $upgrade->id;
+                            $history_stock['type_warehouse'] = "Ready";
+                            $history_stock['quantity'] = 1;
+                            $history_stock['stock_id'] = $stock['id'];
+                            HistoryStock::create($history_stock);
+                        }
+                    }
+                }
+                //end pembentukan history stock                
 
                 // TODO: Ganti "IF" bagian ini jika bagian lain yang dibutuhkan sudah selesai
                 if (
