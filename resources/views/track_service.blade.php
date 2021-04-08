@@ -120,6 +120,20 @@
     width: 60em;
 }
 
+.table th{
+    color: #545454;
+    font-size: 0.95em;
+    font-weight: 600;
+    border-bottom: 1px #545454 solid; 
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link {
+  color: #737373; 
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+  color: #28a745;
+}
 
 /* Tabs Card */
 
@@ -173,20 +187,19 @@
             <h4>{{ $services['code'] }}</h4>
         </div>
             <div class="col-xs-12">
-              <div class="card card-shadow mt-3 tab-card">
-                <div class="card-header tab-card-header">
-                  <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Data Service</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Data Product</a>
-                    </li>
-                  </ul>
+             <div class="card card-shadow mt-3 ">
+                <div class="card-header" style="background: none;">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" style="font-weight: 600; font-size: 1em;" id="one-tab" data-toggle="tab" href="#one" role="tab" aria-controls="One" aria-selected="true">Data Service</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" style="font-weight: 600; font-size: 1em;" id="two-tab" data-toggle="tab" href="#two" role="tab" aria-controls="Two" aria-selected="false">Data Product</a>
+                        </li>
+                    </ul>
                 </div>
-        
                 <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+                    <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
                         <div class="row">
                             <div class="col-6">
                                 <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
@@ -204,85 +217,86 @@
                                 </label>
                             </div>
                         </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
-                                Customer Name
-                            </label>
+                        <div class="row">
+                            <div class="col-6">
+                                <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
+                                    Customer Name
+                                </label>
 
+                            </div>
+                            <div class="col-6">
+                                <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
+                                    {{ $services['name'] }}
+                                </label>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
-                                {{ $services['name'] }}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
-                                Customer Phone
-                            </label>
+                        <div class="row">
+                            <div class="col-6">
+                                <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
+                                    Customer Phone
+                                </label>
 
+                            </div>
+                            <div class="col-6">
+                                <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
+                                {{ $services['phone'] }}
+                                </label>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
-                               {{ $services['phone'] }}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <label style="color: #737373; font-weight: 600; font-size: 0.9em;  ">
-                                Customer Address
-                            </label>
+                        <div class="row">
+                            <div class="col-6">
+                                <label style="color: #737373; font-weight: 600; font-size: 0.9em;  ">
+                                    Customer Address
+                                </label>
 
+                            </div>
+                            <div class="col-6">
+                                <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
+                                {{ $services['address'] }}
+                                </label>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
-                               {{ $services['address'] }}
-                            </label>
-                        </div>
-                    </div>
-                </div>      
-                  <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab" style="font-size: 0.9em;">
-                    @foreach($services->product_services as $key => $product_service)
-                    <h6 style="color: #545454; font-weight: 600; margin-bottom: 0.5m;">
-                        Product {{$key + 1}}
-                    </h6>
-                    <div class="row">
-                        <div class="col-12">
-                            <label style="color: #737373; font-weight: 600; ">
-                                @if($product_service['product_id'] != null)
-                                      {{$product_service->product['name']}}	
-                                  @elseif($product_service['product_id'] == null)
-                                      {{$product_service['other_product']}}
-                                  @endif
-                            </label>
+                    </div>      
+                    <div class="tab-pane fade p-3" id="two" role="tabpanel" aria-labelledby="two-tab" style="font-size: 0.9em;">
+                        @foreach($services->product_services as $key => $product_service)
+                        <h6 style="color: #545454; font-weight: 600; margin-bottom: 0.5m;">
+                            Product {{$key + 1}}
+                        </h6>
+                        <div class="row">
+                            <div class="col-12">
+                                <label style="color: #737373; font-weight: 600; ">
+                                    @if($product_service['product_id'] != null)
+                                        {{$product_service->product['name']}}	
+                                    @elseif($product_service['product_id'] == null)
+                                        {{$product_service['other_product']}}
+                                    @endif
+                                </label>
 
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <label style="color: #545454; font-weight: 600; ">
-                                Issues</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <label style="color: #545454; font-weight: 600; ">
+                                    Issues
+                                </label>
 
+                            </div>
+                            <div class="col-6">
+                                <label style="color: #737373; font-weight: 600; ">
+                                    @php
+                                        $issues = json_decode($product_service['issues']);
+                                    @endphp
+                                    {{implode(", ",$issues[0]->issues)}}
+
+                                </label>
+
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label style="color: #737373; font-weight: 600; ">
-                                @php
-                                      $issues = json_decode($product_service['issues']);
-                                  @endphp
-                                  {{implode(", ",$issues[0]->issues)}}
-
-                            </label>
-
-                        </div>
-                    </div>
-                    <hr style="padding-top: 0; padding-bottom: 1em;">
-                    @endforeach             
+                        <hr style="padding-top: 0; padding-bottom: 1em;">
+                        @endforeach             
                   </div>
                 </div>
-              </div>
+            </div>
             </div><br>
             <div class="col-xs-12">
                 <div class="container">
@@ -315,6 +329,7 @@
                                                 <h6 style="color: #048b32; font-weight: 700;">Processed</h6>
                                                 <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
                                                 <hr>
+                                                <p style="font-weight: 400;">Produk sedang diproses</p>
                                                 <div class="card">
                                                     
                                                     <div class="card-body">
@@ -413,8 +428,20 @@
                                                 <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
                                                 <hr>
                                                 <h6 class="text-center" style="font-weight: 600;">Biaya Service</h6>
+                                                    <div class="row" style="padding: 0; margin: 0;">
+                                                        <div class="col-5 text-left">
+                                                            <p style="font-weight: 600; margin-bottom: 0;">Harga Sparepart (Rp)</p>
+                                                        </div>
+                                                        <div class="col-3 text-left">
+                                                             <p style="font-weight: 600; margin-bottom: 0;">Qty</p>
+                                                        </div>
+                                                        <div class="col-4 text-left">
+                                                             <p style="font-weight: 600; margin-bottom: 0;">Total (Rp)</p>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
                                                 @foreach($services->product_services as $key => $product_service)
-                                                    <p class="card-title" style="font-weight: 600;">Product {{$key + 1}}</p>
+                                                    {{-- <p class="card-title" style="font-weight: 600;">Product {{$key + 1}}</p> --}}
                                                     @php
                                                         $arr_sparepart = json_decode($product_service['sparepart']);
                                                         $count_sparepart = count($arr_sparepart);
@@ -428,7 +455,7 @@
                                                             <div class="col-5">
                                                                <span class="align-numbers"> {{number_format($unit_price)}}</span>
                                                             </div>
-                                                            <div class="col-3">
+                                                            <div class="col-3 text-center">
                                                                 {{$item->qty}}x
                                                             </div>
                                                             <div class="col-4 text-right">
@@ -439,19 +466,19 @@
                                                     </div>
                                                     @php $first = true; @endphp
                                                     @for($i = 0; $i < $count_sparepart; $i++)
-                                                    @php
-                                                        if($first){
-                                                            $first = false;
-                                                            continue;
-                                                        }
-                                                        $unit_price = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
-                                                        $total_price = $item->qty * $unit_price;
-                                                    @endphp
+                                                                @php
+                                                                    if($first){
+                                                                        $first = false;
+                                                                        continue;
+                                                                    }
+                                                                     $unit_price = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
+		                            		                         $total_price = (int)$arr_sparepart[$i]->qty * $unit_price;
+                                                                @endphp
                                                     <div class="row">
                                                         <div class="col-5">
                                                             <span class="align-numbers"> {{number_format($unit_price)}}</span>
                                                         </div>
-                                                        <div class="col-3">
+                                                        <div class="col-3 text-center">
                                                             {{$arr_sparepart[$i]->qty}}x
                                                         </div>
                                                         <div class="col-4 text-right">
@@ -460,7 +487,15 @@
                                                     </div>
                                                     @endfor
                                                 @endforeach
-                                                <br><p style="font-weight: 600;">Total</p>    
+                                                <br>
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <p style="font-weight: 600;">Total Biaya</p>    
+                                                    </div>
+                                                    <div class="col-4 text-right">
+                                                        <p style="font-weight: 600;">Rp </p>
+                                                    </div>
+                                                </div>
                                                            
                                                 {{-- <div class="table-responsive"> --}}
                                                                 {{-- <table class="table table-responsive table-borderless">
@@ -706,6 +741,7 @@
                                                 <h6 style="color: #048b32; font-weight: 700;">Processed</h6>
                                                 <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
                                                 <hr>
+                                                 <p style="font-weight: 400;">Produk sedang diproses</p>
                                                 <div class="card">
                                                     
                                                     <div class="card-body">
@@ -820,9 +856,16 @@
                                                     
                                                     <div class="card-body">
                                                         <h6 class="text-center" style="font-weight: 600;">Biaya Service</h6>
-                                                        @foreach($services->product_services as $key => $product_service)
-                                                        <h6 class="card-title" style="font-weight: 600;">Product {{$key + 1}}</h6>
+                                                        
+                                                        {{-- <h6 class="card-title" style="font-weight: 600;">Product {{$key + 1}}</h6> --}}
                                                         <table class="table table-borderless table-responsive">
+                                                            <tr>
+                                                                    <th>Nama Sparepart</th>
+                                                                    <th>Qty</th>
+                                                                    <th>Harga (Rp)</th>
+                                                                    <th>Total (Rp)</th>
+                                                            </tr>
+                                                            @foreach($services->product_services as $key => $product_service)
                                                             @php
                                                             $arr_sparepart = json_decode($product_service['sparepart']);
                                                             $count_sparepart = count($arr_sparepart);
@@ -851,9 +894,15 @@
                                                                         $first = false;
                                                                         continue;
                                                                     }
-                                                                    $unit_price = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
-                                                                    $total_price = $item->qty * $unit_price;
+                                                                     $unit_price = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
+		                            		                         $total_price = (int)$arr_sparepart[$i]->qty * $unit_price;
                                                                 @endphp
+                                                                {{-- <tr>
+                                                                    <th>Nama Sparepart</th>
+                                                                    <th>Qty</th>
+                                                                    <th>Harga (Rp)</th>
+                                                                    <th>Total (Rp)</th>
+                                                                </tr> --}}
                                                                 <tr>
                                                                     <td class="td-product-name">{{$product_service->getSparepart($arr_sparepart[$i]->id)->id['name']}}</td>
                                                                     <td>{{$arr_sparepart[$i]->qty}}x</td>
@@ -861,9 +910,22 @@
                                                                     <td>{{number_format($total_price)}}</td>
                                                                 </tr>
                                                             @endfor
-                                                        </table>
                                                         @endforeach
-                                                        <h6 style="font-weight: 600;">Total</h6>
+                                                            <tr>
+                                                            
+                                                                @php
+                                                                    $total = 0;
+                                                                    $total += $total_price; 
+                                                                    
+                                                                @endphp
+                                                                <td colspan="2"><h6 style="font-weight: 600;">Total Biaya Service</h6></td>
+                                                                <td colspan="2" class="text-right" style="font-weight: 600;">
+                                                                    Rp {{number_format($total)}}
+                                                                </td>
+                                                            </tr>
+                                                            
+                                                        </table>
+                                                        {{-- <h6 style="font-weight: 600;">Total</h6> --}}
                                                     </div>
                                                 </div>
                                             </div>
