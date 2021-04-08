@@ -1,32 +1,36 @@
 <?php
-  $menu_item_page = "homeservice";
-  $menu_item_second = "add_home_service";
+$menu_item_page = "homeservice";
+$menu_item_second = "add_home_service";
 ?>
+
 @extends('admin.layouts.template')
 
 @section('style')
 <style type="text/css">
-  #intro {
-    padding-top: 2em;
-  }
-  button{
-    background: #1bb1dc;
-    border: 0;
-    border-radius: 3px;
-    padding: 8px 30px;
-    color: #fff;
-    transition: 0.3s;
-  }
-  .validation{
-    color: red;
-    font-size: 9pt;
-  }
-  input, select, textarea{
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    border: 1px solid #dce1ec !important;
-    font-size: 14px !important;
-  }
+    #intro {
+        padding-top: 2em;
+    }
+
+    button {
+        background: #1bb1dc;
+        border: 0;
+        border-radius: 3px;
+        padding: 8px 30px;
+        color: #fff;
+        transition: 0.3s;
+    }
+
+    .validation {
+        color: red;
+        font-size: 9pt;
+    }
+
+    input, select, textarea {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        border: 1px solid #dce1ec !important;
+        font-size: 14px !important;
+    }
 </style>
 @endsection
 
@@ -42,7 +46,7 @@
 	        	</ol>
       		</nav>
     	</div>
-      
+
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
@@ -184,31 +188,50 @@
 
               <div class="text-center"><button id="tambah_appointment" type="button" style="display: none;background: #4caf3ab3">Tambah Appointment</button></div>
 
-              <div class="form_appoint_container">
+                <div class="form_appoint_container">
+                    <div class="form-group">
+                        <label for="">Tanggal Janjian</label>
+                        <input type="date"
+                            class="form-control"
+                            name="date[]"
+                            id="date"
+                            placeholder="Tanggal Janjian"
+                            value="<?php echo date("Y-m-d"); ?>"
+                            min="<?php echo date("Y-m-d"); ?>"
+                            onchange="setMinAppointmentTime(this)"
+                            onload="setMinAppointmentTime(this)"
+                            required
+                            data-msg="Mohon Isi Tanggal" />
+                        <div class="validation"></div>
+                        <span class="invalid-feedback">
+                            <strong></strong>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Jam Janjian</label>
+                        <input type="time"
+                            class="form-control"
+                            name="time[]"
+                            id="time"
+                            placeholder="Jam Janjian"
+                            value="<?php echo date('H:i'); ?>"
+                            required
+                            data-msg="Mohon Isi Jam"
+                            min="<?php echo date("H:i") ?>"
+                            max="20:00" />
+                        <div class="validation"></div>
+                        <span class="invalid-feedback">
+                            <strong></strong>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="errormessage"></div>
+
                 <div class="form-group">
-                  <label for="">Tanggal Janjian</label>
-  								  <input type="date" class="form-control" name="date[]" id="date" placeholder="Tanggal Janjian" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
-  								<div class="validation"></div>
-  								<span class="invalid-feedback">
-  									<strong></strong>
-  								</span>
-  							</div>
-  							<div class="form-group">
-  								<label for="">Jam Janjian</label>
-  								<input type="time" class="form-control" name="time[]" id="time" placeholder="Jam Janjian" value="<?php echo date('H:i'); ?>" required data-msg="Mohon Isi Jam" min="10:00" max="20:00"/>
-  								<div class="validation"></div>
-  								<span class="invalid-feedback">
-  									<strong></strong>
-  								</span>
-  							</div>
-              </div>
-
-        			<div id="errormessage"></div>
-
-        			<div class="form-group">
-        				<button id="addHomeService" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
-        				<button class="btn btn-light">Cancel</button>
-        			</div>
+                    <button id="addHomeService" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+                    <button class="btn btn-light">Cancel</button>
+                </div>
 
 	          </form>
 						@elseif(Utils::$lang=='eng')
@@ -279,7 +302,16 @@
 							<div class="form-group">
 								<label for=""><h2>Home Service Appointment</h2></label><br/>
 	              	<label for="">Date</label>
-								  <input type="date" class="form-control" name="date" id="date" placeholder="Appointment Date" value="<?php echo date('Y-m-j'); ?>" required data-msg="Please fill the Date" />
+                                <input type="date"
+                                    class="form-control"
+                                    name="date"
+                                    id="date"
+                                    placeholder="Appointment Date"
+                                    value="<?php echo date('Y-m-j'); ?>"
+                                    onchange="setMinAppointmentTime(this)"
+                                    onload="setMinAppointmentTime(this)"
+                                    required
+                                    data-msg="Please fill the Date" />
 								<div class="validation"></div>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -288,7 +320,16 @@
 
 							<div class="form-group">
 								<label for="">Appointment Time</label>
-								<input type="time" class="form-control" name="time" id="time" placeholder="Appointment Time" value="<?php echo date('H:i'); ?>" required data-msg="Please fill the time" min="10:00" max="20:00"/>
+								<input type="time"
+                                    class="form-control"
+                                    name="time"
+                                    id="time"
+                                    placeholder="Appointment Time"
+                                    value="<?php echo date('H:i'); ?>"
+                                    required
+                                    data-msg="Please fill the time"
+                                    min="<?php echo date("H:i"); ?>"
+                                    max="20:00"/>
 								<div class="validation"></div>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -354,25 +395,39 @@
 @endsection
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script type="application/javascript">
+function setMinAppointmentTime(e) {
+    // Tanggal & waktu dari inputan
+    const getCurrentDate = new Date(Date.parse(e.value));
+
+    // Tanggal & waktu hari ini
+    const today = new Date();
+
+    if (
+        getCurrentDate.getFullYear() === today.getFullYear()
+        && getCurrentDate.getMonth() === today.getMonth()
+        && getCurrentDate.getDate() === today.getDate()
+    ) {
+        if (today.getHours() < 10) {
+            document.getElementById("time").setAttribute("min", "10:00");
+        } else if (today.getHours() >= 10 && today.getHours() < 20) {
+            document.getElementById("time").setAttribute(
+                "min",
+                ("0" + (getCurrentDate.getHours() + 1)).slice(-2)
+                + ":"
+                + ("0" + (getCurrentDate.getMinutes() + 1)).slice(-2)
+            );
+        } else if (today.getHours() >= 20) {
+            document.getElementById("time").setAttribute("disabled", "");
+        }
+    } else {
+        document.getElementById("time").setAttribute("min", "10:00");
+    }
+}
+</script>
 <script type="text/javascript">
 	$(document).ready(function() {
       var frmAdd;
-
-      // $('#addHomeService').click(function(){
-      //       var appointment = 
-      //       $.ajax({
-      //           type: 'POST',
-      //           data: {
-      //               date: date
-      //           },
-      //           success: function(data){
-      //               console.log(data.data);
-      //           },
-      //           error: function(xhr){
-      //               console.log(xhr.responseText);
-      //           }
-      //       });
-      //   });
 
 	    $("#actionAdd").on("submit", function (e) {
 	        e.preventDefault();
@@ -422,7 +477,7 @@
 	                }
 	            }
               if(hasil['errors']['type_homeservices'] != null){
-                alert(hasil['errors']['type_homeservices']);  
+                alert(hasil['errors']['type_homeservices']);
               }else if(hasil['errors'] != null){
                 alert(hasil['errors']);
               }
@@ -476,7 +531,7 @@
                 var arrCity = "<option selected disabled value=\"\">Pilihan Kabupaten</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
-						if(value['type'] == "Kabupaten"){                            
+						if(value['type'] == "Kabupaten"){
 							arrCity += "<option value=\""+value['city_id']+"\">"+value['type']+" "+value['city_name']+"</option>";
 						}
                     });
@@ -494,7 +549,7 @@
                 var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
-                        if(value['type'] == "Kota"){                            
+                        if(value['type'] == "Kota"){
                             arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                         }
                     });
@@ -511,7 +566,7 @@
 				console.log(result);
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
-                    $.each( result, function( key, value ) {                            
+                    $.each( result, function( key, value ) {
                         arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
                     });
                     $( "#subDistrict" ).append(arrSubDistsrict);

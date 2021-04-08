@@ -21,6 +21,11 @@ Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category/{id}', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
 Route::get('/firebase','FirebaseController@index');
+
+//Service Product
+Route::get('/service', 'ServiceController@indexUser')->name('service');
+Route::get('/trackservice/{id}', 'ServiceController@trackService')->name('track_service');
+
 //DO Register
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
 Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
@@ -533,6 +538,13 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    //Delete Product
 	    Route::post('/{ProductNya}', 'ProductController@delete')
 	    	->name('delete_product');
+    });
+
+    Route::group(['prefix' => 'stock', 'middleware' => 'auth'], function(){
+    	//List Stock
+	    Route::get('/list', 'StockController@index')
+	    	->name('list_stock')
+	    	->middleware('can:browse-product');
     });
 
     Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){

@@ -323,7 +323,6 @@ h6 {
   position: absolute;
   top: 0px;
   width: 100%
-
 }
 
 #hero .hero-info .btn-get-started{
@@ -1031,7 +1030,6 @@ p.titleprodcat{
    padding-top: 0;
   border-top: 0;
   }
-
 #product .btn-link{
   background: #fff;
   transition: 0.5s;
@@ -1078,9 +1076,6 @@ p.titleprodcat{
   box-shadow:  20px 20px 60px #bebebe,
   -20px -20px 60px #ffffff;
 }
-
-
-
 
 /* Why Us Section
 --------------------------------*/
@@ -1200,7 +1195,6 @@ p.titleprodcat{
   text-align: center;
   padding-right: 0;
 }
-
 @media (max-width: 767px) {
   #testimonials .testimonial-item {
     text-align: center;

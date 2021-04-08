@@ -665,8 +665,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <!-- #wrapper end -->
 
-
-
 <!-- Footer Scripts
 ============================================= -->
 <script src="{{asset('js/landing/jquery-2.2.4.min.js')}}"></script>
@@ -691,13 +689,7 @@ $(document).ready(function() {
   });
 
   $("#success-alert").show();
-  // $("#myWish").click(function showAlert() {
-  //   $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
-  //     $("#success-alert").slideUp(500);
-  //   });
-  // });
 });
-
 
 // update the tag with id "countdown" every 1 second
 const countDownDate = new Date("Apr 30, 2021 00:00:00").getTime();
@@ -708,22 +700,26 @@ const intervalId = setInterval(function () {
     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
     let countDownHtml = "";
     if (days > 0) {
         countDownHtml += '<span class="h1 font-weight-bold">'
             + days
             + ' </span><span class="h1 font-weight-bold">hari </span>';
     }
+
     if (hours > 0) {
         countDownHtml += '<span class="h1 font-weight-bold">'
             + ("0" + hours).slice(-2)
             + ' </span><span class="h1 font-weight-bold">jam </span>';
     }
+
     if (minutes > 0) {
         countDownHtml += '<span class="h1 font-weight-bold">'
             + ("0" + minutes).slice(-2)
             + ' </span><span class="h1 font-weight-bold">menit </span>';
     }
+    
     countDownHtml += '<span class="h1 font-weight-bold">'
         + ("0" + seconds).slice(-2)
         + ' </span><span class="h1 font-weight-bold">detik</span>';
@@ -731,6 +727,7 @@ const intervalId = setInterval(function () {
         clearInterval(intervalId);
         countDownHtml = '<span class="h1 font-weight-bold">Promo telah berakhir</span>';
     }
+
     document.getElementById("countdown-timer").innerHTML = countDownHtml;
 }, 1000);
 </script>
@@ -745,5 +742,4 @@ const intervalId = setInterval(function () {
 @endif
 
 </body>
-
 </html>
