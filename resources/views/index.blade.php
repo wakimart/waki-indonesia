@@ -507,17 +507,6 @@
         <h2>Bisnis Kami</h2>
       </header>
 
-<<<<<<< HEAD
-      <div class="col-lg-12 col-md-12">
-
-        <div class="col-lg-12 col-md-12 wow fadeInUp" style="width: 60%; margin:auto;">
-          <div class="member">
-            <img src="{{asset('sources/Waki-Chairman.jpg')}}" class="img-fluid" alt="">
-            <div class="member-info">
-              <div class="member-info-content">
-                <h4>Teo Choo Guan</h4>
-                <span>Chairman of WAKi International Group</span>
-=======
       <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="row card-group align-items-center">
             <div class="col-lg-3 col-md-3 col-sm-3">
@@ -586,7 +575,6 @@
                     </div>
                   </div>
                 </div>
->>>>>>> eb0fa6e727f421bc79753cd97f8769352b463c3a
               </div>
             </div>
 
