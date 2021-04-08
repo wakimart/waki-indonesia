@@ -2,9 +2,27 @@
 @extends('layouts.template')
 
 @section('content')
-<!--==========================Intro Section============================-->
-<section id="intro" class="clearfix">
+<!--==========================Hero Section============================-->
+<section id="hero" class="clearfix">
+  {{-- <img class="video-bg" src="{{ asset ('sources/video-bg.png') }}"/> --}}
+    <div class="container d-flex h-100">
+      <div class="row justify-content-center align-self-center" data-aos="fade-up">
+        <div class="col-md-6 hero-info order-md-first order-last" data-aos="zoom-in" data-aos-delay="100">
+          <h2>Selamat datang di WAKi International Group</h2>
+          <p>WAKi adalah perusahaan alat kesehatan yang mengunggulkan kualitas terjamin, untuk membantu keluarga menuju kehidupan yang lebih baik. </p>
+          <div>
+            <a href="#main" class="btn-get-started scrollto">Mulai</a>
+          </div>
+        </div>
 
+        <div class="col-md-6 hero-img">
+          <img src="" alt="" class="img-fluid">
+        </div>
+      </div>
+
+    </div>
+  </section><!-- End Hero -->
+{{-- 
     <div class="carousel-inner ">
       @foreach ($banners as $banner )
       @php
@@ -17,7 +35,7 @@
       </div>
       @endif
     @endforeach
-    </div>
+    
     <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="sr-only">Previous</span>
@@ -27,9 +45,9 @@
       <span class="sr-only">Next</span>
     </a>
   </div>
-
-  <div class="container d-flex h-100">
-    <div class="col-lg-12 col-md-12">
+ --}}
+  {{-- <div class="container d-flex h-100"> --}}
+   {{--  <div class="col-lg-12 col-md-12">
       <div class="intro-content">
         <br>
 
@@ -63,18 +81,36 @@
         <div class="col-sm-12 col-md-4 col-lg-4 wow fadeInUp" data-wow-delay="0.1s" data-wow-duration="1.4s">
           <div class="box">
             <img src="https://waki.asia/wp-content/uploads/2017/07/Indonesia-Therapy-Therapeutic-Equipment.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
+          </div>
         </div>
       </div>
+    </div> --}}
+  {{-- </div> --}}
+</section><!-- #intro -->
+
+
+  <!--==========================Clients Section============================-->
+  <section id="clients" class="wow fadeInUp">
+    <div class="container">
+
+      <header class="section-header">
+        {{-- @if(Utils::$lang=='id')
+        <h3>Penghargaan Kami</h3>
+        @elseif(Utils::$lang=='eng')
+        <h3>Our Awards</h3>
+        @endif --}}
+        <img src="{{asset('sources/Awards_s.png')}}" alt="" class="img-fluid">
+      </header>
 
     </div>
-  </div>
-</section><!-- #intro -->
+  </section><!-- #clients -->
+
 
 <main id="main">
   <!--==========================About Us Section============================-->
-  <section id="about" class="section-bg" style="position: relative; z-index: -1;">
+  <section id="about" style="position: relative; z-index: -1;">
     <div class="container">
-      <div class="col-lg-12 col-md-12">
+      <div class="col-lg-12 col-md-12" style="padding-bottom: 1.5em; padding-top: 2em;">
         <div class="row">
 
           <div class="col-lg-5 col-md-6">
@@ -90,9 +126,9 @@
 
                 <h3>WAKI INTERNATIONAL GROUP</h3>
 
-                <p>"Metrowealth International Group" telah didirikan pada tahun 1995. Sejak saat itu, perusahaan telah berkembang pesat di kawasan Asia Pasifik dan negara-negara Eropa. Pada tahun 2008, untuk menyusun strategi pemasaran global, perusahaan memutuskan untuk mengubah nama menjadi "WAKi". Oleh karena itu, perusahaan ini terdaftar sebagai "WAKi International Group".
-                  <br>
-                  Saat ini, "WAKi" telah menjadi merek populer untuk produk kesehatan. Untuk mengembangkan cetak biru bisnis, WAKi telah mendirikan cabang dan perusahaan patungannya di Malaysia, Indonesia, Filipina, Thailand, Singapura, Brunei, Vietnam, Kamboja, Myanmar, Hongkong, Jepang, Korea, dan Cina. WAKi International Headquarter berlokasi di Gedung WAKi, Kuala Lumpur, Malaysia.</p>
+                <p>"Metrowealth International Group" telah didirikan pada tahun 1995. Sejak saat itu, perusahaan telah berkembang pesat di kawasan Asia Pasifik dan negara-negara Eropa.</p>
+                  
+                  <p>Pada tahun 2008, untuk menyusun strategi pemasaran global, perusahaan memutuskan untuk mengubah nama menjadi "WAKi". Oleh karena itu, perusahaan ini terdaftar sebagai "WAKi International Group".
                 </p>
               @elseif(Utils::$lang=='eng')
                 <h2>About Us</h2>
@@ -106,83 +142,150 @@
               @endif
             </div>
           </div>
-          <div class="col-lg-12 col-md-12">
-            <div class="about-content" style="padding-bottom: 40px">
-              @if(Utils::$lang=='id')
-                <h3>SIFAT BISNIS WAKI</h3>
-
-                <ul>
-                  <li><i class="ion-android-checkmark-circle"></i> Di negara-negara ASEAN, pemasaran produk perawatan kesehatan merek WAKi melalui toko-toko WAKi dan pameran WAKi.</li>
-                  <li><i class="ion-android-checkmark-circle"></i> Di Hong Kong, China, mengekspor perangkat listrik rumah tangga ke seluruh dunia melalui Waki Trading Company.</li>
-                  <li><i class="ion-android-checkmark-circle"></i> Di negara-negara Asia Tenggara, investasi properti komersial melalui perusahaan WAKi Holdings.</li>
-                  <li><i class="ion-android-checkmark-circle"></i> Di Malaysia, mengembangkan proyek perumahan melalui Perusahaan konstruksi WAKi.</li>
-                  <li><i class="ion-android-checkmark-circle"></i> Di Malaysia dan China, berinvestasi dalam industri makanan & minuman melalui perusahaan WAKi F&B.</li>
-                </ul>
-              @elseif(Utils::$lang=='eng')
-                <h3>WAKI’S NATURE OF BUSINESS</h3>
-
-                <ul>
-                  <li><i class="ion-android-checkmark-circle"></i> In ASEAN countries, marketing WAKi’s brand health care products through WAKi shops and WAKi exhibitions.</li>
-                  <li><i class="ion-android-checkmark-circle"></i> In Hong Kong China, exporting household electrical devices to worldwide through Waki Trading Company.</li>
-                  <li><i class="ion-android-checkmark-circle"></i> In South East Asia countries, investing commercial properties through WAKi Holdings company.</li>
-                  <li><i class="ion-android-checkmark-circle"></i> In Malaysia, developing housing projects through WAKi construction Company.</li>
-                  <li><i class="ion-android-checkmark-circle"></i> In Malaysia and China, investing in food & beverage industries through WAKi F&B company.</li>
-                </ul>
-              @endif
-            </div>
-            <div class="row">
-              <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
-                <div class="box col-md-12">
-                  <div class="icon" style="background: #eafde7;"><h1 class="WAKI">W</h1></div>
-                  <h4 class="title" style="color: #00844a;font-weight: bolder;">Willingness</h4>
-                  @if(Utils::$lang=='id')
-                  <p class="description">Kami percaya bahwa <i>Willingness</i> menguasai segalanya.</p>
-                  @elseif(Utils::$lang=='eng')
-                  <p class="description">We believe that <i>Willingness</i> conquers everything.</p>
-                  @endif
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.1s" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
-                <div class="box col-md-12">
-                  <div class="icon" style="background: #eafde7;"><h1 class="WAKI">A</h1></div>
-                  <h4 class="title" style="color: #00844a;font-weight: bolder;">Action</h4>
-                  @if(Utils::$lang=='id')
-                  <p class="description">Kami percaya bahwa <i>Action</i> adalah kekuatan.</p>
-                  @elseif(Utils::$lang=='eng')
-                  <p class="description">We believe that <i>Action</i> is power.</p>
-                  @endif
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
-                <div class="box col-md-12">
-                  <div class="icon" style="background: #eafde7;"><h1 class="WAKI">K</h1></div>
-                  <h4 class="title" style="color: #00844a;font-weight: bolder;">Knowledge</h4>
-                  @if(Utils::$lang=='id')
-                  <p class="description">Kami percaya bahwa <i>Knowledge</i> adalah bagian penting dari kesuksesan.</p>
-                  @elseif(Utils::$lang=='eng')
-                  <p class="description">We believe that <i>Knowledge</i> is the essential part of success.</p>
-                  @endif
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
-                <div class="box col-md-12">
-                  <div class="icon" style="background: #eafde7;"><h1 class="WAKI" style="color: #fcb813;">i</h1></div>
-                  <h4 class="title" style="color: #fcb813;font-weight: bolder;">Innovation</h4>
-                  @if(Utils::$lang=='id')
-                  <p class="description">Kami percaya bahwa <i>Innovation</i> akan membawa peluang tak
-                  terbatas kepada kita.</p>
-                  @elseif(Utils::$lang=='eng')
-                  <p class="description">We believe that <i>Innovation</i> will bring about infinite opportunities to us.</p>
-                  @endif
-                </div>
-              </div>
-            </div><!--row-->
+        </div>
+      </div>
+      <div class="row" style="padding-top: 2em;">
+        <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
+          <div class="box col-md-12">
+            <div class="icon" style="background: #eafde7;"><h1 class="WAKI">W</h1></div>
+            <h4 class="title" style="color: #00844a;font-weight: bolder;">Willingness</h4>
+            @if(Utils::$lang=='id')
+            <p class="description">Kami percaya bahwa <i>Willingness</i> menguasai segalanya.</p>
+            @elseif(Utils::$lang=='eng')
+            <p class="description">We believe that <i>Willingness</i> conquers everything.</p>
+            @endif
           </div>
-
-        </div><!--for row-->
-      </div><!--for div-->
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.1s" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
+          <div class="box col-md-12">
+            <div class="icon" style="background: #eafde7;"><h1 class="WAKI">A</h1></div>
+            <h4 class="title" style="color: #00844a;font-weight: bolder;">Action</h4>
+            @if(Utils::$lang=='id')
+            <p class="description">Kami percaya bahwa <i>Action</i> adalah kekuatan.</p>
+            @elseif(Utils::$lang=='eng')
+            <p class="description">We believe that <i>Action</i> is power.</p>
+            @endif
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.2s" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
+          <div class="box col-md-12">
+            <div class="icon" style="background: #eafde7;"><h1 class="WAKI">K</h1></div>
+            <h4 class="title" style="color: #00844a;font-weight: bolder;">Knowledge</h4>
+            @if(Utils::$lang=='id')
+            <p class="description">Kami percaya bahwa <i>Knowledge</i> adalah bagian penting dari kesuksesan.</p>
+            @elseif(Utils::$lang=='eng')
+            <p class="description">We believe that <i>Knowledge</i> is the essential part of success.</p>
+            @endif
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.3s" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
+          <div class="box col-md-12">
+            <div class="icon" style="background: #eafde7;"><h1 class="WAKI" style="color: #fcb813;">i</h1></div>
+            <h4 class="title" style="color: #fcb813;font-weight: bolder;">Innovation</h4>
+            @if(Utils::$lang=='id')
+            <p class="description">Kami percaya bahwa <i>Innovation</i> akan membawa peluang tak
+            terbatas kepada kita.</p>
+            @elseif(Utils::$lang=='eng')
+            <p class="description">We believe that <i>Innovation</i> will bring about infinite opportunities to us.</p>
+            @endif
+          </div>
+        </div>
+      </div><!--row-->
     </div>
   </section><!-- #about -->
+
+  <!--==========================Product Section============================-->
+  <section id="product" class="section-bg">
+    <div class="col-lg-12 col-md-12 col-sm-12" style="padding-bottom: 1.5em; padding-top: 2em;">
+      
+      <h2>Produk Kami</h2>
+      <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch"">
+          <div class="card white-bg shadow  mb-3 ">
+            <div class="container product-img">
+              <img src="{{ asset ('sources/hpt.jpg') }}" class="" alt="" />
+            </div>
+            <div class="card-body">
+              <div data-equal-height="card">
+                  <span class="category">Massager</span>
+                  <p>
+                    WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                  </p>
+              </div><hr>
+              <div class="row justify-content-center align-self-center">
+                <div>
+                  <a href="" class="btn-link">Lihat Semua</a>
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
+          <div class="card white-bg shadow  mb-3 ">
+            <div class="container product-img">
+              <img src="{{ asset ('sources/hpthome.jpg') }}" class="" alt="" />
+            </div>
+            <div class="card-body">
+              <div data-equal-height="card">
+                  <span class="category">Massager</span>
+                  <p>
+                    WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                  </p>
+              </div><hr>
+              <div class="row justify-content-center align-self-center">
+                <div>
+                  <a href="" class="btn-link">Lihat Semua</a>
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 d-flex align-items-stretch">
+          <div class="card white-bg shadow  mb-3 ">
+            <div class="container product-img">
+              <img src="{{ asset ('sources/hpt2079.jpg') }}" class="" alt="" />
+            </div>
+            <div class="card-body">
+              <div data-equal-height="card">
+                  <span class="category">Massager</span>
+                  <p>
+                    WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                  </p>
+              </div><hr>
+              <div class="row justify-content-center align-self-center">
+                <div>
+                  <a href="" class="btn-link">Lihat Semua</a>
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+          <div class="card white-bg shadow  mb-3 ">
+            <div class="container product-img">
+              <img src="{{ asset ('sources/hpt2076i.jpg') }}" class="" alt="" />
+            </div>
+            <div class="card-body">
+              <div data-equal-height="card">
+                  <span class="category">Massager</span>
+                  <p>
+                    WAKi Multi-Functional Electro Massager is a modern technology health care equipment that applying “Bio-Electro Energy” and “Magnetic Heat Energy” on foot, palms, buttocks and waist. It results in “Internal Body Massage” effect.
+                  </p>
+              </div><hr>
+              <div class="row justify-content-center align-self-center">
+                <div>
+                  <a href="" class="btn-link">Lihat Semua</a>
+                </div>
+            </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+  <!-- #product -->
 
   <!--==========================Why Us Section============================-->
   <section id="why-us" class="wow fadeIn">
@@ -191,17 +294,66 @@
 
         <header class="section-header">
           @if(Utils::$lang=='id')
-            <h3 style="margin-bottom: 10px;">Nilai Inti WAKi</h3>
+            <h2 class="text-center" style="margin-bottom: 1em;">Kenapa Memilih Kami</h2>
 
-            <h4 style="font-size: 16px;color: #555186; text-align: center; margin-bottom: 20px;">Bukan Janji, tapi Pasti!</h4>
+            <h4 style="text-align: center;">Misi kami membawa pelanggan WAKian dan WAKi, menuju kehidupan yang lebih baik.<br>Bukan Janji, tapi Pasti!</h4>
           @elseif(Utils::$lang=='eng')
-            <h3 style="margin-bottom: 10px;">WAKi Value</h3>
+            <h3 style="margin-bottom: 10px;">Wy Choose Us</h3>
 
-            <h4 style="font-size: 16px;color: #555186; text-align: center; margin-bottom: 20px;">Not a promise, but sure!</h4>
+            <h4 style="text-align: center;">We bring WAKian and WAKi’s customers, towards a better life.<br>Not a promise, but sure!</h4>
           @endif
+           <div class="text-center mt-2 mb-2">
+            <img src="{{ asset ('sources/testi-icon.png') }}" class="img-fluid" alt="" style="width: 60px; height: 60px;" />
+
+           </div>
         </header>
 
-        <div class="col-lg-12 col-md-12">
+         <!-- ======= Testimonials Section ======= -->
+         <section id="testimonials" class="testimonials">
+          <div class="container" data-aos="zoom-in">
+
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+
+            <div class="owl-carousel testimonials-carousel">
+
+              <div class="testimonial-item">
+                <p>
+                  "Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper."
+                </p><br>
+                <h4>- Saul Goodman, Ceo &amp; Founder</h4>
+              </div>
+
+              <div class="testimonial-item">
+                <p>
+                  "Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa."
+                </p><br>
+                <h4>- Sara Wilsson, Designer</h4>
+              </div>
+
+              <div class="testimonial-item">
+                <p>
+                  "Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim."
+                </p><br> 
+                <h4>- Jena Karlis, Store Owner</h4>
+              </div>
+
+              <div class="testimonial-item">
+                <p>
+                  "Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam."
+                </p><br>
+                <h4>- Matt Brandon, Freelancer</h4>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+      </section>
+
+
+        {{-- <div class="col-lg-12 col-md-12">
           <div class="row">
 
             <div class="col-lg-5 col-md-6">
@@ -267,7 +419,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> --}}
       </div>
     </div>
 
@@ -277,7 +429,7 @@
   </section>
 
   <!--==========================Portfolio Section============================-->
-  <section id="portfolio" class="section-bg">
+{{--   <section id="portfolio" class="section-bg">
     <div class="container">
 
       <header class="section-header">
@@ -300,9 +452,9 @@
             @endif
           </ul>
         </div>
-      </div>
+      </div> --}}
 
-      <div class="row portfolio-container">
+   {{--    <div class="row portfolio-container">
         @php
         foreach($galleries as $gallerie){
           $photos = json_decode($gallerie->photo, true);
@@ -327,9 +479,9 @@
             </div>
           </div>
         </div>
-        @endfor
+        @endfor --}}
 
-        @for($v = 0; $v < sizeof($videos) ; $v++)
+     {{--    @for($v = 0; $v < sizeof($videos) ; $v++)
         <div class="col-lg-4 col-md-6 portfolio-item filter-video">
           <div class="portfolio-wrap2">
             <h5 class="portfolio-video-title">{{$videos[$v]['title']}}</h5>
@@ -340,7 +492,7 @@
 
       </div>
     </div>
-  </section><!-- #portfolio -->
+  </section> --}}<!-- #portfolio -->
 
   <!--==========================Team Section============================-->
   <section id="team" class="section-bg">
@@ -414,21 +566,18 @@
 
     </div>
   </section><!-- #team -->
-
-  <!--==========================Clients Section============================-->
-  <section id="clients" class="wow fadeInUp">
-    <div class="container">
-
-      <header class="section-header">
-        @if(Utils::$lang=='id')
-        <h3>Penghargaan Kami</h3>
-        @elseif(Utils::$lang=='eng')
-        <h3>Our Awards</h3>
-        @endif
-        <img src="{{asset('sources/Awards_s.png')}}" alt="" class="img-fluid">
-      </header>
-
-    </div>
-  </section><!-- #clients -->
 </main>
+
+@endsection
+
+@section("script")
+<script>
+  // Testimonials carousel (uses the Owl Carousel library)
+  $(".testimonials-carousel").owlCarousel({
+    autoplay: true,
+    dots: true,
+    loop: true,
+    items: 1
+  });
+</script>
 @endsection
