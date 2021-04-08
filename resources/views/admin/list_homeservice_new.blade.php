@@ -968,6 +968,7 @@ $menu_item_second = "list_homeservice";
                     <div class="modal-body">
                         <h5 style="text-align:center;"></h5>
                         {{ csrf_field() }}
+                        <input type="hidden" id="edit-id" name="id" value="" />
                         <div class="form-group">
                             <span>Type Customer</span>
                             <select id="type_customer"
@@ -1208,9 +1209,7 @@ $menu_item_second = "list_homeservice";
                     <div class="modal-footer">
                         <button id="btn-edit"
                             type="submit"
-                            class="btn btn-gradient-primary mr-2"
-                            name="id"
-                            value="-">
+                            class="btn btn-gradient-primary mr-2">
                             Save
                         </button>
                         <button class="btn btn-light"
@@ -1772,6 +1771,8 @@ function clickEdit(btn) {
     }).then(function (response) {
         const result = response.result;
 
+        document.getElementById("edit-id").value = btn.value;
+
         const editTypeCustomer = document.getElementById("type_customer");
         for (let i = 0; i < editTypeCustomer.options.length; i++) {
             if (editTypeCustomer.options[i].text === result.type_customer) {
@@ -2026,13 +2027,13 @@ function setCity(e) {
                         + currentValue['city_name']
                         + '</option>';
                 }
-
-                const getTargetId = (e.id).split("_");
-
-                document.getElementById(getTargetId[0] + "_city").innerHTML = '<option selected value="">All City</option>'
-                    + arrCity[0]
-                    + arrCity[1];
             });
+
+            const getTargetId = (e.id).split("_");
+
+            document.getElementById(getTargetId[0] + "_city").innerHTML = '<option selected value="">All City</option>'
+                + arrCity[0]
+                + arrCity[1];
         }
     }).catch(function(error) {
         console.error(error);
