@@ -50,6 +50,7 @@
 
 	  <!-- Google Fonts -->
 	  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,600,700,700i|Montserrat:300,400,500,600,700" rel="stylesheet">
+	  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 	  <!-- Bootstrap CSS File -->
 	  <link href="{{asset('css/lib/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
@@ -58,8 +59,9 @@
 	  <link href="{{asset('css/lib/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
 	  <link href="{{asset('css/lib/animate/animate.min.css')}}" rel="stylesheet">
 	  <link href="{{asset('css/lib/ionicons/css/ionicons.min.css')}}" rel="stylesheet">
-	  <link href="{{asset('css/lib/owlcarousel/asset/owl.carousel.min.css')}}" rel="stylesheet">
+	  {{-- <link href="{{asset('css/lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet"> --}}
 	  <link href="{{asset('css/lib/lightbox/css/lightbox.min.css')}}" rel="stylesheet">
+	  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 
 	  <!-- Main Stylesheet File -->
 	  <link href="{{asset('css/style.css')}}" rel="stylesheet">
@@ -70,7 +72,7 @@
 	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<!-- End Google Tag Manager (noscript) -->
 	<!--==========================Header============================-->
-	<header id="header" style="background-color: #fff;">
+	<header id="header" class="fixed-top header-transparent">
 	  <!-- <div id="topbar">
 	    <div class="container">
 	      <div class="social-links">
@@ -86,38 +88,39 @@
 	      <div class="logo float-left">
 	        <!-- Uncomment below if you prefer to use an image logo -->
 	        <!-- <h1 class="text-light"><a href="#intro" class="scrollto"><span>WAKi</span></a></h1> -->
-	        <a href="#header" class="scrollto"><img src="{{asset('sources/Logo Since.png')}}" alt="" class="img-fluid"></a>
+	        <a href="#header" class="scrollto"><img src="{{asset('sources/Logo Since.png')}}" alt="" class="img-fluid" style="margin-right: 4em;"></a>
 	      </div>
-	      <nav class="main-nav float-right d-none d-lg-block">
+	      <nav class="main-nav float-left d-none d-lg-block scrollto">
 	        <ul>
 	          @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#intro">Beranda</a></li>
+	          <li><a href="{{route('index')}}#hero">Beranda</a></li>
 	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#intro">Home</a></li>
+	          <li><a href="{{route('index')}}#hero">Home</a></li>
 	          @endif
-						@if(Utils::$lang=='id' || Utils::$lang=='eng')
-	          <li class="drop-down"><a href="#product">Produk</a>
-	            <ul>
-					@foreach (App\CategoryProduct::all() as $categoryProduct)
-					<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
-						@if( ! $categoryProduct->product->isEmpty())
-							<ul>
-								@foreach($categoryProduct->product as $product)
-									<li><a href="{{route('single_product',['id'=>$product->id])}}">{{ $product->code }}</a></li>
-								@endforeach
-							</ul>
-						@endif
-					  </li>
-					@endforeach
-	            </ul>
-	          </li>
-						@endif
 
-	          @if(Utils::$lang=='id')
+			  @if(Utils::$lang=='id')
 	          <li><a href="{{route('index')}}#about">Tentang</a></li>
 	          @elseif(Utils::$lang=='eng')
 	          <li><a href="{{route('index')}}#about">About Us</a></li>
 	          @endif
+
+						@if(Utils::$lang=='id' || Utils::$lang=='eng')
+	          <li class="drop-down"><a href="#product">Produk</a>
+	            <ul>
+								@foreach (App\CategoryProduct::all() as $categoryProduct)
+								<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
+									@if( ! $categoryProduct->product->isEmpty())
+										<ul>
+											@foreach($categoryProduct->product as $product)
+												<li><a href="{{route('single_product',['id'=>$product->id])}}">{{ $product->code }}</a></li>
+											@endforeach
+										</ul>
+									@endif
+								  </li>
+								@endforeach
+	            </ul>
+	          </li>
+						@endif
 
 	          @if(Utils::$lang=='id')
 	          <li><a href="{{route('index')}}#portfolio">Galeri</a></li>
@@ -136,11 +139,11 @@
 						</li>
 						@endif --}}
 
-						@if(Utils::$lang=='id')
+					{{-- 	@if(Utils::$lang=='id')
 	          <li><a href="{{route('index')}}#team">World Peace</a></li>
 	          @elseif(Utils::$lang=='eng')
 	          <li><a href="{{route('index')}}#team">World Peace</a></li>
-	          @endif
+	          @endif --}}
 
 	          @if(Utils::$lang=='id')
 	          <li><a href="{{route('index')}}#footer">Kontak</a></li>
@@ -319,6 +322,8 @@
 
   	<!-- JavaScript Libraries -->
   	<script src="{{asset('css/lib/jquery/jquery.min.js')}}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+	{{-- <script src="{{asset('css/lib/owlcarousel/owl.carousel.min.js')}}"></script> --}}
   	<script src="{{asset('css/lib/jquery/jquery-migrate.min.js')}}"></script>
   	<script src="{{asset('css/lib/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
   	<script src="{{asset('css/lib/easing/easing.min.js')}}"></script>
@@ -326,7 +331,6 @@
   	<script src="{{asset('css/lib/wow/wow.min.js')}}"></script>
   	<script src="{{asset('css/lib/waypoints/waypoints.min.js')}}"></script>
   	<script src="{{asset('css/lib/counterup/counterup.min.js')}}"></script>
-  	<script src="{{asset('css/lib/owlcarousel/owl.carousel.min.js')}}"></script>
   	<script src="{{asset('css/lib/isotope/isotope.pkgd.min.js')}}"></script>
   	<script src="{{asset('css/lib/lightbox/js/lightbox.min.js')}}"></script>
   	<!-- Contact Form JavaScript File -->
@@ -334,5 +338,31 @@
 
   	<!-- Template Main Javascript File -->
   	<script src="{{asset('js/main.js')}}"></script>
+		<script>
+		$(document).ready(function() {
+		  $(".product-carousel").owlCarousel({
+		    items: 4,
+				margin:20,
+		    pagination: true,
+		    autoplay: true,
+		    loop: true,
+		    navigation: true,
+		    dots: false,
+		    responsive:{
+		      1000: {items: 4},
+		      768: {items: 3},
+		      640: {items: 2},
+		      370: {items: 1}
+		    }
+		  });
+		  console.log("test");
+			$('#video2').on('shown.bs.modal', function (event) {
+		    $('#video-2')[0].play();
+		  });
+		  $('#video2').on('hidden.bs.modal', function (event) {
+		    $('#video-2')[0].pause();
+		  });
+		});
+		</script>
 </body>
 </html>

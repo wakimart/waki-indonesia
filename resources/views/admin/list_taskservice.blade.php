@@ -193,7 +193,12 @@
 														$due_date_sec = $due_date_sec[0];
 						                            @endphp
 						                            <tr>
-						                                <td>{{$service->product_services[$i]->product['name']}}</td>
+						                            	@if($service->product_services[$i]['product_id'] != null)
+						                            		<td>{{$service->product_services[$i]->product['name']}}</td>
+						                            	@elseif($service->product_services[$i]['product_id'] == null)
+						                            		<td>{{$service->product_services[$i]['other_product']}}</td>
+						                            	@endif
+						                                
 						                                <td>{{implode(",",$issues_sec[0]->issues)}}</td>
 						                                <td>{{$service_date}}</td>
 						                                <td>{{$due_date_sec}}</td>
@@ -270,21 +275,21 @@
             	</div>
             </div>
 		</div>
-
-		
-
 	</div>
 </div>
 @endsection
 
 @section('script')
 <script>
-    $('.nav-tabs').on('click', 'li', function() {
-        $('.nav-tabs li.active').removeClass('active');
-        $(this).addClass('active');
-        $('.dataTables_scrollHeadInner').css({"width": "100%"});
-        $('.dtDynamicVerticalScrollExample').css({"width": "100%"});
-        console.log("dhuaaarr");
-    });
+	$(document).ready(function(){
+		$('.nav-tabs').on('click', 'li', function() {
+	        $('.nav-tabs li.active').removeClass('active');
+	        $(this).addClass('active');
+	        // $('.dataTables_scrollHeadInner').css({"width": "100%"});
+	        // $('.dtDynamicVerticalScrollExample').css({"width": "100%"});
+	        console.log("dhuaaarr");
+	    });
+	});
+    
 </script>
 @endsection

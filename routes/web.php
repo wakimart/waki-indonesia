@@ -21,6 +21,11 @@ Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category/{id}', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
 Route::get('/firebase','FirebaseController@index');
+
+//Service Product
+Route::get('/service', 'ServiceController@indexUser')->name('service');
+Route::get('/trackservice/{id}', 'ServiceController@trackService')->name('track_service');
+
 //DO Register
 Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
 Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
@@ -335,6 +340,22 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    Route::get('/list', 'ServiceController@index')
 	    	->name('list_service')
 	    	->middleware('can:browse-service');
+	    //Detail Service
+        Route::get("/detail/{id}", "ServiceController@show")
+            ->name("detail_service")
+            ->middleware('can:detail-service');
+        // Update/change upgrade status
+        Route::post("/updatestatus", "ServiceController@updateStatus")
+            ->name("update_service_status")
+            ->middleware('can:detail-service');
+	    //Edit Service
+	    Route::get('/edit/', 'ServiceController@edit')
+	    	->name('edit_service')
+	    	->middleware('can:edit-service');
+	    //Update Service
+	    Route::post('/update/', 'ServiceController@update')
+	    	->name('update_service')
+	    	->middleware('can:edit-service');
     });
 
     Route::group(['prefix' => 'product_service', 'middleware' => 'auth'], function(){
@@ -517,6 +538,13 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    //Delete Product
 	    Route::post('/{ProductNya}', 'ProductController@delete')
 	    	->name('delete_product');
+    });
+
+    Route::group(['prefix' => 'stock', 'middleware' => 'auth'], function(){
+    	//List Stock
+	    Route::get('/list', 'StockController@index')
+	    	->name('list_stock')
+	    	->middleware('can:browse-product');
     });
 
     Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){

@@ -7,6 +7,7 @@ use App\Sparepart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class SparepartController extends Controller
 {
@@ -29,7 +30,7 @@ class SparepartController extends Controller
             compact(
                 "countSparepart",
                 "sparepart",
-                "url",
+                "url"
             )
         )
         ->with('i', (request()->input('page', 1) - 1) * 10 + 1);
@@ -53,6 +54,26 @@ class SparepartController extends Controller
      */
     public function store(Request $request)
     {
+        /**
+         * Mengecek inputan dengan validator
+         * ! Jika name.max di database berubah, jangan lupa ubah maxlength input di add_sparepart.blade.php
+         */
+        $validator = Validator::make(
+            $request->all(),
+            [
+                "name" => ["required", "string", "max:191"],
+                "price" => ["required", "numeric", "digits_between:1,20"],
+            ]
+        );
+
+        // Jika validator gagal, maka akan kembali ke halaman create
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput($request->all());
+        }
+
         Sparepart::create($request->all());
 
         return redirect()->route("list_sparepart");
@@ -95,6 +116,26 @@ class SparepartController extends Controller
     public function update(Request $request)
     {
         if (!empty($request->id)) {
+            /**
+             * Mengecek inputan dengan validator
+             * ! Jika name.max di database berubah, jangan lupa ubah maxlength input di updatesparepart.blade.php
+             */
+            $validator = Validator::make(
+                $request->all(),
+                [
+                    "name" => ["required", "string", "max:191"],
+                    "price" => ["required", "numeric", "digits_between:1,20"],
+                ]
+            );
+
+            // Jika validator gagal, maka akan kembali ke halaman edit
+            if ($validator->fails()) {
+                return redirect()
+                    ->back()
+                    ->withErrors($validator)
+                    ->withInput($request->all());
+            }
+
             DB::beginTransaction();
 
             try {

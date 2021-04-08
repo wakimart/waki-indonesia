@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use App\HomeService;
 use App\Branch;
-use App\Cso;
-use App\User;
 use App\CategoryProduct;
-use App\Utils;
-use App\HistoryUpdate;
+use App\Cso;
 use App\DeliveryOrder;
-use App\Order;
-use Carbon\Carbon;
 use App\Exports\HomeServicesExport;
 use App\Exports\HomeServicesExportByDate;
-use Maatwebsite\Excel\Facades\Excel;
-use DB;
-use Validator;
+use App\HistoryUpdate;
+use App\HomeService;
 use App\Http\Controllers\gCalendarController;
+use App\Order;
+use App\User;
+use App\Utils;
 use DateTime;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Validator;
 
 class HomeServiceController extends Controller
 {
@@ -138,62 +137,62 @@ class HomeServiceController extends Controller
         return view('homeservicesuccess', compact('homeService', $categoryProducts));
     }
 
-    // public function admin_ListHomeService(Request $request){
-    //     $branches = Branch::Where('active', true)->get();
-    //     $csos = Cso::where('active', true)->get();
-    //     $awalBulan = Carbon::now()->startOfMonth()->subMonth(1);
-    //     $akhirBulan = Carbon::now()->startOfMonth()->addMonth(2); // 5
-    //     // $awalBulan = "2020-10-01 00:00:00";
-    //     // $akhirBulan = "2021-01-01 00:00:00";
-    //     $arrbranches = [];
+    /* public function admin_ListHomeService(Request $request){
+        $branches = Branch::Where('active', true)->get();
+        $csos = Cso::where('active', true)->get();
+        $awalBulan = Carbon::now()->startOfMonth()->subMonth(1);
+        $akhirBulan = Carbon::now()->startOfMonth()->addMonth(2); // 5
+        // $awalBulan = "2020-10-01 00:00:00";
+        // $akhirBulan = "2021-01-01 00:00:00";
+        $arrbranches = [];
 
-    //     //khususu head-manager, head-admin, admin
-    //     $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-    //                  ->where('active', true);
+        //khususu head-manager, head-admin, admin
+        $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
+                     ->where('active', true);
 
-    //     //khusus akun CSO
-    //     if(Auth::user()->roles[0]['slug'] == 'cso'){
-    //         // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
-    //         $homeServices = $homeServices->where('home_services.cso_id', Auth::user()->cso['id']);
-    //     }
+        //khusus akun CSO
+        if(Auth::user()->roles[0]['slug'] == 'cso'){
+            // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
+            $homeServices = $homeServices->where('home_services.cso_id', Auth::user()->cso['id']);
+        }
 
-    //     //khusus akun branch dan area-manager
-    //     if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
-    //         foreach (Auth::user()->listBranches() as $value) {
-    //             array_push($arrbranches, $value['id']);
-    //         }
-    //         // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-    //         //          ->whereIn('branch_id', $arrbranches)->where('active', true);
-    //         $homeServices = $homeServices->whereIn('home_services.branch_id', $arrbranches);
-    //     }
+        //khusus akun branch dan area-manager
+        if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
+            foreach (Auth::user()->listBranches() as $value) {
+                array_push($arrbranches, $value['id']);
+            }
+            // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
+            //          ->whereIn('branch_id', $arrbranches)->where('active', true);
+            $homeServices = $homeServices->whereIn('home_services.branch_id', $arrbranches);
+        }
 
-    //     //kalau ada filter
-    //     if($request->has('filter_province')){
-    //         $homeServices = $homeServices->where('home_services.province', $request->filter_province);
-    //     }
-    //     if($request->has('filter_city')){
-    //         $homeServices = $homeServices->where('home_services.city', $request->filter_city);
-    //     }
-    //     if($request->has('filter_district')){
-    //         $homeServices = $homeServices->where('home_services.distric', $request->filter_district);
-    //     }
-    //     if($request->has('filter_search')){
-    //         $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
-    //         ->orWhere('home_services.phone', 'like', '%'.$request->filter_search.'%')
-    //         ->orWhere('home_services.code', 'like', '%'.$request->filter_search.'%');
-    //     }
-    //     if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
-    //         $homeServices = $homeServices->where('home_services.branch_id', $request->filter_branch);
-    //     }
-    //     if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
-    //         $cso_id = Cso::where('code', $request->filter_cso)->get();
-    //         $homeServices = $homeServices->where('home_services.cso_id', $cso_id[0]['id']);
-    //     }
+        //kalau ada filter
+        if($request->has('filter_province')){
+            $homeServices = $homeServices->where('home_services.province', $request->filter_province);
+        }
+        if($request->has('filter_city')){
+            $homeServices = $homeServices->where('home_services.city', $request->filter_city);
+        }
+        if($request->has('filter_district')){
+            $homeServices = $homeServices->where('home_services.distric', $request->filter_district);
+        }
+        if($request->has('filter_search')){
+            $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
+            ->orWhere('home_services.phone', 'like', '%'.$request->filter_search.'%')
+            ->orWhere('home_services.code', 'like', '%'.$request->filter_search.'%');
+        }
+        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+            $homeServices = $homeServices->where('home_services.branch_id', $request->filter_branch);
+        }
+        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
+            $cso_id = Cso::where('code', $request->filter_cso)->get();
+            $homeServices = $homeServices->where('home_services.cso_id', $cso_id[0]['id']);
+        }
 
-    //     $homeServices = $homeServices->get();
+        $homeServices = $homeServices->get();
 
-    //     return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches', 'csos'));
-    // }
+        return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches', 'csos'));
+    } */
 
     public function admin_ListHomeService(Request $request)
     {
@@ -253,15 +252,24 @@ class HomeServiceController extends Controller
             $request->filter_cso = $getCSOCode->code;
         }
 
+        // Jika user memiliki peran sebagai "admin-management"
+        $isAdminManagement = false;
+        if (Auth::user()->roles[0]["slug"] === "admin-management") {
+            $request->filter_province = 11;
+            $request->filter_city = 444;
+            $isAdminManagement = true;
+        }
+
         // Mendapatkan count appointment
         $currentMonthDataCount = $this->getCountAppointment(
-            date("Y-m-01"),
+            date("Y-m-d"),
             $request->filter_province,
             $request->filter_city,
             $request->filter_district,
             $arrBranches,
             $request->filter_cso,
-            $request->filter_search
+            $request->filter_search,
+            $isAdminManagement
         );
 
         // Inisialisasi variabel $todayDate dan mengisi dengan tanggal hari ini
@@ -274,7 +282,8 @@ class HomeServiceController extends Controller
             $request->filter_district,
             $arrBranches,
             $request->filter_cso,
-            $request->filter_search
+            $request->filter_search,
+            $isAdminManagement
         );
 
         return view(
@@ -283,7 +292,7 @@ class HomeServiceController extends Controller
                 "currentMonthDataCount",
                 "currentDayData",
                 "branches",
-                "csos",
+                "csos"
             )
         );
     }
@@ -295,7 +304,8 @@ class HomeServiceController extends Controller
         $filterDistrict = null,
         $filterBranch = null,
         $filterCSO = null,
-        $filterSearch = null
+        $filterSearch = null,
+        $isAdminManagement = false
     ) {
         // Inisialisasi tanggal awal bulan dari variabel $startDate
         $start = date("Y-m-01 00:00:00", strtotime($startdate));
@@ -312,35 +322,35 @@ class HomeServiceController extends Controller
         )
         ->where("active", 1);
 
-        if (!empty($filterProvince)) {
+        if (!empty($filterProvince) && !$isAdminManagement) {
             $currentMonthDataCount = $currentMonthDataCount->where(
                 "province",
                 $filterProvince
             );
         }
 
-        if (!empty($filterCity)) {
+        if (!empty($filterCity) && !$isAdminManagement) {
             $currentMonthDataCount = $currentMonthDataCount->where(
                 "city",
                 $filterCity
             );
         }
 
-        if (!empty($filterDistrict)) {
+        if (!empty($filterDistrict) && !$isAdminManagement) {
             $currentMonthDataCount = $currentMonthDataCount->where(
                 "distric",
                 $filterDistrict
             );
         }
 
-        if (!empty($filterBranch)) {
+        if (!empty($filterBranch) && !$isAdminManagement) {
             $currentMonthDataCount = $currentMonthDataCount->whereIn(
                 "branch_id",
                 $filterBranch
             );
         }
 
-        if (!empty($filterCSO)) {
+        if (!empty($filterCSO) && !$isAdminManagement) {
             $cso_id = Cso::where('code', $filterCSO)->first();
 
             $currentMonthDataCount = $currentMonthDataCount->where(
@@ -349,7 +359,7 @@ class HomeServiceController extends Controller
             );
         }
 
-        if (!empty($filterSearch)) {
+        if (!empty($filterSearch) && !$isAdminManagement) {
             $currentMonthDataCount = $currentMonthDataCount->where(
                 "name",
                 "like",
@@ -364,6 +374,21 @@ class HomeServiceController extends Controller
                 "code",
                 "like",
                 "%" . $filterSearch . "%"
+            );
+        }
+
+        if ($isAdminManagement) {
+            if (strtotime($startdate) < strtotime("now")) {
+                $start = date("Y-m-d");
+            }
+
+            $currentMonthDataCount = $currentMonthDataCount->where(
+                "province",
+                11
+            )
+            ->where(
+                "city",
+                444
             );
         }
 
@@ -415,6 +440,12 @@ class HomeServiceController extends Controller
             $request->filter_cso = $getCSOCode->code;
         }
 
+        // Jika user memiliki peran sebagai "admin-management"
+        $isAdminManagement = false;
+        if (Auth::user()->roles[0]["slug"] === "admin-management") {
+            $isAdminManagement = true;
+        }
+
         $currentMonthDataCount = $this->getCountAppointment(
             $request->date,
             $request->filter_province,
@@ -422,7 +453,8 @@ class HomeServiceController extends Controller
             $request->filter_district,
             $arrBranches,
             $request->filter_cso,
-            $request->filter_search
+            $request->filter_search,
+            $isAdminManagement
         );
 
         $requestedMonth = strtotime($request->date);
@@ -553,11 +585,10 @@ class HomeServiceController extends Controller
         $filterDistrict = null,
         $filterBranch = null,
         $filterCSO = null,
-        $filterSearch = null
+        $filterSearch = null,
+        $isAdminManagement = false
     ) {
         $todayDate = date("Y-m-d", strtotime($requestedDate));
-        $beginDay = $todayDate . " 00:00:00";
-        $endDay = $todayDate . " 23:59:59";
 
         $currentDayData = HomeService::select(
             "h.id AS hs_id",
@@ -572,13 +603,13 @@ class HomeServiceController extends Controller
             "h.updated_at AS updated_at"
         )
         ->from("home_services AS h")
-        ->join(
+        ->leftJoin(
             "branches AS b",
             "b.id",
             "=",
             "h.branch_id"
         )
-        ->join(
+        ->leftJoin(
             "csos AS c",
             "c.id",
             "=",
@@ -586,56 +617,74 @@ class HomeServiceController extends Controller
         )
         ->where("h.active", true);
 
-        if (!empty($filterProvince)) {
+        if ($isAdminManagement) {
+            if (strtotime($requestedDate) < strtotime("now")) {
+                $todayDate = date("Y-m-d");
+            }
+
             $currentDayData = $currentDayData->where(
                 "province",
+                11
+            )
+            ->where(
+                "city",
+                444
+            );
+        }
+
+        $beginDay = $todayDate . " 00:00:00";
+        $endDay = $todayDate . " 23:59:59";
+
+        if (!empty($filterProvince) && !$isAdminManagement) {
+            $currentDayData = $currentDayData->where(
+                "h.province",
                 $filterProvince
             );
         }
 
-        if (!empty($filterCity)) {
+        if (!empty($filterCity) && !$isAdminManagement) {
             $currentDayData = $currentDayData->where(
-                "city",
+                "h.city",
                 $filterCity
             );
         }
 
-        if (!empty($filterDistrict)) {
+        if (!empty($filterDistrict) && !$isAdminManagement) {
             $currentDayData = $currentDayData->where(
-                "distric",
+                "h.distric",
                 $filterDistrict
             );
         }
 
-        if (!empty($filterBranch)) {
+        if (!empty($filterBranch) && !$isAdminManagement) {
             $currentDayData = $currentDayData->whereIn(
-                "branch_id",
+                "h.branch_id",
                 $filterBranch
             );
         }
 
-        if (!empty($filterCSO)) {
+        if (!empty($filterCSO) && !$isAdminManagement) {
             $cso_id = Cso::where('code', $filterCSO)->first();
 
             $currentDayData = $currentDayData->where(
-                "cso_id",
+                "h.cso_id",
                 $cso_id->id
             );
         }
 
-        if (!empty($filterSearch)) {
+        if (!empty($filterSearch) && !$isAdminManagement) {
             $currentDayData = $currentDayData->where(
-                "name",
+                "h.name",
                 "like",
                 "%" . $filterSearch . "%"
             )
             ->orWhere(
-                "phone",
+                "h.phone",
                 "like",
                 "%" . $filterSearch . "%"
             )
             ->orWhere(
-                "code",
+                "h.code",
                 "like",
                 "%" . $filterSearch . "%"
             );
@@ -691,6 +740,12 @@ class HomeServiceController extends Controller
             $request->filter_cso = $getCSOCode->code;
         }
 
+        // Jika user memiliki peran sebagai "admin-management"
+        $isAdminManagement = false;
+        if (Auth::user()->roles[0]["slug"] === "admin-management") {
+            $isAdminManagement = true;
+        }
+
         $currentDayData = $this->getDayData(
             $request->date,
             $request->filter_province,
@@ -698,7 +753,8 @@ class HomeServiceController extends Controller
             $request->filter_district,
             $arrBranches,
             $request->filter_cso,
-            $request->filter_search
+            $request->filter_search,
+            $isAdminManagement
         );
 
         $result = "";
@@ -729,8 +785,10 @@ class HomeServiceController extends Controller
                 $result .= $time->format("H:i");
 
                 $result .= '</td>'
-                    . '<td>'
-                    . '<p class="titleAppoin">'
+                    . '<td>';
+
+                if (!$isAdminManagement) {
+                    $result .= '<p class="titleAppoin">'
                     . '<a href="'
                     . route('homeServices_success')
                     . '?code='
@@ -738,72 +796,89 @@ class HomeServiceController extends Controller
                     . '" target="_blank">'
                     . $dayData->hs_code
                     . '</a>'
-                    . '</p>'
-                    . '<p class="descAppoin">'
-                    . $dayData->customer_name . ' - ' . $dayData->customer_phone
-                    . '<br>'
-                    . 'Branch: '
+                    . '</p>';
+                }
+
+                $result .= '<p class="descAppoin">';
+
+                if (!$isAdminManagement) {
+                    $result .= $dayData->customer_name . ' - ' . $dayData->customer_phone
+                        . '<br>';
+                }
+
+                $result .= 'Branch: '
                     . $dayData->branch_code . ' - ' . $dayData->branch_name
                     . '<br>'
                     . 'CSO: ' . $dayData->cso_name
-                    . '<br>'
-                    . 'Created at: ' . $dayData->created_at
-                    . '<br>'
-                    . 'Last update: ' . $dayData->updated_at
-                    . '</p>'
-                    . '</td>'
-                    . '<td style="text-align: center">';
+                    . '<br>';
 
-                $result .= '<button '
-                    . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
-                    . 'type="button" '
-                    . 'data-toggle="modal" '
-                    . 'data-target="#viewHomeServiceModal" '
-                    . 'onclick="clickView(this)" '
-                    . 'value="' . $dayData->hs_id . '">'
-                    . '</button>'
-                    . '</td>'
-                    . '<td style="text-align: center">';
-
-                $result .= '<button '
-                    . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
-                    . 'type="button" '
-                    . 'data-toggle="modal" '
-                    . 'data-target="#cashHomeServiceModal" '
-                    . 'onclick=clickCash(this) '
-                    . 'value="' . $dayData->hs_id . '">'
-                    . '</button>'
-                    . '</td>'
-                    . '<td style="text-align: center">';
-
-                $result .= '<button '
-                    . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
-                    . 'type="button" '
-                    . 'data-toggle="modal" '
-                    . 'data-target="#editHomeServiceModal" ';
-
-                if (Auth::user()->roles[0]["slug"] === "cso") {
-                    $result .= 'data-cso="true" ';
-                } else {
-                    $result .= 'data-cso="false" ';
+                if (!$isAdminManagement) {
+                    $result .= 'Created at: ' . $dayData->created_at
+                        . '<br>'
+                        . 'Last update: ' . $dayData->updated_at;
                 }
 
-                $result .= 'onclick="clickEdit(this)" '
-                    . 'value="' . $dayData->hs_id . '">'
-                    . '</button>'
-                    . '</td>'
-                    . '<td style="text-align: center">';
+                $result .= '</p>'
+                    . '</td>';
 
-                $result .= '<button '
-                    . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
-                    . 'type="button" '
-                    . 'data-toggle="modal" '
-                    . 'data-target="#deleteHomeServiceModal" '
-                    . 'onclick="clickCancel(this)" '
-                    . 'value="' . $dayData->hs_id . '">'
-                    . '</button>'
-                    . '</td>'
-                    . '</tr>';
+
+                if (!$isAdminManagement) {
+                    $result .= '<td style="text-align: center">';
+
+                    $result .= '<button '
+                        . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                        . 'type="button" '
+                        . 'data-toggle="modal" '
+                        . 'data-target="#viewHomeServiceModal" '
+                        . 'onclick="clickView(this)" '
+                        . 'value="' . $dayData->hs_id . '">'
+                        . '</button>'
+                        . '</td>'
+                        . '<td style="text-align: center">';
+
+                    $result .= '<button '
+                        . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
+                        . 'type="button" '
+                        . 'data-toggle="modal" '
+                        . 'data-target="#cashHomeServiceModal" '
+                        . 'onclick=clickCash(this) '
+                        . 'value="' . $dayData->hs_id . '">'
+                        . '</button>'
+                        . '</td>'
+                        . '<td style="text-align: center">';
+
+                    $result .= '<button '
+                        . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
+                        . 'type="button" '
+                        . 'data-toggle="modal" '
+                        . 'data-target="#editHomeServiceModal" ';
+
+                    if (Auth::user()->roles[0]["slug"] === "cso") {
+                        $result .= 'data-cso="true" ';
+                    } else {
+                        $result .= 'data-cso="false" ';
+                    }
+
+                    $result .= 'onclick="clickEdit(this)" '
+                        . 'value="' . $dayData->hs_id . '">'
+                        . '</button>'
+                        . '</td>'
+                        . '<td style="text-align: center">';
+
+                    $result .= '<button '
+                        . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
+                        . 'type="button" '
+                        . 'data-toggle="modal" '
+                        . 'data-target="#deleteHomeServiceModal" '
+                        . 'onclick="clickCancel(this)" '
+                        . 'value="' . $dayData->hs_id . '">'
+                        . '</button>'
+                        . '</td>';
+                } else {
+                    $result .= '<td></td><td></td><td></td><td></td>';
+                }
+
+                $result .= '</tr>';
 
                 $i++;
             }

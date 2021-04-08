@@ -11,6 +11,7 @@
 <meta name="description" content="Html5 Construction Landing Page">
 <link href="{{asset('sources/landing/favicon/favicon.ico')}}" rel="icon">
 <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+
 <!-- Fonts
 ============================================= -->
 <link href="https://fonts.googleapis.com/css?family=Poppins:300i,400,400i,500,600,700,800%7CLora:400,400i,700,700i%7COpen+Sans:800" rel="stylesheet">
@@ -60,6 +61,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   position: relative;
   border-radius: 1em;
 }
+
 .testimonial .icon {
   display: inline-block;
   font-size: 80px;
@@ -67,17 +69,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   margin-bottom: 20px;
   opacity: 0.6;
 }
+
 .testimonial .description {
   font-size: 14px;
   color: #777;
   text-align: justify;
   margin-bottom: 30px;
 }
+
 .testimonial .testimonial-content {
   width: 100%;
   left: 0;
   position: absolute;
 }
+
 .testimonial .pic {
   display: inline-block;
   border: 4px solid white;
@@ -85,10 +90,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   z-index: 1;
   position: relative;
 }
+
 .testimonial .pic img {
   width: 100%;
   height: auto;
 }
+
 .testimonial .name {
   font-size: 15px;
   font-weight: bold;
@@ -96,6 +103,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   text-transform: capitalize;
   margin: 10px 0 5px 0;
 }
+
 .testimonial .title {
   display: block;
   font-size: 14px;
@@ -105,6 +113,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 .owl-controls {
   margin-top: 20px;
 }
+
 .owl-pagination {
   display: flex;
   justify-content: center;
@@ -201,11 +210,10 @@ touch-action: none;
 }
 </style>
 <body class="body-scroll">
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MSXJGPP"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MSXJGPP"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <!-- Document Wrapper
 ============================================= -->
 <div id="wrapper" class="wrapper clearfix">
@@ -225,7 +233,7 @@ touch-action: none;
                         <img src="https://waki-indonesia.co.id/sources/Logo Since.png" alt="" class="img-fluid logoWK">
                         <div class="clearfix"></div>
                         <h1 class="hero--headline">WAKi semakin dekat dengan anda, langsung ke RUMAH!</h1>
-                        <p class="hero--bio">Dapatkan fisioterapi gratis selama <strong>5 hari</strong> di rumah anda!</p>
+                        <p class="hero--bio">Dapatkan fisioterapi gratis<br> selama <strong>5 hari</strong> di rumah anda!</p>
                         <div class="col-xs-12 col-sm-12 col-md-12 row" style="text-align: left;padding: 0;margin-bottom: 30px;">
                           <div class="col-xs-12 col-sm-4 col-md-4">
                             <i class="fas fa-check-circle" style="color:#6ac159; font-size: 32px;"></i>
@@ -248,7 +256,7 @@ touch-action: none;
                         Isi Form Kami
                       </h5>
                       <p class="form--para">Dapatkan ekstra bonus voucher wakimart senilai 280.000 untuk 100 orang pendaftar pertama. <br>Promo berakhir dalam</p>
-                      <div id="countdown" class="countdown py-4 form--title" style="margin: 0;"></div>
+                      <div id="countdown-timer" class="countdown py-4 form--title" style="margin: 0;"></div>
                       <form id="actionAdd" action="{{ route('store_registrationPromotion') }}" method="POST">
                           @csrf
                           <div class="col-xs-12 col-sm-12 col-md-12" style="padding: 0;">
@@ -531,15 +539,15 @@ touch-action: none;
               </div>
               <div class="testimonial">
                 <div class="pic">
-                  <img src="{{asset('sources/landing/testimonials/testi3.jpg')}}" alt="">
+                  <img src="{{asset('sources/landing/testimonials/testi7.jpg')}}" alt="">
                 </div>
                 <p class="description">
-                  Sebelum menggunakan WAKi High Potential Therapy, darah tinggi 160/90, kolesterol 260, asam urat 7,6, kaki dan tangan kaku bekas stroke.
-                  Setelah menggunakan, tensi sudah normal 120/80, kolesterol turun ke 180, asam urat 4, kaki dan tangan sudah tidak kaku dan bisa digerakkan dengan mudah.
+                  Sebelum menggunakan WAKi High Potential Therapy, sering insomnia, tekanan darah tinggi, kolesterol 260, dan sering kelelahan.
+                  Setelah menggunakan, tensi sudah normal 120/80, kolesterol menurun dan stabil, badan lebih energik dan bugar.
                 </p>
                 <div class="testimonial-content">
 
-                  <h3 class="name">Ibu Yenny</h3>
+                  <h3 class="name">Bapak Moh. Lontara</h3>
                 </div>
               </div>
               <div class="testimonial">
@@ -589,7 +597,6 @@ touch-action: none;
 
 <!-- Footer #9
 ============================================= -->
-
 <footer id="footer9" class="footer footer-5 footer-8 footer-9 bg-white text-center-xs pt-0 pb-0">
 
     <!-- .footer-widget end -->
@@ -655,24 +662,8 @@ touch-action: none;
     </div>
 </div>
 
-<div class="container displaynone">
-  <div class="interior">
-    <a class="btn regisnotif" href="#open-modal"></a>
-  </div>
-</div>
-<div id="open-modal" class="modal-window">
-  <div>
-    <a href="#" title="Close" class="modal-close">X</a>
-    <h5 id="notif-name">Albert - Surabaya</h5>
-    <h5 style="font-weight: 100;" id="notif-time">Telah mendaftar 5 menit yang lalu</h5>
-    <!-- <div>A CSS-only modal based on the :target pseudo-class. Hope you find it helpful.</div> -->
-    </div>
-</div>
-
 </div>
 <!-- #wrapper end -->
-
-
 
 <!-- Footer Scripts
 ============================================= -->
@@ -698,68 +689,47 @@ $(document).ready(function() {
   });
 
   $("#success-alert").show();
-  // $("#myWish").click(function showAlert() {
-  //   $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {
-  //     $("#success-alert").slideUp(500);
-  //   });
-  // });
 });
-// set the date we're counting down to
-var target_date = new Date('Mar 25, 2021 00:00:00').getTime();
-
-// variables for time units
-var days, hours, minutes, seconds;
-
-// get tag element
-var countdown = document.getElementById('countdown');
 
 // update the tag with id "countdown" every 1 second
-setInterval(function () {
+const countDownDate = new Date("Apr 30, 2021 00:00:00").getTime();
+const intervalId = setInterval(function () {
+    const now = new Date().getTime();
+    const distance = countDownDate - now;
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    // find the amount of "seconds" between now and target
-    var current_date = new Date().getTime();
-    var seconds_left = (target_date - current_date) / 1000;
+    let countDownHtml = "";
+    if (days > 0) {
+        countDownHtml += '<span class="h1 font-weight-bold">'
+            + days
+            + ' </span><span class="h1 font-weight-bold">hari </span>';
+    }
 
-    // do some time calculations
-    days = parseInt(seconds_left / 86400);
-    seconds_left = seconds_left % 86400;
+    if (hours > 0) {
+        countDownHtml += '<span class="h1 font-weight-bold">'
+            + ("0" + hours).slice(-2)
+            + ' </span><span class="h1 font-weight-bold">jam </span>';
+    }
 
-    hours = parseInt(seconds_left / 3600);
-    seconds_left = seconds_left % 3600;
+    if (minutes > 0) {
+        countDownHtml += '<span class="h1 font-weight-bold">'
+            + ("0" + minutes).slice(-2)
+            + ' </span><span class="h1 font-weight-bold">menit </span>';
+    }
+    
+    countDownHtml += '<span class="h1 font-weight-bold">'
+        + ("0" + seconds).slice(-2)
+        + ' </span><span class="h1 font-weight-bold">detik</span>';
+    if (days <= 0 && hours <= 0 && minutes < 0) {
+        clearInterval(intervalId);
+        countDownHtml = '<span class="h1 font-weight-bold">Promo telah berakhir</span>';
+    }
 
-    minutes = parseInt(seconds_left / 60);
-    seconds = parseInt(seconds_left % 60);
-
-    // format countdown string + set tag value
-    countdown.innerHTML = ''
-      + '<span class="h1 font-weight-bold">' + days +  ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + (hours<10 ? "0" + hours : hours) + ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + (minutes<10 ? "0" + minutes : minutes) + ' </span><span class="separator">: </span>'
-      + '<span class="h1 font-weight-bold">' + (seconds<10 ? "0" + seconds : seconds) + ' </span>';
+    document.getElementById("countdown-timer").innerHTML = countDownHtml;
 }, 1000);
-</script>
-
-<script>
-  // var arrName = ['Tagi Muhammad', 'Firmansyah', 'Andre', 'Johanes', 'Abimana', 'Charles Wijaya', 'Cokroaminoto', 'Eric Sanjaya', 'Endang', 'Mahmud Muhsin'];
-  // var arrKota = ['Surabaya', 'Jakarta Utara', 'Jakarta Pusat', 'Jakarta Selatan', 'Bandung', 'Semarang', 'Medan', 'Jakarta Timur'];
-  // var i = 0;
-  // var timeClose = 0;
-  // setInterval(function () {
-  //     if(i < arrName.length){
-  //       $("#notif-name").html(arrName[i]+" - "+arrKota[Math.floor(Math.random() * arrKota.length)]);
-  //       $("#notif-time").html("Telah mendaftar "+(arrName.length-i)+" menit yang lalu");
-  //       document.querySelector("a.regisnotif").click();
-  //       console.log("buka"+arrName[i]);
-  //       i++;
-  //     }
-  // }, (Math.floor(Math.random() * 10) + 5)*5000);
-
-  // setInterval(function () {
-  //   if(timeClose == 3)
-  //   document.querySelector("a.modal-close").click();
-  //   console.log("close");
-  // }, 1000);
-
 </script>
 
 @if(Session::has('success_registration'))
@@ -772,5 +742,4 @@ setInterval(function () {
 @endif
 
 </body>
-
 </html>

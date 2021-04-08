@@ -1,9 +1,4 @@
-/*
-  Theme Name: Rapid
-  Theme URL: https://bootstrapmade.com/rapid-multipurpose-bootstrap-business-template/
-  Author: BootstrapMade.com
-  License: https://bootstrapmade.com/license/
-*/
+
 
 /*--------------------------------------------------------------
 # General
@@ -16,14 +11,14 @@ body {
 }
 
 a {
-  color: #1bb1dc;
+  color: #1bc554;
   transition: 0.5s;
 }
 
 a:hover,
 a:active,
 a:focus {
-  color: #0a98c0;
+  color: #0ad54d;
   outline: none;
   text-decoration: none;
 }
@@ -50,7 +45,7 @@ h6 {
 .back-to-top {
   position: fixed;
   display: none;
-  background: #1bb1dc;
+  background: #1bc554;
   color: #fff;
   width: 44px;
   height: 44px;
@@ -88,7 +83,7 @@ h6 {
   top: calc(50% - 30px);
   left: calc(50% - 30px);
   border: 6px solid #f2f2f2;
-  border-top: 6px solid #1bb1dc;
+  border-top: 6px solid #1bc554;
   border-radius: 50%;
   width: 60px;
   height: 60px;
@@ -142,7 +137,7 @@ h6 {
 }
 
 #topbar .social-links a:hover {
-  color: #1bb1dc;
+  color: #1bc554;
 }
 
 #topbar .social-links a:first-child {
@@ -157,7 +152,7 @@ h6 {
   padding: 12px 15px;
 }
 #searchicn:hover{
-  color: #1bb1dc;
+  color: #1bc554;
 }
 
 .searchbox{
@@ -193,7 +188,7 @@ h6 {
   color: #413e66;
 }
 #searchbtn:hover{
-  color: #1bb1dc;
+  color: #1bc554;
 }
 
 
@@ -255,6 +250,146 @@ h6 {
 
 .main-pages {
   margin-top: 60px;
+}
+
+/*--------------------------------------------------------------
+# Hero Section
+--------------------------------------------------------------*/
+#hero {
+  margin-top: 0;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  background: url("../sources/hero-bg.png") center top no-repeat;
+  background-size: cover;
+  padding: 0 0 60px 0;
+}
+
+#hero .icon-play{
+  width: 90px;
+  height: 90px;
+  margin-right: 2em;
+  cursor: pointer;
+}
+#hero .icon-play:hover{
+  filter: opacity(0.5) drop-shadow(0 0 0 #00844a) saturate(1000%);
+}
+
+.modal-dialog {
+  max-width: 800px;
+  margin: 30px auto;
+}
+
+.modal-body {
+  position:relative;
+  padding:0px;
+}
+
+.close {
+  position:absolute;
+  right:1em;
+  top:1em;
+  z-index:999;
+  font-size:2rem;
+  color:#fff;
+  opacity:1;
+}
+.close:hover{
+  color: #1bc554 !important;
+}
+
+
+#hero .hero-info h2 {
+  color: #3b3b3b;
+  margin-bottom: 1em;
+  margin-top: 2em;
+  font-size: 3em;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+#hero .hero-info p {
+  margin-bottom: 3em;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+}
+
+#hero .video-bg {
+  height: 100vh;
+  left: 400px;
+  object-fit: contain;
+  position: absolute;
+  top: 0px;
+  width: 100%
+
+}
+
+#hero .hero-info .btn-get-started{
+  background: #048b32;
+  transition: 0.5s;
+  color: #fff;
+  font-size: 1.1em;
+  letter-spacing: 0.05rem;
+  padding: 0.5em 4em;
+  border-radius: 2rem;
+  text-transform: capitalize;
+  display: inline-block;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  margin-top: 1em;
+  border: 1px solid transparent;
+}
+
+
+#hero .hero-info .btn-get-started:hover{
+  background: #fff;
+  transition: 0.5s;
+  border: 1px solid #048b32;
+  color: #048b32;
+}
+
+
+#hero .hero-content h2 {
+  color: #413e66;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+}
+
+
+#hero .box {
+  padding: 10px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 10px 29px 0 rgba(68, 88, 144, 0.1);
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+}
+
+#hero .box:hover {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+#hero .boxprd {
+  padding: 1px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 10px 25px 0 rgba(68, 88, 144, 0.1);
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+}
+
+#hero .prodpd {
+  padding: 5px;
+}
+
+#hero .boxprd:hover {
+  -webkit-transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 /*--------------------------------------------------------------
@@ -378,7 +513,7 @@ p.titleprodcat{
   margin-bottom: 1em;
 }
 .buttonprd .button {
-  background: #76B3FA;
+  background: #76df99;
   border-radius: 100px;
   padding: 5px 7px;
   color: #fff;
@@ -389,11 +524,11 @@ p.titleprodcat{
   transition: all 0.1s ease-in-out;
 }
 .buttonprd .button:hover {
-  background: #5F9BE0;
+  background: #1bc554;
 }
 
 .buttonprd .button:active {
-  background: #5F9BE0;
+  background: #1bc554;
 }
 
 
@@ -472,7 +607,7 @@ p.titleprodcat{
 .main-nav a:hover,
 .main-nav .active > a,
 .main-nav li:hover > a {
-  color: #1bb1dc;
+  color: #1bc554;
   text-decoration: none;
 }
 
@@ -508,13 +643,13 @@ p.titleprodcat{
   font-size: 14px;
   font-weight: 500;
   text-transform: none;
-  color: #065e77;
+  color: #0f7431;
 }
 
 .main-nav .drop-down ul a:hover,
 .main-nav .drop-down ul .active > a,
 .main-nav .drop-down ul li:hover > a {
-  color: #1bb1dc;
+  color: #1bc554;
 }
 
 .main-nav .drop-down > a:after {
@@ -578,7 +713,7 @@ p.titleprodcat{
 .mobile-nav a:hover,
 .mobile-nav .active > a,
 .mobile-nav li:hover > a {
-  color: #8dc2fa;
+  color: #1bc554;
   text-decoration: none;
 }
 
@@ -624,7 +759,7 @@ p.titleprodcat{
 
 .mobile-nav-toggle i {
   margin: 18px 18px 0 0;
-  color: #065e77;
+  color: #048b32;
 }
 
 .mobile-nav-overly {
@@ -657,6 +792,13 @@ p.titleprodcat{
 
 /* Sections Header
 --------------------------------*/
+.section-header h2 {
+  color: #048B32;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  font-size: 2.2em;
+  text-align: center;
+}
 
 .section-header h3 {
   font-size: 36px;
@@ -665,6 +807,13 @@ p.titleprodcat{
   font-weight: 700;
   position: relative;
   font-family: "Montserrat", sans-serif;
+}
+
+.section-header h4{
+  margin-bottom: 3em;
+  font-weight: 500;
+  font-size: 1.2em;
+  font-family: 'Poppins', sans-serif;
 }
 
 .section-header p {
@@ -680,7 +829,7 @@ p.titleprodcat{
 --------------------------------*/
 
 .section-bg {
-  background: #f5f8fd;
+  background: #f1faf2;
 }
 
 /* About Us Section
@@ -691,18 +840,20 @@ p.titleprodcat{
 }
 
 #about .about-content {
-  padding-top: 20px;
+  padding-top: 90px;
 }
 
-#about .about-content h2 {
-  color: #413e66;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 700;
+#about h2 {
+  color: #048B32;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  font-size: 2.2em;
+  text-align: center;
 }
 
 #about .about-content h3 {
-  color: #696592;
-  font-weight: 400;
+  color: #4E4E4E;
+  font-weight: 600;
   font-size: 20px;
   /* font-style: italic; */
 }
@@ -729,7 +880,7 @@ p.titleprodcat{
 
 #about .about-img img {
   width: 100%;
-  border: 8px solid #fff;
+  /* border: 8px solid #fff; */
   transition: .5s;
 }
 
@@ -747,7 +898,7 @@ p.titleprodcat{
   height: 92%;
   z-index: -1;
   content: '';
-  background-color: #ebf1fa;
+  /* background-color: #ebf1fa; */
   transition: .5s;
 }
 
@@ -759,7 +910,7 @@ p.titleprodcat{
   height: 92%;
   z-index: -1;
   content: '';
-  background-color: #ebf1fa;
+  /* background-color: #ebf1fa; */
   transition: .5s;
 }
 
@@ -797,12 +948,151 @@ p.titleprodcat{
     -webkit-text-stroke: 1px black;
 }
 
+/* Produk
+--------------------------------*/
+#product{
+  padding: 40px 0;
+}
+
+/* #product .card-container{
+  display: flex;
+  flex-flow: row wrap;
+}
+
+
+#product .card{
+  flex: 0 0 33.333%;
+  display: flex;
+}
+
+#product .product-img {
+  flex-grow: 1;
+  object-fit:contain;
+}
+ */
+/* #product .card-body{
+  flex-grow:0;
+} */
+
+#product .card-img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#product h2 {
+  color: #048B32;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  font-size: 2.2em;
+  text-align: center;
+}
+
+#product .category {
+  font-size: 0.8em;
+  color: #eea805;
+  font-weight: 600;
+  background:#faf8f2;
+  padding: 0.5em 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  display: inline-block;
+  margin-bottom: 1em;
+  border-radius: 10px;
+  font-family: "Poppins", sans-serif;
+  width: 12em;
+  text-align: center;
+}
+
+#product p{
+  padding: 0;
+  margin: 0 0 20px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.75em;
+  color: #5e5e5e;
+}
+
+#product  .owl-stage {
+  display: flex;
+ }
+ #product .owl-item {
+  display: flex;
+  flex: 1 0 auto;
+ }
+
+ #product .card-body{
+	padding-bottom: 0;
+  min-height: 15vw;
+ }
+
+ #product .card-footer {
+   padding-top: 0;
+  border-top: 0;
+  }
+
+#product .btn-link{
+  background: #fff;
+  transition: 0.5s;
+  color: #048b32;
+  font-size: 0.8em;
+  letter-spacing: 0.05rem;
+  padding: 0.5em 3em;
+  border-radius: 2rem;
+  text-transform: capitalize;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  margin-top: 1em;
+  border: 1px solid #048b32;
+  text-align: center;
+  display: inline-block;
+}
+
+#product .btn-link span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+#product .btn-link span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+#product .btn-link:hover span {
+  padding-right: 25px;
+}
+
+#product .btn-link:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+#product .cstm-shadow {
+  box-shadow:  20px 20px 60px #bebebe,
+  -20px -20px 60px #ffffff;
+}
+
+
+
 
 /* Why Us Section
 --------------------------------*/
 
 #why-us {
   padding: 40px 0;
+}
+
+#why-us .section-header h2 {
+  color: #048B32;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 800;
+  font-size: 2.2em;
+  text-align: center;
 }
 
 #why-us .why-us-content .features {
@@ -893,6 +1183,262 @@ p.titleprodcat{
   color: #8a87b6;
 }
 
+/* Testimonials Section
+--------------------------------*/
+#testimonials {
+  padding: 60px 0;
+}
+
+#testimonials .section-header {
+  margin-bottom: 40px;
+}
+
+#testimonials .testimonial-item {
+  width: 100%;
+  text-align: center;
+  padding-right: 0;
+}
+
+@media (max-width: 767px) {
+  #testimonials .testimonial-item {
+    text-align: center;
+  }
+}
+/*
+#testimonials .testimonial-item .testimonial-img {
+  width: 120px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  float: left;
+} */
+
+/* @media (max-width: 767px) {
+  #testimonials .testimonial-item .testimonial-img {
+    float: none;
+    margin: auto;
+  }
+} */
+/*
+#testimonials .testimonial-item h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0 5px 0;
+  color: #111;
+  margin-left: 140px;
+}
+ */
+#testimonials .testimonial-item h4 {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 15px;
+}
+
+#testimonials .testimonial-item h5 {
+  font-size: 16px;
+  font-weight: 500;
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+#testimonials .testimonial-item p {
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+/* @media (min-width: 992px) {
+  #testimonials .testimonial-item p {
+    width: 80%;
+  }
+}
+ */
+@media (max-width: 767px) {
+  #testimonials .testimonial-item h3, #testimonials .testimonial-item h4, #testimonials .testimonial-item p {
+    margin-left: 0;
+  }
+}
+
+#testimonials .owl-nav, #testimonials .owl-dots {
+  margin-top: 5px;
+  text-align: center;
+}
+
+#testimonials .owl-dot {
+  display: inline-block;
+  margin: 0 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ddd;
+}
+
+#testimonials .owl-dot.active {
+  background-color: #048b32;
+}
+
+/* Business Section
+--------------------------------*/
+#business {
+  padding: 40px 0;
+}
+
+#business .business h2 {
+  color: #048B32;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 1.7em;
+}
+
+#business p{
+  padding: 0;
+  margin: 0 0 20px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.75em;
+  color: #5e5e5e;
+}
+
+#business .btn-link {
+    background: #fff;
+    transition: 0.5s;
+    color: #048b32;
+    font-size: 0.9em;
+    letter-spacing: 0.05rem;
+    padding: 0.5em 3em;
+    border-radius: 2rem;
+    text-transform: capitalize;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    margin-top: 1em;
+    border: 1px solid #048b32;
+    text-align: center;
+    display: inline-block;
+}
+
+#business .business .card-business{
+  border: 0;
+  margin-bottom: 10px;
+}
+
+/* card group aka PRIMARY */
+.card-group .card-business:hover {
+  box-shadow: 0 40px 60px -20px rgba(12, 5, 62, 0.15);
+  z-index: 100;
+}
+.card-group .card-business:hover .card-title{
+  color: #4e4e4e;
+}
+.card-group .card-business .card-img-top{
+  width: 100%;
+  object-fit: cover;
+  padding: 15px 15px;
+  align-items: center;
+}
+
+.card-group .card-business .card-img-top img:hover {
+  opacity: 1;
+}
+
+.card-group .card-business .card-title {
+  color: #261c6a;
+  font-size: 1em;
+  line-height: 1.54;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+.card-group .card-business .link-business{
+  font-size: 0.9em;
+  color: #048B32;
+  margin-bottom: 1em;
+}
+
+
+/*
+=====
+DEPENDENCIES
+=====
+*/
+
+.r-link{
+	display: var(--rLinkDisplay, inline-flex) !important;
+}
+
+.r-link[href]{
+	color: var(--rLinkColor) !important;
+	text-decoration: var(--rLinkTextDecoration, none) !important;
+}
+
+.text-underlined{
+    /*
+        1. I use pixels units because others units (em, rem, vw, vh, etc) can
+        lead to the mistake of displaying a circumcised line
+    */
+
+    --uiTextUnderlinedLineHeight: var(--textUnderlinedLineHeight, 2px); /* 1 */
+    --uiTextUnderlinedLineGap: var(--textUnderlinedLineGap, .5rem);
+    --uiTextUnderlinedPaddingBottom: calc(var(--uiTextUnderlinedLineHeight) + var(--uiTextUnderlinedLineGap));
+
+    padding-bottom: var(--uiTextUnderlinedPaddingBottom) !important;
+    position: var(--textUnderlinedPosition, relative) !important;
+		z-index: var(--textUnderlinedZindex, 1) !important;
+}
+
+.text-underlined::after{
+    content: "";
+    width: var(--textUnderlinedLineWidht, 100%) !important;
+    height: var(--uiTextUnderlinedLineHeight) !important;
+		background-image: var(--textUnderlinedBackgroundImage, linear-gradient(to top, var(--textUnderlinedLineColor, currentColor) 30%, rgba(0, 0, 0, 0) 45%)) !important;
+
+    position: absolute;
+    left: var(--textUnderlinedLineLeft, 0) !important;
+    bottom: var(--textUnderlinedLineBottom, 0) !important;
+		z-index: var(--textUnderlinedLineZindex, -1) !important;
+}
+
+/*
+=====
+CORE
+=====
+*/
+
+.link{
+	--textUnderlinedLineHeight: 100%;
+	--textUnderlinedLineGap: 0;
+	--textUnderlinedLineColor: #fed330;
+
+	padding-left: .75rem;
+	padding-right: .75rem;
+}
+
+.link::after{
+	will-change: width;
+	transition: width .1s ease-out;
+	transform: rotate(-2deg);
+	transform-origin: left bottom;
+}
+
+.link:hover{
+	--textUnderlinedLineWidht: 0;
+}
+
+.link:hover::after{
+	transition-duration: .15s;
+}
+
+/*
+* These styles for text decoration. The demo will be work without it
+*/
+
+.link{
+	font-weight: 600;
+  font-size: 0.9em;
+	text-transform: capitalize;
+}
+
+.link:focus{
+	outline: 2px solid #fed330;
+	outline-offset: .5rem;
+}
+
 /* Portfolio Section
 --------------------------------*/
 
@@ -909,22 +1455,29 @@ p.titleprodcat{
 
 #portfolio #portfolio-flters li {
   cursor: pointer;
-  margin: 15px 15px 15px 0;
   display: inline-block;
-  padding: 6px 10px;
+  padding: 10px 30px;
   font-size: 16px;
+  font-weight: 600;
   line-height: 20px;
-  color: #413e66;
+  color: #248d32;
   margin-bottom: 5px;
   transition: all 0.3s ease-in-out;
+  border: 1px solid #248d32;
 }
 
 #portfolio #portfolio-flters li:hover,
 #portfolio #portfolio-flters li.filter-active {
-  color: #1bb1dc;
+  color: #fff;
+  background-color: #248d32;
 }
 
+#portfolio #portfolio-flters li:first-child {
+  border-radius:2em 0 0 2em;
+  margin-right: -5px;
+}
 #portfolio #portfolio-flters li:last-child {
+  border-radius:0 2em 2em 0;
   margin-right: 0;
 }
 
@@ -1131,7 +1684,9 @@ p.titleprodcat{
 --------------------------------*/
 
 #clients {
-  padding: 60px 0;
+  padding: 0.8em 0;
+  box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.3);
+
 }
 
 #clients img {
@@ -1177,7 +1732,7 @@ p.titleprodcat{
 
 #footer .footer-top {
   padding: 60px 0 30px 0;
-  background: #f5f8fd;
+  background: #f1faf2;
 }
 
 #footer .footer-top .footer-info {
@@ -1206,7 +1761,7 @@ p.titleprodcat{
 #footer .footer-top .social-links a {
   font-size: 18px;
   display: inline-block;
-  background: #1bb1dc;
+  background: #048b32;
   color: #fff;
   line-height: 1;
   padding: 8px 0;
@@ -1219,7 +1774,7 @@ p.titleprodcat{
 }
 
 #footer .footer-top .social-links a:hover {
-  background: #0a98c0;
+  background: #048b32;
   color: #fff;
 }
 
@@ -1254,7 +1809,7 @@ p.titleprodcat{
 }
 
 #footer .footer-top .footer-links ul a:hover {
-  color: #1bb1dc;
+  color: #048b32;
 }
 
 #footer .footer-top .footer-contact {
@@ -1281,7 +1836,7 @@ p.titleprodcat{
 
 #footer .footer-top .form #sendmessage {
   color: #fff;
-  background: #1bb1dc;
+  background: #048b32;
   display: none;
   text-align: center;
   padding: 15px;
@@ -1347,7 +1902,7 @@ p.titleprodcat{
 }
 
 #footer .footer-top .form button[type="submit"] {
-  background: #1bb1dc;
+  background: #048b32;
   border: 0;
   border-radius: 3px;
   padding: 8px 30px;
@@ -1356,7 +1911,7 @@ p.titleprodcat{
 }
 
 #footer .footer-top .form button[type="submit"]:hover {
-  background: #0a98c0;
+  background: #048b32;
   cursor: pointer;
 }
 
@@ -1376,13 +1931,24 @@ p.titleprodcat{
 }
 
 #footer .credits a {
-  color: #1bb1dc;
+  color: #048b32;
 }
 
 #footer .credits a:hover {
-  color: #0a98c0;
+  color: #048b32;
 }
 
+/*------------------------------------
+# Modal Video
+--------------------------------------*/
+.videoModal .modal-header{
+  border: none !important;
+}
+
+.videoModal .modal-content{
+  border: none !important;
+  background-color: transparent !important;
+}
 
 /*--------------------------------------------------------------
 # Responsive Media Queries
@@ -1463,6 +2029,9 @@ p.titleprodcat{
   .back-to-top {
     bottom: 15px;
   }
+  #hero .icon-play{
+    display: none;
+  }
 
   #faq #faq-list a {
     font-size: 18px;
@@ -1520,5 +2089,102 @@ p.titleprodcat{
 @media (max-width: 574px) {
   #footer .footer-top .social-links a {
     margin-bottom: 25px;
+  }
+}
+
+/*-- mobile --*/
+@media (min-width: 768px){
+  #desktop {
+      display: block;
+  }
+  #mobile {
+      display: none;
+  }
+}
+
+
+@media (max-width: 768px){
+  #desktop {
+      display: none;
+  }
+  #mobile {
+      display: block;
+  }
+  #hero .btn-mobile {
+    display: inline-block;
+    background: transparent;
+    transition: 0.5s;
+    border: 1px solid #048b32;
+    color: #048b32;
+    font-size: 0.9em;
+    letter-spacing: 0.05rem;
+    padding: 0.5em 1.5em;
+    border-radius: 2rem;
+    text-transform: capitalize;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    margin-top: 1em;
+  }
+  #hero .hero-info h2 {
+    color: #3b3b3b;
+    margin-bottom: 0.75em;
+    margin-top: 1.75em;
+    font-size: 2.5em;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  #hero .hero-info p {
+    margin-bottom: 3em;
+    font-weight: 500;
+    font-size: 0.9em;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  #hero .hero-info .btn-get-started{
+    background: #048b32;
+    transition: 0.5s;
+    color: #fff;
+    font-size: 1.1em;
+    letter-spacing: 0.05rem;
+    padding: 0.4em 3em;
+    border-radius: 2rem;
+    text-transform: capitalize;
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1em;
+    margin-top: 1em;
+    border: 1px solid transparent;
+  }
+
+  #about .section-header h2 {
+    font-size: 2em;
+  }
+  #about .about-content {
+    padding-top: 1em;
+  }
+
+  #product .section-header h2 {
+    font-size: 2em;
+  }
+  #portfolio .section-header h2 {
+    font-size: 2em;
+  }
+
+  #business .section-header h2 {
+    font-size: 2em;
+  }
+
+  #testimonials .section-header h2 {
+    font-size: 2em;
+  }
+
+  #testimonials .section-header h4 {
+    font-size: 18px;
+  }
+
+  #testimonials h5 {
+    font-size: 0.9em;
   }
 }

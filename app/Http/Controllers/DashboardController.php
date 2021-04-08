@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use App\User;
+use App\Role;
+use App\RoleUser;
 
 class DashboardController extends Controller
 {
@@ -12,7 +17,18 @@ class DashboardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
+        //update role user yg baru
+        $role = Role::where('slug', Auth::user()->roles[0]['slug'])->get();
+
+        $users = User::find(Auth::user()->id);
+        
+        $check_permission = Str::contains($users->permissions, 'add-service');
+        if(!$check_permission){
+            $users->permissions = $role[0]['permissions'];
+            $users->save();
+        }
+
         return view('admin.dashboard');
     }
 

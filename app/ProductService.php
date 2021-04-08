@@ -24,4 +24,15 @@ class ProductService extends Model
     {
         return $this->belongsTo('App\Upgrade');
     }
+
+    public function getSparepart($id)
+    {
+        $arrSparepart = json_decode($this->sparepart);
+        foreach ($arrSparepart as $key => $value) {
+            if($value->id == $id){
+                $value->id = Sparepart::find($value->id);
+                return $value;
+            }
+        }
+    }
 }

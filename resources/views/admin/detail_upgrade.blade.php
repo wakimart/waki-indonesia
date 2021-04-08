@@ -235,6 +235,74 @@ $menu_item_second = "detail_upgrade_form";
 	          					</tr>
 	          				</table>
 	          			</div>
+
+	          			<div class="row justify-content-center">
+	          			@foreach($upgrade->product_services as $key => $product_service)
+	          				@if($product_service['sparepart'] != null)
+	          				<table class="col-md-12">
+	          					<thead>
+	          						<td colspan="5">Data Product Service {{$key + 1}}</td>
+	          					</thead>
+	          					<tr>
+	          						<td>Product: </td>
+	          						@if ($upgrade->acceptance['oldproduct_id'] != null)
+		          						<td>{{ $upgrade->acceptance->oldproduct['code'] }} - {{ $upgrade->acceptance->oldproduct['name'] }}</td>
+		          					@else
+		          						<td>{{ $upgrade->acceptance['other_product'] }}</td>
+		          					@endif
+	          					</tr>
+	          					
+	          					@php
+	                            	$arr_sparepart = json_decode($product_service['sparepart']);
+	                            	$count_sparepart = count($arr_sparepart);
+	                            @endphp
+	                            <thead>
+	                            	<td colspan="5">Detail Sparepart</td>
+	                            </thead>
+	                            <tr>
+	                            	<td>No.</td>
+	                            	<td>Sparepart</td>
+	                            	<td>Qty</td>
+	                            	<td>Price (Rp)</td>
+	                            	<td>Total (Rp)</td>
+	                            </tr>
+	                            <tr>
+	                            	@foreach($arr_sparepart as $index => $item)
+	                            		@php
+	                            			$unit_price = $product_service->getSparepart($item->id)->id['price'];
+	                            			$total_price = (int)$item->qty * $unit_price;
+	                            		@endphp
+	                            		<td>{{$index+1}}</td>
+	                            		<td>{{$product_service->getSparepart($item->id)->id['name']}}</td>
+		                            	<td>{{$item->qty}}</td>
+		                            	<td>{{number_format($unit_price)}}</td>
+		                            	<td>{{number_format($total_price)}}</td>
+		                            	@php break; @endphp
+	                            	@endforeach
+          						</tr>
+          						@php $first = true; @endphp
+		                        @for($i = 0; $i < $count_sparepart; $i++)
+		                            @php
+		                                if($first){
+		                                    $first = false;
+		                                    continue;
+		                                }
+		                                $unit_price_two = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
+	                            		$total_price_two = (int)$arr_sparepart[$i]->qty * $unit_price_two;
+		                            @endphp
+		                            <tr>
+		                            	<td>{{$i+1}}</td>
+		                            	<td>{{$product_service->getSparepart($arr_sparepart[$i]->id)->id['name']}}</td>
+		                                <td>{{$arr_sparepart[$i]->qty}}</td>
+		                                <td>{{number_format($unit_price_two)}}</td>
+		                            	<td>{{number_format($total_price_two)}}</td>
+		                            </tr>
+		                        @endfor
+	          					
+	          				</table>
+	          				@endif
+	          			@endforeach
+	          			</div>
 	          		</div>
 	        	</div>
 	      	</div>
@@ -261,7 +329,7 @@ $menu_item_second = "detail_upgrade_form";
                                         type="submit"
                                         class="btn btn-gradient-primary btn-lg"
                                         name="status"
-                                        value="approved">
+                                        value="Approved">
                                         Approved
                                     </button>
                                 </form>
@@ -291,14 +359,14 @@ $menu_item_second = "detail_upgrade_form";
                                         type="submit"
                                         class="btn btn-gradient-primary btn-lg"
                                         name="status"
-                                        value="display">
+                                        value="Display">
                                         Display
                                     </button>
                                     <button id="upgradeProcess"
                                         type="submit"
                                         class="btn btn-gradient-success btn-lg"
                                         name="status"
-                                        value="ready">
+                                        value="Ready">
                                         Ready
                                     </button>
                                 </form>

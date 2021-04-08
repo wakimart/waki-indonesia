@@ -54,7 +54,7 @@
 					              	<th> Service Date </th>
 					              	<th> Status </th>
 					              	@if(Gate::check('edit-order') || Gate::check('delete-order'))
-						              	<th colspan="2"> Edit / Delete </th>
+						              	<th colspan="3"> Detail/Edit/Delete </th>
 						            @endif
 				            	</tr>
 							</thead>
@@ -68,11 +68,26 @@
 									<td>{{$service['service_date']}}</td>
 									<td>{{$service['status']}}</td>
 
-									@can('edit-order')
-			                            <td style="text-align: center;"><a href=""><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+									@can('detail-service')
+									<td style="text-align: center;">
+                                        <a href="{{ route('detail_service' ,['id' => $service['id']]) }}">
+                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                        </a>
+                                    </td>
+									@endcan
+									@can('edit-service')
+		                            <td style="text-align: center;">
+		                            	<a href="{{route('edit_service', ['id' => $service['id']])}}">
+		                            		<i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+		                            	</a>
+		                            </td>
 		                            @endcan
-		                            @can('delete-order')
-	                      				<td style="text-align: center;"><button value="" data-toggle="modal" data-target="#deleteDoModal" class="btn-delete" ><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></button></td>
+		                            @can('delete-service')
+                      				<td style="text-align: center;">
+                      					<button value="" data-toggle="modal" data-target="#deleteDoModal" class="btn-delete" >
+                      						<i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
+                      					</button>
+                      				</td>
                       				@endcan
 								</tr>
 								@endforeach

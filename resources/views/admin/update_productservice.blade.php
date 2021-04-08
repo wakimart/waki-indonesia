@@ -92,7 +92,7 @@
 			                    	@php $counterSparepart++; @endphp
 			                    	<div id="detailSparepart-{{$key}}">
 			                    		<div class="form-group" style="width: 72%; display: inline-block;">
-					                        <select id="idSparepart-{{$index}}-{{$key}}" class="form-control pilihan-product" data-msg="Mohon Pilih Product" required>
+					                        <select id="idSparepart-{{$index}}-{{$key}}" class="form-control pilihan-sparepart" data-msg="Mohon Pilih Product" required>
 					                            <option selected disabled value="">Choose SPAREPART</option>
 				                            	@foreach($spareparts as $sparepart)
 				                            		@if($arr_sparepart[$index]->id == $sparepart['id'])
@@ -101,6 +101,7 @@
 					                                	<option value="{{ $sparepart['id'] }}">{{ $sparepart['name'] }}</option>
 					                                @endif
 					                            @endforeach
+					                            <option value="other">OTHER</option>
 					                        </select>
 					                        <div class="validation"></div>
 					                    </div>
@@ -115,6 +116,15 @@
 					                    	<div class="text-center" style="display: inline-block; float: right;"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>	
 					                    @endif
 					                    
+					                    <div class="form-group d-none" style="width: 72%; display: inline-block;">
+				                            <input type="text" class="form-control" id="sparepart_other-{{$index}}-{{$key}}" placeholder="Sparepart Name" data-msg="Please fill in the product"/>
+				                            <div class="validation"></div>
+				                        </div>
+				                        <div class="form-group d-none" style="width: 25%; display: inline-block;">
+				                            <input type="number" class="form-control" id="price_other-{{$index}}-{{$key}}" placeholder="Price (Rp.)" data-msg="Please fill in the product"/>
+				                            <div class="validation"></div>
+				                        </div>
+					                    
 			                    	</div>
 			                    	@endforeach
 			                    </div>
@@ -123,12 +133,12 @@
 		                    	<div id="container-sparepart-{{$key}}">
 			                    	<div id="detailSparepart-{{$key}}">
 			                    		<div class="form-group" style="width: 72%; display: inline-block;">
-					                        <select id="idSparepart-0-{{$key}}" class="form-control pilihan-product" data-msg="Mohon Pilih Product" required>
+					                        <select id="idSparepart-0-{{$key}}" class="form-control pilihan-sparepart" data-msg="Mohon Pilih Product" required>
 					                            <option selected disabled value="">Choose SPAREPART</option>
-
 					                            @foreach($spareparts as $sparepart)
 					                                <option value="{{ $sparepart['id'] }}">{{ $sparepart['name'] }}</option>
 					                            @endforeach
+					                            <option value="other">OTHER</option>
 					                        </select>
 					                        <div class="validation"></div>
 					                    </div>
@@ -136,7 +146,17 @@
 					                        <input id="idQtySparepart-0-{{$key}}" type="number" class="form-control" placeholder="Qty">
 					                        <div class="validation"></div>
 					                    </div>
-					                    <div class="text-center" style="display: inline-block; float: right;"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>	
+					                    <div class="text-center" style="display: inline-block; float: right;"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
+
+					                    <div class="form-group d-none" style="width: 72%; display: inline-block;">
+				                            <input type="text" class="form-control" id="sparepart_other-0-{{$key}}" placeholder="Sparepart Name" data-msg="Please fill in the product"/>
+				                            <div class="validation"></div>
+				                        </div>
+				                        <div class="form-group d-none" style="width: 25%; display: inline-block;">
+				                            <input type="number" class="form-control" id="price_other-0-{{$key}}" placeholder="Price (Rp.)" data-msg="Please fill in the product"/>
+				                            <div class="validation"></div>
+				                        </div>
+
 			                    	</div>
 			                    </div>
 			                    @endif
@@ -267,7 +287,7 @@
 			idSparepart++;
 			idQtySparepart++;
 
-			var added_sparepart = "<div id='detailSparepart-"+idSparepart+"'><div class='form-group' style='width: 72%; display: inline-block;'><select id='idSparepart-"+idSparepart+"-"+id_parent+"' class='form-control pilihan-product' name='sparepart[]' data-msg='Mohon Pilih Product' required=''><option selected disabled value=''>Choose SPAREPART</option>@foreach($spareparts as $sparepart)<option value='{{ $sparepart['id'] }}'>{{ $sparepart['name'] }}</option>@endforeach</select><div class='validation'></div></div><div class='form-group' style='width: 16%; display: inline-block;'><input id='idQtySparepart-"+idQtySparepart+"-"+id_parent+"' type='number' class='form-control' name='sparepart_qty' placeholder='Qty'><div class='validation'></div></div><div class='text-center' style='display: inline-block; float: right;'><button class='remove_sparepart btn btn-gradient-danger' type='button' title='Remove Sparepart' style='padding: 0.4em 0.7em;'><i class='mdi mdi-minus'></i></button></div></div>";
+			var added_sparepart = "<div id='detailSparepart-"+idSparepart+"'><div class='form-group' style='width: 72%; display: inline-block;'><select id='idSparepart-"+idSparepart+"-"+id_parent+"' class='form-control pilihan-sparepart' name='sparepart[]' data-msg='Mohon Pilih Product' required=''><option selected disabled value=''>Choose SPAREPART</option>@foreach($spareparts as $sparepart)<option value='{{ $sparepart['id'] }}'>{{ $sparepart['name'] }}</option>@endforeach<option value='other'>OTHER</option></select><div class='validation'></div></div><div class='form-group' style='width: 16%; display: inline-block;'><input id='idQtySparepart-"+idQtySparepart+"-"+id_parent+"' type='number' class='form-control' name='sparepart_qty' placeholder='Qty'><div class='validation'></div></div><div class='text-center' style='display: inline-block; float: right;'><button class='remove_sparepart btn btn-gradient-danger' type='button' title='Remove Sparepart' style='padding: 0.4em 0.7em;'><i class='mdi mdi-minus'></i></button></div><div class='form-group d-none' style='width: 72%; display: inline-block;'><input type='text' class='form-control' id='sparepart_other-"+idSparepart+"-"+id_parent+"' placeholder='Sparepart Name' data-msg='Please fill in the product'/><div class='validation'></div></div><div class='form-group d-none' style='width: 25%; display: inline-block;'><input type='number' class='form-control' id='price_other-"+idSparepart+"-"+id_parent+"' placeholder='Price (Rp.)' data-msg='Please fill in the product'/><div class='validation'></div></div></div>";
 
 			$(this).parent().parent().parent().append(added_sparepart);
 		});
@@ -278,6 +298,31 @@
 			// idSparepart--;
 			// idQtySparepart--;
 		});
+
+		@if(true)
+            $(document).on("change", ".pilihan-sparepart", function(e){
+                if($(this).val() == 'other'){
+                	console.log($(this).parent().next().next().next());
+                	//other sparepart name
+                    $(this).parent().next().next().next().removeClass("d-none");
+                    $(this).parent().next().next().next().children().attr('required', '');
+
+                    //price
+                    $(this).parent().next().next().next().next().removeClass("d-none");
+                    $(this).parent().next().next().next().next().children().attr('required', '');
+                }
+                else{
+                	//other sparepart name
+                    $(this).parent().next().next().next().addClass("d-none");
+                    $(this).parent().next().next().next().children().removeAttr('required', '');
+
+                    //price
+                    $(this).parent().next().next().next().next().addClass("d-none");
+                    $(this).parent().next().next().next().next().children().removeAttr('required', '');
+                }
+            });
+        @endif
+
 
 
 		var frmAdd;
@@ -304,7 +349,13 @@
 	        		var qty = $("#idQtySparepart-"+s+"-"+i).val();
 
 	        		if(sparepart != null && qty != null){
-	        			arr_sparepart.push([sparepart, qty]);
+	        			if(sparepart == 'other'){
+	        				var other_sparepart = $("#sparepart_other-"+s+"-"+i).val();
+	        				var price = $("#price_other-"+s+"-"+i).val();
+	        				arr_sparepart.push([sparepart, qty, other_sparepart, price]);
+	        			}else{
+	        				arr_sparepart.push([sparepart, qty]);
+	        			}
 	        		}
 	        	}
 	        	arr_productservice.push([id_product_service, arr_sparepart, id_service]);
@@ -312,7 +363,7 @@
 
 	        var arr_jsonproductservice = JSON.stringify(arr_productservice);
 
-	        console.log(repaired);
+	        console.log(arr_productservice);
 
 	        frmAdd.append('productservices', arr_jsonproductservice);
 	        frmAdd.append('repairedservices', repaired);
@@ -362,7 +413,7 @@
 	        }
 	        else{ 
 	            alert("Input Success !!!");
-	            window.location.reload()
+	           	window.location.reload()
 	        }
 
 	        document.getElementById("updateService").innerHTML = "SAVE";

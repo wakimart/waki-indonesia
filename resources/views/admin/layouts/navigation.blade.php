@@ -293,6 +293,23 @@
 </li>
 @endif
 
+@if(Gate::check('add-product') || Gate::check('browse-product'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'stock'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#stock-dd" aria-expanded="false" aria-controls="stock-dd">
+    <span class="menu-title">Stock</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-package menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'stock'? 'show': '' }}" id="stock-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('browse-product'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_stock'? 'active': '' }}" href="{{route('list_stock')}}">List Stock</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
 @if(Gate::check('add-promo') || Gate::check('browse-promo'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'promo'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#promo-dd" aria-expanded="false" aria-controls="promo-dd">

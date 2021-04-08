@@ -109,10 +109,29 @@ class ProductServiceController extends Controller
                 $index = 0;
                 $data['arr_sparepart'] = [];
                 foreach ($item_productservice[1] as $item_sparepart) {
-                    $data['arr_sparepart'][$index] = [];
-                    $data['arr_sparepart'][$index]['id'] = $item_sparepart[0];
-                    $data['arr_sparepart'][$index]['qty'] = $item_sparepart[1];
-                    $index++;
+                    if($item_sparepart[0] == 'other'){
+                        //cek sparepart ada/tidak
+                        $spareparts = Sparepart::where([
+                            ['active', true],
+                            ['name', 'like', '%{$item_sparepart[2]}%']
+                        ])->get();
+
+                        if(count($spareparts) == 0){
+                            $sparepart['name'] = $item_sparepart[2];
+                            $sparepart['price'] = $item_sparepart[3];
+                            $new_sparepart = Sparepart::create($sparepart);
+
+                            $data['arr_sparepart'][$index] = [];
+                            $data['arr_sparepart'][$index]['id'] = $new_sparepart->id;
+                            $data['arr_sparepart'][$index]['qty'] = $item_sparepart[1];
+                            $index++;
+                        }
+                    }else{
+                        $data['arr_sparepart'][$index] = [];
+                        $data['arr_sparepart'][$index]['id'] = $item_sparepart[0];
+                        $data['arr_sparepart'][$index]['qty'] = $item_sparepart[1];
+                        $index++;
+                    }
                 }
 
                 $product_services->sparepart = json_encode($data['arr_sparepart']);
@@ -124,13 +143,13 @@ class ProductServiceController extends Controller
             if($request->repairedservices == "true"){
                 
                 $arr_history = json_decode($services['history_status']);
-                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "Repaired", 'updated_at' => date("Y-m-d h:i:s")]);
+                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "repaired", 'updated_at' => date("Y-m-d h:i:s")]);
                 $services->history_status = json_encode($arr_history);
                 $services->status = "Repaired";
                 $services->save();
             }else if($request->repairedservices == "false"){
                 $arr_history = array();
-                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "Process", 'updated_at' => date("Y-m-d h:i:s")]);
+                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "process", 'updated_at' => date("Y-m-d h:i:s")]);
                 $services->history_status = json_encode($arr_history);
                 $services->status = "Process";
                 $services->save();      
@@ -155,23 +174,43 @@ class ProductServiceController extends Controller
                 $data = $request->all();
                 $product_services = ProductService::find($item_productservice[0]);
 
-                $index = 0;
-                $data['arr_sparepart'] = [];
-                foreach ($item_productservice[1] as $item_sparepart) {
-                    $data['arr_sparepart'][$index] = [];
-                    $data['arr_sparepart'][$index]['id'] = $item_sparepart[0];
-                    $data['arr_sparepart'][$index]['qty'] = $item_sparepart[1];
-                    $index++;
-                }
+                if(count($item_productservice[1]) > 0){
+                    $index = 0;
+                    $data['arr_sparepart'] = [];
+                    foreach ($item_productservice[1] as $item_sparepart) {
+                        if($item_sparepart[0] == 'other'){
+                            //cek sparepart ada/tidak
+                            $spareparts = Sparepart::where([
+                                ['active', true],
+                                ['name', 'like', '%{$item_sparepart[2]}%']
+                            ])->get();
 
-                $product_services->sparepart = json_encode($data['arr_sparepart']);
+                            if(count($spareparts) == 0){
+                                $sparepart['name'] = $item_sparepart[2];
+                                $sparepart['price'] = $item_sparepart[3];
+                                $new_sparepart = Sparepart::create($sparepart);
+
+                                $data['arr_sparepart'][$index] = [];
+                                $data['arr_sparepart'][$index]['id'] = $new_sparepart->id;
+                                $data['arr_sparepart'][$index]['qty'] = $item_sparepart[1];
+                                $index++;
+                            }
+                        }else{
+                            $data['arr_sparepart'][$index] = [];
+                            $data['arr_sparepart'][$index]['id'] = $item_sparepart[0];
+                            $data['arr_sparepart'][$index]['qty'] = $item_sparepart[1];
+                            $index++;
+                        }
+                    }
+                    $product_services->sparepart = json_encode($data['arr_sparepart']);
+                }
                 $product_services->save();
             }
             
             if($request->repairedservices == "true"){
                 $upgrades = Upgrade::find($get_allProductService[0][2]);
                 $arr_old_history = $upgrades['history_status'];
-                array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => "Repaired", 'updated_at' => date("Y-m-d h:i:s")]);
+                array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => "repaired", 'updated_at' => date("Y-m-d h:i:s")]);
 
                 $upgrades->history_status = $arr_old_history;
                 $upgrades->status = "Repaired";
