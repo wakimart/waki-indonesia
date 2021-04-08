@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Reference;
+use App\HistoryUpdate;
+use App\RajaOngkir_City;
+use App\Souvenir;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ReferenceController extends Controller
 {
@@ -76,7 +81,91 @@ class ReferenceController extends Controller
      */
     public function update(Request $request)
     {
-        //
+        if (!empty($request->id)) {
+            $user = Auth::user();
+
+            $returnValue = $this->updateReference($request, $user["id"]);
+
+            return $returnValue;
+        }
+
+        return response()->json([
+            "result" => 0,
+            "error" => "Data tidak ditemukan."
+        ], 400);
+    }
+
+    private function updateReference(Request $request, int $userId)
+    {
+        DB::beginTransaction();
+
+        try {
+            $reference = Reference::find($request->id);
+            $reference->fill($request->only(
+                "name",
+                "age",
+                "phone",
+                "province",
+                "city",
+                "souvenir_id",
+                "link_hs",
+                "status",
+            ));
+            $reference->save();
+
+            $this->historyReference($reference, "update", $userId);
+
+            $city = RajaOngkir_City::select(
+                "province AS province",
+                DB::raw("CONCAT(type, ' ', city_name) AS city"),
+            )
+            ->where("city_id", $reference->city)
+            ->first();
+
+            $souvenir = "";
+            if (!empty($reference->souvenir_id)) {
+                $souvenir = Souvenir::select("name")
+                ->where("id", $reference->souvenir_id)
+                ->first();
+            }
+
+            DB::commit();
+
+            return response()->json([
+                "result" => 1,
+                "data" => $reference,
+                "province" => $city->province,
+                "city" => $city->city,
+                "souvenir" => $souvenir->name,
+            ]);
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 501);
+        }
+    }
+
+    private function historyReference(
+        Reference $reference,
+        string $method,
+        int $userId
+    ) {
+        $historyReference["type_menu"] = "Reference";
+        $historyReference["method"] = $method;
+        $historyReference["meta"] = json_encode(
+            [
+                "user" => $userId,
+                "createdAt" => date("Y-m-d H:i:s"),
+                "dataChange" => $reference->getChanges(),
+            ],
+            JSON_THROW_ON_ERROR
+        );
+        $historyReference["user_id"] = $userId;
+        $historyReference["menu_id"] = $reference->id;
+        HistoryUpdate::create($historyReference);
     }
 
     /**
@@ -153,5 +242,19 @@ class ReferenceController extends Controller
 
             return response()->json($data, 401);
         }
+    }
+
+    public function updateApi(Request $request)
+    {
+        if (!empty($request->id) && !empty($request->user_id)) {
+            $returnValue = $this->updateReference($request, (int) $request->user_id);
+
+            return $returnValue;
+        }
+
+        return response()->json([
+            "result" => 0,
+            "error" => "Data tidak ditemukan."
+        ], 400);
     }
 }

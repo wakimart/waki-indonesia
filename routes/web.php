@@ -50,14 +50,14 @@ Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
 Route::get('/fetchCsoByIdBranch/{branch}', 'CsoController@fetchCsoByIdBranch')->name('fetchCsoByIdBranch');
 Route::get('/fetchBranchById', 'BranchController@fetchBranchById')->name('fetchBranchById');
 Route::get('/fetchCity/{province}', function ($province) {
-		return RajaOngkir::FetchCity($province);
-	})->name('fetchCity');
+    return RajaOngkir::FetchCity($province);
+})->name('fetchCity');
 
 Route::get('/fetchDistrict/{city}', function ($city) {
 	$kotaOrKab = array("Kota ", "Kabupaten ");
 	$city = str_replace($kotaOrKab, '', $city);
-		return RajaOngkir::FetchDistrict($city);
-	})->name('fetchDistrict');
+    return RajaOngkir::FetchDistrict($city);
+})->name('fetchDistrict');
 
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)
@@ -608,6 +608,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // List reference
         Route::get("/list", "ReferenceController@index")
             ->name("list_reference");
+
+        // Update reference
+        Route::post("/update", "ReferenceController@update")
+            ->name("update_reference");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {

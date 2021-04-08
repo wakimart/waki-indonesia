@@ -8,6 +8,7 @@ use App\DeliveryOrder;
 use App\HistoryUpdate;
 use App\RajaOngkir_City;
 use App\Reference;
+use App\Souvenir;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -231,6 +232,26 @@ class SubmissionController extends Controller
                 . $refCityAndProvince->province;
         }
 
+        $getReferencesSouvenir = Reference::select(
+            "references.id",
+            "souvenirs.id AS id",
+            "souvenirs.name AS name",
+        )
+        ->leftJoin(
+            "souvenirs",
+            "souvenirs.id",
+            "=",
+            "references.souvenir_id"
+        )
+        ->where("references.deliveryorder_id", $request["id"])
+        ->orderBy("references.id")
+        ->get();
+
+        $referenceSouvenir = [];
+        foreach ($getReferencesSouvenir as $refSouvenir) {
+            $referenceSouvenir[] = $refSouvenir->name;
+        }
+
         // Melakukan query riwayat dari tabel history_updates
         $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin(
             'users',
@@ -248,6 +269,10 @@ class SubmissionController extends Controller
         ->where('menu_id', $deliveryOrder->id)
         ->get();
 
+        $souvenirs = Souvenir::select("id", "name")
+        ->where("active", true)
+        ->get();
+
         return view(
             "admin.detail_submission",
             compact(
@@ -255,6 +280,8 @@ class SubmissionController extends Controller
                 "historyUpdateDeliveryOrder",
                 "references",
                 "referencesCityAndProvince",
+                "referenceSouvenir",
+                "souvenirs",
             )
         );
     }
