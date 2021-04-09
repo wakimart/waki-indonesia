@@ -99,20 +99,16 @@
     #mobile .timeline .timeline-item .timeline-content {
         -ms-flex: 1; /* IE 10 */
         flex: 1;
+         -webkit-flex: 1;
+         height: auto;
+         width: calc(50% - 30px) !important;
         padding: 0 0 0 0;
     }
 
-    #mobile .table-responsive{
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-        -ms-overflow-style: -ms-autohiding-scrollbar; 
+    #mobile .table th{
+        vertical-align: top;
     }
 
-    #mobile .align-numbers {
-    float: right;
-    
-    }
 
 }
 
@@ -389,10 +385,7 @@
                                                         <p class="card-text">{{ date("d/m/Y", strtotime($arr_serviceoption->appointment)) }}<br>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</p>
                                                         @endif
                                                     </div>
-
-                                                </div>{{-- 
-                                                <p style="font-weight: 400;">Produk telah dikirim pada</p>
-                                                    <p>{{$service_option['recipient_name']}}<br>{{$service_option['address']}}</p> --}}
+                                                </div>
                                             </div>
                                         </div>
                                         @elseif (strtolower($history_status['status']) == "take_away")
@@ -427,144 +420,76 @@
                                                 <h6 style="color: #048b32; font-weight: 700;">Completed</h6>
                                                 <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
                                                 <hr>
-                                                <h6 class="text-center" style="font-weight: 600;">Biaya Service</h6>
-                                                    <div class="row" style="padding: 0; margin: 0;">
-                                                        <div class="col-5 text-left">
-                                                            <p style="font-weight: 600; margin-bottom: 0;">Harga Sparepart (Rp)</p>
-                                                        </div>
-                                                        <div class="col-3 text-left">
-                                                             <p style="font-weight: 600; margin-bottom: 0;">Qty</p>
-                                                        </div>
-                                                        <div class="col-4 text-left">
-                                                             <p style="font-weight: 600; margin-bottom: 0;">Total (Rp)</p>
-                                                        </div>
-                                                    </div>
-                                                    <hr>
-                                                @foreach($services->product_services as $key => $product_service)
-                                                    {{-- <p class="card-title" style="font-weight: 600;">Product {{$key + 1}}</p> --}}
-                                                    @php
-                                                        $arr_sparepart = json_decode($product_service['sparepart']);
-                                                        $count_sparepart = count($arr_sparepart);
-                                                    @endphp
-                                                    <div class="row" style="padding-bottom: 1em;">
-                                                        @foreach($arr_sparepart as $index => $item)
-                                                        @php
-                                                            $unit_price = $product_service->getSparepart($item->id)->id['price'];
-                                                            $total_price = $item->qty * $unit_price;
-                                                        @endphp
-                                                            <div class="col-5">
-                                                               <span class="align-numbers"> {{number_format($unit_price)}}</span>
-                                                            </div>
-                                                            <div class="col-3 text-center">
-                                                                {{$item->qty}}x
-                                                            </div>
-                                                            <div class="col-4 text-right">
-                                                                <span class="align-numbers">{{number_format($total_price)}}</span>
-                                                            </div>
-                                                        @php break; @endphp
-                                                        @endforeach
-                                                    </div>
-                                                    @php $first = true; @endphp
-                                                    @for($i = 0; $i < $count_sparepart; $i++)
-                                                                @php
-                                                                    if($first){
-                                                                        $first = false;
-                                                                        continue;
-                                                                    }
-                                                                     $unit_price = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
-		                            		                         $total_price = (int)$arr_sparepart[$i]->qty * $unit_price;
-                                                                @endphp
-                                                    <div class="row">
-                                                        <div class="col-5">
-                                                            <span class="align-numbers"> {{number_format($unit_price)}}</span>
-                                                        </div>
-                                                        <div class="col-3 text-center">
-                                                            {{$arr_sparepart[$i]->qty}}x
-                                                        </div>
-                                                        <div class="col-4 text-right">
-                                                            <span class="align-numbers">{{number_format($total_price)}}</span>
-                                                        </div>
-                                                    </div>
-                                                    @endfor
-                                                @endforeach
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-8">
-                                                        <p style="font-weight: 600;">Total Biaya</p>    
-                                                    </div>
-                                                    <div class="col-4 text-right">
-                                                        <p style="font-weight: 600;">Rp </p>
-                                                    </div>
-                                                </div>
-                                                           
-                                                {{-- <div class="table-responsive"> --}}
-                                                                {{-- <table class="table table-responsive table-borderless">
+                                                            <div class="table-responsive"> 
+                                                                <table class="table table-borderless table-sm">
+                                                                    <h6 class="text-center" style="font-weight: 600;">Biaya Service</h6>
                                                                     <thead>
-                                                                        <h6 class="text-center" style="font-weight: 600;">Biaya Service</h6>
+                                                                    <tr> 
+                                                                        <th class="text-center">Nama</th>
+                                                                        <th class="text-center">Qty</th>
+                                                                        <th class="text-center">Harga (Rp)</th>
+                                                                        <th class="text-center">Total (Rp)</th>
+                                                                    </tr>
                                                                     </thead>
+                                                                    @php
+                                                                        $total = 0;
+                                                                    @endphp
                                                                     @foreach($services->product_services as $key => $product_service)
                                                                     <tbody>
-                                                                        <tr> 
-                                                                            <td colspan="3">
-                                                                                <p class="card-title" style="font-weight: 600;">Product {{$key + 1}}</p>
-                                                                            </td>
-                                                                        </tr>
                                                                         @php
-                                                                        $arr_sparepart = json_decode($product_service['sparepart']);
-                                                                        $count_sparepart = count($arr_sparepart);
+                                                                            $arr_sparepart = json_decode($product_service['sparepart']);
+                                                                            $count_sparepart = count($arr_sparepart);
                                                                         @endphp
                                                                         <tr>
                                                                             @foreach($arr_sparepart as $index => $item)
-                                                                            @php
-                                                                                $unit_price = $product_service->getSparepart($item->id)->id['price'];
-                                                                                $total_price = $item->qty * $unit_price;
-                                                                            @endphp --}}
-                                                                           {{--  <td>
-                                                                                {{$product_service->getSparepart($item->id)->id['name']}}
-                                                                            </td> --}}
-                                                                            {{-- <td>
-                                                                                {{$item->qty}}x
-                                                                            </td>
-                                                                            <td class="text-right">{{number_format($unit_price)}}</td>
-                                                                            <td class="text-right">{{number_format($total_price)}}</td>
-                                                                            @php break; @endphp
+                                                                                @php
+                                                                                    $unit_price = $product_service->getSparepart($item->id)->id['price'];
+                                                                                    $total_price = $item->qty * $unit_price;
+                                                                                    $total += $total_price
+                                                                                @endphp 
+                                                                                <td>
+                                                                                    {{$product_service->getSparepart($item->id)->id['name']}}
+                                                                                </td> 
+                                                                                <td>
+                                                                                    {{$item->qty}}x
+                                                                                </td>
+                                                                                <td class="text-right">{{number_format($unit_price)}}</td>
+                                                                                <td class="text-right">{{number_format($total_price)}}</td>
+                                                                                @php break; @endphp
                                                                             @endforeach
                                                                         </tr>
                                                                         @php $first = true; @endphp
                                                                             @for($i = 0; $i < $count_sparepart; $i++)
-                                                                            @php
-                                                                                if($first){
-                                                                                    $first = false;
-                                                                                    continue;
-                                                                                }
-                                                                                $unit_price = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
-                                                                                $total_price = $item->qty * $unit_price;
-                                                                            @endphp
-                                                                            <tr>
-                                                                                {{-- <td>{{$product_service->getSparepart($arr_sparepart[$i]->id)->id['name']}}</td> --}}
-                                                                               {{--  <td>{{$arr_sparepart[$i]->qty}}x</td>
-                                                                                <td class="text-right">{{number_format($unit_price)}}</td>
-                                                                                <td class="text-right">{{number_format($total_price)}}</td>
-                                                                            </tr>
-                                                                        @endfor
-
+                                                                                @php
+                                                                                    if($first){
+                                                                                        $first = false;
+                                                                                        continue;
+                                                                                    }
+                                                                                    $unit_price_two = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
+                                                                                    $total_price_two = $item->qty * $unit_price_two;
+                                                                                    $total += $total_price_two;
+                                                                                @endphp
+                                                                                <tr>
+                                                                                    <td>{{$product_service->getSparepart($arr_sparepart[$i]->id)->id['name']}}</td>
+                                                                                <td>{{$arr_sparepart[$i]->qty}}x</td>
+                                                                                    <td class="text-right">{{number_format($unit_price_two)}}</td>
+                                                                                    <td class="text-right">{{number_format($total_price_two)}}</td>
+                                                                                </tr>
+                                                                             @endfor
                                                                     </tbody>
                                                                     @endforeach
                                                                     <tfoot>
                                                                         <tr>
-                                                                            <td colspan="3">
+                                                                            <td colspan="2">
                                                                                 <p style="font-weight: 600;">Total</p>
                                                                             </td>
-                                                                            <td>
-
+                                                                            <td colspan="2" class="text-right" style="font-weight: 600;">
+                                                                                Rp {{number_format($total)}}
                                                                             </td>
                                                                         </tr>
-
                                                                     </tfoot>
-                                                                </table> --}}
-        
-                                                            {{-- </div> --}}
-                                                            
+                                                                </table>
+                                                            </div>
                                             </div>
                                         </div>
 
@@ -743,19 +668,17 @@
                                                 <hr>
                                                  <p style="font-weight: 400;">Produk sedang diproses</p>
                                                 <div class="card">
-                                                    
                                                     <div class="card-body">
                                                         <h6 class="text-center" style="font-weight: 600;">Detail Sparepart</h6>
                                                         @foreach($services->product_services as $key => $product_service)
-                                                        <h6 class="card-title" style="font-weight: 600;">Product {{$key + 1}}</h6>
-                                                        @php
-                                                            $arr_sparepart = json_decode($product_service['sparepart']);
-                                                        @endphp
-                                                        @foreach($arr_sparepart as $index => $item)
-                                                        <h6 class="card-subtitle mb-2" style="font-weight: 500;">{{$product_service->getSparepart($item->id)->id['name']}}</h6>
-                                                        <p class="card-text">Qty: {{$item->qty}}</p>
-                                                        @endforeach
-
+                                                            <h6 class="card-title" style="font-weight: 600;">Product {{$key + 1}}</h6>
+                                                            @php
+                                                                $arr_sparepart = json_decode($product_service['sparepart']);
+                                                            @endphp
+                                                            @foreach($arr_sparepart as $index => $item)
+                                                            <h6 class="card-subtitle mb-2" style="font-weight: 500;">{{$product_service->getSparepart($item->id)->id['name']}}</h6>
+                                                            <p class="card-text">Qty: {{$item->qty}}</p>
+                                                            @endforeach
                                                         @endforeach
                                                     </div>
                                                 </div>
@@ -790,23 +713,23 @@
                                                       <h6 class="card-title" style="font-weight: 600; padding-bottom: 1em;">Delivery Detail</h6>
                                                       <div class="row">
                                                         @php
-                                                      $arr_serviceoption = $services->ServiceOptionDelivery();
-                                                      @endphp
-                                                      <div class="col-lg-7 col-md-7 col-sm-7 border-right">
-                                                        <h6 class="card-subtitle mb-2" style="font-weight: 500;">{{ $arr_serviceoption->recipient_name }}</h6>
-                                                        <p class="card-text" style="font-size: 1em; ">{{ $arr_serviceoption->address }}<br>{{ $arr_serviceoption->recipient_phone }} </p>
-                                                        <p style="font-size: 1em; text-transform: capitalize;">Branch: {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['name'] }}
-                                                            <br> CSO Code: {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['name'] }}
-                                                        </p>
+                                                        $arr_serviceoption = $services->ServiceOptionDelivery();
+                                                        @endphp
+                                                        <div class="col-lg-7 col-md-7 col-sm-7 border-right">
+                                                            <h6 class="card-subtitle mb-2" style="font-weight: 500;">{{ $arr_serviceoption->recipient_name }}</h6>
+                                                            <p class="card-text" style="font-size: 1em; ">{{ $arr_serviceoption->address }}<br>{{ $arr_serviceoption->recipient_phone }} </p>
+                                                            <p style="font-size: 1em; text-transform: capitalize;">Branch: {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['name'] }}
+                                                                <br> CSO Code: {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['name'] }}
+                                                            </p>
 
+                                                        </div>
+                                                        <div class="col-lg-5 col-md-5 col-sm-5">
+                                                            <h6 style="font-size: 1em; font-weight: 600;">Delivery Schedule</h6>
+                                                            @if(isset($arr_serviceoption->appointment))
+                                                            <p class="card-text">{{ date("d/m/Y", strtotime($arr_serviceoption->appointment)) }}<br>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</p>
+                                                            @endif
+                                                        </div>
                                                       </div>
-                                                      <div class="col-lg-5 col-md-5 col-sm-5">
-                                                        <h6 style="font-size: 1em; font-weight: 600;">Delivery Schedule</h6>
-                                                        @if(isset($arr_serviceoption->appointment))
-                                                        <p class="card-text">{{ date("d/m/Y", strtotime($arr_serviceoption->appointment)) }}<br>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</p>
-                                                        @endif
-                                                      </div>
-                                                    </div>
                                                     </div>
                                                 </div>{{-- 
                                                 <p style="font-weight: 400;">Produk telah dikirim pada</p>
@@ -821,27 +744,25 @@
                                                 <hr>
                                                 <div class="card">
                                                     <div class="card-body">
-                                                      <h6 class="card-title" style="font-weight: 600; padding-bottom: 1em;">Pickup Detail</h6>
-                                                      <div class="row">
-                                                        @php
-                                                      $arr_serviceoption = $services->ServiceOptionDelivery();
-                                                      @endphp
-                                                      <div class="col-lg-7 col-md-7 col-sm-7 border-right">
-                                                        <h6 class="card-subtitle mb-2" style="font-weight: 500;">{{ $arr_serviceoption->recipient_name }}</h6>
-                                                        <p class="card-text" style="font-size: 1em; ">{{ $arr_serviceoption->recipient_phone }} </p>
-                                                        <p style="font-size: 1em; text-transform: capitalize;">Branch: {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['name'] }}
-                                                            <br> CSO Code: {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['name'] }}
-                                                        </p>
-
-                                                      </div>
-                                                      
-                                                      <div class="col-lg-5 col-md-5 col-sm-5">
-                                                        <h6 style="font-size: 1em; font-weight: 600;">Delivery Schedule</h6>
-                                                        @if(isset($arr_serviceoption->appointment))
-                                                        <p class="card-text">{{ date("d/m/Y", strtotime($arr_serviceoption->appointment)) }}<br>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</p>
-                                                        @endif
-                                                      </div>
-                                                    </div>
+                                                        <h6 class="card-title" style="font-weight: 600; padding-bottom: 1em;">Pickup Detail</h6>
+                                                        <div class="row">
+                                                            @php
+                                                            $arr_serviceoption = $services->ServiceOptionDelivery();
+                                                            @endphp
+                                                            <div class="col-lg-7 col-md-7 col-sm-7 border-right">
+                                                                <h6 class="card-subtitle mb-2" style="font-weight: 500;">{{ $arr_serviceoption->recipient_name }}</h6>
+                                                                <p class="card-text" style="font-size: 1em; ">{{ $arr_serviceoption->recipient_phone }} </p>
+                                                                <p style="font-size: 1em; text-transform: capitalize;">Branch: {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['name'] }}
+                                                                    <br> CSO Code: {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['name'] }}
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-lg-5 col-md-5 col-sm-5">
+                                                                <h6 style="font-size: 1em; font-weight: 600;">Delivery Schedule</h6>
+                                                                @if(isset($arr_serviceoption->appointment))
+                                                                <p class="card-text">{{ date("d/m/Y", strtotime($arr_serviceoption->appointment)) }}<br>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</p>
+                                                                @endif
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -853,10 +774,8 @@
                                                 <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
                                                 <hr>
                                                 <div class="card">
-                                                    
                                                     <div class="card-body">
                                                         <h6 class="text-center" style="font-weight: 600;">Biaya Service</h6>
-                                                        
                                                         {{-- <h6 class="card-title" style="font-weight: 600;">Product {{$key + 1}}</h6> --}}
                                                         <table class="table table-borderless table-responsive">
                                                             <tr>
@@ -865,72 +784,75 @@
                                                                     <th>Harga (Rp)</th>
                                                                     <th>Total (Rp)</th>
                                                             </tr>
-                                                            @foreach($services->product_services as $key => $product_service)
+                                                            
                                                             @php
-                                                            $arr_sparepart = json_decode($product_service['sparepart']);
-                                                            $count_sparepart = count($arr_sparepart);
+                                                                $total = 0;
                                                             @endphp
-                                                            <tr>
-                                                                @foreach($arr_sparepart as $index => $item)
+                                                            @foreach($services->product_services as $key => $product_service)
                                                                 @php
-                                                                    $unit_price = $product_service->getSparepart($item->id)->id['price'];
-                                                                    $total_price = $item->qty * $unit_price;
+                                                                
+                                                                    $arr_sparepart = json_decode($product_service['sparepart']);
+                                                                    $count_sparepart = count($arr_sparepart);
+                                                                
                                                                 @endphp
-                                                                <td class="td-product-name">
-                                                                    {{$product_service->getSparepart($item->id)->id['name']}}
-                                                                </td>
-                                                                <td>
-                                                                    {{$item->qty}}x
-                                                                </td>
-                                                                <td>{{number_format($unit_price)}}</td>
-                                                                <td>{{number_format($total_price)}}</td>
-                                                                @php break; @endphp
-                                                                @endforeach
-                                                            </tr>
-                                                            @php $first = true; @endphp
-                                                                @for($i = 0; $i < $count_sparepart; $i++)
-                                                                @php
-                                                                    if($first){
-                                                                        $first = false;
-                                                                        continue;
-                                                                    }
-                                                                     $unit_price = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
-		                            		                         $total_price = (int)$arr_sparepart[$i]->qty * $unit_price;
-                                                                @endphp
-                                                                {{-- <tr>
-                                                                    <th>Nama Sparepart</th>
-                                                                    <th>Qty</th>
-                                                                    <th>Harga (Rp)</th>
-                                                                    <th>Total (Rp)</th>
-                                                                </tr> --}}
                                                                 <tr>
-                                                                    <td class="td-product-name">{{$product_service->getSparepart($arr_sparepart[$i]->id)->id['name']}}</td>
-                                                                    <td>{{$arr_sparepart[$i]->qty}}x</td>
-                                                                    <td>{{number_format($unit_price)}}</td>
-                                                                    <td>{{number_format($total_price)}}</td>
+                                                                    @foreach($arr_sparepart as $index => $item)
+                                                                        @php
+                                                                            $unit_price = $product_service->getSparepart($item->id)->id['price'];
+                                                                            $total_price = $item->qty * $unit_price;
+                                                                            $total += $total_price;
+                                                                        @endphp
+                                                                        <td class="td-product-name">
+                                                                            {{$product_service->getSparepart($item->id)->id['name']}}
+                                                                        </td>
+                                                                        <td>
+                                                                            {{$item->qty}}x
+                                                                        </td>
+                                                                        <td>{{number_format($unit_price)}}</td>
+                                                                        <td>{{number_format($total_price)}}</td>
+                                                                        @php break; @endphp
+                                                                    @endforeach
                                                                 </tr>
-                                                            @endfor
-                                                        @endforeach
+                                                                @php $first = true; @endphp
+                                                                    @for($i = 0; $i < $count_sparepart; $i++)
+                                                                        @php
+                                                                            if($first){
+                                                                                $first = false;
+                                                                                continue;
+                                                                            }
+                                                                            $unit_price_two = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
+                                                                            $total_price_two = (int)$arr_sparepart[$i]->qty * $unit_price_two;
+
+                                                                            $total += $total_price_two;
+                                                                        @endphp
+                                                                        {{-- <tr>
+                                                                            <th>Nama Sparepart</th>
+                                                                            <th>Qty</th>
+                                                                            <th>Harga (Rp)</th>
+                                                                            <th>Total (Rp)</th>
+                                                                        </tr> --}}
+                                                                        <tr>
+                                                                            <td class="td-product-name">{{$product_service->getSparepart($arr_sparepart[$i]->id)->id['name']}}</td>
+                                                                            <td>{{$arr_sparepart[$i]->qty}}x</td>
+                                                                            <td>{{number_format($unit_price_two)}}</td>
+                                                                            <td>{{number_format($total_price_two)}}</td>
+                                                                        </tr>
+                                                                    @endfor
+                                                            @endforeach
+
                                                             <tr>
-                                                            
-                                                                @php
-                                                                    $total = 0;
-                                                                    $total += $total_price; 
                                                                     
-                                                                @endphp
-                                                                <td colspan="2"><h6 style="font-weight: 600;">Total Biaya Service</h6></td>
-                                                                <td colspan="2" class="text-right" style="font-weight: 600;">
-                                                                    Rp {{number_format($total)}}
-                                                                </td>
-                                                            </tr>
-                                                            
+                                                                    <td colspan="2"><h6 style="font-weight: 600;">Total Biaya Service</h6></td>
+                                                                    <td colspan="2" class="text-right" style="font-weight: 600;">
+                                                                        Rp {{number_format($total)}}
+                                                                    </td>
+                                                                </tr>
                                                         </table>
                                                         {{-- <h6 style="font-weight: 600;">Total</h6> --}}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                         @endif
                                     </div>
                                 </div>
