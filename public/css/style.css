@@ -1,9 +1,4 @@
-/*
-  Theme Name: Rapid
-  Theme URL: https://bootstrapmade.com/rapid-multipurpose-bootstrap-business-template/
-  Author: BootstrapMade.com
-  License: https://bootstrapmade.com/license/
-*/
+
 
 /*--------------------------------------------------------------
 # General
@@ -276,6 +271,9 @@ h6 {
   margin-right: 2em;
   cursor: pointer;
 }
+#hero .icon-play:hover{
+  filter: opacity(0.5) drop-shadow(0 0 0 #00844a) saturate(1000%);
+}
 
 .modal-dialog {
   max-width: 800px;
@@ -289,8 +287,8 @@ h6 {
 
 .close {
   position:absolute;
-  right:-30px;
-  top:0;
+  right:1em;
+  top:1em;
   z-index:999;
   font-size:2rem;
   color:#fff;
@@ -323,6 +321,7 @@ h6 {
   position: absolute;
   top: 0px;
   width: 100%
+
 }
 
 #hero .hero-info .btn-get-started{
@@ -760,7 +759,7 @@ p.titleprodcat{
 
 .mobile-nav-toggle i {
   margin: 18px 18px 0 0;
-  color: #065e77;
+  color: #048b32;
 }
 
 .mobile-nav-overly {
@@ -977,7 +976,7 @@ p.titleprodcat{
 
 #product .card-img-top {
   width: 100%;
-  height: 15vw;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -1023,13 +1022,14 @@ p.titleprodcat{
 
  #product .card-body{
 	padding-bottom: 0;
-  height: 17vw;
+  min-height: 15vw;
  }
 
  #product .card-footer {
    padding-top: 0;
   border-top: 0;
   }
+
 #product .btn-link{
   background: #fff;
   transition: 0.5s;
@@ -1076,6 +1076,9 @@ p.titleprodcat{
   box-shadow:  20px 20px 60px #bebebe,
   -20px -20px 60px #ffffff;
 }
+
+
+
 
 /* Why Us Section
 --------------------------------*/
@@ -1195,6 +1198,7 @@ p.titleprodcat{
   text-align: center;
   padding-right: 0;
 }
+
 @media (max-width: 767px) {
   #testimonials .testimonial-item {
     text-align: center;
@@ -2090,18 +2094,22 @@ CORE
 
 /*-- mobile --*/
 @media (min-width: 768px){
-  #hero .btn-mobile {
-    display: none;
+  #desktop {
+      display: block;
+  }
+  #mobile {
+      display: none;
   }
 }
 
 
 @media (max-width: 768px){
-  #hero {
-    background: url("../sources/intro-bg.png") center top no-repeat;
-    padding: 80px 0 60px 0;
+  #desktop {
+      display: none;
   }
-
+  #mobile {
+      display: block;
+  }
   #hero .btn-mobile {
     display: inline-block;
     background: transparent;
@@ -2117,23 +2125,22 @@ CORE
     font-weight: 500;
     margin-top: 1em;
   }
-
   #hero .hero-info h2 {
     color: #3b3b3b;
-    margin-bottom: 1em;
+    margin-bottom: 0.75em;
     margin-top: 1.75em;
     font-size: 2.5em;
     font-weight: 600;
     font-family: 'Poppins', sans-serif;
   }
-  
+
   #hero .hero-info p {
     margin-bottom: 3em;
     font-weight: 500;
     font-size: 0.9em;
     font-family: 'Poppins', sans-serif;
   }
-  
+
   #hero .hero-info .btn-get-started{
     background: #048b32;
     transition: 0.5s;
@@ -2153,6 +2160,9 @@ CORE
 
   #about .section-header h2 {
     font-size: 2em;
+  }
+  #about .about-content {
+    padding-top: 1em;
   }
 
   #product .section-header h2 {
@@ -2177,5 +2187,4 @@ CORE
   #testimonials h5 {
     font-size: 0.9em;
   }
-  
 }
