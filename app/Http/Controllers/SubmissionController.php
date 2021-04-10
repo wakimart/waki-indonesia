@@ -7,6 +7,7 @@ use App\Cso;
 use App\DeliveryOrder;
 use App\HistoryUpdate;
 use App\RajaOngkir_City;
+use App\Promo;
 use App\Reference;
 use App\Souvenir;
 use Exception;
@@ -82,11 +83,14 @@ class SubmissionController extends Controller
      */
     public function create()
     {
-        $promos = DeliveryOrder::$Promo;
         $branches = Branch::where('active', true)->get();
         $csos = Cso::all();
+        $promos = Promo::all();
+        $souvenirs = Souvenir::select("id", "name")
+        ->where("active", true)
+        ->get();
 
-        return view('admin.add_submission_form', compact('promos', 'branches', 'csos'));
+        return view('admin.add_submission_form', compact('promos', 'branches', 'csos', "souvenirs"));
     }
 
     /**
@@ -174,6 +178,8 @@ class SubmissionController extends Controller
                 $reference->province = $data["province_ref"][$i];
                 $reference->city = $data["city_ref"][$i];
                 $reference->deliveryorder_id = $deliveryOrder->id;
+                $reference->souvenir_id = $data["souvenir_id"][$i];
+                $reference->link_hs = $data["link_hs"][$i];
                 $reference->status = "pending";
                 $reference->save();
             }
@@ -186,6 +192,7 @@ class SubmissionController extends Controller
 
             return response()->json([
                 'error' => $ex,
+                'error message' => $ex->getMessage(),
             ]);
         }
     }
@@ -441,6 +448,8 @@ class SubmissionController extends Controller
                 $reference->phone = $data["phone_ref"][$i];
                 $reference->province = $data["province_ref"][$i];
                 $reference->city = $data["city_ref"][$i];
+                $reference->souvenir_id = $data["souvenir_id"][$i];
+                $reference->link_hs = $data["link_hs"][$i];
 
                 // Menyimpan pembaruan data references
                 $reference->save();
@@ -474,6 +483,7 @@ class SubmissionController extends Controller
 
             return response()->json([
                 "error" => $e,
+                "erroe message" => $e->getMessage(),
             ]);
         }
     }

@@ -611,7 +611,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         // Show detail of submission
         Route::get("/detail", "SubmissionController@show")
-            ->name("detail_submission");
+            ->name("detail_submission_form");
 
         // Edit submission form page
         Route::get("/edit/", "SubmissionController@edit")

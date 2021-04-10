@@ -1,4 +1,7 @@
 <?php
+
+use App\Product;
+
 $menu_item_page = "submission";
 $menu_item_second = "add_submission_form";
 ?>
@@ -101,7 +104,7 @@ $menu_item_second = "add_submission_form";
                             Submission
                         </a>
                     </li>
-                      <li class="breadcrumb-item active" aria-current="page">
+                    <li class="breadcrumb-item active" aria-current="page">
                         Add Submission
                     </li>
                 </ol>
@@ -118,7 +121,7 @@ $menu_item_second = "add_submission_form";
                             method="POST"
                             enctype="multipart/form-data"
                             action="{{ route('store_submission_form') }}">
-                            {{ csrf_field() }}
+                            @csrf
                             <div class="form-group">
                                 <span>Type Register</span>
                                 <select id="type_register"
@@ -127,7 +130,9 @@ $menu_item_second = "add_submission_form";
                                     name="type_register"
                                     required>
                                     <option value="MGM" selected>MGM</option>
-                                    <option value="Refrensi">Referensi</option>
+                                    <option value="Refrensi">
+                                        Referensi Sehat Bersama WAKi
+                                    </option>
                                     <option value="Take Away">Take Away</option>
                                 </select>
                                 <span class="invalid-feedback">
@@ -183,16 +188,19 @@ $menu_item_second = "add_submission_form";
                                     <option selected disabled value="" hidden>
                                         Pilihan Provinsi
                                     </option>
-                                    @php
-                                        $result = RajaOngkir::FetchProvince();
-                                        $result = $result['rajaongkir']['results'];
-                                        $arrProvince = [];
-                                        if (sizeof($result) > 0) {
-                                            foreach ($result as $value) {
-                                                echo "<option value=\"" . $value['province_id'] . "\">" . $value['province']."</option>";
-                                            }
+                                    <?php
+                                    $result = RajaOngkir::FetchProvince();
+                                    $result = $result['rajaongkir']['results'];
+                                    if (sizeof($result) > 0) {
+                                        foreach ($result as $value) {
+                                            echo '<option value="'
+                                                . $value['province_id']
+                                                . '">'
+                                                . $value['province']
+                                                . "</option>";
                                         }
-                                    @endphp
+                                    }
+                                    ?>
                                 </select>
                                 <div class="validation"></div>
                             </div>
@@ -237,7 +245,7 @@ $menu_item_second = "add_submission_form";
                                 <div class="validation"></div>
                             </div>
 
-                            @for($j = 0; $j < 2; $j++)
+                            @for ($j = 0; $j < 2; $j++)
                                 <div class="form-group product-group">
                                     <div class="col-xs-12 col-sm-12 row"
                                         style="margin: 0;padding: 0;">
@@ -257,16 +265,47 @@ $menu_item_second = "add_submission_form";
                                                     {{ $j > 0 ? "" : "hidden" }}>
                                                     Choose Promo{{ $j > 0 ? " (optional)" : ""}}
                                                 </option>
-                                                @foreach($promos as $key => $promo)
-                                                    <option value="{{ $key }}">
-                                                        {{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )
+                                                <?php foreach ($promos as $key => $promo): ?>
+                                                    <option value="<?php echo $key; ?>">
+                                                        <?php
+                                                        $productPromo = json_decode($promo["product"]);
+                                                        $arrayProductId = [];
+
+                                                        foreach ($productPromo as $pp) {
+                                                            $arrayProductId[] = $pp->id;
+                                                        }
+
+                                                        $getProduct = Product::select("code")
+                                                        ->whereIn(
+                                                            "id",
+                                                            $arrayProductId
+                                                        )
+                                                        ->get();
+
+                                                        $arrayProductCode = [];
+
+                                                        foreach ($getProduct as $product) {
+                                                            $arrayProductCode[] = $product->code;
+                                                        }
+
+                                                        $productCode = implode(", ", $arrayProductCode);
+
+                                                        echo $promo["code"]
+                                                            . " - ("
+                                                            . $productCode
+                                                            . ") - Rp. "
+                                                            . number_format(
+                                                                (int) $promo["price"],
+                                                                0,
+                                                                null,
+                                                                ","
+                                                            );
+                                                        ?>
                                                     </option>
-                                                @endforeach
+                                                <?php endforeach; ?>
 
                                                 {{-- KHUSUS Philiphin --}}
-                                                @if (true)
-                                                    <option value="other">OTHER</option>
-                                                @endif
+                                                <option value="other">OTHER</option>
                                             </select>
                                             <div class="validation"></div>
                                         </div>
@@ -284,7 +323,7 @@ $menu_item_second = "add_submission_form";
                                                     1
                                                 </option>
 
-                                                @for($i = 2; $i <= 10; $i++)
+                                                @for ($i = 2; $i <= 10; $i++)
                                                     <option value="{{ $i }}">
                                                         {{ $i }}
                                                     </option>
@@ -294,16 +333,14 @@ $menu_item_second = "add_submission_form";
                                         </div>
 
                                         {{-- KHUSUS Philiphin --}}
-                                        @if (true)
-                                            <div class="form-group d-none">
-                                                <input type="text"
-                                                    class="form-control"
-                                                    name="product_other_{{ $j }}"
-                                                    placeholder="Product Name"
-                                                    data-msg="Please fill in the product" />
-                                                <div class="validation"></div>
-                                            </div>
-                                        @endif
+                                        <div class="form-group d-none">
+                                            <input type="text"
+                                                class="form-control"
+                                                name="product_other_{{ $j }}"
+                                                placeholder="Product Name"
+                                                data-msg="Please fill in the product" />
+                                            <div class="validation"></div>
+                                        </div>
                                     </div>
                                 </div>
                             @endfor
@@ -319,7 +356,7 @@ $menu_item_second = "add_submission_form";
                                         Choose Branch
                                     </option>
 
-                                    @foreach($branches as $branch)
+                                    @foreach ($branches as $branch)
                                         <option value="{{ $branch['id'] }}">
                                             {{ $branch['code'] }} - {{ $branch['name'] }}
                                         </option>
@@ -362,7 +399,7 @@ $menu_item_second = "add_submission_form";
                                 <br>
 
                                 <!-- One "tab" for each step in the form: -->
-                                @for($x = 0; $x < 10; $x++)
+                                @for ($x = 0; $x < 10; $x++)
                                     <div class="tab">
                                         <label for="member-name-{{ $x }}">
                                             Member {{ $x + 1 }}
@@ -376,7 +413,6 @@ $menu_item_second = "add_submission_form";
                                                 class="form-control"
                                                 name="name_ref[]"
                                                 placeholder="Name"
-                                                oninput="this.className = ''"
                                                 required />
                                             <div class="validation"></div>
                                         </div>
@@ -390,7 +426,6 @@ $menu_item_second = "add_submission_form";
                                                 class="form-control"
                                                 name="age_ref[]"
                                                 placeholder="Age"
-                                                oninput="this.className = ''"
                                                 required />
                                             <div class="validation"></div>
                                         </div>
@@ -404,7 +439,6 @@ $menu_item_second = "add_submission_form";
                                                 class="form-control"
                                                 name="phone_ref[]"
                                                 placeholder="Phone Number"
-                                                oninput="this.className = ''"
                                                 required />
                                             <div class="validation"></div>
                                         </div>
@@ -422,18 +456,17 @@ $menu_item_second = "add_submission_form";
                                                     disabled
                                                     value=""
                                                     hidden>
-                                                    Pilihan Provinsi
+                                                    Pilih Provinsi
                                                 </option>
-                                                @php
-                                                    $result = RajaOngkir::FetchProvince();
-                                                    $result = $result['rajaongkir']['results'];
-                                                    $arrProvince = [];
-                                                    if (sizeof($result) > 0) {
-                                                        foreach ($result as $value) {
-                                                            echo "<option value=\"" . $value['province_id'] . "\">" . $value['province'] . "</option>";
-                                                        }
+                                                <?php
+                                                $result = RajaOngkir::FetchProvince();
+                                                $result = $result['rajaongkir']['results'];
+                                                if (sizeof($result) > 0) {
+                                                    foreach ($result as $value) {
+                                                        echo "<option value=\"" . $value['province_id'] . "\">" . $value['province'] . "</option>";
                                                     }
-                                                @endphp
+                                                }
+                                                ?>
                                             </select>
                                             <div class="validation"></div>
                                         </div>
@@ -446,38 +479,69 @@ $menu_item_second = "add_submission_form";
                                                 id="city-{{ $x }}"
                                                 name="city_ref[]"
                                                 data-msg="Mohon Pilih Kota"
-                                                onselect="this.className = ''"
                                                 required>
                                                 <option selected
                                                     disabled
                                                     value=""
                                                     hidden>
-                                                    Pilihan Kota
+                                                    Pilih Kota
                                                 </option>
                                             </select>
                                             <div class="validation"></div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="souvenir-{{ $x }}">
+                                                Souvenir
+                                            </label>
+                                            <select class="form-control"
+                                                id="souvenir-{{ $x }}"
+                                                name="souvenir_id[]"
+                                                required>
+                                                <option selected disabled>
+                                                    Pilih Souvenir
+                                                </option>
+                                                <?php foreach ($souvenirs as $souvenir): ?>
+                                                    <option value="<?php echo $souvenir->id; ?>">
+                                                        <?php echo $souvenir->name; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="edit-link-hs-{{ $x }}">
+                                                Link Home Service
+                                            </label>
+                                            <input type="url"
+                                                class="form-control"
+                                                id="edit-link-hs-{{ $x }}"
+                                                name="link_hs[]"
+                                                pattern="https://.*"
+                                                maxlength="191"
+                                                placeholder="Link Home Service" />
                                         </div>
                                     </div>
                                 @endfor
 
                                 <div style="overflow:auto;">
-                                  <div style="float:right;">
-                                    <button type="button"
-                                        id="prevBtn"
-                                        onclick="nextPrev(-1)">
-                                        Previous
-                                    </button>
-                                    <button type="button"
-                                        id="nextBtn"
-                                        onclick="nextPrev(1)">
-                                        Next
-                                    </button>
-                                  </div>
+                                    <div style="float:right;">
+                                        <button type="button"
+                                            id="prevBtn"
+                                            onclick="nextPrev(-1)">
+                                            Previous
+                                        </button>
+                                        <button type="button"
+                                            id="nextBtn"
+                                            onclick="nextPrev(1)">
+                                            Next
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <!-- Circles which indicates the steps of the form: -->
                                 <div style="text-align:center; margin-top:40px;">
-                                    @for($x = 0; $x < 10; $x++)
+                                    @for ($x = 0; $x < 10; $x++)
                                         <span class="step"></span>
                                     @endfor
                                 </div>
@@ -503,8 +567,8 @@ $menu_item_second = "add_submission_form";
 @endsection
 
 @section('script')
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script type="text/javascript">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="application/javascript">
 var currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
 
@@ -543,14 +607,6 @@ function nextPrev(n) {
     x[currentTab].style.display = "none";
     // Increase or decrease the current tab by 1:
     currentTab = currentTab + n;
-
-    // TODO: Cek codingan, apakah form masih berfungsi atau tidak
-    // if you have reached the end of the form... :
-    // if (currentTab >= x.length) {
-    //     //...the form gets submitted:
-    //     // document.getElementById("regForm").submit();
-    //     return false;
-    // }
 
     // Otherwise, display the correct tab:
     showTab(currentTab);
@@ -609,7 +665,7 @@ $(document).on("change", ".changeProvince", function () {
             if (result.length > 0) {
                 $.each( result, function (key, value) {
                     if (value['type'] == "Kabupaten") {
-                        arrCity += "<option value=\""+value['city_id'] + "\">Kabupaten " + value['city_name'] + "</option>";
+                        arrCity += "<option value=\"" + value['city_id'] + "\">Kabupaten " + value['city_name'] + "</option>";
                     }
 
                     if (value['type'] == "Kota") {
@@ -622,13 +678,12 @@ $(document).on("change", ".changeProvince", function () {
         });
 })
 </script>
-<script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
-<script type="text/javascript">
+<script type="application/javascript">
 for (let input of document.querySelectorAll('#tags')) {
     tagsInput(input);
 }
 </script>
-<script>
+<script type="application/javascript">
 $(document).ready(function () {
     $("#cso").on("input", function () {
         check_cso($("#cso").val());
@@ -694,17 +749,15 @@ $(document).ready(function () {
     }
 
     {{-- KHUSUS Philiphin --}}
-    @if (true)
-        $(".pilihan-product").change(function (e) {
-            if ($(this).val() == 'other') {
-                $(this).parent().next().next().removeClass("d-none");
-                $(this).parent().next().next().children().attr('required', '');
-            } else {
-                $(this).parent().next().next().addClass("d-none");
-                $(this).parent().next().next().children().removeAttr('required', '');
-            }
-        });
-    @endif
+    $(".pilihan-product").change(function (e) {
+        if ($(this).val() == 'other') {
+            $(this).parent().next().next().removeClass("d-none");
+            $(this).parent().next().next().children().attr('required', '');
+        } else {
+            $(this).parent().next().next().addClass("d-none");
+            $(this).parent().next().next().children().removeAttr('required', '');
+        }
+    });
 
     // Memunculkan form file upload untuk image-proof
     function showHideImageproof() {
@@ -755,12 +808,6 @@ $(document).ready(function () {
             }
         }
     });
-
-    // $.when($("#province").val("1").change()).then(function () {
-    //     setTimeout(function () {
-    //         $("#city").val("17").change();
-    //     }, 1000);
-    // });
 });
 </script>
 @endsection
