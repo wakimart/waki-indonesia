@@ -148,6 +148,17 @@ Route::group(['prefix' => 'api-apps'], function () {
         // List reference API
         Route::post("list_reference", "ReferenceController@listApi");
     });
+
+    // Promo API
+    Route::group(["prefix" => "promo"], function () {
+        // List promo API
+        Route::post("fetch_promo", "PromoController@fetchPromoList");
+    });
+
+    // Souvenir API
+    Route::group(["prefix" => "souvenir"], function () {
+        Route::post("fetch_souvenir", "SouvenirController@fetchSouvenir");
+    });
 });
 
 Auth::routes(['verify' => true]);
@@ -245,7 +256,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	   	//Delete DO
 	    Route::post('/{deliveryOrderNya}', 'DeliveryOrderController@delete')
 	    	->name('delete_deliveryorder');
-
 
 	    //WAKi Di Rumah Aja
 	    Route::get('/list_regispromo', 'RegistrationPromotionController@admin_ListRegistrationPromo')
@@ -582,7 +592,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('delete_promo');
 
         // Fetch List Promo
-        Route::get("/fetchPromoDropdown", "PromoController@fetchPromoDropdown")
+        Route::get("/fetchPromo", "PromoController@fetchPromoList")
             ->name("fetch_promo_dropdown");
     });
 

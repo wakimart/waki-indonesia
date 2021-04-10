@@ -248,7 +248,7 @@ class PromoController extends Controller
         //
     }
 
-    public function fetchPromoDropdown()
+    public function fetchPromoList()
     {
         $promos = Promo::select(
             "id",

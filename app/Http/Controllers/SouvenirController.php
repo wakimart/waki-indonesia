@@ -213,4 +213,16 @@ class SouvenirController extends Controller
 
         return response()->json(["error" => "Data tidak ditemukan."]);
     }
+
+    public function fetchSouvenir()
+    {
+        $souvenirs = Souvenir::select("id", "name")
+        ->where("active", true)
+        ->get();
+
+        return response()->json([
+            "result" => 1,
+            "data" => $souvenirs,
+        ]);
+    }
 }
