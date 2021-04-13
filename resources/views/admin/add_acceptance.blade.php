@@ -214,8 +214,8 @@
 		                        <div class="validation"></div>
 		                    </div>
 		                    <div class="form-group">
-	              				<label for="">Old Product Photo</label>
-		                        <input type="file" class="form-control" name="image" id="image" accept="image/*" placeholder="Old Product Photo" required data-msg="Mohon Sertakan Foto" style="text-transform:uppercase"/>
+	              				<label for="">Old Product Photo< (Max. 5 Photo)/label>
+		                        <input multiple type="file" class="form-control" name="image[]" id="image" accept="image/*" placeholder="Old Product Photo" required data-msg="Mohon Sertakan Foto" style="text-transform:uppercase"/>
 		                        <div class="validation"></div>
 		                    </div>
 
@@ -414,6 +414,12 @@
         	e.preventDefault();
         	if($('.div-CheckboxGroup :checkbox:checked').length < 1){
         		alert("Kelengkapan minimal tercentang 1 !");
+        		return false;
+        	}
+        	var $fileUpload = $("input[type='file']");
+        	if (parseInt($fileUpload.get(0).files.length)>5){
+        		alert("You can only upload a maximum of 5 files");
+        		return false;
         	}
 
         	frmAdd = _("actionAdd");
@@ -460,7 +466,7 @@
         				$("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
         			}
         		}
-                alert("Terdapat kesalahan pada inputan !");
+                alert("Terdapat kesalahan pada inputan ! \n"+hasil['errors']['errorInfo'][2]);
         	}
         	else{
                 alert("Data berhasil disimpan !");
