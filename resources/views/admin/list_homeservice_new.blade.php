@@ -427,7 +427,7 @@ $menu_item_second = "list_homeservice";
                         }
 
                         if (Auth::user()->roles[0]['slug'] === "cso") {
-                            $getCSOCode = Cso::where("id", Auth::user()->cso["id"])->first();
+                            $getCSOCode = App\Cso::where("id", Auth::user()->cso["id"])->first();
                             $CSOCode = $getCSOCode->code;
                         }
                         ?>
