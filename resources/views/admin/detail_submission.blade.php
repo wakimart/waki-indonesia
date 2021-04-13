@@ -319,9 +319,6 @@ $menu_item_second = "detail_submission_form";
                                         <button id="edit_button" value="edit" class="btn" onclick="edit_row(this)">
                                             <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                         </button>
-                                        <button id="save_button" value="save" class="btn" onclick="save_row(this)">
-                                            <i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i>
-                                        </button>
                                     </td>
                                 </tr>
                             </form>
@@ -621,51 +618,6 @@ $menu_item_second = "detail_submission_form";
             }		
         }); 
     });
-</script>
-
-<script type="application/javascript">
-
-function edit_row(e){
-    document.getElementById("edit_button").style.display="none";
-    document.getElementById("save_button").style.display="block";
-
-    var name=document.getElementById("name");
-    var age=document.getElementById("age");
-    var phone=document.getElementById("phone");
-    var province=document.getElementById("province");
-    var souvenir=document.getElementById("souvenir");
-    var linkHS=document.getElementById("link-hs-href");
-    var status=document.getElementById("status");
-        
-    var name_data=name.innerHTML;
-    var age_data=age.innerHTML;
-    var phone_data=phone.innerHTML;
-    var province_data=province.innerHTML;
-    var souvenir_data=souvenir.innerHTML;
-    var linkHS_data=linkHS.innerHTML;
-    var status_data=status.innerHTML;
-        
-    name.innerHTML="<input type='text' class='form-control' id='name_text' style='border-radius: 2px' value='"+name_data+"'>";
-    age.innerHTML="<input type='text' id='age_text' value='"+age_data+"'>";
-    phone.innerHTML="<input type='text' id='phone_text' value='"+phone_data+"'>";
-    province.innerHTML="<input type='text' id='province_text' value='"+province_data+"'>";
-    souvenir.innerHTML="<input type='text' id='souvenir_text' value='"+souvenir_data+"'>";
-    linkHS.innerHTML="<input type='text' id='linkHS_text' value='"+linkHS_data+"'>";
-    status.innerHTML="<input type='text' id='status_text' value='"+status_data+"'>";
-}
-
-function save_row(){
-    /*  var name_val=document.getElementById("name_text"+no).value;
-    var country_val=document.getElementById("country_text"+no).value;
-    var age_val=document.getElementById("age_text"+no).value;
-
-    document.getElementById("name_row"+no).innerHTML=name_val;
-    document.getElementById("country_row"+no).innerHTML=country_val;
-    document.getElementById("age_row"+no).innerHTML=age_val; */
-
-    document.getElementById("edit_button").style.display="block";
-    document.getElementById("save_button").style.display="none";
-}
 </script>
 
 <script type="application/javascript">
