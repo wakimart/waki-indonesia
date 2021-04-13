@@ -498,7 +498,10 @@ $menu_item_second = "add_submission_form";
                                                 id="souvenir-{{ $x }}"
                                                 name="souvenir_id[]"
                                                 required>
-                                                <option selected disabled>
+                                                <option selected
+                                                    disabled
+                                                    hidden
+                                                    value="">
                                                     Pilih Souvenir
                                                 </option>
                                                 <?php foreach ($souvenirs as $souvenir): ?>
@@ -510,12 +513,12 @@ $menu_item_second = "add_submission_form";
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="edit-link-hs-{{ $x }}">
+                                            <label for="link-hs-{{ $x }}">
                                                 Link Home Service
                                             </label>
                                             <input type="url"
                                                 class="form-control"
-                                                id="edit-link-hs-{{ $x }}"
+                                                id="link-hs-{{ $x }}"
                                                 name="link_hs[]"
                                                 pattern="https://.*"
                                                 maxlength="191"
@@ -569,8 +572,13 @@ $menu_item_second = "add_submission_form";
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="application/javascript">
-var currentTab = 0; // Current tab is set to be the first tab (0)
+let currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
+
+const souvenirArray = []
+for (let i = 0; i < 10; i++) {
+    souvenirArray.push(-1);
+};
 
 function showTab(n) {
     // This function will display the specified tab of the form ...
@@ -614,27 +622,52 @@ function nextPrev(n) {
 
 function validateForm() {
     // This function deals with validation of the form fields
-    var x, y, i, valid = true;
-    x = document.getElementsByClassName("tab");
-    y = x[currentTab].getElementsByTagName("input");
+    let valid = true;
 
-    // A loop that checks every input field in the current tab:
-    for (i = 0; i < y.length; i++) {
-        // If a field is empty...
-        if (y[i].value == "") {
-            // add an "invalid" class to the field:
-            y[i].className += " invalid";
-            // and set the current valid status to false:
+    inputArray = ["member-name-", "member-age-", "member-phone-", "province-", "city-", "souvenir-", "link-hs-"];
+
+    inputArray.forEach(function (currentValue) {
+        const inputBeingChecked = document.getElementById(currentValue + currentTab);
+
+        if (!inputBeingChecked.checkValidity()) {
+            addOrRemoveInvalid(inputBeingChecked, "add");
             valid = false;
+        } else {
+            addOrRemoveInvalid(inputBeingChecked, "remove");
+        }
+    });
+
+    const souvenirInput = document.getElementById("souvenir-" + currentTab);
+    const souvenirValue = parseInt(souvenirInput.value, 10);
+    if (souvenirValue) {
+        souvenirArray[currentTab] = souvenirValue;
+        const findDuplicate = souvenirArray.filter(function (currentValue) {
+            return currentValue === souvenirValue;
+        });
+
+        if (findDuplicate.length > 2) {
+            addOrRemoveInvalid(souvenirInput, "add");
+            valid = false;
+        } else {
+            addOrRemoveInvalid(souvenirInput, "remove");
         }
     }
 
-    // If the valid status is true, mark the step as finished and valid:
-    if (valid) {
-        document.getElementsByClassName("step")[currentTab].className += " finish";
-    }
-
     return valid; // return the valid status
+}
+
+function addOrRemoveInvalid(element, command) {
+    if (command === "add") {
+        if (!element.className.includes("invalid")) {
+            element.classList.add("is-invalid");
+            element.classList.add("invalid");
+        }
+    } else if (command === "remove") {
+        if (element.className.includes("invalid")) {
+            element.classList.remove("is-invalid");
+            element.classList.remove("invalid");
+        }
+    }
 }
 
 function fixStepIndicator(n) {
