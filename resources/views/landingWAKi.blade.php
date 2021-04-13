@@ -592,7 +592,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-md-offset-3">
                 <div class="heading text-center">
-                    <h2 class="heading--title">WAKi Stay at Home</h2>
+                    <h2 class="heading--title">WAKi Sehat Dirumah Aja</h2>
                 </div>
             </div>
             <!-- .col-md-6 end -->
@@ -600,9 +600,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-10 col-md-offset-1">
-              <div class="text-right" style="position: relative; z-index: 2; top: 50%; transform: translateY(-50%);" data-toggle="modal" data-target="#video2">
+              <!-- <div class="text-right" style="position: relative; z-index: 2; top: 50%; transform: translateY(-50%);" data-toggle="modal" data-target="#video2">
                 <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
-              </div>
+              </div> -->
               <div class="overlay-inner overlay-video embed-responsive embed-responsive-16by9">
                 <video controls onclick="this.paused?this.play():this.pause();" style="min-height: 100%";>
                   <source src="{{asset('sources/stayathome.mp4')}}" type="video/mp4">
