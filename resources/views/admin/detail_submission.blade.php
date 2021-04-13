@@ -261,7 +261,7 @@ $menu_item_second = "detail_submission_form";
                             <td>Age</td>
                             <td>Phone</td>
                             <td colspan="2">Province</td>
-                            <td colspan="2">City</td>
+                            <td colspan="3">City</td>
                             <td colspan="2">Souvenir</td>
                             <td>Link HS</td>
                             <td>Status</td>
@@ -319,8 +319,8 @@ $menu_item_second = "detail_submission_form";
                                         <button id="edit_button" value="edit" class="btn" onclick="edit_row(this)">
                                             <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                         </button>
-                                        <button id="save_button" value="save" class="btn" style="display:none" onclick="save_row(this)">
-                                            <i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i>
+                                        <button id="save_button" value="save" class="btn" onclick="save_row(this)">
+                                            <i class="mdi mdi-content-save" style="font-size: 24px; color: #fed713;"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -359,7 +359,7 @@ $menu_item_second = "detail_submission_form";
                                 <td id="province">
                                         <select class="form-control"
                                             id="edit-province"
-                                            name="province" onchange="this.nextElementSibling.value=this.value">
+                                            name="province">
                                             <option value="Maluku">Maluku</option>
                                             <option value="Jawa Barat">Jawa Barat</option>
                                         </select>
@@ -372,7 +372,7 @@ $menu_item_second = "detail_submission_form";
                                         <option value="Kota Cirebon">Kota Cirebon</option>
                                     </select>
                                 </td>
-                                <td id="souvenir">
+                                <td class="souvenir">
                                     <select class="form-control"
                                         id="edit-souvenir"
                                         name="souvenir">
@@ -388,12 +388,12 @@ $menu_item_second = "detail_submission_form";
                                 <td id="status">
                                     <select class="form-control"
                                         id="edit-status"
-                                        name="status" onchange="this.nextElementSibling.value=this.value">
+                                        name="status">
                                         <option value="pending">pending</option>
                                         <option value="success">success</option>
                                     </select>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <a class="save" title="Save" data-toggle="tooltip"><i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i></a>
                                     <a class="edit" title="Edit" data-toggle="tooltip"><i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i></a>
                                 </td>
@@ -601,23 +601,8 @@ $menu_item_second = "detail_submission_form";
     $(document).ready(function(){
 	$('[data-toggle="tooltip"]').tooltip();
 	var actions = $("table td:last-child").html();
-    // Append table with add row form on add new button click
-    $(".add-new").click(function(){
-		$(this).attr("disabled", "disabled");
-		var index = $("table tbody tr:last-child").index();
-        var row = '<tr>' +
-            '<td><input type="text" class="form-control" name="name" id="name"></td>' +
-            '<td><input type="text" class="form-control" name="department" id="department"></td>' +
-            '<td><input type="text" class="form-control" name="phone" id="phone"></td>' +
-			'<td>' + actions + '</td>' +
-        '</tr>';
-    	$("table").append(row);		
-		$("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-
 	// Edit row on edit button click
-	$(document).on("click", ".edit", function(){		
+	$(document).on("click", ".edit", function(){	
         $(this).parents("tr").find("td:not(:last-child)").each(function(){
 			$(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
 		});		
@@ -653,7 +638,7 @@ function edit_row(e){
     var linkHS_data=linkHS.innerHTML;
     var status_data=status.innerHTML;
         
-    name.innerHTML="<input type='text' id='name_text' value='"+name_data+"'>";
+    name.innerHTML="<input type='text' class='form-control' id='name_text' value='"+name_data+"'>";
     age.innerHTML="<input type='text' id='age_text' value='"+age_data+"'>";
     phone.innerHTML="<input type='text' id='phone_text' value='"+phone_data+"'>";
     province.innerHTML="<input type='text' id='province_text' value='"+province_data+"'>";
