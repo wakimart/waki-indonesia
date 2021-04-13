@@ -320,7 +320,7 @@ $menu_item_second = "detail_submission_form";
                                             <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                         </button>
                                         <button id="save_button" value="save" class="btn" onclick="save_row(this)">
-                                            <i class="mdi mdi-content-save" style="font-size: 24px; color: #fed713;"></i>
+                                            <i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -347,15 +347,9 @@ $menu_item_second = "detail_submission_form";
                         </thead>
                         <tbody>
                             <tr>
-                                <td id="name" value="Amel">
-                                    Amel
-                                </td>
-                                <td class="center" id="age" value="21">
-                                    21
-                                </td>
-                                <td class="center" id="phone" value="0811111111">
-                                    0811111111
-                                </td>
+                                <td class="edit-input" id="name">Amel</td>
+                                <td class="center edit-input" id="age">21</td>
+                                <td class="center edit-input" id="phone">0811111111</td>
                                 <td id="province">
                                         <select class="form-control"
                                             id="edit-province"
@@ -382,9 +376,7 @@ $menu_item_second = "detail_submission_form";
                                         <option value="success">Air Mineral</option>
                                     </select>
                                 </td>
-                                <td>
-                                   https://dzsdfdfcsadfcsdfcsdsdvszdv
-                                </td>
+                                <td class="edit-input">https://dzsdfdfcsadfcsdfcsdsdvszdv</td>
                                 <td id="status">
                                     <select class="form-control"
                                         id="edit-status"
@@ -599,21 +591,36 @@ $menu_item_second = "detail_submission_form";
 @section('script')
 <script type="application/javascript">
     $(document).ready(function(){
-	$('[data-toggle="tooltip"]').tooltip();
-	var actions = $("table td:last-child").html();
-	// Edit row on edit button click
-	$(document).on("click", ".edit", function(){	
-        $(this).parents("tr").find("td:not(:last-child)").each(function(){
-			$(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
-		});		
-		$(this).parents("tr").find(".save, .edit").toggle();
+        $('[data-toggle="tooltip"]').tooltip();
+        var actions = $("table td:last-child").html();
+        // Edit row on edit button click
+        $(document).on("click", ".edit", function(){	
+            $(this).parents("tr").find("td.edit-input").each(function(){
+                $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
+            });		
+            $(this).parents("tr").find(".save, .edit").toggle();
+        });
+        	// Save to row on save button click
+        $(document).on("click", ".save", function(){
+            var empty = false;
+            var input = $(this).parents("tr").find('input[type="text"]');
+            input.each(function(){
+                if(!$(this).val()){
+                    $(this).addClass("error");
+                    empty = true;
+                } else{
+                    $(this).removeClass("error");
+                }
+            });
+            $(this).parents("tr").find(".error").first().focus();
+            if(!empty){
+                input.each(function(){
+                    $(this).parent("td").html($(this).val());
+                });			
+                $(this).parents("tr").find(".save, .edit").toggle();
+            }		
+        }); 
     });
-	// Delete row on delete button click
-	$(document).on("click", ".delete", function(){
-        $(this).parents("tr").remove();
-		$(".add-new").removeAttr("disabled");
-    });
-});
 </script>
 
 <script type="application/javascript">
@@ -638,7 +645,7 @@ function edit_row(e){
     var linkHS_data=linkHS.innerHTML;
     var status_data=status.innerHTML;
         
-    name.innerHTML="<input type='text' class='form-control' id='name_text' value='"+name_data+"'>";
+    name.innerHTML="<input type='text' class='form-control' id='name_text' style='border-radius: 2px' value='"+name_data+"'>";
     age.innerHTML="<input type='text' id='age_text' value='"+age_data+"'>";
     phone.innerHTML="<input type='text' id='phone_text' value='"+phone_data+"'>";
     province.innerHTML="<input type='text' id='province_text' value='"+province_data+"'>";
