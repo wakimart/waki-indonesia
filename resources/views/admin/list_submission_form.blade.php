@@ -69,7 +69,7 @@ $menu_item_second = "list_submission_form";
                                             {{ $deliveryOrder->cso->code }} - {{ $deliveryOrder->cso->name }}
                                         </td>
                                         <td style="text-align: center;">
-                                            <a href="{{ route("detail_submission", ["id" => $deliveryOrder->id]) }}">
+                                            <a href="{{ route("detail_submission_form", ["id" => $deliveryOrder->id]) }}">
                                                 <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                             </a>
                                         </td>

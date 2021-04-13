@@ -15,6 +15,31 @@ $menu_item_second = "detail_submission_form";
         font-size: 14px;
     }
 
+    .table-responsive table{
+        
+        display: inline-table;
+        table-layout:fixed;
+        overflow:scroll;
+    }
+
+    .table-responsive table td{
+        word-wrap:break-word;
+    }
+
+    .table-responsive table .form-control {
+        height: 32px;
+        line-height: 32px;
+        box-shadow: none;
+        border-radius: 2px;
+        margin-bottom: 0;
+    }
+	.table-responsive table .form-control.error {
+		border-color: #f50000;
+	}
+	.table-responsive table td .save {
+		display: none;
+	}
+
     table thead {
         background-color: #8080801a;
         text-align: center;
@@ -23,6 +48,11 @@ $menu_item_second = "detail_submission_form";
     table td {
         border: 0.5px #8080801a solid;
         padding: 0.5em;
+
+    }
+
+    table, td{
+        background-color: #fff !important;
     }
 
     .center {
@@ -41,6 +71,7 @@ $menu_item_second = "detail_submission_form";
     select.form-control {
         color: black !important;
     }
+
 </style>
 @endsection
 
@@ -145,73 +176,231 @@ $menu_item_second = "detail_submission_form";
                     </tr>
                 </table>
 
-                <table class="col-md-12">
-                    <thead>
-                        <td colspan="8">Reference</td>
-                    </thead>
-                    <thead style="background-color: #80808012 !important">
-                        <td>Name</td>
-                        <td>Age</td>
-                        <td>Phone</td>
-                        <td>City</td>
-                        <td>Souvenir</td>
-                        <td>Link HS</td>
-                        <td>Status</td>
-                        <td>Edit</td>
-                    </thead>
-                    <?php foreach ($references as $key => $reference): ?>
-                        <form id="ref_{{ $key }}">
-                            <input type="hidden"
-                                id="id_{{ $key }}"
-                                class="d-none"
-                                {{-- name="id" --}}
-                                value="{{ $reference->id }}" />
+                    <table class="col-md-12">
+                        <thead>
+                            <td colspan="8">Reference</td>
+                        </thead>
+                        <thead style="background-color: #80808012 !important">
+                            <td>Name</td>
+                            <td>Age</td>
+                            <td>Phone</td>
+                            <td>City</td>
+                            <td>Souvenir</td>
+                            <td>Link HS</td>
+                            <td>Status</td>
+                            <td>Edit</td>
+                        </thead>
+                        <?php foreach ($references as $key => $reference): ?>
+                            <form id="ref_{{ $key }}">
+                                <input type="hidden"
+                                    id="id_{{ $key }}"
+                                    class="d-none"
+                                    {{-- name="id" --}}
+                                    value="{{ $reference->id }}" />
+                                <tr>
+                                    <td id="name_{{ $key }}">
+                                        <?php echo $reference->name; ?>
+                                    </td>
+                                    <td class="center" id="age_{{ $key }}">
+                                        <?php echo $reference->age; ?>
+                                    </td>
+                                    <td class="center" id="phone_{{ $key }}">
+                                        <?php echo $reference->phone; ?>
+                                    </td>
+                                    <td id="province_{{ $key }}"
+                                        data-province="{{ $reference->province }}"
+                                        data-city="{{ $reference->city }}">
+                                        <?php echo $referencesCityAndProvince[$key]; ?>
+                                    </td>
+                                    <td id="souvenir_{{ $key }}"
+                                        data-souvenir="{{ $reference->souvenir_id }}">
+                                        <?php echo $referenceSouvenir[$key]; ?>
+                                    </td>
+                                    <td class="center" id="link-hs_{{ $key }}">
+                                        <?php if (!empty($reference->link_hs)): ?>
+                                            <a id="link-hs-href_{{ $key }}"
+                                                href="<?php echo $reference->link_hs; ?>"
+                                                target="_blank">
+                                                <i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="center" id="status_{{ $key }}">
+                                    {{--  <label for="edit-status"><label>
+                                        <select class="form-control"
+                                            id="edit-status"
+                                            name="status" onchange="this.nextElementSibling.value=this.value">
+                                            <option value="pending">pending</option>
+                                            <option value="success">success</option>
+                                        </select> --}}
+                                        <?php echo $reference->status; ?>
+                                    </td>
+                                    <td class="center">
+                                        <button class="btn"
+                                            style="padding: 0;"
+                                            data-toggle="modal"
+                                            data-target="#edit-reference"
+                                            data-edit="edit_{{ $key }}"
+                                            onclick="clickEdit(this)"
+                                            value="<?php echo $reference->id; ?>">
+                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </form>
+                        <?php endforeach; ?>
+                    </table>
+
+                <div class="table-responsive">
+                    <table class="col-md-12">
+                        <thead>
+                            <td colspan="12">Reference</td>
+                        </thead>
+                        <thead style="background-color: #80808012 !important">
+                            <td>Name</td>
+                            <td>Age</td>
+                            <td>Phone</td>
+                            <td colspan="2">Province</td>
+                            <td colspan="2">City</td>
+                            <td colspan="2">Souvenir</td>
+                            <td>Link HS</td>
+                            <td>Status</td>
+                            <td>Edit</td>
+                        </thead>
+                            <form id="ref_1">
+                                <tr>
+                                    <td contenteditable="true" id="name">
+                                        Amel
+                                    </td>
+                                    <td contenteditable="true" class="center" id="age">
+                                        21
+                                    </td>
+                                    <td contenteditable="true" class="center" id="phone">
+                                        0811111111
+                                    </td>
+                                    <td colspan="2" id="province" style="background-color: #fff;">
+                                            <select contenteditable="true" class="form-control" style="min-width: 100px"
+                                                id="edit-province"
+                                                name="province" onchange="this.nextElementSibling.value=this.value">
+                                                <option value="Maluku">Maluku</option>
+                                                <option value="Jawa Barat">Jawa Barat</option>
+                                            </select>
+                                    </td>
+                                    <td colspan="3" id="city" style="background-color: #fff;">
+                                        <select contenteditable="true" class="form-control" style="min-width: 100px"
+                                            id="edit-city"
+                                            name="city" onchange="this.nextElementSibling.value=this.value">
+                                            <option value="Kabupaten Maluku Barat Daya">Kabupaten Maluku Barat Daya</option>
+                                            <option value="Kota Cirebon">Kota Cirebon</option>
+                                        </select>
+                                    </td>
+                                    <td colspan="2" id="souvenir">
+                                        <select contenteditable="true" class="form-control"
+                                            id="edit-souvenir"
+                                            name="souvenir" onchange="this.nextElementSibling.value=this.value">
+                                            <option value="success">Jeep Hardtop 4x4</option>
+                                            <option value="pending">Driver & BBM & Parkir</option>
+                                            <option value="success">Tiket Masuk Bromo</option>
+                                            <option value="success">Air Mineral</option>
+                                        </select>
+                                    </td>
+                                    <td contenteditable="true" class="center" id="link-hs">
+                                       https://dzsdfdfcsadfcsdfcsdsdvszdv
+                                    </td>
+                                    <td class="center scroll-code" id="status">
+                                        <select contenteditable="true" class="form-control"
+                                            id="edit-status"
+                                            name="status" onchange="this.nextElementSibling.value=this.value">
+                                            <option value="pending">pending</option>
+                                            <option value="success">success</option>
+                                        </select>
+                                    </td>
+                                    <td class="center">
+                                        <button id="edit_button" value="edit" class="btn" onclick="edit_row(this)">
+                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                        </button>
+                                        <button id="save_button" value="save" class="btn" style="display:none" onclick="save_row(this)">
+                                            <i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </form>
+                    </table>
+                </div>
+                <div class="table-responsive">
+                    <table class="col-md-12">
+                        <thead>
+                            <td colspan="9">Reference</td>
+                        </thead>
+                        <thead style="background-color: #80808012 !important">
                             <tr>
-                                <td id="name_{{ $key }}">
-                                    <?php echo $reference->name; ?>
-                                </td>
-                                <td class="center" id="age_{{ $key }}">
-                                    <?php echo $reference->age; ?>
-                                </td>
-                                <td class="center" id="phone_{{ $key }}">
-                                    <?php echo $reference->phone; ?>
-                                </td>
-                                <td id="province_{{ $key }}"
-                                    data-province="{{ $reference->province }}"
-                                    data-city="{{ $reference->city }}">
-                                    <?php echo $referencesCityAndProvince[$key]; ?>
-                                </td>
-                                <td id="souvenir_{{ $key }}"
-                                    data-souvenir="{{ $reference->souvenir_id }}">
-                                    <?php echo $referenceSouvenir[$key]; ?>
-                                </td>
-                                <td class="center" id="link-hs_{{ $key }}">
-                                    <?php if (!empty($reference->link_hs)): ?>
-                                        <a id="link-hs-href_{{ $key }}"
-                                            href="<?php echo $reference->link_hs; ?>"
-                                            target="_blank">
-                                            <i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>
-                                        </a>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="center" id="status_{{ $key }}">
-                                    <?php echo $reference->status; ?>
-                                </td>
-                                <td class="center">
-                                    <button class="btn"
-                                        style="padding: 0;"
-                                        data-toggle="modal"
-                                        data-target="#edit-reference"
-                                        data-edit="edit_{{ $key }}"
-                                        onclick="clickEdit(this)"
-                                        value="<?php echo $reference->id; ?>">
-                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                    </button>
-                                </td>
+                                <td>Name</td>
+                                <td>Age</td>
+                                <td>Phone</td>
+                                <td>Province</td>
+                                <td>City</td>
+                                <td>Souvenir</td>
+                                <td>Link HS</td>
+                                <td>Status</td>
+                                <td>Action</td>
                             </tr>
-                        </form>
-                    <?php endforeach; ?>
-                </table>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="name" value="Amel">
+                                    Amel
+                                </td>
+                                <td class="center" id="age" value="21">
+                                    21
+                                </td>
+                                <td class="center" id="phone" value="0811111111">
+                                    0811111111
+                                </td>
+                                <td id="province">
+                                        <select class="form-control"
+                                            id="edit-province"
+                                            name="province" onchange="this.nextElementSibling.value=this.value">
+                                            <option value="Maluku">Maluku</option>
+                                            <option value="Jawa Barat">Jawa Barat</option>
+                                        </select>
+                                </td>
+                                <td id="city">
+                                    <select class="form-control"
+                                        id="edit-city"
+                                        name="city">
+                                        <option value="Kabupaten Maluku Barat Daya">Kabupaten Maluku Barat Daya</option>
+                                        <option value="Kota Cirebon">Kota Cirebon</option>
+                                    </select>
+                                </td>
+                                <td id="souvenir">
+                                    <select class="form-control"
+                                        id="edit-souvenir"
+                                        name="souvenir">
+                                        <option value="success">Jeep Hardtop 4x4</option>
+                                        <option value="pending">Driver & BBM & Parkir</option>
+                                        <option value="success">Tiket Masuk Bromo</option>
+                                        <option value="success">Air Mineral</option>
+                                    </select>
+                                </td>
+                                <td>
+                                   https://dzsdfdfcsadfcsdfcsdsdvszdv
+                                </td>
+                                <td id="status">
+                                    <select class="form-control"
+                                        id="edit-status"
+                                        name="status" onchange="this.nextElementSibling.value=this.value">
+                                        <option value="pending">pending</option>
+                                        <option value="success">success</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <a class="save" title="Save" data-toggle="tooltip"><i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i></a>
+                                    <a class="edit" title="Edit" data-toggle="tooltip"><i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i></a>
+                                </td>
+                            </tr>    
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -408,6 +597,85 @@ $menu_item_second = "detail_submission_form";
 @endsection
 
 @section('script')
+<script type="application/javascript">
+    $(document).ready(function(){
+	$('[data-toggle="tooltip"]').tooltip();
+	var actions = $("table td:last-child").html();
+    // Append table with add row form on add new button click
+    $(".add-new").click(function(){
+		$(this).attr("disabled", "disabled");
+		var index = $("table tbody tr:last-child").index();
+        var row = '<tr>' +
+            '<td><input type="text" class="form-control" name="name" id="name"></td>' +
+            '<td><input type="text" class="form-control" name="department" id="department"></td>' +
+            '<td><input type="text" class="form-control" name="phone" id="phone"></td>' +
+			'<td>' + actions + '</td>' +
+        '</tr>';
+    	$("table").append(row);		
+		$("table tbody tr").eq(index + 1).find(".add, .edit").toggle();
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+	// Edit row on edit button click
+	$(document).on("click", ".edit", function(){		
+        $(this).parents("tr").find("td:not(:last-child)").each(function(){
+			$(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
+		});		
+		$(this).parents("tr").find(".save, .edit").toggle();
+    });
+	// Delete row on delete button click
+	$(document).on("click", ".delete", function(){
+        $(this).parents("tr").remove();
+		$(".add-new").removeAttr("disabled");
+    });
+});
+</script>
+
+<script type="application/javascript">
+
+function edit_row(e){
+    document.getElementById("edit_button").style.display="none";
+    document.getElementById("save_button").style.display="block";
+
+    var name=document.getElementById("name");
+    var age=document.getElementById("age");
+    var phone=document.getElementById("phone");
+    var province=document.getElementById("province");
+    var souvenir=document.getElementById("souvenir");
+    var linkHS=document.getElementById("link-hs-href");
+    var status=document.getElementById("status");
+        
+    var name_data=name.innerHTML;
+    var age_data=age.innerHTML;
+    var phone_data=phone.innerHTML;
+    var province_data=province.innerHTML;
+    var souvenir_data=souvenir.innerHTML;
+    var linkHS_data=linkHS.innerHTML;
+    var status_data=status.innerHTML;
+        
+    name.innerHTML="<input type='text' id='name_text' value='"+name_data+"'>";
+    age.innerHTML="<input type='text' id='age_text' value='"+age_data+"'>";
+    phone.innerHTML="<input type='text' id='phone_text' value='"+phone_data+"'>";
+    province.innerHTML="<input type='text' id='province_text' value='"+province_data+"'>";
+    souvenir.innerHTML="<input type='text' id='souvenir_text' value='"+souvenir_data+"'>";
+    linkHS.innerHTML="<input type='text' id='linkHS_text' value='"+linkHS_data+"'>";
+    status.innerHTML="<input type='text' id='status_text' value='"+status_data+"'>";
+}
+
+function save_row(){
+    /*  var name_val=document.getElementById("name_text"+no).value;
+    var country_val=document.getElementById("country_text"+no).value;
+    var age_val=document.getElementById("age_text"+no).value;
+
+    document.getElementById("name_row"+no).innerHTML=name_val;
+    document.getElementById("country_row"+no).innerHTML=country_val;
+    document.getElementById("age_row"+no).innerHTML=age_val; */
+
+    document.getElementById("edit_button").style.display="block";
+    document.getElementById("save_button").style.display="none";
+}
+</script>
+
 <script type="application/javascript">
 function getCSRF() {
     const getMeta = document.getElementsByTagName("meta");

@@ -109,7 +109,7 @@ class ReferenceController extends Controller
                 "city",
                 "souvenir_id",
                 "link_hs",
-                "status",
+                "status"
             ));
             $reference->save();
 
@@ -117,7 +117,7 @@ class ReferenceController extends Controller
 
             $city = RajaOngkir_City::select(
                 "province AS province",
-                DB::raw("CONCAT(type, ' ', city_name) AS city"),
+                DB::raw("CONCAT(type, ' ', city_name) AS city")
             )
             ->where("city_id", $reference->city)
             ->first();
@@ -199,7 +199,7 @@ class ReferenceController extends Controller
                 "raja_ongkir__cities.city_name AS city_name",
                 "souvenirs.name AS souvenir",
                 "references.link_hs AS link_hs",
-                "references.status AS status",
+                "references.status AS status"
             )
             ->leftJoin(
                 "raja_ongkir__cities",
@@ -221,7 +221,7 @@ class ReferenceController extends Controller
 
                 unset(
                     $references[$i]->type,
-                    $references[$i]->city_name,
+                    $references[$i]->city_name
                 );
 
                 $i++;
