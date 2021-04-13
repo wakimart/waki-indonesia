@@ -251,7 +251,7 @@ class AcceptanceController extends Controller
         DB::beginTransaction();
 
         try {
-            $acceptance = Acceptance::find($data['id']);
+            $acceptance = Acceptance::find($id);
             $acceptance['active'] = false;
             $acceptance->save();
 
