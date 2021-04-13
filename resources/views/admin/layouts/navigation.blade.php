@@ -173,7 +173,7 @@
 @endif
 
 {{-- Khusus untuk Acc --}}
-{{-- @if(Gate::check('add-acceptance') || Gate::check('browse-acceptance'))
+@if(Gate::check('add-acceptance') || Gate::check('browse-acceptance'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'acceptance'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#acceptance-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'acceptance'? 'true': '' }}" aria-controls="acceptance-dd">
     <span class="menu-title">Acceptance Form</span>
@@ -191,10 +191,10 @@
     </ul>
   </div>
 </li>
-@endif --}}
+@endif
 
 {{-- Khusus untuk Upgrade --}}
-{{-- @if(Gate::check('browse-upgrade'))
+@if(Gate::check('browse-upgrade'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'upgrade'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#upgrade-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'upgrade'? 'true': '' }}" aria-controls="upgrade-dd">
     <span class="menu-title">Upgrade</span>
@@ -210,7 +210,7 @@
     </ul>
   </div>
 </li>
-@endif --}}
+@endif
 
 
 @if(Gate::check('add-cso') || Gate::check('browse-cso'))
