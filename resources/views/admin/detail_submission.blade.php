@@ -687,6 +687,9 @@ function submitEdit(e) {
         }
 
         document.getElementById("status_" + refSeq).innerHTML = data.status;
+
+        document.getElementById("btn-edit-save_" + refSeq).setAttribute("onclick", "clickEdit(this)");
+    document.getElementById("btn-edit-save_" + refSeq).innerHTML = `<i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>`;
     }).catch(function (error){
         console.error(error);
     });
