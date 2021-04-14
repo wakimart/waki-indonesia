@@ -7,6 +7,7 @@ use App\Cso;
 use App\DeliveryOrder;
 use App\HistoryUpdate;
 use App\RajaOngkir_City;
+use App\Product;
 use App\Promo;
 use App\Reference;
 use App\Souvenir;
@@ -1158,10 +1159,40 @@ class SubmissionController extends Controller
             $arrayPromo = [];
             foreach ($getPromo as $key => $promoItem) {
                 $getIndex = explode("_", $key);
-                $getPromoName = DeliveryOrder::$Promo[$promoItem->id];
+
+                $promo = Promo::select("code", "product", "price")
+                ->where("id", $promoItem->id)
+                ->first();
+
+                $productPromo = json_decode($promo["product"]);
+                $arrayProductId = [];
+
+                foreach ($productPromo as $pp) {
+                    $arrayProductId[] = $pp->id;
+                }
+
+                $getProduct = Product::select("code")
+                ->whereIn(
+                    "id",
+                    $arrayProductId
+                )
+                ->get();
+
+                $arrayProductCode = [];
+
+                foreach ($getProduct as $product) {
+                    $arrayProductCode[] = $product->code;
+                }
+
+                $productCode = implode(", ", $arrayProductCode);
+
+                $promoName = $promo["code"]
+                    . " (" . $productCode . ") "
+                    . "Rp. " . number_format((int) $promo["price"], 0, null, ",");
+
                 $arrayPromo[] = [
                     "id" => $getIndex[1],
-                    "name" => $getPromoName["name"],
+                    "name" => $promoName,
                     "qty" => $promoItem->qty
                 ];
             }
@@ -1178,12 +1209,12 @@ class SubmissionController extends Controller
             );
 
             $references = Reference::select(
+                "references.id AS id",
                 "references.name AS name",
                 "references.age AS age",
                 "references.phone AS phone",
                 "raja_ongkir__cities.province AS province",
-                "raja_ongkir__cities.type AS city_type",
-                "raja_ongkir__cities.city_name AS city_name",
+                DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
                 "souvenirs.name AS souvenir",
                 "references.link_hs AS link_hs",
                 "references.status AS status",
@@ -1201,23 +1232,13 @@ class SubmissionController extends Controller
                 "references.souvenir_id"
             )
             ->where("references.deliveryorder_id", $request->id)
+            ->orderBy("references.id", "asc")
             ->get();
-
-            $referenceArray = [];
-            foreach ($references as $ref) {
-                $referenceArray[] = [
-                    "name" => $ref->name,
-                    "age" => $ref->age,
-                    "phone" => $ref->phone,
-                    "province" => $ref->province,
-                    "city" => $ref->city_type . " " . $ref->city_name,
-                ];
-            }
 
             $data = [
                 "result" => 1,
                 "dataSubmission" => $deliveryOrder,
-                "dataReference" => $referenceArray,
+                "dataReference" => $references,
             ];
 
             return response()->json($data, 200);

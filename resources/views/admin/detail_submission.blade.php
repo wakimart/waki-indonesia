@@ -1,4 +1,8 @@
 <?php
+
+use App\Product;
+use App\Promo;
+
 $menu_item_page = "submission";
 $menu_item_second = "detail_submission_form";
 ?>
@@ -140,12 +144,34 @@ $menu_item_second = "detail_submission_form";
                             @if (is_numeric($promo['id']) && $promo['id'] < 8)
                                 <td>
                                     <?php
-                                    echo App\DeliveryOrder::$Promo[$promo['id']]['code'];
-                                    echo " - ";
-                                    echo App\DeliveryOrder::$Promo[$promo['id']]['name'];
-                                    echo " (";
-                                    echo App\DeliveryOrder::$Promo[$promo['id']]['harga'];
-                                    echo ")";
+                                    $getPromo = Promo::select("code", "product", "price")
+                                    ->where("id", $promo["id"])
+                                    ->first();
+
+                                    $productPromo = json_decode($getPromo["product"]);
+                                    $arrayProductId = [];
+
+                                    foreach ($productPromo as $pp) {
+                                        $arrayProductId[] = $pp->id;
+                                    }
+
+                                    $getProduct = Product::select("code")
+                                    ->whereIn(
+                                        "id",
+                                        $arrayProductId
+                                    )
+                                    ->get();
+
+                                    $arrayProductCode = [];
+
+                                    foreach ($getProduct as $product) {
+                                        $arrayProductCode[] = $product->code;
+                                    }
+
+                                    $productCode = implode(", ", $arrayProductCode);
+                                    echo $getPromo["code"]
+                                        . " (" . $productCode . ") "
+                                        . "Rp. " . number_format((int) $getPromo["price"], 0, null, ",");
                                     ?>
                                 </td>
                             @else
