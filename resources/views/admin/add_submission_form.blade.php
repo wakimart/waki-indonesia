@@ -624,7 +624,7 @@ function validateForm() {
     // This function deals with validation of the form fields
     let valid = true;
 
-    inputArray = ["member-name-", "member-age-", "member-phone-", "province-", "city-", "souvenir-", "link-hs-"];
+    const inputArray = ["member-name-", "member-age-", "member-phone-", "province-", "city-", "souvenir-", "link-hs-"];
 
     inputArray.forEach(function (currentValue) {
         const inputBeingChecked = document.getElementById(currentValue + currentTab);

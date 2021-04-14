@@ -54,15 +54,18 @@ Route::get('/fetchCso', 'CsoController@fetchCso')->name('fetchCso');
 Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
 Route::get('/fetchCsoByIdBranch/{branch}', 'CsoController@fetchCsoByIdBranch')->name('fetchCsoByIdBranch');
 Route::get('/fetchBranchById', 'BranchController@fetchBranchById')->name('fetchBranchById');
+Route::get("/fetchProvince", function () {
+    return RajaOngkir::FetchProvince();
+})->name("fetchProvince");
 Route::get('/fetchCity/{province}', function ($province) {
     return RajaOngkir::FetchCity($province);
 })->name('fetchCity');
-
 Route::get('/fetchDistrict/{city}', function ($city) {
 	$kotaOrKab = array("Kota ", "Kabupaten ");
 	$city = str_replace($kotaOrKab, '', $city);
     return RajaOngkir::FetchDistrict($city);
 })->name('fetchDistrict');
+Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSouvenir");
 
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)

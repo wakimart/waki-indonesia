@@ -207,42 +207,25 @@ class SubmissionController extends Controller
     {
         $deliveryOrder = DeliveryOrder::where("id", $request["id"])->first();
         $deliveryOrder["district"] = array($deliveryOrder->getDistrict());
-        $references = Reference::where(
-            "deliveryorder_id",
-            $request["id"]
+        $references = Reference::select(
+            "references.id AS id",
+            "references.name AS name",
+            "references.phone AS phone",
+            "references.age AS age",
+            "references.province AS province_id",
+            "references.city AS city_id",
+            "references.souvenir_id AS souvenir_id",
+            "references.link_hs AS link_hs",
+            "references.status AS status",
+            "souvenirs.name AS souvenir_name",
+            "raja_ongkir__cities.province AS province_name",
+            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city_name"),
         )
-        ->orderBy("id", "asc")
-        ->get();
-
-        // Melakukan query nama kota dan provinsi untuk referensi
-        $referencesCityAndProvince = [];
-        $getReferencesCityAndProvince = RajaOngkir_City::leftJoin(
-            "references",
-            "references.city",
+        ->leftJoin(
+            "raja_ongkir__cities",
+            "raja_ongkir__cities.city_id",
             "=",
-            "raja_ongkir__cities.city_id"
-        )
-        ->select(
-            "raja_ongkir__cities.province",
-            "raja_ongkir__cities.type",
-            "raja_ongkir__cities.city_name"
-        )
-        ->where("references.deliveryorder_id", $request["id"])
-        ->orderBy("references.id")
-        ->get();
-
-        foreach ($getReferencesCityAndProvince as $refCityAndProvince) {
-            $referencesCityAndProvince[] = $refCityAndProvince->type
-                . " "
-                . $refCityAndProvince->city_name
-                . ", "
-                . $refCityAndProvince->province;
-        }
-
-        $getReferencesSouvenir = Reference::select(
-            "references.id",
-            "souvenirs.id AS id",
-            "souvenirs.name AS name"
+            "references.city"
         )
         ->leftJoin(
             "souvenirs",
@@ -251,13 +234,8 @@ class SubmissionController extends Controller
             "references.souvenir_id"
         )
         ->where("references.deliveryorder_id", $request["id"])
-        ->orderBy("references.id")
+        ->orderBy("references.id", "asc")
         ->get();
-
-        $referenceSouvenir = [];
-        foreach ($getReferencesSouvenir as $refSouvenir) {
-            $referenceSouvenir[] = $refSouvenir->name;
-        }
 
         // Melakukan query riwayat dari tabel history_updates
         $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin(
@@ -286,8 +264,6 @@ class SubmissionController extends Controller
                 "deliveryOrder",
                 "historyUpdateDeliveryOrder",
                 "references",
-                "referencesCityAndProvince",
-                "referenceSouvenir",
                 "souvenirs"
             )
         );

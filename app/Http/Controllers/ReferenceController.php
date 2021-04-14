@@ -144,7 +144,7 @@ class ReferenceController extends Controller
             return response()->json([
                 "error" => $e,
                 "error message" => $e->getMessage(),
-            ], 501);
+            ], 500);
         }
     }
 

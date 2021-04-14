@@ -16,7 +16,6 @@ $menu_item_second = "detail_submission_form";
     }
 
     .table-responsive table{
-        
         display: inline-table;
         table-layout:fixed;
         overflow:scroll;
@@ -33,9 +32,11 @@ $menu_item_second = "detail_submission_form";
         border-radius: 2px;
         margin-bottom: 0;
     }
+
 	.table-responsive table .form-control.error {
 		border-color: #f50000;
 	}
+
 	.table-responsive table td .save {
 		display: none;
 	}
@@ -49,10 +50,6 @@ $menu_item_second = "detail_submission_form";
         border: 0.5px #8080801a solid;
         padding: 0.5em;
 
-    }
-
-    table, td{
-        background-color: #fff !important;
     }
 
     .center {
@@ -93,6 +90,7 @@ $menu_item_second = "detail_submission_form";
                         </td>
                     </tr>
                 </table>
+
                 <table class="col-md-12">
                     <thead>
                         <td colspan="2">Customer Data</td>
@@ -110,10 +108,11 @@ $menu_item_second = "detail_submission_form";
                         <td>{{ $deliveryOrder['phone'] }}</td>
                     </tr>
                     <tr>
-                        <td rowspan="2">Address: </td>
+                        <td>Address: </td>
                         <td>{{ $deliveryOrder['address'] }}</td>
                     </tr>
                     <tr>
+                        <td></td>
                         <td>
                             <?php
                             echo $deliveryOrder['district'][0]['province'];
@@ -176,154 +175,87 @@ $menu_item_second = "detail_submission_form";
                     </tr>
                 </table>
 
-                    <table class="col-md-12">
-                        <thead>
-                            <td colspan="8">Reference</td>
-                        </thead>
-                        <thead style="background-color: #80808012 !important">
-                            <td>Name</td>
-                            <td>Age</td>
-                            <td>Phone</td>
-                            <td>City</td>
-                            <td>Souvenir</td>
-                            <td>Link HS</td>
-                            <td>Status</td>
-                            <td>Edit</td>
-                        </thead>
-                        <?php foreach ($references as $key => $reference): ?>
-                            <form id="ref_{{ $key }}">
-                                <input type="hidden"
-                                    id="id_{{ $key }}"
-                                    class="d-none"
-                                    {{-- name="id" --}}
-                                    value="{{ $reference->id }}" />
-                                <tr>
-                                    <td id="name_{{ $key }}">
-                                        <?php echo $reference->name; ?>
-                                    </td>
-                                    <td class="center" id="age_{{ $key }}">
-                                        <?php echo $reference->age; ?>
-                                    </td>
-                                    <td class="center" id="phone_{{ $key }}">
-                                        <?php echo $reference->phone; ?>
-                                    </td>
-                                    <td id="province_{{ $key }}"
-                                        data-province="{{ $reference->province }}"
-                                        data-city="{{ $reference->city }}">
-                                        <?php echo $referencesCityAndProvince[$key]; ?>
-                                    </td>
-                                    <td id="souvenir_{{ $key }}"
-                                        data-souvenir="{{ $reference->souvenir_id }}">
-                                        <?php echo $referenceSouvenir[$key]; ?>
-                                    </td>
-                                    <td class="center" id="link-hs_{{ $key }}">
-                                        <?php if (!empty($reference->link_hs)): ?>
-                                            <a id="link-hs-href_{{ $key }}"
-                                                href="<?php echo $reference->link_hs; ?>"
-                                                target="_blank">
-                                                <i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>
-                                            </a>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="center" id="status_{{ $key }}">
-                                    {{--  <label for="edit-status"><label>
-                                        <select class="form-control"
-                                            id="edit-status"
-                                            name="status" onchange="this.nextElementSibling.value=this.value">
-                                            <option value="pending">pending</option>
-                                            <option value="success">success</option>
-                                        </select> --}}
-                                        <?php echo $reference->status; ?>
-                                    </td>
-                                    <td class="center">
-                                        <button class="btn"
-                                            style="padding: 0;"
-                                            data-toggle="modal"
-                                            data-target="#edit-reference"
-                                            data-edit="edit_{{ $key }}"
-                                            onclick="clickEdit(this)"
-                                            value="<?php echo $reference->id; ?>">
-                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </form>
-                        <?php endforeach; ?>
-                    </table>
-
                 <div class="table-responsive">
+                    <?php for ($i = 0; $i < 10; $i++): ?>
+                        <form method="POST" id="edit-form_{{ $i }}"></form>
+                    <?php endfor; ?>
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="12">Reference</td>
+                            <td colspan="9">Reference</td>
                         </thead>
-                        <thead style="background-color: #80808012 !important">
-                            <td>Name</td>
-                            <td>Age</td>
-                            <td>Phone</td>
-                            <td colspan="2">Province</td>
-                            <td colspan="3">City</td>
-                            <td colspan="2">Souvenir</td>
-                            <td>Link HS</td>
-                            <td>Status</td>
-                            <td>Edit</td>
+                        <thead style="background-color: #80808012 !important;">
+                            <tr>
+                                <td>Name</td>
+                                <td>Age</td>
+                                <td>Phone</td>
+                                <td>Province</td>
+                                <td>City</td>
+                                <td>Souvenir</td>
+                                <td>Link HS</td>
+                                <td>Status</td>
+                                <td>Edit</td>
+                            </tr>
                         </thead>
-                            <form id="ref_1">
-                                <tr>
-                                    <td contenteditable="true" id="name">
-                                        Amel
-                                    </td>
-                                    <td contenteditable="true" class="center" id="age">
-                                        21
-                                    </td>
-                                    <td contenteditable="true" class="center" id="phone">
-                                        0811111111
-                                    </td>
-                                    <td colspan="2" id="province" style="background-color: #fff;">
-                                            <select contenteditable="true" class="form-control" style="min-width: 100px"
-                                                id="edit-province"
-                                                name="province" onchange="this.nextElementSibling.value=this.value">
-                                                <option value="Maluku">Maluku</option>
-                                                <option value="Jawa Barat">Jawa Barat</option>
-                                            </select>
-                                    </td>
-                                    <td colspan="3" id="city" style="background-color: #fff;">
-                                        <select contenteditable="true" class="form-control" style="min-width: 100px"
-                                            id="edit-city"
-                                            name="city" onchange="this.nextElementSibling.value=this.value">
-                                            <option value="Kabupaten Maluku Barat Daya">Kabupaten Maluku Barat Daya</option>
-                                            <option value="Kota Cirebon">Kota Cirebon</option>
-                                        </select>
-                                    </td>
-                                    <td colspan="2" id="souvenir">
-                                        <select contenteditable="true" class="form-control"
-                                            id="edit-souvenir"
-                                            name="souvenir" onchange="this.nextElementSibling.value=this.value">
-                                            <option value="success">Jeep Hardtop 4x4</option>
-                                            <option value="pending">Driver & BBM & Parkir</option>
-                                            <option value="success">Tiket Masuk Bromo</option>
-                                            <option value="success">Air Mineral</option>
-                                        </select>
-                                    </td>
-                                    <td contenteditable="true" class="center" id="link-hs">
-                                       https://dzsdfdfcsadfcsdfcsdsdvszdv
-                                    </td>
-                                    <td class="center scroll-code" id="status">
-                                        <select contenteditable="true" class="form-control"
-                                            id="edit-status"
-                                            name="status" onchange="this.nextElementSibling.value=this.value">
-                                            <option value="pending">pending</option>
-                                            <option value="success">success</option>
-                                        </select>
-                                    </td>
-                                    <td class="center">
-                                        <button id="edit_button" value="edit" class="btn" onclick="edit_row(this)">
-                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </form>
+                        <tbody>
+                            <?php foreach ($references as $key => $reference): ?>
+                                {{-- <form id="edit-form_{{ $key }}"> --}}
+                                    <input type="hidden"
+                                        id="edit-id_{{ $key }}"
+                                        class="d-none"
+                                        name="id"
+                                        form="edit-form_{{ $key }}"
+                                        value="{{ $reference->id }}" />
+                                    <tr>
+                                        <td id="name_{{ $key }}">
+                                            {{ $reference->name }}
+                                        </td>
+                                        <td class="center" id="age_{{ $key }}">
+                                            {{ $reference->age }}
+                                        </td>
+                                        <td class="center" id="phone_{{ $key }}">
+                                            {{ $reference->phone }}
+                                        </td>
+                                        <td id="province_{{ $key }}"
+                                            data-province="{{ $reference->province_id }}">
+                                            {{ $reference->province_name }}
+                                        </td>
+                                        <td id="city_{{ $key }}"
+                                            data-city="{{ $reference->city_id }}">
+                                            {{ $reference->city_name }}
+                                        </td>
+                                        <td id="souvenir_{{ $key }}"
+                                            data-souvenir="{{ $reference->souvenir_id }}">
+                                            {{ $reference->souvenir_name }}
+                                        </td>
+                                        <td class="center" id="link-hs_{{ $key }}">
+                                            <?php if (!empty($reference->link_hs)): ?>
+                                                <a id="link-hs-href_{{ $key }}"
+                                                    href="{{ $reference->link_hs }}"
+                                                    target="_blank">
+                                                    <i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>
+                                                </a>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="center" id="status_{{ $key }}">
+                                            {{ $reference->status }}
+                                        </td>
+                                        <td class="center">
+                                            <button class="btn"
+                                                id="btn-edit-save_{{ $key }}"
+                                                style="padding: 0;"
+                                                data-edit="edit_{{ $key }}"
+                                                onclick="clickEdit2(this)"
+                                                value="{{ $reference->id }}">
+                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {{-- </form> --}}
+                            <?php endforeach; ?>
+                        </tbody>
                     </table>
                 </div>
+
                 <div class="table-responsive">
                     <table class="col-md-12">
                         <thead>
@@ -348,12 +280,12 @@ $menu_item_second = "detail_submission_form";
                                 <td class="center edit-input" id="age">21</td>
                                 <td class="center edit-input" id="phone">0811111111</td>
                                 <td id="province">
-                                        <select class="form-control"
-                                            id="edit-province"
-                                            name="province">
-                                            <option value="Maluku">Maluku</option>
-                                            <option value="Jawa Barat">Jawa Barat</option>
-                                        </select>
+                                    <select class="form-control"
+                                        id="edit-province"
+                                        name="province">
+                                        <option value="Maluku">Maluku</option>
+                                        <option value="Jawa Barat">Jawa Barat</option>
+                                    </select>
                                 </td>
                                 <td id="city">
                                     <select class="form-control"
@@ -383,17 +315,19 @@ $menu_item_second = "detail_submission_form";
                                     </select>
                                 </td>
                                 <td class="text-center">
-                                    <a class="save" title="Save" data-toggle="tooltip"><i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i></a>
-                                    <a class="edit" title="Edit" data-toggle="tooltip"><i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i></a>
+                                    <a class="save" title="Save" data-toggle="tooltip">
+                                        <i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i>
+                                    </a>
+                                    <a class="edit" title="Edit" data-toggle="tooltip">
+                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                    </a>
                                 </td>
-                            </tr>    
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
 
-        <div class="container">
             <div class="row justify-content-center" style="margin-top: 2em;">
                 <h2>SUBMISSION HISTORY LOG</h2>
             </div>
@@ -434,7 +368,6 @@ $menu_item_second = "detail_submission_form";
                 </table>
             </div>
         </div>
-        <div id="response"></div>
     </section>
 @else
     <div class="row justify-content-center">
@@ -587,40 +520,104 @@ $menu_item_second = "detail_submission_form";
 
 @section('script')
 <script type="application/javascript">
-    $(document).ready(function(){
+    /* $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
-        var actions = $("table td:last-child").html();
+        const actions = $("table td:last-child").html();
+
         // Edit row on edit button click
-        $(document).on("click", ".edit", function(){	
-            $(this).parents("tr").find("td.edit-input").each(function(){
+        $(document).on("click", ".edit", function () {
+            $(this).parents("tr").find("td.edit-input").each(function () {
                 $(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
-            });		
+            });
+
             $(this).parents("tr").find(".save, .edit").toggle();
         });
-        	// Save to row on save button click
+
+        // Save to row on save button click
         $(document).on("click", ".save", function(){
-            var empty = false;
-            var input = $(this).parents("tr").find('input[type="text"]');
-            input.each(function(){
-                if(!$(this).val()){
+            let empty = false;
+            const input = $(this).parents("tr").find('input[type="text"]');
+
+            input.each(function () {
+                if (!$(this).val()) {
                     $(this).addClass("error");
                     empty = true;
-                } else{
+                } else {
                     $(this).removeClass("error");
                 }
             });
-            $(this).parents("tr").find(".error").first().focus();
-            if(!empty){
-                input.each(function(){
-                    $(this).parent("td").html($(this).val());
-                });			
-                $(this).parents("tr").find(".save, .edit").toggle();
-            }		
-        }); 
-    });
-</script>
 
+            $(this).parents("tr").find(".error").first().focus();
+
+            if (!empty) {
+                input.each(function () {
+                    $(this).parent("td").html($(this).val());
+                });
+
+                $(this).parents("tr").find(".save, .edit").toggle();
+            }
+        });
+    }); */
+</script>
 <script type="application/javascript">
+let provinceOption = "";
+let souvenirOption = `<option disabled selected value="">Pilih souvenir</option>`;
+
+document.addEventListener('DOMContentLoaded', function () {
+    const URL_PROVINCE = '<?php echo route("fetchProvince"); ?>';
+    const URL_SOUVENIR = '<?php echo route("fetchSouvenir"); ?>';
+
+    fetch(
+        URL_PROVINCE,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const result = response["rajaongkir"]["results"];
+
+        result.forEach(function (currentValue) {
+            provinceOption += `<option value="${currentValue["province_id"]}">`
+                + currentValue["province"]
+                + `</option>`;
+        });
+    }).catch(function (error) {
+        console.error(error);
+    });
+
+    fetch(
+        URL_SOUVENIR,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const result = response.data;
+
+        result.forEach(function (currentValue) {
+            souvenirOption += `<option value="${currentValue["id"]}">`
+                + currentValue["name"]
+                + `</option>`;
+        });
+    });
+}, false);
+
 function getCSRF() {
     const getMeta = document.getElementsByTagName("meta");
     let metaCSRF = "";
@@ -695,11 +692,9 @@ function setCity(e) {
                 }
             });
 
-            document.getElementById("edit-city").innerHTML = '<option value="">All City</option>'
-                + arrCity[0]
-                + arrCity[1];
+            const refSeq = e.id.split("_")[1];
 
-            document.getElementById("edit-city").value = e.dataset.city;
+            document.getElementById("edit-city_" + refSeq).innerHTML = arrCity[0] + arrCity[1];
         }
     }).catch(function(error) {
         console.error(error);
@@ -756,6 +751,211 @@ function submitEdit(e) {
         document.getElementById("edit-close").click();
     }).catch(function (error) {
         console.log(error);
+    });
+}
+
+function clickEdit2(e) {
+    const refSeq = e.dataset.edit.split("_")[1];
+    const id = document.getElementById("edit-id_" + refSeq).value;
+    const name = document.getElementById("name_" + refSeq).innerHTML.trim();
+    const age = document.getElementById("age_" + refSeq).innerHTML.trim();
+    const phone = document.getElementById("phone_" + refSeq).innerHTML.trim();
+    const province = document.getElementById("province_" + refSeq).getAttribute("data-province");
+    const city = document.getElementById("city_" + refSeq).getAttribute("data-city");
+    console.log(city);
+    const souvenir = document.getElementById("souvenir_" + refSeq).getAttribute("data-souvenir");
+    const linkHS = function () {
+        try {
+            return document.getElementById("link-hs-href_" + refSeq).getAttribute("href");
+        } catch (error) {
+            return "";
+        }
+    };
+    const status = document.getElementById("status_" + refSeq).innerHTML.trim();
+
+    const FORM_ATTR = `form="edit-form_${refSeq}"`;
+    const INPUT_CLASS = `class="form-control" `;
+    document.getElementById("name_" + refSeq).innerHTML = `<input type="text" `
+        + `id="edit-name_${refSeq}" `
+        + INPUT_CLASS
+        + FORM_ATTR
+        + `name="name" `
+        + `value="${name}" `
+        + `placeholder="Name" `
+        + `required />`;
+
+    document.getElementById("age_" + refSeq).innerHTML = `<input type="number" `
+        + `id="edit-age_${refSeq}" `
+        + INPUT_CLASS
+        + FORM_ATTR
+        + `name="age" `
+        + `value="${age}" `
+        + `required />`;
+
+    document.getElementById("phone_" + refSeq).innerHTML = `<input type="number" `
+        + `id="edit-phone_${refSeq}" `
+        + INPUT_CLASS
+        + FORM_ATTR
+        + `name="phone" `
+        + `value="${phone}" `
+        + `required />`;
+
+    document.getElementById("province_" + refSeq).innerHTML = `<select `
+        + `id="edit-province_${refSeq}" `
+        + INPUT_CLASS
+        + FORM_ATTR
+        + `name="province" `
+        + `onchange="setCity(this)"`
+        + `required>`
+        + provinceOption
+        + `</select>`;
+
+    document.getElementById("edit-province_" + refSeq).value = province;
+
+    document.getElementById("city_" + refSeq).innerHTML = `<select `
+        + `id="edit-city_${refSeq}" `
+        + INPUT_CLASS
+        + FORM_ATTR
+        + `name="city" `
+        + `required>`
+        + `</select>`;
+
+    setCity(document.getElementById("edit-province_" + refSeq));
+    document.getElementById("edit-city_" + refSeq).value = city;
+
+    document.getElementById("souvenir_" + refSeq).innerHTML = `<select `
+        + `id="edit-souvenir_${refSeq}" `
+        + INPUT_CLASS
+        + FORM_ATTR
+        + `name="souvenir_id" `
+        + `required>`
+        + souvenirOption
+        + `</select>`;
+    document.getElementById("edit-souvenir_" + refSeq).value = souvenir;
+
+    document.getElementById("link-hs_" + refSeq).innerHTML = `<input type="url" `
+        + `id="edit-link-hs_${refSeq}" `
+        + INPUT_CLASS
+        + FORM_ATTR
+        + `name="link_hs" `
+        + `pattern="https://.*" `
+        + `maxlength="191" `
+        + `value="${linkHS()}" `
+        + `placeholder="Link HS" />`;
+
+    document.getElementById("status_" + refSeq).innerHTML = `<select `
+        + `id="edit-status_${refSeq}" `
+        + INPUT_CLASS
+        + FORM_ATTR
+        + `name="status" `
+        + `required>`
+        + `<option value="pending">pending</option>`
+        + `<option value="success">success</option>`
+        + `</select>`;
+    document.getElementById("edit-status_" + refSeq).value = status || "pending";
+
+    document.getElementById("btn-edit-save_" + refSeq).setAttribute("onclick", "submitEdit2(this)");
+    document.getElementById("btn-edit-save_" + refSeq).innerHTML = `<i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i>`;
+}
+
+function validateForm(refSeq) {
+    console.log("Currently validating");
+    const inputArray = [
+        "edit-name_",
+        "edit-age_",
+        "edit-phone_",
+        "edit-province_",
+        "edit-city_",
+        "edit-souvenir_",
+        "edit-link-hs_",
+        "edit-status_",
+    ];
+
+    let valid = true;
+
+    inputArray.forEach(function (currentValue) {
+        const inputBeingChecked = document.getElementById(currentValue + refSeq);
+
+        if (!inputBeingChecked.checkValidity()) {
+            addOrRemoveInvalid(inputBeingChecked, "add");
+            valid = false;
+            console.log("Validation fail: " + inputBeingChecked.innerHTML);
+        } else {
+            addOrRemoveInvalid(inputBeingChecked, "remove");
+            console.log("Validation pass: " + inputBeingChecked.innerHTML);
+        }
+    });
+
+    return valid;
+}
+
+function addOrRemoveInvalid(element, command) {
+    if (command === "add") {
+        if (!element.className.includes("error")) {
+            element.classList.add("error");
+        }
+    } else if (command === "remove") {
+        if (element.className.includes("error")) {
+            element.classList.remove("error");
+        }
+    }
+}
+
+function submitEdit2(e) {
+    const refSeq = e.dataset.edit.split("_")[1];
+    const form = document.getElementById("edit-form_" + refSeq);
+    const data = new URLSearchParams();
+    const URL = '<?php echo route("update_reference"); ?>';
+
+    for (const pair of new FormData(form)) {
+        data.append(pair[0], pair[1]);
+    }
+
+    if (!validateForm(refSeq)) {
+        return false;
+    }
+
+    console.log("Validation pass");
+
+    fetch(
+        URL,
+        {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "X-CSRF-TOKEN": getCSRF(),
+            },
+            body: data,
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const data = response.data;
+        document.getElementById("name_" + refSeq).innerHTML = data.name;
+        document.getElementById("age_" + refSeq).innerHTML = data.age;
+        document.getElementById("phone_" + refSeq).innerHTML = data.phone;
+        document.getElementById("province_" + refSeq).setAttribute("data-province", data.province);
+        document.getElementById("province_" + refSeq).innerHTML = response.province;
+        document.getElementById("city_" + refSeq).setAttribute("data-city", data.city);
+        document.getElementById("city_" + refSeq).innerHTML = response.city;
+        document.getElementById("souvenir_" + refSeq).setAttribute("data-souvenir", data.souvenir_id);
+        document.getElementById("souvenir_" + refSeq).innerHTML = response.souvenir;
+
+        if (data.link_hs) {
+            document.getElementById("link-hs_" + refSeq).innerHTML = `<a href="${data.link_hs}" id="link-hs-href_${refSeq}" target="blank">`
+                + `<i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>`
+                + `</a>`;
+        } else {
+            document.getElementById("link-hs_" + refSeq).innerHTML = "";
+        }
+
+        document.getElementById("status_" + refSeq).innerHTML = data.status;
+    }).catch(function (error){
+        console.error(error);
     });
 }
 </script>
