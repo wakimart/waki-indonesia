@@ -91,7 +91,7 @@ class ReferenceController extends Controller
 
         return response()->json([
             "result" => 0,
-            "error" => "Data tidak ditemukan."
+            "error" => "Data tidak ditemukan.",
         ], 400);
     }
 
@@ -109,7 +109,7 @@ class ReferenceController extends Controller
                 "city",
                 "souvenir_id",
                 "link_hs",
-                "status"
+                "status",
             ));
             $reference->save();
 
@@ -199,7 +199,7 @@ class ReferenceController extends Controller
                 "raja_ongkir__cities.city_name AS city_name",
                 "souvenirs.name AS souvenir",
                 "references.link_hs AS link_hs",
-                "references.status AS status"
+                "references.status AS status",
             )
             ->leftJoin(
                 "raja_ongkir__cities",
@@ -254,7 +254,7 @@ class ReferenceController extends Controller
 
         return response()->json([
             "result" => 0,
-            "error" => "Data tidak ditemukan."
+            "error" => "Data tidak ditemukan.",
         ], 400);
     }
 }

@@ -90,7 +90,15 @@ class SubmissionController extends Controller
         ->where("active", true)
         ->get();
 
-        return view('admin.add_submission_form', compact('promos', 'branches', 'csos', "souvenirs"));
+        return view(
+            'admin.add_submission_form',
+            compact(
+                'promos',
+                'branches',
+                'csos',
+                "souvenirs",
+            )
+        );
     }
 
     /**
@@ -248,7 +256,7 @@ class SubmissionController extends Controller
             'history_updates.method',
             'history_updates.created_at',
             'history_updates.meta AS meta',
-            'users.name AS name'
+            'users.name AS name',
         )
         ->where('type_menu', 'Delivery Order')
         ->where('menu_id', $deliveryOrder->id)
@@ -264,7 +272,7 @@ class SubmissionController extends Controller
                 "deliveryOrder",
                 "historyUpdateDeliveryOrder",
                 "references",
-                "souvenirs"
+                "souvenirs",
             )
         );
     }
@@ -306,7 +314,7 @@ class SubmissionController extends Controller
                     "csos",
                     "deliveryOrders",
                     "promos",
-                    "arrayReference"
+                    "arrayReference",
                 )
             );
         } else {
@@ -531,7 +539,7 @@ class SubmissionController extends Controller
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => ['required', 'exists:branches,id'],
             'product_0' => 'required',
-            'qty_0' => 'required'
+            'qty_0' => 'required',
         ], $messages);
 
         if ($validator->fails()) {
@@ -647,7 +655,7 @@ class SubmissionController extends Controller
                     "raja_ongkir__cities.province",
                     "raja_ongkir__cities.type",
                     "raja_ongkir__cities.city_name",
-                    "raja_ongkir__subdistricts.subdistrict_name"
+                    "raja_ongkir__subdistricts.subdistrict_name",
                 )
                 ->where(
                     "raja_ongkir__subdistricts.subdistrict_id",
@@ -696,7 +704,7 @@ class SubmissionController extends Controller
                 ->select(
                     "raja_ongkir__cities.province",
                     "raja_ongkir__cities.type",
-                    "raja_ongkir__cities.city_name"
+                    "raja_ongkir__cities.city_name",
                 )
                 ->where("references.deliveryorder_id", $dataSubmission->id)
                 ->orderBy("references.id")
@@ -712,7 +720,7 @@ class SubmissionController extends Controller
                         $referenceArray[$i]->id,
                         $referenceArray[$i]->deliveryorder_id,
                         $referenceArray[$i]->created_at,
-                        $referenceArray[$i]->updated_at
+                        $referenceArray[$i]->updated_at,
                     );
                 }
 
@@ -724,7 +732,7 @@ class SubmissionController extends Controller
                     $dataSubmission->cso_id,
                     $dataSubmission->branch_id,
                     $dataSubmission->active,
-                    $dataSubmission->distric
+                    $dataSubmission->distric,
                 );
 
                 $data = [
@@ -772,7 +780,7 @@ class SubmissionController extends Controller
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => ['required', 'exists:branches,id'],
             'product_0' => 'required',
-            'qty_0' => 'required'
+            'qty_0' => 'required',
         ], $messages);
 
         if ($validator->fails()) {
@@ -933,7 +941,7 @@ class SubmissionController extends Controller
                     "raja_ongkir__cities.province",
                     "raja_ongkir__cities.type",
                     "raja_ongkir__cities.city_name",
-                    "raja_ongkir__subdistricts.subdistrict_name"
+                    "raja_ongkir__subdistricts.subdistrict_name",
                 )
                 ->where(
                     "raja_ongkir__subdistricts.subdistrict_id",
@@ -982,7 +990,7 @@ class SubmissionController extends Controller
                 ->select(
                     "raja_ongkir__cities.province",
                     "raja_ongkir__cities.type",
-                    "raja_ongkir__cities.city_name"
+                    "raja_ongkir__cities.city_name",
                 )
                 ->where("references.deliveryorder_id", $dataSubmission->id)
                 ->orderBy("references.id")
@@ -998,7 +1006,7 @@ class SubmissionController extends Controller
                         $referenceArray[$i]->id,
                         $referenceArray[$i]->deliveryorder_id,
                         $referenceArray[$i]->created_at,
-                        $referenceArray[$i]->updated_at
+                        $referenceArray[$i]->updated_at,
                     );
                 }
 
@@ -1010,7 +1018,7 @@ class SubmissionController extends Controller
                     $dataSubmission->cso_id,
                     $dataSubmission->branch_id,
                     $dataSubmission->active,
-                    $dataSubmission->distric
+                    $dataSubmission->distric,
                 );
 
                 $data = [
@@ -1055,7 +1063,7 @@ class SubmissionController extends Controller
                 "branches.code AS branch_code",
                 "branches.name AS branch_name",
                 "csos.code AS cso_code",
-                "csos.name AS cso_name"
+                "csos.name AS cso_name",
             )
             ->leftJoin(
                 "branches",
@@ -1115,7 +1123,7 @@ class SubmissionController extends Controller
                 "raja_ongkir__cities.province AS province",
                 "raja_ongkir__cities.type AS city_type",
                 "raja_ongkir__cities.city_name AS city_name",
-                "raja_ongkir__subdistricts.subdistrict_name AS district"
+                "raja_ongkir__subdistricts.subdistrict_name AS district",
             )
             ->leftJoin(
                 "raja_ongkir__cities",
@@ -1166,7 +1174,7 @@ class SubmissionController extends Controller
             unset(
                 $deliveryOrder->arr_product,
                 $deliveryOrder->city_type,
-                $deliveryOrder->city_name
+                $deliveryOrder->city_name,
             );
 
             $references = Reference::select(
@@ -1178,7 +1186,7 @@ class SubmissionController extends Controller
                 "raja_ongkir__cities.city_name AS city_name",
                 "souvenirs.name AS souvenir",
                 "references.link_hs AS link_hs",
-                "references.status AS status"
+                "references.status AS status",
             )
             ->leftJoin(
                 "raja_ongkir__cities",
@@ -1202,14 +1210,14 @@ class SubmissionController extends Controller
                     "age" => $ref->age,
                     "phone" => $ref->phone,
                     "province" => $ref->province,
-                    "city" => $ref->city_type . " " . $ref->city_name
+                    "city" => $ref->city_type . " " . $ref->city_name,
                 ];
             }
 
             $data = [
                 "result" => 1,
                 "dataSubmission" => $deliveryOrder,
-                "dataReference" => $referenceArray
+                "dataReference" => $referenceArray,
             ];
 
             return response()->json($data, 200);
@@ -1218,7 +1226,7 @@ class SubmissionController extends Controller
                 "result" => 0,
                 "error" => $e,
                 "error line" => $e->getLine(),
-                "error messages" => $e->getMessage()
+                "error messages" => $e->getMessage(),
             ];
 
             return response()->json($data, 501);
