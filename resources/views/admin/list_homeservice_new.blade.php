@@ -785,7 +785,7 @@ $menu_item_second = "list_homeservice";
                                                                 </td>
                                                                 <td style="text-align: center">
                                                                     <?php
-                                                                        if(Gate::check('delete-home_service')){
+                                                                        if(Gate::check('edit-home_service')){
                                                                             echo '<button '
                                                                                 . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
                                                                                 . 'type="button" '
@@ -806,14 +806,16 @@ $menu_item_second = "list_homeservice";
                                                                 </td>
                                                                 <td style="text-align: center">
                                                                     <?php
-                                                                    echo '<button '
-                                                                        . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
-                                                                        . 'type="button" '
-                                                                        . 'data-toggle="modal" '
-                                                                        . 'data-target="#deleteHomeServiceModal" '
-                                                                        . 'onclick="clickCancel(this)" '
-                                                                        . 'value="' . $dayData->hs_id . '">'
-                                                                        . '</button>';
+                                                                        if(Gate::check('delete-home_service')){
+                                                                            echo '<button '
+                                                                                . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
+                                                                                . 'type="button" '
+                                                                                . 'data-toggle="modal" '
+                                                                                . 'data-target="#deleteHomeServiceModal" '
+                                                                                . 'onclick="clickCancel(this)" '
+                                                                                . 'value="' . $dayData->hs_id . '">'
+                                                                                . '</button>';
+                                                                        }
                                                                     ?>
                                                                 </td>
                                                             <?php else: ?>
