@@ -290,12 +290,15 @@ class SubmissionController extends Controller
             $branches = Branch::all();
             $csos = Cso::all();
             $deliveryOrders = DeliveryOrder::find($request->get("id"));
-            $promos = DeliveryOrder::$Promo;
+            $promos = Promo::all();
             $references = Reference::where(
                 "deliveryorder_id",
                 $request->get("id")
             )
             ->orderBy("id", "asc")
+            ->get();
+            $souvenirs = Souvenir::select("id", "name")
+            ->where("active", true)
             ->get();
 
             $arrayReference = [];
@@ -311,11 +314,12 @@ class SubmissionController extends Controller
             return view(
                 "admin.update_submission_form",
                 compact(
+                    "arrayReference",
                     "branches",
                     "csos",
                     "deliveryOrders",
                     "promos",
-                    "arrayReference",
+                    "souvenirs",
                 )
             );
         } else {

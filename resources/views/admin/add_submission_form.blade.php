@@ -56,6 +56,10 @@ $menu_item_second = "add_submission_form";
       background-color: #ffdddd;
     }
 
+    .invalid {
+        border: 1px solid red !important;
+    }
+
     /* Hide all steps by default: */
     .tab {
       display: none;
@@ -659,12 +663,10 @@ function validateForm() {
 function addOrRemoveInvalid(element, command) {
     if (command === "add") {
         if (!element.className.includes("invalid")) {
-            element.classList.add("is-invalid");
             element.classList.add("invalid");
         }
     } else if (command === "remove") {
         if (element.className.includes("invalid")) {
-            element.classList.remove("is-invalid");
             element.classList.remove("invalid");
         }
     }

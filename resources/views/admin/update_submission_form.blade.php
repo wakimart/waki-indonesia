@@ -1,3 +1,7 @@
+<?php
+
+use App\Product;
+?>
 @extends('admin.layouts.template')
 
 @section('style')
@@ -43,6 +47,10 @@
     /* Mark input boxes that gets an error on validation: */
     input.invalid {
         background-color: #ffdddd;
+    }
+
+    .invalid {
+        border: 1px solid red !important;
     }
 
     /* Hide all steps by default: */
@@ -344,7 +352,40 @@
                                                     }
 
                                                     echo ">";
-                                                    echo $promo["code"] . " - " . $promo["name"] . " (" . $promo["harga"] . ")";
+
+                                                    $productPromo = json_decode($promo["product"]);
+                                                    $arrayProductId = [];
+
+                                                    foreach ($productPromo as $pp) {
+                                                        $arrayProductId[] = $pp->id;
+                                                    }
+
+                                                    $getProduct = Product::select("code")
+                                                    ->whereIn(
+                                                        "id",
+                                                        $arrayProductId
+                                                    )
+                                                    ->get();
+
+                                                    $arrayProductCode = [];
+
+                                                    foreach ($getProduct as $product) {
+                                                        $arrayProductCode[] = $product->code;
+                                                    }
+
+                                                    $productCode = implode(", ", $arrayProductCode);
+
+                                                    echo $promo["code"]
+                                                        . " - ("
+                                                        . $productCode
+                                                        . ") - Rp. "
+                                                        . number_format(
+                                                            (int) $promo["price"],
+                                                            0,
+                                                            null,
+                                                            ","
+                                                        );
+
                                                     echo "</option>";
                                                 }
                                                 ?>
@@ -755,12 +796,10 @@ function validateForm() {
 function addOrRemoveInvalid(element, command) {
     if (command === "add") {
         if (!element.className.includes("invalid")) {
-            element.classList.add("is-invalid");
             element.classList.add("invalid");
         }
     } else if (command === "remove") {
         if (element.className.includes("invalid")) {
-            element.classList.remove("is-invalid");
             element.classList.remove("invalid");
         }
     }

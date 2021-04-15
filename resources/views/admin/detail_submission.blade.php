@@ -250,7 +250,7 @@ $menu_item_second = "detail_submission_form";
                                         {{ $reference->city_name }}
                                     </td>
                                     <td id="souvenir_{{ $key }}"
-                                        data-souvenir="{{ $reference->souvenir_id }}">
+                                        data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
                                         {{ $reference->souvenir_name }}
                                     </td>
                                     <td class="center" id="link-hs_{{ $key }}">
@@ -538,7 +538,7 @@ function clickEdit(e) {
     };
     const status = document.getElementById("status_" + refSeq).innerHTML.trim();
 
-    const FORM_ATTR = `form="edit-form_${refSeq}"`;
+    const FORM_ATTR = `form="edit-form_${refSeq}" `;
     const INPUT_CLASS = `class="form-control" `;
     document.getElementById("name_" + refSeq).innerHTML = `<input type="text" `
         + `id="edit-name_${refSeq}" `
@@ -646,6 +646,25 @@ function validateForm(refSeq) {
             addOrRemoveInvalid(inputBeingChecked, "remove");
         }
     });
+
+    const souvenirData = [];
+    for (let i = 0; i < 10; i++) {
+        souvenirData.push(document.getElementById("souvenir_" + i).dataset.souvenir);
+    }
+
+    const souvenir = document.getElementById("edit-souvenir_" + refSeq);
+    souvenirData[refSeq] = souvenir.value;
+
+    const findDuplicate = souvenirData.filter(function (currentValue) {
+        return currentValue === souvenir.value;
+    });
+
+    if (findDuplicate.length > 2) {
+        addOrRemoveInvalid(souvenir, "add");
+        valid = false;
+    } else {
+        addOrRemoveInvalid(souvenir, "remove");
+    }
 
     return valid;
 }
