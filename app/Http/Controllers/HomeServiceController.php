@@ -825,7 +825,7 @@ class HomeServiceController extends Controller
                 if (!$isAdminManagement) {
                     $result .= '<td style="text-align: center">';
 
-                    if(Gate::check('detail-home_service')){
+                    if(Auth::user()->hasPermission('detail-home_service')){
                         $result .= '<button '
                             . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
                             . 'type="button" '
@@ -842,7 +842,7 @@ class HomeServiceController extends Controller
                             . '<td style="text-align: center">';
                     }
 
-                    if(Gate::check('edit-home_service')){
+                    if(Auth::user()->hasPermission('edit-home_service')){
                         $result .= '<button '
                             . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
                             . 'type="button" '
@@ -879,7 +879,7 @@ class HomeServiceController extends Controller
                             . '<td style="text-align: center">';
                     }
 
-                    if(Gate::check('delete-home_service')){
+                    if(Auth::user()->hasPermission('delete-home_service')){
                         $result .= '<button '
                             . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
                             . 'type="button" '
