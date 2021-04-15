@@ -70,17 +70,20 @@ class AcceptanceController extends Controller
                 $data['arr_condition'] = ['kelengkapan' => $data['kelengkapan'], 'kondisi' => $data['kondisi'], 'tampilan' => $data['tampilan']];
 
                 if ($request->hasFile("image")) {
-                    $image = $request->file("image");
                     $data['image'] = [];
                     $path = "sources/acceptance";
+                    $idxImg = 1;
 
                     if (!is_dir($path)) {
                         File::makeDirectory($path, 0777, true, true);
                     }
 
-                    $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . "_upgrade." . $image->getClientOriginalExtension();
-                    $image->move($path, $fileName);
-                    $data["image"] = [$fileName];
+                    foreach ($request->file("image") as $imgNya) {
+                        $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()). $idxImg . "_upgrade." . $imgNya->getClientOriginalExtension();
+                        $imgNya->move($path, $fileName);
+                        array_push($data['image'], $fileName);
+                        $idxImg++;
+                    }
                 }
 
                 $acc = Acceptance::create($data);
@@ -106,6 +109,12 @@ class AcceptanceController extends Controller
         $acceptances = Acceptance::where('active', true);
         if(isset($url['status'])){
             $acceptances = $acceptances->where('status', $url['status']);
+        }
+        if (Auth::user()->roles[0]['slug'] === "cso") {
+            $acceptances = $acceptances->where('cso_id', Auth::user()->cso["id"]);
+        }
+        else if(Auth::user()->roles[0]['slug'] === 'branch' || Auth::user()->roles[0]['slug'] === 'area-manager') {
+            $acceptances = $acceptances->WhereIn('branch_id', json_decode(Auth::user()['branches_id'], true));
         }
         $acceptances = $acceptances->orderBy('id', 'DESC')->paginate(10);
         return view('admin.list_acceptance', compact('acceptances', 'url'));
@@ -242,7 +251,7 @@ class AcceptanceController extends Controller
         DB::beginTransaction();
 
         try {
-            $acceptance = Acceptance::find($data['id']);
+            $acceptance = Acceptance::find($id);
             $acceptance['active'] = false;
             $acceptance->save();
 
