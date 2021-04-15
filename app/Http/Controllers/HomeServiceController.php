@@ -837,6 +837,10 @@ class HomeServiceController extends Controller
                             . '</td>'
                             . '<td style="text-align: center">';
                     }
+                    else{
+                        $result .= '</td>'
+                            . '<td style="text-align: center">';
+                    }
 
                     if(Gate::check('edit-home_service')){
                         $result .= '<button '
@@ -868,6 +872,12 @@ class HomeServiceController extends Controller
                             . '</td>'
                             . '<td style="text-align: center">';
                     }
+                    else{
+                        $result .= '</td>'
+                            . '<td style="text-align: center">'
+                            . '</td>'
+                            . '<td style="text-align: center">';
+                    }
 
                     if(Gate::check('delete-home_service')){
                         $result .= '<button '
@@ -879,6 +889,9 @@ class HomeServiceController extends Controller
                             . 'value="' . $dayData->hs_id . '">'
                             . '</button>'
                             . '</td>';
+                    }
+                    else{
+                         $result .= '</td>';
                     }
                 } else {
                     $result .= '<td></td><td></td><td></td><td></td>';
