@@ -298,9 +298,9 @@
 		          			<div class="row justify-content-center">
 		          				<h2>Share Acceptance</h2>
 		          			</div>
-		            		<form class="forms-sample" method="GET" action="whatsapp://send?text=Request Acc {{ route('detail_acceptance_form' ,['id' => $acceptance['id']]) }}">
+		            		<form class="forms-sample" method="GET" action="whatsapp://send">
 		              			<div class="form-group row justify-content-center">
-		              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-primary mr-2 btn-lg" name="status" value="approved">Share Whatsapp</button>
+		              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-primary mr-2 btn-lg" name="text" value="Request Acc {{ route('detail_acceptance_form' ,['id' => $acceptance['id']]) }}">Share Whatsapp</button>
 		              			</div>
 		            		</form>
 		          		</div>
