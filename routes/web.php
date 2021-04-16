@@ -547,30 +547,30 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->middleware('can:browse-product');
     });
 
-    Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){
-    	//Add Form Promo
-    	Route::get('/', 'PromoController@create')
-	    	->name('add_promo')
-	    	->middleware('can:add-promo');
-	    //Create Promo
-	    Route::post('/', 'PromoController@store')
-	    	->name('store_promo')
-	    	->middleware('can:add-promo');
-	    //List Promo
-	    Route::get('/list', 'PromoController@index')
-	    	->name('list_promo')
-	    	->middleware('can:browse-promo');
-	    //Edit Promo
-	    Route::get('/edit/', 'PromoController@edit')
-	    	->name('edit_promo')
-	    	->middleware('can:edit-promo');
-	    //Update Promo
-	    Route::post('/update/', 'PromoController@update')
-	    	->name('update_promo')
-	    	->middleware('can:edit-promo');
-	    //Delete Promo
-	    Route::post('/{PromoNya}', 'PromoController@delete')
-	    	->name('delete_promo');
+    Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function() {
+        //Add Form Promo
+        Route::get('/', 'PromoController@create')
+            ->name('add_promo')
+            ->middleware('can:add-promo');
+        //Create Promo
+        Route::post('/', 'PromoController@store')
+            ->name('store_promo')
+            ->middleware('can:add-promo');
+        //List Promo
+        Route::get('/list', 'PromoController@index')
+            ->name('list_promo')
+            ->middleware('can:browse-promo');
+        //Edit Promo
+        Route::get('/edit/', 'PromoController@edit')
+            ->name('edit_promo')
+            ->middleware('can:edit-promo');
+        //Update Promo
+        Route::post('/update/', 'PromoController@update')
+            ->name('update_promo')
+            ->middleware('can:edit-promo');
+        //Delete Promo
+        Route::post('/{PromoNya}', 'PromoController@delete')
+            ->name('delete_promo');
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
