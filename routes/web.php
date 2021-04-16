@@ -514,37 +514,42 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('delete_category');
     });
 
-    Route::group(['prefix' => 'product', 'middleware' => 'auth'], function(){
-    	//Add Form Product
-    	Route::get('/', 'ProductController@create')
-	    	->name('add_product')
-	    	->middleware('can:add-product');
-	    //Create Product
-	    Route::post('/', 'ProductController@store')
-	    	->name('store_product')
-	    	->middleware('can:add-product');
-	    //List Product
-	    Route::get('/list', 'ProductController@admin_ListProduct')
-	    	->name('list_product')
-	    	->middleware('can:browse-product');
-	    //Edit Product
-	    Route::get('/edit/', 'ProductController@edit')
-	    	->name('edit_product')
-	    	->middleware('can:edit-product');
-	    //Update Product
-	    Route::post('/update/', 'ProductController@update')
-	    	->name('update_product')
-	    	->middleware('can:edit-product');
-	    //Delete Product
-	    Route::post('/{ProductNya}', 'ProductController@delete')
-	    	->name('delete_product');
+    Route::group(['prefix' => 'product', 'middleware' => 'auth'], function() {
+        //Add Form Product
+        Route::get('/', 'ProductController@create')
+            ->name('add_product')
+            ->middleware('can:add-product');
+
+        //Create Product
+        Route::post('/', 'ProductController@store')
+            ->name('store_product')
+            ->middleware('can:add-product');
+
+        //List Product
+        Route::get('/list', 'ProductController@admin_ListProduct')
+            ->name('list_product')
+            ->middleware('can:browse-product');
+
+        //Edit Product
+        Route::get('/edit/', 'ProductController@edit')
+            ->name('edit_product')
+            ->middleware('can:edit-product');
+
+        //Update Product
+        Route::post('/update/', 'ProductController@update')
+            ->name('update_product')
+            ->middleware('can:edit-product');
+
+        //Delete Product
+        Route::post('/delete', 'ProductController@destroy')
+            ->name('delete_product');
     });
 
-    Route::group(['prefix' => 'stock', 'middleware' => 'auth'], function(){
-    	//List Stock
-	    Route::get('/list', 'StockController@index')
-	    	->name('list_stock')
-	    	->middleware('can:browse-product');
+    Route::group(['prefix' => 'stock', 'middleware' => 'auth'], function() {
+        //List Stock
+        Route::get('/list', 'StockController@index')
+            ->name('list_stock')
+            ->middleware('can:browse-product');
     });
 
     Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function() {
