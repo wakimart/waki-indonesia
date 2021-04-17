@@ -514,63 +514,68 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('delete_category');
     });
 
-    Route::group(['prefix' => 'product', 'middleware' => 'auth'], function(){
-    	//Add Form Product
-    	Route::get('/', 'ProductController@create')
-	    	->name('add_product')
-	    	->middleware('can:add-product');
-	    //Create Product
-	    Route::post('/', 'ProductController@store')
-	    	->name('store_product')
-	    	->middleware('can:add-product');
-	    //List Product
-	    Route::get('/list', 'ProductController@admin_ListProduct')
-	    	->name('list_product')
-	    	->middleware('can:browse-product');
-	    //Edit Product
-	    Route::get('/edit/', 'ProductController@edit')
-	    	->name('edit_product')
-	    	->middleware('can:edit-product');
-	    //Update Product
-	    Route::post('/update/', 'ProductController@update')
-	    	->name('update_product')
-	    	->middleware('can:edit-product');
-	    //Delete Product
-	    Route::post('/{ProductNya}', 'ProductController@delete')
-	    	->name('delete_product');
+    Route::group(['prefix' => 'product', 'middleware' => 'auth'], function() {
+        //Add Form Product
+        Route::get('/', 'ProductController@create')
+            ->name('add_product')
+            ->middleware('can:add-product');
+
+        //Create Product
+        Route::post('/', 'ProductController@store')
+            ->name('store_product')
+            ->middleware('can:add-product');
+
+        //List Product
+        Route::get('/list', 'ProductController@admin_ListProduct')
+            ->name('list_product')
+            ->middleware('can:browse-product');
+
+        //Edit Product
+        Route::get('/edit/', 'ProductController@edit')
+            ->name('edit_product')
+            ->middleware('can:edit-product');
+
+        //Update Product
+        Route::post('/update/', 'ProductController@update')
+            ->name('update_product')
+            ->middleware('can:edit-product');
+
+        //Delete Product
+        Route::post('/delete', 'ProductController@destroy')
+            ->name('delete_product');
     });
 
-    Route::group(['prefix' => 'stock', 'middleware' => 'auth'], function(){
-    	//List Stock
-	    Route::get('/list', 'StockController@index')
-	    	->name('list_stock')
-	    	->middleware('can:browse-product');
+    Route::group(['prefix' => 'stock', 'middleware' => 'auth'], function() {
+        //List Stock
+        Route::get('/list', 'StockController@index')
+            ->name('list_stock')
+            ->middleware('can:browse-product');
     });
 
-    Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){
-    	//Add Form Promo
-    	Route::get('/', 'PromoController@create')
-	    	->name('add_promo')
-	    	->middleware('can:add-promo');
-	    //Create Promo
-	    Route::post('/', 'PromoController@store')
-	    	->name('store_promo')
-	    	->middleware('can:add-promo');
-	    //List Promo
-	    Route::get('/list', 'PromoController@index')
-	    	->name('list_promo')
-	    	->middleware('can:browse-promo');
-	    //Edit Promo
-	    Route::get('/edit/', 'PromoController@edit')
-	    	->name('edit_promo')
-	    	->middleware('can:edit-promo');
-	    //Update Promo
-	    Route::post('/update/', 'PromoController@update')
-	    	->name('update_promo')
-	    	->middleware('can:edit-promo');
-	    //Delete Promo
-	    Route::post('/{PromoNya}', 'PromoController@delete')
-	    	->name('delete_promo');
+    Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function() {
+        //Add Form Promo
+        Route::get('/', 'PromoController@create')
+            ->name('add_promo')
+            ->middleware('can:add-promo');
+        //Create Promo
+        Route::post('/', 'PromoController@store')
+            ->name('store_promo')
+            ->middleware('can:add-promo');
+        //List Promo
+        Route::get('/list', 'PromoController@index')
+            ->name('list_promo')
+            ->middleware('can:browse-promo');
+        //Edit Promo
+        Route::get('/edit/', 'PromoController@edit')
+            ->name('edit_promo')
+            ->middleware('can:edit-promo');
+        //Update Promo
+        Route::post('/update/', 'PromoController@update')
+            ->name('update_promo')
+            ->middleware('can:edit-promo');
+        //Delete Promo
+        Route::post('/{PromoNya}', 'PromoController@delete')
+            ->name('delete_promo');
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {

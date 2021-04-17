@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\User;
-use App\Role;
-use App\RoleUser;
-use App\Cso;
 use App\Branch;
-use Auth;
-use DB;
-use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Hash;
+use App\Cso;
+use App\Role;
+use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Validator;
 
 class UserAdminController extends Controller
 {
@@ -25,12 +21,28 @@ class UserAdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $users = User::where('users.active', true);
         $roles = Role::all();
+
+        if (!empty($request->name)) {
+            $users = $users->where("name", "like", "%" . $request->name . "%");
+        }
+
+        if (!empty($request->username)) {
+            $users = $users->where("username", "like", "%" . $request->username . "%");
+        }
+
         $users = $users->paginate(10);
-        return view('admin.list_useradmin', compact('users', 'roles'));
+        return view(
+            'admin.list_useradmin',
+            compact(
+                'users',
+                'roles',
+            )
+        )
+        ->with("i", (request()->input("page", 1) - 1) * 10 + 1);
     }
 
     /**
@@ -54,7 +66,7 @@ class UserAdminController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'username' => [
                 'required',
@@ -104,20 +116,20 @@ class UserAdminController extends Controller
 
             if($request->has('branch_0')){
                 $arr_branchid = [];
-                for ($i=0; $i < $request->total_branch; $i++) { 
-                    array_push($arr_branchid, $request->get('branch_' . $i));    
+                for ($i=0; $i < $request->total_branch; $i++) {
+                    array_push($arr_branchid, $request->get('branch_' . $i));
                 }
                 $data['branches_id'] = json_encode($arr_branchid);
             }
-            
+
             if($request->has('cso_id')){
                 if($request->get('cso_id') != null){
-                    $data['cso_id'] = $request->get('cso_id');    
-                }            
+                    $data['cso_id'] = $request->get('cso_id');
+                }
             }
 
-            //  return response()->json(['test' => $data]);      
-            
+            //  return response()->json(['test' => $data]);
+
             $user = User::create($data); //INSERT INTO DATABASE (with created_at)
             $user->roles()->attach($request['role']);
 
@@ -168,7 +180,7 @@ class UserAdminController extends Controller
      */
     public function update(Request $request)
     {
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'username' => [
                 'required',
@@ -207,16 +219,16 @@ class UserAdminController extends Controller
 
             if($request->has('branch_0')){
                 $arr_branchid = [];
-                for ($i=0; $i < $request->total_branch; $i++) { 
-                    array_push($arr_branchid, $request->get('branch_' . $i));    
+                for ($i=0; $i < $request->total_branch; $i++) {
+                    array_push($arr_branchid, $request->get('branch_' . $i));
                 }
                 $data['branches_id'] = json_encode($arr_branchid);
             }
-            
+
             if($request->has('cso_id')){
                 if($request->get('cso_id') != null){
-                    $data['cso_id'] = $request->get('cso_id');    
-                }            
+                    $data['cso_id'] = $request->get('cso_id');
+                }
             }
 
             $user->fill($data)->save();
@@ -226,23 +238,25 @@ class UserAdminController extends Controller
         }
     }
 
-    public function serveImages($file) {
+    public function serveImages($file)
+    {
         return response()->download(storage_path('app/admin/' . $file), null, [], null);
     }
 
-    public function changePassword(Request $request){
+    public function changePassword(Request $request)
+    {
         $validatedData = $request->validate([
             'current-password' => 'required',
             'new-password' => 'required|string|min:6|confirmed',
         ]);
- 
+
         //Change Password
         $user = Auth::user();
         $user->password = bcrypt($request->get('new-password'));
         $user->save();
- 
+
         return redirect()->back()->with("success","Password changed successfully!");
- 
+
     }
 
     public function checkChangePassword(Request $request)
