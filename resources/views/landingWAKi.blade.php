@@ -598,7 +598,7 @@ touch-action: none;
             <div class="row">
                 <div class="col-xs-12 col-sm-4 col-md-4">
                   <div class="logoWKbawahcon">
-                    <img src="https://waki-indonesia.co.id/sources/Logo Since.png" alt="" class="img-fluid logoWKbawah">
+                    <img src="https://www.wakimart.co.id/sources/wakimartlogo.png" alt="" class="img-fluid logoWKbawah">
                   </div>
                 </div>
                 <!-- .col-md-6 end -->

@@ -42,6 +42,9 @@ Route::get('/homeservice-success', 'HomeServiceController@successRegister')->nam
 Route::get('/wakidirumahaja', 'RegistrationPromotionController@index')->name('landing_waki');
 Route::post('/wakidirumahaja', 'RegistrationPromotionController@store')->name('store_registrationPromotion');
 
+//WAKimart Register
+Route::get('/wakimartregister', 'RegisterWakimartController@index')->name('wakimart_register');
+
 //fetching data - data
 Route::get('/fetchCso', 'CsoController@fetchCso')->name('fetchCso');
 Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
