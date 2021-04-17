@@ -321,6 +321,9 @@ class AcceptanceController extends Controller
             ],
             "data" => [
                 "url" => URL::to(route('detail_acceptance_form', ['id'=>$acceptance['id']])),
+                "branch_cso" => $branch."-".$cso,
+                "product" => $oldProduct." to ".$newProduct,
+                "price" => "Rp. ".number_format($acceptance->request_price),
             ]];
             // 'data'=> $homeservice];
 
