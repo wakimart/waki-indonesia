@@ -245,9 +245,9 @@
                   <div data-equal-height="card" class="caption">
                       <span class="category">Massager</span>
                       @if(Utils::$lang=='id')
-                      <p> WAKi Multi Functional Massage Belt adalah sabuk pelangsing pijat terkecil pertama di dunia yang dirancang dengan baik untuk pelanggan oleh Metrowealth WAKi International Group. Menerapkan teori pijat tradisional sebagai fondasi, menerapkan teknologi getaran inti terbaru untuk bagian dalam sistem operasi.</p>
+                      <p> WAKi Foot Massage Master adalah alat pijat kaki dengan desain unik yang dibuat untuk orang-orang yang ingin menikmati pijat kaki 360 derajat dan relaksasi kaki.</p>
                       @elseif(Utils::$lang=='eng')
-                      <p>WAKi Multi Functional Massage Belt is the world's first smallest massage slimming belt that well designed for customers by Metrowealth WAKi International Group. Applies the traditional massage theory as foundation, applies the latest core vibration technology for inner operation system. </p>
+                      <p>WAKi Foot Massage Master is the unique-designed foot-massage equipment that created for people want to enjoy 360 degree of foot massaging and foot relaxation. </p>
                       @endif
                       </div>
                 </div>
@@ -266,10 +266,10 @@
                   <div data-equal-height="card" class="caption">
                   <span class="category">High Potential Therapy</span>
                     @if(Utils::$lang=='id')
-                      <p> WAKi Multi Functional ULTRA Potential Therapy Healthcare Device dapat membantu masyarakat modern memperbaiki masalah kesehatanya dalam kehidupan modern secara efektif. Berhasil menciptakan generasi baru dari peralatan terapi yang berpotensi tinggi.</p>
+                      <p> WAKi Multi Fungsional ULTRA Potential Therapy Healthcare Device mampu membantu masyarakat modern dalam memperbaiki masalah kesehatannya dalam kehidupan modern secara efektif dan tentunya akan meningkatkan kesehatan Anda dan anggota keluarga Anda.</p>
                       @elseif(Utils::$lang=='eng')
                       <p>
-                        WAKi Multi Functional ULTRA Potential Therapy Healthcare Device is able to help modern people in improving their health problems in modern life effectively. Successfully invented the new generation of high potential therapeutic equipment. </p>
+                        WAKi Multi Functional ULTRA Potential Therapy Healthcare Device is able to help modern people in improving their health problems in modern life effectively and definitely will improve you and your family members’ health. </p>
                        @endif
                       </div>
                 </div>
@@ -287,10 +287,10 @@
                   <div data-equal-height="card" class="caption">
                   <span class="category">Bio Energy</span>
                       @if(Utils::$lang=='id')
-                      <p> WAKi Bio Energy-π Air adalah bio energi air alkali rendah yang berenergi tinggi. Sangat cocok untuk tubuh manusia karena molekulnya yang sangat kecil sehingga lebih mudah diserap oleh tubuh manusia. </p>
+                      <p> WAKi Bio Energy Water System dapat menghasilkan air bio energi dengan alkalin rendah yang berenergi tinggi. Sangat cocok untuk tubuh manusia karena molekulnya yang sangat kecil sehingga lebih mudah diserap oleh tubuh manusia. </p>
                       @elseif(Utils::$lang=='eng')
                       <p>
-                         WAKi Bio Energy-π Water is high energetic low alkaline water. It is very suitable for the human body because its molecule is very small. Therefore, it is easier to be absorbed by the human body. </p>
+                         WAKi Bio Energy Water System can produce Bio Energy Water which is high energetic low alkaline water. It is very suitable for the human body because its molecule is very small. Therefore, it is easier to be absorbed by the human body. </p>
                        @endif
                       </div>
                 </div>
@@ -308,7 +308,7 @@
                   <div data-equal-height="card" class="caption">
                   <span class="category">Air Humidifier</span>
                       @if(Utils::$lang=='id')
-                      <p>  WAKi Multi Functional Ion Air Humidifier adalah peralatan perawatan kesehatan pemurni udara dan pelembab udara multifungsi. Dapat membantu mengurangi polusi udara di dalam ruangan dan menyediakan lingkungan yang sehat di rumah dan kantor.</p>
+                      <p>  WAKi Multi Functional Ion Air Humidifier adalah alat kesehatan pemurni udara dan pelembab udara multifungsi. Dapat membantu mengurangi polusi udara di dalam ruangan dan menyediakan lingkungan yang sehat di rumah dan kantor.</p>
                       @elseif(Utils::$lang=='eng')
                       <p>
                         WAKi Multi Functional Ion Air Humidifier is multi-functional air purification and humidifier health care equipment. It helps to reduce air pollution in room and provide healthy environment in house and office.  </p>
@@ -515,9 +515,7 @@
                   <img src="{{ asset ('sources/wakimartlogo.png')}}" class="img-fluid" style="padding-top: 30px;" />
                 </div>
                 <div class="card-body">
-                  <div class="card-title text-center">
-                    WAKimart
-                  </div>
+
                   <div class="row justify-content-center align-self-center">
                     <div>
                       <a href="https://wakimart.co.id/" class="r-link link text-underlined" target="_blank" rel="noopener noreferrer">Lihat</a>
@@ -532,9 +530,7 @@
                   <img src="{{ asset ('sources/wakishop.png')}}" class="img-fluid" />
                 </div>
                 <div class="card-body">
-                  <div class="card-title text-center">
-                    WAKiShop
-                  </div>
+
                   <div class="row justify-content-center align-self-center">
                     <div>
                       <a href="https://www.facebook.com/WAKiShopMalaysia/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
@@ -549,9 +545,7 @@
                   <img src="{{ asset ('sources/wakifnb.png')}}" class="img-fluid" style="padding-top: 15px;"/>
                 </div>
                 <div class="card-body">
-                  <div class="card-title text-center">
-                    WAKi F&B
-                  </div>
+
                   <div class="row justify-content-center align-self-center">
                     <div>
                       <a href="#0" class="r-link link text-underlined">Lihat</a>
@@ -566,9 +560,7 @@
                   <img src="{{ asset ('sources/waki3dprinting.png')}}" class="img-fluid" />
                 </div>
                 <div class="card-body">
-                  <div class="card-title text-center">
-                    WAKi 3D Printing
-                  </div>
+
                   <div class="row justify-content-center align-self-center">
                     <div>
                       <a href="https://www.facebook.com/waki3Dprintingindustries/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>

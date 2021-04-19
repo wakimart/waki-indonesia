@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
 use App\CategoryProduct;
+use App\HistoryUpdate;
+use App\Product;
+use Exception;
 use Illuminate\Http\Request;
-use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -42,44 +43,55 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         $data = $request->all();
         $data['code'] = strtoupper($request->input('code'));
 
-        //arr_image
+        // arr_image
         $namaGambar = [];
         $codePath = strtolower($request->input('code'));
-        for ($i = 0; $i < 3; $i++) {
 
+        for ($i = 0; $i < 3; $i++) {
             if ($request->hasFile('images' . $i)) {
                 $path = "public/product_images/" . $codePath;
                 $path = str_replace("\\", "", $path);
                 $file = $request->file('images' . $i);
                 $filename = $file->getClientOriginalName();
 
-                // $image_resize = Image::make($file->getRealPath());
-                // $image_resize->resize(720, 720);
-
-                //cek ada folder tidak
+                // Cek ada folder tidak
                 if (!is_dir("sources/product_images/" . $codePath)) {
-                    File::makeDirectory("sources/product_images/" . $codePath, $mode = 0777, true, true);
+                    File::makeDirectory("sources/product_images/" . $codePath, 0777, true, true);
                 }
 
-                //storing gambar - gambar
+                // Storing gambar-gambar
                 $pathForImage = "sources/product_images/" . $codePath;
                 $file->move($pathForImage, $filename);
-                //$image_resize->save(public_path($pathForImage.'/'.$filename));
                 $namaGambar[$i] = $filename;
             }
         }
+
         $data['image'] = json_encode($namaGambar);
-        $product = Product::create($data);
-        return response()->json(['success' => 'Berhasil']);  
+        Product::create($data);
+
+        return response()->json(['success' => 'Berhasil']);
     }
 
-    public function admin_ListProduct(){
-        $products = Product::all();
-        return view('admin.list_product', compact('products'));
+    public function admin_ListProduct(Request $request)
+    {
+        $url = $request->all();
+
+        $products = Product::paginate(10);
+        $countProduct = $products->count();
+
+        return view(
+            "admin.list_product",
+            compact(
+                "countProduct",
+                "products",
+                "url",
+            )
+        )
+        ->with("i", (request()->input("page", 1) - 1) * 10 + 1);;
     }
 
     /**
@@ -96,16 +108,16 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Product  $product
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function edit(Request $request)
     {
-        if($request->has('id')){
+        if ($request->has('id')) {
             $products = Product::find($request->get('id'));
             $categories = CategoryProduct::all();
             return view('admin.update_product', compact('products','categories'));
-        }else{
+        } else {
             return response()->json(['result' => 'Gagal!!']);
         }
     }
@@ -114,12 +126,12 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
         $products = Product::find($request->input('idProduct'));
+        $products->active = $request->input("active");
         $products->name = $request->input('name');
         $products->price = $request->input('price');
         $products->video = $request->input('video');
@@ -127,107 +139,120 @@ class ProductController extends Controller
         $products->description = $request->description;
         $products->quick_desc = $request->quick_description;
 
-
-        //restore image
+        // Restore image
         $codePath = strtolower($request->input('code'));
         $arr_image_before = json_decode($products->image, true);
         $namaGambar = [];
         $namaGambar = array_values($arr_image_before);
 
-
         if ($request->hasFile('images0') || $request->hasFile('images1') || $request->hasFile('images2')){
-            
-            //store image
-
+            // Store image
             for ($i = 0; $i < $request->total_images; $i++) {
-               
                 if ($request->hasFile('images' . $i)) {
-                    if(array_key_exists($i, $arr_image_before)){
-                        if(File::exists("sources/product_images/" . $codePath . "/" . $arr_image_before[$i]))
-                        {
+                    if (array_key_exists($i, $arr_image_before)) {
+                        if (File::exists("sources/product_images/" . $codePath . "/" . $arr_image_before[$i])) {
                             File::delete("sources/product_images/" . $codePath . "/" . $arr_image_before[$i]);
                         }
-                    }  
-                    //return response()->json(['success' => $request->dlt_img ]);
+                    }
+
                     $path = "public/product_images/" . $codePath;
                     $path = str_replace("\\", "", $path);
                     $file = $request->file('images' . $i);
                     $filename = $file->getClientOriginalName();
 
-                    // $image_resize = Image::make($file->getRealPath());
-                    // $image_resize->resize(720, 720);
-
-                    //storing gambar - gambar
+                    // Storing gambar-gambar
                     $pathForImage = "sources/product_images/" . $codePath;
                     $file->move($pathForImage, $filename);
-                    //$image_resize->save(public_path($pathForImage.'/'.$filename));
                     $namaGambar[$i] = $filename;
-                }
-                else{
-                    if(array_key_exists($i, $arr_image_before)){
+                } else {
+                    if (array_key_exists($i, $arr_image_before)) {
                         $namaGambar[$i] = $arr_image_before[$i];
                     }
                 }
-            }  
+            }
         }
 
-        // return response()->json(['success' => $request->dlt_img ]);
-        if($request->dlt_img!="")
-        {
+        if ($request->dlt_img != "") {
             $deletes = explode(",", $request->dlt_img);
             foreach ($deletes as $value) {
-                if(array_key_exists($value, $namaGambar))
-                {
-                    if(File::exists("sources/product_images/" . $codePath . "/" . $namaGambar[$value]))
-                    {
+                if (array_key_exists($value, $namaGambar)) {
+                    if (File::exists("sources/product_images/" . $codePath . "/" . $namaGambar[$value])) {
                         File::delete("sources/product_images/" . $codePath . "/" . $namaGambar[$value]);
                     }
-                   // return response()->json(['success' => $value ]);
                     unset($namaGambar[$value]);
                 }
-               
             }
         }
 
-        $namaGambarFix="[";
+        $namaGambarFix = "[";
 
-        for($key=0; $key<3; $key++) {
-            if($key==2)
-            {
-                if(array_key_exists($key, $namaGambar)){
-                    $namaGambarFix.='"'.$namaGambar[$key].'"';
+        for ($key = 0; $key < 3; $key++) {
+            if ($key == 2) {
+                if (array_key_exists($key, $namaGambar)) {
+                    $namaGambarFix .= '"' . $namaGambar[$key] . '"';
+                } else {
+                    $namaGambarFix .= '""';
                 }
-                else{
-                    $namaGambarFix.='""';
-                }
-            }else{
-                if(array_key_exists($key, $namaGambar)){
-                    $namaGambarFix.='"'.$namaGambar[$key].'",';
-                }
-                else{
-                    $namaGambarFix.='"",';
+            } else {
+                if (array_key_exists($key, $namaGambar)) {
+                    $namaGambarFix .= '"' . $namaGambar[$key] . '",';
+                } else {
+                    $namaGambarFix .= '"",';
                 }
             }
-            
         }
 
-        $namaGambarFix.="]";
+        $namaGambarFix .= "]";
         $products->image = $namaGambarFix;
         $products->save();
         return response()->json(['testing' => $products]);
-
-
-        // return response()->json(['success' => 'Berhasil']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function destroy(Product $product)
+    public function destroy(Request $request)
     {
-        //
+        DB::beginTransaction();
+
+        if (!empty($request->id)) {
+            try {
+                $product = Product::where("id", $request->id)->first();
+                $product->delete();
+
+                $user = Auth::user();
+                $historyDeleteProduct["type_menu"] = "Product";
+                $historyDeleteProduct["method"] = "Delete";
+                $historyDeleteProduct["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $product->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+
+                $historyDeleteProduct["user_id"] = $user["id"];
+                $historyDeleteProduct["menu_id"] = $request->id;
+                HistoryUpdate::create($historyDeleteProduct);
+
+                DB::commit();
+
+                return redirect()
+                    ->route("list_product")
+                    ->with("success", "Data berhasil dihapus!");
+            } catch (Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    "error" => $e,
+                ], 500);
+            }
+        }
+
+        return response()->json(["result" => "Data tidak ditemukan."], 400);
     }
 }
