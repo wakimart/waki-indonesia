@@ -548,7 +548,7 @@
 
                   <div class="row justify-content-center align-self-center">
                     <div>
-                      <a href="#0" class="r-link link text-underlined">Lihat</a>
+                      <a href="https://www.facebook.com/wakimalaysiandimsum/" class="r-link link text-underlined">Lihat</a>
                     </div>
                   </div>
                 </div>
