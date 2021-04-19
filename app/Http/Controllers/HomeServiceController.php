@@ -825,55 +825,74 @@ class HomeServiceController extends Controller
                 if (!$isAdminManagement) {
                     $result .= '<td style="text-align: center">';
 
-                    $result .= '<button '
-                        . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
-                        . 'type="button" '
-                        . 'data-toggle="modal" '
-                        . 'data-target="#viewHomeServiceModal" '
-                        . 'onclick="clickView(this)" '
-                        . 'value="' . $dayData->hs_id . '">'
-                        . '</button>'
-                        . '</td>'
-                        . '<td style="text-align: center">';
-
-                    $result .= '<button '
-                        . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
-                        . 'type="button" '
-                        . 'data-toggle="modal" '
-                        . 'data-target="#cashHomeServiceModal" '
-                        . 'onclick=clickCash(this) '
-                        . 'value="' . $dayData->hs_id . '">'
-                        . '</button>'
-                        . '</td>'
-                        . '<td style="text-align: center">';
-
-                    $result .= '<button '
-                        . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
-                        . 'type="button" '
-                        . 'data-toggle="modal" '
-                        . 'data-target="#editHomeServiceModal" ';
-
-                    if (Auth::user()->roles[0]["slug"] === "cso") {
-                        $result .= 'data-cso="true" ';
-                    } else {
-                        $result .= 'data-cso="false" ';
+                    if(Auth::user()->hasPermission('detail-home_service')){
+                        $result .= '<button '
+                            . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                            . 'type="button" '
+                            . 'data-toggle="modal" '
+                            . 'data-target="#viewHomeServiceModal" '
+                            . 'onclick="clickView(this)" '
+                            . 'value="' . $dayData->hs_id . '">'
+                            . '</button>'
+                            . '</td>'
+                            . '<td style="text-align: center">';
+                    }
+                    else{
+                        $result .= '</td>'
+                            . '<td style="text-align: center">';
                     }
 
-                    $result .= 'onclick="clickEdit(this)" '
-                        . 'value="' . $dayData->hs_id . '">'
-                        . '</button>'
-                        . '</td>'
-                        . '<td style="text-align: center">';
+                    if(Auth::user()->hasPermission('edit-home_service')){
+                        $result .= '<button '
+                            . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
+                            . 'type="button" '
+                            . 'data-toggle="modal" '
+                            . 'data-target="#cashHomeServiceModal" '
+                            . 'onclick=clickCash(this) '
+                            . 'value="' . $dayData->hs_id . '">'
+                            . '</button>'
+                            . '</td>'
+                            . '<td style="text-align: center">';
 
-                    $result .= '<button '
-                        . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
-                        . 'type="button" '
-                        . 'data-toggle="modal" '
-                        . 'data-target="#deleteHomeServiceModal" '
-                        . 'onclick="clickCancel(this)" '
-                        . 'value="' . $dayData->hs_id . '">'
-                        . '</button>'
-                        . '</td>';
+                        $result .= '<button '
+                            . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
+                            . 'type="button" '
+                            . 'data-toggle="modal" '
+                            . 'data-target="#editHomeServiceModal" ';
+
+                        if (Auth::user()->roles[0]["slug"] === "cso") {
+                            $result .= 'data-cso="true" ';
+                        } else {
+                            $result .= 'data-cso="false" ';
+                        }
+
+                        $result .= 'onclick="clickEdit(this)" '
+                            . 'value="' . $dayData->hs_id . '">'
+                            . '</button>'
+                            . '</td>'
+                            . '<td style="text-align: center">';
+                    }
+                    else{
+                        $result .= '</td>'
+                            . '<td style="text-align: center">'
+                            . '</td>'
+                            . '<td style="text-align: center">';
+                    }
+
+                    if(Auth::user()->hasPermission('delete-home_service')){
+                        $result .= '<button '
+                            . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
+                            . 'type="button" '
+                            . 'data-toggle="modal" '
+                            . 'data-target="#deleteHomeServiceModal" '
+                            . 'onclick="clickCancel(this)" '
+                            . 'value="' . $dayData->hs_id . '">'
+                            . '</button>'
+                            . '</td>';
+                    }
+                    else{
+                         $result .= '</td>';
+                    }
                 } else {
                     $result .= '<td></td><td></td><td></td><td></td>';
                 }
