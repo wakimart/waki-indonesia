@@ -431,7 +431,7 @@
 <script>
     var total_bank = 0;
     var total_product = 0;
-    var arrBooleanCso = [ 'false', 'false', 'false' ];
+    var arrBooleanCso = [ {{ Auth::user()->roles[0]['slug'] == 'cso' ? "true" : "false" }}, false, false ];
 
     $(document).ready(function(){
         $(".cso").on("input", function(){
