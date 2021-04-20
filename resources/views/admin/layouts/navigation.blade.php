@@ -176,7 +176,7 @@
 @if(Gate::check('add-acceptance') || Gate::check('browse-acceptance'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'acceptance'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#acceptance-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'acceptance'? 'true': '' }}" aria-controls="acceptance-dd">
-    <span class="menu-title">ACC Upgrade Form</span>
+    <span class="menu-title">ACC Upgrade Form<br><b style="color: red">(Admin ONLY)</b></span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-calendar-text menu-icon"></i>
   </a>
