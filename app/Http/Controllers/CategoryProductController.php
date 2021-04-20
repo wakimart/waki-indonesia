@@ -18,7 +18,7 @@ class CategoryProductController extends Controller
         $categoryProducts = CategoryProduct::with('product')->get(); //->where('id','=', '2')
         $product = null;
         if($id != null){
-            $product = Product::where('category_id', '=', $id)->get();
+            $product = Product::where([['category_id', '=', $id], ['active', true]])->get();
             // dd($product);
         }
         return view('product_category', compact('categoryProducts','product'));
