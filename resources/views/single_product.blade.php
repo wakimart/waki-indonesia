@@ -2,8 +2,8 @@
 
 @section('content')
 <!--==========================Intro Section============================-->
-<section id="intro" class="clearfix">
-	<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+<section id="hero" class="clearfix">
+	{{--<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
 	  <div class="carousel-inner">
 	    <div class="carousel-item active">
 	      <img class="d-block w-100" src="{{asset('sources/waki-carousel1.jpg')}}" alt="First slide">
@@ -25,8 +25,56 @@
 	    <span class="carousel-control-next-icon" aria-hidden="true"></span>
 	    <span class="sr-only">Next</span>
 	  </a>
-	</div>
+	</div>--}}
+	<div class="container d-flex h-100">
+    <div class="row justify-content-center align-self-center" data-aos="fade-up">
+      <div class="col-md-6 hero-info order-md-first order-last" data-aos="zoom-in" data-aos-delay="100">
+        <h2>Selamat datang di WAKi International Group</h2>
+        <p>WAKi adalah perusahaan alat kesehatan yang mengunggulkan kualitas terjamin, untuk membantu keluarga menuju kehidupan yang lebih baik. </p>
+        <div>
+          <!-- <a href="#main" class="btn-get-started scrollto">Mulai</a> -->
+          <a href="#myModal" id="mobile" class="btn-mobile" data-toggle="modal" data-target="#video2" style="margin-left: 0.5em;">Lihat Video<span style="padding-left: 0.5em;"><i class="far fa-play-circle"></i></span></a>
+        </div>
+      </div>
 
+      <div class="col-md-6" style="flex: none;">
+        <div class="text-right" style="position: relative; top: 50%; transform: translateY(-50%);" data-toggle="modal" data-target="#video2">
+          <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
+        </div>
+
+        {{-- <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
+          <video muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
+            <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
+          </video>
+        </div> --}}
+      </div>
+
+      <div id="video2" class="modal fade videoModal" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+              <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
+                <video id="video-2" muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
+                  <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
+                </video>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="intro" class="clearfix">
 	<div class="container">
   		<div class="col-lg-12 col-md-12" style="padding:0;">
 		    <div class="intro-content">
@@ -84,7 +132,7 @@
                           <div>
                             {!! $product->description !!}
                           </div>
-                          
+
                 					<div class="descvid">
                   					<iframe width="100%" height="250px" position="relative" src="{{ $product->video }}" frameborder="0" allowfullscreen=""></iframe>
                 					</div>
@@ -150,7 +198,6 @@
     		</div><!-- row -->
     	</div>
   	</div>
-</div><!-- container -->
-
-</section><!-- #intro -->
+	</div><!-- container -->
+</section>
 @endsection

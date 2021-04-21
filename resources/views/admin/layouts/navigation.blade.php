@@ -31,7 +31,7 @@
       @if(Gate::check('browse-deliveryorder'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_deliveryorder'? 'active': '' }}" href="{{ route('list_deliveryorder') }}">List Registration</a></li>
       @endif
-      @if(Gate::check('browse-deliveryorder'))
+      @if(Auth::user()->roles[0]['slug'] == 'head-admin')
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_regispromo'? 'active': '' }}" href="{{ route('list_regispromo') }}">List Registration Promotion</a></li>
       @endif
     </ul>
@@ -176,7 +176,7 @@
 @if(Gate::check('add-acceptance') || Gate::check('browse-acceptance'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'acceptance'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#acceptance-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'acceptance'? 'true': '' }}" aria-controls="acceptance-dd">
-    <span class="menu-title">Acceptance Form</span>
+    <span class="menu-title">ACC Upgrade Form</span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-calendar-text menu-icon"></i>
   </a>
@@ -197,7 +197,7 @@
 @if(Gate::check('browse-upgrade'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'upgrade'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#upgrade-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'upgrade'? 'true': '' }}" aria-controls="upgrade-dd">
-    <span class="menu-title">Upgrade</span>
+    <span class="menu-title">Post Process Upgrade<br><b style="color: red">(Admin ONLY)</b></span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-calendar-text menu-icon"></i>
   </a>

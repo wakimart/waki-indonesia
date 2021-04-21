@@ -278,13 +278,14 @@ $menu_item_second = "list_homeservice";
                                                 $selected = "";
 
                                                 if (isset($_GET['filter_branch'])) {
-                                                    if ($_GET['filter_branch'] === $branch['id']) {
-                                                        $selected = "selected=\"\"";
+                                                    if ((int) $_GET['filter_branch'] === (int) $branch['id']) {
+                                                        $selected = "selected";
                                                     }
                                                 }
                                                 @endphp
 
-                                                <option {{ $selected }} value="{{ $branch['id'] }}">
+                                                <option {{ $selected }}
+                                                    value="{{ $branch['id'] }}">
                                                     {{ $branch['code'] }} - {{ $branch['name'] }}
                                                 </option>
                                             @endforeach
@@ -427,7 +428,7 @@ $menu_item_second = "list_homeservice";
                         }
 
                         if (Auth::user()->roles[0]['slug'] === "cso") {
-                            $getCSOCode = Cso::where("id", Auth::user()->cso["id"])->first();
+                            $getCSOCode = App\Cso::where("id", Auth::user()->cso["id"])->first();
                             $CSOCode = $getCSOCode->code;
                         }
                         ?>
@@ -757,57 +758,65 @@ $menu_item_second = "list_homeservice";
                                                             <?php if (!$isAdminManagement): ?>
                                                                 <td style="text-align: center">
                                                                     <?php
-                                                                    echo '<button '
-                                                                        . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
-                                                                        . 'type="button" '
-                                                                        . 'data-toggle="modal" '
-                                                                        . 'data-target="#viewHomeServiceModal" '
-                                                                        . 'onclick="clickView(this)" '
-                                                                        . 'value="' . $dayData->hs_id . '">'
-                                                                        . '</button>';
+                                                                        if(Gate::check('detail-home_service')){
+                                                                            echo '<button '
+                                                                            . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                                                                            . 'type="button" '
+                                                                            . 'data-toggle="modal" '
+                                                                            . 'data-target="#viewHomeServiceModal" '
+                                                                            . 'onclick="clickView(this)" '
+                                                                            . 'value="' . $dayData->hs_id . '">'
+                                                                            . '</button>';
+                                                                        }
                                                                     ?>
                                                                 </td>
                                                                 <td style="text-align: center">
                                                                     <?php
-                                                                    echo '<button '
-                                                                        . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
-                                                                        . 'type="button" '
-                                                                        . 'data-toggle="modal" '
-                                                                        . 'data-target="#cashHomeServiceModal" '
-                                                                        . 'onclick="clickCash(this)" '
-                                                                        . 'value="' . $dayData->hs_id . '">'
-                                                                        . '</button>';
+                                                                        if(Gate::check('edit-home_service')){
+                                                                            echo '<button '
+                                                                                . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
+                                                                                . 'type="button" '
+                                                                                . 'data-toggle="modal" '
+                                                                                . 'data-target="#cashHomeServiceModal" '
+                                                                                . 'onclick="clickCash(this)" '
+                                                                                . 'value="' . $dayData->hs_id . '">'
+                                                                                . '</button>';
+                                                                        }
                                                                     ?>
                                                                 </td>
                                                                 <td style="text-align: center">
                                                                     <?php
-                                                                    echo '<button '
-                                                                        . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
-                                                                        . 'type="button" '
-                                                                        . 'data-toggle="modal" '
-                                                                        . 'data-target="#editHomeServiceModal" ';
+                                                                        if(Gate::check('edit-home_service')){
+                                                                            echo '<button '
+                                                                                . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
+                                                                                . 'type="button" '
+                                                                                . 'data-toggle="modal" '
+                                                                                . 'data-target="#editHomeServiceModal" ';
 
-                                                                    if (Auth::user()->roles[0]["slug"] === "cso") {
-                                                                        echo 'data-cso="true" ';
-                                                                    } else {
-                                                                        echo 'data-cso="false" ';
-                                                                    }
+                                                                            if (Auth::user()->roles[0]["slug"] === "cso") {
+                                                                                echo 'data-cso="true" ';
+                                                                            } else {
+                                                                                echo 'data-cso="false" ';
+                                                                            }
 
-                                                                    echo 'onclick="clickEdit(this)" '
-                                                                        . 'value="' . $dayData->hs_id . '">'
-                                                                        . '</button>';
+                                                                            echo 'onclick="clickEdit(this)" '
+                                                                                . 'value="' . $dayData->hs_id . '">'
+                                                                                . '</button>';
+                                                                        }
                                                                     ?>
                                                                 </td>
                                                                 <td style="text-align: center">
                                                                     <?php
-                                                                    echo '<button '
-                                                                        . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
-                                                                        . 'type="button" '
-                                                                        . 'data-toggle="modal" '
-                                                                        . 'data-target="#deleteHomeServiceModal" '
-                                                                        . 'onclick="clickCancel(this)" '
-                                                                        . 'value="' . $dayData->hs_id . '">'
-                                                                        . '</button>';
+                                                                        if(Gate::check('delete-home_service')){
+                                                                            echo '<button '
+                                                                                . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
+                                                                                . 'type="button" '
+                                                                                . 'data-toggle="modal" '
+                                                                                . 'data-target="#deleteHomeServiceModal" '
+                                                                                . 'onclick="clickCancel(this)" '
+                                                                                . 'value="' . $dayData->hs_id . '">'
+                                                                                . '</button>';
+                                                                        }
                                                                     ?>
                                                                 </td>
                                                             <?php else: ?>
@@ -968,6 +977,7 @@ $menu_item_second = "list_homeservice";
                     <div class="modal-body">
                         <h5 style="text-align:center;"></h5>
                         {{ csrf_field() }}
+                        <input type="hidden" id="edit-id" name="id" value="" />
                         <div class="form-group">
                             <span>Type Customer</span>
                             <select id="type_customer"
@@ -1208,9 +1218,7 @@ $menu_item_second = "list_homeservice";
                     <div class="modal-footer">
                         <button id="btn-edit"
                             type="submit"
-                            class="btn btn-gradient-primary mr-2"
-                            name="id"
-                            value="-">
+                            class="btn btn-gradient-primary mr-2">
                             Save
                         </button>
                         <button class="btn btn-light"
@@ -1772,6 +1780,8 @@ function clickEdit(btn) {
     }).then(function (response) {
         const result = response.result;
 
+        document.getElementById("edit-id").value = btn.value;
+
         const editTypeCustomer = document.getElementById("type_customer");
         for (let i = 0; i < editTypeCustomer.options.length; i++) {
             if (editTypeCustomer.options[i].text === result.type_customer) {
@@ -2026,13 +2036,13 @@ function setCity(e) {
                         + currentValue['city_name']
                         + '</option>';
                 }
-
-                const getTargetId = (e.id).split("_");
-
-                document.getElementById(getTargetId[0] + "_city").innerHTML = '<option selected value="">All City</option>'
-                    + arrCity[0]
-                    + arrCity[1];
             });
+
+            const getTargetId = (e.id).split("_");
+
+            document.getElementById(getTargetId[0] + "_city").innerHTML = '<option selected value="">All City</option>'
+                + arrCity[0]
+                + arrCity[1];
         }
     }).catch(function(error) {
         console.error(error);
