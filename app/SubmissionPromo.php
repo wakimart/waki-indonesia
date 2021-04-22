@@ -10,6 +10,10 @@ class SubmissionPromo extends Model
         "submission_id",
         "promo_1",
         "promo_2",
+        "qty_1",
+        "qty_2",
+        "other_1",
+        "other_2",
         "active",
     ];
 
