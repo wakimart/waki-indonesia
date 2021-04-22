@@ -573,7 +573,7 @@ $menu_item_second = "detail_service";
 	          			<div class="row justify-content-center">
 	          				<h2>Share Service Process</h2>
 	          			</div>
-	            		<form class="forms-sample" method="GET" action="whatsapp://send">
+	            		<form class="forms-sample" method="GET" action="https://wa.me/">
 	              			<div class="form-group row justify-content-center">
 	              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-primary mr-2 btn-lg" name="text" value="Untuk mengecek status product service anda, anda dapat mengklik link di sini ( {{ route('track_service' ,['id' => $services['id']]) }} )">Share Link</button>
 	              			</div>
