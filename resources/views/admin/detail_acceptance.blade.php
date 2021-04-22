@@ -300,7 +300,16 @@
 		          			</div>
 		            		<form class="forms-sample" method="GET" action="https://wa.me/">
 		              			<div class="form-group row justify-content-center">
-		              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-primary mr-2 btn-lg" name="text" value="Request Acc {{ route('detail_acceptance_form' ,['id' => $acceptance['id']]) }}">Share Whatsapp</button>
+		              				@php
+		              					$txtWA = "Request Acc";
+		              					if(strtolower($acceptance['status']) == "approved"){
+			              					$txtWA = "Approved Acc";
+		              					}
+		              					else if(strtolower($acceptance['status']) == "rejected"){
+			              					$txtWA = "Rejected Acc";
+		              					}
+		              				@endphp
+		              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-primary mr-2 btn-lg" name="text" value="{{ $txtWA }} {{ route('detail_acceptance_form' ,['id' => $acceptance['id']]) }}">Share Whatsapp</button>
 		              			</div>
 		            		</form>
 		          		</div>
