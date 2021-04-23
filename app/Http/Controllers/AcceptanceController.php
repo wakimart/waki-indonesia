@@ -354,6 +354,8 @@ class AcceptanceController extends Controller
 
         $body = ['registration_ids'=>$fcm_tokenNya,
             'collapse_key'=>"type_a",
+            "content_available": true,
+            "priority": "high",
             "notification" => [
                 "body" => "Upgrade from ".$oldProduct." to ".$newProduct.". By ".$branch."-".$cso,
                 "title" => $txtNotif."Acceptance [Upgrade]",
