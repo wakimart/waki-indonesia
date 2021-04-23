@@ -3,7 +3,7 @@
 use App\Product;
 
 $menu_item_page = "submission";
-$menu_item_second = "add_submission_form";
+$menu_item_second = "add_submission_reference";
 ?>
 @extends('admin.layouts.template')
 
