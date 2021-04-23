@@ -609,9 +609,27 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("/", "SubmissionController@create")
             ->name("add_submission_form");
 
+        Route::get("/mgm", "SubmissionController@createMGM")
+            ->name("add_submission_mgm");
+
+        Route::get("/reference", "SubmissionController@createReference")
+            ->name("add_submission_reference");
+
+        Route::get("/takeaway", "SubmissionController@createTakeaway")
+            ->name("add_submission_takeaway");
+
         // Process new submission form
         Route::post("/", "SubmissionController@store")
             ->name("store_submission_form");
+
+        Route::post("/mgm", "SubmissionController@storeMGM")
+            ->name("store_submission_mgm");
+
+        Route::post("/reference", "SubmissionController@storeReference")
+            ->name("store_submission_reference");
+
+        Route::post("/takeaway", "SubmissionController@storeTakeaway")
+            ->name("store_submission_takeaway");
 
         // Show submission list
         Route::get("/list", "SubmissionController@index")

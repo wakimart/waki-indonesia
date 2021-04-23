@@ -97,7 +97,7 @@ $menu_item_second = "add_submission_form";
 <div class="main-panel">
       <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Add Submission</h3>
+            <h3 class="page-title">Add Submission - Referensi Sehat Bersama WAKi</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -109,7 +109,7 @@ $menu_item_second = "add_submission_form";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Add Submission
+                        Add Submission - Referensi
                     </li>
                 </ol>
             </nav>
@@ -124,27 +124,16 @@ $menu_item_second = "add_submission_form";
                             class="forms-sample"
                             method="POST"
                             enctype="multipart/form-data"
-                            action="{{ route('store_submission_form') }}">
+                            action="{{ route("store_submission_reference") }}">
                             @csrf
                             <div class="form-group">
-                                <span>Type Register</span>
-                                <select id="type_register"
-                                    style="margin-top: 0.5em; height: auto;"
-                                    class="form-control"
-                                    name="type_register"
-                                    onclick="changeType(this)"
-                                    onload="changeType(this)"
-                                    required>
-                                    <option value="mgm" selected>MGM</option>
-                                    <option value="referensi">
-                                        Referensi Sehat Bersama WAKi
-                                    </option>
-                                    <option value="takeaway">Takeaway</option>
-                                </select>
+                                <label>Type Register</label>
+                                <input type="hidden" name="type" value="referensi" />
+                                <input type="text" readonly disabled value="Referensi Sehat Bersama WAKi" />
                             </div>
 
                             <div class="form-group">
-                                <label><h2>Data Pelanggan</h2></label>
+                                <label><h2>Customer Data</h2></label>
                                 <br>
                                 <label id="member_label" for="member_input">
                                     No. MPC
@@ -241,107 +230,6 @@ $menu_item_second = "add_submission_form";
                                 </textarea>
                             </div>
 
-                            @for ($j = 0; $j < 2; $j++)
-                                <div class="form-group product-group"
-                                    id="promo-group-{{ $j }}">
-                                    <div class="col-xs-12 col-sm-12 row"
-                                        style="margin: 0;padding: 0;">
-                                        <div class="col-xs-10 col-sm-10"
-                                            style="padding: 0; display: inline-block;">
-                                            <label for="promo-{{ $j }}">
-                                                Promo {{ $j + 1 }} {{ $j > 0 ? "(optional)" : "" }}
-                                            </label>
-                                            <select class="form-control pilihan-product"
-                                                id="promo-{{ $j }}"
-                                                name="promo_{{ $j }}"
-                                                data-msg="Mohon Pilih Promo"
-                                                {{ $j > 0 ? "" : "required" }}>
-                                                <option selected
-                                                    disabled
-                                                    value=""
-                                                    {{ $j > 0 ? "" : "hidden" }}>
-                                                    Choose Promo {{ $j > 0 ? "(optional)" : ""}}
-                                                </option>
-                                                <?php foreach ($promos as $key => $promo): ?>
-                                                    <option value="<?php echo $key; ?>">
-                                                        <?php
-                                                        $productPromo = json_decode($promo["product"]);
-                                                        $arrayProductId = [];
-
-                                                        foreach ($productPromo as $pp) {
-                                                            $arrayProductId[] = $pp->id;
-                                                        }
-
-                                                        $getProduct = Product::select("code")
-                                                        ->whereIn(
-                                                            "id",
-                                                            $arrayProductId
-                                                        )
-                                                        ->get();
-
-                                                        $arrayProductCode = [];
-
-                                                        foreach ($getProduct as $product) {
-                                                            $arrayProductCode[] = $product->code;
-                                                        }
-
-                                                        $productCode = implode(", ", $arrayProductCode);
-
-                                                        echo $promo["code"]
-                                                            . " - ("
-                                                            . $productCode
-                                                            . ") - Rp. "
-                                                            . number_format(
-                                                                (int) $promo["price"],
-                                                                0,
-                                                                null,
-                                                                ","
-                                                            );
-                                                        ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-
-                                                {{-- KHUSUS Philiphin --}}
-                                                <option value="other">OTHER</option>
-                                            </select>
-                                            <div class="validation"></div>
-                                        </div>
-                                        <div class="col-xs-2 col-sm-2"
-                                            style="padding-right: 0;display: inline-block;">
-                                            <label for="qty-{{ $j }}">
-                                                Qty
-                                            </label>
-                                            <select class="form-control"
-                                                id="qty-{{ $j }}"
-                                                name="qty_{{ $j }}"
-                                                data-msg="Mohon Pilih Jumlah"
-                                                {{ $j > 0 ? "" : "required" }}>
-                                                <option selected value="1">
-                                                    1
-                                                </option>
-
-                                                @for ($i = 2; $i <= 10; $i++)
-                                                    <option value="{{ $i }}">
-                                                        {{ $i }}
-                                                    </option>
-                                                @endfor
-                                            </select>
-                                            <div class="validation"></div>
-                                        </div>
-
-                                        {{-- KHUSUS Philiphin --}}
-                                        <div class="form-group d-none">
-                                            <input type="text"
-                                                class="form-control"
-                                                name="product_other_{{ $j }}"
-                                                placeholder="Product Name"
-                                                data-msg="Please fill in the product" />
-                                            <div class="validation"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endfor
-
                             <div class="form-group">
                                 <label for="branch">Branch</label>
                                 <select class="form-control"
@@ -372,7 +260,7 @@ $menu_item_second = "add_submission_form";
                                     required data-msg="Mohon Isi Kode CSO"
                                     style="text-transform:uppercase"
                                     {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=" . Auth::user()->cso['code'] : "" }}
-                                    {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
+                                    {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly" : "" }} />
                                 <div class="validation" id="validation_cso"></div>
                             </div>
 
@@ -387,15 +275,11 @@ $menu_item_second = "add_submission_form";
                                     accept=".jpg, .jpeg, .png"
                                     multiple />
                             </div>
-
                             <br>
                             <br>
-
                             <div id="refrensiForm" class="form-group">
-                                <h3>Referensi:</h3>
+                                <h3>Reference Data</h3>
                                 <br>
-
-                                <!-- One "tab" for each step in the form: -->
                                 @for ($x = 0; $x < 10; $x++)
                                     <div class="tab">
                                         <label for="member-name-{{ $x }}">
@@ -410,7 +294,7 @@ $menu_item_second = "add_submission_form";
                                                 class="form-control"
                                                 name="name_ref[]"
                                                 placeholder="Name"
-                                                required />
+                                                {{ $x > 0 ? "" : "required" }} />
                                             <div class="validation"></div>
                                         </div>
 
@@ -423,7 +307,7 @@ $menu_item_second = "add_submission_form";
                                                 class="form-control"
                                                 name="age_ref[]"
                                                 placeholder="Age"
-                                                required />
+                                                {{ $x > 0 ? "" : "required" }} />
                                             <div class="validation"></div>
                                         </div>
 
@@ -436,7 +320,7 @@ $menu_item_second = "add_submission_form";
                                                 class="form-control"
                                                 name="phone_ref[]"
                                                 placeholder="Phone Number"
-                                                required />
+                                                {{ $x > 0 ? "" : "required" }} />
                                             <div class="validation"></div>
                                         </div>
 
@@ -448,7 +332,7 @@ $menu_item_second = "add_submission_form";
                                                 id="province-{{ $x }}"
                                                 name="province_ref[]"
                                                 data-msg="Mohon Pilih Provinsi"
-                                                required>
+                                                {{ $x > 0 ? "" : "required" }}>
                                                 <option selected
                                                     disabled
                                                     value=""
@@ -476,7 +360,7 @@ $menu_item_second = "add_submission_form";
                                                 id="city-{{ $x }}"
                                                 name="city_ref[]"
                                                 data-msg="Mohon Pilih Kota"
-                                                required>
+                                                {{ $x > 0 ? "" : "required" }}>
                                                 <option selected
                                                     disabled
                                                     value=""
@@ -494,7 +378,7 @@ $menu_item_second = "add_submission_form";
                                             <select class="form-control"
                                                 id="souvenir-{{ $x }}"
                                                 name="souvenir_id[]"
-                                                required>
+                                                {{ $x > 0 ? "" : "required" }}>
                                                 <option selected
                                                     disabled
                                                     hidden
@@ -520,116 +404,6 @@ $menu_item_second = "add_submission_form";
                                                 pattern="https://.*"
                                                 maxlength="191"
                                                 placeholder="Link Home Service" />
-                                        </div>
-                                        @for ($j = 0; $j < 2; $j++)
-                                            <div class="form-group product-group"
-                                                id="promo-group-{{ $j }}">
-                                                <div class="col-xs-12 col-sm-12 row"
-                                                    style="margin: 0;padding: 0;">
-                                                    <div class="col-xs-10 col-sm-10"
-                                                        style="padding: 0; display: inline-block;">
-                                                        <label for="promo-{{ $j }}">
-                                                            Promo {{ $j + 1 }} {{ $j > 0 ? "(optional)" : "" }}
-                                                        </label>
-                                                        <select class="form-control pilihan-product"
-                                                            id="promo-{{ $j }}"
-                                                            name="promo_{{ $j }}"
-                                                            data-msg="Mohon Pilih Promo"
-                                                            {{ $j > 0 ? "" : "required" }}>
-                                                            <option selected
-                                                                disabled
-                                                                value=""
-                                                                {{ $j > 0 ? "" : "hidden" }}>
-                                                                Choose Promo {{ $j > 0 ? "(optional)" : ""}}
-                                                            </option>
-                                                            <?php foreach ($promos as $key => $promo): ?>
-                                                                <option value="<?php echo $key; ?>">
-                                                                    <?php
-                                                                    $productPromo = json_decode($promo["product"]);
-                                                                    $arrayProductId = [];
-
-                                                                    foreach ($productPromo as $pp) {
-                                                                        $arrayProductId[] = $pp->id;
-                                                                    }
-
-                                                                    $getProduct = Product::select("code")
-                                                                    ->whereIn(
-                                                                        "id",
-                                                                        $arrayProductId
-                                                                    )
-                                                                    ->get();
-
-                                                                    $arrayProductCode = [];
-
-                                                                    foreach ($getProduct as $product) {
-                                                                        $arrayProductCode[] = $product->code;
-                                                                    }
-
-                                                                    $productCode = implode(", ", $arrayProductCode);
-
-                                                                    echo $promo["code"]
-                                                                        . " - ("
-                                                                        . $productCode
-                                                                        . ") - Rp. "
-                                                                        . number_format(
-                                                                            (int) $promo["price"],
-                                                                            0,
-                                                                            null,
-                                                                            ","
-                                                                        );
-                                                                    ?>
-                                                                </option>
-                                                            <?php endforeach; ?>
-
-                                                            {{-- KHUSUS Philiphin --}}
-                                                            <option value="other">OTHER</option>
-                                                        </select>
-                                                        <div class="validation"></div>
-                                                    </div>
-                                                    <div class="col-xs-2 col-sm-2"
-                                                        style="padding-right: 0;display: inline-block;">
-                                                        <label for="qty-{{ $j }}">
-                                                            Qty
-                                                        </label>
-                                                        <select class="form-control"
-                                                            id="qty-{{ $j }}"
-                                                            name="qty_{{ $j }}"
-                                                            data-msg="Mohon Pilih Jumlah"
-                                                            {{ $j > 0 ? "" : "required" }}>
-                                                            <option selected value="1">
-                                                                1
-                                                            </option>
-
-                                                            @for ($i = 2; $i <= 10; $i++)
-                                                                <option value="{{ $i }}">
-                                                                    {{ $i }}
-                                                                </option>
-                                                            @endfor
-                                                        </select>
-                                                        <div class="validation"></div>
-                                                    </div>
-
-                                                    {{-- KHUSUS Philiphin --}}
-                                                    <div class="form-group d-none">
-                                                        <input type="text"
-                                                            class="form-control"
-                                                            name="product_other_{{ $j }}"
-                                                            placeholder="Product Name"
-                                                            data-msg="Please fill in the product" />
-                                                        <div class="validation"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endfor
-
-                                        <div class="form-group">
-                                            <input type="file"
-                                                class="custom-file-input"
-                                                id="do-proof">
-                                            <label class="custom-file-label"
-                                                for="do-proof">
-                                                Proof Delivery Order (Image)
-                                            </label>
                                         </div>
                                     </div>
                                 @endfor
@@ -676,16 +450,10 @@ $menu_item_second = "add_submission_form";
 </div>
 @endsection
 
-@section('script')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+@section("script")
 <script type="application/javascript">
-let currentTab = 0; // Current tab is set to be the first tab (0)
-showTab(currentTab); // Display the current tab
-
-const souvenirArray = []
-for (let i = 0; i < 10; i++) {
-    souvenirArray.push(-1);
-};
+let currentTab = 0;
+showTab(currentTab);
 
 function showTab(n) {
     // This function will display the specified tab of the form ...
@@ -744,22 +512,6 @@ function validateForm() {
         }
     });
 
-    const souvenirInput = document.getElementById("souvenir-" + currentTab);
-    const souvenirValue = parseInt(souvenirInput.value, 10);
-    if (souvenirValue) {
-        souvenirArray[currentTab] = souvenirValue;
-        const findDuplicate = souvenirArray.filter(function (currentValue) {
-            return currentValue === souvenirValue;
-        });
-
-        if (findDuplicate.length > 2) {
-            addOrRemoveInvalid(souvenirInput, "add");
-            valid = false;
-        } else {
-            addOrRemoveInvalid(souvenirInput, "remove");
-        }
-    }
-
     return valid; // return the valid status
 }
 
@@ -783,25 +535,6 @@ function fixStepIndicator(n) {
     x[n].className += " active";
 }
 
-function changeType(e) {
-    console.log(e.value);
-    if (e.value === "mgm") {
-        document.getElementById("promo-0").setAttribute("disabled", "");
-        document.getElementById("promo-1").setAttribute("disabled", "");
-        document.getElementById("qty-0").setAttribute("disabled", "");
-        document.getElementById("qty-1").setAttribute("disabled", "");
-        document.getElementById("promo-group-0").style.display = "none";
-        document.getElementById("promo-group-1").style.display = "none";
-        document.getElementById("proof-image").setAttribute("disabled", "");
-        document.getElementById("customer-image-group").style.display = "none";
-    } else if (e.value === "referensi") {
-        //
-    } else if (e.value === "takeaway") {
-        //
-    }
-}
-
-//function load city
 $(document).on("change", ".changeProvince", function () {
     const get_index = $(this).attr('id');
     const index = get_index.slice(-1);
@@ -831,8 +564,6 @@ $(document).on("change", ".changeProvince", function () {
 })
 
 document.addEventListener("DOMContentLoaded", function () {
-    changeType(document.getElementById("type_register"));
-
     $("#cso").on("input", function () {
         check_cso($("#cso").val());
     });
@@ -857,7 +588,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     });
 
-                    $( "#city" ).append(arrCity);
+                    $("#city").append(arrCity);
                 }
             });
     });
@@ -896,7 +627,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    {{-- KHUSUS Philiphin --}}
     $(".pilihan-product").change(function (e) {
         if ($(this).val() == 'other') {
             $(this).parent().next().next().removeClass("d-none");
@@ -907,35 +637,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Memunculkan form file upload untuk image-proof
-    // function showHideImageproof() {
-    //     if ($("#type_register").val() === "Refrensi") {
-    //         $(".image-proof").prop("disabled", false);
-    //         $(".image-proof").show();
-    //     } else {
-    //         $(".image-proof").prop("disabled", true);
-    //         $(".image-proof").hide();
-    //     }
-    // }
-
-    // $("#type_register").on('change', function (e) {
-    //     if ($(this).val() === "Refrensi" || $(this).val() === "MGM") {
-    //         $("#member_label").html("No. MPC");
-    //         $("#member_input").attr("required", true);
-    //     } else {
-    //         $("#member_label").html("No. MPC (opsional)");
-    //         $("#member_input").removeAttr("required");
-    //     }
-
-    //     showHideImageproof();
-    // });
-
-    // showHideImageproof();
-
     // Memunculkan alert apabila gambar lebih dari 5
     $("#addDeliveryOrder").click(function () {
-        if ($("#type_register").val() === "Refrensi") {
-            const numberOfImage = parseInt($("#image-proof").get(0).files.length);
+        if ($("#type_register").val() === "referensi") {
+            const numberOfImage = parseInt($("#proof-image").get(0).files.length);
 
             if (numberOfImage > 5) {
                 $("form").submit(function (e) {

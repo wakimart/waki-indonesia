@@ -10,7 +10,14 @@ use App\RajaOngkir_City;
 use App\Product;
 use App\Promo;
 use App\Reference;
+use App\ReferenceImage;
+use App\ReferencePromo;
+use App\ReferenceSouvenir;
+use App\Submission;
 use App\Souvenir;
+use App\SubmissionDeliveryorder;
+use App\SubmissionImage;
+use App\SubmissionPromo;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,6 +105,58 @@ class SubmissionController extends Controller
                 'branches',
                 'csos',
                 "souvenirs",
+            )
+        );
+    }
+
+    public function createMGM()
+    {
+        $branches = Branch::where('active', true)->get();
+        $csos = Cso::all();
+        $promos = Promo::all();
+
+        return view(
+            "admin.add_submission_mgm",
+            compact(
+                'promos',
+                'branches',
+                'csos',
+            )
+        );
+    }
+
+    public function createReference()
+    {
+        $branches = Branch::where('active', true)->get();
+        $csos = Cso::all();
+        $promos = Promo::all();
+        $souvenirs = Souvenir::select("id", "name")
+        ->where("active", true)
+        ->get();
+
+        return view(
+            "admin.add_submission_reference",
+            compact(
+                'promos',
+                'branches',
+                'csos',
+                "souvenirs",
+            )
+        );
+    }
+
+    public function createTakeaway()
+    {
+        $branches = Branch::where('active', true)->get();
+        $csos = Cso::all();
+        $promos = Promo::all();
+
+        return view(
+            "admin.add_submission_takeaway",
+            compact(
+                'promos',
+                'branches',
+                'csos',
             )
         );
     }
@@ -203,6 +262,231 @@ class SubmissionController extends Controller
                 'error' => $ex,
                 'error message' => $ex->getMessage(),
             ]);
+        }
+    }
+
+    public function storeMGM(Request $request)
+    {
+        $data = $request->all();
+
+        DB::beginTransaction();
+
+        try {
+            $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $submission = Submission::create($data);
+
+            $dataCount = count($data["name_ref"]);
+            for ($i = 0; $i < $dataCount; $i++) {
+                if (!empty($data["name_ref"][$i])) {
+                    $reference = new Reference();
+                    $reference->submission_id = $submission->id;
+                    $reference->name = $data["name_ref"][$i];
+                    $reference->age = $data["age_ref"][$i];
+                    $reference->phone = $data["phone_ref"][$i];
+                    $reference->province = $data["province_ref"][$i];
+                    $reference->city = $data["city_ref"][$i];
+                    $reference->save();
+
+                    $referencePromo = new ReferencePromo();
+                    $referencePromo->reference_id = $reference->id;
+
+                    if ($data["promo_1"][$i] !== "other") {
+                        $referencePromo->promo_1 = $data["promo_1"][$i];
+                    }
+
+                    if ($data["promo_2"][$i] !== "other") {
+                        $referencePromo->promo_2 = $data["promo_2"][$i];
+                    }
+
+                    $referencePromo->qty_1 = $data["qty_1"][$i];
+
+                    if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
+                        $referencePromo->qty_2 = $data["qty_2"][$i];
+                    }
+
+                    $referencePromo->other_1 = $data["other_1"][$i];
+                    $referencePromo->other_2 = $data["other_2"][$i];
+                    $referencePromo->save();
+
+                    $user_id = Auth::user()["id"];
+                    $path = "sources/registration";
+                    $referenceImage = new ReferenceImage();
+                    $referenceImage->reference_id = $reference->id;
+                    foreach ($request->file("do-image_" . ($i + 1)) AS $image) {
+                        $fileName = ((string) strval(time()))
+                            . "_"
+                            . $user_id
+                            . "_"
+                            . $i
+                            . "."
+                            . $image->getClientOriginalExtension();
+
+                        $image->move($path, $fileName);
+
+                        $referenceImage["image_" . ($i + 1)] = $fileName;
+
+                        $i++;
+                    }
+                    $referenceImage->save();
+                }
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route("add_submission_mgm")
+                ->with('success', 'Data berhasil dimasukkan.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function storeReference(Request $request)
+    {
+        $data = $request->all();
+
+        DB::beginTransaction();
+
+        try {
+            $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $submission = Submission::create($data);
+
+            $user_id = Auth::user()["id"];
+            $i = 1;
+            $path = "sources/registration";
+            $submissionImage = new SubmissionImage();
+            $submissionImage->submission_id = $submission->id;
+            foreach ($request->file("proof_image") as $image) {
+                $fileName = ((string) strval(time()))
+                    . "_"
+                    . $user_id
+                    . "_"
+                    . $i
+                    . "."
+                    . $image->getClientOriginalExtension();
+
+                $image->move($path, $fileName);
+
+                $submissionImage["image_" . $i] = $fileName;
+
+                $i++;
+            }
+            $submissionImage->save();
+
+            $dataCount = count($data["name_ref"]);
+            for ($i = 0; $i < $dataCount; $i++) {
+                if (!empty($data["name_ref"][$i])) {
+                    $reference = new Reference();
+                    $reference->submission_id = $submission->id;
+                    $reference->name = $data["name_ref"][$i];
+                    $reference->age = $data["age_ref"][$i];
+                    $reference->phone = $data["phone_ref"][$i];
+                    $reference->province = $data["province_ref"][$i];
+                    $reference->city = $data["city_ref"][$i];
+                    $reference->save();
+
+                    $referenceSouvenir = new ReferenceSouvenir();
+                    $referenceSouvenir->reference_id = $reference->id;
+                    $referenceSouvenir->souvenir_id = $data["souvenir_id"][$i];
+                    $referenceSouvenir->link_hs = $data["link_hs"][$i];
+                    $referenceSouvenir->save();
+                }
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route("add_submission_reference")
+                ->with('success', 'Data berhasil dimasukkan.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function storeTakeaway(Request $request)
+    {
+        $data = $request->all();
+
+        DB::beginTransaction();
+
+        try {
+            $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $submission = Submission::create($data);
+
+            $submissionPromo = new SubmissionPromo();
+            $submissionPromo->submission_id = $submission->id;
+
+            if ($data["promo_1"] !== "other") {
+                $submissionPromo->promo_1 = $data["promo_1"];
+            }
+
+            if ($data["promo_2"] !== "other") {
+                $submissionPromo->promo_2 = $data["promo_2"];
+            }
+
+            $submissionPromo->qty_1 = $data["qty_1"];
+
+            if (!empty($data["promo_2"]) || !empty($data["other_2"])) {
+                $submissionPromo->qty_2 = $data["qty_2"];
+            }
+
+            $submissionPromo->other_1 = $data["other_1"];
+            $submissionPromo->other_2 = $data["other_2"];
+            $submissionPromo->save();
+
+            $submissionDO = new SubmissionDeliveryorder();
+            $submissionDO->submission_id = $submission->id;
+            $submissionDO->no_deliveryorder = $data["nomor_do"];
+            $submissionDO->save();
+
+            $user_id = Auth::user()["id"];
+            $i = 1;
+            $path = "sources/registration";
+
+            $submissionImage = new SubmissionImage();
+            $submissionImage->submission_id = $submission->id;
+            foreach ($request->file("do_image") as $image) {
+                $fileName = ((string) strval(time()))
+                    . "_"
+                    . $user_id
+                    . "_"
+                    . $i
+                    . "."
+                    . $image->getClientOriginalExtension();
+
+                $image->move($path, $fileName);
+
+                $submissionImage["image_" . $i] = $fileName;
+
+                $i++;
+            }
+            $submissionImage->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route("add_submission_takeaway")
+                ->with('success', 'Data berhasil dimasukkan.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 400);
         }
     }
 
@@ -527,7 +811,7 @@ class SubmissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addApi(Request $request)
+    /* public function addApi(Request $request)
     {
         $messages = array(
             'cso_id.required' => 'The CSO Code field is required.',
@@ -553,7 +837,7 @@ class SubmissionController extends Controller
                 'data' => $validator->errors(),
             ];
 
-            return response()->json($data, 401);
+            return response()->json($data, 400);
         } else {
             DB::beginTransaction();
 
@@ -746,7 +1030,7 @@ class SubmissionController extends Controller
                     "dataReference" => $referenceArray,
                 ];
 
-                return response()->json($data, 201);
+                return response()->json($data, 200);
             } catch (Exception $e) {
                 DB::rollback();
 
@@ -758,9 +1042,164 @@ class SubmissionController extends Controller
                     "error line" => $e->getLine(),
                 ];
 
-                return response()->json($data, 501);
+                return response()->json($data, 500);
             }
 
+        }
+    } */
+
+    public function addApi(Request $request)
+    {
+        $data = $request->all();
+
+        DB::beginTransaction();
+
+        try {
+            $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+
+            if ($data["type"] === "mgm") {
+                //
+            } elseif ($data["type"] === "referensi") {
+                //
+            } elseif ($data["type"] === "takeaway") {
+                $submission = Submission::create($data);
+
+                $submissionPromo = new SubmissionPromo();
+                $submissionPromo->submission_id = $submission->id;
+
+                if ($data["promo_1"] !== "other") {
+                    $submissionPromo->promo_1 = $data["promo_1"];
+                }
+
+                if ($data["promo_2"] !== "other") {
+                    $submissionPromo->promo_2 = $data["promo_2"];
+                }
+
+                $submissionPromo->qty_1 = $data["qty_1"];
+
+                if (!empty($data["promo_2"]) || !empty($data["other_2"])) {
+                    $submissionPromo->qty_2 = $data["qty_2"];
+                }
+
+                $submissionPromo->other_1 = $data["other_1"];
+                $submissionPromo->other_2 = $data["other_2"];
+                $submissionPromo->save();
+
+                $submissionDO = new SubmissionDeliveryorder();
+                $submissionDO->submission_id = $submission->id;
+                $submissionDO->no_deliveryorder = $data["nomor_do"];
+                $submissionDO->save();
+
+                $user_id = Auth::user()["id"];
+                $i = 1;
+                $path = "sources/registration";
+
+                $submissionImage = new SubmissionImage();
+                $submissionImage->submission_id = $submission->id;
+                foreach ($request->file("do_image") as $image) {
+                    $fileName = ((string) strval(time()))
+                        . "_"
+                        . $user_id
+                        . "_"
+                        . $i
+                        . "."
+                        . $image->getClientOriginalExtension();
+
+                    $image->move($path, $fileName);
+
+                    $submissionImage["image_" . $i] = $fileName;
+
+                    $i++;
+                }
+                $submissionImage->save();
+            } else {
+                return response()->json([
+                    "error" => "Bad request.",
+                ], 401);
+            }
+
+            DB::commit();
+
+            if ($data["type"] === "mgm") {
+                //
+            } elseif ($data["type"] === "referensi") {
+                //
+            } elseif ($data["type"] === "takeaway") {
+                $querySubmission = Submission::select(
+                    "submissions.code AS code",
+                    "submissiobs.no_member AS no_member",
+                    "branches.code AS branch_code",
+                    "branches.name AS branch_name",
+                    "csos.code AS cso_code",
+                    "csos.name AS cso_name",
+                    "submissions.type AS type",
+                    "submissions.name AS name",
+                    "submissions.address AS address",
+                    "submissions.phone AS phone",
+                    "raja_ongkir__cities.province AS province",
+                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+                    "raja_ongkir__subdistricts.subdistrict_name AS district",
+                    "submission_promos.promo_1 AS promo_1",
+                    "submission_promos.promo_2 AS promo_2",
+                    "submission_promos.qty_1 AS qty_1",
+                    "submission_promos.qty_2 AS qty_2",
+                    "submission_promos.other_1 AS other_1",
+                    "submission_promos.other_2 AS other_2",
+                    "submission_deliveryorders.no_deliveryorder AS no_deliveryorder",
+                    "submission_images.image_1 AS image_1",
+                    "submission_images.image_2 AS image_2",
+                    "submission_images.image_3 AS image_3",
+                    "submission_images.image_4 AS image_4",
+                    "submission_images.image_5 AS image_5",
+                )
+                ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
+                ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
+                ->leftJoin(
+                    "raja_ongkir__cities",
+                    "submissions.city",
+                    "=",
+                    "raja_ongkir__cities.city_id"
+                )
+                ->leftJoin(
+                    "raja_ongkir__subdistricts",
+                    "submissions.district",
+                    "=",
+                    "raja_ongkir__subdistricts.subdistrict_id"
+                )
+                ->leftJoin(
+                    "submission_promos",
+                    "submissions.id",
+                    "=",
+                    "submission_promos.submission_id"
+                )
+                ->leftJoin(
+                    "submission_deliveryorders",
+                    "submissions.id",
+                    "=",
+                    "submission_deliveryorders.submission_id"
+                )
+                ->leftJoin(
+                    "submission_images",
+                    "submissions.id",
+                    "=",
+                    "submission_images.submission_id"
+                )
+                ->where("id", $submission->id)
+                ->first();
+            }
+
+            return response()->json([
+                "result" => 1,
+                "dataSubmission" => $querySubmission,
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 400);
         }
     }
 

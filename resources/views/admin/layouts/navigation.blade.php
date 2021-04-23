@@ -133,42 +133,58 @@
 </li>
 @endif
 
-@if(Gate::check('add-submission') || Gate::check('browse-submission') || Gate::check('browse-reference'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'submission'? 'active': '' }}">
-  <a class="nav-link" data-toggle="collapse" href="#submission-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'submission'? 'true': '' }}" aria-controls="submission-dd">
-    <span class="menu-title">Submission Registration</span>
-    <i class="menu-arrow"></i>
-    <i class="mdi mdi-calendar-text menu-icon"></i>
-  </a>
-  <div class="collapse {{ isset($menu_item_page) && $menu_item_page == 'submission' ? 'show' : '' }}"
-    id="submission-dd">
-    <ul class="nav flex-column sub-menu">
-      @if (Gate::check('add-submission'))
-      <li class="nav-item">
-        <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'add_submission_form' ? 'active' : '' }}"
-          href="{{ route('add_submission_form')}}">
-          Add Submmission
-        </a>
-      </li>
-      @endif
-      @if (Gate::check('browse-submission'))
-      <li class="nav-item">
-        <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form' ? 'active' : '' }}"
-          href="{{ route('list_submission_form') }}">
-          List Submmission
-        </a>
-      </li>
-      @endif
-      @if (Gate::check('browse-reference'))
-      <li class="nav-item">
-        <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_reference' ? 'active' : '' }}"
-          href="{{ route('list_reference') }}">
-          List Reference
-        </a>
-      </li>
-      @endif
-    </ul>
-  </div>
+@if (Gate::check('add-submission') || Gate::check('browse-submission') || Gate::check('browse-reference'))
+<li class="nav-item {{ isset($menu_item_page) && $menu_item_page == 'submission' ? 'active': '' }}">
+    <a class="nav-link"
+        data-toggle="collapse"
+        href="#submission-dd"
+        aria-expanded="{{ isset($menu_item_page) && $menu_item_page == 'submission' ? 'true': '' }}"
+        aria-controls="submission-dd">
+        <span class="menu-title">Submission Registration</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-calendar-text menu-icon"></i>
+    </a>
+    <div class="collapse {{ isset($menu_item_page) && $menu_item_page == 'submission' ? 'show' : '' }}"
+        id="submission-dd">
+        <ul class="nav flex-column sub-menu">
+        @if (Gate::check('add-submission'))
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'add_submission_mgm' ? 'active' : '' }}"
+                    href="{{ route('add_submission_mgm')}}">
+                    Add Submmission - MGM
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'add_submission_reference' ? 'active' : '' }}"
+                    href="{{ route('add_submission_reference')}}">
+                    Add Submmission - Referensi
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'add_submission_takeaway' ? 'active' : '' }}"
+                    href="{{ route('add_submission_takeaway')}}">
+                    Add Submmission - Takeaway
+                </a>
+            </li>
+        @endif
+        @if (Gate::check('browse-submission'))
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form' ? 'active' : '' }}"
+                    href="{{ route('list_submission_form') }}">
+                    List Submmission
+                </a>
+            </li>
+        @endif
+        @if (Gate::check('browse-reference'))
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_reference' ? 'active' : '' }}"
+                    href="{{ route('list_reference') }}">
+                    List Reference
+                </a>
+            </li>
+        @endif
+        </ul>
+    </div>
 </li>
 @endif
 
