@@ -26,27 +26,63 @@ $menu_item_second = "add_sparepart";
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
+
+    @media (max-width: 768px){
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+	}
+
+	@media (min-width: 768px){
+		#desktop{
+			display: block;
+		}
+
+		#mobile{
+			display: none;
+		}
+	}
+
 </style>
 @endsection
 
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
-        <div class="page-header">
-            <h3 class="page-title">Add Sparepart</h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a data-toggle="collapse"
-                            aria-expanded="false">
-                            Service
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                        Add Sparepart
-                    </li>
-                </ol>
-            </nav>
+        <!-- header mobile -->
+    	<div id="mobile">
+			<h3 class="text-center">Add Sparepart</h3>
+			<div class="row">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a data-toggle="collapse" aria-expanded="false">Service</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Add Sparepart</li>
+                    </ol>
+                </nav>
+		    </div>
+	  	</div>
+        <!-- header mdesktop -->
+        <div id="desktop">
+            <div class="page-header">
+                <h3 class="page-title">Add Sparepart</h3>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a data-toggle="collapse"
+                                aria-expanded="false">
+                                Service
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Add Sparepart
+                        </li>
+                    </ol>
+                </nav>
+            </div>
         </div>
         <div class="row">
             <div class="col-12 grid-margin stretch-card">

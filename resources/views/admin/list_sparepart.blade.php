@@ -13,29 +13,66 @@ $menu_item_second = "list_sparepart";
     .right {
         text-align: right;
     }
+
+    @media (max-width: 768px){
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+	}
+
+	@media (min-width: 768px){
+		#desktop{
+			display: block;
+		}
+
+		#mobile{
+			display: none;
+		}
+	}
+    
 </style>
 @endsection
 
 @section("content")
 <div class="main-panel">
     <div class="content-wrapper">
-        <div class="page-header">
-            <h3 class="page-title">List Sparepart</h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a data-toggle="collapse"
-                            href="#"
-                            aria-expanded="false">
-                            Service
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active"
-                        aria-current="page">
-                        List Sparepart
-                    </li>
-                </ol>
-            </nav>
+        <!-- header mobile -->
+    	<div id="mobile">
+			<h3 class="text-center">List Sparepart</h3>
+			<div class="row">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false">Service</a></li>
+						<li class="breadcrumb-item active" aria-current="page">List Sparepart</li>
+					</ol>
+				</nav>
+		  	</div>
+	  	</div>
+
+		<!-- header desktop -->
+        <div id="desktop">
+            <div class="page-header">
+                <h3 class="page-title">List Sparepart</h3>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a data-toggle="collapse"
+                                href="#"
+                                aria-expanded="false">
+                                Service
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active"
+                            aria-current="page">
+                            List Sparepart
+                        </li>
+                    </ol>
+                </nav>
+            </div>
         </div>
         <div class="col-12 grid-margin stretch-card" style="padding: 0;">
             <div class="card">

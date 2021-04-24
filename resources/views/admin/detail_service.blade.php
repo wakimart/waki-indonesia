@@ -45,6 +45,26 @@ $menu_item_second = "detail_service";
     .justify-content-center{
     	padding: 0em 1em;
     }
+
+	.share{
+		padding-bottom: 20px;
+	}
+
+	/*-- mobile --*/
+	@media (max-width: 768px){
+		.share{
+			font-size: 1.7em;
+			text-align: center;
+			padding-bottom: 20px;
+		}
+	}
+
+	@media (min-width: 768px) { 
+		.table-responsive::-webkit-scrollbar {
+            display: none;
+        }
+	}
+	
 </style>
 @endsection
 
@@ -79,6 +99,7 @@ $menu_item_second = "detail_service";
 	          				<h2>Detail Service</h2>
 	          			</div>
 	          			<div class="row justify-content-center">
+							<div class="table-responsive">
 	          				<table class="col-md-12">
 	          					<thead>
 	          						<td>Status</td>
@@ -125,8 +146,10 @@ $menu_item_second = "detail_service";
 	          						</td>
 	          					</tr>
 	          				</table>
+							</div>
 	          			</div>
 	          			<div class="row justify-content-center">
+							<div class="table-responsive">
 	          				<table class="col-md-12">
 	          					<thead>
 	          						<td colspan="2">Data Service</td>
@@ -152,85 +175,92 @@ $menu_item_second = "detail_service";
 	          						<td>{{ $services['address'] }}</td>
 	          					</tr>
 	          				</table>
+							</div>
 	          			</div>
 	          			<div class="row justify-content-center">
 	          				@foreach($services->product_services as $key => $product_service)
-	          				<table class="col-md-12">
-	          					<thead>
-	          						<td colspan="5">Data Product Service {{$key + 1}}</td>
-	          					</thead>
-	          					<tr>
-	          						<td>Product: </td>
-	          						@if($product_service['product_id'] != null)
-	          							<td>{{$product_service->product['name']}}</td>	
-	          						@elseif($product_service['product_id'] == null)
-	          							<td>{{$product_service['other_product']}}</td>
-	          						@endif
-	          					</tr>
-	          					<tr>
-	          						<td>Issues:</td>
-	          						@php
-	          							$issues = json_decode($product_service['issues']);
-	          						@endphp
-	          						<td>{{implode(",",$issues[0]->issues)}}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Description: </td>
-	          						<td>{{$issues[1]->desc}}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Due Date:</td>
-	          						<td>{{date("d/m/Y", strtotime($product_service['due_date']))}}</td>
-	          					</tr>
+								<div class="table-responsive">
+									<table class="col-md-12">
+										<thead>
+											<td colspan="5">Data Product Service {{$key + 1}}</td>
+										</thead>
+										<tr>
+											<td>Product: </td>
+											@if($product_service['product_id'] != null)
+												<td colspan="4">{{$product_service->product['name']}}</td>	
+											@elseif($product_service['product_id'] == null)
+												<td colspan="4">{{$product_service['other_product']}}</td>
+											@endif
+										</tr>
+										<tr>
+											<td>Issues:</td>
+											@php
+												$issues = json_decode($product_service['issues']);
+											@endphp
+											<td colspan="4">{{implode(",",$issues[0]->issues)}}</td>
+										</tr>
+										<tr>
+											<td>Description: </td>
+											<td colspan="4">{{$issues[1]->desc}}</td>
+										</tr>
+										<tr>
+											<td>Due Date:</td>
+											<td colspan="4">{{date("d/m/Y", strtotime($product_service['due_date']))}}</td>
+										</tr>
+									</table>
+								</div>
 	          					@if($product_service['sparepart'] != null)
 		          					@php
 		                            	$arr_sparepart = json_decode($product_service['sparepart']);
 		                            	$count_sparepart = count($arr_sparepart);
 		                            @endphp
-		                            <thead>
-		                            	<td colspan="5">Detail Sparepart</td>
-		                            </thead>
-		                            <tr>
-		                            	<td>No.</td>
-		                            	<td>Sparepart</td>
-		                            	<td>Qty</td>
-		                            	<td>Price (Rp)</td>
-		                            	<td>Total (Rp)</td>
-		                            </tr>
-		                            <tr>
-		                            	@foreach($arr_sparepart as $index => $item)
-		                            		@php
-		                            			$unit_price = $product_service->getSparepart($item->id)->id['price'];
-		                            			$total_price = (int)$item->qty * $unit_price;
-		                            		@endphp
-		                            		<td>{{$index+1}}</td>
-		                            		<td>{{$product_service->getSparepart($item->id)->id['name']}}</td>
-			                            	<td>{{$item->qty}}</td>
-			                            	<td>{{number_format($unit_price)}}</td>
-			                            	<td>{{number_format($total_price)}}</td>
-			                            	@php break; @endphp
-		                            	@endforeach
-	          						</tr>
-	          						@php $first = true; @endphp
-			                        @for($i = 0; $i < $count_sparepart; $i++)
-			                            @php
-			                                if($first){
-			                                    $first = false;
-			                                    continue;
-			                                }
-			                                $unit_price_two = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
-		                            		$total_price_two = (int)$arr_sparepart[$i]->qty * $unit_price_two;
-			                            @endphp
-			                            <tr>
-			                            	<td>{{$i+1}}</td>
-			                            	<td>{{$product_service->getSparepart($arr_sparepart[$i]->id)->id['name']}}</td>
-			                                <td>{{$arr_sparepart[$i]->qty}}</td>
-			                                <td>{{number_format($unit_price_two)}}</td>
-			                            	<td>{{number_format($total_price_two)}}</td>
-			                            </tr>
-			                        @endfor
+									<div class="table-responsive">
+										<table class="col-md-12">
+											<thead>
+												<td colspan="5">Detail Sparepart</td>
+											</thead>
+											<tr>
+												<td>No.</td>
+												<td>Sparepart</td>
+												<td>Qty</td>
+												<td>Price (Rp)</td>
+												<td>Total (Rp)</td>
+											</tr>
+											<tr>
+												@foreach($arr_sparepart as $index => $item)
+													@php
+														$unit_price = $product_service->getSparepart($item->id)->id['price'];
+														$total_price = (int)$item->qty * $unit_price;
+													@endphp
+													<td>{{$index+1}}</td>
+													<td>{{$product_service->getSparepart($item->id)->id['name']}}</td>
+													<td>{{$item->qty}}</td>
+													<td>{{number_format($unit_price)}}</td>
+													<td>{{number_format($total_price)}}</td>
+													@php break; @endphp
+												@endforeach
+											  </tr>
+											  @php $first = true; @endphp
+											@for($i = 0; $i < $count_sparepart; $i++)
+												@php
+													if($first){
+														$first = false;
+														continue;
+													}
+													$unit_price_two = $product_service->getSparepart($arr_sparepart[$i]->id)->id['price'];
+													$total_price_two = (int)$arr_sparepart[$i]->qty * $unit_price_two;
+												@endphp
+												<tr>
+													<td>{{$i+1}}</td>
+													<td>{{$product_service->getSparepart($arr_sparepart[$i]->id)->id['name']}}</td>
+													<td>{{$arr_sparepart[$i]->qty}}</td>
+													<td>{{number_format($unit_price_two)}}</td>
+													<td>{{number_format($total_price_two)}}</td>
+												</tr>
+											@endfor
+										</table>
+									</div>
 	          					@endif
-	          				</table>
 	          				@endforeach
 	          			</div>
 	          		</div>
@@ -247,41 +277,43 @@ $menu_item_second = "detail_service";
 	        	<div class="card">
 	          		<div class="card-body">
 	          			<div class="row justify-content-center">
-	          				<table class="col-md-12">
-	          					<thead>
-	          						<td colspan="5">{{ $services['status'] }} Detail</td>
-	          					</thead>
-	          					<tr>
-	          						<td>Recipient's Name: </td>
-	          						<td>{{ $arr_serviceoption->recipient_name }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Recipient's Phone: </td>
-	          						<td>{{ $arr_serviceoption->recipient_phone }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Address: </td>
-	          						<td>{{ $arr_serviceoption->address }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Branch: </td>
-	          						<td>{{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['name'] }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>CSO: </td>
-	          						<td>{{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['name'] }}</td>
-	          					</tr>
-	          					@if(isset($arr_serviceoption->appointment))
-		          					<tr>
-		          						<td>Tanggal: </td>
-		          						<td>{{ date("d/m/Y", strtotime($arr_serviceoption->appointment)) }}</td>
-		          					</tr>
-		          					<tr>
-		          						<td>Jam: </td>
-		          						<td>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</td>
-		          					</tr>
-		          				@endif
-	          				</table>
+							<div class="table-responsive">
+								<table class="col-md-12 col-sm-12 col-xs-12">
+									<thead>
+										<td colspan="5">{{ $services['status'] }} Detail</td>
+									</thead>
+									<tr>
+										<td>Recipient's Name: </td>
+										<td>{{ $arr_serviceoption->recipient_name }}</td>
+									</tr>
+									<tr>
+										<td>Recipient's Phone: </td>
+										<td>{{ $arr_serviceoption->recipient_phone }}</td>
+									</tr>
+									<tr>
+										<td>Address: </td>
+										<td>{{ $arr_serviceoption->address }}</td>
+									</tr>
+									<tr>
+										<td>Branch: </td>
+										<td>{{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->branch['name'] }}</td>
+									</tr>
+									<tr>
+										<td>CSO: </td>
+										<td>{{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['code'] }} - {{ $services->getDetailSales($arr_serviceoption->branch_id, $arr_serviceoption->cso_id)->cso['name'] }}</td>
+									</tr>
+									@if(isset($arr_serviceoption->appointment))
+										<tr>
+											<td>Tanggal: </td>
+											<td>{{ date("d/m/Y", strtotime($arr_serviceoption->appointment)) }}</td>
+										</tr>
+										<tr>
+											<td>Jam: </td>
+											<td>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</td>
+										</tr>
+									@endif
+								</table>
+							</div>
 	          			</div>
 	          		</div>
 	        	</div>
@@ -295,49 +327,51 @@ $menu_item_second = "detail_service";
 	        	<div class="card">
 	          		<div class="card-body">
 	          			<div class="row justify-content-center">
-	          				<table class="col-md-12">
-	          					<thead>
-	          						<td colspan="3">History Status</td>
-	          					</thead>
-	          					<tr>
-	          						<td class="center">Status</td>
-	          						<td class="center">User</td>
-	          						<td class="center">Date</td>
-	          					</tr>
-	          					@foreach(json_decode($services['history_status'], true) as $history_status)
-	          					<tr>
-	          						<td class="center">
-	          							@if (strtolower($history_status['status']) == "process")
-                                            <span class="badge badge-primary">
-                                                Process
-                                            </span>
-                                        @elseif (strtolower($history_status['status']) == "repaired")
-                                            <span class="badge badge-warning">
-                                                Repaired
-                                            </span>
-                                        @elseif (strtolower($history_status['status']) == "quality_control")
-                                            <span class="badge badge-warning">
-                                                Quality Control
-                                            </span>
-                                        @elseif (strtolower($history_status['status']) == "delivery")
-                                            <span class="badge badge-info">
-                                                Delivery
-                                            </span>
-                                        @elseif (strtolower($history_status['status']) == "pickup")
-                                            <span class="badge badge-info">
-                                                Pickup
-                                            </span>
-                                        @elseif (strtolower($history_status['status']) == "completed")
-                                            <span class="badge badge-success">
-                                                Completed
-                                            </span>
-                                        @endif
-	          						</td>
-	          						<td class="center">{{ $services->statusBy("process")->user_id['name'] }}</td>
-	          						<td class="center">{{ date("d/m/Y", strtotime($history_status['updated_at'])) }}</td>
-	          					</tr>
-	          					@endforeach
-	          				</table>
+							<div class="table-responsive">
+								<table class="col-md-12 col-sm-12 col-xs-12">
+									<thead>
+										<td colspan="3">History Status</td>
+									</thead>
+									<tr>
+										<td class="center">Status</td>
+										<td class="center">User</td>
+										<td class="center">Date</td>
+									</tr>
+									@foreach(json_decode($services['history_status'], true) as $history_status)
+									<tr>
+										<td class="center">
+											@if (strtolower($history_status['status']) == "process")
+												<span class="badge badge-primary">
+													Process
+												</span>
+											@elseif (strtolower($history_status['status']) == "repaired")
+												<span class="badge badge-warning">
+													Repaired
+												</span>
+											@elseif (strtolower($history_status['status']) == "quality_control")
+												<span class="badge badge-warning">
+													Quality Control
+												</span>
+											@elseif (strtolower($history_status['status']) == "delivery")
+												<span class="badge badge-info">
+													Delivery
+												</span>
+											@elseif (strtolower($history_status['status']) == "pickup")
+												<span class="badge badge-info">
+													Pickup
+												</span>
+											@elseif (strtolower($history_status['status']) == "completed")
+												<span class="badge badge-success">
+													Completed
+												</span>
+											@endif
+										</td>
+										<td class="center">{{ $services->statusBy("process")->user_id['name'] }}</td>
+										<td class="center">{{ date("d/m/Y", strtotime($history_status['updated_at'])) }}</td>
+									</tr>
+									@endforeach
+								</table>
+							</div>
 	          			</div>
 	          		</div>
 	        	</div>
@@ -571,7 +605,7 @@ $menu_item_second = "detail_service";
 	        	<div class="card">
 	          		<div class="card-body">	          			
 	          			<div class="row justify-content-center">
-	          				<h2>Share Service Process</h2>
+	          				<h2 class="text-center share">Share Service Process</h2>
 	          			</div>
 	            		<form class="forms-sample" method="GET" action="whatsapp://send">
 	              			<div class="form-group row justify-content-center">
