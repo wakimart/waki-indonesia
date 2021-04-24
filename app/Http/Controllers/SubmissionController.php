@@ -41,6 +41,9 @@ class SubmissionController extends Controller
         // Memasukkan klausa WHERE yang digunakan berkali-kali ke dalam array
         $whereArray = [];
         $whereArray[] = ["active", true];
+        if (!empty($request->filter_type)) {
+            $whereArray[] = ["type", $request->filter_type];
+        }
 
         if (Auth::user()->roles[0]->slug === "cso") {
             // Jika user adalah CSO
@@ -505,7 +508,7 @@ class SubmissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View
      */
-    public function show(Request $request)
+    /* public function show(Request $request)
     {
         $deliveryOrder = DeliveryOrder::where("id", $request["id"])->first();
         $deliveryOrder["district"] = array($deliveryOrder->getDistrict());
@@ -567,6 +570,30 @@ class SubmissionController extends Controller
                 "historyUpdateDeliveryOrder",
                 "references",
                 "souvenirs",
+            )
+        );
+    } */
+
+    public function show(Request $request)
+    {
+
+        $references = "";
+        if ($request->type === "mgm") {
+            $submission = $this->querySubmissionMGM($request->id);
+            $references = $this->queryReferenceMGM($request->id);
+        } elseif ($request->type === "referensi") {
+            $submission = $this->querySubmissionReferensi($request->id);
+            $references = $this->queryReferenceReferensi($request->id);
+        } elseif ($request->type === "takeaway") {
+            $submission = $this->querySubmissionTakeaway($request->id);
+        }
+
+        return view(
+            "admin.detail_submission",
+            compact(
+                "submission",
+                "historySubmission",
+                "references",
             )
         );
     }
@@ -1229,210 +1256,13 @@ class SubmissionController extends Controller
 
             $queryReference = "";
             if ($data["type"] === "mgm") {
-                $querySubmission = Submission::select(
-                    "submissions.code AS code",
-                    "submissiobs.no_member AS no_member",
-                    "branches.code AS branch_code",
-                    "branches.name AS branch_name",
-                    "csos.code AS cso_code",
-                    "csos.name AS cso_name",
-                    "submissions.type AS type",
-                    "submissions.name AS name",
-                    "submissions.address AS address",
-                    "submissions.phone AS phone",
-                    "raja_ongkir__cities.province AS province",
-                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
-                    "raja_ongkir__subdistricts.subdistrict_name AS district",
-                )
-                ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
-                ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
-                ->leftJoin(
-                    "raja_ongkir__cities",
-                    "submissions.city",
-                    "=",
-                    "raja_ongkir__cities.city_id"
-                )
-                ->leftJoin(
-                    "raja_ongkir__subdistricts",
-                    "submissions.district",
-                    "=",
-                    "raja_ongkir__subdistricts.subdistrict_id"
-                )
-                ->where("submissions.id", $submission->id)
-                ->first();
-
-                $queryReference = Reference::select(
-                    "references.submission_id AS submission_id",
-                    "references.name AS name",
-                    "references.phone AS phone",
-                    "raja_ongkir__cities.province AS province",
-                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
-                    "reference_promos.promo_1 AS promo_1",
-                    "reference_promos.promo_2 AS promo_2",
-                    "reference_promos.qty_1 AS qty_1",
-                    "reference_promos.qty_2 AS qty_2",
-                    "reference_promos.other_1 AS other_1",
-                    "reference_promos.other_2 AS other_2",
-                    "reference_images.image_1 AS image_1",
-                    "reference_images.image_2 AS image_2",
-                )
-                ->leftJoin(
-                    "raja_ongkir__cities",
-                    "references.city",
-                    "=",
-                    "raja_ongkir__cities.city_id"
-                )
-                ->leftJoin(
-                    "reference_promos",
-                    "references.id",
-                    "=",
-                    "reference_promos.reference_id"
-                )
-                ->leftJoin(
-                    "reference_images",
-                    "references.id",
-                    "=",
-                    "reference_images.reference_id"
-                )
-                ->where("references.submission_id", $submission->id)
-                ->get();
+                $querySubmission = $this->querySubmissionMGM($submission->id);
+                $queryReference = $this->queryReferenceMGM($submission->id);
             } elseif ($data["type"] === "referensi") {
-                $querySubmission = Submission::select(
-                    "submissions.code AS code",
-                    "submissiobs.no_member AS no_member",
-                    "branches.code AS branch_code",
-                    "branches.name AS branch_name",
-                    "csos.code AS cso_code",
-                    "csos.name AS cso_name",
-                    "submissions.type AS type",
-                    "submissions.name AS name",
-                    "submissions.address AS address",
-                    "submissions.phone AS phone",
-                    "raja_ongkir__cities.province AS province",
-                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
-                    "raja_ongkir__subdistricts.subdistrict_name AS district",
-                    "submission_images.image_1 AS image_1",
-                    "submission_images.image_2 AS image_2",
-                    "submission_images.image_3 AS image_3",
-                    "submission_images.image_4 AS image_4",
-                    "submission_images.image_5 AS image_5",
-                )
-                ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
-                ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
-                ->leftJoin(
-                    "raja_ongkir__cities",
-                    "submissions.city",
-                    "=",
-                    "raja_ongkir__cities.city_id"
-                )
-                ->leftJoin(
-                    "raja_ongkir__subdistricts",
-                    "submissions.district",
-                    "=",
-                    "raja_ongkir__subdistricts.subdistrict_id"
-                )
-                ->leftJoin(
-                    "submission_images",
-                    "submissions.id",
-                    "=",
-                    "submission_images.submission_id"
-                )
-                ->where("submissions.id", $submission->id)
-                ->first();
-
-                $queryReference = Reference::select(
-                    "references.submission_id AS submission_id",
-                    "references.name AS name",
-                    "references.phone AS phone",
-                    "raja_ongkir__cities.province AS province",
-                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
-                    "reference_souvenirs.souvenir_id AS souvenir_id",
-                    "souvenirs.name AS souvenir_name",
-                    "reference_souvenirs.status AS status",
-                    "reference_souvenirs.link_hs AS link_hs",
-                )
-                ->leftJoin(
-                    "raja_ongkir__cities",
-                    "references.city",
-                    "=",
-                    "raja_ongkir__cities.city_id"
-                )
-                ->leftJoin(
-                    "reference_souvenirs",
-                    "references.id",
-                    "=",
-                    "reference_souvenirs.reference_id"
-                )
-                ->leftJoin(
-                    "souvenirs",
-                    "reference_souvenirs.souvenir_id",
-                    "=",
-                    "souvenirs.id"
-                )
-                ->where("references.submission_id", $submission->id)
-                ->get();
+                $querySubmission = $this->querySubmissionReferensi($submission->id);
+                $queryReference = $this->queryReferenceReferensi($submission->id);
             } elseif ($data["type"] === "takeaway") {
-                $querySubmission = Submission::select(
-                    "submissions.code AS code",
-                    "submissiobs.no_member AS no_member",
-                    "branches.code AS branch_code",
-                    "branches.name AS branch_name",
-                    "csos.code AS cso_code",
-                    "csos.name AS cso_name",
-                    "submissions.type AS type",
-                    "submissions.name AS name",
-                    "submissions.address AS address",
-                    "submissions.phone AS phone",
-                    "raja_ongkir__cities.province AS province",
-                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
-                    "raja_ongkir__subdistricts.subdistrict_name AS district",
-                    "submission_promos.promo_1 AS promo_1",
-                    "submission_promos.promo_2 AS promo_2",
-                    "submission_promos.qty_1 AS qty_1",
-                    "submission_promos.qty_2 AS qty_2",
-                    "submission_promos.other_1 AS other_1",
-                    "submission_promos.other_2 AS other_2",
-                    "submission_deliveryorders.no_deliveryorder AS no_deliveryorder",
-                    "submission_images.image_1 AS image_1",
-                    "submission_images.image_2 AS image_2",
-                    "submission_images.image_3 AS image_3",
-                    "submission_images.image_4 AS image_4",
-                    "submission_images.image_5 AS image_5",
-                )
-                ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
-                ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
-                ->leftJoin(
-                    "raja_ongkir__cities",
-                    "submissions.city",
-                    "=",
-                    "raja_ongkir__cities.city_id"
-                )
-                ->leftJoin(
-                    "raja_ongkir__subdistricts",
-                    "submissions.district",
-                    "=",
-                    "raja_ongkir__subdistricts.subdistrict_id"
-                )
-                ->leftJoin(
-                    "submission_promos",
-                    "submissions.id",
-                    "=",
-                    "submission_promos.submission_id"
-                )
-                ->leftJoin(
-                    "submission_deliveryorders",
-                    "submissions.id",
-                    "=",
-                    "submission_deliveryorders.submission_id"
-                )
-                ->leftJoin(
-                    "submission_images",
-                    "submissions.id",
-                    "=",
-                    "submission_images.submission_id"
-                )
-                ->where("submissions.id", $submission->id)
-                ->first();
+                $querySubmission = $this->querySubmissionTakeaway($submission->id);
             }
 
             return response()->json([
@@ -2001,5 +1831,225 @@ class SubmissionController extends Controller
 
             return response()->json($data, 500);
         }
+    }
+
+    private function querySubmissionMGM($id)
+    {
+        return Submission::select(
+            "submissions.code AS code",
+            "submissiobs.no_member AS no_member",
+            "branches.code AS branch_code",
+            "branches.name AS branch_name",
+            "csos.code AS cso_code",
+            "csos.name AS cso_name",
+            "submissions.type AS type",
+            "submissions.name AS name",
+            "submissions.address AS address",
+            "submissions.phone AS phone",
+            "raja_ongkir__cities.province AS province",
+            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+            "raja_ongkir__subdistricts.subdistrict_name AS district",
+        )
+        ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
+        ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
+        ->leftJoin(
+            "raja_ongkir__cities",
+            "submissions.city",
+            "=",
+            "raja_ongkir__cities.city_id"
+        )
+        ->leftJoin(
+            "raja_ongkir__subdistricts",
+            "submissions.district",
+            "=",
+            "raja_ongkir__subdistricts.subdistrict_id"
+        )
+        ->where("submissions.id", $id)
+        ->first();
+    }
+
+    private function querySubmissionReferensi($id)
+    {
+        return Submission::select(
+            "submissions.code AS code",
+            "submissiobs.no_member AS no_member",
+            "branches.code AS branch_code",
+            "branches.name AS branch_name",
+            "csos.code AS cso_code",
+            "csos.name AS cso_name",
+            "submissions.type AS type",
+            "submissions.name AS name",
+            "submissions.address AS address",
+            "submissions.phone AS phone",
+            "raja_ongkir__cities.province AS province",
+            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+            "raja_ongkir__subdistricts.subdistrict_name AS district",
+            "submission_images.image_1 AS image_1",
+            "submission_images.image_2 AS image_2",
+            "submission_images.image_3 AS image_3",
+            "submission_images.image_4 AS image_4",
+            "submission_images.image_5 AS image_5",
+        )
+        ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
+        ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
+        ->leftJoin(
+            "raja_ongkir__cities",
+            "submissions.city",
+            "=",
+            "raja_ongkir__cities.city_id"
+        )
+        ->leftJoin(
+            "raja_ongkir__subdistricts",
+            "submissions.district",
+            "=",
+            "raja_ongkir__subdistricts.subdistrict_id"
+        )
+        ->leftJoin(
+            "submission_images",
+            "submissions.id",
+            "=",
+            "submission_images.submission_id"
+        )
+        ->where("submissions.id", $id)
+        ->first();
+    }
+
+    private function querySubmissionTakeaway($id)
+    {
+        return Submission::select(
+            "submissions.code AS code",
+            "submissiobs.no_member AS no_member",
+            "branches.code AS branch_code",
+            "branches.name AS branch_name",
+            "csos.code AS cso_code",
+            "csos.name AS cso_name",
+            "submissions.type AS type",
+            "submissions.name AS name",
+            "submissions.address AS address",
+            "submissions.phone AS phone",
+            "raja_ongkir__cities.province AS province",
+            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+            "raja_ongkir__subdistricts.subdistrict_name AS district",
+            "submission_promos.promo_1 AS promo_1",
+            "submission_promos.promo_2 AS promo_2",
+            "submission_promos.qty_1 AS qty_1",
+            "submission_promos.qty_2 AS qty_2",
+            "submission_promos.other_1 AS other_1",
+            "submission_promos.other_2 AS other_2",
+            "submission_deliveryorders.no_deliveryorder AS no_deliveryorder",
+            "submission_images.image_1 AS image_1",
+            "submission_images.image_2 AS image_2",
+            "submission_images.image_3 AS image_3",
+            "submission_images.image_4 AS image_4",
+            "submission_images.image_5 AS image_5",
+        )
+        ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
+        ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
+        ->leftJoin(
+            "raja_ongkir__cities",
+            "submissions.city",
+            "=",
+            "raja_ongkir__cities.city_id"
+        )
+        ->leftJoin(
+            "raja_ongkir__subdistricts",
+            "submissions.district",
+            "=",
+            "raja_ongkir__subdistricts.subdistrict_id"
+        )
+        ->leftJoin(
+            "submission_promos",
+            "submissions.id",
+            "=",
+            "submission_promos.submission_id"
+        )
+        ->leftJoin(
+            "submission_deliveryorders",
+            "submissions.id",
+            "=",
+            "submission_deliveryorders.submission_id"
+        )
+        ->leftJoin(
+            "submission_images",
+            "submissions.id",
+            "=",
+            "submission_images.submission_id"
+        )
+        ->where("submissions.id", $id)
+        ->first();
+    }
+
+    private function queryReferenceMGM($submissionId)
+    {
+        return Reference::select(
+            "references.submission_id AS submission_id",
+            "references.name AS name",
+            "references.phone AS phone",
+            "raja_ongkir__cities.province AS province",
+            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+            "reference_promos.promo_1 AS promo_1",
+            "reference_promos.promo_2 AS promo_2",
+            "reference_promos.qty_1 AS qty_1",
+            "reference_promos.qty_2 AS qty_2",
+            "reference_promos.other_1 AS other_1",
+            "reference_promos.other_2 AS other_2",
+            "reference_images.image_1 AS image_1",
+            "reference_images.image_2 AS image_2",
+        )
+        ->leftJoin(
+            "raja_ongkir__cities",
+            "references.city",
+            "=",
+            "raja_ongkir__cities.city_id"
+        )
+        ->leftJoin(
+            "reference_promos",
+            "references.id",
+            "=",
+            "reference_promos.reference_id"
+        )
+        ->leftJoin(
+            "reference_images",
+            "references.id",
+            "=",
+            "reference_images.reference_id"
+        )
+        ->where("references.submission_id", $submissionId)
+        ->get();
+    }
+
+    private function queryReferenceReferensi($submissionId)
+    {
+        return Reference::select(
+            "references.submission_id AS submission_id",
+            "references.name AS name",
+            "references.phone AS phone",
+            "raja_ongkir__cities.province AS province",
+            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+            "reference_souvenirs.souvenir_id AS souvenir_id",
+            "souvenirs.name AS souvenir_name",
+            "reference_souvenirs.status AS status",
+            "reference_souvenirs.link_hs AS link_hs",
+        )
+        ->leftJoin(
+            "raja_ongkir__cities",
+            "references.city",
+            "=",
+            "raja_ongkir__cities.city_id"
+        )
+        ->leftJoin(
+            "reference_souvenirs",
+            "references.id",
+            "=",
+            "reference_souvenirs.reference_id"
+        )
+        ->leftJoin(
+            "souvenirs",
+            "reference_souvenirs.souvenir_id",
+            "=",
+            "souvenirs.id"
+        )
+        ->where("references.submission_id", $submissionId)
+        ->get();
     }
 }

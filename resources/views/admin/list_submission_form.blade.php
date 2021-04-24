@@ -39,6 +39,74 @@ $menu_item_second = "list_submission_form";
             </nav>
         </div>
 
+        <div class="col-12" style="padding: 0;">
+            <form method="GET"
+                class="col-12"
+                action="{{ route("list_submission_form") }}">
+                <div class="col-xs-6 col-sm-3"
+                    style="padding: 0; display: inline-block;">
+                    <div class="form-group">
+                        <label for="filter-type">Search by type</label>
+                        <select id="filter-type"
+                            class="form-control"
+                            name="filter_type">
+                            <option value=""
+                                <?php
+                                if (!isset($_GET["filter_type"])) {
+                                    echo "selected";
+                                }
+                                ?>>
+                                No Filter
+                            </option>
+                            <option value="mgm"
+                                <?php
+                                if (
+                                    isset($_GET["filter_type"])
+                                    && $_GET["filter_type"] === "mgm"
+                                ) {
+                                    echo "selected";
+                                }
+                                ?>>
+                                MGM
+                            </option>
+                            <option value="referensi"
+                                <?php
+                                if (
+                                    isset($_GET["filter_type"])
+                                    && $_GET["filter_type"] === "referensi"
+                                ) {
+                                    echo "selected";
+                                }
+                                ?>>
+                                Referensi
+                            </option>
+                            <option value="takeaway"
+                                <?php
+                                if (
+                                    isset($_GET["filter_type"])
+                                    && $_GET["filter_type"] === "takeaway"
+                                ) {
+                                    echo "selected";
+                                }
+                                ?>>
+                                Takeaway
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6"
+                    style="padding: 0; display: inline-block;">
+                    <div class="form-group">
+                        <button id="btn-filter"
+                            type="submit"
+                            class="btn btn-gradient-primary m-1">
+                            <span class="mdi mdi-magnify"></span> Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
         <div class="col-12 grid-margin stretch-card" style="padding: 0;">
             <div class="card">
                 <div class="card-body">
@@ -85,7 +153,7 @@ $menu_item_second = "list_submission_form";
                                             {{ $submission->cso->code }} - {{ $submission->cso->name }}
                                         </td>
                                         <td class="center">
-                                            <a href="{{ route("detail_submission_form", ["id" => $submission->id]) }}">
+                                            <a href="{{ route("detail_submission_form", ["id" => $submission->id, "type" => $submission->type]) }}">
                                                 <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                             </a>
                                         </td>
@@ -159,10 +227,10 @@ $menu_item_second = "list_submission_form";
 
 @section('script')
 <script type="application/javascript">
-$(document).ready(function (e) {
+document.addEventListener("DOMContentLoaded", function () {
     $(".btn-delete").click(function (e) {
         $("#frmDelete").attr("action",  $(this).val());
     });
-});
+}, false);
 </script>
 @endsection
