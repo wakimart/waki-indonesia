@@ -273,7 +273,7 @@ $menu_item_second = "add_submission_reference";
                                     name="proof_image[]"
                                     class="proof-image"
                                     accept=".jpg, .jpeg, .png"
-                                    multiple />
+                                    multiple required/>
                             </div>
                             <br>
                             <br>
