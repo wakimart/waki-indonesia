@@ -157,7 +157,7 @@ $menu_item_page = "user";
                                     </span>
                                 </div>
                                 <!-- End CSO -->
-                            @elseif ($get_roleId == 5 || $get_roleId == 6)
+                            @elseif ($get_roleId == 5)
                                 <?php
                                 $getBranches = json_decode($users['branches_id'], true);
                                 $total_branch = count($getBranches);

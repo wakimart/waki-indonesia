@@ -278,13 +278,14 @@ $menu_item_second = "list_homeservice";
                                                 $selected = "";
 
                                                 if (isset($_GET['filter_branch'])) {
-                                                    if ($_GET['filter_branch'] === $branch['id']) {
-                                                        $selected = "selected=\"\"";
+                                                    if ((int) $_GET['filter_branch'] === (int) $branch['id']) {
+                                                        $selected = "selected";
                                                     }
                                                 }
                                                 @endphp
 
-                                                <option {{ $selected }} value="{{ $branch['id'] }}">
+                                                <option {{ $selected }}
+                                                    value="{{ $branch['id'] }}">
                                                     {{ $branch['code'] }} - {{ $branch['name'] }}
                                                 </option>
                                             @endforeach

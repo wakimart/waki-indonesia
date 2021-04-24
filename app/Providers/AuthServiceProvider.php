@@ -355,5 +355,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define("delete-sparepart", function ($user) {
             return $user->hasAccess(["delete-sparepart"]);
         });
+
+        //-- REFERENCE --//
+        // Edit reference status
+        Gate::define("edit-reference-status", function ($user) {
+            return $user->hasAccess(["edit-reference-status"]);
+        });
     }
 }

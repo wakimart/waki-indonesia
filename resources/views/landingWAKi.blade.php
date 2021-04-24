@@ -716,22 +716,35 @@ $(document).ready(function() {
   $("#success-alert").show();
 });
 
+setInterval(function time(){
+  var d = new Date();
+  var hours = 24 - d.getHours();
+  var min = 60 - d.getMinutes();
+  if((min + '').length == 1){
+    min = '0' + min;
+  }
+  var sec = 60 - d.getSeconds();
+  if((sec + '').length == 1){
+        sec = '0' + sec;
+  }
+  jQuery('#the-final-countdown p').html(hours+':'+min+':'+sec)
+}, 1000);
+
 // update the tag with id "countdown" every 1 second
-const countDownDate = new Date("Apr 30, 2021 00:00:00").getTime();
+const countDownDate = new Date().getTime();
 const intervalId = setInterval(function () {
-    const now = new Date().getTime();
-    const distance = countDownDate - now;
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    var d = new Date();
+    var hours = 24 - d.getHours();
+    var min = 60 - d.getMinutes();
+    if((min + '').length == 1){
+      min = '0' + min;
+    }
+    var sec = 60 - d.getSeconds();
+    if((sec + '').length == 1){
+          sec = '0' + sec;
+    }
 
     let countDownHtml = "";
-    if (days > 0) {
-        countDownHtml += '<span class="h1 font-weight-bold">'
-            + days
-            + ' </span><span class="h1 font-weight-bold">hari </span>';
-    }
 
     if (hours > 0) {
         countDownHtml += '<span class="h1 font-weight-bold">'
@@ -739,19 +752,16 @@ const intervalId = setInterval(function () {
             + ' </span><span class="h1 font-weight-bold">jam </span>';
     }
 
-    if (minutes > 0) {
+    if (min > 0) {
         countDownHtml += '<span class="h1 font-weight-bold">'
-            + ("0" + minutes).slice(-2)
+            + ("0" + min).slice(-2)
             + ' </span><span class="h1 font-weight-bold">menit </span>';
     }
 
     countDownHtml += '<span class="h1 font-weight-bold">'
-        + ("0" + seconds).slice(-2)
+        + ("0" + sec).slice(-2)
         + ' </span><span class="h1 font-weight-bold">detik</span>';
-    if (days <= 0 && hours <= 0 && minutes < 0) {
-        clearInterval(intervalId);
-        countDownHtml = '<span class="h1 font-weight-bold">Promo telah berakhir</span>';
-    }
+    
 
     document.getElementById("countdown-timer").innerHTML = countDownHtml;
 }, 1000);

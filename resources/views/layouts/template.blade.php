@@ -111,7 +111,7 @@
 								<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
 									@if( ! $categoryProduct->product->isEmpty())
 										<ul>
-											@foreach($categoryProduct->product as $product)
+											@foreach($categoryProduct->productIndex as $product)
 												<li><a href="{{route('single_product',['id'=>$product->id])}}">{{ $product->code }}</a></li>
 											@endforeach
 										</ul>

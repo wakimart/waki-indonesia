@@ -1,42 +1,44 @@
 <?php
-    $menu_item_page = "promo";
-    $menu_item_second = "add_promo";
+$menu_item_page = "promo";
+$menu_item_second = "add_promo";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <style type="text/css">
 	.imagePreview {
-      width: 100%;
-      height: 150px;
-      background-position: center center;
-      background-color: #fff;
-      background-size: cover;
-      background-repeat: no-repeat;
-      display: inline-block;
-   }
+        width: 100%;
+        height: 150px;
+        background-position: center center;
+        background-color: #fff;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: inline-block;
+    }
 
   	.del {
-      position: absolute;
-      top: 0px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
-      text-align: center;
-      line-height: 30px;
-      background-color: rgba(255,255,255,0.6);
-      cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgba(255,255,255,0.6);
+        cursor: pointer;
   	}
 
   	#intro {
         padding-top: 2em;
     }
 
-    .validation{
+    .validation {
         color: red;
         font-size: 9pt;
     }
-    button{
+
+    button {
         background: #1bb1dc;
         border: 0;
         border-radius: 3px;
@@ -45,7 +47,7 @@
         transition: 0.3s;
     }
 
-    input, select, textarea{
+    input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
@@ -61,92 +63,144 @@
 			<h3 class="page-title">Add Promo</h3>
 			<nav aria-label="breadcrumb">
 				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a data-toggle="collapse" href="#promo-dd" aria-expanded="false" aria-controls="promo-dd">Promo</a></li>
-					<li class="breadcrumb-item active" aria-current="page">Add Promo</li>
+					<li class="breadcrumb-item">
+                        <a data-toggle="collapse"
+                            href="#promo-dd"
+                            aria-expanded="false"
+                            aria-controls="promo-dd">
+                            Promo
+                        </a>
+                    </li>
+					<li class="breadcrumb-item active" aria-current="page">
+                        Add Promo
+                    </li>
 				</ol>
 			</nav>
 		</div>
-		<div class="row">
 
+		<div class="row">
 			<div class="col-12 grid-margin stretch-card">
 				<div class="card">
 					<div class="card-body">
-						<form id="actionAdd" class="forms-sample" method="POST" action="{{route('store_promo')}}">
+						<form id="actionAdd"
+                            class="forms-sample"
+                            method="POST"
+                            action="{{ route('store_promo') }}">
 							{{ csrf_field() }}
 							<div class="form-group">
-								<label for="">Code</label>
-								<input type="text" class="form-control" id="exampleInputName1" placeholder="Promo Code" name="code" required="">
+								<label for="code">Code</label>
+								<input type="text"
+                                    class="form-control"
+                                    id="code"
+                                    placeholder="Promo Code"
+                                    name="code"
+                                    required />
 							</div>
 							<div class="form-group">
-								<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-	                  				<div class="form-group" style="width: 72%; display: inline-block;">
-					                    <label for="">Product</label>
-					                    <select class="form-control" name="product_0" data-msg="Mohon Pilih Product" required="">
-			                            <option selected disabled value="">Choose Product</option>
+								<div class="col-xs-12 col-sm-12 row"
+                                    style="margin: 0;padding: 0;">
+	                  				<div class="form-group"
+                                        style="width: 72%; display: inline-block;">
+					                    <label for="product_0">Product</label>
+					                    <select class="form-control"
+                                            name="product_0"
+                                            data-msg="Mohon Pilih Product"
+                                            required>
+                                            <option selected disabled value="">
+                                                Choose Product
+                                            </option>
 
-			                            @foreach($products as $key=>$product)
-			                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
-			                            @endforeach
-			                        </select>
+                                            @foreach ($products as $key => $product)
+                                                <option value="{{ $product['id'] }}">
+                                                    {{ $product['code'] }} - {{ $product['name'] }}
+                                                </option>
+                                            @endforeach
+			                            </select>
 	                    				<div class="validation"></div>
 	                  				</div>
-	                  				<div class="form-group" style="width: 16%; display: inline-block;">
-	                    				<label for="">Qty</label>
-		                					<select class="form-control" name="qty_0" data-msg="Mohon Pilih Jumlah" required="">
-				                            <option selected value="1">1</option>
+	                  				<div class="form-group"
+                                        style="width: 16%; display: inline-block;">
+	                    				<label for="qty_0">Qty</label>
+		                					<select class="form-control"
+                                                name="qty_0"
+                                                data-msg="Mohon Pilih Jumlah"
+                                                required>
+				                                <option selected value="1">1</option>
 
-				                            @for($i=2; $i<=10;$i++)
-				                                <option value="{{ $i }}">{{ $i }}</option>
-				                            @endfor
+                                                @for ($i = 2; $i <= 10; $i++)
+                                                    <option value="{{ $i }}">
+                                                        {{ $i }}
+                                                    </option>
+                                                @endfor
 				                        </select>
 				                        <div class="validation"></div>
 	                  				</div>
 
-	                  				<div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+	                  				<div class="text-center">
+                                        <button id="tambah_product"
+                                            title="Tambah Product"
+                                            style="padding: 0.4em 0.7em; margin-top: 26px;">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
 
 	                  				<div id="tambahan_product"></div>
 	                			</div>
 							</div>
 
 							<div class="form-group d-none">
-								<label for="">Berat Promo (KG)</label>
-								<input type="text" class="form-control" id="exampleInputName1" placeholder="Berat (Kg)">
+								<label for="weight">Berat Promo (KG)</label>
+								<input type="text"
+                                    class="form-control"
+                                    id="weight"
+                                    placeholder="Berat (Kg)" />
 							</div>
 							<div class="form-group d-none">
-								<label for="">Jumlah Promo</label>
-								<input type="text" class="form-control" id="exampleInputName1" placeholder="Jumlah">
+								<label for="amount">Jumlah Promo</label>
+								<input type="text"
+                                    class="form-control"
+                                    id="amount"
+                                    placeholder="Jumlah" />
 							</div>
 							<div class="form-group">
-								<label for="">Price (Rp.)</label>
-								<input type="number" class="form-control" id="exampleInputName1" placeholder="Promo Price (Rp)" name="price" required="">
+								<label for="price">Price (Rp.)</label>
+								<input type="number"
+                                    class="form-control"
+                                    id="price"
+                                    placeholder="Promo Price (Rp)"
+                                    name="price"
+                                    required />
 							</div>
 
-
-							<div class="form-group">
+							{{-- <div class="form-group">
 								<div class="col-xs-12">
-									<label>Promo Price (720x720 pixel)</label><span style="float: right;">min. 1 picture</span>
+									<label>Promo Image (720x720 pixel)</label><span style="float: right;">min. 1 picture</span>
 								</div>
-								@for($i=0;$i<3;$i++)
+								@for ($i = 0; $i < 3; $i++)
 								<div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp" style="padding: 15px; float: left;">
 	                          		<label>Image {{$i+1}}</label>
-	                          		<div class="imagePreview" style="background-image: url({{asset('sources/dashboard/no-img-banner.jpg')}});"></div>
+	                          		<div class="imagePreview" style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});"></div>
 	                          		<label class="file-upload-browse btn btn-gradient-primary" style="margin-top: 15px;">Upload
 	                              		<input name="images{{$i}}" id="productimg-{{$i}}" type="file" accept=".jpg,.jpeg,.png" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">
 	                          		</label>
 	                          		<i class="mdi mdi-window-close del"></i>
 	                      		</div>
 								@endfor
-							</div>
+							</div> --}}
 
 							<div class="form-group d-none">
-								<label for="">Coming Soon ?</label>
-								<select class="form-control" id="exampleSelectGender">
+								<label for="coming-soon">Coming soon?</label>
+								<select class="form-control" id="coming-soon">
 									<option>Yes</option>
 									<option>No</option>
 								</select>
 							</div>
 
-							<button id="addPromo" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+							<button id="addPromo"
+                                type="submit"
+                                class="btn btn-gradient-primary mr-2">
+                                Save
+                            </button>
 							<button class="btn btn-light">Cancel</button>
 						</form>
 					</div>
@@ -154,13 +208,12 @@
 			</div>
 		</div>
 	</div>
-<!-- partial -->
 </div>
 @endsection
 
 @section('script')
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script type="text/javascript">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="application/javascript">
 	$(document).ready(function() {
         var frmAdd;
 
@@ -226,7 +279,7 @@
 	    }
     });
 </script>
-<script type="text/javascript">
+<script type="application/javascript">
 	$(function() {
 	    $(document).on("change",".uploadFile", function()
 	    {
@@ -247,7 +300,7 @@
 	    });
 	});
 </script>
-<script type="text/javascript">
+<script type="application/javascript">
 	$(document).ready(function(){
 		var total_product = 0;
 

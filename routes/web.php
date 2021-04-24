@@ -54,15 +54,19 @@ Route::get('/fetchCso', 'CsoController@fetchCso')->name('fetchCso');
 Route::get('/fetchCsoById', 'CsoController@fetchCsoById')->name('fetchCsoById');
 Route::get('/fetchCsoByIdBranch/{branch}', 'CsoController@fetchCsoByIdBranch')->name('fetchCsoByIdBranch');
 Route::get('/fetchBranchById', 'BranchController@fetchBranchById')->name('fetchBranchById');
+Route::get("/fetchProvince", function () {
+    return RajaOngkir::FetchProvince();
+})->name("fetchProvince");
 Route::get('/fetchCity/{province}', function ($province) {
     return RajaOngkir::FetchCity($province);
 })->name('fetchCity');
 
 Route::get('/fetchDistrict/{city}', function ($city) {
-    $kotaOrKab = array("Kota ", "Kabupaten ");
-    $city = str_replace($kotaOrKab, '', $city);
+	$kotaOrKab = array("Kota ", "Kabupaten ");
+	$city = str_replace($kotaOrKab, '', $city);
     return RajaOngkir::FetchDistrict($city);
 })->name('fetchDistrict');
+Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSouvenir");
 
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)
@@ -82,48 +86,48 @@ Route::group(['prefix' => 'api-apps'], function () {
     Route::get('fetchprovinceapi', function () {
         return RajaOngkir::FetchProvinceApi();
     }); //fetching all province
-    Route::get('fetchcityapi/{province}',function ($province) {
+    Route::get('fetchcityapi/{province}', function ($province) {
         return RajaOngkir::FetchCityApi($province);
     }); //fetching all city from province
-    Route::get('fetchallcityapi/{province}',function ($province) {
-        return RajaOngkir::FetchAllCityApi($province);
-    });
-    Route::get('fetchdistrictapi/{city}',function ($city) {
+	Route::get('fetchallcityapi/{province}', function ($province) {
+		return RajaOngkir::FetchAllCityApi($province);
+	});
+	Route::get('fetchdistrictapi/{city}', function ($city) {
         return RajaOngkir::FetchAllDistrictAPI($city);
     }); //fetching all district from province
-    Route::group(['prefix' => 'homeservice'], function () {
-        Route::post('add','HomeServiceController@addApi'); //add home service
-        Route::post('update','HomeServiceController@updateApi'); //update home service
-        Route::post('reportHomeService','HomeServiceController@reportHomeService'); //reportHomeService home service
-        Route::post('delete','HomeServiceController@deleteApi'); //delete home service
-        Route::post('list','HomeServiceController@listApi'); //list home service
-        Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
-        Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
-    });
+	Route::group(['prefix' => 'homeservice'], function () {
+	    Route::post('add','HomeServiceController@addApi'); //add home service
+		Route::post('update','HomeServiceController@updateApi'); //update home service
+		Route::post('reportHomeService','HomeServiceController@reportHomeService'); //reportHomeService home service
+	    Route::post('delete','HomeServiceController@deleteApi'); //delete home service
+	    Route::post('list','HomeServiceController@listApi'); //list home service
+		Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
+		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
+	});
 
-    Route::group(['prefix' => 'register'], function () {
-        Route::post('add','DeliveryOrderController@addApi'); //add register DO
-        Route::post('list','DeliveryOrderController@listApi'); //list register DO
-        Route::post('update','DeliveryOrderController@updateApi'); //update register DO
-        Route::get('view/{id}','DeliveryOrderController@viewApi'); //view single register DO
-        Route::post('delete','DeliveryOrderController@deleteApi'); //delete register DO
-    });
+	Route::group(['prefix' => 'register'], function () {
+	    Route::post('add','DeliveryOrderController@addApi'); //add register DO
+	    Route::post('list','DeliveryOrderController@listApi'); //list register DO
+		Route::post('update','DeliveryOrderController@updateApi'); //update register DO
+		Route::get('view/{id}','DeliveryOrderController@viewApi'); //view single register DO
+		Route::post('delete','DeliveryOrderController@deleteApi'); //delete register DO
+	});
 
-    Route::group(['prefix' => 'order'], function () {
-        Route::post('add','OrderController@addApi'); //add order
-        Route::post('list','OrderController@listApi'); //list order
-        Route::post('update','OrderController@updateApi'); //update order
-        Route::get('view/{id}','OrderController@viewApi'); //view single order
-        Route::post('delete','OrderController@deleteApi'); //delete order
-    });
+	Route::group(['prefix' => 'order'], function () {
+	    Route::post('add','OrderController@addApi'); //add order
+		Route::post('list','OrderController@listApi'); //list order
+		Route::post('update','OrderController@updateApi'); //update order
+		Route::get('view/{id}','OrderController@viewApi'); //view single order
+		Route::post('delete','OrderController@deleteApi'); //delete order
+	});
 
-    Route::group(['prefix' => 'acceptance'], function () {
-        Route::post('add','AcceptanceController@addApi'); //add acceptance
-        Route::post('list','AcceptanceController@listApi'); //list acceptance
-        Route::post('update','AcceptanceController@updateApi'); //update acceptance
-        Route::get('view/{id}','AcceptanceController@viewApi'); //view single acceptance
-        Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
-    });
+	Route::group(['prefix' => 'acceptance'], function () {
+	    Route::post('add','AcceptanceController@addApi'); //add acceptance
+		Route::post('list','AcceptanceController@listApi'); //list acceptance
+		Route::post('update','AcceptanceController@updateApi'); //update acceptance
+		Route::get('view/{id}','AcceptanceController@viewApi'); //view single acceptance
+		Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
+	});
 
     // Submission form API
     Route::group(["prefix" => "submission"], function () {
@@ -131,19 +135,33 @@ Route::group(['prefix' => 'api-apps'], function () {
         Route::post("add", "SubmissionController@addApi");
 
         // Show submission list API
-        Route::post("list_submission", "SubmissionController@listSubmissionApi");
-
-        // Show reference list API
-        Route::post("list_reference", "SubmissionController@listReferenceApi");
+        Route::post("list_submission", "SubmissionController@listApi");
 
         // View detail submission API
-        Route::post("detail", "SubmissionController@detailSubmissionApi");
+        Route::post("detail", "SubmissionController@detailApi");
 
         // Update submission API
         Route::post("update", "SubmissionController@updateApi");
 
         // Delete submission API
         Route::post("delete", "SubmissionController@deleteApi");
+    });
+
+    // Reference API
+    Route::group(["prefix" => "reference"], function () {
+        // List reference API
+        Route::post("list_reference", "ReferenceController@listApi");
+    });
+
+    // Promo API
+    Route::group(["prefix" => "promo"], function () {
+        // List promo API
+        Route::post("fetch_promo", "PromoController@fetchPromoList");
+    });
+
+    // Souvenir API
+    Route::group(["prefix" => "souvenir"], function () {
+        Route::post("fetch_souvenir", "SouvenirController@fetchSouvenir");
     });
 });
 
@@ -215,42 +233,41 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //get user image
         Route::get('file/{file}', 'UserAdminController@serveImages')
                 ->name('avatar_useradmin');
-    });
+	});
 
-    Route::group(['prefix' => 'delivery_order', 'middleware' => 'auth'], function() {
-        //Add Form DO
-        Route::get('/', 'DeliveryOrderController@admin_AddDeliveryOrder')
-            ->name('add_deliveryorder')
-            ->middleware('can:add-deliveryorder');
-        //Create DO
-        Route::post('/', 'DeliveryOrderController@admin_StoreDeliveryOrder')
-            ->name('store_deliveryorder')
-            ->middleware('can:add-deliveryorder');
-        //List DO
-        Route::get('/list', 'DeliveryOrderController@admin_ListDeliveryOrder')
-            ->name('list_deliveryorder')
-            ->middleware('can:browse-deliveryorder');
-        //Detail DO
-        Route::get('/detail', 'DeliveryOrderController@admin_DetailDeliveryOrder')
-            ->name('detail_deliveryorder')
-            ->middleware('can:detail-deliveryorder');
-        //Edit DO
-        Route::get('/edit/', 'DeliveryOrderController@edit')
-            ->name('edit_deliveryorder')
-            ->middleware('can:edit-deliveryorder');
-        //Update DO
-        Route::post('/update/', 'DeliveryOrderController@update')
-            ->name('update_deliveryorder')
-            ->middleware('can:edit-deliveryorder');
-           //Delete DO
-        Route::post('/{deliveryOrderNya}', 'DeliveryOrderController@delete')
-            ->name('delete_deliveryorder');
+    Route::group(['prefix' => 'delivery_order', 'middleware' => 'auth'], function(){
+    	//Add Form DO
+	    Route::get('/', 'DeliveryOrderController@admin_AddDeliveryOrder')
+	    	->name('add_deliveryorder')
+	    	->middleware('can:add-deliveryorder');
+	    //Create DO
+	    Route::post('/', 'DeliveryOrderController@admin_StoreDeliveryOrder')
+	    	->name('store_deliveryorder')
+	    	->middleware('can:add-deliveryorder');
+	    //List DO
+	    Route::get('/list', 'DeliveryOrderController@admin_ListDeliveryOrder')
+	    	->name('list_deliveryorder')
+	    	->middleware('can:browse-deliveryorder');
+	    //Detail DO
+	    Route::get('/detail', 'DeliveryOrderController@admin_DetailDeliveryOrder')
+	    	->name('detail_deliveryorder')
+	    	->middleware('can:detail-deliveryorder');
+	    //Edit DO
+	    Route::get('/edit/', 'DeliveryOrderController@edit')
+	    	->name('edit_deliveryorder')
+	    	->middleware('can:edit-deliveryorder');
+	    //Update DO
+	    Route::post('/update/', 'DeliveryOrderController@update')
+	    	->name('update_deliveryorder')
+	    	->middleware('can:edit-deliveryorder');
+	   	//Delete DO
+	    Route::post('/{deliveryOrderNya}', 'DeliveryOrderController@delete')
+	    	->name('delete_deliveryorder');
 
-
-        //WAKi Di Rumah Aja
-        Route::get('/list_regispromo', 'RegistrationPromotionController@admin_ListRegistrationPromo')
-            ->name('list_regispromo')
-            ->middleware('can:browse-deliveryorder');
+	    //WAKi Di Rumah Aja
+	    Route::get('/list_regispromo', 'RegistrationPromotionController@admin_ListRegistrationPromo')
+	    	->name('list_regispromo')
+	    	->middleware('can:browse-deliveryorder');
     });
 
     Route::group(['prefix' => 'order', 'middleware' => 'auth'], function() {
@@ -466,31 +483,30 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('delete_branch');
     });
 
-
-    Route::group(['prefix' => 'appVersion', 'middleware' => 'auth'], function() {
-        //Add Form App Version
-        Route::get('/', 'VersionController@create')
-            ->name('add_appVersion')
-            ->middleware('can:add-app');
-        //Create App Version
-        Route::post('/', 'VersionController@store')
-            ->name('store_appVersion')
-            ->middleware('can:add-app');
-        //List App Version
-        Route::get('/list', 'VersionController@index')
-            ->name('list_appVersion')
-            ->middleware('can:browse-app');
-        //Edit App Version
-        Route::get('/edit/', 'VersionController@edit')
-            ->name('edit_app')
-            ->middleware('can:edit-app');
-        //Update Branch
-        Route::post('/update/', 'VersionController@update')
-            ->name('update_app')
-            ->middleware('can:edit-app');
-        //Delete Branch
-        Route::post('/{AppNya}', 'VersionController@delete')
-            ->name('delete_app');
+	Route::group(['prefix' => 'appVersion', 'middleware' => 'auth'], function(){
+    	//Add Form App Version
+    	Route::get('/', 'VersionController@create')
+	    	->name('add_appVersion')
+	    	->middleware('can:add-app');
+	    //Create App Version
+	    Route::post('/', 'VersionController@store')
+	    	->name('store_appVersion')
+	    	->middleware('can:add-app');
+	    //List App Version
+	    Route::get('/list', 'VersionController@index')
+	    	->name('list_appVersion')
+	    	->middleware('can:browse-app');
+	    //Edit App Version
+	    Route::get('/edit/', 'VersionController@edit')
+	    	->name('edit_app')
+	    	->middleware('can:edit-app');
+	    //Update Branch
+	    Route::post('/update/', 'VersionController@update')
+	    	->name('update_app')
+	    	->middleware('can:edit-app');
+	    //Delete Branch
+	    Route::post('/{AppNya}', 'VersionController@delete')
+	    	->name('delete_app');
     });
 
     Route::group(['prefix' => 'category_products', 'middleware' => 'auth'], function() {
@@ -557,30 +573,39 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->middleware('can:browse-product');
     });
 
-    Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function() {
-        //Add Form Promo
-        Route::get('/', 'PromoController@create')
-            ->name('add_promo')
-            ->middleware('can:add-promo');
-        //Create Promo
-        Route::post('/', 'PromoController@store')
-            ->name('store_promo')
-            ->middleware('can:add-promo');
-        //List Promo
-        Route::get('/list', 'PromoController@index')
-            ->name('list_promo')
-            ->middleware('can:browse-promo');
-        //Edit Promo
-        Route::get('/edit/', 'PromoController@edit')
-            ->name('edit_promo')
-            ->middleware('can:edit-promo');
-        //Update Promo
-        Route::post('/update/', 'PromoController@update')
-            ->name('update_promo')
-            ->middleware('can:edit-promo');
-        //Delete Promo
-        Route::post('/{PromoNya}', 'PromoController@delete')
-            ->name('delete_promo');
+    Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){
+    	// Add Form Promo
+    	Route::get('/', 'PromoController@create')
+	    	->name('add_promo')
+	    	->middleware('can:add-promo');
+
+	    // Create Promo
+	    Route::post('/', 'PromoController@store')
+	    	->name('store_promo')
+	    	->middleware('can:add-promo');
+
+	    // List Promo
+	    Route::get('/list', 'PromoController@index')
+	    	->name('list_promo')
+	    	->middleware('can:browse-promo');
+
+	    // Edit Promo
+	    Route::get('/edit/', 'PromoController@edit')
+	    	->name('edit_promo')
+	    	->middleware('can:edit-promo');
+
+	    // Update Promo
+	    Route::post('/update/', 'PromoController@update')
+	    	->name('update_promo')
+	    	->middleware('can:edit-promo');
+
+	    // Delete Promo
+	    Route::post('/{PromoNya}', 'PromoController@delete')
+	    	->name('delete_promo');
+
+        // Fetch List Promo
+        Route::get("/fetchPromo", "PromoController@fetchPromoList")
+            ->name("fetch_promo_dropdown");
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
@@ -588,21 +613,35 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("/", "SubmissionController@create")
             ->name("add_submission_form");
 
+        Route::get("/mgm", "SubmissionController@createMGM")
+            ->name("add_submission_mgm");
+
+        Route::get("/reference", "SubmissionController@createReference")
+            ->name("add_submission_reference");
+
+        Route::get("/takeaway", "SubmissionController@createTakeaway")
+            ->name("add_submission_takeaway");
+
         // Process new submission form
         Route::post("/", "SubmissionController@store")
             ->name("store_submission_form");
 
+        Route::post("/mgm", "SubmissionController@storeMGM")
+            ->name("store_submission_mgm");
+
+        Route::post("/reference", "SubmissionController@storeReference")
+            ->name("store_submission_reference");
+
+        Route::post("/takeaway", "SubmissionController@storeTakeaway")
+            ->name("store_submission_takeaway");
+
         // Show submission list
-        Route::get("/list", "SubmissionController@listSubmission")
+        Route::get("/list", "SubmissionController@index")
             ->name("list_submission_form");
 
-        // Show reference list
-        Route::get("/list_reference", "SubmissionController@listReference")
-            ->name("list_reference");
-
         // Show detail of submission
-        Route::get("/detail", "SubmissionController@detailSubmission")
-            ->name("detail_submission");
+        Route::get("/detail", "SubmissionController@show")
+            ->name("detail_submission_form");
 
         // Edit submission form page
         Route::get("/edit/", "SubmissionController@edit")
@@ -615,6 +654,16 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Process submission form delete
         Route::post("/delete/", "SubmissionController@destroy")
             ->name("delete_submission_form");
+    });
+
+    Route::group(["prefix" => "reference", "middleware" => "auth"], function () {
+        // List reference
+        Route::get("/list", "ReferenceController@index")
+            ->name("list_reference");
+
+        // Update reference
+        Route::post("/update", "ReferenceController@update")
+            ->name("update_reference");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {
@@ -683,6 +732,32 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Process upgrade form delete
         Route::post("/{id}", "UpgradeController@destroy")
             ->name("delete_upgrade_form");
+    });
+
+    Route::group(["prefix" => "souvenir", "middleware" => "auth"], function () {
+        // List souvenir
+        Route::get("/list", "SouvenirController@index")
+            ->name("list_souvenir");
+
+        // Create souvenir
+        Route::get("/add", "SouvenirController@create")
+            ->name("add_souvenir");
+
+        // Store souvenir
+        Route::post("/add", "SouvenirController@store")
+            ->name("store_souvenir");
+
+        // Edit souvenir
+        Route::get("/edit", "SouvenirController@edit")
+            ->name("edit_souvenir");
+
+        // Update souvenir
+        Route::post("/update", "SouvenirController@update")
+            ->name("update_souvenir");
+
+        // Delete souvenir
+        Route::post("/delete", "SouvenirController@destroy")
+            ->name("delete_souvenir");
     });
 });
 

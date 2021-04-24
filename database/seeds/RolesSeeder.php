@@ -133,6 +133,9 @@ class RolesSeeder extends Seeder
                 "browse-sparepart" => true,
                 "edit-sparepart" => true,
                 "delete-sparepart" => true,
+
+                // Reference (Head Admin)
+                "edit-reference-status" => true,
         	]),
         ]);
 
@@ -257,6 +260,9 @@ class RolesSeeder extends Seeder
                 "browse-sparepart" => true,
                 "edit-sparepart" => true,
                 "delete-sparepart" => true,
+
+                // Reference (Admin)
+                "edit-reference-status" => true,
         	]),
         ]);
 
@@ -375,6 +381,9 @@ class RolesSeeder extends Seeder
                 "browse-sparepart" => false,
                 "edit-sparepart" => false,
                 "delete-sparepart" => false,
+
+                // Reference (CSO)
+                "edit-reference-status" => false,
             ]),
         ]);
 
@@ -493,6 +502,9 @@ class RolesSeeder extends Seeder
                 "browse-sparepart" => false,
                 "edit-sparepart" => false,
                 "delete-sparepart" => false,
+
+                // Reference (Branch)
+                "edit-reference-status" => false,
             ]),
         ]);
 
@@ -611,6 +623,9 @@ class RolesSeeder extends Seeder
                 "browse-sparepart" => false,
                 "edit-sparepart" => false,
                 "delete-sparepart" => false,
+
+                // Reference (Area Manager)
+                "edit-reference-status" => false,
             ]),
         ]);
 
@@ -729,6 +744,9 @@ class RolesSeeder extends Seeder
                 "browse-sparepart" => false,
                 "edit-sparepart" => false,
                 "delete-sparepart" => false,
+
+                // Reference (Head Manager)
+                "edit-reference-status" => false,
             ]),
         ]);
 
@@ -853,6 +871,9 @@ class RolesSeeder extends Seeder
                 "browse-sparepart" => true,
                 "edit-sparepart" => true,
                 "delete-sparepart" => true,
+
+                // Reference (Admin Management)
+                "edit-reference-status" => false,
             ]),
         ]);
     }

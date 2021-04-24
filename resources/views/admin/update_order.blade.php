@@ -1,9 +1,14 @@
 <?php
-    $menu_item_page = "order";
+
+use App\DeliveryOrder;
+use App\Product;
+
+$menu_item_page = "order";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <style type="text/css">
     .imagePreview {
 	    width: 100%;
@@ -14,27 +19,28 @@
 	    background-repeat: no-repeat;
 	    display: inline-block;
 	}
-   
+
   	.del {
-      position: absolute;
-      top: 0px;
-      right: 10px;
-      width: 30px;
-      height: 30px;
-      text-align: center;
-      line-height: 30px;
-      background-color: rgba(255,255,255,0.6);
-      cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgba(255,255,255,0.6);
+        cursor: pointer;
   	}
 
   	#intro {
         padding-top: 2em;
     }
-    
+
     .validation{
         color: red;
         font-size: 9pt;
     }
+
     button{
         background: #1bb1dc;
         border: 0;
@@ -68,33 +74,33 @@
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
-	          		<div class="card-body">	            		
+	          		<div class="card-body">
 	            		<form id="actionUpdate" class="forms-sample" method="POST" action="{{ route('update_order') }}">
 	            			{{ csrf_field() }}
 	            			<div class="form-group">
-				                <label for="">Order Code</label>
-				                <input type="text" class="form-control" id="name" name="name" value="{{$orders['code']}}" readonly="">
+				                <label for="order-code">Order Code</label>
+				                <input type="text" class="form-control" id="order-code" name="order_code" value="{{ $orders['code'] }}" readonly="">
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
 	                			<label for="">No. Member (optional)</label>
-	                			<input type="number" class="form-control" id="no_member" name="no_member" value="{{$orders['no_member']}}">
+	                			<input type="number" class="form-control" id="no_member" name="no_member" value="{{ $orders['no_member'] }}">
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
 				                <label for="">Name</label>
-				                <input type="text" class="form-control" id="name" name="name" value="{{$orders['name']}}">
+				                <input type="text" class="form-control" id="name" name="name" value="{{ $orders['name'] }}">
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
 				                <label for="">Phone Number</label>
-				                <input type="number" class="form-control" id="phone" name="phone" value="{{$orders['phone']}}">
+				                <input type="number" class="form-control" id="phone" name="phone" value="{{ $orders['phone'] }}">
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
 				                <label for="">Province</label>
 								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
-									<option selected value="{{$orders['district']['province_id']}}">{{$orders['district']['province']}}</option>
+									<option selected value="{{ $orders['district']['province_id'] }}">{{ $orders['district']['province'] }}</option>
 
 									@php
 										$result = RajaOngkir::FetchProvince();
@@ -102,7 +108,7 @@
 										$arrProvince = [];
 										if(sizeof($result) > 0){
 											foreach ($result as $value) {
-												echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
+												echo "<option value=\"" . $value['province_id'] . "\">" . $value['province'] . "</option>";
 											}
 										}
 									@endphp
@@ -113,31 +119,30 @@
 				                <label for="">City</label>
 								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
 									@php
-		                              if(isset($orders['district']['province_id'])){
-		                                $result = RajaOngkir::FetchCity($orders['district']['province_id']);
-		                                $result = $result['rajaongkir']['results'];
-		                                $arrCity = [];
-		                                $arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
-		                                $arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
-		                                if(sizeof($result) > 0){
-		                                    foreach ($result as $value) {
-		                                      $terpilihNya = "";
-		                                      if(isset($orders['district']['city_id'])){
-		                                        if($orders['district']['city_id'] == $value['city_id']){
-		                                          $terpilihNya = "selected";
-		                                        }
-		                                      }
+		                                if (isset($orders['district']['province_id'])) {
+                                            $result = RajaOngkir::FetchCity($orders['district']['province_id']);
+                                            $result = $result['rajaongkir']['results'];
+                                            $arrCity = [];
+                                            $arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
+                                            $arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
+                                            if (sizeof($result) > 0) {
+                                                foreach ($result as $value) {
+                                                    $terpilihNya = "";
+                                                    if (isset($orders['district']['city_id'])) {
+                                                        if ($orders['district']['city_id'] == $value['city_id']) {
+                                                            $terpilihNya = "selected";
+                                                        }
+                                                    }
 
-		                                      if($value['type'] == "Kabupaten"){
-		                                        $arrCity[0] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
-		                                      }
-		                                      else{
-		                                        $arrCity[1] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
-		                                      }
-		                                    }
-		                                    echo $arrCity[0];
-		                                    echo $arrCity[1];
-		                                  }
+                                                    if ($value['type'] == "Kabupaten") {
+                                                        $arrCity[0] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
+                                                    } else {
+                                                        $arrCity[1] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
+                                                    }
+                                                }
+                                                echo $arrCity[0];
+                                                echo $arrCity[1];
+                                            }
 		                                }
 		                            @endphp
 								</select>
@@ -175,14 +180,14 @@
 							</div>
 							<div class="form-group">
 				                <label for="">Know From</label>
-								<select class="form-control" id="know_from" name="know_from" data-msg="Mohon Pilih Kecamatan" required>							
+								<select class="form-control" id="know_from" name="know_from" data-msg="Mohon Pilih Kecamatan" required>
 									<option selected disabled value="">{{$orders['know_from']}}</option>
 									@foreach($from_know as $key=>$value)
 										<option value="{{ $value }}">{{ $value }}</option>
 									@endforeach
 								</select>
 								<div class="validation"></div>
-	              			</div>  
+	              			</div>
 	              			<br>
 
 	              			<div class="form-group">
@@ -190,11 +195,15 @@
 			                    <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Mohon Pilih Tipe" required>
 			                        <option selected disabled value="">Choose CASH/UPGRADE</option>
 
-			                        @foreach($cashUpgrades as $key=>$cashUpgrade)
-			                        	@if($orders['cash_upgrade'] == $key)
-			                            <option value="{{ $key }}" selected="true">{{ strtoupper($cashUpgrade) }}</option>
+			                        @foreach ($cashUpgrades as $key => $cashUpgrade)
+			                        	@if ($orders['cash_upgrade'] == $key)
+			                                <option value="{{ $key }}" selected>
+                                                {{ strtoupper($cashUpgrade) }}
+                                            </option>
 			                            @else
-			                            <option value="{{ $key }}">{{ strtoupper($cashUpgrade) }}</option>
+			                                <option value="{{ $key }}">
+                                                {{ strtoupper($cashUpgrade) }}
+                                            </option>
 			                            @endif
 			                        @endforeach
 			                    </select>
@@ -203,7 +212,7 @@
 
 			                @if($orders['cash_upgrade'] == 1 || $orders['cash_upgrade'] == 2)
 			                <div id="container-cashupgrade">
-			                	@php 
+			                	@php
 		                            $ProductPromos = json_decode($orders['product'], true);
 		                            $totalProduct = count($ProductPromos);
 
@@ -216,29 +225,74 @@
 									@endphp
 
 				                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
-				                    <div id="product_{{$total_product}}" class="form-group" style="width: 72%; display: inline-block;">
-				                        <select class="form-control pilihan-product" name="product_{{$total_product}}" data-msg="Mohon Pilih Product" required="">
-				                            <option selected disabled value="">Choose Product</option>
+				                    <div id="product_{{ $total_product }}"
+                                        class="form-group"
+                                        style="width: 72%; display: inline-block;">
+				                        <select class="form-control pilihan-product"
+                                            name="product_{{ $total_product }}"
+                                            data-msg="Mohon Pilih Product"
+                                            required>
+				                            <option selected disabled value="">
+                                                Choose Product
+                                            </option>
+                                            <?php
+                                            $isPromoIdNumeric = false;
+                                            if (is_numeric($ProductPromo['id'])) {
+                                                $isPromoIdNumeric = true;
+                                            }
+                                            ?>
 
-				                            @if(is_numeric($ProductPromo['id']))
-					                            @foreach($promos as $key=>$promo)
-					                            	@if(App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] == $promo['code'])
-					                                	<option value="{{ $key }}" selected="true">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
-					                                @else
-					                                	<option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
-					                                @endif
-					                            @endforeach
-											@endif
+                                            <?php foreach ($promos as $key => $promo): ?>
+                                                <option value="<?php echo $key; ?>"
+                                                    <?php
+                                                    if (
+                                                        $isPromoIdNumeric
+                                                        && $promo["id"] === $ProductPromo["id"]
+                                                    ) {
+                                                        echo "selected";
+                                                    }
+                                                    ?>
+                                                    >
+                                                    <?php
+                                                    $productFromPromo = json_decode($promo["product"]);
+                                                    $arrayProductId = [];
 
-			                                @if(true)
-			                                	@if(!is_numeric($ProductPromo['id']))
-				                                	@foreach($promos as $key=>$promo)
-					                                	<option value="{{ $key }}">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option>
-						                            @endforeach
+                                                    foreach ($productFromPromo as $pp) {
+                                                        $arrayProductId[] = $pp->id;
+                                                    }
 
-					                                <option value="other" selected>OTHER</option>
-			                                	@endif
-			                                @endif
+                                                    $getProduct = Product::select("code")
+                                                    ->whereIn(
+                                                        "id",
+                                                        $arrayProductId
+                                                    )
+                                                    ->get();
+
+                                                    $arrayProductCode = [];
+
+                                                    foreach ($getProduct as $product) {
+                                                        $arrayProductCode[] = $product->code;
+                                                    }
+
+                                                    $productCode = implode(", ", $arrayProductCode);
+
+                                                    echo $promo["code"]
+                                                        . " - ("
+                                                        . $productCode
+                                                        . ") - Rp. "
+                                                        . number_format(
+                                                            (int) $promo["price"],
+                                                            0,
+                                                            null,
+                                                            ","
+                                                        );
+                                                    ?>
+                                                </option>
+                                            <?php endforeach; ?>
+
+                                            <option value="other" <?php echo $isPromoIdNumeric ?: "selected";?>>
+                                                OTHER
+                                            </option>
 				                        </select>
 				                        <div class="validation"></div>
 				                    </div>
@@ -246,7 +300,7 @@
 				                        <select class="form-control" name="qty_{{$total_product}}" data-msg="Mohon Pilih Jumlah" required="">
 				                            <option selected value="1">1</option>
 
-				                            @for($i=2; $i<=10;$i++)
+				                            @for($i = 2; $i <= 10; $i++)
 				                            	@if($ProductPromo['qty'] == $i)
 				                                	<option value="{{ $i }}" selected="true">{{ $i }}</option>
 				                                @else
@@ -256,7 +310,7 @@
 				                        </select>
 				                        <div class="validation"></div>
 				                    </div>
-				                    
+
 				                    @if($total_product == 0)
 					                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
 				                    @else
@@ -264,14 +318,12 @@
 				                    @endif
 
 				                    {{-- KHUSUS Philiphin --}}
-				                    @if(true)
-					                    @if(!is_numeric($ProductPromo['id']))
-					                        <div class="form-group">
-					                            <input type="text" class="form-control" name="product_other_{{ $total_product }}" placeholder="Product Name" data-msg="Please fill in the product" value="{{ $ProductPromo['id'] }}" />
-					                            <div class="validation"></div>
-					                        </div>
-				                        @endif
-				                    @endif
+                                    @if(!is_numeric($ProductPromo['id']))
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="product_other_{{ $total_product }}" placeholder="Product Name" data-msg="Please fill in the product" value="{{ $ProductPromo['id'] }}" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    @endif
 
 			                    @endforeach
 			                    <div id="tambahan_product"></div>
@@ -309,7 +361,7 @@
 			                </div>
 
 			                @if($orders['payment_type'] == 1 || $orders['payment_type'] == 2)
-			                @php 
+			                @php
 	                            $payments = json_decode($orders['bank'], true);
 	                        @endphp
 			                <div id="container-jenispembayaran">
@@ -421,10 +473,9 @@
 	              				<input type="hidden" name="idOrder" value="{{$orders['id']}}">
 	              				<input type="hidden" id="lastTotalProduct" value="{{$total_product}}">
 	              				<button id="updateOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
-	              				<button class="btn btn-light">Cancel</button>	
+	              				<button class="btn btn-light">Cancel</button>
 	              			</div>
 	            		</form>
-
 	          		</div>
 	        	</div>
 	      	</div>
@@ -434,8 +485,44 @@
 @endsection
 
 @section('script')
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script type="text/javascript">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="application/javascript">
+let promoOption = "";
+let quantityOption = "";
+
+document.addEventListener("DOMContentLoaded", function () {
+    const URL = '<?php echo route("fetch_promo_dropdown"); ?>';
+
+    fetch(
+        URL,
+        {
+            method: "GET",
+			headers: {
+				"Accept": "application/json",
+			},
+        }
+    ).then(function (response) {
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+
+		return response.json();
+	}).then(function (response) {
+		const dataPromo = response.data;
+
+        for (const promo in dataPromo) {
+            promoOption += `<option value="${promo}">${dataPromo[promo].product}</option>`;
+        }
+	}).catch(function (error) {
+		console.error(error);
+	});
+
+    for (let i = 1; i <= 10; i++) {
+        quantityOption += `<option value="${i}">${i}</option>`;
+    }
+}, false);
+</script>
+<script type="application/javascript">
 	$(document).ready(function() {
         var frmUpdate;
 
@@ -475,7 +562,7 @@
 	        if(hasil['errors'] != null){
 	            for (var key of frmUpdate.keys()) {
 	                if(typeof hasil['errors'][key] === 'undefined') {
-	                    
+
 	                }
 	                else {
 	                    $("#actionUpdate").find("input[name="+key+"]").addClass("is-invalid");
@@ -513,7 +600,7 @@
                     	if(value['type'] == "Kabupaten"){
                         	arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
                         }
-	                        
+
                         if(value['type'] == "Kota"){
                             arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                         }
@@ -533,7 +620,7 @@
 				console.log(result);
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
-                    $.each( result, function( key, value ) {                            
+                    $.each( result, function( key, value ) {
                         arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
                     });
                     $( "#subDistrict" ).append(arrSubDistsrict);
@@ -542,11 +629,11 @@
         });
 	});
 </script>
-<script>
+<script type="application/javascript">
     var total_bank = 0;
     var total_product = $('#lastTotalProduct').val();
     var count = 0;
-    var arrBooleanCso = [ 'false', 'false', 'false' ];
+    var arrBooleanCso = ['false', 'false', 'false'];
 
     $(document).ready(function(){
         $(".cso").on("input", function(){
@@ -581,7 +668,7 @@
                     console.log("masuk");
                 }
                 else{
-                    $('#submit').attr('disabled',"");                    
+                    $('#submit').attr('disabled',"");
                 }
             });
         });
@@ -602,6 +689,7 @@
                 $(".other_valCicilan").show();
             }
         });
+
         $(document).on("click",".hapus_bank", function(e){
             e.preventDefault();
             total_bank--;
@@ -610,22 +698,42 @@
             $(this).remove();
         });
 
-        $("#tambah_product").click(function(e){
+        $("#tambah_product").click(function (e) {
             e.preventDefault();
             total_product++;
             count = total_product + 1;
 
-            strIsi = "<div id=\"product_"+total_product+"\" class=\"form-group\" style=\"width: 72%; display: inline-block;\"><select class=\"form-control\" name=\"product_"+total_product+"\" data-msg=\"Mohon Pilih Product\" required=\"\"><option selected disabled value=\"\">Choose Product</option> @foreach($promos as $key=>$promo) <option value=\"{{ $key }}\">{{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )</option> @endforeach </select><div class=\"validation\"></div></div><div id=\"qty_"+total_product+"\" class=\"form-group\" style=\"width: 16%; display: inline-block;\"><select class=\"form-control\" name=\"qty_"+total_product+"\" data-msg=\"Mohon Pilih Jumlah\" required=\"\"><option selected value=\"1\">1</option> @for($i=2; $i<=10;$i++) <option value=\"{{ $i }}\">{{ $i }}</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_product\" value=\""+total_product+"\" title=\"Tambah Product\" style=\"padding: 0.4em 0.7em; background-color: red;\"><i class=\"fas fa-minus\"></i></button></div>";
-            $('#tambahan_product').html($('#tambahan_product').html()+strIsi);
+            const strIsi = `<div id="product_${total_product}" class="form-group" style="width: 72%; display: inline-block;">`
+                + `<select class="form-control pilihan-product" name="product_${total_product}" data-msg="Mohon Pilih Product" required>`
+                + promoOption
+                + `</select>`
+                + `<div class="validation"></div>`
+                + `</div>`
+                + `<div id="qty_${total_product}" class="form-group" style="width: 16%; display: inline-block;">`
+                + `<select class="form-control" name="qty_${total_product}" data-msg="Mohon Pilih Jumlah" required>`
+                + quantityOption
+                + `</select>`
+                + `<div class="validation"></div>`
+                + `</div>`
+                + `<div class="text-center" style="display: inline-block; float: right;">`
+                + `<button class="hapus_product" value="${total_product}" title="Tambah Product" style="padding: 0.4em 0.7em; background-color: red;">`
+                + `<i class="fas fa-minus"></i>`
+                + `</button>`
+                + `</div>`;
+
+            let tambahanProduct = document.getElementById("tambahan_product").innerHTML;
+            tambahanProduct += strIsi;
+
+            document.getElementById("tambahan_product").innerHTML = tambahanProduct;
         });
+
         $(document).on("click",".hapus_product", function(e){
             e.preventDefault();
-            //total_product--;
+            // total_product--;
             $('#product_'+$(this).val()).remove();
             $('#qty_'+$(this).val()).remove();
             $(this).remove();
         });
-
 
         $("#cash_upgarde").change( function(e){
             $("#container-cashupgrade").show();
@@ -671,11 +779,5 @@
             });
         @endif
     });
-</script>
-<script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
-<script type="text/javascript">
-    for (let input of document.querySelectorAll('#tags')) {
-        tagsInput(input);
-    }
 </script>
 @endsection
