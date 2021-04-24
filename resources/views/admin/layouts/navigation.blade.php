@@ -168,20 +168,20 @@
             </li>
         @endif
         @if (Gate::check('browse-submission'))
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form' ? 'active' : '' }}"
                     href="{{ route('list_submission_form') }}">
                     List Submmission
                 </a>
-            </li>
+            </li> --}}
         @endif
         @if (Gate::check('browse-reference'))
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_reference' ? 'active' : '' }}"
                     href="{{ route('list_reference') }}">
                     List Reference
                 </a>
-            </li>
+            </li> --}}
         @endif
         </ul>
     </div>
