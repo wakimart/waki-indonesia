@@ -1571,11 +1571,16 @@ class SubmissionController extends Controller
      */
     public function listApi(Request $request)
     {
-        try {
-            // Menyimpan request ke dalam variabel $url untuk pagination
-            $url = $request->all();
+        // Menyimpan request ke dalam variabel $url untuk pagination
+        $url = $request->all();
 
-            // Query dari tabel delivery_orders, dan menampilkan 10 data per halaman
+        $filterType = "";
+        if (!empty($request->filter_type)) {
+            $filterType = $request->filter_type;
+        }
+
+        try {
+            // Query dari tabel submissions, dan menampilkan 10 data per halaman
             $submissions = Submission::select(
                 "submissions.id AS id",
                 "submissions.code AS code",
@@ -1599,6 +1604,7 @@ class SubmissionController extends Controller
                 "=",
                 "submissions.cso_id"
             )
+            ->where("submissions.type", $filterType)
             ->where("submissions.active", true)
             ->paginate(10);
 
