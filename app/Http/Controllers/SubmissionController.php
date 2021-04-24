@@ -7,27 +7,33 @@ use App\Cso;
 use App\DeliveryOrder;
 use App\HistoryUpdate;
 use App\RajaOngkir_City;
+use App\Product;
+use App\Promo;
 use App\Reference;
-use DB;
+use App\ReferenceImage;
+use App\ReferencePromo;
+use App\ReferenceSouvenir;
+use App\Submission;
+use App\Souvenir;
+use App\SubmissionDeliveryorder;
+use App\SubmissionImage;
+use App\SubmissionPromo;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class SubmissionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
      */
-    public function index()
-    {
-        //
-    }
-
-    public function listSubmission(Request $request)
+    public function index(Request $request)
     {
         // Menyimpan request ke dalam variabel $url untuk pagination
         $url = $request->all();
@@ -73,82 +79,7 @@ class SubmissionController extends Controller
             "admin.list_submission_form",
             compact(
                 "deliveryOrders",
-                "url",
-            )
-        );
-    }
-
-    public function listReference(Request $request)
-    {
-        // Menyimpan request ke dalam variabel $url untuk pagination
-        $url = $request->all();
-
-        // Query dari tabel references, dan menampilkan 10 data per halaman
-        $references = Reference::all()->paginate(10);
-
-        return view("admin.list_reference", compact("references", "url"));
-    }
-
-    public function detailSubmission(Request $request)
-    {
-        $deliveryOrder = DeliveryOrder::where("id", $request["id"])->first();
-        $deliveryOrder["district"] = array($deliveryOrder->getDistrict());
-        $references = Reference::where(
-            "deliveryorder_id",
-            $request["id"]
-        )
-        ->orderBy("id", "asc")
-        ->get();
-
-        // Melakukan query nama kota dan provinsi untuk referensi
-        $referencesCityAndProvince = [];
-        $getReferencesCityAndProvince = RajaOngkir_City::leftJoin(
-            "references",
-            "references.city",
-            "=",
-            "raja_ongkir__cities.city_id"
-        )
-        ->select(
-            "raja_ongkir__cities.province",
-            "raja_ongkir__cities.type",
-            "raja_ongkir__cities.city_name",
-        )
-        ->where("references.deliveryorder_id", $request["id"])
-        ->orderBy("references.id")
-        ->get();
-
-        foreach ($getReferencesCityAndProvince as $refCityAndProvince) {
-            $referencesCityAndProvince[] = $refCityAndProvince->type
-                . " "
-                . $refCityAndProvince->city_name
-                . ", "
-                . $refCityAndProvince->province;
-        }
-
-        // Melakukan query riwayat dari tabel history_updates
-        $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin(
-            'users',
-            'users.id',
-            '=',
-            'history_updates.user_id'
-        )
-        ->select(
-            'history_updates.method',
-            'history_updates.created_at',
-            'history_updates.meta AS meta',
-            'users.name AS name'
-        )
-        ->where('type_menu', 'Delivery Order')
-        ->where('menu_id', $deliveryOrder->id)
-        ->get();
-
-        return view(
-            "admin.detail_submission",
-            compact(
-                "deliveryOrder",
-                "historyUpdateDeliveryOrder",
-                "references",
-                "referencesCityAndProvince",
+                "url"
             )
         );
     }
@@ -160,18 +91,81 @@ class SubmissionController extends Controller
      */
     public function create()
     {
-        $promos = DeliveryOrder::$Promo;
         $branches = Branch::where('active', true)->get();
         $csos = Cso::all();
+        $promos = Promo::all();
+        $souvenirs = Souvenir::select("id", "name")
+        ->where("active", true)
+        ->get();
 
-        return view('admin.add_submission_form', compact('promos', 'branches', 'csos'));
+        return view(
+            'admin.add_submission_form',
+            compact(
+                'promos',
+                'branches',
+                'csos',
+                "souvenirs",
+            )
+        );
+    }
+
+    public function createMGM()
+    {
+        $branches = Branch::where('active', true)->get();
+        $csos = Cso::all();
+        $promos = Promo::all();
+
+        return view(
+            "admin.add_submission_mgm",
+            compact(
+                'promos',
+                'branches',
+                'csos',
+            )
+        );
+    }
+
+    public function createReference()
+    {
+        $branches = Branch::where('active', true)->get();
+        $csos = Cso::all();
+        $promos = Promo::all();
+        $souvenirs = Souvenir::select("id", "name")
+        ->where("active", true)
+        ->get();
+
+        return view(
+            "admin.add_submission_reference",
+            compact(
+                'promos',
+                'branches',
+                'csos',
+                "souvenirs",
+            )
+        );
+    }
+
+    public function createTakeaway()
+    {
+        $branches = Branch::where('active', true)->get();
+        $csos = Cso::all();
+        $promos = Promo::all();
+
+        return view(
+            "admin.add_submission_takeaway",
+            compact(
+                'promos',
+                'branches',
+                'csos',
+            )
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -194,11 +188,11 @@ class SubmissionController extends Controller
 
                         // {{-- KHUSUS Philiphin --}}
                         if($value == 'other'){
-                            $data['arr_product'][$key]['id'] = $data['product_other_'.$arrKey[1]];
+                            $data['arr_product'][$key]['id'] = $data['product_other_' . $arrKey[1]];
                         }
                         // ===========================
 
-                        $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+                        $data['arr_product'][$key]['qty'] = $data['qty_' . $arrKey[1]];
                     }
                 }
             }
@@ -252,6 +246,9 @@ class SubmissionController extends Controller
                 $reference->province = $data["province_ref"][$i];
                 $reference->city = $data["city_ref"][$i];
                 $reference->deliveryorder_id = $deliveryOrder->id;
+                $reference->souvenir_id = $data["souvenir_id"][$i];
+                $reference->link_hs = $data["link_hs"][$i];
+                $reference->status = "pending";
                 $reference->save();
             }
 
@@ -263,26 +260,319 @@ class SubmissionController extends Controller
 
             return response()->json([
                 'error' => $ex,
+                'error message' => $ex->getMessage(),
             ]);
+        }
+    }
+
+    public function storeMGM(Request $request)
+    {
+        $data = $request->all();
+
+        DB::beginTransaction();
+
+        try {
+            $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $submission = Submission::create($data);
+
+            $dataCount = count($data["name_ref"]);
+            for ($i = 0; $i < $dataCount; $i++) {
+                if (!empty($data["name_ref"][$i])) {
+                    $reference = new Reference();
+                    $reference->submission_id = $submission->id;
+                    $reference->name = $data["name_ref"][$i];
+                    $reference->age = $data["age_ref"][$i];
+                    $reference->phone = $data["phone_ref"][$i];
+                    $reference->province = $data["province_ref"][$i];
+                    $reference->city = $data["city_ref"][$i];
+                    $reference->save();
+
+                    $referencePromo = new ReferencePromo();
+                    $referencePromo->reference_id = $reference->id;
+
+                    if (isset($data["promo_1"])){
+                        if ($data["promo_1"][$i] !== "other") {
+                        $referencePromo->promo_1 = $data["promo_1"][$i];
+                    }                    }
+
+                    if (isset($data["promo_2"])){
+                        if ($data["promo_2"][$i] !== "other") {
+                            $referencePromo->promo_2 = $data["promo_2"][$i];
+                        }
+                    }
+
+                    $referencePromo->qty_1 = $data["qty_1"][$i];
+
+
+                    if (isset($data["promo_2"])){
+                        if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
+                            $referencePromo->qty_2 = $data["qty_2"][$i];
+                        }
+                    }
+
+                    $referencePromo->other_1 = $data["other_1"][$i];
+                    $referencePromo->other_2 = $data["other_2"][$i];
+                    $referencePromo->save();
+
+                    $user_id = Auth::user()["id"];
+                    $path = "sources/registration";
+                    $referenceImage = new ReferenceImage();
+                    $referenceImage->reference_id = $reference->id;
+                    foreach ($request->file("do-image_" . ($i + 1)) AS $image) {
+                        $fileName = ((string) strval(time()))
+                            . "_"
+                            . $user_id
+                            . "_"
+                            . $i
+                            . "."
+                            . $image->getClientOriginalExtension();
+
+                        $image->move($path, $fileName);
+
+                        $referenceImage["image_" . ($i + 1)] = $fileName;
+
+                        $i++;
+                    }
+                    $referenceImage->save();
+                }
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route("add_submission_mgm")
+                ->with('success', 'Data berhasil dimasukkan.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function storeReference(Request $request)
+    {
+        $data = $request->all();
+
+        DB::beginTransaction();
+
+        try {
+            $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $submission = Submission::create($data);
+
+            $user_id = Auth::user()["id"];
+            $i = 1;
+            $path = "sources/registration";
+            $submissionImage = new SubmissionImage();
+            $submissionImage->submission_id = $submission->id;
+            foreach ($request->file("proof_image") as $image) {
+                $fileName = ((string) strval(time()))
+                    . "_"
+                    . $user_id
+                    . "_"
+                    . $i
+                    . "."
+                    . $image->getClientOriginalExtension();
+
+                $image->move($path, $fileName);
+
+                $submissionImage["image_" . $i] = $fileName;
+
+                $i++;
+            }
+            $submissionImage->save();
+
+            $dataCount = count($data["name_ref"]);
+            for ($i = 0; $i < $dataCount; $i++) {
+                if (!empty($data["name_ref"][$i])) {
+                    $reference = new Reference();
+                    $reference->submission_id = $submission->id;
+                    $reference->name = $data["name_ref"][$i];
+                    $reference->age = $data["age_ref"][$i];
+                    $reference->phone = $data["phone_ref"][$i];
+                    $reference->province = $data["province_ref"][$i];
+                    $reference->city = $data["city_ref"][$i];
+                    $reference->save();
+
+                    $referenceSouvenir = new ReferenceSouvenir();
+                    $referenceSouvenir->reference_id = $reference->id;
+                    $referenceSouvenir->souvenir_id = $data["souvenir_id"][$i];
+                    $referenceSouvenir->link_hs = $data["link_hs"][$i];
+                    $referenceSouvenir->save();
+                }
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route("add_submission_reference")
+                ->with('success', 'Data berhasil dimasukkan.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function storeTakeaway(Request $request)
+    {
+        $data = $request->all();
+
+        DB::beginTransaction();
+
+        try {
+            $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $submission = Submission::create($data);
+
+            $submissionPromo = new SubmissionPromo();
+            $submissionPromo->submission_id = $submission->id;
+
+            if ($data["promo_1"] !== "other") {
+                $submissionPromo->promo_1 = $data["promo_1"];
+            }
+
+            if ($data["promo_2"] !== "other") {
+                $submissionPromo->promo_2 = $data["promo_2"];
+            }
+
+            $submissionPromo->qty_1 = $data["qty_1"];
+
+            if (!empty($data["promo_2"]) || !empty($data["other_2"])) {
+                $submissionPromo->qty_2 = $data["qty_2"];
+            }
+
+            $submissionPromo->other_1 = $data["other_1"];
+            $submissionPromo->other_2 = $data["other_2"];
+            $submissionPromo->save();
+
+            $submissionDO = new SubmissionDeliveryorder();
+            $submissionDO->submission_id = $submission->id;
+            $submissionDO->no_deliveryorder = $data["nomor_do"];
+            $submissionDO->save();
+
+            $user_id = Auth::user()["id"];
+            $i = 1;
+            $path = "sources/registration";
+
+            $submissionImage = new SubmissionImage();
+            $submissionImage->submission_id = $submission->id;
+            foreach ($request->file("do_image") as $image) {
+                $fileName = ((string) strval(time()))
+                    . "_"
+                    . $user_id
+                    . "_"
+                    . $i
+                    . "."
+                    . $image->getClientOriginalExtension();
+
+                $image->move($path, $fileName);
+
+                $submissionImage["image_" . $i] = $fileName;
+
+                $i++;
+            }
+            $submissionImage->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route("add_submission_takeaway")
+                ->with('success', 'Data berhasil dimasukkan.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 400);
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        $deliveryOrder = DeliveryOrder::where("id", $request["id"])->first();
+        $deliveryOrder["district"] = array($deliveryOrder->getDistrict());
+        $references = Reference::select(
+            "references.id AS id",
+            "references.name AS name",
+            "references.phone AS phone",
+            "references.age AS age",
+            "references.province AS province_id",
+            "references.city AS city_id",
+            "references.souvenir_id AS souvenir_id",
+            "references.link_hs AS link_hs",
+            "references.status AS status",
+            "souvenirs.name AS souvenir_name",
+            "raja_ongkir__cities.province AS province_name",
+            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city_name"),
+        )
+        ->leftJoin(
+            "raja_ongkir__cities",
+            "raja_ongkir__cities.city_id",
+            "=",
+            "references.city"
+        )
+        ->leftJoin(
+            "souvenirs",
+            "souvenirs.id",
+            "=",
+            "references.souvenir_id"
+        )
+        ->where("references.deliveryorder_id", $request["id"])
+        ->orderBy("references.id", "asc")
+        ->get();
+
+        // Melakukan query riwayat dari tabel history_updates
+        $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin(
+            'users',
+            'users.id',
+            '=',
+            'history_updates.user_id'
+        )
+        ->select(
+            'history_updates.method',
+            'history_updates.created_at',
+            'history_updates.meta AS meta',
+            'users.name AS name',
+        )
+        ->where('type_menu', 'Delivery Order')
+        ->where('menu_id', $deliveryOrder->id)
+        ->get();
+
+        $souvenirs = Souvenir::select("id", "name")
+        ->where("active", true)
+        ->get();
+
+        return view(
+            "admin.detail_submission",
+            compact(
+                "deliveryOrder",
+                "historyUpdateDeliveryOrder",
+                "references",
+                "souvenirs",
+            )
+        );
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
      */
     public function edit(Request $request)
     {
@@ -290,12 +580,15 @@ class SubmissionController extends Controller
             $branches = Branch::all();
             $csos = Cso::all();
             $deliveryOrders = DeliveryOrder::find($request->get("id"));
-            $promos = DeliveryOrder::$Promo;
+            $promos = Promo::all();
             $references = Reference::where(
                 "deliveryorder_id",
                 $request->get("id")
             )
             ->orderBy("id", "asc")
+            ->get();
+            $souvenirs = Souvenir::select("id", "name")
+            ->where("active", true)
             ->get();
 
             $arrayReference = [];
@@ -311,11 +604,12 @@ class SubmissionController extends Controller
             return view(
                 "admin.update_submission_form",
                 compact(
+                    "arrayReference",
                     "branches",
                     "csos",
                     "deliveryOrders",
                     "promos",
-                    "arrayReference",
+                    "souvenirs",
                 )
             );
         } else {
@@ -327,7 +621,7 @@ class SubmissionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function update(Request $request)
     {
@@ -433,6 +727,8 @@ class SubmissionController extends Controller
                 $reference->phone = $data["phone_ref"][$i];
                 $reference->province = $data["province_ref"][$i];
                 $reference->city = $data["city_ref"][$i];
+                $reference->souvenir_id = $data["souvenir_id"][$i];
+                $reference->link_hs = $data["link_hs"][$i];
 
                 // Menyimpan pembaruan data references
                 $reference->save();
@@ -458,13 +754,15 @@ class SubmissionController extends Controller
 
             DB::commit();
 
-            return redirect()->route('list_submission_form')
+            return redirect()
+                ->route('list_submission_form')
                 ->with('success', 'Data berhasil diperbarui');
         } catch (Exception $e) {
             DB::rollback();
 
             return response()->json([
                 "error" => $e,
+                "erroe message" => $e->getMessage(),
             ]);
         }
     }
@@ -473,7 +771,7 @@ class SubmissionController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
@@ -503,7 +801,8 @@ class SubmissionController extends Controller
 
             DB::commit();
 
-            return redirect()->route('list_submission_form')
+            return redirect()
+                ->route('list_submission_form')
                 ->with('success', 'Data berhasil dihapus');
         } catch (Exception $e) {
             DB::rollback();
@@ -514,7 +813,11 @@ class SubmissionController extends Controller
         }
     }
 
-    public function addApi(Request $request)
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /* public function addApi(Request $request)
     {
         $messages = array(
             'cso_id.required' => 'The CSO Code field is required.',
@@ -531,7 +834,7 @@ class SubmissionController extends Controller
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => ['required', 'exists:branches,id'],
             'product_0' => 'required',
-            'qty_0' => 'required'
+            'qty_0' => 'required',
         ], $messages);
 
         if ($validator->fails()) {
@@ -540,7 +843,7 @@ class SubmissionController extends Controller
                 'data' => $validator->errors(),
             ];
 
-            return response()->json($data, 401);
+            return response()->json($data, 400);
         } else {
             DB::beginTransaction();
 
@@ -560,11 +863,11 @@ class SubmissionController extends Controller
 
                             // KHUSUS Philiphin
                             if($value == 'other'){
-                                $data['arr_product'][$key]['id'] = $data['product_other_'.$arrKey[1]];
+                                $data['arr_product'][$key]['id'] = $data['product_other_' . $arrKey[1]];
                             }
                             // ===========================
 
-                            $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
+                            $data['arr_product'][$key]['qty'] = $data['qty_' . $arrKey[1]];
                         }
                     }
                 }
@@ -617,6 +920,9 @@ class SubmissionController extends Controller
                     $reference->province = $data["province_ref"][$i];
                     $reference->city = $data["city_ref"][$i];
                     $reference->deliveryorder_id = $deliveryOrder->id;
+                    $reference->souvenir_id = $data["souvenir_id"][$i];
+                    $reference->link_hs = $data["link_hs"][$i];
+                    $reference->status = "pending";
                     $reference->save();
 
                     $referenceArray[] = $reference;
@@ -730,7 +1036,7 @@ class SubmissionController extends Controller
                     "dataReference" => $referenceArray,
                 ];
 
-                return response()->json($data, 201);
+                return response()->json($data, 200);
             } catch (Exception $e) {
                 DB::rollback();
 
@@ -742,12 +1048,410 @@ class SubmissionController extends Controller
                     "error line" => $e->getLine(),
                 ];
 
-                return response()->json($data, 501);
+                return response()->json($data, 500);
             }
 
         }
+    } */
+
+    public function addApi(Request $request)
+    {
+        $data = $request->all();
+
+        DB::beginTransaction();
+
+        try {
+            $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
+            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+
+            if ($data["type"] === "mgm") {
+                $submission = Submission::create($data);
+
+                $dataCount = count($data["name_ref"]);
+                for ($i = 0; $i < $dataCount; $i++) {
+                    if (!empty($data["name_ref"][$i])) {
+                        $reference = new Reference();
+                        $reference->submission_id = $submission->id;
+                        $reference->name = $data["name_ref"][$i];
+                        $reference->age = $data["age_ref"][$i];
+                        $reference->phone = $data["phone_ref"][$i];
+                        $reference->province = $data["province_ref"][$i];
+                        $reference->city = $data["city_ref"][$i];
+                        $reference->save();
+
+                        $referencePromo = new ReferencePromo();
+                        $referencePromo->reference_id = $reference->id;
+
+                        if ($data["promo_1"][$i] !== "other") {
+                            $referencePromo->promo_1 = $data["promo_1"][$i];
+                        }
+
+                        if ($data["promo_2"][$i] !== "other") {
+                            $referencePromo->promo_2 = $data["promo_2"][$i];
+                        }
+
+                        $referencePromo->qty_1 = $data["qty_1"][$i];
+
+                        if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
+                            $referencePromo->qty_2 = $data["qty_2"][$i];
+                        }
+
+                        $referencePromo->other_1 = $data["other_1"][$i];
+                        $referencePromo->other_2 = $data["other_2"][$i];
+                        $referencePromo->save();
+
+                        $user_id = Auth::user()["id"];
+                        $path = "sources/registration";
+                        $referenceImage = new ReferenceImage();
+                        $referenceImage->reference_id = $reference->id;
+                        foreach ($request->file("do-image_" . ($i + 1)) AS $image) {
+                            $fileName = ((string) strval(time()))
+                                . "_"
+                                . $user_id
+                                . "_"
+                                . $i
+                                . "."
+                                . $image->getClientOriginalExtension();
+
+                            $image->move($path, $fileName);
+
+                            $referenceImage["image_" . ($i + 1)] = $fileName;
+
+                            $i++;
+                        }
+                        $referenceImage->save();
+                    }
+                }
+            } elseif ($data["type"] === "referensi") {
+                $submission = Submission::create($data);
+
+                $user_id = Auth::user()["id"];
+                $i = 1;
+                $path = "sources/registration";
+                $submissionImage = new SubmissionImage();
+                $submissionImage->submission_id = $submission->id;
+                foreach ($request->file("proof_image") as $image) {
+                    $fileName = ((string) strval(time()))
+                        . "_"
+                        . $user_id
+                        . "_"
+                        . $i
+                        . "."
+                        . $image->getClientOriginalExtension();
+
+                    $image->move($path, $fileName);
+
+                    $submissionImage["image_" . $i] = $fileName;
+
+                    $i++;
+                }
+                $submissionImage->save();
+
+                $dataCount = count($data["name_ref"]);
+                for ($i = 0; $i < $dataCount; $i++) {
+                    if (!empty($data["name_ref"][$i])) {
+                        $reference = new Reference();
+                        $reference->submission_id = $submission->id;
+                        $reference->name = $data["name_ref"][$i];
+                        $reference->age = $data["age_ref"][$i];
+                        $reference->phone = $data["phone_ref"][$i];
+                        $reference->province = $data["province_ref"][$i];
+                        $reference->city = $data["city_ref"][$i];
+                        $reference->save();
+
+                        $referenceSouvenir = new ReferenceSouvenir();
+                        $referenceSouvenir->reference_id = $reference->id;
+                        $referenceSouvenir->souvenir_id = $data["souvenir_id"][$i];
+                        $referenceSouvenir->link_hs = $data["link_hs"][$i];
+                        $referenceSouvenir->save();
+                    }
+                }
+            } elseif ($data["type"] === "takeaway") {
+                $submission = Submission::create($data);
+
+                $submissionPromo = new SubmissionPromo();
+                $submissionPromo->submission_id = $submission->id;
+
+                if ($data["promo_1"] !== "other") {
+                    $submissionPromo->promo_1 = $data["promo_1"];
+                }
+
+                if ($data["promo_2"] !== "other") {
+                    $submissionPromo->promo_2 = $data["promo_2"];
+                }
+
+                $submissionPromo->qty_1 = $data["qty_1"];
+
+                if (!empty($data["promo_2"]) || !empty($data["other_2"])) {
+                    $submissionPromo->qty_2 = $data["qty_2"];
+                }
+
+                $submissionPromo->other_1 = $data["other_1"];
+                $submissionPromo->other_2 = $data["other_2"];
+                $submissionPromo->save();
+
+                $submissionDO = new SubmissionDeliveryorder();
+                $submissionDO->submission_id = $submission->id;
+                $submissionDO->no_deliveryorder = $data["nomor_do"];
+                $submissionDO->save();
+
+                $user_id = Auth::user()["id"];
+                $i = 1;
+                $path = "sources/registration";
+
+                $submissionImage = new SubmissionImage();
+                $submissionImage->submission_id = $submission->id;
+                foreach ($request->file("do_image") as $image) {
+                    $fileName = ((string) strval(time()))
+                        . "_"
+                        . $user_id
+                        . "_"
+                        . $i
+                        . "."
+                        . $image->getClientOriginalExtension();
+
+                    $image->move($path, $fileName);
+
+                    $submissionImage["image_" . $i] = $fileName;
+
+                    $i++;
+                }
+                $submissionImage->save();
+            } else {
+                return response()->json([
+                    "error" => "Bad request.",
+                ], 401);
+            }
+
+            DB::commit();
+
+            $queryReference = "";
+            if ($data["type"] === "mgm") {
+                $querySubmission = Submission::select(
+                    "submissions.code AS code",
+                    "submissiobs.no_member AS no_member",
+                    "branches.code AS branch_code",
+                    "branches.name AS branch_name",
+                    "csos.code AS cso_code",
+                    "csos.name AS cso_name",
+                    "submissions.type AS type",
+                    "submissions.name AS name",
+                    "submissions.address AS address",
+                    "submissions.phone AS phone",
+                    "raja_ongkir__cities.province AS province",
+                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+                    "raja_ongkir__subdistricts.subdistrict_name AS district",
+                )
+                ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
+                ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
+                ->leftJoin(
+                    "raja_ongkir__cities",
+                    "submissions.city",
+                    "=",
+                    "raja_ongkir__cities.city_id"
+                )
+                ->leftJoin(
+                    "raja_ongkir__subdistricts",
+                    "submissions.district",
+                    "=",
+                    "raja_ongkir__subdistricts.subdistrict_id"
+                )
+                ->where("submissions.id", $submission->id)
+                ->first();
+
+                $queryReference = Reference::select(
+                    "references.submission_id AS submission_id",
+                    "references.name AS name",
+                    "references.phone AS phone",
+                    "raja_ongkir__cities.province AS province",
+                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+                    "reference_promos.promo_1 AS promo_1",
+                    "reference_promos.promo_2 AS promo_2",
+                    "reference_promos.qty_1 AS qty_1",
+                    "reference_promos.qty_2 AS qty_2",
+                    "reference_promos.other_1 AS other_1",
+                    "reference_promos.other_2 AS other_2",
+                    "reference_images.image_1 AS image_1",
+                    "reference_images.image_2 AS image_2",
+                )
+                ->leftJoin(
+                    "raja_ongkir__cities",
+                    "references.city",
+                    "=",
+                    "raja_ongkir__cities.city_id"
+                )
+                ->leftJoin(
+                    "reference_promos",
+                    "references.id",
+                    "=",
+                    "reference_promos.reference_id"
+                )
+                ->leftJoin(
+                    "reference_images",
+                    "references.id",
+                    "=",
+                    "reference_images.reference_id"
+                )
+                ->where("references.submission_id", $submission->id)
+                ->get();
+            } elseif ($data["type"] === "referensi") {
+                $querySubmission = Submission::select(
+                    "submissions.code AS code",
+                    "submissiobs.no_member AS no_member",
+                    "branches.code AS branch_code",
+                    "branches.name AS branch_name",
+                    "csos.code AS cso_code",
+                    "csos.name AS cso_name",
+                    "submissions.type AS type",
+                    "submissions.name AS name",
+                    "submissions.address AS address",
+                    "submissions.phone AS phone",
+                    "raja_ongkir__cities.province AS province",
+                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+                    "raja_ongkir__subdistricts.subdistrict_name AS district",
+                    "submission_images.image_1 AS image_1",
+                    "submission_images.image_2 AS image_2",
+                    "submission_images.image_3 AS image_3",
+                    "submission_images.image_4 AS image_4",
+                    "submission_images.image_5 AS image_5",
+                )
+                ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
+                ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
+                ->leftJoin(
+                    "raja_ongkir__cities",
+                    "submissions.city",
+                    "=",
+                    "raja_ongkir__cities.city_id"
+                )
+                ->leftJoin(
+                    "raja_ongkir__subdistricts",
+                    "submissions.district",
+                    "=",
+                    "raja_ongkir__subdistricts.subdistrict_id"
+                )
+                ->leftJoin(
+                    "submission_images",
+                    "submissions.id",
+                    "=",
+                    "submission_images.submission_id"
+                )
+                ->where("submissions.id", $submission->id)
+                ->first();
+
+                $queryReference = Reference::select(
+                    "references.submission_id AS submission_id",
+                    "references.name AS name",
+                    "references.phone AS phone",
+                    "raja_ongkir__cities.province AS province",
+                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+                    "reference_souvenirs.souvenir_id AS souvenir_id",
+                    "souvenirs.name AS souvenir_name",
+                    "reference_souvenirs.status AS status",
+                    "reference_souvenirs.link_hs AS link_hs",
+                )
+                ->leftJoin(
+                    "raja_ongkir__cities",
+                    "references.city",
+                    "=",
+                    "raja_ongkir__cities.city_id"
+                )
+                ->leftJoin(
+                    "reference_souvenirs",
+                    "references.id",
+                    "=",
+                    "reference_souvenirs.reference_id"
+                )
+                ->leftJoin(
+                    "souvenirs",
+                    "reference_souvenirs.souvenir_id",
+                    "=",
+                    "souvenirs.id"
+                )
+                ->where("references.submission_id", $submission->id)
+                ->get();
+            } elseif ($data["type"] === "takeaway") {
+                $querySubmission = Submission::select(
+                    "submissions.code AS code",
+                    "submissiobs.no_member AS no_member",
+                    "branches.code AS branch_code",
+                    "branches.name AS branch_name",
+                    "csos.code AS cso_code",
+                    "csos.name AS cso_name",
+                    "submissions.type AS type",
+                    "submissions.name AS name",
+                    "submissions.address AS address",
+                    "submissions.phone AS phone",
+                    "raja_ongkir__cities.province AS province",
+                    DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+                    "raja_ongkir__subdistricts.subdistrict_name AS district",
+                    "submission_promos.promo_1 AS promo_1",
+                    "submission_promos.promo_2 AS promo_2",
+                    "submission_promos.qty_1 AS qty_1",
+                    "submission_promos.qty_2 AS qty_2",
+                    "submission_promos.other_1 AS other_1",
+                    "submission_promos.other_2 AS other_2",
+                    "submission_deliveryorders.no_deliveryorder AS no_deliveryorder",
+                    "submission_images.image_1 AS image_1",
+                    "submission_images.image_2 AS image_2",
+                    "submission_images.image_3 AS image_3",
+                    "submission_images.image_4 AS image_4",
+                    "submission_images.image_5 AS image_5",
+                )
+                ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
+                ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
+                ->leftJoin(
+                    "raja_ongkir__cities",
+                    "submissions.city",
+                    "=",
+                    "raja_ongkir__cities.city_id"
+                )
+                ->leftJoin(
+                    "raja_ongkir__subdistricts",
+                    "submissions.district",
+                    "=",
+                    "raja_ongkir__subdistricts.subdistrict_id"
+                )
+                ->leftJoin(
+                    "submission_promos",
+                    "submissions.id",
+                    "=",
+                    "submission_promos.submission_id"
+                )
+                ->leftJoin(
+                    "submission_deliveryorders",
+                    "submissions.id",
+                    "=",
+                    "submission_deliveryorders.submission_id"
+                )
+                ->leftJoin(
+                    "submission_images",
+                    "submissions.id",
+                    "=",
+                    "submission_images.submission_id"
+                )
+                ->where("submissions.id", $submission->id)
+                ->first();
+            }
+
+            return response()->json([
+                "result" => 1,
+                "dataSubmission" => $querySubmission,
+                "dataReference" => $queryReference,
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 400);
+        }
     }
 
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateApi(Request $request)
     {
         $messages = array(
@@ -765,7 +1469,7 @@ class SubmissionController extends Controller
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => ['required', 'exists:branches,id'],
             'product_0' => 'required',
-            'qty_0' => 'required'
+            'qty_0' => 'required',
         ], $messages);
 
         if ($validator->fails()) {
@@ -876,6 +1580,9 @@ class SubmissionController extends Controller
                     $reference->phone = $data["phone_ref"][$i];
                     $reference->province = $data["province_ref"][$i];
                     $reference->city = $data["city_ref"][$i];
+                    $reference->souvenir_id = $data["souvenir_id"][$i];
+                    $reference->link_hs = $data["link_hs"][$i];
+                    $reference->status = $data["status"][$i];
 
                     // Menyimpan pembaruan data references
                     $reference->save();
@@ -1026,7 +1733,11 @@ class SubmissionController extends Controller
         }
     }
 
-    public function listSubmissionApi(Request $request)
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function listApi(Request $request)
     {
         try {
             // Menyimpan request ke dalam variabel $url untuk pagination
@@ -1041,7 +1752,7 @@ class SubmissionController extends Controller
                 "branches.code AS branch_code",
                 "branches.name AS branch_name",
                 "csos.code AS cso_code",
-                "csos.name AS cso_name"
+                "csos.name AS cso_name",
             )
             ->leftJoin(
                 "branches",
@@ -1079,59 +1790,11 @@ class SubmissionController extends Controller
         }
     }
 
-    public function listReferenceApi(Request $request)
-    {
-        try {
-            // Menyimpan request ke dalam variabel $url untuk pagination
-            $url = $request->all();
-
-            // Query dari tabel references, dan menampilkan 10 data per halaman
-            $references = Reference::select(
-                "references.name AS name",
-                "references.age AS age",
-                "references.phone AS phone",
-                "raja_ongkir__cities.province AS province",
-                "raja_ongkir__cities.type AS type",
-                "raja_ongkir__cities.city_name AS city_name",
-            )
-            ->leftJoin(
-                "raja_ongkir__cities",
-                "raja_ongkir__cities.city_id",
-                "=",
-                "references.city"
-            )
-            ->paginate(10);
-
-            $i = 0;
-            foreach ($references as $refItem) {
-                $references[$i]->city = $refItem->type . " " . $refItem->city_name;
-
-                unset(
-                    $references[$i]->type,
-                    $references[$i]->city_name,
-                );
-
-                $i++;
-            }
-
-            $data = [
-                "result" => 1,
-                "data" => $references,
-                "url" => $url,
-            ];
-
-            return response()->json($data, 200);
-        } catch (Exception $e) {
-            $data = [
-                "result" => 0,
-                "data" => $e->getMessage(),
-            ];
-
-            return response()->json($data, 401);
-        }
-    }
-
-    public function detailSubmissionApi(Request $request)
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function detailApi(Request $request)
     {
         try {
             $deliveryOrder = DeliveryOrder::select(
@@ -1161,7 +1824,7 @@ class SubmissionController extends Controller
                 "raja_ongkir__subdistricts",
                 "raja_ongkir__subdistricts.subdistrict_id",
                 "=",
-                "delivery_orders.distric",
+                "delivery_orders.distric"
             )
             ->leftJoin(
                 "branches",
@@ -1184,11 +1847,41 @@ class SubmissionController extends Controller
             $arrayPromo = [];
             foreach ($getPromo as $key => $promoItem) {
                 $getIndex = explode("_", $key);
-                $getPromoName = DeliveryOrder::$Promo[$promoItem->id];
+
+                $promo = Promo::select("code", "product", "price")
+                ->where("id", $promoItem->id)
+                ->first();
+
+                $productPromo = json_decode($promo["product"]);
+                $arrayProductId = [];
+
+                foreach ($productPromo as $pp) {
+                    $arrayProductId[] = $pp->id;
+                }
+
+                $getProduct = Product::select("code")
+                ->whereIn(
+                    "id",
+                    $arrayProductId
+                )
+                ->get();
+
+                $arrayProductCode = [];
+
+                foreach ($getProduct as $product) {
+                    $arrayProductCode[] = $product->code;
+                }
+
+                $productCode = implode(", ", $arrayProductCode);
+
+                $promoName = $promo["code"]
+                    . " (" . $productCode . ") "
+                    . "Rp. " . number_format((int) $promo["price"], 0, null, ",");
+
                 $arrayPromo[] = [
                     "id" => $getIndex[1],
-                    "name" => $getPromoName["name"],
-                    "qty" => $promoItem->qty,
+                    "name" => $promoName,
+                    "qty" => $promoItem->qty
                 ];
             }
 
@@ -1204,12 +1897,15 @@ class SubmissionController extends Controller
             );
 
             $references = Reference::select(
+                "references.id AS id",
                 "references.name AS name",
                 "references.age AS age",
                 "references.phone AS phone",
                 "raja_ongkir__cities.province AS province",
-                "raja_ongkir__cities.type AS city_type",
-                "raja_ongkir__cities.city_name AS city_name",
+                DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+                "souvenirs.name AS souvenir",
+                "references.link_hs AS link_hs",
+                "references.status AS status",
             )
             ->leftJoin(
                 "raja_ongkir__cities",
@@ -1217,24 +1913,20 @@ class SubmissionController extends Controller
                 "=",
                 "references.city"
             )
+            ->leftJoin(
+                "souvenirs",
+                "souvenirs.id",
+                "=",
+                "references.souvenir_id"
+            )
             ->where("references.deliveryorder_id", $request->id)
+            ->orderBy("references.id", "asc")
             ->get();
-
-            $referenceArray = [];
-            foreach ($references as $ref) {
-                $referenceArray[] = [
-                    "name" => $ref->name,
-                    "age" => $ref->age,
-                    "phone" => $ref->phone,
-                    "province" => $ref->province,
-                    "city" => $ref->city_type . " " . $ref->city_name,
-                ];
-            }
 
             $data = [
                 "result" => 1,
                 "dataSubmission" => $deliveryOrder,
-                "dataReference" => $referenceArray,
+                "dataReference" => $references,
             ];
 
             return response()->json($data, 200);
@@ -1251,6 +1943,10 @@ class SubmissionController extends Controller
 
     }
 
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteApi(Request $request)
     {
         $messages = array(

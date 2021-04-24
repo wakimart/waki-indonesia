@@ -1,12 +1,12 @@
+<?php
+
+use App\Product;
+?>
 @extends('admin.layouts.template')
 
 @section('style')
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
-
-    button{
+    button {
         background: #1bb1dc;
         border: 0;
         border-radius: 3px;
@@ -15,12 +15,12 @@
         transition: 0.3s;
     }
 
-    .validation{
+    .validation {
         color: red;
         font-size: 9pt;
     }
 
-    input, select, textarea{
+    input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
@@ -28,56 +28,60 @@
     }
 
     #regForm {
-      background-color: #ffffff;
-      margin: 100px auto;
-      padding: 40px;
-      width: 70%;
-      min-width: 300px;
+        background-color: #ffffff;
+        margin: 100px auto;
+        padding: 40px;
+        width: 70%;
+        min-width: 300px;
     }
 
     /* Style the input fields */
     input {
-      padding: 10px;
-      width: 100%;
-      font-size: 17px;
-      font-family: Raleway;
-      border: 1px solid #aaaaaa;
+        padding: 10px;
+        width: 100%;
+        font-size: 17px;
+        font-family: Raleway;
+        border: 1px solid #aaaaaa;
     }
 
     /* Mark input boxes that gets an error on validation: */
     input.invalid {
-      background-color: #ffdddd;
+        background-color: #ffdddd;
+    }
+
+    .invalid {
+        border: 1px solid red !important;
     }
 
     /* Hide all steps by default: */
     .tab {
-      display: none;
+        display: none;
     }
 
     /* Make circles that indicate the steps of the form: */
     .step {
-      height: 15px;
-      width: 15px;
-      margin: 0 2px;
-      background-color: #bbbbbb;
-      border: none;
-      border-radius: 50%;
-      display: inline-block;
-      opacity: 0.5;
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbbbbb;
+        border: none;
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 0.5;
     }
 
     /* Mark the active step: */
     .step.active {
-      opacity: 1;
+        opacity: 1;
     }
 
     /* Mark the steps that are finished and valid: */
     .step.finish {
-      background-color: #4CAF50;
+        background-color: #4CAF50;
     }
 
     select {
-      color: black !important;
+        color: black !important;
     }
 </style>
 @endsection
@@ -86,7 +90,7 @@
 <div class="main-panel">
       <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Add Registration</h3>
+            <h3 class="page-title">Edit Registration</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -98,7 +102,7 @@
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Add Registration
+                        Edit Registration
                     </li>
                 </ol>
             </nav>
@@ -114,7 +118,7 @@
                             method="POST"
                             enctype="multipart/form-data"
                             action="{{ route('update_submission_form') }}">
-                            {{ csrf_field() }}
+                            @csrf
                             <div class="form-group">
                                 <span>Type Register</span>
                                 <select id="type_register"
@@ -123,30 +127,30 @@
                                     name="type_register"
                                     required>
                                     <option value="MGM"
-                                        @php
-                                            if ($deliveryOrders->type_register === "MGM") {
-                                                echo "selected";
-                                            }
-                                        @endphp
-                                    >
+                                        <?php
+                                        if ($deliveryOrders->type_register === "MGM") {
+                                            echo "selected";
+                                        }
+                                        ?>
+                                        >
                                         MGM
                                     </option>
                                     <option value="Refrensi"
-                                        @php
-                                            if ($deliveryOrders->type_register === "Refrensi") {
-                                                echo "selected";
-                                            }
-                                        @endphp
-                                    >
+                                        <?php
+                                        if ($deliveryOrders->type_register === "Refrensi") {
+                                            echo "selected";
+                                        }
+                                        ?>
+                                        >
                                         Referensi
                                     </option>
                                     <option value="Take Away"
-                                        @php
-                                            if ($deliveryOrders->type_register === "Take Away") {
-                                                echo "selected";
-                                            }
-                                        @endphp
-                                    >
+                                        <?php
+                                        if ($deliveryOrders->type_register === "Take Away") {
+                                            echo "selected";
+                                        }
+                                        ?>
+                                        >
                                         Take Away
                                     </option>
                                 </select>
@@ -167,11 +171,11 @@
                                     id="no_member"
                                     name="no_member"
                                     placeholder="No. Member"
-                                    @php
-                                        if (!empty($deliveryOrders->no_member)) {
-                                            echo 'value="' . $deliveryOrders->no_member . '"';
-                                        }
-                                    @endphp
+                                    <?php
+                                    if (!empty($deliveryOrders->no_member)) {
+                                        echo 'value="' . $deliveryOrders->no_member . '"';
+                                    }
+                                    ?>
                                     required />
                                 <div class="validation"></div>
                             </div>
@@ -183,9 +187,9 @@
                                     id="name"
                                     name="name"
                                     placeholder="Name"
-                                    @php
-                                        echo 'value="' . $deliveryOrders->name . '"';
-                                    @endphp
+                                    <?php
+                                    echo 'value="' . $deliveryOrders->name . '"';
+                                    ?>
                                     required />
                                 <div class="validation"></div>
                             </div>
@@ -197,9 +201,9 @@
                                     id="phone"
                                     name="phone"
                                     placeholder="Phone Number"
-                                    @php
-                                        echo 'value="' . $deliveryOrders->phone . '"';
-                                    @endphp
+                                    <?php
+                                    echo 'value="' . $deliveryOrders->phone . '"';
+                                    ?>
                                     required />
                                 <div class="validation"></div>
                             </div>
@@ -214,24 +218,24 @@
                                     <option selected disabled value="" hidden>
                                         Pilihan Provinsi
                                     </option>
-                                    @php
-                                        $result = RajaOngkir::FetchProvince();
-                                        $result = $result['rajaongkir']['results'];
+                                    <?php
+                                    $result = RajaOngkir::FetchProvince();
+                                    $result = $result['rajaongkir']['results'];
 
-                                        if (sizeof($result) > 0) {
-                                            foreach ($result as $value) {
-                                                echo "<option value=\"" . $value['province_id'] . "\"";
+                                    if (sizeof($result) > 0) {
+                                        foreach ($result as $value) {
+                                            echo "<option value=\"" . $value['province_id'] . "\"";
 
-                                                if ($value["province_id"] === $deliveryOrders->province) {
-                                                    echo " selected";
-                                                }
-
-                                                echo ">";
-                                                echo $value['province'];
-                                                echo "</option>";
+                                            if ($value["province_id"] === $deliveryOrders->province) {
+                                                echo " selected";
                                             }
+
+                                            echo ">";
+                                            echo $value['province'];
+                                            echo "</option>";
                                         }
-                                    @endphp
+                                    }
+                                    ?>
                                 </select>
                                 <div class="validation"></div>
                             </div>
@@ -246,24 +250,24 @@
                                     <option disabled value="" hidden>
                                         Pilihan Kota
                                     </option>
-                                    @php
-                                        $getCity =  RajaOngkir::FetchCity($deliveryOrders->province);
-                                        $getCity = $getCity["rajaongkir"]["results"];
+                                    <?php
+                                    $getCity =  RajaOngkir::FetchCity($deliveryOrders->province);
+                                    $getCity = $getCity["rajaongkir"]["results"];
 
-                                        if (!empty($getCity)) {
-                                            foreach ($getCity as $city) {
-                                                echo '<option value="' . $city->city_id . '"';
+                                    if (!empty($getCity)) {
+                                        foreach ($getCity as $city) {
+                                            echo '<option value="' . $city->city_id . '"';
 
-                                                if ($city->city_id === $deliveryOrders->city) {
-                                                    echo " selected";
-                                                }
-
-                                                echo ">";
-                                                echo $city->type . " " . $city->city_name;
-                                                echo "</option>";
+                                            if ($city->city_id === $deliveryOrders->city) {
+                                                echo " selected";
                                             }
+
+                                            echo ">";
+                                            echo $city->type . " " . $city->city_name;
+                                            echo "</option>";
                                         }
-                                    @endphp
+                                    }
+                                    ?>
                                 </select>
                                 <div class="validation"></div>
                             </div>
@@ -278,24 +282,24 @@
                                     <option disabled value="" hidden>
                                         Pilihan Kecamatan
                                     </option>
-                                    @php
-                                        $getDistrict = RajaOngkir::FetchDistrict($deliveryOrders->city);
-                                        $getDistrict =  $getDistrict["rajaongkir"]["results"];
+                                    <?php
+                                    $getDistrict = RajaOngkir::FetchDistrict($deliveryOrders->city);
+                                    $getDistrict =  $getDistrict["rajaongkir"]["results"];
 
-                                        if (!empty($getDistrict)) {
-                                            foreach ($getDistrict as $district) {
-                                                echo '<option value="' . $district->subdistrict_id . '"';
+                                    if (!empty($getDistrict)) {
+                                        foreach ($getDistrict as $district) {
+                                            echo '<option value="' . $district->subdistrict_id . '"';
 
-                                                if ($district->subdistrict_id === $deliveryOrders->distric) {
-                                                    echo " selected";
-                                                }
-
-                                                echo ">";
-                                                echo $district->subdistrict_name;
-                                                echo "</option>";
+                                            if ($district->subdistrict_id === $deliveryOrders->distric) {
+                                                echo " selected";
                                             }
+
+                                            echo ">";
+                                            echo $district->subdistrict_name;
+                                            echo "</option>";
                                         }
-                                    @endphp
+                                    }
+                                    ?>
                                 </select>
                                 <div class="validation"></div>
                             </div>
@@ -330,33 +334,64 @@
                                                     {{ $j > 0 ? "" : "hidden" }}>
                                                     Choose Promo{{ $j > 0 ? " (optional)" : "" }}
                                                 </option>
-                                                @php
-                                                    foreach ($promos as $key => $promo) {
-                                                        echo '<option value="' . $key . '"';
+                                                <?php
+                                                foreach ($promos as $key => $promo) {
+                                                    echo '<option value="' . $key . '"';
 
-                                                        if (!empty($deliveryOrders->arr_product)) {
-                                                            try {
-                                                                $decodePromo = json_decode($deliveryOrders->arr_product);
-                                                                $arrayPromo = (Array) $decodePromo;
+                                                    if (!empty($deliveryOrders->arr_product)) {
+                                                        try {
+                                                            $decodePromo = json_decode($deliveryOrders->arr_product);
+                                                            $arrayPromo = (Array) $decodePromo;
 
-                                                                if ((int) $arrayPromo["product_" . $j]->id === $key) {
-                                                                    echo " selected";
-                                                                }
-                                                            } catch (Exception $e) {
-                                                                unset($e);
+                                                            if ((int) $arrayPromo["product_" . $j]->id === $key) {
+                                                                echo " selected";
                                                             }
+                                                        } catch (Exception $e) {
+                                                            unset($e);
                                                         }
-
-                                                        echo ">";
-                                                        echo $promo["code"] . " - " . $promo["name"] . " (" . $promo["harga"] . ")";
-                                                        echo "</option>";
                                                     }
-                                                @endphp
+
+                                                    echo ">";
+
+                                                    $productPromo = json_decode($promo["product"]);
+                                                    $arrayProductId = [];
+
+                                                    foreach ($productPromo as $pp) {
+                                                        $arrayProductId[] = $pp->id;
+                                                    }
+
+                                                    $getProduct = Product::select("code")
+                                                    ->whereIn(
+                                                        "id",
+                                                        $arrayProductId
+                                                    )
+                                                    ->get();
+
+                                                    $arrayProductCode = [];
+
+                                                    foreach ($getProduct as $product) {
+                                                        $arrayProductCode[] = $product->code;
+                                                    }
+
+                                                    $productCode = implode(", ", $arrayProductCode);
+
+                                                    echo $promo["code"]
+                                                        . " - ("
+                                                        . $productCode
+                                                        . ") - Rp. "
+                                                        . number_format(
+                                                            (int) $promo["price"],
+                                                            0,
+                                                            null,
+                                                            ","
+                                                        );
+
+                                                    echo "</option>";
+                                                }
+                                                ?>
 
                                                 {{-- KHUSUS Philiphin --}}
-                                                @if (true)
-                                                    <option value="other">OTHER</option>
-                                                @endif
+                                                <option value="other">OTHER</option>
                                             </select>
                                             <div class="validation"></div>
                                         </div>
@@ -370,41 +405,39 @@
                                                 name="qty_{{ $j }}"
                                                 data-msg="Mohon Pilih Jumlah"
                                                 {{ $j > 0 ? "" : "required" }}>
-                                                @for ($i = 1; $i <= 10; $i++)
+                                                <?php for ($i = 1; $i <= 10; $i++): ?>
                                                     <option value="{{ $i }}"
-                                                    @php
-                                                        if (!empty($deliveryOrders->arr_product)) {
-                                                            try {
-                                                                $decodePromo = json_decode($deliveryOrders->arr_product);
-                                                                $arrayPromo = (Array) $decodePromo;
+                                                    <?php
+                                                    if (!empty($deliveryOrders->arr_product)) {
+                                                        try {
+                                                            $decodePromo = json_decode($deliveryOrders->arr_product);
+                                                            $arrayPromo = (Array) $decodePromo;
 
-                                                                if ((int) $arrayPromo["product_" . $j]->qty === $i) {
-                                                                    echo " selected";
-                                                                }
-                                                            } catch (Exception $e) {
-                                                                unset($e);
+                                                            if ((int) $arrayPromo["product_" . $j]->qty === $i) {
+                                                                echo " selected";
                                                             }
+                                                        } catch (Exception $e) {
+                                                            unset($e);
                                                         }
-                                                    @endphp
+                                                    }
+                                                    ?>
                                                     >
                                                         {{ $i }}
                                                     </option>
-                                                @endfor
+                                                <?php endfor; ?>
                                             </select>
                                             <div class="validation"></div>
                                         </div>
 
                                         {{-- KHUSUS Philiphin --}}
-                                        @if(true)
-                                            <div class="form-group d-none">
-                                                <input type="text"
-                                                    class="form-control"
-                                                    name="product_other_{{ $j }}"
-                                                    placeholder="Product Name"
-                                                    data-msg="Please fill in the product" />
-                                                <div class="validation"></div>
-                                            </div>
-                                        @endif
+                                        <div class="form-group d-none">
+                                            <input type="text"
+                                                class="form-control"
+                                                name="product_other_{{ $j }}"
+                                                placeholder="Product Name"
+                                                data-msg="Please fill in the product" />
+                                            <div class="validation"></div>
+                                        </div>
                                     </div>
                                 </div>
                             @endfor
@@ -534,24 +567,24 @@
                                                     hidden>
                                                     Pilihan Provinsi
                                                 </option>
-                                                @php
-                                                    $result = RajaOngkir::FetchProvince();
-                                                    $result = $result['rajaongkir']['results'];
+                                                <?php
+                                                $result = RajaOngkir::FetchProvince();
+                                                $result = $result['rajaongkir']['results'];
 
-                                                    if (sizeof($result) > 0) {
-                                                        foreach ($result as $value) {
-                                                            echo "<option value=\"" . $value['province_id'] . "\"";
+                                                if (sizeof($result) > 0) {
+                                                    foreach ($result as $value) {
+                                                        echo "<option value=\"" . $value['province_id'] . "\"";
 
-                                                            if ($value["province_id"] === $arrayReference[$x]["province"]) {
-                                                                echo " selected";
-                                                            }
-
-                                                            echo ">";
-                                                            echo $value['province'];
-                                                            echo "</option>";
+                                                        if ($value["province_id"] === $arrayReference[$x]["province"]) {
+                                                            echo " selected";
                                                         }
+
+                                                        echo ">";
+                                                        echo $value['province'];
+                                                        echo "</option>";
                                                     }
-                                                @endphp
+                                                }
+                                                ?>
                                             </select>
                                             <div class="validation"></div>
                                         </div>
@@ -570,26 +603,58 @@
                                                     hidden>
                                                     Pilihan Kota
                                                 </option>
-                                                @php
-                                                    $getCity =  RajaOngkir::FetchCity($arrayReference[$x]["province"]);
-                                                    $getCity = $getCity["rajaongkir"]["results"];
+                                                <?php
+                                                $getCity =  RajaOngkir::FetchCity($arrayReference[$x]["province"]);
+                                                $getCity = $getCity["rajaongkir"]["results"];
 
-                                                    if (!empty($getCity)) {
-                                                        foreach ($getCity as $city) {
-                                                            echo '<option value="' . $city->city_id . '"';
+                                                if (!empty($getCity)) {
+                                                    foreach ($getCity as $city) {
+                                                        echo '<option value="' . $city->city_id . '"';
 
-                                                            if ($city->city_id === $deliveryOrders->city) {
-                                                                echo " selected";
-                                                            }
-
-                                                            echo ">";
-                                                            echo $city->type . " " . $city->city_name;
-                                                            echo "</option>";
+                                                        if ($city->city_id === $deliveryOrders->city) {
+                                                            echo " selected";
                                                         }
+
+                                                        echo ">";
+                                                        echo $city->type . " " . $city->city_name;
+                                                        echo "</option>";
                                                     }
-                                                @endphp
+                                                }
+                                                ?>
                                             </select>
                                             <div class="validation"></div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="souvenir-{{ $x }}">
+                                                Souvenir
+                                            </label>
+                                            <select class="form-control"
+                                                id="souvenir-{{ $x }}"
+                                                name="souvenir_id[]"
+                                                required>
+                                                <option selected disabled>
+                                                    Pilih Souvenir
+                                                </option>
+                                                <?php foreach ($souvenirs as $souvenir): ?>
+                                                    <option value="<?php echo $souvenir->id; ?>">
+                                                        <?php echo $souvenir->name; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="link-hs-{{ $x }}">
+                                                Link Home Service
+                                            </label>
+                                            <input type="url"
+                                                class="form-control"
+                                                id="link-hs-{{ $x }}"
+                                                name="link_hs[]"
+                                                pattern="https://.*"
+                                                maxlength="191"
+                                                placeholder="Link Home Service" />
                                         </div>
 
                                         <input type="hidden"
@@ -600,23 +665,23 @@
                                 @endfor
 
                                 <div style="overflow:auto;">
-                                  <div style="float:right;">
-                                    <button type="button"
-                                        id="prevBtn"
-                                        onclick="nextPrev(-1)">
-                                        Previous
-                                    </button>
-                                    <button type="button"
-                                        id="nextBtn"
-                                        onclick="nextPrev(1)">
-                                        Next
-                                    </button>
-                                  </div>
+                                    <div style="float:right;">
+                                        <button type="button"
+                                            id="prevBtn"
+                                            onclick="nextPrev(-1)">
+                                            Previous
+                                        </button>
+                                        <button type="button"
+                                            id="nextBtn"
+                                            onclick="nextPrev(1)">
+                                            Next
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <!-- Circles which indicates the steps of the form: -->
                                 <div style="text-align:center; margin-top:40px;">
-                                    @for($x = 0; $x < 10; $x++)
+                                    @for ($x = 0; $x < 10; $x++)
                                         <span class="step"></span>
                                     @endfor
                                 </div>
@@ -642,10 +707,15 @@
 @endsection
 
 @section('script')
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script type="text/javascript">
-var currentTab = 0; // Current tab is set to be the first tab (0)
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="application/javascript">
+let currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
+
+const souvenirArray = []
+for (let i = 0; i < 10; i++) {
+    souvenirArray.push(-1);
+};
 
 function showTab(n) {
     // This function will display the specified tab of the form ...
@@ -683,41 +753,56 @@ function nextPrev(n) {
     // Increase or decrease the current tab by 1:
     currentTab = currentTab + n;
 
-    // TODO: Cek codingan, apakah form masih berfungsi atau tidak
-    // if you have reached the end of the form... :
-    // if (currentTab >= x.length) {
-    //     //...the form gets submitted:
-    //     // document.getElementById("regForm").submit();
-    //     return false;
-    // }
-
     // Otherwise, display the correct tab:
     showTab(currentTab);
 }
 
 function validateForm() {
     // This function deals with validation of the form fields
-    var x, y, i, valid = true;
-    x = document.getElementsByClassName("tab");
-    y = x[currentTab].getElementsByTagName("input");
+    let valid = true;
 
-    // A loop that checks every input field in the current tab:
-    for (i = 0; i < y.length; i++) {
-        // If a field is empty...
-        if (y[i].value == "") {
-            // add an "invalid" class to the field:
-            y[i].className += " invalid";
-            // and set the current valid status to false:
+    inputArray = ["member-name-", "member-age-", "member-phone-", "province-", "city-", "souvenir-", "link-hs-"];
+
+    inputArray.forEach(function (currentValue) {
+        const inputBeingChecked = document.getElementById(currentValue + currentTab);
+
+        if (!inputBeingChecked.checkValidity()) {
+            addOrRemoveInvalid(inputBeingChecked, "add");
             valid = false;
+        } else {
+            addOrRemoveInvalid(inputBeingChecked, "remove");
+        }
+    });
+
+    const souvenirInput = document.getElementById("souvenir-" + currentTab);
+    const souvenirValue = parseInt(souvenirInput.value, 10);
+    if (souvenirValue) {
+        souvenirArray[currentTab] = souvenirValue;
+        const findDuplicate = souvenirArray.filter(function (currentValue) {
+            return currentValue === souvenirValue;
+        });
+
+        if (findDuplicate.length > 2) {
+            addOrRemoveInvalid(souvenirInput, "add");
+            valid = false;
+        } else {
+            addOrRemoveInvalid(souvenirInput, "remove");
         }
     }
 
-    // If the valid status is true, mark the step as finished and valid:
-    if (valid) {
-        document.getElementsByClassName("step")[currentTab].className += " finish";
-    }
-
     return valid; // return the valid status
+}
+
+function addOrRemoveInvalid(element, command) {
+    if (command === "add") {
+        if (!element.className.includes("invalid")) {
+            element.classList.add("invalid");
+        }
+    } else if (command === "remove") {
+        if (element.className.includes("invalid")) {
+            element.classList.remove("invalid");
+        }
+    }
 }
 
 function fixStepIndicator(n) {
@@ -733,7 +818,7 @@ function fixStepIndicator(n) {
 }
 
 //function load city
-$(document).on("change", ".changeProvince", function (){
+$(document).on("change", ".changeProvince", function () {
     var get_index = $(this).attr('id');
     var index = get_index.slice(-1);
 
@@ -748,7 +833,7 @@ $(document).on("change", ".changeProvince", function (){
             if(result.length > 0){
                 $.each(result, function (key, value) {
                     if (value['type'] == "Kabupaten") {
-                        arrCity += "<option value=\""+value['city_id'] + "\">Kabupaten " + value['city_name'] + "</option>";
+                        arrCity += "<option value=\"" + value['city_id'] + "\">Kabupaten " + value['city_name'] + "</option>";
                     }
 
                     if (value['type'] == "Kota") {
@@ -761,13 +846,12 @@ $(document).on("change", ".changeProvince", function (){
         });
 })
 </script>
-<script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
-<script type="text/javascript">
+<script type="application/javascript">
 for (let input of document.querySelectorAll('#tags')) {
     tagsInput(input);
 }
 </script>
-<script>
+<script type="application/javascript">
 $(document).ready(function () {
     $("#cso").on("input", function () {
         check_cso($("#cso").val());
@@ -831,17 +915,15 @@ $(document).ready(function () {
     }
 
     {{-- KHUSUS Philiphin --}}
-    @if(true)
-        $(".pilihan-product").change(function (e) {
-            if ($(this).val() == 'other') {
-                $(this).parent().next().next().removeClass("d-none");
-                $(this).parent().next().next().children().attr('required', '');
-            } else {
-                $(this).parent().next().next().addClass("d-none");
-                $(this).parent().next().next().children().removeAttr('required', '');
-            }
-        });
-    @endif
+    $(".pilihan-product").change(function (e) {
+        if ($(this).val() == 'other') {
+            $(this).parent().next().next().removeClass("d-none");
+            $(this).parent().next().next().children().attr('required', '');
+        } else {
+            $(this).parent().next().next().addClass("d-none");
+            $(this).parent().next().next().children().removeAttr('required', '');
+        }
+    });
 
     // Memunculkan form file upload untuk image-proof
     function showHideImageproof() {

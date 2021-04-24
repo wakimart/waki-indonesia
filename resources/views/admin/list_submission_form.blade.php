@@ -43,6 +43,7 @@ $menu_item_second = "list_submission_form";
                                     <th>Type Register</th>
                                     <th>Branch</th>
                                     <th>CSO</th>
+                                    <th>View</th>
                                     @if (Gate::check('edit-submission') || Gate::check('delete-submission'))
                                         <th colspan="2">Edit / Delete</th>
                                     @endif
@@ -66,6 +67,11 @@ $menu_item_second = "list_submission_form";
                                         </td>
                                         <td>
                                             {{ $deliveryOrder->cso->code }} - {{ $deliveryOrder->cso->name }}
+                                        </td>
+                                        <td style="text-align: center;">
+                                            <a href="{{ route("detail_submission_form", ["id" => $deliveryOrder->id]) }}">
+                                                <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                            </a>
                                         </td>
                                         @can('edit-submission')
                                             <td style="text-align: center;">
@@ -121,7 +127,7 @@ $menu_item_second = "list_submission_form";
             </div>
             <div class="modal-footer">
                 <form id="frmDelete" method="post" action="">
-                    {{csrf_field()}}
+                    @csrf
                     <button type="submit" class="btn btn-gradient-danger mr-2">
                         Yes
                     </button>
@@ -135,7 +141,7 @@ $menu_item_second = "list_submission_form";
 @endsection
 
 @section('script')
-<script>
+<script type="application/javascript">
 $(document).ready(function (e) {
     $(".btn-delete").click(function (e) {
         $("#frmDelete").attr("action",  $(this).val());

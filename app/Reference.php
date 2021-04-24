@@ -7,12 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Reference extends Model
 {
     protected $fillable = [
-        'name', 'age', 'phone', 'province', 'city', 'deliveryorder_id',
+        "submission_id",
+        "name",
+        "age",
+        "phone",
+        "province",
+        "city",
     ];
 
-    public function deliveryorder()
+    public function submission()
     {
-        return $this->belongsTo('App\DeliveryOrder');
+        return $this->belongsTo("App\Submission");
     }
 
     public function getCityName()
