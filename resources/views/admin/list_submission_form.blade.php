@@ -3,6 +3,19 @@ $menu_item_page = "submission";
 $menu_item_second = "list_submission_form";
 ?>
 @extends('admin.layouts.template')
+
+@section("style")
+<style type="text/css">
+    .center {
+        text-align: center;
+    }
+
+    .right {
+        text-align: right;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
@@ -30,72 +43,76 @@ $menu_item_second = "list_submission_form";
             <div class="card">
                 <div class="card-body">
                     <h5 style="margin-bottom: 0.5em;">
-                        Total: {{ $deliveryOrders->count() }} data
+                        Total: {{ $countSubmission }} data
                     </h5>
                     <div class="table-responsive"
                         style="border: 1px solid #ebedf2;">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
+                                    <th class="center">No.</th>
                                     <th>Registration Date</th>
                                     <th>Member Name</th>
-                                    <th>Type Register</th>
+                                    <th>Type</th>
                                     <th>Branch</th>
                                     <th>CSO</th>
-                                    <th>View</th>
-                                    @if (Gate::check('edit-submission') || Gate::check('delete-submission'))
-                                        <th colspan="2">Edit / Delete</th>
+                                    <th class="center">View</th>
+                                    @if (Gate::check('edit-submission'))
+                                        <th class="center">Edit</th>
+                                    @endif
+                                    @if (Gate::check('delete-submission'))
+                                        <th class="center">Delete</th>
                                     @endif
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($deliveryOrders as $key => $deliveryOrder)
+                                @foreach($submissions as $key => $submission)
                                     <tr>
-                                        <td>{{ $key + 1 }}</td>
+                                        <td class="right">{{ $i }}</td>
                                         <td>
-                                            {{ date("d/m/Y", strtotime($deliveryOrder->created_at)) }}
+                                            {{ date("d F Y", strtotime($submission->created_at)) }}
                                         </td>
                                         <td>
-                                            {{ $deliveryOrder->name }}
+                                            {{ $submission->name }}
                                         </td>
                                         <td>
-                                            {{ $deliveryOrder->type_register }}
+                                            {{ strtoupper($submission->type) }}
                                         </td>
                                         <td>
-                                            {{ $deliveryOrder->branch->code }} - {{ $deliveryOrder->branch->name }}
+                                            {{ $submission->branch->code }} - {{ $submission->branch->name }}
                                         </td>
                                         <td>
-                                            {{ $deliveryOrder->cso->code }} - {{ $deliveryOrder->cso->name }}
+                                            {{ $submission->cso->code }} - {{ $submission->cso->name }}
                                         </td>
-                                        <td style="text-align: center;">
-                                            <a href="{{ route("detail_submission_form", ["id" => $deliveryOrder->id]) }}">
+                                        <td class="center">
+                                            <a href="{{ route("detail_submission_form", ["id" => $submission->id]) }}">
                                                 <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                             </a>
                                         </td>
                                         @can('edit-submission')
-                                            <td style="text-align: center;">
-                                                <a href="{{ route('edit_submission_form', ['id' => $deliveryOrder->id]) }}">
+                                            <td class="center">
+                                                <a href="{{ route('edit_submission_form', ['id' => $submission->id]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>
                                         @endcan
                                         @can('delete-submission')
-                                            <td style="text-align: center;">
+                                            <td class="center">
                                                 <button class="btn-delete"
                                                     data-toggle="modal"
                                                     data-target="#deleteDoModal"
-                                                    value="{{ route('delete_submission_form', ['id' => $deliveryOrder->id]) }}">
+                                                    value="{{ route('delete_submission_form', ['id' => $submission->id]) }}">
                                                     <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                 </button>
                                             </td>
                                         @endcan
                                     </tr>
+                                    <?php $i++; ?>
                                 @endforeach
                             </tbody>
                         </table>
                         <br>
-                        {{ $deliveryOrders->appends($url)->links() }}
+                        {{ $submissions->appends($url)->links() }}
                     </div>
                 </div>
             </div>

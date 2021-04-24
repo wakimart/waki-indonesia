@@ -41,7 +41,6 @@ class SubmissionController extends Controller
         // Memasukkan klausa WHERE yang digunakan berkali-kali ke dalam array
         $whereArray = [];
         $whereArray[] = ["active", true];
-        $whereArray[] = ["type_register", "!=", "Normal Register"];
 
         if (Auth::user()->roles[0]->slug === "cso") {
             // Jika user adalah CSO
@@ -51,7 +50,7 @@ class SubmissionController extends Controller
                 Auth::user()->cso["id"],
             ];
 
-            $deliveryOrders = DeliveryOrder::where($whereArray)->paginate(10);
+            $submissions = Submission::where($whereArray)->paginate(10);
         } elseif (
             Auth::user()->roles[0]->slug === "branch"
             || Auth::user()->roles[0]->slug === "area-manager"
@@ -62,32 +61,36 @@ class SubmissionController extends Controller
 
             // Menyimpan BRANCH yang dipegang oleh user ke dalam $arrBranches
             foreach (Auth::user()->listBranches() as $value) {
-                array_push($arrBranches, $value['id']);
+                $arrBranches[] = $value['id'];
             }
 
-            $deliveryOrders = DeliveryOrder::WhereIn(
+            $submissions = Submission::WhereIn(
                 "branch_id",
                 $arrBranches
             )
             ->where($whereArray)
             ->paginate(10);
         } else {
-            $deliveryOrders = DeliveryOrder::where($whereArray)->paginate(10);
+            $submissions = Submission::where($whereArray)->paginate(10);
         }
+
+        $countSubmission = $submissions->count();
 
         return view(
             "admin.list_submission_form",
             compact(
-                "deliveryOrders",
+                "countSubmission",
+                "submissions",
                 "url"
             )
-        );
+        )
+        ->with("i", (request()->input("page", 1) - 1) * 10 + 1);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -293,8 +296,9 @@ class SubmissionController extends Controller
 
                     if (isset($data["promo_1"])){
                         if ($data["promo_1"][$i] !== "other") {
-                        $referencePromo->promo_1 = $data["promo_1"][$i];
-                    }                    }
+                            $referencePromo->promo_1 = $data["promo_1"][$i];
+                        }
+                    }
 
                     if (isset($data["promo_2"])){
                         if ($data["promo_2"][$i] !== "other") {
@@ -303,7 +307,6 @@ class SubmissionController extends Controller
                     }
 
                     $referencePromo->qty_1 = $data["qty_1"][$i];
-
 
                     if (isset($data["promo_2"])){
                         if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
@@ -320,7 +323,7 @@ class SubmissionController extends Controller
                     $referenceImage = new ReferenceImage();
                     $referenceImage->reference_id = $reference->id;
                     foreach ($request->file("do-image_" . ($i + 1)) AS $image) {
-                        $fileName = ((string) strval(time()))
+                        $fileName = ((string)time())
                             . "_"
                             . $user_id
                             . "_"
@@ -465,7 +468,7 @@ class SubmissionController extends Controller
             $submissionImage = new SubmissionImage();
             $submissionImage->submission_id = $submission->id;
             foreach ($request->file("do_image") as $image) {
-                $fileName = ((string) strval(time()))
+                $fileName = ((string)time())
                     . "_"
                     . $user_id
                     . "_"
@@ -778,38 +781,37 @@ class SubmissionController extends Controller
         DB::beginTransaction();
 
         try {
-            $deliveryOrder = DeliveryOrder::where("id", $id)->first();
-            $deliveryOrder->active = false;
-            $deliveryOrder->save();
+            $submission = Submission::where("id", $id)->first();
+            $submission->active = false;
+            $submission->save();
 
             $user = Auth::user();
-            $historyDeleteDeliveryOrder = [];
-            $historyDeleteDeliveryOrder["type_menu"] = "Delivery Order";
-            $historyDeleteDeliveryOrder["method"] = "Delete";
-            $historyDeleteDeliveryOrder["meta"] = json_encode(
-                [
-                    "user" => $user["id"],
-                    "createdAt" => date("Y-m-d H:i:s"),
-                    "dataChange" => $deliveryOrder->getChanges(),
-                ]
-            );
+            $historyDeleteSubmission = [];
+            $historyDeleteSubmission["type_menu"] = "Submission";
+            $historyDeleteSubmission["method"] = "Delete";
+            $historyDeleteSubmission["meta"] = json_encode([
+                "user" => $user["id"],
+                "createdAt" => date("Y-m-d H:i:s"),
+                "dataChange" => $submission->getChanges(),
+            ], JSON_THROW_ON_ERROR);
 
-            $historyDeleteDeliveryOrder["user_id"] = $user["id"];
-            $historyDeleteDeliveryOrder["menu_id"] = $id;
+            $historyDeleteSubmission["user_id"] = $user["id"];
+            $historyDeleteSubmission["menu_id"] = $id;
 
-            HistoryUpdate::create($historyDeleteDeliveryOrder);
+            HistoryUpdate::create($historyDeleteSubmission);
 
             DB::commit();
 
             return redirect()
                 ->route('list_submission_form')
-                ->with('success', 'Data berhasil dihapus');
+                ->with('success', 'Data berhasil dihapus.');
         } catch (Exception $e) {
             DB::rollback();
 
             return response()->json([
                 "error" => $e,
-            ]);
+                "error message" => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -1104,8 +1106,8 @@ class SubmissionController extends Controller
                         $path = "sources/registration";
                         $referenceImage = new ReferenceImage();
                         $referenceImage->reference_id = $reference->id;
-                        foreach ($request->file("do-image_" . ($i + 1)) AS $image) {
-                            $fileName = ((string) strval(time()))
+                        foreach ($request->file("do-image_" . ($i + 1)) as $image) {
+                            $fileName = ((string)time())
                                 . "_"
                                 . $user_id
                                 . "_"
@@ -1131,7 +1133,7 @@ class SubmissionController extends Controller
                 $submissionImage = new SubmissionImage();
                 $submissionImage->submission_id = $submission->id;
                 foreach ($request->file("proof_image") as $image) {
-                    $fileName = ((string) strval(time()))
+                    $fileName = ((string)time())
                         . "_"
                         . $user_id
                         . "_"
@@ -1202,7 +1204,7 @@ class SubmissionController extends Controller
                 $submissionImage = new SubmissionImage();
                 $submissionImage->submission_id = $submission->id;
                 foreach ($request->file("do_image") as $image) {
-                    $fileName = ((string) strval(time()))
+                    $fileName = ((string)time())
                         . "_"
                         . $user_id
                         . "_"
@@ -1532,7 +1534,7 @@ class SubmissionController extends Controller
                     $j = 0;
                     foreach ($request->file("image_proof") as $image) {
                         // Inisialisasi nama gambar dengan UNIX Timestamp
-                        $fileName = strval(time());
+                        $fileName = (string)time();
                         // Memberikan suffix dengan $j agar nama gambar tidak sama, dan juga menambahkan file extension
                         $fileName .= "_" . $j . "." . $image->getClientOriginalExtension();
                         // Menyimpan gambar
@@ -1744,11 +1746,12 @@ class SubmissionController extends Controller
             $url = $request->all();
 
             // Query dari tabel delivery_orders, dan menampilkan 10 data per halaman
-            $deliveryOrders = DeliveryOrder::select(
-                "delivery_orders.id AS id",
-                "delivery_orders.code AS code",
-                "delivery_orders.name AS customer_name",
-                "delivery_orders.created_at",
+            $submissions = Submission::select(
+                "submissions.id AS id",
+                "submissions.code AS code",
+                "submissions.name AS customer_name",
+                "submissions.type AS type",
+                "submissions.created_at",
                 "branches.code AS branch_code",
                 "branches.name AS branch_name",
                 "csos.code AS cso_code",
@@ -1758,35 +1761,27 @@ class SubmissionController extends Controller
                 "branches",
                 "branches.id",
                 "=",
-                "delivery_orders.branch_id"
+                "submissions.branch_id"
             )
             ->leftJoin(
                 "csos",
                 "csos.id",
                 "=",
-                "delivery_orders.cso_id"
+                "submissions.cso_id"
             )
-            ->where(
-                [
-                    ['delivery_orders.active', true],
-                    ['delivery_orders.type_register', '!=', 'Normal Register'],
-                ]
-            )
+            ->where("submissions.active", true)
             ->paginate(10);
 
-            $data = [
-                "data" => $deliveryOrders,
+            return response()->json([
+                "result" => 1,
+                "data" => $submissions,
                 "url" => $url,
-            ];
-
-            return response()->json($data, 200);
+            ]);
         } catch (Exception $e) {
-            $data = [
+            return response()->json([
                 "result" => 0,
                 "data" => $e->getMessage(),
-            ];
-
-            return response()->json($data, 401);
+            ], 500);
         }
     }
 
@@ -1959,57 +1954,52 @@ class SubmissionController extends Controller
             ]
         ], $messages);
 
-        if ($validator->fails()){
+        if ($validator->fails()) {
             $data = [
                 'result' => 0,
                 'data' => $validator->errors(),
             ];
 
-            return response()->json($data, 401);
-        } else {
-            DB::beginTransaction();
+            return response()->json($data, 400);
+        }
 
-            try {
-                $deliveryOrder = DeliveryOrder::where("id", $request->id)->first();
-                $deliveryOrder->active = false;
-                $deliveryOrder->save();
+        DB::beginTransaction();
 
-                $historyDeleteDeliveryOrder = [];
-                $historyDeleteDeliveryOrder["type_menu"] = "Delivery Order";
-                $historyDeleteDeliveryOrder["method"] = "Delete";
-                $historyDeleteDeliveryOrder["meta"] = json_encode(
-                    [
-                        "user" => $request->user_id,
-                        "createdAt" => date("Y-m-d H:i:s"),
-                        "dataChange" => $deliveryOrder->getChanges(),
-                    ]
-                );
+        try {
+            $submission = Submission::where("id", $request->id)->first();
+            $submission->active = false;
+            $submission->save();
 
-                $historyDeleteDeliveryOrder["user_id"] = $request->user_id;
-                $historyDeleteDeliveryOrder["menu_id"] = $request->id;
+            $historyDeleteSubmission = [];
+            $historyDeleteSubmission["type_menu"] = "Delivery Order";
+            $historyDeleteSubmission["method"] = "Delete";
+            $historyDeleteSubmission["meta"] = json_encode([
+                "user" => $request->user_id,
+                "createdAt" => date("Y-m-d H:i:s"),
+                "dataChange" => $submission->getChanges(),
+            ], JSON_THROW_ON_ERROR);
 
-                // dd($historyDeleteDeliveryOrder);
+            $historyDeleteSubmission["user_id"] = $request->user_id;
+            $historyDeleteSubmission["menu_id"] = $request->id;
 
-                HistoryUpdate::create($historyDeleteDeliveryOrder);
+            HistoryUpdate::create($historyDeleteSubmission);
 
-                DB::commit();
+            DB::commit();
 
-                $data = [
-                    "result" => 1,
-                ];
+            $data = [
+                "result" => 1,
+            ];
 
-                return response()->json($data, 200);
+            return response()->json($data);
+        } catch (Exception $e) {
+            DB::rollback();
 
-            } catch (Exception $e) {
-                DB::rollback();
+            $data = [
+                "result" => 0,
+                "data" => $e->getMessage(),
+            ];
 
-                $data = [
-                    "result" => 0,
-                    "data" => $e->getMessage(),
-                ];
-
-                return response()->json($data, 501);
-            }
+            return response()->json($data, 500);
         }
     }
 }
