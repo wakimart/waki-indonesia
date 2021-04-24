@@ -346,6 +346,22 @@
 </li>
 @endif
 
+@if(Auth::user()->roles[0]['slug'] == 'head-admin')
+<li class="{{isset($menu_item_page) && $menu_item_page == 'souvenir'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#souvenir-dd" aria-expanded="false" aria-controls="souvenir-dd">
+    <span class="menu-title">Souvenir</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-gift menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'souvenir'? 'show': '' }}" id="souvenir-dd">
+    <ul class="nav flex-column sub-menu">
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_souvenir'? 'active': '' }}" href="{{route('add_souvenir')}}">Add Souvenir</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_souvenir'? 'active': '' }}" href="{{route('list_souvenir')}}">List Souvenir</a></li>
+    </ul>
+  </div>
+</li>
+@endif
+
 
 {{-- <li class="nav-item">
   <a class="nav-link" data-toggle="collapse" href="#rekap-dd" aria-expanded="false" aria-controls="rekap-dd">
