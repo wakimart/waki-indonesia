@@ -165,6 +165,8 @@ class AcceptanceController extends Controller
                 $createData = HistoryUpdate::create($historyUpdate);
 
                 DB::commit();
+
+                $this->sendNotif($acceptance);
                 return redirect()->route('detail_acceptance_form', ['id'=>$data['id']]);
             }
             catch (\Exception $ex) {
@@ -236,6 +238,8 @@ class AcceptanceController extends Controller
                     $createData = HistoryUpdate::create($historyUpdate);
                     
                     DB::commit();
+
+                    $this->sendNotif($acceptance);
                     return response()->json(['success' => $acceptance]);
                 }
                 catch (\Exception $ex) {
@@ -297,10 +301,20 @@ class AcceptanceController extends Controller
 
     public function sendNotif($acceptance){
         $fcm_tokenNya = [];
-        $userNya = Role::where('slug', 'head-admin')->first()->users;
-        foreach ($userNya as $value) {
-            if($value['fmc_token'] != null){
-                $fcm_tokenNya = array_merge($fcm_tokenNya, $value['fmc_token']);
+
+        if(strtolower($acceptance['status']) == "new"){
+            $userNya = User::where('users.fmc_token', '!=', null)
+                        ->whereIn('role_users.role_id', [1,6])
+                        ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                        ->get();
+            foreach ($userNya as $value) {
+                if($value['fmc_token'] != null){
+                    foreach ($value['fmc_token'] as $fcmSatuan) {
+                        if($fcmSatuan != null){
+                            array_push($fcm_tokenNya, $fcmSatuan);
+                        }
+                    }
+                }
             }
         }
 
@@ -312,11 +326,39 @@ class AcceptanceController extends Controller
         $branch = $acceptance->branch['code'];
         $cso = $acceptance->cso['code'];
 
+        $txtNotif = "New ";
+        if(strtolower($acceptance['status']) == "approved"){
+            $txtNotif = "Approved ";
+            if($acceptance->cso->user != null){
+                if($acceptance->cso->user['fmc_token'] != null){
+                    foreach ($acceptance->cso->user['fmc_token'] as $fcmSatuan) {
+                        if($fcmSatuan != null){
+                            array_push($fcm_tokenNya, $fcmSatuan);
+                        }
+                    }
+                }
+            }
+        }
+        else if(strtolower($acceptance['status']) == "rejected"){
+            $txtNotif = "Rejected ";
+            if($acceptance->cso->user != null){
+                if($acceptance->cso->user['fmc_token'] != null){
+                    foreach ($acceptance->cso->user['fmc_token'] as $fcmSatuan) {
+                        if($fcmSatuan != null){
+                            array_push($fcm_tokenNya, $fcmSatuan);
+                        }
+                    }
+                }
+            }
+        }
+
         $body = ['registration_ids'=>$fcm_tokenNya,
             'collapse_key'=>"type_a",
+            "content_available" => true,
+            "priority" => "high",
             "notification" => [
                 "body" => "Upgrade from ".$oldProduct." to ".$newProduct.". By ".$branch."-".$cso,
-                "title" => "New Acceptance [Upgrade]",
+                "title" => $txtNotif."Acceptance [Upgrade]",
                 "icon" => "ic_launcher"
             ],
             "data" => [
@@ -325,9 +367,11 @@ class AcceptanceController extends Controller
                 "product" => $oldProduct." to ".$newProduct,
                 "price" => "Rp. ".number_format($acceptance->request_price),
             ]];
-            // 'data'=> $homeservice];
-
-        $this->sendFCM(json_encode($body));
+            
+        if(sizeof($fcm_tokenNya) > 0)
+        {
+            $this->sendFCM(json_encode($body));
+        }
     }
     //===================================================//
 
