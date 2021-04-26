@@ -88,21 +88,63 @@
 	input[type='checkbox'], input[type='radio']{
 		margin-left: 0px !important;
 	}
+
+	/*-- mobile --*/
+	@media (max-width: 768px){
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+		img{
+			height: 150px;
+		}
+	}
+
+	
+	@media (min-width: 768px) { 
+		#desktop{
+			display: block;
+		}
+
+		#mobile{
+			display: none;
+		}
+	}
+
 </style>
 @endsection
 
 @section('content')
 <div class="main-panel">
   	<div class="content-wrapper">
-    	<div class="page-header">
-      		<h3 class="page-title">Edit Acceptance</h3>
-      		<nav aria-label="breadcrumb">
-	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">Acceptance</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Edit Acceptance</li>
-	        	</ol>
-      		</nav>
-    	</div>
+		<!-- header mobile -->
+		<div id="mobile">
+			<h3 class="text-center">Edit Acceptance</h3>
+			<div class="row">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">Acceptance</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Edit Acceptance</li>
+					</ol>
+				</nav>
+		  	</div>
+	  	</div>
+
+		<!-- header desktop -->
+		<div id="desktop">
+			<div class="page-header">
+				<h3 class="page-title">Edit Acceptance</h3>
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">Acceptance</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Edit Acceptance</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">

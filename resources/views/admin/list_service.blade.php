@@ -5,6 +5,49 @@
 
 @extends('admin.layouts.template')
 
+@section('style')
+<style type="text/css">
+    /*-- mobile --*/
+	@media (max-width: 768px){
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+
+		#mobile .filter{
+			padding-top: 15px;
+		}
+	}
+
+	@media (min-width: 768px){
+		#desktop{
+			display: block;
+		}
+
+		#mobile{
+			display: none;
+		}
+	}
+
+	@media (min-width: 410px){
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+
+		#mobile .filter{
+			padding-top: 0;
+		}
+	}
+</style>
+@endsection
+
 @section('content')
 <div class="main-panel">
 	<div class="content-wrapper">
@@ -18,7 +61,7 @@
   			</nav>
 		</div>
 		
-		<div class="row">
+		<div id="desktop" class="row">
 			<div class="col-12 grid-margin stretch-card">
 				<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
                     <div class="form-group">
@@ -28,13 +71,31 @@
                     </div>
 				</div>
 
-				<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+				<div class="col-xs-6 col-sm-12 row" style="margin: 0;padding: 0;">
 					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
 						<label for=""></label>
 						<div class="form-group">
 							<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
 					  	</div>
 					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="mobile" class="row">
+			<div class="col-12 grid-margin stretch-card">
+				<div class="col-xs-12">
+                    <div class="form-group">
+						<label for="">Search By Name, Code, and Phone</label>
+                        <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
+                        <div class="validation"></div>
+                    </div>
+				</div>
+				<div class="col-xs-12 filter">
+					<label for=""></label>
+						<div class="form-group">
+							<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" style="font-size: 0.8em; padding: 1.1em;" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+						</div>
 				</div>
 			</div>
 		</div>

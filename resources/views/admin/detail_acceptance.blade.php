@@ -115,21 +115,72 @@
     .justify-content-center{
     	padding: 0em 1em;
     }
+
+	/*-- mobile --*/
+	@media (max-width: 768px){
+
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+		.btn{
+			display: inline-block;
+			padding-left: 2em !important;
+			padding-right: 2em !important;
+			margin-top: 1em;
+		}
+
+		img{
+			height: 150px;
+		}
+	}
+
+	@media (min-width: 768px) { 
+		#desktop{
+			display: block;
+		}
+
+		#mobile{
+			display: none;
+		}
+		.table-responsive::-webkit-scrollbar {
+            display: none;
+        }
+	}
 </style>
 @endsection
 
 @section('content')
 <div class="main-panel">
   	<div class="content-wrapper">
-    	<div class="page-header">
-      		<h3 class="page-title">Detail Acceptance</h3>
-      		<nav aria-label="breadcrumb">
-	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="acceptance-dd">Acceptance</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Detail Acceptance</li>
-	        	</ol>
-      		</nav>
-    	</div>
+		<!-- header mobile -->
+		<div id="mobile">
+			<h3 class="text-center">Detail Acceptance</h3>
+			<div class="row">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="acceptance-dd">Acceptance</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Detail Acceptance</li>
+					</ol>
+				</nav>
+		  	</div>
+	  	</div>
+
+		<!-- header desktop -->
+		<div id="desktop">
+			<div class="page-header">
+				<h3 class="page-title">Detail Acceptance</h3>
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="acceptance-dd">Acceptance</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Detail Acceptance</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
 
     	<div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
@@ -139,131 +190,137 @@
 	          				<h2>Detail Acceptance (Upgrade)</h2>
 	          			</div>
 	          			<div class="row justify-content-center">
-	          				<table class="col-md-12">
-	          					<thead>
-	          						<td>Status</td>
-	          						<td>Acceptance Code</td>
-	          						<td>Acceptance Date</td>
-	          					</thead>
-	          					<tr>
-	          						<td style="text-align: center;">
-	          							@if(strtolower($acceptance['status']) == "new")
-	                                        <span class="badge badge-primary">New</span>
-	                                    @elseif(strtolower($acceptance['status']) == "approved")
-	                                        <span class="badge badge-success">Approved by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
-	                                    @elseif(strtolower($acceptance['status']) == "rejected")
-	                                        <span class="badge badge-danger">Rejected by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
-	                                    @endif
-	          						</td>	          						
-	          						<td>{{ $acceptance['code'] }}</td>
-	          						<td>
-	          							{{ date("d/m/Y", strtotime($acceptance['created_at'])) }}
-	          						</td>
-	          					</tr>
-	          				</table>
+							<div class="table-responsive">
+								<table class="col-md-12">
+									<thead>
+										<td>Status</td>
+										<td>Acceptance Code</td>
+										<td>Acceptance Date</td>
+									</thead>
+									<tr>
+										<td style="text-align: center;">
+											@if(strtolower($acceptance['status']) == "new")
+												<span class="badge badge-primary">New</span>
+											@elseif(strtolower($acceptance['status']) == "approved")
+												<span class="badge badge-success">Approved by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
+											@elseif(strtolower($acceptance['status']) == "rejected")
+												<span class="badge badge-danger">Rejected by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
+											@endif
+										</td>	          						
+										<td>{{ $acceptance['code'] }}</td>
+										<td>
+											{{ date("d/m/Y", strtotime($acceptance['created_at'])) }}
+										</td>
+									</tr>
+								</table>
+							</div>
 	          			</div>
 	          			<div class="row justify-content-center">
-	          				<table class="col-md-12">
-	          					<thead>
-	          						<td colspan="2">Data Acceptance</td>
-	          					</thead>
-	          					<tr>
-	          						<td>Upgrade Date : </td>
-	          						<td>{{ date("d/m/Y", strtotime($acceptance['upgrade_date'])) }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Customer Name : </td>
-	          						<td>{{ $acceptance['name'] }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Customer Phone : </td>
-	          						<td>{{ $acceptance['phone'] }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Customer Address : </td>
-	          						<td>
-		          						{{ $acceptance['address'] }}
-		          						<br>
-		          						{{$acceptance->provinceObj['province']}}, {{$acceptance->cityObj['city_name']}}, {{$acceptance->districObj['subdistrict_name']}}
-		          					</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Branch - CSO : </td>
-	          						<td>{{ $acceptance->branch->code }} - {{ $acceptance->cso->code }} ({{ $acceptance->cso->name }})</td>
-	          					</tr>
-	          				</table>
+							<div class="table-responsive">
+								<table class="col-md-12">
+									<thead>
+										<td colspan="2">Data Acceptance</td>
+									</thead>
+									<tr>
+										<td>Upgrade Date </td>
+										<td>{{ date("d/m/Y", strtotime($acceptance['upgrade_date'])) }}</td>
+									</tr>
+									<tr>
+										<td>Customer Name </td>
+										<td>{{ $acceptance['name'] }}</td>
+									</tr>
+									<tr>
+										<td>Customer Phone </td>
+										<td>{{ $acceptance['phone'] }}</td>
+									</tr>
+									<tr>
+										<td>Customer Address </td>
+										<td>
+											{{ $acceptance['address'] }}
+											<br>
+											{{$acceptance->provinceObj['province']}}, {{$acceptance->cityObj['city_name']}}, {{$acceptance->districObj['subdistrict_name']}}
+										</td>
+									</tr>
+									<tr>
+										<td>Branch - CSO </td>
+										<td>{{ $acceptance->branch->code }} - {{ $acceptance->cso->code }} ({{ $acceptance->cso->name }})</td>
+									</tr>
+								</table>
+							</div>
 	          			</div>
 	          			<div class="row justify-content-center">
-	          				<table class="col-md-12">
-	          					<thead>
-	          						<td colspan="2">Data Product</td>
-	          					</thead>
-	          					<tr>
-	          						<td>New Product : </td>
-	          						<td>{{ $acceptance->newproduct['code'] }} - {{ $acceptance->newproduct['name'] }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Old Product : </td>
-	          						@if($acceptance['oldproduct_id'] != null)
-		          						<td>{{ $acceptance->oldproduct['code'] }} - {{ $acceptance->oldproduct['name'] }}</td>
-		          					@else
-		          						<td>{{ $acceptance['other_product'] }}</td>
-		          					@endif
-	          					</tr>
-	          					<tr>
-	          						<td>Purchase Date : </td>
-	          						<td>{{ date("d/m/Y", strtotime($acceptance['purchase_date'])) }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Request Price : </td>
-	          						<td>{{ number_format($acceptance->request_price) }}</td>
-	          					</tr>
+							<div class="table-responsive">
+								<table class="col-md-12">
+									<thead>
+										<td colspan="2">Data Product</td>
+									</thead>
+									<tr>
+										<td>New Product </td>
+										<td>{{ $acceptance->newproduct['code'] }} - {{ $acceptance->newproduct['name'] }}</td>
+									</tr>
+									<tr>
+										<td>Old Product </td>
+										@if($acceptance['oldproduct_id'] != null)
+											<td>{{ $acceptance->oldproduct['code'] }} - {{ $acceptance->oldproduct['name'] }}</td>
+										@else
+											<td>{{ $acceptance['other_product'] }}</td>
+										@endif
+									</tr>
+									<tr>
+										<td>Purchase Date </td>
+										<td>{{ date("d/m/Y", strtotime($acceptance['purchase_date'])) }}</td>
+									</tr>
+									<tr>
+										<td>Request Price </td>
+										<td>{{ number_format($acceptance->request_price) }}</td>
+									</tr>
 
-	          					<tr>
-	          						<td rowspan="5">Kelengkapan : </td>
-	          						<td><i class="mdi {{ in_array("mesin", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Mesin
-	          						</td>
-	          					</tr>
-	          					<tr>
-	          						<td>
-	          							<i class="mdi {{ in_array("filter", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Filter
-	          						</td>
-	          					</tr>
-	          					<tr>
-	          						<td>
-	          							<i class="mdi {{ in_array("aksesoris", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Aksesoris
-	          						</td>
-	          					</tr>
-	          					<tr>
-	          						<td>
-	          							<i class="mdi {{ in_array("kabel", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Kabel
-	          						</td>
-	          					</tr>
-	          					<tr>
-	          						<td>
-	          							<i class="mdi {{ in_array("other", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Other : {{ isset($acceptance['arr_condition']['kelengkapan']['other']) ? $acceptance['arr_condition']['kelengkapan']['other'][0] : "-" }}
-	          						</td></tr>
-	          					<tr>
-	          						<td>Kondisi Mesin : </td>
-	          						<td>{{ ucwords($acceptance['arr_condition']['kondisi']) }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Tampilan : </td>
-	          						<td>{{ ucwords($acceptance['arr_condition']['tampilan']) }}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Description : </td>
-	          						<td>{{ $acceptance['description']}}</td>
-	          					</tr>
-	          					<tr>
-	          						<td>Photo : </td>
-	          						<td>
-	          							@foreach($acceptance['image'] as $imgAcc)
-		          							<img src="{{asset('sources/acceptance/').'/'.$imgAcc}}" height="300px">
-		          						@endforeach
-	          						</td>
-	          					</tr>
-	          				</table>
+									<tr>
+										<td rowspan="5">Kelengkapan </td>
+										<td><i class="mdi {{ in_array("mesin", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Mesin
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<i class="mdi {{ in_array("filter", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Filter
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<i class="mdi {{ in_array("aksesoris", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Aksesoris
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<i class="mdi {{ in_array("kabel", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Kabel
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<i class="mdi {{ in_array("other", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Other : {{ isset($acceptance['arr_condition']['kelengkapan']['other']) ? $acceptance['arr_condition']['kelengkapan']['other'][0] : "-" }}
+										</td></tr>
+									<tr>
+										<td>Kondisi Mesin </td>
+										<td>{{ ucwords($acceptance['arr_condition']['kondisi']) }}</td>
+									</tr>
+									<tr>
+										<td>Tampilan </td>
+										<td>{{ ucwords($acceptance['arr_condition']['tampilan']) }}</td>
+									</tr>
+									<tr>
+										<td>Description </td>
+										<td>{{ $acceptance['description']}}</td>
+									</tr>
+									<tr>
+										<td>Photo </td>
+										<td>
+											@foreach($acceptance['image'] as $imgAcc)
+												<img src="{{asset('sources/acceptance/').'/'.$imgAcc}}" height="300px">
+											@endforeach
+										</td>
+									</tr>
+								</table>
+							</div>
 	          			</div>
 	          		</div>
 	        	</div>
@@ -327,29 +384,31 @@
 		          				<h2>Acceptance History Log</h2>
 		          			</div>
 		            		<div class="row justify-content-center">
-		          				<table class="col-md-12">
-		          					<thead>
-		          						<td>No.</td>
-		          						<td>Action</td>
-		          						<td>User</td>
-		          						<td>Change</td>
-		          						<td>Time</td>
-		          					</thead>
-		          					@foreach($historyUpdate as $key => $historyNya)
-			          					<tr>
-			          						<td>{{$key+1}}</td>
-			          						<td>{{$historyNya->method}}</td>
-			          						<td>{{$historyNya->user['name']}}</td>
-			          						<?php $dataChange = json_decode($historyNya->meta, true);?>
-			          						<td>
-			          							@foreach ($dataChange['dataChange'] as $key=>$value)
-				          							<b>{{$key}}</b>: {{$value}}<br/>
-			          							@endforeach
-			          						</td>
-			          						<td>{{ date("d/m/Y H:i:s", strtotime($historyNya->created_at)) }}</td>
-			          					</tr>
-		          					@endforeach
-		          				</table>
+								<div class="table-responsive">
+									<table class="col-md-12">
+										<thead>
+											<td>No.</td>
+											<td>Action</td>
+											<td>User</td>
+											<td>Change</td>
+											<td>Time</td>
+										</thead>
+										@foreach($historyUpdate as $key => $historyNya)
+											<tr>
+												<td>{{$key+1}}</td>
+												<td>{{$historyNya->method}}</td>
+												<td>{{$historyNya->user['name']}}</td>
+												<?php $dataChange = json_decode($historyNya->meta, true);?>
+												<td>
+													@foreach ($dataChange['dataChange'] as $key=>$value)
+														<b>{{$key}}</b>: {{$value}}<br/>
+													@endforeach
+												</td>
+												<td>{{ date("d/m/Y H:i:s", strtotime($historyNya->created_at)) }}</td>
+											</tr>
+										@endforeach
+									</table>
+								</div>
 		          			</div>
 		          		</div>
 		        	</div>
