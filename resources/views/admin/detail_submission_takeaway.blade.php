@@ -142,6 +142,10 @@ $menu_item_second = "detail_submission_form";
                             $queryPromo = Promo::find($submission["promo_" . $i]);
                             $productCode = implode(", ", $queryPromo->productCode());
                             $promo = $queryPromo->code . " - (" . $productCode . ")";
+                        } else {
+                            if (!empty($submission["other_" . $i])) {
+                                $promo = $submission["other_" . $i];
+                            }
                         }
                         ?>
                         <tr>

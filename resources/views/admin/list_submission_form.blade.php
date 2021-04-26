@@ -159,7 +159,7 @@ $menu_item_second = "list_submission_form";
                                         </td>
                                         @can('edit-submission')
                                             <td class="center">
-                                                <a href="{{ route('edit_submission_form', ['id' => $submission->id]) }}">
+                                                <a href="{{ route('edit_submission_form', ['id' => $submission->id, "type" => $submission->type]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>

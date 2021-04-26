@@ -95,31 +95,6 @@ class SubmissionController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
-    {
-        $branches = Branch::where('active', true)->get();
-        $csos = Cso::all();
-        $promos = Promo::all();
-        $souvenirs = Souvenir::select("id", "name")
-        ->where("active", true)
-        ->get();
-
-        return view(
-            'admin.add_submission_form',
-            compact(
-                'promos',
-                'branches',
-                'csos',
-                "souvenirs",
-            )
-        );
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\View\View
-     */
     public function createMGM(): \Illuminate\View\View
     {
         $branches = Branch::where('active', true)->get();
@@ -170,110 +145,6 @@ class SubmissionController extends Controller
                 'csos',
             )
         );
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
-     */
-    public function store(Request $request)
-    {
-        DB::beginTransaction();
-
-        try {
-            $data = $request->all();
-
-            $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
-            $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-
-            // Pembentukan array product
-            $data['arr_product'] = [];
-            foreach ($data as $key => $value) {
-                $arrKey = explode("_", $key);
-                if($arrKey[0] == 'product'){
-                    if(isset($data['qty_'.$arrKey[1]])){
-                        $data['arr_product'][$key] = [];
-                        $data['arr_product'][$key]['id'] = $value;
-
-                        // {{-- KHUSUS Philiphin --}}
-                        if($value == 'other'){
-                            $data['arr_product'][$key]['id'] = $data['product_other_' . $arrKey[1]];
-                        }
-                        // ===========================
-
-                        $data['arr_product'][$key]['qty'] = $data['qty_' . $arrKey[1]];
-                    }
-                }
-            }
-
-            $data['arr_product'] = json_encode($data['arr_product']);
-
-            $data["province"] = $data["province_id"];
-
-            // Mengecek apakah ada gambar yang diupload atau tidak
-            if ($request->hasFile("image_proof")) {
-                // Inisialisasi variabel data["image"]
-                $data["image"] = [];
-                // Inisialisasi jalur di mana gambar akan diletakkan
-                $path = "sources/registration";
-
-                // Mengecek apakah jalur untuk gambar sudah ada atau belum
-                if (!is_dir($path)) {
-                    // Jika belum, maka akan membuat folder/directory baru
-                    File::makeDirectory($path, 0777, true, true);
-                }
-
-                // Inisialisasi variabel $j untuk counter dan sebagai suffix nama file
-                $j = 0;
-                foreach ($request->file("image_proof") as $image) {
-                    // Inisialisasi nama gambar dengan UNIX Timestamp
-                    $fileName = strval(time());
-                    // Memberikan suffix dengan $j agar nama gambar tidak sama, dan juga menambahkan file extension
-                    $fileName .= "_" . $j . "." . $image->getClientOriginalExtension();
-                    // Menyimpan gambar
-                    $image->move($path, $fileName);
-                    // Push nama gambar ke dalam variabel data["image"]
-                    $data["image"][] = $fileName;
-                    // Increment variabel $j
-                    $j++;
-                }
-
-                // Convert array pada $data["image"] menjadi JSON
-                $data["image"] = json_encode($data["image"], JSON_FORCE_OBJECT);
-            }
-
-            // Memasukkan data delivery order ke tabel delivery_orders
-            $deliveryOrder = DeliveryOrder::create($data);
-
-            // Memasukkan data referensi ke tabel Reference
-            $dataCount = count($data["name_ref"]);
-            for ($i = 0; $i < $dataCount; $i++) {
-                $reference = new Reference();
-                $reference->name = $data["name_ref"][$i];
-                $reference->age = $data["age_ref"][$i];
-                $reference->phone = $data["phone_ref"][$i];
-                $reference->province = $data["province_ref"][$i];
-                $reference->city = $data["city_ref"][$i];
-                $reference->deliveryorder_id = $deliveryOrder->id;
-                $reference->souvenir_id = $data["souvenir_id"][$i];
-                $reference->link_hs = $data["link_hs"][$i];
-                $reference->status = "pending";
-                $reference->save();
-            }
-
-            DB::commit();
-
-            return redirect()->route("detail_submission_form", ["id" => $deliveryOrder->id]);
-        } catch (Exception $ex) {
-            DB::rollback();
-
-            return response()->json([
-                'error' => $ex,
-                'error message' => $ex->getMessage(),
-            ]);
-        }
     }
 
     public function storeMGM(Request $request)
@@ -507,78 +378,6 @@ class SubmissionController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
-     */
-    /* public function show(Request $request)
-    {
-        $deliveryOrder = DeliveryOrder::where("id", $request["id"])->first();
-        $deliveryOrder["district"] = array($deliveryOrder->getDistrict());
-        $references = Reference::select(
-            "references.id AS id",
-            "references.name AS name",
-            "references.phone AS phone",
-            "references.age AS age",
-            "references.province AS province_id",
-            "references.city AS city_id",
-            "references.souvenir_id AS souvenir_id",
-            "references.link_hs AS link_hs",
-            "references.status AS status",
-            "souvenirs.name AS souvenir_name",
-            "raja_ongkir__cities.province AS province_name",
-            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city_name"),
-        )
-        ->leftJoin(
-            "raja_ongkir__cities",
-            "raja_ongkir__cities.city_id",
-            "=",
-            "references.city"
-        )
-        ->leftJoin(
-            "souvenirs",
-            "souvenirs.id",
-            "=",
-            "references.souvenir_id"
-        )
-        ->where("references.deliveryorder_id", $request["id"])
-        ->orderBy("references.id", "asc")
-        ->get();
-
-        // Melakukan query riwayat dari tabel history_updates
-        $historyUpdateDeliveryOrder = HistoryUpdate::leftjoin(
-            'users',
-            'users.id',
-            '=',
-            'history_updates.user_id'
-        )
-        ->select(
-            'history_updates.method',
-            'history_updates.created_at',
-            'history_updates.meta AS meta',
-            'users.name AS name',
-        )
-        ->where('type_menu', 'Delivery Order')
-        ->where('menu_id', $deliveryOrder->id)
-        ->get();
-
-        $souvenirs = Souvenir::select("id", "name")
-        ->where("active", true)
-        ->get();
-
-        return view(
-            "admin.detail_submission",
-            compact(
-                "deliveryOrder",
-                "historyUpdateDeliveryOrder",
-                "references",
-                "souvenirs",
-            )
-        );
-    } */
-
     public function show(Request $request)
     {
         $references = "";
@@ -610,7 +409,7 @@ class SubmissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
      */
-    public function edit(Request $request)
+    /* public function edit(Request $request)
     {
         if ($request->has("id")) {
             $branches = Branch::all();
@@ -651,6 +450,35 @@ class SubmissionController extends Controller
         } else {
             return response()->json(['result' => 'Gagal!!']);
         }
+    } */
+
+    public function edit(Request $request)
+    {
+        if (!empty($request->id) && !empty($request->type)) {
+            $references = "";
+            if ($request->type === "mgm") {
+                $submission = $this->querySubmissionMGM($request->id);
+                $references = $this->queryReferenceMGM($request->id);
+            } elseif ($request->type === "referensi") {
+                $submission = $this->querySubmissionReferensi($request->id);
+                $references = $this->queryReferenceReferensi($request->id);
+            } elseif ($request->type === "takeaway") {
+                $submission = $this->querySubmissionTakeaway($request->id);
+            }
+
+            return view(
+                "admin.update_submission_" . $request->type,
+                compact(
+                    "submission",
+                    "references",
+                )
+            );
+        }
+
+        return response()->json([
+            "result" => "0",
+            "message" => "Data tidak ditemukan.",
+        ], 400);
     }
 
     /**

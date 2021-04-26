@@ -606,9 +606,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
         // Create submission form page
-        Route::get("/", "SubmissionController@create")
-            ->name("add_submission_form");
-
         Route::get("/mgm", "SubmissionController@createMGM")
             ->name("add_submission_mgm");
 
@@ -619,9 +616,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("add_submission_takeaway");
 
         // Process new submission form
-        Route::post("/", "SubmissionController@store")
-            ->name("store_submission_form");
-
         Route::post("/mgm", "SubmissionController@storeMGM")
             ->name("store_submission_mgm");
 
