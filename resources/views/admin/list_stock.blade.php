@@ -26,27 +26,33 @@
         					<table class="table table-bordered">
           						<thead>
 						            <tr>
-						              	<th> No. </th>
-						              	<th> Product Name </th>
-        										<th> Qty </th>
-        										<th> Warehouse </th>
+						              	<th rowspan="2" class="align-middle"> No. </th>
+						              	<th rowspan="2" class="align-middle"> Product Name </th>
+        								<th colspan="2" class="text-center"> Qty </th>
+        								{{-- <th> Warehouse </th> --}}
 						            </tr>
+									<tr>
+										<td class="text-center"> Ready </td>
+										<td class="text-center"> Display </td>
+									</tr>
           						</thead>
           						<tbody>
-          							@foreach($stocks as $key => $stock)
+          						@foreach($stocks as $key => $stock)
 		                        <tr>
 		                        	<td>{{$key+1}}</td>
 
-                              @if($stock['product_id'] != null)
-                                <td>{{$stock->product['name']}}</td>
-                              @elseif($stock['product_id'] == null)
-                                <td>{{$stock['other_product']}}</td>
-                              @endif
+									@if($stock['product_id'] != null)
+										@if ($stock->product == reset($stocks )) First Item: @endif
+										<td>{{$stock->product['name']}}</td>
+									@elseif($stock['product_id'] == null)
+										<td>{{$stock['other_product']}}</td>
+									@endif
 
-                              <td>{{$stock['quantity']}}</td>
-                              <td>{{$stock['type_warehouse']}}</td>
+									<td>{{$stock['quantity']}}</td>
+   
+								
 		                        </tr>
-		                    @endforeach
+		                    	@endforeach
           						</tbody>
         					</table>
 
