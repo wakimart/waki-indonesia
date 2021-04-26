@@ -245,9 +245,9 @@
                   <div data-equal-height="card" class="caption">
                       <span class="category">Massager</span>
                       @if(Utils::$lang=='id')
-                      <p> WAKi Foot Massage Master adalah alat pijat kaki dengan desain unik yang dibuat untuk orang-orang yang ingin menikmati pijat kaki 360 derajat dan relaksasi kaki.</p>
+                      <p> WAKi Massager adalah alat pijat otomatis yang di desain untuk meningkatkan kesehatan dan kenyamanan pengguna.</p>
                       @elseif(Utils::$lang=='eng')
-                      <p>WAKi Foot Massage Master is the unique-designed foot-massage equipment that created for people want to enjoy 360 degree of foot massaging and foot relaxation. </p>
+                      <p>WAKi Massager is an automatic massage equipment designed to improve user health and provide comfort for users. </p>
                       @endif
                       </div>
                 </div>
@@ -266,10 +266,10 @@
                   <div data-equal-height="card" class="caption">
                   <span class="category">High Potential Therapy</span>
                     @if(Utils::$lang=='id')
-                      <p> WAKi Multi Fungsional ULTRA Potential Therapy Healthcare Device mampu membantu masyarakat modern dalam memperbaiki masalah kesehatannya dalam kehidupan modern secara efektif dan tentunya akan meningkatkan kesehatan Anda dan anggota keluarga Anda.</p>
+                      <p> WAKi  High Potential Theraphy merupakan alat terapi multifungsi berbasis listrik yang dapat meregenerasi kesehatan dalam tubuh manusia, membantu mengaktifkan sel-sel tubuh, melancarkan proses metabolisme sel, dan membuang radikal bebas.</p>
                       @elseif(Utils::$lang=='eng')
                       <p>
-                        WAKi Multi Functional ULTRA Potential Therapy Healthcare Device is able to help modern people in improving their health problems in modern life effectively and definitely will improve you and your family members’ health. </p>
+                        WAKi High Potential Therapy is multifunctional therapy equipment based on electricity that can regenerate health in human body, can help to activate body cells, accelerate cellular metabolic processes, and remove free radicals. </p>
                        @endif
                       </div>
                 </div>
@@ -287,10 +287,10 @@
                   <div data-equal-height="card" class="caption">
                   <span class="category">Bio Energy</span>
                       @if(Utils::$lang=='id')
-                      <p> WAKi Bio Energy Water System dapat menghasilkan air bio energi dengan alkalin rendah yang berenergi tinggi. Sangat cocok untuk tubuh manusia karena molekulnya yang sangat kecil sehingga lebih mudah diserap oleh tubuh manusia. </p>
+                      <p> Waki Bio Energy adalah alat peningkat kualitas air minum dengan molekul yang sangat kecil sehingga dapat lebih mudah diserap oleh tubuh dan dapat membantu meningkatkan metabolisme sel dalam tubuh.</p>
                       @elseif(Utils::$lang=='eng')
                       <p>
-                         WAKi Bio Energy Water System can produce Bio Energy Water which is high energetic low alkaline water. It is very suitable for the human body because its molecule is very small. Therefore, it is easier to be absorbed by the human body. </p>
+                         WAKi Bio Energy is water trearment equipment to improve the quality of water with very small molecules so it is easier to be absorbed by the human body and it can help increase the metabolism of cells in the body. </p>
                        @endif
                       </div>
                 </div>
@@ -308,10 +308,10 @@
                   <div data-equal-height="card" class="caption">
                   <span class="category">Air Humidifier</span>
                       @if(Utils::$lang=='id')
-                      <p>  WAKi Multi Functional Ion Air Humidifier adalah alat kesehatan pemurni udara dan pelembab udara multifungsi. Dapat membantu mengurangi polusi udara di dalam ruangan dan menyediakan lingkungan yang sehat di rumah dan kantor.</p>
+                      <p> WAKi Air Humudifire adalah alat penyaring udara multifungsi yang dapat meningkatkan kualitas udara di dalam ruangan sehingga dapat menciptakan lingkungan yang sehat di rumah dan kantor kita.</p>
                       @elseif(Utils::$lang=='eng')
                       <p>
-                        WAKi Multi Functional Ion Air Humidifier is multi-functional air purification and humidifier health care equipment. It helps to reduce air pollution in room and provide healthy environment in house and office.  </p>
+                        WAKi Multi Functional Ion Air Humidifier is multi-functional air purification and humidifier that can improve indoor air quality so it can create healthy environment in our house and office.  </p>
                        @endif
                   </div>
                 </div>
@@ -329,10 +329,10 @@
                   <div data-equal-height="card" class="caption">
                   <span class="category">Household</span>
                      @if(Utils::$lang=='id')
-                      <p>   WAKi Multi Functional Dishwasher adalah mesin pencuci piring otomatis multi fungsi yang super bersih dan higienis. Dengan teknologi terbaru dimana fungsi hemat energi disertakan. Peralatan listrik yang diperlukan di setiap rumah tangga. </p>
+                       <p> Waki Household adalah peralatan listrik yang diperlukan di setiap rumah tangga untuk membuat pekerjaan rumah menjadi lebih mudah.</p>
                       @elseif(Utils::$lang=='eng')
                       <p>
-                       WAKi Multi Functional Dishwasher is a multi functional automatic super clean and hygienic dishwasher. With the latest technology where energy-save function is included. A neccesary electrical appliance in every household.  </p>
+                       WAKi Household is a neccesary electrical appliance in every household to make your household chores easier.</p>
                        @endif
                       </div>
                 </div>
