@@ -1,6 +1,5 @@
 <?php
 
-use App\Product;
 use App\Promo;
 
 $menu_item_page = "submission";
@@ -19,13 +18,13 @@ $menu_item_second = "detail_submission_form";
         font-size: 14px;
     }
 
-    .table-responsive table{
+    .table-responsive table {
         display: inline-table;
         table-layout:fixed;
         overflow:scroll;
     }
 
-    .table-responsive table td{
+    .table-responsive table td {
         word-wrap:break-word;
     }
 
@@ -77,7 +76,7 @@ $menu_item_second = "detail_submission_form";
 @endsection
 
 @section('content')
-@if ($deliveryOrder['code'] !== null)
+@if ($submission->code !== null)
     <section id="intro" class="clearfix">
         <div class="container">
             <div class="row justify-content-center">
@@ -90,7 +89,7 @@ $menu_item_second = "detail_submission_form";
                     </thead>
                     <tr>
                         <td class="right">
-                            {{ date("d/m/Y H:i:s", strtotime($submission['created_at'])) }}
+                            {{ date("d/m/Y H:i:s", strtotime($submission->created_at)) }}
                         </td>
                     </tr>
                 </table>
@@ -101,85 +100,31 @@ $menu_item_second = "detail_submission_form";
                     </thead>
                     <tr>
                         <td>Member Code: </td>
-                        <td>{{ $submission['no_member'] }}</td>
+                        <td>{{ $submission->no_member }}</td>
                     </tr>
                     <tr>
                         <td>Name: </td>
-                        <td>{{ $submission['name'] }}</td>
+                        <td>{{ $submission->name }}</td>
                     </tr>
                     <tr>
                         <td>Phone Number: </td>
-                        <td>{{ $submission['phone'] }}</td>
+                        <td>{{ $submission->phone }}</td>
                     </tr>
                     <tr>
-                        <td>Address: </td>
-                        <td>{{ $submission['address'] }}</td>
+                        <td rowspan="2">Address: </td>
+                        <td>{{ $submission->address }}</td>
                     </tr>
                     <tr>
-                        <td></td>
                         <td>
                             <?php
-                            echo $submission['district'][0]['province'];
-                            echo ", ";
-                            echo $submission['district'][0]['kota_kab'];
-                            echo ", ";
-                            echo $submission['district'][0]['subdistrict_name'];
+                            echo $submission->district
+                                . ", "
+                                . $submission->city
+                                . ", "
+                                . $submission->province;
                             ?>
                         </td>
                     </tr>
-                </table>
-
-                <table class="col-md-12">
-                    <thead>
-                        <td colspan="2">Detail Order</td>
-                    </thead>
-                    <thead style="background-color: #80808012 !important">
-                        <td>Promo Name</td>
-                        <td>Quantity</td>
-                    </thead>
-
-                    @foreach (json_decode($deliveryOrder['arr_product'], true) as $promo)
-                        <tr>
-                            @if (is_numeric($promo['id']) && $promo['id'] < 8)
-                                <td>
-                                    <?php
-                                    $getPromo = Promo::select("code", "product", "price")
-                                    ->where("id", $promo["id"])
-                                    ->first();
-
-                                    $productPromo = json_decode($getPromo["product"]);
-                                    $arrayProductId = [];
-
-                                    foreach ($productPromo as $pp) {
-                                        $arrayProductId[] = $pp->id;
-                                    }
-
-                                    $getProduct = Product::select("code")
-                                    ->whereIn(
-                                        "id",
-                                        $arrayProductId
-                                    )
-                                    ->get();
-
-                                    $arrayProductCode = [];
-
-                                    foreach ($getProduct as $product) {
-                                        $arrayProductCode[] = $product->code;
-                                    }
-
-                                    $productCode = implode(", ", $arrayProductCode);
-                                    echo $getPromo["code"]
-                                        . " (" . $productCode . ") "
-                                        . "Rp. " . number_format((int) $getPromo["price"], 0, null, ",");
-                                    ?>
-                                </td>
-                            @else
-                                <td>{{ $promo['id'] }}</td>
-                            @endif
-
-                            <td>{{ $promo['qty'] }}</td>
-                        </tr>
-                    @endforeach
                 </table>
 
                 <table class="col-md-12">
@@ -190,19 +135,23 @@ $menu_item_second = "detail_submission_form";
                     <tr>
                         <td style="width:50%; text-align: center">
                             <?php
-                            echo $deliveryOrder->branch['code'];
-                            echo " - ";
-                            echo $deliveryOrder->branch['name'];
+                            echo $submission->branch_code
+                                . " - "
+                                . $submission->branch_name;
                             ?>
                         </td>
                         <td style="width:50%; text-align: center">
-                            {{ $deliveryOrder->cso['code'] }}
+                            {{ $submission->cso_code }}
                         </td>
                     </tr>
                 </table>
 
                 <div class="table-responsive">
-                    <?php for ($i = 0; $i < 10; $i++): ?>
+                    <?php $formLength = $references->count(); ?>
+                    <input type="hidden"
+                        id="form-length"
+                        value="{{ $formLength }}" />
+                    <?php for ($i = 0; $i < $formLength; $i++): ?>
                         <form method="POST" id="edit-form_{{ $i }}"></form>
                     <?php endfor; ?>
                     <table class="col-md-12">
@@ -224,173 +173,101 @@ $menu_item_second = "detail_submission_form";
                         </thead>
                         <tbody>
                             <?php foreach ($references as $key => $reference): ?>
-                                <input type="hidden"
-                                    id="edit-id_{{ $key }}"
-                                    class="d-none"
-                                    name="id"
-                                    form="edit-form_{{ $key }}"
-                                    value="{{ $reference->id }}" />
-                                <tr>
-                                    <td id="name_{{ $key }}">
-                                        {{ $reference->name }}
-                                    </td>
-                                    <td class="center" id="age_{{ $key }}">
-                                        {{ $reference->age }}
-                                    </td>
-                                    <td class="center" id="phone_{{ $key }}">
-                                        {{ $reference->phone }}
-                                    </td>
-                                    <td id="province_{{ $key }}"
-                                        data-province="{{ $reference->province_id }}">
-                                        {{ $reference->province_name }}
-                                    </td>
-                                    <td id="city_{{ $key }}"
-                                        data-city="{{ $reference->city_id }}">
-                                        {{ $reference->city_name }}
-                                    </td>
-                                    <td id="souvenir_{{ $key }}"
-                                        data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
-                                        {{ $reference->souvenir_name }}
-                                    </td>
-                                    <td class="center" id="link-hs_{{ $key }}">
-                                        <?php if (!empty($reference->link_hs)): ?>
-                                            <a id="link-hs-href_{{ $key }}"
-                                                href="{{ $reference->link_hs }}"
-                                                target="_blank">
-                                                <i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>
-                                            </a>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="center" id="status_{{ $key }}">
-                                        {{ $reference->status }}
-                                    </td>
-                                    <td class="center">
-                                        <button class="btn"
-                                            id="btn-edit-save_{{ $key }}"
-                                            style="padding: 0;"
-                                            data-edit="edit_{{ $key }}"
-                                            onclick="clickEdit(this)"
-                                            value="{{ $reference->id }}">
-                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                            <input type="hidden"
+                                id="edit-id_{{ $key }}"
+                                class="d-none"
+                                name="id"
+                                form="edit-form_{{ $key }}"
+                                value="{{ $reference->id }}" />
+                            <tr>
+                                <td id="name_{{ $key }}">
+                                    {{ $reference->name }}
+                                </td>
+                                <td class="center" id="age_{{ $key }}">
+                                    {{ $reference->age }}
+                                </td>
+                                <td class="center" id="phone_{{ $key }}">
+                                    {{ $reference->phone }}
+                                </td>
+                                <td id="province_{{ $key }}"
+                                    data-province="{{ $reference->province_id }}">
+                                    {{ $reference->province }}
+                                </td>
+                                <td id="city_{{ $key }}"
+                                    data-city="{{ $reference->city_id }}">
+                                    {{ $reference->city }}
+                                </td>
+                                <td id="souvenir_{{ $key }}"
+                                    data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
+                                    {{ $reference->souvenir_name }}
+                                </td>
+                                <td class="center" id="link-hs_{{ $key }}">
+                                    <?php if (!empty($reference->link_hs)): ?>
+                                        <a id="link-hs-href_{{ $key }}"
+                                            href="{{ $reference->link_hs }}"
+                                            target="_blank">
+                                            <i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>
+                                        </a>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="center" id="status_{{ $key }}">
+                                    {{ $reference->status }}
+                                </td>
+                                <td class="center">
+                                    <button class="btn"
+                                        id="btn-edit-save_{{ $key }}"
+                                        style="padding: 0;"
+                                        data-edit="edit_{{ $key }}"
+                                        onclick="clickEdit(this)"
+                                        value="{{ $reference->id }}">
+                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                    </button>
+                                </td>
+                            </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
+            </div>
 
-                <div class="table-responsive">
+            @if ($historySubmission->isNotEmpty())
+                <div class="row justify-content-center"
+                    style="margin-top: 2em;">
+                    <h2>SUBMISSION HISTORY LOG</h2>
+                </div>
+                <div class="row justify-content-center">
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="9">Reference</td>
+                            <td class="center">No.</td>
+                            <td>Action</td>
+                            <td>User</td>
+                            <td>Change</td>
+                            <td>Time</td>
                         </thead>
-                        <thead style="background-color: #80808012 !important">
+                        @foreach ($historySubmission as $key => $history)
+                            <?php $dataChange = json_decode($history->meta, true); ?>
                             <tr>
-                                <td>Name</td>
-                                <td>Age</td>
-                                <td>Phone</td>
-                                <td>Province</td>
-                                <td>City</td>
-                                <td>Souvenir</td>
-                                <td>Link HS</td>
-                                <td>Status</td>
-                                <td>Action</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="edit-input" id="name">Amel</td>
-                                <td class="center edit-input" id="age">21</td>
-                                <td class="center edit-input" id="phone">0811111111</td>
-                                <td id="province">
-                                    <select class="form-control"
-                                        id="edit-province"
-                                        name="province">
-                                        <option value="Maluku">Maluku</option>
-                                        <option value="Jawa Barat">Jawa Barat</option>
-                                    </select>
-                                </td>
-                                <td id="city">
-                                    <select class="form-control"
-                                        id="edit-city"
-                                        name="city">
-                                        <option value="Kabupaten Maluku Barat Daya">Kabupaten Maluku Barat Daya</option>
-                                        <option value="Kota Cirebon">Kota Cirebon</option>
-                                    </select>
-                                </td>
-                                <td class="souvenir">
-                                    <select class="form-control"
-                                        id="edit-souvenir"
-                                        name="souvenir">
-                                        <option value="success">Jeep Hardtop 4x4</option>
-                                        <option value="pending">Driver & BBM & Parkir</option>
-                                        <option value="success">Tiket Masuk Bromo</option>
-                                        <option value="success">Air Mineral</option>
-                                    </select>
-                                </td>
-                                <td class="edit-input">https://dzsdfdfcsadfcsdfcsdsdvszdv</td>
-                                <td id="status">
-                                    <select class="form-control"
-                                        id="edit-status"
-                                        name="status">
-                                        <option value="pending">pending</option>
-                                        <option value="success">success</option>
-                                    </select>
-                                </td>
-                                <td class="text-center">
-                                    <a class="save" title="Save" data-toggle="tooltip">
-                                        <i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i>
-                                    </a>
-                                    <a class="edit" title="Edit" data-toggle="tooltip">
-                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="row justify-content-center" style="margin-top: 2em;">
-                <h2>SUBMISSION HISTORY LOG</h2>
-            </div>
-            <div class="row justify-content-center">
-                <table class="col-md-12">
-                    <thead>
-                        <td>No.</td>
-                        <td>Action</td>
-                        <td>User</td>
-                        <td>Change</td>
-                        <td>Time</td>
-                    </thead>
-                    @if ($historySubmission !== null)
-                        @foreach ($historySubmission as $key => $historySubmission)
-                            <tr>
-                                <td class="center">{{ $key + 1 }}</td>
+                                <td class="right">{{ $key + 1 }}</td>
                                 <td class="center">
-                                    {{ $historySubmission->method }}
+                                    {{ $history->method }}
                                 </td>
                                 <td class="center">
-                                    {{ $historySubmission->name }}
+                                    {{ $history->name }}
                                 </td>
-                                <?php
-                                $dataChange = json_decode($historySubmission->meta, true);
-                                ?>
                                 <td>
-                                    @foreach ($dataChange['dataChange'] as $key => $value)
-                                        <b>{{ $key }}</b>: {{ $value}}
+                                    @foreach ($dataChange["dataChange"] as $key => $value)
+                                        <b>{{ $key }}</b>: {{ var_export($value, true) }}
                                         <br>
                                     @endforeach
                                 </td>
                                 <td class="center">
-                                    {{ date("d/m/Y H:i:s", strtotime($historySubmission->created_at)) }}
+                                    {{ date("d/m/Y H:i:s", strtotime($history->created_at)) }}
                                 </td>
                             </tr>
                         @endforeach
-                    @endif
-                </table>
-            </div>
+                    </table>
+                </div>
+            @endif
         </div>
     </section>
 @else
@@ -647,7 +524,8 @@ function validateForm(refSeq) {
     });
 
     const souvenirData = [];
-    for (let i = 0; i < 10; i++) {
+    const formLength = parseInt(document.getElementById("form-length").value, 10);
+    for (let i = 0; i < formLength; i++) {
         souvenirData.push(document.getElementById("souvenir_" + i).dataset.souvenir);
     }
 
@@ -712,6 +590,8 @@ function submitEdit(e) {
         return response.json();
     }).then(function (response) {
         const data = response.data;
+        const dataSouvenir = response.dataSouvenir;
+
         document.getElementById("name_" + refSeq).innerHTML = data.name;
         document.getElementById("age_" + refSeq).innerHTML = data.age;
         document.getElementById("phone_" + refSeq).innerHTML = data.phone;
@@ -719,18 +599,18 @@ function submitEdit(e) {
         document.getElementById("province_" + refSeq).innerHTML = response.province;
         document.getElementById("city_" + refSeq).setAttribute("data-city", data.city);
         document.getElementById("city_" + refSeq).innerHTML = response.city;
-        document.getElementById("souvenir_" + refSeq).setAttribute("data-souvenir", data.souvenir_id);
+        document.getElementById("souvenir_" + refSeq).setAttribute("data-souvenir", dataSouvenir.souvenir_id);
         document.getElementById("souvenir_" + refSeq).innerHTML = response.souvenir;
 
-        if (data.link_hs) {
-            document.getElementById("link-hs_" + refSeq).innerHTML = `<a href="${data.link_hs}" id="link-hs-href_${refSeq}" target="blank">`
+        if (dataSouvenir.link_hs) {
+            document.getElementById("link-hs_" + refSeq).innerHTML = `<a href="${dataSouvenir.link_hs}" id="link-hs-href_${refSeq}" target="blank">`
                 + `<i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>`
                 + `</a>`;
         } else {
             document.getElementById("link-hs_" + refSeq).innerHTML = "";
         }
 
-        document.getElementById("status_" + refSeq).innerHTML = data.status;
+        document.getElementById("status_" + refSeq).innerHTML = dataSouvenir.status;
 
         document.getElementById("btn-edit-save_" + refSeq).setAttribute("onclick", "clickEdit(this)");
     document.getElementById("btn-edit-save_" + refSeq).innerHTML = `<i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>`;

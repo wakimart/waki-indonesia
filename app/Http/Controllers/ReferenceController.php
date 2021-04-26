@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Reference;
 use App\HistoryUpdate;
 use App\RajaOngkir_City;
+use App\ReferenceSouvenir;
 use App\Souvenir;
 use Exception;
 use Illuminate\Http\Request;
@@ -107,13 +108,19 @@ class ReferenceController extends Controller
                 "phone",
                 "province",
                 "city",
+            ));
+            $reference->save();
+
+            $referenceSouvenir = ReferenceSouvenir::where("reference_id", $reference->id)->first();
+            $referenceSouvenir->fill($request->only(
                 "souvenir_id",
                 "link_hs",
                 "status",
             ));
-            $reference->save();
+            $referenceSouvenir->save();
 
             $this->historyReference($reference, "update", $userId);
+            $this->historyReferenceSouvenir($referenceSouvenir, "update", $userId);
 
             $city = RajaOngkir_City::select(
                 "province AS province",
@@ -123,9 +130,9 @@ class ReferenceController extends Controller
             ->first();
 
             $souvenir = "";
-            if (!empty($reference->souvenir_id)) {
+            if (!empty($referenceSouvenir->souvenir_id)) {
                 $souvenir = Souvenir::select("name")
-                ->where("id", $reference->souvenir_id)
+                ->where("id", $referenceSouvenir->souvenir_id)
                 ->first();
             }
 
@@ -134,6 +141,7 @@ class ReferenceController extends Controller
             return response()->json([
                 "result" => 1,
                 "data" => $reference,
+                "dataSouvenir" => $referenceSouvenir,
                 "province" => $city->province,
                 "city" => $city->city,
                 "souvenir" => $souvenir->name,
@@ -168,6 +176,26 @@ class ReferenceController extends Controller
         HistoryUpdate::create($historyReference);
     }
 
+    private function historyReferenceSouvenir(
+        ReferenceSouvenir $referenceSouvenir,
+        string $method,
+        int $userId
+    ) {
+        $historyReferenceSouvenir["type_menu"] = "Reference Souvenir";
+        $historyReferenceSouvenir["method"] = $method;
+        $historyReferenceSouvenir["meta"] = json_encode(
+            [
+                "user" => $userId,
+                "createdAt" => date("Y-m-d H:i:s"),
+                "dataChange" => $referenceSouvenir->getChanges(),
+            ],
+            JSON_THROW_ON_ERROR
+        );
+        $historyReferenceSouvenir["user_id"] = $userId;
+        $historyReferenceSouvenir["menu_id"] = $referenceSouvenir->id;
+        HistoryUpdate::create($historyReferenceSouvenir);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -197,21 +225,12 @@ class ReferenceController extends Controller
                 "raja_ongkir__cities.province AS province",
                 "raja_ongkir__cities.type AS type",
                 "raja_ongkir__cities.city_name AS city_name",
-                "souvenirs.name AS souvenir",
-                "references.link_hs AS link_hs",
-                "references.status AS status",
             )
             ->leftJoin(
                 "raja_ongkir__cities",
                 "raja_ongkir__cities.city_id",
                 "=",
                 "references.city"
-            )
-            ->leftJoin(
-                "souvenirs",
-                "souvenirs.id",
-                "=",
-                "references.souvenir_id"
             )
             ->paginate(10);
 

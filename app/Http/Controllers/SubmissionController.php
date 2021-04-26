@@ -1792,11 +1792,14 @@ class SubmissionController extends Controller
     private function queryReferenceReferensi($submissionId)
     {
         return Reference::select(
+            "references.id AS id",
             "references.submission_id AS submission_id",
             "references.name AS name",
             "references.age AS age",
             "references.phone AS phone",
+            "references.province AS province_id",
             "raja_ongkir__cities.province AS province",
+            "references.city AS city_id",
             DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
             "reference_souvenirs.souvenir_id AS souvenir_id",
             "souvenirs.name AS souvenir_name",
@@ -1839,8 +1842,8 @@ class SubmissionController extends Controller
             "=",
             "history_updates.user_id"
         )
-        ->where("type_menu", "Submission")
-        ->where("menu_id", $submissionId)
+        ->where("history_updates.type_menu", "Submission")
+        ->where("history_updates.menu_id", $submissionId)
         ->get();
     }
 }
