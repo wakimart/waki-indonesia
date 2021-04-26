@@ -4,6 +4,14 @@ use App\Promo;
 
 $menu_item_page = "submission";
 $menu_item_second = "detail_submission_form";
+
+$specialPermission = false;
+if (
+    Auth::user()->roles[0]->slug === "branch"
+    || Auth::user()->roles[0]->slug === "cso"
+) {
+    $permission = false;
+}
 ?>
 @extends('admin.layouts.template')
 
@@ -211,10 +219,13 @@ $menu_item_second = "detail_submission_form";
                                     {{ $reference->city }}
                                 </td>
                                 <td id="souvenir_{{ $key }}"
+                                    data-permission="{{ $specialPermission }}"
                                     data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
                                     {{ $reference->souvenir_name }}
                                 </td>
-                                <td class="center" id="link-hs_{{ $key }}">
+                                <td class="center"
+                                    id="link-hs_{{ $key }}"
+                                    data-permission="{{ $specialPermission }}">
                                     <?php if (!empty($reference->link_hs)): ?>
                                         <a id="link-hs-href_{{ $key }}"
                                             href="{{ $reference->link_hs }}"
@@ -223,7 +234,9 @@ $menu_item_second = "detail_submission_form";
                                         </a>
                                     <?php endif; ?>
                                 </td>
-                                <td class="center" id="status_{{ $key }}">
+                                <td class="center"
+                                    id="status_{{ $key }}"
+                                    data-permission="{{ $specialPermission }}">
                                     {{ $reference->status }}
                                 </td>
                                 <td class="center">
@@ -426,6 +439,7 @@ function clickEdit(e) {
         }
     };
     const status = document.getElementById("status_" + refSeq).innerHTML.trim();
+    const permission = document.getElementById("status_" + refSeq).dataset.permission;
 
     const FORM_ATTR = `form="edit-form_${refSeq}" `;
     const INPUT_CLASS = `class="form-control" `;
@@ -476,36 +490,38 @@ function clickEdit(e) {
 
     setCity(document.getElementById("edit-province_" + refSeq));
 
-    document.getElementById("souvenir_" + refSeq).innerHTML = `<select `
-        + `id="edit-souvenir_${refSeq}" `
-        + INPUT_CLASS
-        + FORM_ATTR
-        + `name="souvenir_id" `
-        + `required>`
-        + souvenirOption
-        + `</select>`;
-    document.getElementById("edit-souvenir_" + refSeq).value = souvenir;
+    if (permission) {
+        document.getElementById("souvenir_" + refSeq).innerHTML = `<select `
+            + `id="edit-souvenir_${refSeq}" `
+            + INPUT_CLASS
+            + FORM_ATTR
+            + `name="souvenir_id" `
+            + `required>`
+            + souvenirOption
+            + `</select>`;
+        document.getElementById("edit-souvenir_" + refSeq).value = souvenir;
 
-    document.getElementById("link-hs_" + refSeq).innerHTML = `<input type="url" `
-        + `id="edit-link-hs_${refSeq}" `
-        + INPUT_CLASS
-        + FORM_ATTR
-        + `name="link_hs" `
-        + `pattern="https://.*" `
-        + `maxlength="191" `
-        + `value="${linkHS()}" `
-        + `placeholder="Link HS" />`;
+        document.getElementById("link-hs_" + refSeq).innerHTML = `<input type="url" `
+            + `id="edit-link-hs_${refSeq}" `
+            + INPUT_CLASS
+            + FORM_ATTR
+            + `name="link_hs" `
+            + `pattern="https://.*" `
+            + `maxlength="191" `
+            + `value="${linkHS()}" `
+            + `placeholder="Link HS" />`;
 
-    document.getElementById("status_" + refSeq).innerHTML = `<select `
-        + `id="edit-status_${refSeq}" `
-        + INPUT_CLASS
-        + FORM_ATTR
-        + `name="status" `
-        + `required>`
-        + `<option value="pending">pending</option>`
-        + `<option value="success">success</option>`
-        + `</select>`;
-    document.getElementById("edit-status_" + refSeq).value = status || "pending";
+        document.getElementById("status_" + refSeq).innerHTML = `<select `
+            + `id="edit-status_${refSeq}" `
+            + INPUT_CLASS
+            + FORM_ATTR
+            + `name="status" `
+            + `required>`
+            + `<option value="pending">pending</option>`
+            + `<option value="success">success</option>`
+            + `</select>`;
+        document.getElementById("edit-status_" + refSeq).value = status || "pending";
+    }
 
     document.getElementById("btn-edit-save_" + refSeq).setAttribute("onclick", "submitEdit(this)");
     document.getElementById("btn-edit-save_" + refSeq).innerHTML = `<i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i>`;
@@ -526,34 +542,40 @@ function validateForm(refSeq) {
     let valid = true;
 
     inputArray.forEach(function (currentValue) {
-        const inputBeingChecked = document.getElementById(currentValue + refSeq);
+        try {
+            const inputBeingChecked = document.getElementById(currentValue + refSeq);
 
-        if (!inputBeingChecked.checkValidity()) {
-            addOrRemoveInvalid(inputBeingChecked, "add");
-            valid = false;
-        } else {
-            addOrRemoveInvalid(inputBeingChecked, "remove");
+            if (!inputBeingChecked.checkValidity()) {
+                addOrRemoveInvalid(inputBeingChecked, "add");
+                valid = false;
+            } else {
+                addOrRemoveInvalid(inputBeingChecked, "remove");
+            }
+        } catch (error) {
+            delete error;
         }
     });
 
-    const souvenirData = [];
-    const formLength = parseInt(document.getElementById("form-length").value, 10);
-    for (let i = 0; i < formLength; i++) {
-        souvenirData.push(document.getElementById("souvenir_" + i).dataset.souvenir);
-    }
+    if (document.getElementById("status_" + refSeq).dataset.permission) {
+        const souvenirData = [];
+        const formLength = parseInt(document.getElementById("form-length").value, 10);
+        for (let i = 0; i < formLength; i++) {
+            souvenirData.push(document.getElementById("souvenir_" + i).dataset.souvenir);
+        }
 
-    const souvenir = document.getElementById("edit-souvenir_" + refSeq);
-    souvenirData[refSeq] = souvenir.value;
+        const souvenir = document.getElementById("edit-souvenir_" + refSeq);
+        souvenirData[refSeq] = souvenir.value;
 
-    const findDuplicate = souvenirData.filter(function (currentValue) {
-        return currentValue === souvenir.value;
-    });
+        const findDuplicate = souvenirData.filter(function (currentValue) {
+            return currentValue === souvenir.value;
+        });
 
-    if (findDuplicate.length > 2) {
-        addOrRemoveInvalid(souvenir, "add");
-        valid = false;
-    } else {
-        addOrRemoveInvalid(souvenir, "remove");
+        if (findDuplicate.length > 2) {
+            addOrRemoveInvalid(souvenir, "add");
+            valid = false;
+        } else {
+            addOrRemoveInvalid(souvenir, "remove");
+        }
     }
 
     return valid;
