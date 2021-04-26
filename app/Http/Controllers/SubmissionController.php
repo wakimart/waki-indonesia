@@ -173,13 +173,13 @@ class SubmissionController extends Controller
                     $referencePromo = new ReferencePromo();
                     $referencePromo->reference_id = $reference->id;
 
-                    if (isset($data["promo_1"])){
+                    if (isset($data["promo_1"][$i])) {
                         if ($data["promo_1"][$i] !== "other") {
                             $referencePromo->promo_1 = $data["promo_1"][$i];
                         }
                     }
 
-                    if (isset($data["promo_2"])){
+                    if (isset($data["promo_2"][$i])) {
                         if ($data["promo_2"][$i] !== "other") {
                             $referencePromo->promo_2 = $data["promo_2"][$i];
                         }
@@ -187,8 +187,14 @@ class SubmissionController extends Controller
 
                     $referencePromo->qty_1 = $data["qty_1"][$i];
 
-                    if (isset($data["promo_2"])){
-                        if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
+                    if (
+                        isset($data["promo_2"][$i])
+                        || isset($data["other_2"][$i])
+                    ) {
+                        if (
+                            !empty($data["promo_2"][$i])
+                            || !empty($data["other_2"][$i])
+                        ) {
                             $referencePromo->qty_2 = $data["qty_2"][$i];
                         }
                     }
@@ -466,9 +472,14 @@ class SubmissionController extends Controller
                 $submission = $this->querySubmissionTakeaway($request->id);
             }
 
+            $branches = Branch::where("active", true)->get();
+            $promos = Promo::all();
+
             return view(
                 "admin.update_submission_" . $request->type,
                 compact(
+                    "branches",
+                    "promos",
                     "submission",
                     "references",
                 )
@@ -1446,8 +1457,8 @@ class SubmissionController extends Controller
             "raja_ongkir__subdistricts.subdistrict_name AS district",
             "submissions.created_at AS created_at",
         )
-        ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
-        ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
+        ->leftJoin("branches", "submissions.branch_id", "=", "branches.id")
+        ->leftJoin("csos", "submissions.cso_id", "=", "csos.id")
         ->leftJoin(
             "raja_ongkir__cities",
             "submissions.city",
@@ -1487,8 +1498,8 @@ class SubmissionController extends Controller
             "submission_images.image_4 AS image_4",
             "submission_images.image_5 AS image_5",
         )
-        ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
-        ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
+        ->leftJoin("branches", "submissions.branch_id", "=", "branches.id")
+        ->leftJoin("csos", "submissions.cso_id", "=", "csos.id")
         ->leftJoin(
             "raja_ongkir__cities",
             "submissions.city",
@@ -1541,8 +1552,8 @@ class SubmissionController extends Controller
             "submission_images.image_4 AS image_4",
             "submission_images.image_5 AS image_5",
         )
-        ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
-        ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
+        ->leftJoin("branches", "submissions.branch_id", "=", "branches.id")
+        ->leftJoin("csos", "submissions.cso_id", "=", "csos.id")
         ->leftJoin(
             "raja_ongkir__cities",
             "submissions.city",

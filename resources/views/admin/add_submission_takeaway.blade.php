@@ -359,7 +359,7 @@ $menu_item_second = "add_submission_takeaway";
                                     placeholder="CSO Code"
                                     required data-msg="Mohon Isi Kode CSO"
                                     style="text-transform:uppercase"
-                                    {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=" . Auth::user()->cso['code'] : "" }}
+                                    {{ Auth::user()->roles[0]['slug'] == 'cso' ? 'value="' . Auth::user()->cso['code'] . '"' : "" }}
                                     {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly" : "" }} />
                                 <div class="validation" id="validation_cso"></div>
                             </div>
