@@ -239,7 +239,7 @@
           <div class="owl-carousel product-carousel">
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/massager.jpg')}}" class="card-img-top img-fluid" />
+                  <img src="{{ asset ('sources/thumbnail-massager.png')}}" class="card-img-top img-fluid" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
@@ -260,7 +260,7 @@
               </div>
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/theraphy.jpg') }}" class="card-img-top img-fluid" alt="" />
+                  <img src="{{ asset ('sources/thumbnail-hpt.png') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body ">
                   <div data-equal-height="card" class="caption">
@@ -281,7 +281,7 @@
               </div>
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/bioenergy.jpg') }}" class="card-img-top img-fluid" alt="" />
+                  <img src="{{ asset ('sources/thumbnail-bio.png') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
@@ -302,7 +302,7 @@
               </div>
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/air.png') }}" class="card-img-top img-fluid" alt="" />
+                  <img src="{{ asset ('sources/thumbnail-humidifier.png') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body ">
                   <div data-equal-height="card" class="caption">
@@ -323,7 +323,7 @@
               </div>
               <div class="card white-bg mb-3 item">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/household.jpg') }}" class="card-img-top img-fluid" alt="" />
+                  <img src="{{ asset ('sources/thumbnail-household.png') }}" class="card-img-top img-fluid" alt="" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
@@ -548,7 +548,7 @@
 
                   <div class="row justify-content-center align-self-center">
                     <div>
-                      <a href="https://www.facebook.com/wakimalaysiandimsum/" class="r-link link text-underlined">Lihat</a>
+                      <a href="https://www.facebook.com/wakimalaysiandimsum/" class="r-link link text-underlined" target="_blank" rel="noopener noreferrer">Lihat</a>
                     </div>
                   </div>
                 </div>
