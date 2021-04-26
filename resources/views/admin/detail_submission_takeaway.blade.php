@@ -159,6 +159,29 @@ $menu_item_second = "detail_submission_form";
 
                 <table class="col-md-12">
                     <thead>
+                        <td colspan=2>Detail Delivery Order</td>
+                    </thead>
+                    <thead style="background-color: #80808012 !important">
+                        <td>Nomor Delivery Order</td>
+                        <td>Proof (image)</td>
+                    </thead>
+                    <tr>
+                        <td class="center">{{ $submission->no_member }}</td>
+                        <td class="center">
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if (!empty($submission["image_" . $i]))
+                                    <a href="{{ asset("sources/registration/" . $submission["image_" . $i]) }}"
+                                        target="_blank">
+                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: blue;"></i>
+                                    </a>
+                                @endif
+                            @endfor
+                        </td>
+                    </tr>
+                </table>
+
+                <table class="col-md-12">
+                    <thead>
                         <td>Sales Branch</td>
                         <td>Sales Code</td>
                     </thead>
