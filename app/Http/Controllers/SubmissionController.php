@@ -115,7 +115,12 @@ class SubmissionController extends Controller
         );
     }
 
-    public function createMGM()
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function createMGM(): \Illuminate\View\View
     {
         $branches = Branch::where('active', true)->get();
         $csos = Cso::all();
@@ -131,7 +136,7 @@ class SubmissionController extends Controller
         );
     }
 
-    public function createReference()
+    public function createReference(): \Illuminate\View\View
     {
         $branches = Branch::where('active', true)->get();
         $csos = Cso::all();
@@ -151,7 +156,7 @@ class SubmissionController extends Controller
         );
     }
 
-    public function createTakeaway()
+    public function createTakeaway(): \Illuminate\View\View
     {
         $branches = Branch::where('active', true)->get();
         $csos = Cso::all();
@@ -376,7 +381,7 @@ class SubmissionController extends Controller
             $submissionImage = new SubmissionImage();
             $submissionImage->submission_id = $submission->id;
             foreach ($request->file("proof_image") as $image) {
-                $fileName = ((string) strval(time()))
+                $fileName = ((string)time())
                     . "_"
                     . $user_id
                     . "_"
@@ -576,7 +581,6 @@ class SubmissionController extends Controller
 
     public function show(Request $request)
     {
-
         $references = "";
         if ($request->type === "mgm") {
             $submission = $this->querySubmissionMGM($request->id);
@@ -588,12 +592,14 @@ class SubmissionController extends Controller
             $submission = $this->querySubmissionTakeaway($request->id);
         }
 
+        $historySubmission = $this->queryHistory($request->id);
+
         return view(
-            "admin.detail_submission",
+            "admin.detail_submission_" . $request->type,
             compact(
                 "submission",
-                "historySubmission",
                 "references",
+                "historySubmission",
             )
         );
     }
@@ -800,15 +806,15 @@ class SubmissionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
         DB::beginTransaction();
 
         try {
-            $submission = Submission::where("id", $id)->first();
+            $submission = Submission::where("id", $request->id)->first();
             $submission->active = false;
             $submission->save();
 
@@ -823,7 +829,7 @@ class SubmissionController extends Controller
             ], JSON_THROW_ON_ERROR);
 
             $historyDeleteSubmission["user_id"] = $user["id"];
-            $historyDeleteSubmission["menu_id"] = $id;
+            $historyDeleteSubmission["menu_id"] = $request->id;
 
             HistoryUpdate::create($historyDeleteSubmission);
 
@@ -841,247 +847,6 @@ class SubmissionController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    /* public function addApi(Request $request)
-    {
-        $messages = array(
-            'cso_id.required' => 'The CSO Code field is required.',
-            'cso_id.exists' => 'Wrong CSO Code.',
-            'branch_id.required' => 'The Branch must be selected.',
-            'branch_id.exists' => 'Please choose the branch.',
-        );
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'address' => 'required',
-            'phone' => 'required',
-            'city' => 'required',
-            'cso_id' => ['required', 'exists:csos,code'],
-            'branch_id' => ['required', 'exists:branches,id'],
-            'product_0' => 'required',
-            'qty_0' => 'required',
-        ], $messages);
-
-        if ($validator->fails()) {
-            $data = [
-                'result' => 0,
-                'data' => $validator->errors(),
-            ];
-
-            return response()->json($data, 400);
-        } else {
-            DB::beginTransaction();
-
-            try {
-                $data = $request->all();
-                $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
-                $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-
-                // Pembentukan array product
-                $data['arr_product'] = [];
-                foreach ($data as $key => $value) {
-                    $arrKey = explode("_", $key);
-                    if($arrKey[0] == 'product'){
-                        if(isset($data['qty_'.$arrKey[1]])){
-                            $data['arr_product'][$key] = [];
-                            $data['arr_product'][$key]['id'] = $value;
-
-                            // KHUSUS Philiphin
-                            if($value == 'other'){
-                                $data['arr_product'][$key]['id'] = $data['product_other_' . $arrKey[1]];
-                            }
-                            // ===========================
-
-                            $data['arr_product'][$key]['qty'] = $data['qty_' . $arrKey[1]];
-                        }
-                    }
-                }
-                $data['arr_product'] = json_encode($data['arr_product']);
-                $data["province"] = $data["province_id"];
-
-                // Mengecek apakah ada gambar yang diupload atau tidak
-                if ($request->hasFile("image_proof")) {
-                    // Inisialisasi variabel data["image"]
-                    $data["image"] = [];
-                    // Inisialisasi jalur di mana gambar akan diletakkan
-                    $path = "sources/registration";
-
-                    // Mengecek apakah jalur untuk gambar sudah ada atau belum
-                    if (!is_dir($path)) {
-                        // Jika belum, maka akan membuat folder/directory baru
-                        File::makeDirectory($path, 0777, true, true);
-                    }
-
-                    // Inisialisasi variabel $j untuk counter dan sebagai suffix nama file
-                    $j = 0;
-                    foreach ($request->file("image_proof") as $image) {
-                        // Inisialisasi nama gambar dengan UNIX Timestamp
-                        $fileName = strval(time());
-                        // Memberikan suffix dengan $j agar nama gambar tidak sama, dan juga menambahkan file extension
-                        $fileName .= "_" . $j . "." . $image->getClientOriginalExtension();
-                        // Menyimpan gambar
-                        $image->move($path, $fileName);
-                        // Push nama gambar ke dalam variabel data["image"]
-                        $data["image"][] = $fileName;
-                        // Increment variabel $j
-                        $j++;
-                    }
-
-                    // Convert array pada $data["image"] menjadi JSON
-                    $data["image"] = json_encode($data["image"], JSON_FORCE_OBJECT);
-                }
-
-                // Memasukkan data delivery order ke tabel delivery_orders
-                $deliveryOrder = DeliveryOrder::create($data);
-
-                // Memasukkan data referensi ke tabel Reference
-                $referenceArray = [];
-                $dataCount = count($data["name_ref"]);
-                for ($i = 0; $i < $dataCount; $i++) {
-                    $reference = new Reference();
-                    $reference->name = $data["name_ref"][$i];
-                    $reference->age = $data["age_ref"][$i];
-                    $reference->phone = $data["phone_ref"][$i];
-                    $reference->province = $data["province_ref"][$i];
-                    $reference->city = $data["city_ref"][$i];
-                    $reference->deliveryorder_id = $deliveryOrder->id;
-                    $reference->souvenir_id = $data["souvenir_id"][$i];
-                    $reference->link_hs = $data["link_hs"][$i];
-                    $reference->status = "pending";
-                    $reference->save();
-
-                    $referenceArray[] = $reference;
-                }
-
-                DB::commit();
-
-                $dataSubmission = $deliveryOrder;
-
-                $dataSubmission->created_at = date(
-                    "Y-m-d",
-                    strtotime($dataSubmission->created_at)
-                );
-
-                $dataSubmission->customer_name = $dataSubmission->name;
-                $dataSubmission->customer_phone = $dataSubmission->phone;
-
-                $getSubmissionCityAndProvince = RajaOngkir_City::leftJoin(
-                    "raja_ongkir__subdistricts",
-                    "raja_ongkir__subdistricts.city_id",
-                    "=",
-                    "raja_ongkir__cities.city_id"
-                )
-                ->select(
-                    "raja_ongkir__cities.province",
-                    "raja_ongkir__cities.type",
-                    "raja_ongkir__cities.city_name",
-                    "raja_ongkir__subdistricts.subdistrict_name",
-                )
-                ->where(
-                    "raja_ongkir__subdistricts.subdistrict_id",
-                    $dataSubmission->distric
-                )
-                ->first();
-
-                // Provinsi
-                $dataSubmission->province = $getSubmissionCityAndProvince->province;
-
-                // Kota
-                $dataSubmission->city = $getSubmissionCityAndProvince->type
-                    . " "
-                    . $getSubmissionCityAndProvince->city_name;
-
-                // District
-                $dataSubmission->district = $getSubmissionCityAndProvince->subdistrict_name;
-
-                // Promo
-                $dataSubmission->promo = json_decode($dataSubmission->arr_product);
-                $arrayPromo = (Array) $dataSubmission->promo;
-
-                foreach ($arrayPromo as $key => $promoItem) {
-                    $getPromo = DeliveryOrder::$Promo[$promoItem->id];
-                    $arrayPromo[$key]->name = $getPromo["name"];
-                }
-
-                $dataSubmission->promo = $arrayPromo;
-
-                // Branch
-                $getBranch = Branch::where("id", $dataSubmission->branch_id)->first();
-                $dataSubmission->branch_code = $getBranch->code;
-                $dataSubmission->branch_name = $getBranch->name;
-
-                // CSO
-                $getCSO = Cso::where("id", $dataSubmission->cso_id)->first();
-                $dataSubmission->cso_code = $getCSO->code;
-                $dataSubmission->cso_name = $getCSO->name;
-
-                $getReferencesCityAndProvince = RajaOngkir_City::leftJoin(
-                    "references",
-                    "references.city",
-                    "=",
-                    "raja_ongkir__cities.city_id"
-                )
-                ->select(
-                    "raja_ongkir__cities.province",
-                    "raja_ongkir__cities.type",
-                    "raja_ongkir__cities.city_name",
-                )
-                ->where("references.deliveryorder_id", $dataSubmission->id)
-                ->orderBy("references.id")
-                ->get();
-
-                foreach ($getReferencesCityAndProvince as $i => $refCityAndProvince) {
-                    $referenceArray[$i]->province = $refCityAndProvince->province;
-                    $referenceArray[$i]->city = $refCityAndProvince->type
-                        . " "
-                        . $refCityAndProvince->city_name;
-
-                    unset(
-                        $referenceArray[$i]->id,
-                        $referenceArray[$i]->deliveryorder_id,
-                        $referenceArray[$i]->created_at,
-                        $referenceArray[$i]->updated_at,
-                    );
-                }
-
-                unset(
-                    $dataSubmission->name,
-                    $dataSubmission->phone,
-                    $dataSubmission->arr_product,
-                    $dataSubmission->updated_at,
-                    $dataSubmission->cso_id,
-                    $dataSubmission->branch_id,
-                    $dataSubmission->active,
-                    $dataSubmission->distric,
-                );
-
-                $data = [
-                    "result" => 1,
-                    "dataSubmission" => $dataSubmission,
-                    "dataReference" => $referenceArray,
-                ];
-
-                return response()->json($data, 200);
-            } catch (Exception $e) {
-                DB::rollback();
-
-                $data = [
-                    "result" => 0,
-                    "error" => $e,
-                    "error message" => $e->getMessage(),
-                    "error file" => $e->getFile(),
-                    "error line" => $e->getLine(),
-                ];
-
-                return response()->json($data, 500);
-            }
-
-        }
-    } */
 
     public function addApi(Request $request)
     {
@@ -1569,7 +1334,7 @@ class SubmissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function listApi(Request $request)
+    public function listApi(Request $request): \Illuminate\Http\JsonResponse
     {
         // Menyimpan request ke dalam variabel $url untuk pagination
         $url = $request->all();
@@ -1778,7 +1543,7 @@ class SubmissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteApi(Request $request)
+    public function deleteApi(Request $request): \Illuminate\Http\JsonResponse
     {
         $messages = array(
             'id.required' => "There's an error with the data.",
@@ -1807,7 +1572,7 @@ class SubmissionController extends Controller
             $submission->save();
 
             $historyDeleteSubmission = [];
-            $historyDeleteSubmission["type_menu"] = "Delivery Order";
+            $historyDeleteSubmission["type_menu"] = "Submission";
             $historyDeleteSubmission["method"] = "Delete";
             $historyDeleteSubmission["meta"] = json_encode([
                 "user" => $request->user_id,
@@ -1822,20 +1587,16 @@ class SubmissionController extends Controller
 
             DB::commit();
 
-            $data = [
+            return response()->json([
                 "result" => 1,
-            ];
-
-            return response()->json($data);
+            ]);
         } catch (Exception $e) {
             DB::rollback();
 
-            $data = [
+            return response()->json([
                 "result" => 0,
                 "data" => $e->getMessage(),
-            ];
-
-            return response()->json($data, 500);
+            ], 500);
         }
     }
 
@@ -1843,7 +1604,7 @@ class SubmissionController extends Controller
     {
         return Submission::select(
             "submissions.code AS code",
-            "submissiobs.no_member AS no_member",
+            "submissions.no_member AS no_member",
             "branches.code AS branch_code",
             "branches.name AS branch_name",
             "csos.code AS cso_code",
@@ -1855,6 +1616,7 @@ class SubmissionController extends Controller
             "raja_ongkir__cities.province AS province",
             DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
             "raja_ongkir__subdistricts.subdistrict_name AS district",
+            "submissions.created_at AS created_at",
         )
         ->leftJoin("branches", "submissions.branch_id", "=", "branch_id")
         ->leftJoin("csos", "submissions.cso_id", "=", "cso_id")
@@ -1878,7 +1640,7 @@ class SubmissionController extends Controller
     {
         return Submission::select(
             "submissions.code AS code",
-            "submissiobs.no_member AS no_member",
+            "submissions.no_member AS no_member",
             "branches.code AS branch_code",
             "branches.name AS branch_name",
             "csos.code AS cso_code",
@@ -1890,6 +1652,7 @@ class SubmissionController extends Controller
             "raja_ongkir__cities.province AS province",
             DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
             "raja_ongkir__subdistricts.subdistrict_name AS district",
+            "submissions.created_at AS created_at",
             "submission_images.image_1 AS image_1",
             "submission_images.image_2 AS image_2",
             "submission_images.image_3 AS image_3",
@@ -1924,7 +1687,7 @@ class SubmissionController extends Controller
     {
         return Submission::select(
             "submissions.code AS code",
-            "submissiobs.no_member AS no_member",
+            "submissions.no_member AS no_member",
             "branches.code AS branch_code",
             "branches.name AS branch_name",
             "csos.code AS cso_code",
@@ -1936,6 +1699,7 @@ class SubmissionController extends Controller
             "raja_ongkir__cities.province AS province",
             DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
             "raja_ongkir__subdistricts.subdistrict_name AS district",
+            "submissions.created_at AS created_at",
             "submission_promos.promo_1 AS promo_1",
             "submission_promos.promo_2 AS promo_2",
             "submission_promos.qty_1 AS qty_1",
@@ -1990,6 +1754,7 @@ class SubmissionController extends Controller
         return Reference::select(
             "references.submission_id AS submission_id",
             "references.name AS name",
+            "references.age AS age",
             "references.phone AS phone",
             "raja_ongkir__cities.province AS province",
             DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
@@ -2029,6 +1794,7 @@ class SubmissionController extends Controller
         return Reference::select(
             "references.submission_id AS submission_id",
             "references.name AS name",
+            "references.age AS age",
             "references.phone AS phone",
             "raja_ongkir__cities.province AS province",
             DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
@@ -2056,6 +1822,25 @@ class SubmissionController extends Controller
             "souvenirs.id"
         )
         ->where("references.submission_id", $submissionId)
+        ->get();
+    }
+
+    private function queryHistory($submissionId)
+    {
+        return HistoryUpdate::select(
+            "history_updates.method AS method",
+            "history_updates.created_at AS created_at",
+            "history_updates.meta AS meta",
+            "users.name AS name",
+        )
+        ->leftJoin(
+            "users",
+            "users.id",
+            "=",
+            "history_updates.user_id"
+        )
+        ->where("type_menu", "Submission")
+        ->where("menu_id", $submissionId)
         ->get();
     }
 }
