@@ -125,6 +125,19 @@ $menu_item_second = "detail_submission_form";
                             ?>
                         </td>
                     </tr>
+                    <tr>
+                        <td>Proof (image)</td>
+                        <td>
+                            @for ($i = 1; $i <= 5; $i++)
+                                @if (!empty($submission["image_" . $i]))
+                                    <a href="{{ asset("sources/registration/" . $submission["image_" . $i]) }}"
+                                        target="_blank">
+                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: blue;"></i>
+                                    </a>
+                                @endif
+                            @endfor
+                        </td>
+                    </tr>
                 </table>
 
                 <table class="col-md-12">
