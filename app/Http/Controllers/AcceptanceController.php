@@ -18,6 +18,7 @@ use App\Upgrade;
 use App\HistoryUpdate;
 use App\Role;
 use DB;
+use Intervention\Image\ImageManagerStatic as Image;
 
 
 class AcceptanceController extends Controller
@@ -80,7 +81,13 @@ class AcceptanceController extends Controller
 
                     foreach ($request->file("image") as $imgNya) {
                         $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()). $idxImg . "_upgrade." . $imgNya->getClientOriginalExtension();
-                        $imgNya->move($path, $fileName);
+
+                        //compressed img
+                        $compres = Image::make($imgNya->getRealPath());
+                        $compres->resize(540, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })->save($path.'/'.$fileName);
+
                         array_push($data['image'], $fileName);
                         $idxImg++;
                     }

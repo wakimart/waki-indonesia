@@ -421,8 +421,8 @@
         };
 
         document.getElementById("image").onchange = function() {
-        	if(this.files[0].size > 2000000){
-        		alert("File foto terlalu besar !\nMaksimal 5MB");
+        	if(this.files[0].size > 15000000){
+        		alert("File foto terlalu besar !\nMaksimal 15MB");
         		this.value = "";
         	};
         };
