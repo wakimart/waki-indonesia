@@ -638,8 +638,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("edit_submission_form");
 
         // Process submission form edit
-        Route::post("/update/", "SubmissionController@update")
-            ->name("update_submission_form");
+        Route::post("/update/mgm", "SubmissionController@updateMGM")
+            ->name("update_submission_mgm");
+
+        Route::post("/update/referensi", "SubmissionController@updateReferensi")
+            ->name("update_submission_referensi");
 
         Route::post("/update/takeaway", "SubmissionController@updateTakeaway")
             ->name("update_submission_takeaway");

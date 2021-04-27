@@ -443,155 +443,95 @@ class SubmissionController extends Controller
         ], 400);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
-     */
-    /* public function update(Request $request)
+    public function updateMGM(Request $request)
     {
-        // Inisialisasi variabel $deliveryOrder untuk memperbarui data
-        $deliveryOrder = DeliveryOrder::find($request->input("idDeliveryOrder"));
+
+        $submission = Submission::find($request->id);
 
         DB::beginTransaction();
 
         try {
-            $deliveryOrder->no_member = $request->input("no_member");
-            $deliveryOrder->name = $request->input("name");
-            $deliveryOrder->address = $request->input("address");
-            $deliveryOrder->phone = $request->input("phone");
-
-            // Pembentukan array product
-            $data = $request->all();
-            $data['arr_product'] = [];
-            foreach ($data as $key => $value) {
-                $arrKey = explode("_", $key);
-                if ($arrKey[0] == 'product') {
-                    if (isset($data['qty_'.$arrKey[1]])) {
-                        $data['arr_product'][$key] = [];
-                        $data['arr_product'][$key]['id'] = $value;
-                        $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
-                    }
-                }
-            }
-
-            $deliveryOrder->arr_product = json_encode($data['arr_product']);
-
-            $getCSOid = Cso::where('code', $request->input("cso_id"))->first()['id'];
-            $deliveryOrder->cso_id = $getCSOid;
-            $deliveryOrder->branch_id = $request->input("branch_id");
-            $deliveryOrder->province = $request->input("province_id");
-            $deliveryOrder->city = $request->input("city");
-            $deliveryOrder->distric = $request->input("distric");
-            $deliveryOrder->type_register = $request->input("type_register");
-
-            // Mengecek apakah ada gambar yang diupload atau tidak
-            if ($request->hasFile("image_proof")) {
-                // Inisialisasi variabel data["image"]
-                $data["image"] = [];
-                // Inisialisasi jalur di mana gambar akan diletakkan
-                $path = "sources/registration";
-
-                // Mengecek apakah jalur untuk gambar sudah ada atau belum
-                if (!is_dir($path)) {
-                    // Jika belum, maka akan membuat folder/directory baru
-                    File::makeDirectory($path, 0777, true, true);
-                }
-
-                // Inisialisasi variabel $j untuk counter dan sebagai suffix nama file
-                $j = 0;
-                foreach ($request->file("image_proof") as $image) {
-                    // Inisialisasi nama gambar dengan UNIX Timestamp
-                    $fileName = strval(time());
-                    // Memberikan suffix dengan $j agar nama gambar tidak sama, dan juga menambahkan file extension
-                    $fileName .= "_" . $j . "." . $image->getClientOriginalExtension();
-                    // Menyimpan gambar
-                    $image->move($path, $fileName);
-                    // Push nama gambar ke dalam variabel data["image"]
-                    $data["image"][] = $fileName;
-                    // Increment variabel $j
-                    $j++;
-                }
-
-                // Convert array pada $data["image"] menjadi JSON
-                $data["image"] = json_encode($data["image"], JSON_FORCE_OBJECT);
-
-                $deliveryOrder->image = $data["image"];
-            }
-
-            // Menyimpan pembaruan data delivery_orders
-            $deliveryOrder->save();
-
-            //Inisialisasi variabel $user untuk riwayat pembaruan
-            $user = Auth::user();
-
-            // Mengisi variabel $historyDeliveryOrder dengan data yang diperbarui
-            $historyDeliveryOrder = [];
-            $historyDeliveryOrder["type_menu"] = "Delivery Order";
-            $historyDeliveryOrder["method"] = "Update";
-            $historyDeliveryOrder["meta"] = json_encode(
-                [
-                    "user" => $user["id"],
-                    "createdAt" => date("Y-m-d H:i:s"),
-                    "dataChange" => $deliveryOrder->getChanges(),
-                ]
-            );
-
-            $historyDeliveryOrder["user_id"] = $user["id"];
-            $historyDeliveryOrder["menu_id"] = $deliveryOrder->id;
-
-            // Menyimpan riwayat pembaruan data delivery_orders ke tabel history_updates
-            HistoryUpdate::create($historyDeliveryOrder);
-
-            $dataCount = count($data["name_ref"]);
-            for ($i = 0; $i < $dataCount; $i++) {
-                $reference = Reference::find($data["id_reference"][$i]);
-
-                $reference->name = $data["name_ref"][$i];
-                $reference->age = $data["age_ref"][$i];
-                $reference->phone = $data["phone_ref"][$i];
-                $reference->province = $data["province_ref"][$i];
-                $reference->city = $data["city_ref"][$i];
-                $reference->souvenir_id = $data["souvenir_id"][$i];
-                $reference->link_hs = $data["link_hs"][$i];
-
-                // Menyimpan pembaruan data references
-                $reference->save();
-
-                // Mengisi variabel $historyReference dengan data yang diperbarui
-                $historyReference = [];
-                $historyReference["type_menu"] = "Reference";
-                $historyReference["method"] = "Update";
-                $historyReference["meta"] = json_encode(
-                    [
-                        "user" => $user["id"],
-                        "createdAt" => date("Y-m-d H:i:s"),
-                        "dataChange" => $reference->getChanges(),
-                    ]
-                );
-
-                $historyReference["user_id"] = $user["id"];
-                $historyReference["menu_id"] = $reference->id;
-
-                // Menyimpan riwayat pembaruan data references ke tabel history_updates
-                HistoryUpdate::create($historyReference);
-            }
-
-            DB::commit();
+            $submission->fill($request->only(
+                "no_member",
+                "name",
+                "phone",
+                "province",
+                "city",
+                "district",
+                "address",
+                "branch_id",
+            ));
+            $csoId = Cso::where('code', $request->cso_id)->first()['id'];
+            $submission->cso_id = $csoId;
+            $submission->save();
 
             return redirect()
-                ->route('list_submission_form')
-                ->with('success', 'Data berhasil diperbarui');
+                ->route("edit_submission_form", ["id" => $request->id, "type" => "mgm"])
+                ->with('success', 'Data berhasil diperbarui.');
         } catch (Exception $e) {
-            DB::rollback();
+            DB::rollBack();
 
             return response()->json([
                 "error" => $e,
-                "erroe message" => $e->getMessage(),
-            ]);
+                "error message" => $e->getMessage(),
+            ], 500);
         }
-    } */
+    }
+
+    public function updateReferensi(Request $request)
+    {
+        $submission = Submission::find($request->id);
+
+        DB::beginTransaction();
+
+        try {
+            $submission->fill($request->only(
+                "no_member",
+                "name",
+                "phone",
+                "province",
+                "city",
+                "district",
+                "address",
+                "branch_id",
+            ));
+            $csoId = Cso::where('code', $request->cso_id)->first()['id'];
+            $submission->cso_id = $csoId;
+            $submission->save();
+
+            $user_id = Auth::user()["id"];
+            $path = "sources/registration";
+            $submissionImage = SubmissionImage::where("submission_id", $request->id)->first();
+            for ($i = 1; $i <= 5; $i++) {
+                $imageInput = "proof_image_" . $i;
+                if ($request->hasFile($imageInput)) {
+                    $fileName = ((string)time())
+                        . "_"
+                        . $user_id
+                        . "_"
+                        . $i
+                        . "."
+                        . $request->file($imageInput)->getClientOriginalExtension();
+
+                    $request->file($imageInput)->move($path, $fileName);
+
+                    $submissionImage["image_" . $i] = $fileName;
+                }
+            }
+            $submissionImage->save();
+
+            return redirect()
+                ->route("edit_submission_form", ["id" => $request->id, "type" => "referensi"])
+                ->with('success', 'Data berhasil diperbarui.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 500);
+        }
+    }
 
     public function updateTakeaway(Request $request)
     {
@@ -662,13 +602,17 @@ class SubmissionController extends Controller
             $submissionImage->save();
 
             DB::commit();
+
+            return redirect()
+                ->route("edit_submission_form", ["id" => $request->id, "type" => "takeaway"])
+                ->with('success', 'Data berhasil diperbarui.');
         } catch (Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 "error" => $e,
                 "error message" => $e->getMessage(),
-            ], 400);
+            ], 500);
         }
     }
 

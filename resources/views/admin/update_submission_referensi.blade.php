@@ -97,7 +97,7 @@ $menu_item_second = "add_submission_takeaway";
 <div class="main-panel">
       <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Edit Submission - Takeaway</h3>
+            <h3 class="page-title">Edit Submission - Referensi Sehat Bersama WAKi</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -109,7 +109,7 @@ $menu_item_second = "add_submission_takeaway";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Edit Submission - Takeaway
+                        Edit Submission - Referensi Sehat Bersama WAKi
                     </li>
                 </ol>
             </nav>
@@ -124,7 +124,7 @@ $menu_item_second = "add_submission_takeaway";
                             class="forms-sample"
                             method="POST"
                             enctype="multipart/form-data"
-                            action="{{ route("update_submission_takeaway") }}">
+                            action="{{ route("update_submission_referensi") }}">
                             @csrf
                             <input type="hidden"
                                 name="id"
@@ -133,11 +133,11 @@ $menu_item_second = "add_submission_takeaway";
                                 <label>Type Register</label>
                                 <input type="hidden"
                                     name="type"
-                                    value="takeaway" />
+                                    value="referensi" />
                                 <input type="text"
                                     readonly
                                     disabled
-                                    value="Takeaway" />
+                                    value="Referensi Sehat Bersama WAKi" />
                             </div>
 
                             <div class="form-group">
@@ -145,7 +145,7 @@ $menu_item_second = "add_submission_takeaway";
                                 <br>
                                 <label id="member_label"
                                     for="member_input">
-                                    No. MPC (optional)
+                                    No. MPC
                                 </label>
                                 <input id="member_input"
                                     type="text"
@@ -153,7 +153,8 @@ $menu_item_second = "add_submission_takeaway";
                                     id="no_member"
                                     name="no_member"
                                     value="{{ $submission->no_member }}"
-                                    placeholder="No. member" />
+                                    placeholder="No. member"
+                                    required />
                             </div>
 
                             <div class="form-group">
@@ -286,101 +287,6 @@ $menu_item_second = "add_submission_takeaway";
                                     required>{{ $submission->address }}</textarea>
                             </div>
 
-                            @for ($j = 0; $j < 2; $j++)
-                                <div class="form-group product-group"
-                                    id="promo-group-{{ $j + 1 }}">
-                                    <div class="col-xs-12 col-sm-12 row"
-                                        style="margin: 0;padding: 0;">
-                                        <div class="col-xs-10 col-sm-10"
-                                            style="padding: 0; display: inline-block;">
-                                            <label for="promo-{{ $j }}">
-                                                Promo {{ $j + 1 }} {{ $j > 0 ? "(optional)" : "" }}
-                                            </label>
-                                            <select class="form-control pilihan-product"
-                                                id="promo-{{ $j + 1 }}"
-                                                name="promo_{{ $j + 1 }}"
-                                                data-msg="Mohon Pilih Promo"
-                                                {{ $j > 0 ? "" : "required" }}>
-                                                <option selected
-                                                    value=""
-                                                    {{ $j > 0 ? "" : "disabled" }}
-                                                    {{ $j > 0 ? "" : "hidden" }}>
-                                                    Choose Promo {{ $j > 0 ? "(optional)" : ""}}
-                                                </option>
-                                                <?php foreach ($promos as $promo): ?>
-                                                    <?php
-                                                    $selected = "";
-                                                    if ($promo->id === $submission["promo_" . ($j + 1)]) {
-                                                        $selected = "selected";
-                                                    }
-                                                    ?>
-                                                    <option value="{{ $promo->id }}"
-                                                        {{ $selected }}>
-                                                        <?php
-                                                        echo $promo->code
-                                                            . " - ("
-                                                            . implode(", ", $promo->productCode())
-                                                            . ") - Rp. "
-                                                            . number_format($promo->price);
-                                                        ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-
-                                                <?php
-                                                $isIdPromoNumeric[$j] = true;
-                                                if (!is_numeric($submission["promo_" . ($j + 1)])) {
-                                                    $isIdPromoNumeric = false;
-                                                }
-                                                ?>
-                                                <option value="other"
-                                                    <?php
-                                                    if (!$isIdPromoNumeric) {
-                                                        echo "selected";
-                                                    }
-                                                    ?>
-                                                    >
-                                                    OTHER
-                                                </option>
-                                            </select>
-                                            <div class="validation"></div>
-                                        </div>
-                                        <div class="col-xs-2 col-sm-2"
-                                            style="padding-right: 0;display: inline-block;">
-                                            <label for="qty-{{ $j }}">
-                                                Qty
-                                            </label>
-                                            <select class="form-control"
-                                                id="qty-{{ $j }}"
-                                                name="qty_{{ $j + 1 }}"
-                                                data-msg="Mohon Pilih Jumlah"
-                                                {{ $j > 0 ? "" : "required" }}>
-                                                <option selected value="1">
-                                                    1
-                                                </option>
-
-                                                @for ($i = 2; $i <= 10; $i++)
-                                                    <option value="{{ $i }}">
-                                                        {{ $i }}
-                                                    </option>
-                                                @endfor
-                                            </select>
-                                            <div class="validation"></div>
-                                        </div>
-
-                                        <div class="form-group{{ $isIdPromoNumeric[$j] ? " d-none" : "" }}">
-                                            <input type="text"
-                                                class="form-control"
-                                                id="other-{{ $j + 1 }}"
-                                                name="other_{{ $j + 1 }}"
-                                                placeholder="Product Name"
-                                                value="{{ $submission["other_" . ($j + 1)] }}"
-                                                data-msg="Please fill in the product" />
-                                            <div class="validation"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endfor
-
                             <div class="form-group">
                                 <label for="branch">Branch</label>
                                 <select class="form-control"
@@ -420,44 +326,9 @@ $menu_item_second = "add_submission_takeaway";
                                     style="text-transform: uppercase;"
                                     value="{{ $submission->cso_code }}"
                                     oninput="check_cso(this)"
-                                    onloadend="check_cso(this)"
                                     {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly" : "" }} />
                                 <div class="validation" id="validation_cso"></div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="nomor-do">
-                                    Nomor DO
-                                </label>
-                                <input type="text"
-                                    id="nomor-do"
-                                    class="form-control"
-                                    name="nomor_do"
-                                    placeholder="Nomor DO"
-                                    value="{{ $submission->no_deliveryorder }}"
-                                    required />
-                                <div class="validation"></div>
-                            </div>
-
-                            @for ($i = 1; $i <= 5; $i++)
-                                <div class="form-group">
-                                    <label for="do-image-{{ $i }}">
-                                        Proof DO (image) - {{ $i }}
-                                    </label>
-                                    <br>
-                                    @if (!empty($submission["image_" . $i]))
-                                        <img class="img-fluid img-thumbnail"
-                                            src="{{ asset("sources/registration/" . $submission["image_" . $i]) }}"
-                                            style="max-height: 300px"
-                                            alt="Image DO {{ $i }}" />
-                                    @endif
-                                    <input type="file"
-                                        id="do-image-{{ $i }}"
-                                        name="do_image_{{ $i }}"
-                                        class="do-image"
-                                        accept=".jpg, .jpeg, .png" />
-                                </div>
-                            @endfor
                             <br>
                             <br>
                             <div class="form-group">
@@ -468,6 +339,26 @@ $menu_item_second = "add_submission_takeaway";
                                 </button>
                                 <button class="btn btn-light">Cancel</button>
                             </div>
+
+                            @for ($i = 1; $i <= 5; $i++)
+                                <div class="form-group">
+                                    <label for="proof-image-{{ $i }}">
+                                        Proof Image - {{ $i }}
+                                    </label>
+                                    <br>
+                                    @if (!empty($submission["image_" . $i]))
+                                        <img class="img-fluid img-thumbnail"
+                                            src="{{ asset("sources/registration/" . $submission["image_" . $i]) }}"
+                                            style="max-height: 300px"
+                                            alt="Image DO {{ $i }}" />
+                                    @endif
+                                    <input type="file"
+                                        id="proof-image-{{ $i }}"
+                                        name="proof_image_{{ $i }}"
+                                        class="proof-image"
+                                        accept=".jpg, .jpeg, .png" />
+                                </div>
+                            @endfor
                         </form>
 
                     </div>
@@ -544,16 +435,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     $("#district").append(arrSubDistsrict);
                 }
             });
-    });
-
-    $(".pilihan-product").change(function (e) {
-        if ($(this).val() == 'other') {
-            $(this).parent().next().next().removeClass("d-none");
-            $(this).parent().next().next().children().attr('required', '');
-        } else {
-            $(this).parent().next().next().addClass("d-none");
-            $(this).parent().next().next().children().removeAttr('required', '');
-        }
     });
 }, false);
 </script>
