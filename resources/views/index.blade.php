@@ -163,6 +163,8 @@
                 <p>"Metrowealth International Group" telah didirikan pada tahun 1995. Sejak saat itu, perusahaan telah berkembang pesat di kawasan Asia Pasifik dan negara-negara Eropa.</p>
                 <p>Pada tahun 2008, untuk menyusun strategi pemasaran global, perusahaan memutuskan untuk mengubah nama menjadi "WAKi". Oleh karena itu, perusahaan ini terdaftar sebagai "WAKi International Group".
                 </p>
+                <p>"Visi kami Towards a Better Life. Sehat bersama WAKi menuju kehidupan yang lebih baik."</p>
+                <p style="font-style: italic;">Bukan Janji, Tapi Pasti!</p>
               @elseif(Utils::$lang=='eng')
 
                 <h3>WAKi International Group</h3>
@@ -171,6 +173,8 @@
                   <br>
                   Therefore, the Company renamed as “WAKi International Group”. Nowadays, “WAKi” has become a popular brand for health products. For expanding business blueprint, WAKi has established it’s branches and joint-venture companies in Malaysia, Indonesia, Philippines, Thailand, Singapore, Brunei, Vietnam, Cambodia, Myanmar, Hongkong, Japan, Korea and China. WAKi International Headquarter is located in WAKi Building, Kuala Lumpur, Malaysia.</p>
                 </p>
+                <p>"Our vision being healthy with WAKi towards a better life."</p>
+                <p>Not a Promise, but Sure!</p>
               @endif
             </div>
           </div>
@@ -182,7 +186,7 @@
             <div class="icon" style="background: #eafde7;"><h1 class="WAKI">W</h1></div>
             <h4 class="title" style="color: #00844a;font-weight: bolder;">Willingness</h4>
             @if(Utils::$lang=='id')
-            <p class="description">Kami percaya bahwa <i>Willingness</i> menguasai segalanya.</p>
+            <p class="description">Kami percaya bahwa <i>Kemauan</i> dapat menaklukan segalanya.</p>
             @elseif(Utils::$lang=='eng')
             <p class="description">We believe that <i>Willingness</i> conquers everything.</p>
             @endif
@@ -191,9 +195,9 @@
         <div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp" data-wow-delay="0.1s" data-wow-duration="1.4s" style="margin: 0 0 30px 0;">
           <div class="box col-md-12">
             <div class="icon" style="background: #eafde7;"><h1 class="WAKI">A</h1></div>
-            <h4 class="title" style="color: #00844a;font-weight: bolder;">Action</h4>
+            <h4 class="title" style="color: #00844a;font-weight: bolder;">Action & Agility</h4>
             @if(Utils::$lang=='id')
-            <p class="description">Kami percaya bahwa <i>Action</i> adalah kekuatan.</p>
+            <p class="description">Kami percaya bahwa <i>Tindakan dan Kelincahan</i> adalah kekuatan.</p>
             @elseif(Utils::$lang=='eng')
             <p class="description">We believe that <i>Action</i> is power.</p>
             @endif
@@ -204,7 +208,7 @@
             <div class="icon" style="background: #eafde7;"><h1 class="WAKI">K</h1></div>
             <h4 class="title" style="color: #00844a;font-weight: bolder;">Knowledge</h4>
             @if(Utils::$lang=='id')
-            <p class="description">Kami percaya bahwa <i>Knowledge</i> adalah bagian penting dari kesuksesan.</p>
+            <p class="description">Kami percaya bahwa <i>Pengetahuan</i> adalah bagian penting dari keberhasilan.</p>
             @elseif(Utils::$lang=='eng')
             <p class="description">We believe that <i>Knowledge</i> is the essential part of success.</p>
             @endif
@@ -215,8 +219,8 @@
             <div class="icon" style="background: #eafde7;"><h1 class="WAKI" style="color: #fcb813;">i</h1></div>
             <h4 class="title" style="color: #fcb813;font-weight: bolder;">Innovation</h4>
             @if(Utils::$lang=='id')
-            <p class="description">Kami percaya bahwa <i>Innovation</i> akan membawa peluang tak
-            terbatas kepada kita.</p>
+            <p class="description">Kami percaya bahwa <i>Inovasi</i> akan membawa peluang tak
+            terbatas kepada kami.</p>
             @elseif(Utils::$lang=='eng')
             <p class="description">We believe that <i>Innovation</i> will bring about infinite opportunities to us.</p>
             @endif
@@ -364,11 +368,11 @@
               @if(Utils::$lang=='id')
                 <h2 class="text-center" style="margin-bottom: 1em;">Kenapa Memilih Kami</h2>
 
-                <h4 style="text-align: center;">Misi kami membawa pelanggan WAKian dan WAKi, menuju kehidupan yang lebih baik.<br>Bukan Janji, tapi Pasti!</h4>
+                <h4 style="text-align: center;">"Misi kami membawa pelanggan WAKian dan WAKi, menuju kehidupan yang lebih baik."<br>Bukan Janji, tapi Pasti!</h4>
               @elseif(Utils::$lang=='eng')
                 <h2 style="margin-bottom: 10px;">Wy Choose Us</h2>
 
-                <h4 style="text-align: center;">We bring WAKian and WAKi’s customers, towards a better life.<br>Not a promise, but sure!</h4>
+                <h4 style="text-align: center;">"We bring WAKian and WAKi’s customers, towards a better life."<br>Not a Promise, but Sure!</h4>
               @endif
                <div class="text-center mt-2 mb-2">
                 <img src="{{ asset ('sources/testi-icon.png') }}" class="img-fluid" alt="" style="width: 60px; height: 60px;" />

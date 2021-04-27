@@ -88,7 +88,7 @@ class ProductController extends Controller
             compact(
                 "countProduct",
                 "products",
-                "url",
+                "url"
             )
         )
         ->with("i", (request()->input("page", 1) - 1) * 10 + 1);;
