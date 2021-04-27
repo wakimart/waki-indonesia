@@ -409,55 +409,6 @@ class SubmissionController extends Controller
         );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
-     */
-    /* public function edit(Request $request)
-    {
-        if ($request->has("id")) {
-            $branches = Branch::all();
-            $csos = Cso::all();
-            $deliveryOrders = DeliveryOrder::find($request->get("id"));
-            $promos = Promo::all();
-            $references = Reference::where(
-                "deliveryorder_id",
-                $request->get("id")
-            )
-            ->orderBy("id", "asc")
-            ->get();
-            $souvenirs = Souvenir::select("id", "name")
-            ->where("active", true)
-            ->get();
-
-            $arrayReference = [];
-            foreach ($references as $key => $reference) {
-                $arrayReference[$key]["id"] = $reference->id;
-                $arrayReference[$key]["name"] = $reference->name;
-                $arrayReference[$key]["age"] = $reference->age;
-                $arrayReference[$key]["phone"] = $reference->phone;
-                $arrayReference[$key]["province"] = $reference->province;
-                $arrayReference[$key]["city"] = $reference->city;
-            }
-
-            return view(
-                "admin.update_submission_form",
-                compact(
-                    "arrayReference",
-                    "branches",
-                    "csos",
-                    "deliveryOrders",
-                    "promos",
-                    "souvenirs",
-                )
-            );
-        } else {
-            return response()->json(['result' => 'Gagal!!']);
-        }
-    } */
-
     public function edit(Request $request)
     {
         if (!empty($request->id) && !empty($request->type)) {
@@ -498,7 +449,7 @@ class SubmissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
      */
-    public function update(Request $request)
+    /* public function update(Request $request)
     {
         // Inisialisasi variabel $deliveryOrder untuk memperbarui data
         $deliveryOrder = DeliveryOrder::find($request->input("idDeliveryOrder"));
@@ -639,6 +590,85 @@ class SubmissionController extends Controller
                 "error" => $e,
                 "erroe message" => $e->getMessage(),
             ]);
+        }
+    } */
+
+    public function updateTakeaway(Request $request)
+    {
+        $submission = Submission::find($request->id);
+
+        DB::beginTransaction();
+
+        try {
+            $submission->fill($request->only(
+                "no_member",
+                "name",
+                "phone",
+                "province",
+                "city",
+                "district",
+                "address",
+                "branch_id",
+            ));
+            $csoId = Cso::where('code', $request->cso_id)->first()['id'];
+            $submission->cso_id = $csoId;
+            $submission->save();
+
+            $submissionPromo = SubmissionPromo::where("submission_id", $request->id)->first();
+            if ($request->promo_1 !== "other") {
+                $submissionPromo->promo_1 = $request->promo_1;
+            }
+
+            if ($request->promo_2 !== "other") {
+                $submissionPromo->promo_2 = $request->promo_2;
+            }
+
+            $submissionPromo->qty_1 = $request->qty_1;
+
+            if (
+                !empty($request->promo_2)
+                || !empty($request->other_2)
+            ) {
+                $submissionPromo->qty_2 = $request->qty_2;
+            }
+
+            $submissionPromo->other_1 = $request->other_1;
+            $submissionPromo->other_2 = $request->other_2;
+            $submissionPromo->save();
+
+            $submissionDO = SubmissionDeliveryorder::where("submission_id", $request->id)->first();
+            $submissionDO->no_deliveryorder = $request->other_2;
+            $submissionDO->save();
+
+            $user_id = Auth::user()["id"];
+            $path = "sources/registration";
+            $submissionImage = SubmissionImage::where("submission_id", $request->id)->first();
+            for ($i = 1; $i <= 5; $i++) {
+                $imageInput = "do_image_" . $i;
+                if ($request->hasFile($imageInput)) {
+                    $fileName = ((string)time())
+                        . "_"
+                        . $user_id
+                        . "_"
+                        . $i
+                        . "."
+                        . $request->file($imageInput)->getClientOriginalExtension();
+
+                    $request->file($imageInput)->move($path, $fileName);
+
+                    $submissionImage["image_" . $i] = $fileName;
+                }
+            }
+            $submissionImage->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 400);
         }
     }
 
@@ -1442,6 +1472,7 @@ class SubmissionController extends Controller
     private function querySubmissionMGM($id)
     {
         return Submission::select(
+            "submissions.id AS id",
             "submissions.code AS code",
             "submissions.no_member AS no_member",
             "branches.code AS branch_code",
@@ -1481,6 +1512,7 @@ class SubmissionController extends Controller
     private function querySubmissionReferensi($id)
     {
         return Submission::select(
+            "submissions.id AS id",
             "submissions.code AS code",
             "submissions.no_member AS no_member",
             "branches.code AS branch_code",
@@ -1531,6 +1563,7 @@ class SubmissionController extends Controller
     private function querySubmissionTakeaway($id)
     {
         return Submission::select(
+            "submissions.id AS id",
             "submissions.code AS code",
             "submissions.no_member AS no_member",
             "branches.code AS branch_code",

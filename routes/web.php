@@ -641,6 +641,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("/update/", "SubmissionController@update")
             ->name("update_submission_form");
 
+        Route::post("/update/takeaway", "SubmissionController@updateTakeaway")
+            ->name("update_submission_takeaway");
+
         // Process submission form delete
         Route::post("/delete/", "SubmissionController@destroy")
             ->name("delete_submission_form");
