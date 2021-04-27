@@ -383,42 +383,14 @@ $menu_item_second = "add_submission_mgm";
                                                             <?php foreach ($promos as $key => $promo): ?>
                                                                 <option value="<?php echo $promo["id"]; ?>">
                                                                     <?php
-                                                                    $productPromo = json_decode($promo["product"]);
-                                                                    $arrayProductId = [];
-
-                                                                    foreach ($productPromo as $pp) {
-                                                                        $arrayProductId[] = $pp->id;
-                                                                    }
-
-                                                                    $getProduct = Product::select("code")
-                                                                    ->whereIn(
-                                                                        "id",
-                                                                        $arrayProductId
-                                                                    )
-                                                                    ->get();
-
-                                                                    $arrayProductCode = [];
-
-                                                                    foreach ($getProduct as $product) {
-                                                                        $arrayProductCode[] = $product->code;
-                                                                    }
-
-                                                                    $productCode = implode(", ", $arrayProductCode);
-
-                                                                    echo $promo["code"]
+                                                                    echo $promo->code
                                                                         . " - ("
-                                                                        . $productCode
+                                                                        . implode(", ", $promo->productCode())
                                                                         . ") - Rp. "
-                                                                        . number_format(
-                                                                            (int) $promo["price"],
-                                                                            0,
-                                                                            null,
-                                                                            ","
-                                                                        );
+                                                                        . number_format($promo->price);
                                                                     ?>
                                                                 </option>
                                                             <?php endforeach; ?>
-
                                                             <option value="other">OTHER</option>
                                                         </select>
                                                         <div class="validation"></div>
