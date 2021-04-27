@@ -466,7 +466,7 @@ class SubmissionController extends Controller
             $submission->save();
 
             return redirect()
-                ->route("edit_submission_form", ["id" => $request->id, "type" => "mgm"])
+                ->route("detail_submission_form", ["id" => $request->id, "type" => "mgm"])
                 ->with('success', 'Data berhasil diperbarui.');
         } catch (Exception $e) {
             DB::rollBack();
@@ -521,7 +521,7 @@ class SubmissionController extends Controller
             $submissionImage->save();
 
             return redirect()
-                ->route("edit_submission_form", ["id" => $request->id, "type" => "referensi"])
+                ->route("detail_submission_form", ["id" => $request->id, "type" => "referensi"])
                 ->with('success', 'Data berhasil diperbarui.');
         } catch (Exception $e) {
             DB::rollBack();
@@ -604,7 +604,7 @@ class SubmissionController extends Controller
             DB::commit();
 
             return redirect()
-                ->route("edit_submission_form", ["id" => $request->id, "type" => "takeaway"])
+                ->route("detail_submission_form", ["id" => $request->id, "type" => "takeaway"])
                 ->with('success', 'Data berhasil diperbarui.');
         } catch (Exception $e) {
             DB::rollBack();
