@@ -18,44 +18,6 @@ $menu_item_second = "list_product";
         border-radius: 0% !important;
     }
 
-     /*-- mobile --*/
-	@media (max-width: 768px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
-
-		#mobile .filter{
-			padding-top: 15px;
-		}
-	}
-
-	@media (min-width: 768px){
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
-	}
-
-	@media (min-width: 410px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
-
-		#mobile .filter{
-			padding-top: 0;
-		}
-	}
 </style>
 @endsection
 
@@ -82,47 +44,21 @@ $menu_item_second = "list_product";
         </div>
 
         <div class="row">
-            {{-- <div id="desktop">
-                <div class="col-12 grid-margin stretch-card">
-                    @if(Utils::$lang === 'id'&& Auth::user()->roles[0]["slug"] !== "admin-management")
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-                        <div class="form-group">
-                            <label for="">Search By Name, and Code</label>
-                            <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
-                            <div class="validation"></div>
-                        </div>
-                    </div>
-                    @endif
-    
-                    @if(Utils::$lang === 'id'&& Auth::user()->roles[0]["slug"] !== 'area-manager')
-                    <div class="col-xs-6 col-sm-12 row" style="margin: 0;padding: 0;">
-                        <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-                            <label for=""></label>
-                            <div class="form-group">
-                                <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" onclick="submitApplyFilter()" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </div> --}}
 
-            <div class="col-12 grid-margin" style="margin-bottom: 0;">
-                    <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0;">
+            <div class="col-12" style="margin-bottom: 0;">
+                    <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
                         <div class="form-group">
-                            <label for="">Search By Name, and Code</label>
+                            <label for="">Search By Name and Code</label>
                             <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
                             <div class="validation"></div>
                         </div>
                     </div>
-            </div>
-            <div class="col-12 grid-margin" style="margin-bottom: 15px;">
-                <div class="col-xs-6 col-sm-6" style="padding: 0;">
-                    <label for=""></label>
-                    <div class="form-group">
-                        <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+                    <div class="col-xs-6 col-sm-6" style="padding: 0; display: inline-block">
+                        <label for=""></label>
+                        <div class="form-group">
+                            <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+                        </div>
                     </div>
-                </div>
             </div>
 
             <div class="col-12 grid-margin stretch-card">
@@ -262,7 +198,7 @@ function submitDelete(e) {
  
 $(document).ready(function (e) {
     $("#btn-filter").click(function (e) {
-      /*   var urlParamArray = new Array();
+        var urlParamArray = new Array();
         var urlParamStr = "";
         if($('#search').val() != ""){
             urlParamArray.push("search=" + $('#search').val());
@@ -274,36 +210,9 @@ $(document).ready(function (e) {
                 urlParamStr += "&" + urlParamArray[i]
             }
         }
-        window.location.href = "{{route('list_product')}}" + urlParamStr; */
-
-        $.each($("#table tbody tr"), function() {
-
-            if($(this).text().toLowerCase().indexOf($('#search').val().toLowerCase()) === -1)
-                $(this).hide();
-            else
-                $(this).show();                
-        });
-
+        window.location.href = "{{route('list_product')}}" + urlParamStr;
     });
 }); 
 
-/* {{-- Menyusun parameter untuk filter --}}
-function buildParam() {
-    let urlParamStr = "";
-
-    const filterSearch = document.getElementById("search").value.trim();
-    if (filterSearch.length) {
-        urlParamStr += "filter_search=" + filterSearch + "&";
-    }
-
-    return urlParamStr;
-}
-
-{{-- Apply Filter --}}
-function submitApplyFilter() {
-    const urlParamStr = buildParam();
-
-    window.location.href = "<?php echo route('list_product'); ?>" + "?" + urlParamStr;
-} */
 </script>
 @endsection

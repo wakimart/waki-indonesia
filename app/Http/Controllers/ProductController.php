@@ -80,8 +80,15 @@ class ProductController extends Controller
     {
         $url = $request->all();
 
-        $products = Product::paginate(10);
+        $products = Product::where('active', true)->get();
+
+        if($request->has('search')){
+            $products = Product::where( 'name', 'LIKE', '%'.$request->search.'%' )
+                                    ->orWhere( 'code', 'LIKE', '%'.$request->search.'%' );
+        }
+
         $countProduct = $products->count();
+        $products = $products->paginate(10);
 
         return view(
             "admin.list_product",
