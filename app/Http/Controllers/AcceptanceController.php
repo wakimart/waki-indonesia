@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Acceptance;
 use App\AcceptanceStatusLog;
 use App\Branch;
 use App\Cso;
-use App\User;
-use App\Utils;
+use App\HistoryUpdate;
 use App\Product;
 use App\Upgrade;
-use App\HistoryUpdate;
-use App\Role;
-use DB;
+use App\User;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
 use Intervention\Image\ImageManagerStatic as Image;
 
 
@@ -102,7 +102,7 @@ class AcceptanceController extends Controller
 
                 DB::commit();
 
-                $this->sendNotif($acc);                
+                $this->sendNotif($acc);
                 return response()->json(['success' => $acc]);
             } catch (\Exception $ex) {
                 DB::rollback();
@@ -133,7 +133,7 @@ class AcceptanceController extends Controller
         return view('admin.detail_acceptance', compact('acceptance', 'historyUpdate'));
     }
 
-    public function edit($id){        
+    public function edit($id){
         $acceptance = Acceptance::find($id);
         $products = Product::all();
         $branches = Branch::where('active', true)->get();
@@ -243,7 +243,7 @@ class AcceptanceController extends Controller
                     $historyUpdate['user_id'] = Auth::user()['id'];
                     $historyUpdate['menu_id'] = $acceptance->id;
                     $createData = HistoryUpdate::create($historyUpdate);
-                    
+
                     DB::commit();
 
                     $this->sendNotif($acceptance);
@@ -284,7 +284,7 @@ class AcceptanceController extends Controller
 
     //================ Khusus Notifikasi ================//
     function sendFCM($body){
-        
+
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
         curl_setopt($curl, CURLOPT_POST, true);
@@ -374,7 +374,7 @@ class AcceptanceController extends Controller
                 "product" => $oldProduct." to ".$newProduct,
                 "price" => "Rp. ".number_format($acceptance->request_price),
             ]];
-            
+
         if(sizeof($fcm_tokenNya) > 0)
         {
             $this->sendFCM(json_encode($body));
@@ -391,106 +391,7 @@ class AcceptanceController extends Controller
             'branch_id.exists' => 'Please choose the branch.'
         ];
 
-        $validator = \Validator::make($request->all(), [
-            'name' => 'required',
-            'cso_id' => ['required', 'exists:csos,code'],
-            'branch_id' => ['required', 'exists:branches,id']
-        ], $messages);
-
-        if ($validator->fails()) {
-            $data = [
-                'result' => 0,
-                'data' => $validator->errors(),
-            ];
-
-            return response()->json($data, 401);
-        } else {
-            DB::beginTransaction();
-
-            try{
-                $data = $request->all();
-                $branch = Branch::find($data['branch_id']);
-                $data["branch_id"] = $branch["id"];
-                $data['code'] = "ACC/UPGRADE/"
-                    . $branch->code
-                    . "/"
-                    . $data['cso_id']
-                    . "/"
-                    . date("Ymd");
-                $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-                $data["status"] = "new";
-
-                if (in_array('other', $data['kelengkapan'])) {
-                    $data['kelengkapan']['other'][] = $data['other_kelengkapan'];
-                }
-
-                $data['arr_condition'] = [
-                    'kelengkapan' => $data['kelengkapan'],
-                    'kondisi' => $data['kondisi'],
-                    'tampilan' => $data['tampilan'],
-                ];
-
-                if ($request->hasFile("image")) {
-                    $image = $request->file("image");
-                    $data['image'] = [];
-                    $path = "sources/acceptance";
-
-                    if (!is_dir($path)) {
-                        File::makeDirectory($path, 0777, true, true);
-                    }
-
-                    $fileName = str_replace(
-                        [' ', ':'],
-                        '',
-                        Carbon::now()->toDateTimeString()
-                    )
-                        . "_upgrade."
-                        . $image->getClientOriginalExtension();
-
-                    $image->move($path, $fileName);
-
-                    $data["image"] = [$fileName];
-                }
-
-                $acceptance = Acceptance::create($data);
-
-                $accStatusLog['acceptance_id'] = $acceptance->id;
-                $accStatusLog['user_id'] =  $data['user_id'];
-                $accStatusLog["status"] = "new";
-                AcceptanceStatusLog::create($accStatusLog);
-
-                $upgrade["acceptance_id"] = $acceptance->id;
-                $upgrade["status"] = "new";
-                $upgrade["due_date"] = $acceptance["created_at"];
-                Upgrade::create($upgrade);
-
-                DB::commit();
-
-                $acceptanceView = $this->getDetail($acceptance->id, true);
-
-                $data = [
-                    'result' => 1,
-                    'data' => $acceptanceView,
-                ];
-
-                return response()->json($data, 200);
-            } catch (\Exception $ex) {
-                DB::rollback();
-
-                return response()->json(['error' => $ex->getMessage()], 500);
-            }
-        }
-    }
-
-    public function updateApi(Request $request)
-    {
-        $messages = [
-            'cso_id.required' => 'The CSO Code field is required.',
-            'cso_id.exists' => 'Wrong CSO Code.',
-            'branch_id.required' => 'The Branch must be selected.',
-            'branch_id.exists' => 'Please choose the branch.'
-        ];
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => ['required', 'exists:branches,id'],
@@ -498,140 +399,225 @@ class AcceptanceController extends Controller
         ], $messages);
 
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 'result' => 0,
                 'data' => $validator->errors(),
+            ], 400);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $data = $request->all();
+            $branch = Branch::find($data['branch_id']);
+            $cso = Cso::where('code', $data['cso_id'])->first();
+            $data['branch_id'] = $branch['id'];
+            $data['cso_id'] = $cso['id'];
+            $data['user_id'] = Auth::user()['id'];
+            $data['status'] = "new";
+            $data['code'] = "ACC/UPGRADE/"
+                . $branch->code
+                . "/"
+                . $data['cso_id']
+                . "/"
+                . date("Ymd");
+
+            if (in_array('other', $data['kelengkapan'])) {
+                $data['kelengkapan']['other'][] = $data['other_kelengkapan'];
+            }
+
+            $data['arr_condition'] = [
+                'kelengkapan' => $data['kelengkapan'],
+                'kondisi' => $data['kondisi'],
+                'tampilan' => $data['tampilan'],
             ];
 
-            return response()->json($data, 401);
-        } else {
+            if ($request->hasFile("image")) {
+                $data['image'] = [];
+                $path = "sources/acceptance";
+                $idxImg = 1;
+
+                if (!is_dir($path)) {
+                    File::makeDirectory($path, 0777, true, true);
+                }
+
+                foreach ($request->file("image") as $imgNya) {
+                    $fileName = str_replace(
+                            [' ', ':'],
+                            '',
+                            Carbon::now()->toDateTimeString()
+                        )
+                        . $idxImg
+                        . "_upgrade."
+                        . $imgNya->getClientOriginalExtension();
+
+                    $imgNya->move($path, $fileName);
+                    $data["image"][] = $fileName;
+                    $idxImg++;
+                }
+            }
+
+            $acceptance = Acceptance::create($data);
+
+            $accStatusLog['acceptance_id'] = $acceptance->id;
+            $accStatusLog['user_id'] =  $data['user_id'];
+            $accStatusLog['status'] = "new";
+            AcceptanceStatusLog::create($accStatusLog);
+
+            DB::commit();
+
+            $acceptanceView = $this->getDetail($acceptance->id, true);
+
+            return response()->json([
+                'result' => 1,
+                'data' => $acceptanceView,
+            ]);
+        } catch (Exception $ex) {
+            DB::rollback();
+
+            return response()->json(['error' => $ex->getMessage()], 500);
+        }
+    }
+
+    public function updateApi(Request $request)
+    {
+        $data = $request->all();
+
+        if (isset($data['status'])) {
             DB::beginTransaction();
 
-            try{
-                $data = $request->all();
-
+            try {
                 $acceptance = Acceptance::find($data['id']);
-
-                $acceptance["no_mpc"] = $data["no_mpc"];
-                $acceptance["name"] = $data["name"];
-                $acceptance["address"] = $data["address"];
-                $acceptance["phone"] = $data["phone"];
-                $acceptance["upgrade_date"] = $data["upgrade_date"];
-                $acceptance["newproduct_id"] = $data["newproduct_id"];
-                $acceptance["purchase_date"] = $data["purchase_date"];
-
-                if(in_array('other', $data['kelengkapan'])){
-                    $data['kelengkapan']['other'][] = $data['other_kelengkapan'];
-                }
-                $data['arr_condition'] = [
-                    'kelengkapan' => $data['kelengkapan'],
-                    'kondisi' => $data['kondisi'],
-                    'tampilan' => $data['tampilan']
-                ];
-
-                $acceptance["arr_condition"] = $data["arr_condition"];
-                $acceptance["request_price"] = $data["request_price"];
-                $acceptance["description"] = $data["description"];
-
-                if ($request->hasFile("image")) {
-                    $image = $request->file("image");
-                    $data['image'] = [];
-                    $path = "sources/acceptance";
-
-                    if (!is_dir($path)) {
-                        File::makeDirectory($path, 0777, true, true);
-                    }
-
-                    $fileName = str_replace(
-                        [' ', ':'],
-                        '',
-                        Carbon::now()->toDateTimeString()
-                    )
-                        . "_upgrade."
-                        . $image->getClientOriginalExtension();
-
-                    $image->move($path, $fileName);
-                    $data["image"] = [$fileName];
-                }
-
-                $acceptance["image"] = $data["image"];
-
-                $branch = Branch::find($data['branch_id']);
-                $cso = Cso::where('code', $data['cso_id'])->first();
-
-                $acceptance["branch_id"] = $branch["id"];
-                $acceptance["cso_id"] = $cso["id"];
                 $acceptance['status'] = $data['status'];
-                $acceptance["province"] = $data["province"];
-                $acceptance["city"] = $data["city"];
-                $acceptance["district"] = $data["district"];
-
-                if (
-                    isset($data["other_product"])
-                    && !empty($data["other_product"])
-                ) {
-                    $acceptance["other_product"] = $data["other_product"];
-                }
-
-                if (
-                    isset($data["oldproduct_id"])
-                    && !empty($data["oldproduct_id"])
-                ) {
-                    $acceptance["oldproduct_id"] = $data["oldproduct_id"];
-                }
-
                 $acceptance->save();
 
                 $accStatusLog['acceptance_id'] = $data['id'];
-                $accStatusLog['user_id'] =  $data["user_id"];
+                $accStatusLog['user_id'] =  Auth::user()['id'];
                 $accStatusLog['status'] =  $data['status'];
-                $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
+                AcceptanceStatusLog::create($accStatusLog);
 
-                if(strtolower($data['status']) == "approved"){
+                if (strtolower($data['status']) == "approved") {
                     $upgrade['acceptance_id'] = $data['id'];
-                    $upgrade['status'] = "new";
+                    $upgrade['status'] = "New";
                     $upgrade['due_date'] = date("Y-m-d H:i:s");
                     Upgrade::create($upgrade);
                 }
 
                 $historyUpdate['type_menu'] = "Acceptance";
                 $historyUpdate['method'] = "Update";
-                $historyUpdate["meta"] = json_encode(
-                    [
-                        "user" => $data["user_id"],
-                        "createdAt" => date("Y-m-d H:i:s"),
-                        "dataChange" => $acceptance->getChanges(),
-                    ]
-                );
-                $historyUpdate['user_id'] = $data["user_id"];
+                $historyUpdate["meta"] = json_encode(["dataChange" => $acceptance->getChanges()]);
+                $historyUpdate['user_id'] = Auth::user()['id'];
                 $historyUpdate['menu_id'] = $acceptance->id;
                 HistoryUpdate::create($historyUpdate);
 
-                $viewAcceptanceUpdate = $this->getDetail($data["id"]);
-
                 DB::commit();
 
-                $data = [
-                    'result' => 1,
-                    'data' => $viewAcceptanceUpdate,
-                ];
-
-                return response()->json($data, 200);
-            } catch (\Exception $ex) {
+                return response()->json([
+                    "result" => 1,
+                    "data" => $this->getDetail($data["id"], true),
+                ]);
+            } catch (Exception $ex) {
                 DB::rollback();
 
-                return response()->json(
-                    [
-                        'error' => $ex,
-                        "error line" => $ex->getLine(),
-                        "error messages" => $ex->getMessage(),
-                    ],
-                    500
-                );
+                return response()->json([
+                    "result" => 0,
+                    "error" => $ex->getMessage(),
+                ], 500);
             }
         }
+
+        $messages = [
+            'cso_id.required' => 'The CSO Code field is required.',
+            'cso_id.exists' => 'Wrong CSO Code.',
+            'branch_id.required' => 'The Branch must be selected.',
+            'branch_id.exists' => 'Please choose the branch.'
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'cso_id' => ['required', 'exists:csos,code'],
+            'branch_id' => ['required', 'exists:branches,id'],
+            'phone' => 'required|string|min:7',
+        ], $messages);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'result' => 0,
+                'data' => $validator->errors(),
+            ], 400);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $acceptance = Acceptance::find($data['id']);
+
+            $branch = Branch::find($data['branch_id']);
+            $cso = Cso::where('code', $data['cso_id'])->first();
+            $data['branch_id'] = $branch['id'];
+            $data['cso_id'] = $cso['id'];
+            $data['user_id'] = Auth::user()['id'];
+            $data['status'] = "new";
+            $data['code'] = "ACC/UPGRADE/"
+                . $branch->code
+                . "/"
+                . $data['cso_id']
+                . "/"
+                . date("Ymd");
+
+            if (in_array('other', $data['kelengkapan'])) {
+                $data['kelengkapan']['other'][] = $data['other_kelengkapan'];
+            }
+
+            $data['arr_condition'] = [
+                'kelengkapan' => $data['kelengkapan'],
+                'kondisi' => $data['kondisi'],
+                'tampilan' => $data['tampilan']
+            ];
+
+            if ($request->hasFile("image")) {
+                $image = $request->file("image");
+                $data['image'] = [];
+                $path = "sources/acceptance";
+
+                if (!is_dir($path)) {
+                    File::makeDirectory($path, 0777, true, true);
+                }
+
+                $fileName = str_replace(
+                        [' ', ':'],
+                        '',
+                        Carbon::now()->toDateTimeString()
+                    )
+                    . "_upgrade."
+                    . $image->getClientOriginalExtension();
+
+                $image->move($path, $fileName);
+                $data["image"] = [$fileName];
+            }
+
+            $acceptance->fill($data)->save();
+
+            $historyUpdate['type_menu'] = "Acceptance";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate["meta"] = json_encode(["dataChange" => $acceptance->getChanges()]);
+            $historyUpdate['user_id'] = Auth::user()['id'];
+            $historyUpdate['menu_id'] = $acceptance->id;
+            HistoryUpdate::create($historyUpdate);
+
+            DB::commit();
+
+            return response()->json([
+                "result" => 1,
+                "data" => $this->getDetail($data["id"], false)
+            ]);
+        } catch (Exception $ex) {
+            DB::rollback();
+
+            return response()->json(['errors' => $ex], 500);
+        }
     }
-    
+
     public function listApi(Request $request)
     {
         $messages = [
@@ -639,7 +625,7 @@ class AcceptanceController extends Controller
             'user_id.exists' => 'There\'s an error with the data.'
         ];
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'user_id' => ['required', 'exists:users,id'],
         ], $messages);
 
@@ -649,102 +635,97 @@ class AcceptanceController extends Controller
                 'data' => $validator->errors(),
             ];
 
-            return response()->json($data, 401);
-        } else {
-            try {
-                $data = $request->all();
-                $userNya = User::find($data['user_id']);
+            return response()->json($data, 400);
+        }
 
-                // Khusus head-manager, head-admin, admin
-                $acceptance = Acceptance::where('acceptances.active', true);
+        try {
+            $data = $request->all();
+            $userNya = User::find($data['user_id']);
 
-                // Khusus akun CSO
-                if($userNya->roles[0]['slug'] == 'cso'){
-                    $csoIdUser = $userNya->cso['id'];
-                    $acceptance = Acceptance::where(
-                        [
-                            ['acceptances.active', true],
-                            ['acceptances.cso_id', $csoIdUser],
-                        ]
-                    );
-                }
+            // Khusus head-manager, head-admin, admin
+            $acceptance = Acceptance::where('acceptances.active', true);
 
-                // Khusus akun branch dan area-manager
-                if (
-                    $userNya->roles[0]['slug'] == 'branch'
-                    || $userNya->roles[0]['slug'] == 'area-manager'
-                ) {
-                    $arrbranches = [];
-
-                    foreach ($userNya->listBranches() as $value) {
-                        array_push($arrbranches, $value['id']);
-                    }
-
-                    $acceptance = Acceptance::WhereIn(
-                        'acceptances.branch_id',
-                        $arrbranches
-                    )
-                    ->where('acceptances.active', true);
-                }
-
-                $acceptance = $acceptance->select(
-                    'acceptances.id AS id',
-                    'acceptances.code AS code',
-                    'acceptances.name AS name',
-                    'acceptances.status AS status',
-                    DB::raw("DATE_FORMAT(acceptances.created_at, '%d/%m/%Y') AS acceptance_date"),
-                    'branches.code AS branch_code',
-                    'csos.code AS cso_code',
-                    "np.code AS new_product",
-                    "op.name AS old_product",
-                    "acceptances.other_product AS other_product"
-                )
-                ->leftJoin(
-                    'branches',
-                    'acceptances.branch_id',
-                    '=',
-                    'branches.id'
-                )
-                ->leftJoin(
-                    'csos',
-                    'acceptances.cso_id',
-                    '=',
-                    'csos.id'
-                )
-                ->leftJoin(
-                    "products AS np",
-                    "acceptances.newproduct_id",
-                    "=",
-                    "np.id"
-                )
-                ->leftJoin(
-                    "products AS op",
-                    "acceptances.oldproduct_id",
-                    "=",
-                    "op.id"
-                )
-                ->get();
-
-                $data = [
-                    'result' => count($acceptance),
-                    'data' => $acceptance
-                ];
-
-                return response()->json($data, 200);
-            } catch (\Exception $e) {
-                $data = [
-                    "result" => 0,
-                    "error" => $e,
-                    "error line" => $e->getLine(),
-                    "error message" => $e->getMessage(),
-                ];
-
-                return response()->json($data, 500);
+            // Khusus akun CSO
+            if($userNya->roles[0]['slug'] == 'cso'){
+                $csoIdUser = $userNya->cso['id'];
+                $acceptance = $acceptance->where('acceptances.cso_id', $csoIdUser);
             }
+
+            // Khusus akun branch dan area-manager
+            if (
+                $userNya->roles[0]['slug'] == 'branch'
+                || $userNya->roles[0]['slug'] == 'area-manager'
+            ) {
+                $arrBranches = [];
+
+                foreach ($userNya->listBranches() as $value) {
+                    $arrBranches[] = $value["id"];
+                }
+
+                $acceptance = $acceptance->whereIn(
+                    'acceptances.branch_id',
+                    $arrBranches
+                );
+            }
+
+            $acceptance = $acceptance->select(
+                'acceptances.id AS id',
+                'acceptances.code AS code',
+                'acceptances.name AS name',
+                'acceptances.status AS status',
+                DB::raw("DATE_FORMAT(acceptances.upgrade_date, '%d/%m/%Y') AS upgrade_date"),
+                DB::raw("DATE_FORMAT(acceptances.created_at, '%d/%m/%Y') AS acceptance_date"),
+                'branches.code AS branch_code',
+                'csos.code AS cso_code',
+                "np.code AS new_product",
+                "op.name AS old_product",
+                "acceptances.other_product AS other_product"
+            )
+            ->leftJoin(
+                'branches',
+                'acceptances.branch_id',
+                '=',
+                'branches.id'
+            )
+            ->leftJoin(
+                'csos',
+                'acceptances.cso_id',
+                '=',
+                'csos.id'
+            )
+            ->leftJoin(
+                "products AS np",
+                "acceptances.newproduct_id",
+                "=",
+                "np.id"
+            )
+            ->leftJoin(
+                "products AS op",
+                "acceptances.oldproduct_id",
+                "=",
+                "op.id"
+            )
+            ->get();
+
+            $data = [
+                'result' => count($acceptance),
+                'data' => $acceptance
+            ];
+
+            return response()->json($data, 200);
+        } catch (Exception $e) {
+            $data = [
+                "result" => 0,
+                "error" => $e,
+                "error line" => $e->getLine(),
+                "error message" => $e->getMessage(),
+            ];
+
+            return response()->json($data, 500);
         }
     }
 
-    public function viewApi(Request $request, $id)
+    public function viewApi($id)
     {
         $acceptance = $this->getDetail($id);
 
@@ -773,9 +754,9 @@ class AcceptanceController extends Controller
             'csos.name AS cso_name',
             'acceptances.status AS status',
             DB::raw("DATE_FORMAT(acceptances.created_at, '%d/%m/%Y') AS acceptance_date"),
-            "raja_ongkir__cities.province AS province_name",
-            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city_name"),
-            "raja_ongkir__subdistricts.subdistrict_name AS district_name",
+            "raja_ongkir__cities.province AS province",
+            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+            "raja_ongkir__subdistricts.subdistrict_name AS district",
             "acceptances.other_product AS other_product",
             "op.code AS old_product_code",
             "op.name AS old_product_name"
@@ -855,7 +836,7 @@ class AcceptanceController extends Controller
             'id.exists' => 'There\'s an error with the data.'
         ];
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'id' => ['required', 'exists:home_services,id,active,1']
         ], $messages);
 
@@ -865,50 +846,46 @@ class AcceptanceController extends Controller
                 'data' => $validator->errors(),
             ];
 
-            return response()->json($data, 401);
-        } else {
-            DB::beginTransaction();
+            return response()->json($data, 400);
+        }
 
-            try {
-                $acceptance = Acceptance::find($request->id);
-                $acceptance->active = false;
-                $acceptance->save();
+        DB::beginTransaction();
 
-                $historyDeleteAcceptance = [];
-                $historyDeleteAcceptance["type_menu"] = "Acceptance";
-                $historyDeleteAcceptance["method"] = "Delete";
-                $historyDeleteAcceptance["meta"] = json_encode(
-                    [
-                        "user" => $request->user_id,
-                        "createdAt" => date("Y-m-d H:i:s"),
-                        "dataChange" => $acceptance->getChanges(),
-                    ]
-                );
-                $historyDeleteAcceptance["user_id"] = $request->user_id;
-                $historyDeleteAcceptance["menu_id"] = $request->id;
+        try {
+            $acceptance = Acceptance::find($request->id);
+            $acceptance->active = false;
+            $acceptance->save();
 
-                HistoryUpdate::create($historyDeleteAcceptance);
+            $historyDeleteAcceptance = [];
+            $historyDeleteAcceptance["type_menu"] = "Acceptance";
+            $historyDeleteAcceptance["method"] = "Delete";
+            $historyDeleteAcceptance["meta"] = json_encode(
+                [
+                    "user" => $request->user_id,
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "dataChange" => $acceptance->getChanges(),
+                ]
+            );
+            $historyDeleteAcceptance["user_id"] = $request->user_id;
+            $historyDeleteAcceptance["menu_id"] = $request->id;
 
-                DB::commit();
+            HistoryUpdate::create($historyDeleteAcceptance);
 
-                $data = [
-                    'result' => 1,
-                    'data' => $acceptance,
-                ];
+            DB::commit();
 
-                return response()->json($data, 200);
-            } catch (\Exception $e) {
-                DB::rollback();
+            return response()->json([
+                'result' => 1,
+                'data' => $acceptance,
+            ]);
+        } catch (Exception $e) {
+            DB::rollback();
 
-                $data =[
-                    "result" => 0,
-                    "error" => $e,
-                    "error line" => $e->getLine(),
-                    "error message" => $e->getMessage(),
-                ];
-
-                return response()->json($data, 500);
-            }
+            return response()->json([
+                "result" => 0,
+                "error" => $e,
+                "error line" => $e->getLine(),
+                "error message" => $e->getMessage(),
+            ], 500);
         }
     }
 }
