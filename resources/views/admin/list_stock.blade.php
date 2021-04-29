@@ -32,24 +32,30 @@
         								{{-- <th> Warehouse </th> --}}
 						            </tr>
 									<tr>
-										<td class="text-center"> Ready </td>
 										<td class="text-center"> Display </td>
+										<td class="text-center"> Ready </td>
 									</tr>
           						</thead>
           						<tbody>
+								
+								@php
+									$i = 0;								
+								@endphp
+
           						@foreach($stocks as $key => $stock)
 		                        <tr>
-		                        	<td>{{$key+1}}</td>
+		                        	<td>{{ ++$i }}</td>
 
-									@if($stock['product_id'] != null)
-										@if ($stock->product == reset($stocks )) First Item: @endif
-										<td>{{$stock->product['name']}}</td>
-									@elseif($stock['product_id'] == null)
-										<td>{{$stock['other_product']}}</td>
+									@if($stock[0]['product_id'] != null)
+										
+										<td>{{$stock[0]->product['name']}}</td>
+										
+									@elseif($stock[0]['product_id'] == null)
+										<td>{{$stock[0]['other_product']}}</td>
 									@endif
-
-									<td>{{$stock['quantity']}}</td>
-   
+									
+									<td>{{$stock[0]['quantity'] }}</td>
+									<td>{{$stock[1]['quantity'] }}</td>
 								
 		                        </tr>
 		                    	@endforeach

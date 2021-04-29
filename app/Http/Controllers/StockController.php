@@ -14,7 +14,9 @@ class StockController extends Controller
      */
     public function index()
     {
-        $stocks = Stock::where('active', true)->get();
+        $stocks = Stock::with('product')->where('active', true)->get();
+        $stocks = $stocks->groupBy('product_id');
+        // dd($stocks->toArray());
         return view('admin.list_stock', compact('stocks'));
     }
 
