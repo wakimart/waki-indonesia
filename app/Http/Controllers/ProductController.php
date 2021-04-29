@@ -80,7 +80,7 @@ class ProductController extends Controller
     {
         $url = $request->all();
 
-        $products = Product::where('active', true)->get();
+        $products = Product::all();
 
         if($request->has('search')){
             $products = Product::where( 'name', 'LIKE', '%'.$request->search.'%' )
