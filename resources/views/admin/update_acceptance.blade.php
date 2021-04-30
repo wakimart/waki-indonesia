@@ -1,12 +1,10 @@
 <?php
-    $menu_item_page = "acceptance";
-    $menu_item_second = "list_acceptance_form";
+$menu_item_page = "acceptance";
+$menu_item_second = "list_acceptance_form";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-
 <style type="text/css">
     #intro {
         padding-top: 2em;
@@ -103,8 +101,8 @@
 		}
 	}
 
-	
-	@media (min-width: 768px) { 
+
+	@media (min-width: 768px) {
 		#desktop{
 			display: block;
 		}
@@ -244,7 +242,7 @@
 									@endphp
 								</select>
 								<div class="validation"></div>
-	              			</div> 
+	              			</div>
 	              			<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
 				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address Lengkap" required>{{ $acceptance['address'] }}</textarea>
@@ -269,6 +267,27 @@
 								</select>
 	                			<div class="validation"></div>
 	              			</div>
+                            <div class="form-group">
+                                <label for="product-add-ons">
+                                    Product Add-ons
+                                </label>
+                                <select name="product_addons_id"
+                                    id="product-add-ons"
+                                    class="form-control">
+                                    <option value="" selected disabled>Choose Product</option>
+                                    @foreach ($products as $product)
+                                        <?php
+                                        $selected = "";
+                                        if ($acceptance["product_addons_id"] == $product["id"]) {
+                                            $selected = "selected";
+                                        }
+                                        ?>
+                                        <option value="{{ $product['id'] }}" {{ $selected }}>
+                                            {{ $product['code'] }} - {{ $product['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 	              			<div class="form-group">
 	                			<label for="">Old Product</label>
 	                			<select class="form-control" id="oldproduct_id" name="oldproduct_id" data-msg="Mohon Pilih Produk Lama" required>
@@ -432,7 +451,7 @@
         $("#cso").on("input", function(){
             check_cso($("#cso").val());
 		});
-		
+
 		$("#province").on("change", function(){
             var id = $(this).val();
             $( "#city" ).html("");
@@ -445,8 +464,8 @@
                     	if(value['type'] == "Kabupaten"){
                         	arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
                         }
-                        
-                        if(value['type'] == "Kota"){                            
+
+                        if(value['type'] == "Kota"){
                             arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                         }
                     });
@@ -463,14 +482,14 @@
 				console.log(result);
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
-                    $.each( result, function( key, value ) {                            
+                    $.each( result, function( key, value ) {
                         arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
                     });
                     $( "#subDistrict" ).append(arrSubDistsrict);
                 }
             });
 		});
-		
+
         function check_cso(code) {
         	$.get( '{{route("fetchCso")}}', { cso_code: code })
             .done(function( result ) {

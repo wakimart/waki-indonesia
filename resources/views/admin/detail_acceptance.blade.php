@@ -1,12 +1,10 @@
 <?php
-	$menu_item_page = "acceptance";
-	$menu_item_second = "list_acceptance_form";
+$menu_item_page = "acceptance";
+$menu_item_second = "list_acceptance_form";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-
 <style type="text/css">
     #intro {
         padding-top: 2em;
@@ -138,7 +136,7 @@
 		}
 	}
 
-	@media (min-width: 768px) { 
+	@media (min-width: 768px) {
 		#desktop{
 			display: block;
 		}
@@ -206,7 +204,7 @@
 											@elseif(strtolower($acceptance['status']) == "rejected")
 												<span class="badge badge-danger">Rejected by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
 											@endif
-										</td>	          						
+										</td>
 										<td>{{ $acceptance['code'] }}</td>
 										<td>
 											{{ date("d/m/Y", strtotime($acceptance['created_at'])) }}
@@ -258,6 +256,10 @@
 										<td>New Product </td>
 										<td>{{ $acceptance->newproduct['code'] }} - {{ $acceptance->newproduct['name'] }}</td>
 									</tr>
+                                    <tr>
+                                        <td>Product Add-ons</td>
+                                        <td>{{ $acceptance->productAddons["code"] }} - {{ $acceptance->productAddons["name"] }}</td>
+                                    </tr>
 									<tr>
 										<td>Old Product </td>
 										@if($acceptance['oldproduct_id'] != null)
@@ -331,7 +333,7 @@
 		    <div class="row">
 		      	<div class="col-12 grid-margin stretch-card">
 		        	<div class="card">
-		          		<div class="card-body">	          			
+		          		<div class="card-body">
 		          			<div class="row justify-content-center">
 		          				<h2>Status Acceptance</h2>
 		          			</div>
@@ -351,7 +353,7 @@
 			<div class="row">
 		      	<div class="col-12 grid-margin stretch-card">
 		        	<div class="card">
-		          		<div class="card-body">	          			
+		          		<div class="card-body">
 		          			<div class="row justify-content-center">
 		          				<h2>Share Acceptance</h2>
 		          			</div>
@@ -379,7 +381,7 @@
 			<div class="row">
 		      	<div class="col-12 grid-margin stretch-card">
 		        	<div class="card">
-		          		<div class="card-body">	          			
+		          		<div class="card-body">
 		          			<div class="row justify-content-center">
 		          				<h2>Acceptance History Log</h2>
 		          			</div>
@@ -417,9 +419,4 @@
 	    @endif
 	</div>
 </div>
-@endsection
-
-@section('script')
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
 @endsection
