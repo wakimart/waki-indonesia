@@ -1043,6 +1043,52 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+                            <div class="form-group" id="group-submission">
+                                <span style="display: block;">SUBMISSION</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-submission">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-submission"
+                                                value="add-submission" />
+                                            Add Submission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-submission">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="browse-submission"
+                                                value="browse-submission" />
+                                            Browse Submission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-submission">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-submission"
+                                                value="edit-submission" />
+                                            Edit Submission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-submission">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-submission"
+                                                value="delete-submission" />
+                                            Delete Submission
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <input type="hidden"
                                 name="idUserAdmin"
                                 id="idUserAdmin"

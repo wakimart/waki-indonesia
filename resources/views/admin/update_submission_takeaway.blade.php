@@ -97,7 +97,7 @@ $menu_item_second = "add_submission_takeaway";
 <div class="main-panel">
       <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Add Submission - Takeaway</h3>
+            <h3 class="page-title">Edit Submission - Takeaway</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -109,7 +109,7 @@ $menu_item_second = "add_submission_takeaway";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Add Submission - Takeaway
+                        Edit Submission - Takeaway
                     </li>
                 </ol>
             </nav>
@@ -124,12 +124,20 @@ $menu_item_second = "add_submission_takeaway";
                             class="forms-sample"
                             method="POST"
                             enctype="multipart/form-data"
-                            action="{{ route("store_submission_takeaway") }}">
+                            action="{{ route("update_submission_takeaway") }}">
                             @csrf
+                            <input type="hidden"
+                                name="id"
+                                value="{{ $submission->id }}" />
                             <div class="form-group">
                                 <label>Type Register</label>
-                                <input type="hidden" name="type" value="takeaway" />
-                                <input type="text" readonly disabled value="Takeaway" />
+                                <input type="hidden"
+                                    name="type"
+                                    value="takeaway" />
+                                <input type="text"
+                                    readonly
+                                    disabled
+                                    value="Takeaway" />
                             </div>
 
                             <div class="form-group">
@@ -144,7 +152,8 @@ $menu_item_second = "add_submission_takeaway";
                                     class="form-control"
                                     id="no_member"
                                     name="no_member"
-                                    placeholder="No. Member" />
+                                    value="{{ $submission->no_member }}"
+                                    placeholder="No. member" />
                             </div>
 
                             <div class="form-group">
@@ -154,6 +163,7 @@ $menu_item_second = "add_submission_takeaway";
                                     id="name"
                                     name="name"
                                     placeholder="Name"
+                                    value="{{ $submission->name }}"
                                     required />
                             </div>
 
@@ -163,6 +173,7 @@ $menu_item_second = "add_submission_takeaway";
                                     class="form-control"
                                     id="phone"
                                     name="phone"
+                                    value="{{ $submission->phone }}"
                                     placeholder="Phone Number"
                                     required />
                             </div>
@@ -181,10 +192,16 @@ $menu_item_second = "add_submission_takeaway";
                                     $result = RajaOngkir::FetchProvince();
                                     $result = $result['rajaongkir']['results'];
                                     if (sizeof($result) > 0) {
+                                        $selected = "";
                                         foreach ($result as $value) {
-                                            echo '<option value="'
-                                                . $value['province_id']
-                                                . '">'
+                                            if ($submission->province_id === $value["province_id"]) {
+                                                $selected = "selected";
+                                            }
+
+                                            echo '<option '
+                                                . 'value="' . $value['province_id'] . '" '
+                                                . $selected
+                                                . '>'
                                                 . $value['province']
                                                 . "</option>";
                                         }
@@ -203,6 +220,26 @@ $menu_item_second = "add_submission_takeaway";
                                     <option selected disabled value="" hidden>
                                         Pilihan Kota
                                     </option>
+                                    <?php
+                                    $getCity = RajaOngkir::FetchCity($submission->province_id);
+                                    $getCity = $getCity["rajaongkir"]["results"];
+
+                                    if (!empty($getCity)) {
+                                        foreach ($getCity as $city) {
+                                            $selected = "";
+                                            if ($city->city_id === $submission->city_id) {
+                                                $selected = "selected";
+                                            }
+
+                                            echo '<option '
+                                                . 'value="' . $city->city_id . '" '
+                                                . $selected
+                                                . ">"
+                                                . $city->type . " " . $city->city_name
+                                                . "</option>";
+                                        }
+                                    }
+                                    ?>
                                 </select>
                             </div>
 
@@ -216,6 +253,26 @@ $menu_item_second = "add_submission_takeaway";
                                     <option selected disabled value="" hidden>
                                         Pilihan Kecamatan
                                     </option>
+                                    <?php
+                                    $getDistrict = RajaOngkir::FetchDistrict($submission->city_id);
+                                    $getDistrict =  $getDistrict["rajaongkir"]["results"];
+
+                                    if (!empty($getDistrict)) {
+                                        foreach ($getDistrict as $district) {
+                                            $selected = "";
+                                            if ($district->subdistrict_id === $submission->district_id) {
+                                                $selected = "selected";
+                                            }
+
+                                            echo '<option '
+                                                . 'value="' . $district->subdistrict_id . '" '
+                                                . $selected
+                                                . ">"
+                                                . $district->subdistrict_name
+                                                . "</option>";
+                                        }
+                                    }
+                                    ?>
                                 </select>
                             </div>
 
@@ -226,8 +283,7 @@ $menu_item_second = "add_submission_takeaway";
                                     name="address"
                                     rows="4"
                                     placeholder="Full address"
-                                    required>
-                                </textarea>
+                                    required>{{ $submission->address }}</textarea>
                             </div>
 
                             @for ($j = 0; $j < 2; $j++)
@@ -251,8 +307,15 @@ $menu_item_second = "add_submission_takeaway";
                                                     {{ $j > 0 ? "" : "hidden" }}>
                                                     Choose Promo {{ $j > 0 ? "(optional)" : ""}}
                                                 </option>
-                                                <?php foreach ($promos as $key => $promo): ?>
-                                                    <option value="<?php echo $promo["id"]; ?>">
+                                                <?php foreach ($promos as $promo): ?>
+                                                    <?php
+                                                    $selected = "";
+                                                    if ($promo->id === $submission["promo_" . ($j + 1)]) {
+                                                        $selected = "selected";
+                                                    }
+                                                    ?>
+                                                    <option value="{{ $promo->id }}"
+                                                        {{ $selected }}>
                                                         <?php
                                                         echo $promo->code
                                                             . " - ("
@@ -262,7 +325,22 @@ $menu_item_second = "add_submission_takeaway";
                                                         ?>
                                                     </option>
                                                 <?php endforeach; ?>
-                                                <option value="other">OTHER</option>
+
+                                                <?php
+                                                $isIdPromoNumeric[$j] = true;
+                                                if (!is_numeric($submission["promo_" . ($j + 1)])) {
+                                                    $isIdPromoNumeric = false;
+                                                }
+                                                ?>
+                                                <option value="other"
+                                                    <?php
+                                                    if (!$isIdPromoNumeric) {
+                                                        echo "selected";
+                                                    }
+                                                    ?>
+                                                    >
+                                                    OTHER
+                                                </option>
                                             </select>
                                             <div class="validation"></div>
                                         </div>
@@ -289,11 +367,13 @@ $menu_item_second = "add_submission_takeaway";
                                             <div class="validation"></div>
                                         </div>
 
-                                        <div class="form-group d-none">
+                                        <div class="form-group{{ $isIdPromoNumeric[$j] ? " d-none" : "" }}">
                                             <input type="text"
                                                 class="form-control"
+                                                id="other-{{ $j + 1 }}"
                                                 name="other_{{ $j + 1 }}"
                                                 placeholder="Product Name"
+                                                value="{{ $submission["other_" . ($j + 1)] }}"
                                                 data-msg="Please fill in the product" />
                                             <div class="validation"></div>
                                         </div>
@@ -313,7 +393,14 @@ $menu_item_second = "add_submission_takeaway";
                                     </option>
 
                                     @foreach ($branches as $branch)
-                                        <option value="{{ $branch['id'] }}">
+                                        <?php
+                                        $selected = "";
+                                        if ($branch->code === $submission->branch_code) {
+                                            $selected = "selected";
+                                        }
+                                        ?>
+                                        <option value="{{ $branch['id'] }}"
+                                            {{ $selected }}>
                                             {{ $branch['code'] }} - {{ $branch['name'] }}
                                         </option>
                                     @endforeach
@@ -328,9 +415,12 @@ $menu_item_second = "add_submission_takeaway";
                                     name="cso_id"
                                     id="cso"
                                     placeholder="CSO Code"
-                                    required data-msg="Mohon Isi Kode CSO"
-                                    style="text-transform:uppercase"
-                                    {{ Auth::user()->roles[0]['slug'] == 'cso' ? 'value="' . Auth::user()->cso['code'] . '"' : "" }}
+                                    required
+                                    data-msg="Mohon Isi Kode CSO"
+                                    style="text-transform: uppercase;"
+                                    value="{{ $submission->cso_code }}"
+                                    oninput="check_cso(this)"
+                                    onloadend="check_cso(this)"
                                     {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly" : "" }} />
                                 <div class="validation" id="validation_cso"></div>
                             </div>
@@ -344,25 +434,32 @@ $menu_item_second = "add_submission_takeaway";
                                     class="form-control"
                                     name="nomor_do"
                                     placeholder="Nomor DO"
+                                    value="{{ $submission->no_deliveryorder }}"
                                     required />
                                 <div class="validation"></div>
                             </div>
 
-                            <div class="form-group"
-                                id="ref-do-image">
-                                <label for="do-image">
-                                    Proof DO (image)
-                                </label>
-                                <input type="file"
-                                    id="do-image"
-                                    name="do_image[]"
-                                    class="do-image"
-                                    accept=".jpg, .jpeg, .png"
-                                    multiple />
-                            </div>
+                            @for ($i = 1; $i <= 5; $i++)
+                                <div class="form-group">
+                                    <label for="do-image-{{ $i }}">
+                                        Proof DO (image) - {{ $i }}
+                                    </label>
+                                    <br>
+                                    @if (!empty($submission["image_" . $i]))
+                                        <img class="img-fluid img-thumbnail"
+                                            src="{{ asset("sources/registration/" . $submission["image_" . $i]) }}"
+                                            style="max-height: 300px"
+                                            alt="Image DO {{ $i }}" />
+                                    @endif
+                                    <input type="file"
+                                        id="do-image-{{ $i }}"
+                                        name="do_image_{{ $i }}"
+                                        class="do-image"
+                                        accept=".jpg, .jpeg, .png" />
+                                </div>
+                            @endfor
                             <br>
                             <br>
-
                             <div class="form-group">
                                 <button id="addDeliveryOrder"
                                     type="submit"
@@ -383,12 +480,25 @@ $menu_item_second = "add_submission_takeaway";
 
 @section("script")
 <script type="application/javascript">
-document.addEventListener("DOMContentLoaded", function () {
-    let valid = true;
+function check_cso(e) {
+    const code = e.value;
 
-    $("#cso").on("input", function () {
-        check_cso($("#cso").val());
-    });
+    $.get('{{ route("fetchCso") }}', { cso_code: code })
+        .done(function (result) {
+            if (result['result'] == "true" && result['data'].length > 0) {
+                $('#validation_cso').html('Kode CSO Benar');
+                $('#validation_cso').css('color', 'green');
+                $('#submit').removeAttr('disabled');
+            } else {
+                $('#validation_cso').html('Kode CSO Salah');
+                $('#validation_cso').css('color', 'red');
+                $('#submit').attr('disabled',"");
+            }
+        });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    check_cso(document.getElementById("cso"));
 
     $("#province").on("change", function () {
         const id = $(this).val();
@@ -397,7 +507,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $.get('{{ route("fetchCity", ['province' => ""]) }}/' + id)
             .done(function (result) {
                 result = result['rajaongkir']['results'];
-                let arrCity = "<option selected disabled value=\"\" hidden>Pilihan Kota</option>";
+                let arrCity = '<option selected disabled value="" hidden>Pilih Kota</option>';
 
                 if (result.length > 0) {
                     $.each(result, function (key, value) {
@@ -410,7 +520,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     });
 
-                    $( "#city" ).append(arrCity);
+                    $("#city").append(arrCity);
                 }
             });
     });
@@ -422,7 +532,7 @@ document.addEventListener("DOMContentLoaded", function () {
         $.get('{{ route("fetchDistrict", ['city' => ""]) }}/' + id)
             .done(function (result) {
                 result = result['rajaongkir']['results'];
-                let arrSubDistsrict = '<option selected disabled value="" hidden>Pilihan Kecamatan</option>';
+                let arrSubDistsrict = '<option selected disabled value="" hidden>Pilih Kecamatan</option>';
 
                 if (result.length > 0) {
                     $.each( result, function (key, value) {
@@ -431,27 +541,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             + "</option>";
                     });
 
-                    $( "#district" ).append(arrSubDistsrict);
+                    $("#district").append(arrSubDistsrict);
                 }
             });
     });
-
-    function check_cso(code) {
-        $.get('{{ route("fetchCso") }}', { cso_code: code })
-            .done(function (result) {
-                if (result['result'] == "true" && result['data'].length > 0) {
-                    $('#validation_cso').html('Kode CSO Benar');
-                    $('#validation_cso').css('color', 'green');
-                    $('#submit').removeAttr('disabled');
-                    valid = true;
-                } else {
-                    $('#validation_cso').html('Kode CSO Salah');
-                    $('#validation_cso').css('color', 'red');
-                    $('#submit').attr('disabled',"");
-                    valid = false;
-                }
-            });
-    }
 
     $(".pilihan-product").change(function (e) {
         if ($(this).val() == 'other') {
@@ -460,29 +553,6 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             $(this).parent().next().next().addClass("d-none");
             $(this).parent().next().next().children().removeAttr('required', '');
-        }
-    });
-
-    $("#addDeliveryOrder").click(function () {
-        const numberOfImage = parseInt($("#do-image").get(0).files.length);
-
-        if (numberOfImage > 2) {
-            $("form").submit(function (e) {
-                e.preventDefault();
-            });
-
-            alert("Gambar maksimal hanya 2.");
-        } else if (numberOfImage === 0) {
-            $("form").submit(function (e) {
-                e.preventDefault();
-            });
-
-            alert("Gambar harus ada, minimal 1.");
-        } else if (numberOfImage >= 1 && numberOfImage <= 2) {
-            const inputArray = ["name", "phone", "province", ];
-            $("form").submit(function (e) {
-                e.currentTarget.submit();
-            });
         }
     });
 }, false);

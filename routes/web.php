@@ -610,9 +610,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
         // Create submission form page
-        Route::get("/", "SubmissionController@create")
-            ->name("add_submission_form");
-
         Route::get("/mgm", "SubmissionController@createMGM")
             ->name("add_submission_mgm");
 
@@ -623,9 +620,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("add_submission_takeaway");
 
         // Process new submission form
-        Route::post("/", "SubmissionController@store")
-            ->name("store_submission_form");
-
         Route::post("/mgm", "SubmissionController@storeMGM")
             ->name("store_submission_mgm");
 
@@ -648,8 +642,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("edit_submission_form");
 
         // Process submission form edit
-        Route::post("/update/", "SubmissionController@update")
-            ->name("update_submission_form");
+        Route::post("/update/mgm", "SubmissionController@updateMGM")
+            ->name("update_submission_mgm");
+
+        Route::post("/update/referensi", "SubmissionController@updateReferensi")
+            ->name("update_submission_referensi");
+
+        Route::post("/update/takeaway", "SubmissionController@updateTakeaway")
+            ->name("update_submission_takeaway");
 
         // Process submission form delete
         Route::post("/delete/", "SubmissionController@destroy")
@@ -657,6 +657,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(["prefix" => "reference", "middleware" => "auth"], function () {
+        Route::post("/mgm", "ReferenceController@storeReferenceMGM")
+            ->name("store_reference_mgm");
+
+        Route::post("/referensi", "ReferenceController@storeReferensi")
+            ->name("store_reference_referensi");
+
         // List reference
         Route::get("/list", "ReferenceController@index")
             ->name("list_reference");
@@ -664,6 +670,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Update reference
         Route::post("/update", "ReferenceController@update")
             ->name("update_reference");
+
+        Route::post("/update/mgm", "ReferenceController@updateReferenceMGM")
+            ->name("update_reference_mgm");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {

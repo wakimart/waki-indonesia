@@ -37,14 +37,14 @@ $menu_item_second = "detail_submission_form";
         margin-bottom: 0;
     }
 
-	.table-responsive table .form-control.error {
-		border-color: #f50000;
+    .table-responsive table .form-control.error {
+        border-color: #f50000;
         border: 1px solid red;
-	}
+    }
 
-	.table-responsive table td .save {
-		display: none;
-	}
+    .table-responsive table td .save {
+        display: none;
+    }
 
     table thead {
         background-color: #8080801a;
@@ -73,7 +73,6 @@ $menu_item_second = "detail_submission_form";
     select.form-control {
         color: black !important;
     }
-
 </style>
 @endsection
 
@@ -91,7 +90,7 @@ $menu_item_second = "detail_submission_form";
                     </thead>
                     <tr>
                         <td class="right">
-                            {{ date("d/m/Y H:i:s", strtotime($deliveryOrder['created_at'])) }}
+                            {{ date("d/m/Y H:i:s", strtotime($submission['created_at'])) }}
                         </td>
                     </tr>
                 </table>
@@ -102,29 +101,29 @@ $menu_item_second = "detail_submission_form";
                     </thead>
                     <tr>
                         <td>Member Code: </td>
-                        <td>{{ $deliveryOrder['no_member'] }}</td>
+                        <td>{{ $submission['no_member'] }}</td>
                     </tr>
                     <tr>
                         <td>Name: </td>
-                        <td>{{ $deliveryOrder['name'] }}</td>
+                        <td>{{ $submission['name'] }}</td>
                     </tr>
                     <tr>
                         <td>Phone Number: </td>
-                        <td>{{ $deliveryOrder['phone'] }}</td>
+                        <td>{{ $submission['phone'] }}</td>
                     </tr>
                     <tr>
                         <td>Address: </td>
-                        <td>{{ $deliveryOrder['address'] }}</td>
+                        <td>{{ $submission['address'] }}</td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
                             <?php
-                            echo $deliveryOrder['district'][0]['province'];
+                            echo $submission['district'][0]['province'];
                             echo ", ";
-                            echo $deliveryOrder['district'][0]['kota_kab'];
+                            echo $submission['district'][0]['kota_kab'];
                             echo ", ";
-                            echo $deliveryOrder['district'][0]['subdistrict_name'];
+                            echo $submission['district'][0]['subdistrict_name'];
                             ?>
                         </td>
                     </tr>
@@ -365,18 +364,18 @@ $menu_item_second = "detail_submission_form";
                         <td>Change</td>
                         <td>Time</td>
                     </thead>
-                    @if ($historyUpdateDeliveryOrder !== null)
-                        @foreach ($historyUpdateDeliveryOrder as $key => $historyUpdateDeliveryOrder)
+                    @if ($historySubmission !== null)
+                        @foreach ($historySubmission as $key => $historySubmission)
                             <tr>
                                 <td class="center">{{ $key + 1 }}</td>
                                 <td class="center">
-                                    {{ $historyUpdateDeliveryOrder->method }}
+                                    {{ $historySubmission->method }}
                                 </td>
                                 <td class="center">
-                                    {{ $historyUpdateDeliveryOrder->name }}
+                                    {{ $historySubmission->name }}
                                 </td>
                                 <?php
-                                $dataChange = json_decode($historyUpdateDeliveryOrder->meta, true);
+                                $dataChange = json_decode($historySubmission->meta, true);
                                 ?>
                                 <td>
                                     @foreach ($dataChange['dataChange'] as $key => $value)
@@ -385,7 +384,7 @@ $menu_item_second = "detail_submission_form";
                                     @endforeach
                                 </td>
                                 <td class="center">
-                                    {{ date("d/m/Y H:i:s", strtotime($historyUpdateDeliveryOrder->created_at)) }}
+                                    {{ date("d/m/Y H:i:s", strtotime($historySubmission->created_at)) }}
                                 </td>
                             </tr>
                         @endforeach
