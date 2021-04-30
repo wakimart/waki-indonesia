@@ -28,7 +28,23 @@ class ReferenceController extends Controller
         $url = $request->all();
 
         // Query dari tabel references, dan menampilkan 10 data per halaman
-        $references = Reference::all()->paginate(10);
+        if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
+            $arrbranches = [];
+            foreach (Auth::user()->listBranches() as $value) {
+                array_push($arrbranches, $value['id']);
+            }
+            $references = Reference::WhereIn('submissions.branch_id', $arrbranches)
+                            ->leftjoin('submissions', 'references.submission_id', '=', 'submissions.id');
+        }
+        else if(Auth::user()->roles[0]['slug'] == 'cso'){
+            $references = Reference::where('submissions.cso_id', Auth::user()->cso['id'])
+                            ->leftjoin('submissions', 'references.submission_id', '=', 'submissions.id');
+        }
+        else{
+            $references = Reference::all();
+        }
+
+        $references = $references->paginate(10);
 
         return view("admin.list_reference", compact("references", "url"));
     }
