@@ -28,19 +28,20 @@ class ReferenceController extends Controller
         $url = $request->all();
 
         // Query dari tabel references, dan menampilkan 10 data per halaman
-        if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
+        if (
+            Auth::user()->roles[0]['slug'] === 'branch'
+            || Auth::user()->roles[0]['slug'] === 'area-manager'
+        ) {
             $arrbranches = [];
             foreach (Auth::user()->listBranches() as $value) {
-                array_push($arrbranches, $value['id']);
+                $arrbranches[] = $value['id'];
             }
-            $references = Reference::WhereIn('submissions.branch_id', $arrbranches)
-                            ->leftjoin('submissions', 'references.submission_id', '=', 'submissions.id');
-        }
-        else if(Auth::user()->roles[0]['slug'] == 'cso'){
+            $references = Reference::whereIn('submissions.branch_id', $arrbranches)
+                ->leftjoin('submissions', 'references.submission_id', '=', 'submissions.id');
+        } else if (Auth::user()->roles[0]['slug'] === 'cso') {
             $references = Reference::where('submissions.cso_id', Auth::user()->cso['id'])
-                            ->leftjoin('submissions', 'references.submission_id', '=', 'submissions.id');
-        }
-        else{
+                ->leftjoin('submissions', 'references.submission_id', '=', 'submissions.id');
+        } else {
             $references = Reference::all();
         }
 
@@ -63,7 +64,7 @@ class ReferenceController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
      */
     public function storeReferensi(Request $request)
     {
@@ -212,16 +213,14 @@ class ReferenceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request)
     {
         if (!empty($request->id)) {
             $user = Auth::user();
 
-            $returnValue = $this->updateReference($request, $user["id"]);
-
-            return $returnValue;
+            return $this->updateReference($request, $user["id"]);
         }
 
         return response()->json([
@@ -290,7 +289,7 @@ class ReferenceController extends Controller
         }
     }
 
-    public function updateReferenceMGM(Request $request, int $userId)
+    public function updateReferenceMGM(Request $request)
     {
         DB::beginTransaction();
 
@@ -342,7 +341,7 @@ class ReferenceController extends Controller
                 if ($request->hasFile($imageInput)) {
                     $fileName = ((string)time())
                     . "_"
-                    . $userId
+                    . Auth::user()["id"]
                     . "_"
                     . $i
                     . "."
@@ -356,6 +355,8 @@ class ReferenceController extends Controller
             $referenceImage->save();
 
             DB::commit();
+
+            return redirect($request->url)->with("success", "Data referensi berhasil dimasukkan.");
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -419,7 +420,121 @@ class ReferenceController extends Controller
 
     public function addApi(Request $request)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            if ($request->type === "mgm") {
+                $reference = new Reference();
+                $reference->fill($request->only(
+                    "submission_id",
+                    "name",
+                    "age",
+                    "phone",
+                    "province",
+                    "city",
+                ));
+                $reference->save();
+
+                $referencePromo = new ReferencePromo();
+                $referencePromo->reference_id = $reference->id;
+                if (isset($request->promo_1)) {
+                    if ($request->promo_1 !== "other") {
+                        $referencePromo->promo_1 = $request->promo_1;
+                    }
+                }
+
+                if (isset($request->promo_2)) {
+                    if ($request->promo_2 !== "other") {
+                        $referencePromo->promo_2 = $request->promo_2;
+                    }
+                }
+
+                $referencePromo->qty_1 = $request->qty_1;
+
+                if (
+                    isset($request->promo_2)
+                    || isset($request->other_2)
+                ) {
+                    if (
+                        !empty($request->promo_2)
+                        || !empty($request->other_2)
+                    ) {
+                        $referencePromo->qty_2 = $request->qty_2;
+                    }
+                }
+
+                $referencePromo->other_1 = $request->other_1;
+                $referencePromo->other_2 = $request->other_2;
+                $referencePromo->save();
+
+                $path = "sources/registration";
+                $referenceImage = new ReferenceImage();
+                $referenceImage->reference_id = $reference->id;
+                $userId = Auth::user()["id"];
+                for ($i = 1; $i <= 2; $i++) {
+                    $imageInput = "image_" . $i;
+                    if ($request->hasFile($imageInput)) {
+                        $fileName = ((string)time())
+                            . "_"
+                            . $userId
+                            . "_"
+                            . $i
+                            . "."
+                            . $request->file($imageInput)->getClientOriginalExtension();
+
+                        $request->file($imageInput)->move($path, $fileName);
+
+                        $referenceImage["image_" . $i] = $fileName;
+                    }
+                }
+                $referenceImage->save();
+
+                DB::commit();
+
+                return response()->json([
+                    "result" => 1,
+                    "reference" => $reference,
+                    "referencePromo" => $referencePromo,
+                    "referenceImage" => $referenceImage,
+                ]);
+            }
+
+            if ($request->type === "referensi") {
+                $reference = new Reference();
+                $reference->fill($request->only(
+                    "name",
+                    "age",
+                    "phone",
+                    "province",
+                    "city",
+                ));
+                $reference->save();
+
+                $referenceSouvenir = new ReferenceSouvenir();
+                $reference->reference_id = $reference->id;
+                $referenceSouvenir->fill($request->only(
+                    "souvenir_id",
+                    "link_hs",
+                    "status",
+                ));
+                $referenceSouvenir->save();
+
+                DB::commit();
+
+                return response()->json([
+                    "result" => 1,
+                    "reference" => $reference,
+                    "referenceSouvenir" => $referenceSouvenir,
+                ]);
+            }
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -468,14 +583,95 @@ class ReferenceController extends Controller
     public function updateApi(Request $request)
     {
         if (!empty($request->id) && !empty($request->user_id)) {
-            $returnValue = $this->updateReference($request, (int) $request->user_id);
-
-            return $returnValue;
+            return $this->updateReference($request, (int) $request->user_id);
         }
 
         return response()->json([
             "result" => 0,
             "error" => "Data tidak ditemukan.",
         ], 400);
+    }
+
+    public function updateMGMApi(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $reference = Reference::find($request->id);
+            $reference->fill($request->only(
+                "name",
+                "age",
+                "phone",
+                "province",
+                "city",
+            ));
+            $reference->save();
+
+            $referencePromo = ReferencePromo::where("reference_id", $request->id)->first();
+            if (isset($request->promo_1)) {
+                if ($request->promo_1 !== "other") {
+                    $referencePromo->promo_1 = $request->promo_1;
+                }
+            }
+
+            if (isset($request->promo_2)) {
+                if ($request->promo_2 !== "other") {
+                    $referencePromo->promo_2 = $request->promo_2;
+                }
+            }
+
+            $referencePromo->qty_1 = $request->qty_1;
+
+            if (
+                isset($request->promo_2)
+                || isset($request->other_2)
+            ) {
+                if (
+                    !empty($request->promo_2)
+                    || !empty($request->other_2)
+                ) {
+                    $referencePromo->qty_2 = $request->qty_2;
+                }
+            }
+
+            $referencePromo->other_1 = $request->other_1;
+            $referencePromo->other_2 = $request->other_2;
+
+            $path = "sources/registration";
+            $referenceImage = ReferenceImage::where("reference_id", $request->id)->first();
+            for ($i = 1; $i <= 2; $i++) {
+                $imageInput = "image_" . $i;
+                if ($request->hasFile($imageInput)) {
+                    $fileName = ((string)time())
+                    . "_"
+                    . $request->user_id
+                    . "_"
+                    . $i
+                    . "."
+                    . $request->file($imageInput)->getClientOriginalExtension();
+
+                    $request->file($imageInput)->move($path, $fileName);
+
+                    $referenceImage["image_" . $i] = $fileName;
+                }
+            }
+            $referenceImage->save();
+
+            DB::commit();
+
+            return response()->json([
+                "result" => 1,
+                "reference" => $reference,
+                "referencePromo" => $referencePromo,
+                "referenceImage" => $referenceImage,
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 500);
+        }
     }
 }
