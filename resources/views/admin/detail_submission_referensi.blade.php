@@ -5,12 +5,12 @@ use App\Promo;
 $menu_item_page = "submission";
 $menu_item_second = "detail_submission_form";
 
-$specialPermission = false;
+$specialPermission = true;
 if (
     Auth::user()->roles[0]->slug === "branch"
     || Auth::user()->roles[0]->slug === "cso"
 ) {
-    $permission = false;
+    $specialPermission = false;
 }
 ?>
 @extends('admin.layouts.template')
