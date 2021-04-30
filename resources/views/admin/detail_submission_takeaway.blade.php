@@ -170,7 +170,7 @@ $menu_item_second = "detail_submission_form";
                         <td>Proof (image)</td>
                     </thead>
                     <tr>
-                        <td class="center">{{ $submission->no_member }}</td>
+                        <td class="center">{{ $submission->submissionDeliveryorder['no_deliveryorder'] }}</td>
                         <td class="center">
                             @for ($i = 1; $i <= 5; $i++)
                                 @if (!empty($submission["image_" . $i]))

@@ -45,4 +45,9 @@ class Submission extends Model
     {
         return $this->belongsTo("App\RajaOngkir_Subdistrict", "district");
     }
+
+    public function submissionDeliveryorder()
+    {
+        return $this->hasOne("App\SubmissionDeliveryorder");
+    }
 }
