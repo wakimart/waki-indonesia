@@ -224,8 +224,7 @@ if (
                                     {{ $reference->souvenir_name }}
                                 </td>
                                 <td class="center"
-                                    id="link-hs_{{ $key }}"
-                                    data-permission="{{ $specialPermission }}">
+                                    id="link-hs_{{ $key }}">
                                     <?php if (!empty($reference->link_hs)): ?>
                                         <a id="link-hs-href_{{ $key }}"
                                             href="{{ $reference->link_hs }}"
@@ -683,6 +682,16 @@ function clickEdit(e) {
 
     setCity(document.getElementById("edit-province_" + refSeq));
 
+    document.getElementById("link-hs_" + refSeq).innerHTML = `<input type="url" `
+        + `id="edit-link-hs_${refSeq}" `
+        + INPUT_CLASS
+        + FORM_ATTR
+        + `name="link_hs" `
+        + `pattern="https://.*" `
+        + `maxlength="191" `
+        + `value="${linkHS()}" `
+        + `placeholder="Link HS" />`;
+
     if (permission) {
         document.getElementById("souvenir_" + refSeq).innerHTML = `<select `
             + `id="edit-souvenir_${refSeq}" `
@@ -693,16 +702,6 @@ function clickEdit(e) {
             + souvenirOption
             + `</select>`;
         document.getElementById("edit-souvenir_" + refSeq).value = souvenir;
-
-        document.getElementById("link-hs_" + refSeq).innerHTML = `<input type="url" `
-            + `id="edit-link-hs_${refSeq}" `
-            + INPUT_CLASS
-            + FORM_ATTR
-            + `name="link_hs" `
-            + `pattern="https://.*" `
-            + `maxlength="191" `
-            + `value="${linkHS()}" `
-            + `placeholder="Link HS" />`;
 
         document.getElementById("status_" + refSeq).innerHTML = `<select `
             + `id="edit-status_${refSeq}" `
