@@ -259,8 +259,7 @@ if (
             <div class="col-md-12 center">
                 <button class="btn btn-gradient-primary mt-2"
                     data-toggle="modal"
-                    data-target="#edit-reference"
-                    onclick="clickAdd()">
+                    data-target="#edit-reference">
                     Add Reference - Sehat Bersama WAKi
                 </button>
             </div>
@@ -370,7 +369,7 @@ if (
                         <label for="edit-province">Province</label>
                         <select class="form-control"
                             id="edit-province"
-                            onchange="setCity(this)"
+                            onchange="setCityAdd(this)"
                             name="province"
                             required>
                             <option selected disabled>
@@ -568,6 +567,48 @@ function setCity(e) {
 
             document.getElementById("edit-city_" + refSeq).innerHTML = arrCity[0] + arrCity[1];
             document.getElementById("edit-city_" + refSeq).value = document.getElementById("city_" + refSeq).getAttribute("data-city");
+        }
+    }).catch(function(error) {
+        console.error(error);
+    });
+}
+
+function setCityAdd(e) {
+    fetch(
+        '<?php echo route("fetchCity", ["province" => ""]); ?>/' + e.value,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const result = response["rajaongkir"]["results"];
+
+        const arrCity = [];
+        arrCity[0] = '<option disabled value="">Pilihan Kabupaten</option>';
+        arrCity[1] = '<option disabled value="">Pilihan Kota</option>';
+
+        if (result.length > 0) {
+            result.forEach(function (currentValue) {
+                if (currentValue["type"] === "Kabupaten") {
+                    arrCity[0] += `<option value="${currentValue["city_id"]}">`
+                        + `${currentValue['type']} ${currentValue['city_name']}`
+                        + `</option>`;
+                } else {
+                    arrCity[1] += `<option value="${currentValue['city_id']}">`
+                        + `${currentValue['type']} ${currentValue['city_name']}`
+                        + `</option>`;
+                }
+            });
+
+            document.getElementById("edit-city").innerHTML = arrCity[0] + arrCity[1];
         }
     }).catch(function(error) {
         console.error(error);
