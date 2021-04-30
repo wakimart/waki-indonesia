@@ -174,13 +174,13 @@ class SubmissionController extends Controller
                     $referencePromo = new ReferencePromo();
                     $referencePromo->reference_id = $reference->id;
 
-                    if (isset($data["promo_1"][$i])) {
+                    if (isset($data["promo_1"])){
                         if ($data["promo_1"][$i] !== "other") {
                             $referencePromo->promo_1 = $data["promo_1"][$i];
                         }
                     }
 
-                    if (isset($data["promo_2"][$i])) {
+                    if (isset($data["promo_2"])){
                         if ($data["promo_2"][$i] !== "other") {
                             $referencePromo->promo_2 = $data["promo_2"][$i];
                         }
@@ -188,14 +188,8 @@ class SubmissionController extends Controller
 
                     $referencePromo->qty_1 = $data["qty_1"][$i];
 
-                    if (
-                        isset($data["promo_2"][$i])
-                        || isset($data["other_2"][$i])
-                    ) {
-                        if (
-                            !empty($data["promo_2"][$i])
-                            || !empty($data["other_2"][$i])
-                        ) {
+                    if (isset($data["promo_2"])){
+                        if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
                             $referencePromo->qty_2 = $data["qty_2"][$i];
                         }
                     }
