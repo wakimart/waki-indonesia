@@ -78,7 +78,6 @@ $menu_item_second = "list_promo";
 				                                <td>
                                                     {{ $ProductPromo['qty'] }}
                                                 </td>
-				                                @php break; @endphp
 				                            @endforeach
 
 				                            <td rowspan="{{ $totalProduct }}">

@@ -3,27 +3,71 @@ $menu_item_page = "acceptance";
 $menu_item_second = "list_acceptance_form";
 ?>
 @extends('admin.layouts.template')
+@section('style')
+<style type="text/css">
+
+	/*-- mobile --*/
+	@media (max-width: 768px){
+
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+	}
+
+	@media (min-width: 768px){
+		#desktop{
+			display: block;
+		}
+
+		#mobile{
+			display: none;
+		}
+	}
+
+</style>
+@endsection
+
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
-        <div class="page-header">
-            <h3 class="page-title">Acceptances List</h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a data-toggle="collapse"
-                            href="#"
-                            aria-expanded="false"
-                            aria-controls="acceptance-dd">
-                            Acceptances
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active"
-                        aria-current="page">
-                        Acceptances List
-                    </li>
-                </ol>
-            </nav>
+        <!-- header mobile -->
+		<div id="mobile">
+			<h3 class="text-center">Acceptances List</h3>
+			<div class="row">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="acceptance-dd">Acceptances</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Acceptances List</li>
+					</ol>
+				</nav>
+		  	</div>
+	  	</div>
+
+		<!-- header desktop -->
+        <div id="desktop">
+            <div class="page-header">
+                <h3 class="page-title">Acceptances List</h3>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a data-toggle="collapse"
+                                href="#"
+                                aria-expanded="false"
+                                aria-controls="acceptance-dd">
+                                Acceptances
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active"
+                            aria-current="page">
+                            Acceptances List
+                        </li>
+                    </ol>
+                </nav>
+            </div>
         </div>
         <div class="col-12" style="padding: 0;">
             <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">

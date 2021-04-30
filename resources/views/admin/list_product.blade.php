@@ -17,6 +17,7 @@ $menu_item_second = "list_product";
     .table th img, .table td img {
         border-radius: 0% !important;
     }
+
 </style>
 @endsection
 
@@ -43,6 +44,23 @@ $menu_item_second = "list_product";
         </div>
 
         <div class="row">
+
+            <div class="col-12" style="margin-bottom: 0;">
+                    <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                        <div class="form-group">
+                            <label for="">Search By Name and Code</label>
+                            <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6" style="padding: 0; display: inline-block">
+                        <label for=""></label>
+                        <div class="form-group">
+                            <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+                        </div>
+                    </div>
+            </div>
+
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
@@ -51,7 +69,7 @@ $menu_item_second = "list_product";
                         </h5>
                         <div class="table-responsive"
                             style="border: 1px solid #ebedf2;">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="myTable">
                                 <thead>
                                     <tr>
                                         <th class="center">No.</th>
@@ -177,5 +195,24 @@ $menu_item_second = "list_product";
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
+ 
+$(document).ready(function (e) {
+    $("#btn-filter").click(function (e) {
+        var urlParamArray = new Array();
+        var urlParamStr = "";
+        if($('#search').val() != ""){
+            urlParamArray.push("search=" + $('#search').val());
+        }
+        for (var i = 0; i < urlParamArray.length; i++) {
+            if (i === 0) {
+                urlParamStr += "?" + urlParamArray[i]
+            } else {
+                urlParamStr += "&" + urlParamArray[i]
+            }
+        }
+        window.location.href = "{{route('list_product')}}" + urlParamStr;
+    });
+}); 
+
 </script>
 @endsection

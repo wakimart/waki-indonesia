@@ -76,6 +76,65 @@
     .nav-tabs li a {
       color: #999;
     }
+
+	/*-- mobile --*/
+	@media (max-width: 768px){
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+
+		#page-title-desk{
+			display: none;
+		}
+
+		#mobile .filter{
+			padding-top: 15px;
+		}
+
+		.page-header h5{
+			font-size: 1rem;
+		}
+		.breadcrumb {
+			padding: 0.56rem 0.7rem;
+			text-align: right;
+		}
+
+		.breadcrumb-item + .breadcrumb-item {
+			padding-left: 0.5rem; 
+		}
+	}
+
+	@media (min-width: 768px){
+		#desktop{
+			display: block;
+		}
+
+		#page-title-mob{
+			display: none;
+		}
+
+		#mobile{
+			display: none;
+		}
+	}
+
+	@media (min-width: 410px){
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+
+		#mobile .filter{
+			padding-top: 0;
+		}
+	}
 </style>
 @endsection
 
@@ -87,32 +146,70 @@
 </style>
 <div class="main-panel">
 	<div class="content-wrapper">
-		<div class="page-header">
-  			<h3 class="page-title">List Product Service</h3>
-  			<nav aria-label="breadcrumb">
-    			<ol class="breadcrumb">
-      				<li class="breadcrumb-item"><a data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">Technician</a></li>
-      				<li class="breadcrumb-item active" aria-current="page">List Product Service</li>
-    			</ol>
-  			</nav>
+		<!-- page header desktop -->
+		<div id="page-title-desk">
+			<div class="page-header">
+				<h3 class="page-title">List Product Service</h3>
+				<nav aria-label="breadcrumb">
+				<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">Technician</a></li>
+						<li class="breadcrumb-item active" aria-current="page">List Product Service</li>
+				</ol>
+				</nav>
+			</div>
+		</div>
+
+		<!-- page header & filter mobile -->
+		<div id="mobile">
+			<div id="page-title-mob">
+				<h3 class="text-center">List Product Service</h3>
+				<div class="row">
+					<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">Technician</a></li>
+							<li class="breadcrumb-item active" aria-current="page">List Product Service</li>
+					</ol>
+					</nav>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 grid-margin stretch-card">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label for="">Search By Name, Code, and Phone</label>
+							<input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
+							<div class="validation"></div>
+						</div>
+					</div>
+					<div class="col-xs-12 filter">
+						<label for=""></label>
+							<div class="form-group">
+								<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" style="font-size: 0.8em; padding: 1.1em;" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+							</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		
-		<div class="row">
-			<div class="col-12 grid-margin stretch-card">
-				<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-                    <div class="form-group">
-						<label for="">Search By Name, Code, and Phone</label>
-                        <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
-                        <div class="validation"></div>
-                    </div>
-				</div>
-
-				<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-						<label for=""></label>
+		<!-- filter desktop -->
+		<div id="desktop">
+			<div class="row">
+				<div class="col-12 grid-margin stretch-card">
+					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
 						<div class="form-group">
-							<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-					  	</div>
+							<label for="">Search By Name, Code, and Phone</label>
+							<input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
+							<div class="validation"></div>
+						</div>
+					</div>
+
+					<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+						<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+							<label for=""></label>
+							<div class="form-group">
+								<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

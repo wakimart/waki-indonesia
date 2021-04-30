@@ -27,21 +27,111 @@
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
+
+	.select-sparepart{
+		width: 72%; 
+		display: inline-block;
+	}
+
+	.qty{
+		width: 16%; 
+		display: inline-block;
+	}
+
+	.btn-minus{
+		display: inline-block; 
+		float: right;
+	}
+
+	.btn-plus{
+		display: inline-block; 
+		float: right;
+	}
+
+	.issue label{
+		width: 25em;
+	}
+
+		/*-- mobile --*/
+	@media (max-width: 768px){
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+		.select-sparepart{
+			width: 100%; 
+			display: block;
+		}
+
+		.qty{
+			width: 100%;
+			display: block;
+		}
+
+		.btn-minus{
+			display: block;
+			margin-bottom: 1em; 
+		}
+
+		.btn-plus{
+			display: block;
+			margin-bottom: 1em; 
+		}
+
+		.issue{
+			padding-top: 2em;
+		}
+
+		.btn-save{
+			margin-bottom: 1em;
+		}
+	}
+
+	@media (min-width: 768px){
+		#desktop{
+			display: block;
+		}
+
+		#mobile{
+			display: none;
+		}
+	}
+
+	
 </style>
 @endsection
 
 @section('content')
 <div class="main-panel">
   	<div class="content-wrapper">
-    	<div class="page-header">
-      		<h3 class="page-title">Update Product Service</h3>
-      		<nav aria-label="breadcrumb">
-	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">Technician</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Update Product Service</li>
-	        	</ol>
-      		</nav>
-    	</div>
+		<!-- header mobile -->
+		<div id="mobile">
+			<h3 class="text-center">Update Product Service</h3>
+			<div class="row">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">Technician</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Update Product Service</li>
+					</ol>
+				</nav>
+		  	</div>
+	  	</div>
+
+		<!-- header desktop -->
+		<div id="desktop">
+			<div class="page-header">
+				<h3 class="page-title">Update Product Service</h3>
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">Technician</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Update Product Service</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
@@ -91,7 +181,7 @@
 			                    	@foreach($arr_sparepart as $index => $item)
 			                    	@php $counterSparepart++; @endphp
 			                    	<div id="detailSparepart-{{$key}}">
-			                    		<div class="form-group" style="width: 72%; display: inline-block;">
+			                    		<div class="form-group select-sparepart">
 					                        <select id="idSparepart-{{$index}}-{{$key}}" class="form-control pilihan-sparepart" data-msg="Mohon Pilih Product" required>
 					                            <option selected disabled value="">Choose SPAREPART</option>
 				                            	@foreach($spareparts as $sparepart)
@@ -105,15 +195,15 @@
 					                        </select>
 					                        <div class="validation"></div>
 					                    </div>
-					                    <div class="form-group" style="width: 16%; display: inline-block;">
+					                    <div class="form-group qty">
 					                        <input id="idQtySparepart-{{$index}}-{{$key}}" type="number" class="form-control" placeholder="Qty" value="{{$arr_sparepart[$index]->qty}}">
 					                        <div class="validation"></div>
 					                    </div>
 
 					                    @if($index > 0)
-					                    	<div class='text-center' style='display: inline-block; float: right;'><button class='remove_sparepart btn btn-gradient-danger' type='button' title='Remove Sparepart' style='padding: 0.4em 0.7em;'><i class='mdi mdi-minus'></i></button></div>
+					                    	<div class='text-center btn-minus'><button class='remove_sparepart btn btn-gradient-danger mr-2' type='button' title='Remove Sparepart' style='padding: 0.4em 0.7em;'><i class='mdi mdi-minus'></i></button></div>
 					                    @else
-					                    	<div class="text-center" style="display: inline-block; float: right;"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>	
+					                    	<div class="text-center btn-plus"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>	
 					                    @endif
 					                    
 					                    <div class="form-group d-none" style="width: 72%; display: inline-block;">
@@ -132,7 +222,7 @@
 			                    @php $counterSparepart++; @endphp
 		                    	<div id="container-sparepart-{{$key}}">
 			                    	<div id="detailSparepart-{{$key}}">
-			                    		<div class="form-group" style="width: 72%; display: inline-block;">
+			                    		<div class="form-group select-sparepart">
 					                        <select id="idSparepart-0-{{$key}}" class="form-control pilihan-sparepart" data-msg="Mohon Pilih Product" required>
 					                            <option selected disabled value="">Choose SPAREPART</option>
 					                            @foreach($spareparts as $sparepart)
@@ -142,12 +232,12 @@
 					                        </select>
 					                        <div class="validation"></div>
 					                    </div>
-					                    <div class="form-group" style="width: 16%; display: inline-block;">
+					                    <div class="form-group qty">
 					                        <input id="idQtySparepart-0-{{$key}}" type="number" class="form-control" placeholder="Qty">
 					                        <div class="validation"></div>
 					                    </div>
-					                    <div class="text-center" style="display: inline-block; float: right;"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
-
+					                    <div class="text-center btn-plus"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
+					                    
 					                    <div class="form-group d-none" style="width: 72%; display: inline-block;">
 				                            <input type="text" class="form-control" id="sparepart_other-0-{{$key}}" placeholder="Sparepart Name" data-msg="Please fill in the product"/>
 				                            <div class="validation"></div>
@@ -172,16 +262,16 @@
 									$cbx_issues = ["Kerusakan Listrik", "Bersuara/Bergetar", "Heating", "Jatuh, Pecah, Unit Lepas", "Kerusakan Mekanik", "Lainnya..."];
 			                    @endphp
 
-			                    <div class="form-group">
+			                    <div class="form-group issue">
 				                	<label for="">Issues</label>
 				                	<br>
 				                	@for($i = 0; $i < count($cbx_issues); $i++)
 			                			@if(in_array($cbx_issues[$i], $issues[0]->issues))
-				                			<label style="margin-right: 20%;" class="checkbox-inline">
+				                			<label class="checkbox-inline">
 										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true" disabled="">{{$cbx_issues[$i]}}
 										    </label>
 										@else
-											<label style="margin-right: 20%;" class="checkbox-inline">
+											<label class="checkbox-inline">
 										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" disabled="">{{$cbx_issues[$i]}}
 										    </label>
 			                			@endif
@@ -217,7 +307,7 @@
 	              						<button id="updateService" type="submit" class="btn btn-gradient-primary mr-2">Process</button>
 	              					@endcan
 	              				@elseif($product_services[0]->service['status'] == "Process")
-	              					<button id="updateService" type="submit" class="btn btn-light">Save</button>
+	              					<button id="updateService" type="submit" class="btn btn-light btn-save mr-2">Save</button>
 	              					@can('change-status-repaired-service')
 	              					<button id="updateServiceRepaired" type="submit" class="btn btn-gradient-primary mr-2 updateServiceRepaired">Repaired</button>
 	              					@endcan
@@ -287,7 +377,7 @@
 			idSparepart++;
 			idQtySparepart++;
 
-			var added_sparepart = "<div id='detailSparepart-"+idSparepart+"'><div class='form-group' style='width: 72%; display: inline-block;'><select id='idSparepart-"+idSparepart+"-"+id_parent+"' class='form-control pilihan-sparepart' name='sparepart[]' data-msg='Mohon Pilih Product' required=''><option selected disabled value=''>Choose SPAREPART</option>@foreach($spareparts as $sparepart)<option value='{{ $sparepart['id'] }}'>{{ $sparepart['name'] }}</option>@endforeach<option value='other'>OTHER</option></select><div class='validation'></div></div><div class='form-group' style='width: 16%; display: inline-block;'><input id='idQtySparepart-"+idQtySparepart+"-"+id_parent+"' type='number' class='form-control' name='sparepart_qty' placeholder='Qty'><div class='validation'></div></div><div class='text-center' style='display: inline-block; float: right;'><button class='remove_sparepart btn btn-gradient-danger' type='button' title='Remove Sparepart' style='padding: 0.4em 0.7em;'><i class='mdi mdi-minus'></i></button></div><div class='form-group d-none' style='width: 72%; display: inline-block;'><input type='text' class='form-control' id='sparepart_other-"+idSparepart+"-"+id_parent+"' placeholder='Sparepart Name' data-msg='Please fill in the product'/><div class='validation'></div></div><div class='form-group d-none' style='width: 25%; display: inline-block;'><input type='number' class='form-control' id='price_other-"+idSparepart+"-"+id_parent+"' placeholder='Price (Rp.)' data-msg='Please fill in the product'/><div class='validation'></div></div></div>";
+			var added_sparepart = "<div id='detailSparepart-"+idSparepart+"'><div class='form-group select-sparepart'><select id='idSparepart-"+idSparepart+"-"+id_parent+"' class='form-control pilihan-sparepart' name='sparepart[]' data-msg='Mohon Pilih Product' required=''><option selected disabled value=''>Choose SPAREPART</option>@foreach($spareparts as $sparepart)<option value='{{ $sparepart['id'] }}'>{{ $sparepart['name'] }}</option>@endforeach<option value='other'>OTHER</option></select><div class='validation'></div></div><div class='form-group qty ml-1'><input id='idQtySparepart-"+idQtySparepart+"-"+id_parent+"' type='number' class='form-control' name='sparepart_qty' placeholder='Qty'><div class='validation'></div></div><div class='text-center btn-minus mr-2'><button class='remove_sparepart btn btn-gradient-danger ' type='button' title='Remove Sparepart' style='padding: 0.4em 0.7em;'><i class='mdi mdi-minus'></i></button></div><div class='form-group d-none' style='width: 72%; display: inline-block;'><input type='text' class='form-control' id='sparepart_other-"+idSparepart+"-"+id_parent+"' placeholder='Sparepart Name' data-msg='Please fill in the product'/><div class='validation'></div></div><div class='form-group d-none' style='width: 25%; display: inline-block;'><input type='number' class='form-control' id='price_other-"+idSparepart+"-"+id_parent+"' placeholder='Price (Rp.)' data-msg='Please fill in the product'/><div class='validation'></div></div></div>";
 
 			$(this).parent().parent().parent().append(added_sparepart);
 		});

@@ -3,27 +3,70 @@ $menu_item_page = "upgrade";
 $menu_item_second = "new_upgrade_form";
 ?>
 @extends('admin.layouts.template')
+@section('style')
+<style type="text/css">
+
+    /*-- mobile --*/
+	@media (max-width: 768px){
+
+        #desktop{
+            display: none;
+        }
+
+        #mobile{
+            display: block;
+        }
+        
+    }
+
+        @media (min-width: 768px) { 
+        #desktop{
+            display: block;
+        }
+
+        #mobile{
+            display: none;
+        }
+    }
+</style>
+@endsection
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
-        <div class="page-header">
-            <h3 class="page-title">New Upgrade List</h3>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a data-toggle="collapse"
-                            href="#"
-                            aria-expanded="false"
-                            aria-controls="upgrade-dd">
-                            Upgrade
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active"
-                        aria-current="page">
-                        New Upgrade List
-                    </li>
-                </ol>
-            </nav>
+         <!-- header mobile -->
+		<div id="mobile">
+			<h3 class="text-center">New Upgrade List</h3>
+			<div class="row">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="upgrade-dd">Upgrade</a></li>
+						<li class="breadcrumb-item active" aria-current="page">New Upgrade List</li>
+					</ol>
+				</nav>
+		  	</div>
+	  	</div>
+
+		<!-- header desktop -->
+        <div id="desktop">
+            <div class="page-header">
+                <h3 class="page-title">New Upgrade List</h3>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a data-toggle="collapse"
+                                href="#"
+                                aria-expanded="false"
+                                aria-controls="upgrade-dd">
+                                Upgrade
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active"
+                            aria-current="page">
+                            New Upgrade List
+                        </li>
+                    </ol>
+                </nav>
+            </div>
         </div>
 
         <div class="col-12 grid-margin stretch-card" style="padding: 0;">
