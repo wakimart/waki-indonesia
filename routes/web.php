@@ -149,8 +149,16 @@ Route::group(['prefix' => 'api-apps'], function () {
 
     // Reference API
     Route::group(["prefix" => "reference"], function () {
+        // Create reference API
+        Route::post("/add/mgm", "ReferenceController@storeReferenceMGM");
+        Route::post("/add/referensi", "ReferenceController@storeReferensi");
+
         // List reference API
         Route::post("list_reference", "ReferenceController@listApi");
+
+        // Update reference API
+        Route::post("/update/mmg", "ReferenceController@updateMGMApi");
+        Route::post("/update/referensi", "ReferenceController@updateApi");
     });
 
     // Promo API
