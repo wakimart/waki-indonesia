@@ -256,6 +256,15 @@ if (
                 </div>
             </div>
 
+            <div class="col-md-12 center">
+                <button class="btn btn-gradient-primary mt-2"
+                    data-toggle="modal"
+                    data-target="#edit-reference"
+                    onclick="clickAdd()">
+                    Add Reference - Sehat Bersama WAKi
+                </button>
+            </div>
+
             @if ($historySubmission->isNotEmpty())
                 <div class="row justify-content-center"
                     style="margin-top: 2em;">
@@ -301,6 +310,149 @@ if (
         <h2>CANNOT FIND SUBMISSION</h2>
     </div>
 @endif
+<div class="modal fade"
+    id="edit-reference"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Edit Reference</h5>
+                <button type="button"
+                    id="edit-close"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-form"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    action="<?php echo route("update_reference"); ?>">
+                    @csrf
+                    <input type="hidden" id="edit-id" name="id" value="" />
+                    <input type="hidden" id="url" name="url" value="{{ url()->full() }}" />
+                    <div class="form-group">
+                        <label for="edit-name">Name</label>
+                        <input type="text"
+                            class="form-control"
+                            id="edit-name"
+                            name="name"
+                            maxlength="191"
+                            value=""
+                            placeholder="Name"
+                            required />
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-age">Age</label>
+                        <input type="number"
+                            class="form-control"
+                            id="edit-age"
+                            name="age"
+                            value=""
+                            placeholder="Age"
+                            required />
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-phone">Phone</label>
+                        <input type="number"
+                            class="form-control"
+                            id="edit-phone"
+                            name="phone"
+                            value=""
+                            placeholder="Phone"
+                            required />
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-province">Province</label>
+                        <select class="form-control"
+                            id="edit-province"
+                            onchange="setCity(this)"
+                            name="province"
+                            required>
+                            <option selected disabled>
+                                Pilih Provinsi
+                            </option>
+                            <?php
+                            $result = RajaOngkir::FetchProvince();
+                            $result = $result['rajaongkir']['results'];
+                            if (sizeof($result) > 0) {
+                                foreach ($result as $value) {
+                                    echo '<option value="'
+                                        . $value['province_id']
+                                        . '">'
+                                        . $value['province']
+                                        . "</option>";
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-city">City</label>
+                        <select class="form-control"
+                            id="edit-city"
+                            name="city"
+                            required>
+                            <option selected disabled>
+                                Pilih Kota
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-souvenir">Souvenir</label>
+                        <select class="form-control"
+                            id="edit-souvenir"
+                            name="souvenir_id">
+                            <option selected disabled>
+                                Pilih Souvenir
+                            </option>
+                            <?php foreach ($souvenirs as $souvenir): ?>
+                                <option value="<?php echo $souvenir->id; ?>">
+                                    <?php echo $souvenir->name; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-link-hs">Link Home Service</label>
+                        <input type="url"
+                            class="form-control"
+                            id="edit-link-hs"
+                            name="link_hs"
+                            pattern="https://.*"
+                            maxlength="191"
+                            value=""
+                            placeholder="Link Home Service" />
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-status">Status</label>
+                        <select class="form-control"
+                            id="edit-status"
+                            name="status">
+                            <option value="pending">pending</option>
+                            <option value="success">success</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="submit"
+                    form="edit-form"
+                    value="Submit"
+                    class="btn btn-gradient-primary mr-2" />
+                <button class="btn btn-light"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('script')

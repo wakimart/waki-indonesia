@@ -388,12 +388,16 @@ class SubmissionController extends Controller
     public function show(Request $request)
     {
         $references = "";
+        $promos = "";
+        $souvenirs = "";
         if ($request->type === "mgm") {
             $submission = $this->querySubmissionMGM($request->id);
             $references = $this->queryReferenceMGM($request->id);
+            $promos = Promo::all();
         } elseif ($request->type === "referensi") {
             $submission = $this->querySubmissionReferensi($request->id);
             $references = $this->queryReferenceReferensi($request->id);
+            $souvenirs = Souvenir::where("active", true)->get();
         } elseif ($request->type === "takeaway") {
             $submission = $this->querySubmissionTakeaway($request->id);
         }
@@ -406,6 +410,8 @@ class SubmissionController extends Controller
                 "submission",
                 "references",
                 "historySubmission",
+                "promos",
+                "souvenirs",
             )
         );
     }
@@ -661,7 +667,7 @@ class SubmissionController extends Controller
         }
     }
 
-    public function addApi(Request $request)
+    public function addApi(Request $request): \Illuminate\Http\JsonResponse
     {
         $data = $request->all();
 
@@ -827,7 +833,7 @@ class SubmissionController extends Controller
             } else {
                 return response()->json([
                     "error" => "Bad request.",
-                ], 401);
+                ], 400);
             }
 
             DB::commit();
@@ -1219,7 +1225,7 @@ class SubmissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function detailApi(Request $request)
+    public function detailApi(Request $request): \Illuminate\Http\JsonResponse
     {
         $references = "";
         if ($request->type === "mgm") {
@@ -1303,7 +1309,7 @@ class SubmissionController extends Controller
         }
     }
 
-    public function querySubmission($id)
+    private function querySubmission($id)
     {
         return Submission::select(
             "submissions.id AS id",

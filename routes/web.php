@@ -653,6 +653,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(["prefix" => "reference", "middleware" => "auth"], function () {
+        Route::post("/mgm", "ReferenceController@storeReferenceMGM")
+            ->name("store_reference_mgm");
+
+        Route::post("/referensi", "ReferenceController@storeReferensi")
+            ->name("store_reference_referensi");
+
         // List reference
         Route::get("/list", "ReferenceController@index")
             ->name("list_reference");
@@ -660,6 +666,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Update reference
         Route::post("/update", "ReferenceController@update")
             ->name("update_reference");
+
+        Route::post("/update/mgm", "ReferenceController@updateReferenceMGM")
+            ->name("update_reference_mgm");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {
