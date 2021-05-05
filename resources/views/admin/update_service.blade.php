@@ -27,21 +27,63 @@
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
+
+	.check label{
+		width: 25em;
+	}
+
+	@media (min-width: 768px){
+		#desktop{
+			display: block;
+		}
+
+		#mobile{
+			display: none;
+		}
+	}
+
+	@media (max-width: 768px){
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+	}
+
+
 </style>
 @endsection
 
 @section('content')
 <div class="main-panel">
   	<div class="content-wrapper">
-    	<div class="page-header">
-      		<h3 class="page-title">Update Service</h3>
-      		<nav aria-label="breadcrumb">
-	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#service-dd" aria-expanded="false" aria-controls="service-dd">Service</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Update Service</li>
-	        	</ol>
-      		</nav>
-    	</div>
+		  <!-- header mobile -->
+		<div id="mobile">
+			<h3 class="text-center">Update Service</h3>
+			<div class="row">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#service-dd" aria-expanded="false" aria-controls="service-dd">Service</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Update Service</li>
+					</ol>
+				</nav>
+		  	</div>
+	  	</div>
+
+		<!-- header desktop -->
+		<div id="desktop">
+			<div class="page-header">
+				<h3 class="page-title">Update Service</h3>
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#service-dd" aria-expanded="false" aria-controls="service-dd">Service</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Update Service</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
@@ -152,16 +194,16 @@
 									$cbx_issues = ["Kerusakan Listrik", "Bersuara/Bergetar", "Heating", "Jatuh, Pecah, Unit Lepas", "Kerusakan Mekanik", "Lainnya..."];
 			                    @endphp
 
-			                    <div class="form-group">
+			                    <div class="form-group check">
 				                	<label for="">Issues</label>
 				                	<br>
 				                	@for($i = 0; $i < count($cbx_issues); $i++)
 			                			@if(in_array($cbx_issues[$i], $issues[0]->issues))
-				                			<label style="margin-right: 20%;" class="checkbox-inline">
+				                			<label class="checkbox-inline">
 										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true">{{$cbx_issues[$i]}}
 										    </label>
 										@else
-											<label style="margin-right: 20%;" class="checkbox-inline">
+											<label class="checkbox-inline">
 										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}">{{$cbx_issues[$i]}}
 										    </label>
 			                			@endif
@@ -304,26 +346,26 @@
 							    </div>\
 							</div>\
 						</div>\
-						<div class="form-group">\
+						<div class="form-group check">\
 							<label for="">Issues</label>\
 							<br>\
-							<label style="margin-right: 20%;" class="checkbox-inline">\
+							<label class="checkbox-inline">\
 						      	<input id="cbx_issue-0-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Kerusakan Listrik">Kerusakan Listrik\
 						    </label>\
-						    <label style="margin-right: 20%;" class="checkbox-inline">\
+						    <label class="checkbox-inline">\
 						      	<input id="cbx_issue-1-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Bersuara/Bergetar">Bersuara/Bergetar\
 						    </label>\
-						    <label style="margin-right: 20%;" class="checkbox-inline">\
+						    <label class="checkbox-inline">\
 						      	<input id="cbx_issue-2-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Heating">Heating\
 						    </label>\
 						    <br>\
-						    <label style="margin-right: 20%;" class="checkbox-inline">\
+						    <label class="checkbox-inline">\
 						      	<input id="cbx_issue-3-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Jatuh, Pecah, Unit Lepas">Jatuh, Pecah, Unit Lepas\
 						    </label>\
-						    <label style="margin-right: 20%;" class="checkbox-inline">\
+						    <label class="checkbox-inline">\
 						      	<input id="cbx_issue-4-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Kerusakan Mekanik">Kerusakan Mekanik\
 						    </label>\
-						    <label style="margin-right: 20%;" class="checkbox-inline">\
+						    <label class="checkbox-inline">\
 						      	<input id="cbx_issue-5-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Lainnya...">Lainnya...\
 						    </label>\
 						    \

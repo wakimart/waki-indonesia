@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Promo;
 use App\Product;
-use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\File;
 
 class PromoController extends Controller
 {
@@ -63,9 +61,9 @@ class PromoController extends Controller
         $data['product'] = json_encode($data['arr_product']);
 
         //arr_image
-        $namaGambar = [];
+        /* $namaGambar = [];
         $codePath = strtolower($request->input('code'));
-        
+
         for ($i = 0; $i < 3; $i++) {
             if ($request->hasFile('images' . $i)) {
                 $path = "public/promo_images/" . $codePath;
@@ -88,10 +86,12 @@ class PromoController extends Controller
                 $namaGambar[$i] = $filename;
             }
         }
-        $data['image'] = json_encode($namaGambar);
-        $promo = Promo::create($data);
-        return response()->json(['success' => 'Berhasil']);
-        //return response()->json(['success' => $data]);
+
+        $data['image'] = json_encode($namaGambar); */
+
+        Promo::create($data);
+
+        return response()->json(["success" => "Promo berhasil dibuat."]);
     }
 
     /**
@@ -151,26 +151,25 @@ class PromoController extends Controller
         $promos->product = json_encode($data['arr_product']);
 
         //restore image
-        $codePath = strtolower($request->input('code'));
+        /* $codePath = strtolower($request->input('code'));
         $arr_image_before = json_decode($promos->image, true);
         $namaGambar = [];
         $namaGambar = array_values($arr_image_before);
 
-
         if ($request->hasFile('images0') || $request->hasFile('images1') || $request->hasFile('images2')){
-            
+
             //store image
             $codePath = strtolower($request->input('code'));
 
             for ($i = 0; $i < $request->total_images; $i++) {
-               
+
                 if ($request->hasFile('images' . $i)) {
                     if(array_key_exists($i, $arr_image_before)){
                         if(File::exists("sources/promo_images/" . $codePath . "/" . $arr_image_before[$i]))
                         {
                             File::delete("sources/promo_images/" . $codePath . "/" . $arr_image_before[$i]);
                         }
-                    }  
+                    }
                     //return response()->json(['success' => $request->dlt_img ]);
                     $path = "public/promo_images/" . $codePath;
                     $path = str_replace("\\", "", $path);
@@ -191,24 +190,21 @@ class PromoController extends Controller
                         $namaGambar[$i] = $arr_image_before[$i];
                     }
                 }
-            }  
+            }
         }
 
-        if($request->dlt_img!="")
-        {
+        if ($request->dlt_img != "") {
             $deletes = explode(",", $request->dlt_img);
 
             foreach ($deletes as $value) {
-                if(array_key_exists($value, $namaGambar))
-                {
-                    if(File::exists("sources/promo_images/" . $codePath . "/" . $namaGambar[$value]))
-                    {
+                if (array_key_exists($value, $namaGambar)) {
+                    if (File::exists("sources/promo_images/" . $codePath . "/" . $namaGambar[$value])) {
                         File::delete("sources/promo_images/" . $codePath . "/" . $namaGambar[$value]);
                     }
-                   
+
                     unset($namaGambar[$value]);
                 }
-               
+
             }
         }
 
@@ -231,14 +227,14 @@ class PromoController extends Controller
                     $namaGambarFix.='"",';
                 }
             }
-            
+
         }
         $namaGambarFix.="]";
-        $promos->image = $namaGambarFix;
+        $promos->image = $namaGambarFix; */
         $promos->price = $request->input('price');
         $promos->save();
+
         return response()->json(['result' => 'Berhasil!']);
-        
     }
 
     /**
@@ -250,5 +246,51 @@ class PromoController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function fetchPromoList()
+    {
+        $promos = Promo::select(
+            "id",
+            "code",
+            "product",
+            DB::raw("FLOOR(price) AS price"),
+        )
+        ->get();
+        foreach ($promos as $key => $promo) {
+            $productPromo = json_decode($promo["product"]);
+            $arrayProductId = [];
+
+            foreach ($productPromo as $pp) {
+                $arrayProductId[] = $pp->id;
+            }
+
+            $getProduct = Product::select("code")
+            ->whereIn("id", $arrayProductId)
+            ->get();
+
+            $arrayProductCode = [];
+
+            foreach ($getProduct as $product) {
+                $arrayProductCode[] = $product->code;
+            }
+
+            $productCode = implode(", ", $arrayProductCode);
+
+            $promos[$key]->product = $promo["code"]
+                . " - ("
+                . $productCode
+                . ") - Rp. "
+                . number_format((int) $promo["price"], 0, null, ",");
+
+            unset($promos[$key]->code, $promos[$key]->price);
+        }
+
+        $data = [
+            "result" => 1,
+            "data" => $promos,
+        ];
+
+        return response()->json($data, 200);
     }
 }

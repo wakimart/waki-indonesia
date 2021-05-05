@@ -1,4 +1,7 @@
 <?php
+
+use App\Product;
+
 $menu_item_page = "submission";
 $menu_item_second = "add_submission_form";
 ?>
@@ -53,6 +56,10 @@ $menu_item_second = "add_submission_form";
       background-color: #ffdddd;
     }
 
+    .invalid {
+        border: 1px solid red !important;
+    }
+
     /* Hide all steps by default: */
     .tab {
       display: none;
@@ -101,7 +108,7 @@ $menu_item_second = "add_submission_form";
                             Submission
                         </a>
                     </li>
-                      <li class="breadcrumb-item active" aria-current="page">
+                    <li class="breadcrumb-item active" aria-current="page">
                         Add Submission
                     </li>
                 </ol>
@@ -118,21 +125,22 @@ $menu_item_second = "add_submission_form";
                             method="POST"
                             enctype="multipart/form-data"
                             action="{{ route('store_submission_form') }}">
-                            {{ csrf_field() }}
+                            @csrf
                             <div class="form-group">
                                 <span>Type Register</span>
                                 <select id="type_register"
                                     style="margin-top: 0.5em; height: auto;"
                                     class="form-control"
                                     name="type_register"
+                                    onclick="changeType(this)"
+                                    onload="changeType(this)"
                                     required>
-                                    <option value="MGM" selected>MGM</option>
-                                    <option value="Refrensi">Referensi</option>
-                                    <option value="Take Away">Take Away</option>
+                                    <option value="mgm" selected>MGM</option>
+                                    <option value="referensi">
+                                        Referensi Sehat Bersama WAKi
+                                    </option>
+                                    <option value="takeaway">Takeaway</option>
                                 </select>
-                                <span class="invalid-feedback">
-                                    <strong></strong>
-                                </span>
                             </div>
 
                             <div class="form-group">
@@ -148,7 +156,6 @@ $menu_item_second = "add_submission_form";
                                     name="no_member"
                                     placeholder="No. Member"
                                     required />
-                                <div class="validation"></div>
                             </div>
 
                             <div class="form-group">
@@ -159,7 +166,6 @@ $menu_item_second = "add_submission_form";
                                     name="name"
                                     placeholder="Name"
                                     required />
-                                <div class="validation"></div>
                             </div>
 
                             <div class="form-group">
@@ -170,31 +176,32 @@ $menu_item_second = "add_submission_form";
                                     name="phone"
                                     placeholder="Phone Number"
                                     required />
-                                <div class="validation"></div>
                             </div>
 
                             <div class="form-group">
                                 <label for="province">Province</label>
                                 <select class="form-control"
                                     id="province"
-                                    name="province_id"
+                                    name="province"
                                     data-msg="Mohon Pilih Provinsi"
                                     required>
                                     <option selected disabled value="" hidden>
                                         Pilihan Provinsi
                                     </option>
-                                    @php
-                                        $result = RajaOngkir::FetchProvince();
-                                        $result = $result['rajaongkir']['results'];
-                                        $arrProvince = [];
-                                        if (sizeof($result) > 0) {
-                                            foreach ($result as $value) {
-                                                echo "<option value=\"" . $value['province_id'] . "\">" . $value['province']."</option>";
-                                            }
+                                    <?php
+                                    $result = RajaOngkir::FetchProvince();
+                                    $result = $result['rajaongkir']['results'];
+                                    if (sizeof($result) > 0) {
+                                        foreach ($result as $value) {
+                                            echo '<option value="'
+                                                . $value['province_id']
+                                                . '">'
+                                                . $value['province']
+                                                . "</option>";
                                         }
-                                    @endphp
+                                    }
+                                    ?>
                                 </select>
-                                <div class="validation"></div>
                             </div>
 
                             <div class="form-group">
@@ -208,21 +215,19 @@ $menu_item_second = "add_submission_form";
                                         Pilihan Kota
                                     </option>
                                 </select>
-                                <div class="validation"></div>
                             </div>
 
                             <div class="form-group">
                                 <label for="subDistrict">Sub District</label>
                                 <select class="form-control"
                                     id="subDistrict"
-                                    name="distric"
+                                    name="district"
                                     data-msg="Mohon Pilih Kecamatan"
                                     required>
                                     <option selected disabled value="" hidden>
                                         Pilihan Kecamatan
                                     </option>
                                 </select>
-                                <div class="validation"></div>
                             </div>
 
                             <div class="form-group">
@@ -231,42 +236,73 @@ $menu_item_second = "add_submission_form";
                                     id="address"
                                     name="address"
                                     rows="4"
-                                    placeholder="Address Lengkap"
+                                    placeholder="Full address"
                                     required>
                                 </textarea>
-                                <div class="validation"></div>
                             </div>
 
-                            @for($j = 0; $j < 2; $j++)
-                                <div class="form-group product-group">
+                            @for ($j = 0; $j < 2; $j++)
+                                <div class="form-group product-group"
+                                    id="promo-group-{{ $j }}">
                                     <div class="col-xs-12 col-sm-12 row"
                                         style="margin: 0;padding: 0;">
                                         <div class="col-xs-10 col-sm-10"
                                             style="padding: 0; display: inline-block;">
                                             <label for="promo-{{ $j }}">
-                                                Promo {{ $j + 1 }}
+                                                Promo {{ $j + 1 }} {{ $j > 0 ? "(optional)" : "" }}
                                             </label>
                                             <select class="form-control pilihan-product"
                                                 id="promo-{{ $j }}"
-                                                name="product_{{ $j }}"
+                                                name="promo_{{ $j }}"
                                                 data-msg="Mohon Pilih Promo"
                                                 {{ $j > 0 ? "" : "required" }}>
                                                 <option selected
                                                     disabled
                                                     value=""
                                                     {{ $j > 0 ? "" : "hidden" }}>
-                                                    Choose Promo{{ $j > 0 ? " (optional)" : ""}}
+                                                    Choose Promo {{ $j > 0 ? "(optional)" : ""}}
                                                 </option>
-                                                @foreach($promos as $key => $promo)
-                                                    <option value="{{ $key }}">
-                                                        {{ $promo['code'] }} - {{ $promo['name'] }} ( {{ $promo['harga'] }} )
+                                                <?php foreach ($promos as $key => $promo): ?>
+                                                    <option value="<?php echo $key; ?>">
+                                                        <?php
+                                                        $productPromo = json_decode($promo["product"]);
+                                                        $arrayProductId = [];
+
+                                                        foreach ($productPromo as $pp) {
+                                                            $arrayProductId[] = $pp->id;
+                                                        }
+
+                                                        $getProduct = Product::select("code")
+                                                        ->whereIn(
+                                                            "id",
+                                                            $arrayProductId
+                                                        )
+                                                        ->get();
+
+                                                        $arrayProductCode = [];
+
+                                                        foreach ($getProduct as $product) {
+                                                            $arrayProductCode[] = $product->code;
+                                                        }
+
+                                                        $productCode = implode(", ", $arrayProductCode);
+
+                                                        echo $promo["code"]
+                                                            . " - ("
+                                                            . $productCode
+                                                            . ") - Rp. "
+                                                            . number_format(
+                                                                (int) $promo["price"],
+                                                                0,
+                                                                null,
+                                                                ","
+                                                            );
+                                                        ?>
                                                     </option>
-                                                @endforeach
+                                                <?php endforeach; ?>
 
                                                 {{-- KHUSUS Philiphin --}}
-                                                @if (true)
-                                                    <option value="other">OTHER</option>
-                                                @endif
+                                                <option value="other">OTHER</option>
                                             </select>
                                             <div class="validation"></div>
                                         </div>
@@ -284,7 +320,7 @@ $menu_item_second = "add_submission_form";
                                                     1
                                                 </option>
 
-                                                @for($i = 2; $i <= 10; $i++)
+                                                @for ($i = 2; $i <= 10; $i++)
                                                     <option value="{{ $i }}">
                                                         {{ $i }}
                                                     </option>
@@ -294,16 +330,14 @@ $menu_item_second = "add_submission_form";
                                         </div>
 
                                         {{-- KHUSUS Philiphin --}}
-                                        @if (true)
-                                            <div class="form-group d-none">
-                                                <input type="text"
-                                                    class="form-control"
-                                                    name="product_other_{{ $j }}"
-                                                    placeholder="Product Name"
-                                                    data-msg="Please fill in the product" />
-                                                <div class="validation"></div>
-                                            </div>
-                                        @endif
+                                        <div class="form-group d-none">
+                                            <input type="text"
+                                                class="form-control"
+                                                name="product_other_{{ $j }}"
+                                                placeholder="Product Name"
+                                                data-msg="Please fill in the product" />
+                                            <div class="validation"></div>
+                                        </div>
                                     </div>
                                 </div>
                             @endfor
@@ -319,7 +353,7 @@ $menu_item_second = "add_submission_form";
                                         Choose Branch
                                     </option>
 
-                                    @foreach($branches as $branch)
+                                    @foreach ($branches as $branch)
                                         <option value="{{ $branch['id'] }}">
                                             {{ $branch['code'] }} - {{ $branch['name'] }}
                                         </option>
@@ -342,14 +376,14 @@ $menu_item_second = "add_submission_form";
                                 <div class="validation" id="validation_cso"></div>
                             </div>
 
-                            <div class="form-group" class="image-proof">
-                                <label for="image-proof" class="image-proof">
-                                    Image proof
+                            <div class="form-group" id="customer-image-group">
+                                <label for="image-proof">
+                                    Proof image
                                 </label>
                                 <input type="file"
-                                    id="image-proof"
-                                    name="image_proof[]"
-                                    class="image-proof"
+                                    id="proof-image"
+                                    name="proof_image[]"
+                                    class="proof-image"
                                     accept=".jpg, .jpeg, .png"
                                     multiple />
                             </div>
@@ -362,7 +396,7 @@ $menu_item_second = "add_submission_form";
                                 <br>
 
                                 <!-- One "tab" for each step in the form: -->
-                                @for($x = 0; $x < 10; $x++)
+                                @for ($x = 0; $x < 10; $x++)
                                     <div class="tab">
                                         <label for="member-name-{{ $x }}">
                                             Member {{ $x + 1 }}
@@ -376,7 +410,6 @@ $menu_item_second = "add_submission_form";
                                                 class="form-control"
                                                 name="name_ref[]"
                                                 placeholder="Name"
-                                                oninput="this.className = ''"
                                                 required />
                                             <div class="validation"></div>
                                         </div>
@@ -390,7 +423,6 @@ $menu_item_second = "add_submission_form";
                                                 class="form-control"
                                                 name="age_ref[]"
                                                 placeholder="Age"
-                                                oninput="this.className = ''"
                                                 required />
                                             <div class="validation"></div>
                                         </div>
@@ -404,7 +436,6 @@ $menu_item_second = "add_submission_form";
                                                 class="form-control"
                                                 name="phone_ref[]"
                                                 placeholder="Phone Number"
-                                                oninput="this.className = ''"
                                                 required />
                                             <div class="validation"></div>
                                         </div>
@@ -422,18 +453,17 @@ $menu_item_second = "add_submission_form";
                                                     disabled
                                                     value=""
                                                     hidden>
-                                                    Pilihan Provinsi
+                                                    Pilih Provinsi
                                                 </option>
-                                                @php
-                                                    $result = RajaOngkir::FetchProvince();
-                                                    $result = $result['rajaongkir']['results'];
-                                                    $arrProvince = [];
-                                                    if (sizeof($result) > 0) {
-                                                        foreach ($result as $value) {
-                                                            echo "<option value=\"" . $value['province_id'] . "\">" . $value['province'] . "</option>";
-                                                        }
+                                                <?php
+                                                $result = RajaOngkir::FetchProvince();
+                                                $result = $result['rajaongkir']['results'];
+                                                if (sizeof($result) > 0) {
+                                                    foreach ($result as $value) {
+                                                        echo '<option value="' . $value['province_id'] . '">' . $value['province'] . "</option>";
                                                     }
-                                                @endphp
+                                                }
+                                                ?>
                                             </select>
                                             <div class="validation"></div>
                                         </div>
@@ -446,38 +476,182 @@ $menu_item_second = "add_submission_form";
                                                 id="city-{{ $x }}"
                                                 name="city_ref[]"
                                                 data-msg="Mohon Pilih Kota"
-                                                onselect="this.className = ''"
                                                 required>
                                                 <option selected
                                                     disabled
                                                     value=""
                                                     hidden>
-                                                    Pilihan Kota
+                                                    Pilih Kota
                                                 </option>
                                             </select>
                                             <div class="validation"></div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="souvenir-{{ $x }}">
+                                                Souvenir
+                                            </label>
+                                            <select class="form-control"
+                                                id="souvenir-{{ $x }}"
+                                                name="souvenir_id[]"
+                                                required>
+                                                <option selected
+                                                    disabled
+                                                    hidden
+                                                    value="">
+                                                    Pilih Souvenir
+                                                </option>
+                                                <?php foreach ($souvenirs as $souvenir): ?>
+                                                    <option value="<?php echo $souvenir->id; ?>">
+                                                        <?php echo $souvenir->name; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="link-hs-{{ $x }}">
+                                                Link Home Service
+                                            </label>
+                                            <input type="url"
+                                                class="form-control"
+                                                id="link-hs-{{ $x }}"
+                                                name="link_hs[]"
+                                                pattern="https://.*"
+                                                maxlength="191"
+                                                placeholder="Link Home Service" />
+                                        </div>
+                                        @for ($j = 0; $j < 2; $j++)
+                                            <div class="form-group product-group"
+                                                id="promo-group-{{ $j }}">
+                                                <div class="col-xs-12 col-sm-12 row"
+                                                    style="margin: 0;padding: 0;">
+                                                    <div class="col-xs-10 col-sm-10"
+                                                        style="padding: 0; display: inline-block;">
+                                                        <label for="promo-{{ $j }}">
+                                                            Promo {{ $j + 1 }} {{ $j > 0 ? "(optional)" : "" }}
+                                                        </label>
+                                                        <select class="form-control pilihan-product"
+                                                            id="promo-{{ $j }}"
+                                                            name="promo_{{ $j }}"
+                                                            data-msg="Mohon Pilih Promo"
+                                                            {{ $j > 0 ? "" : "required" }}>
+                                                            <option selected
+                                                                disabled
+                                                                value=""
+                                                                {{ $j > 0 ? "" : "hidden" }}>
+                                                                Choose Promo {{ $j > 0 ? "(optional)" : ""}}
+                                                            </option>
+                                                            <?php foreach ($promos as $key => $promo): ?>
+                                                                <option value="<?php echo $key; ?>">
+                                                                    <?php
+                                                                    $productPromo = json_decode($promo["product"]);
+                                                                    $arrayProductId = [];
+
+                                                                    foreach ($productPromo as $pp) {
+                                                                        $arrayProductId[] = $pp->id;
+                                                                    }
+
+                                                                    $getProduct = Product::select("code")
+                                                                    ->whereIn(
+                                                                        "id",
+                                                                        $arrayProductId
+                                                                    )
+                                                                    ->get();
+
+                                                                    $arrayProductCode = [];
+
+                                                                    foreach ($getProduct as $product) {
+                                                                        $arrayProductCode[] = $product->code;
+                                                                    }
+
+                                                                    $productCode = implode(", ", $arrayProductCode);
+
+                                                                    echo $promo["code"]
+                                                                        . " - ("
+                                                                        . $productCode
+                                                                        . ") - Rp. "
+                                                                        . number_format(
+                                                                            (int) $promo["price"],
+                                                                            0,
+                                                                            null,
+                                                                            ","
+                                                                        );
+                                                                    ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+
+                                                            {{-- KHUSUS Philiphin --}}
+                                                            <option value="other">OTHER</option>
+                                                        </select>
+                                                        <div class="validation"></div>
+                                                    </div>
+                                                    <div class="col-xs-2 col-sm-2"
+                                                        style="padding-right: 0;display: inline-block;">
+                                                        <label for="qty-{{ $j }}">
+                                                            Qty
+                                                        </label>
+                                                        <select class="form-control"
+                                                            id="qty-{{ $j }}"
+                                                            name="qty_{{ $j }}"
+                                                            data-msg="Mohon Pilih Jumlah"
+                                                            {{ $j > 0 ? "" : "required" }}>
+                                                            <option selected value="1">
+                                                                1
+                                                            </option>
+
+                                                            @for ($i = 2; $i <= 10; $i++)
+                                                                <option value="{{ $i }}">
+                                                                    {{ $i }}
+                                                                </option>
+                                                            @endfor
+                                                        </select>
+                                                        <div class="validation"></div>
+                                                    </div>
+
+                                                    {{-- KHUSUS Philiphin --}}
+                                                    <div class="form-group d-none">
+                                                        <input type="text"
+                                                            class="form-control"
+                                                            name="product_other_{{ $j }}"
+                                                            placeholder="Product Name"
+                                                            data-msg="Please fill in the product" />
+                                                        <div class="validation"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endfor
+
+                                        <div class="form-group">
+                                            <input type="file"
+                                                class="custom-file-input"
+                                                id="do-proof">
+                                            <label class="custom-file-label"
+                                                for="do-proof">
+                                                Proof Delivery Order (Image)
+                                            </label>
                                         </div>
                                     </div>
                                 @endfor
 
                                 <div style="overflow:auto;">
-                                  <div style="float:right;">
-                                    <button type="button"
-                                        id="prevBtn"
-                                        onclick="nextPrev(-1)">
-                                        Previous
-                                    </button>
-                                    <button type="button"
-                                        id="nextBtn"
-                                        onclick="nextPrev(1)">
-                                        Next
-                                    </button>
-                                  </div>
+                                    <div style="float:right;">
+                                        <button type="button"
+                                            id="prevBtn"
+                                            onclick="nextPrev(-1)">
+                                            Previous
+                                        </button>
+                                        <button type="button"
+                                            id="nextBtn"
+                                            onclick="nextPrev(1)">
+                                            Next
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <!-- Circles which indicates the steps of the form: -->
                                 <div style="text-align:center; margin-top:40px;">
-                                    @for($x = 0; $x < 10; $x++)
+                                    @for ($x = 0; $x < 10; $x++)
                                         <span class="step"></span>
                                     @endfor
                                 </div>
@@ -503,14 +677,19 @@ $menu_item_second = "add_submission_form";
 @endsection
 
 @section('script')
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-<script type="text/javascript">
-var currentTab = 0; // Current tab is set to be the first tab (0)
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="application/javascript">
+let currentTab = 0; // Current tab is set to be the first tab (0)
 showTab(currentTab); // Display the current tab
+
+const souvenirArray = []
+for (let i = 0; i < 10; i++) {
+    souvenirArray.push(-1);
+};
 
 function showTab(n) {
     // This function will display the specified tab of the form ...
-    var x = document.getElementsByClassName("tab");
+    const x = document.getElementsByClassName("tab");
     x[n].style.display = "block";
 
     // ... and fix the Previous/Next buttons:
@@ -532,7 +711,7 @@ function showTab(n) {
 
 function nextPrev(n) {
     // This function will figure out which tab to display
-    var x = document.getElementsByClassName("tab");
+    const x = document.getElementsByClassName("tab");
 
     // Exit the function if any field in the current tab is invalid:
     if (n == 1 && !validateForm()) {
@@ -544,48 +723,59 @@ function nextPrev(n) {
     // Increase or decrease the current tab by 1:
     currentTab = currentTab + n;
 
-    // TODO: Cek codingan, apakah form masih berfungsi atau tidak
-    // if you have reached the end of the form... :
-    // if (currentTab >= x.length) {
-    //     //...the form gets submitted:
-    //     // document.getElementById("regForm").submit();
-    //     return false;
-    // }
-
     // Otherwise, display the correct tab:
     showTab(currentTab);
 }
 
 function validateForm() {
     // This function deals with validation of the form fields
-    var x, y, i, valid = true;
-    x = document.getElementsByClassName("tab");
-    y = x[currentTab].getElementsByTagName("input");
+    let valid = true;
 
-    // A loop that checks every input field in the current tab:
-    for (i = 0; i < y.length; i++) {
-        // If a field is empty...
-        if (y[i].value == "") {
-            // add an "invalid" class to the field:
-            y[i].className += " invalid";
-            // and set the current valid status to false:
+    const inputArray = ["member-name-", "member-age-", "member-phone-", "province-", "city-", "souvenir-", "link-hs-"];
+
+    inputArray.forEach(function (currentValue) {
+        const inputBeingChecked = document.getElementById(currentValue + currentTab);
+
+        if (!inputBeingChecked.checkValidity()) {
+            addOrRemoveInvalid(inputBeingChecked, "add");
             valid = false;
+        } else {
+            addOrRemoveInvalid(inputBeingChecked, "remove");
         }
-    }
+    });
 
-    // If the valid status is true, mark the step as finished and valid:
-    if (valid) {
-        document.getElementsByClassName("step")[currentTab].className += " finish";
+    const souvenirInput = document.getElementById("souvenir-" + currentTab);
+    const souvenirValue = parseInt(souvenirInput.value, 10);
+    if (souvenirValue) {
+        souvenirArray[currentTab] = souvenirValue;
+        const findDuplicate = souvenirArray.filter(function (currentValue) {
+            return currentValue === souvenirValue;
+        });
+
+        if (findDuplicate.length > 2) {
+            addOrRemoveInvalid(souvenirInput, "add");
+            valid = false;
+        } else {
+            addOrRemoveInvalid(souvenirInput, "remove");
+        }
     }
 
     return valid; // return the valid status
 }
 
+function addOrRemoveInvalid(element, command) {
+    if (command === "add" && !element.className.includes("invalid")) {
+        element.classList.add("invalid");
+    } else if (command === "remove" && element.className.includes("invalid")) {
+        element.classList.remove("invalid");
+    }
+}
+
 function fixStepIndicator(n) {
     // This function removes the "active" class of all steps...
-    var i, x = document.getElementsByClassName("step");
+    const x = document.getElementsByClassName("step");
 
-    for (i = 0; i < x.length; i++) {
+    for (let i = 0; i < x.length; i++) {
         x[i].className = x[i].className.replace(" active", "");
     }
 
@@ -593,23 +783,41 @@ function fixStepIndicator(n) {
     x[n].className += " active";
 }
 
+function changeType(e) {
+    console.log(e.value);
+    if (e.value === "mgm") {
+        document.getElementById("promo-0").setAttribute("disabled", "");
+        document.getElementById("promo-1").setAttribute("disabled", "");
+        document.getElementById("qty-0").setAttribute("disabled", "");
+        document.getElementById("qty-1").setAttribute("disabled", "");
+        document.getElementById("promo-group-0").style.display = "none";
+        document.getElementById("promo-group-1").style.display = "none";
+        document.getElementById("proof-image").setAttribute("disabled", "");
+        document.getElementById("customer-image-group").style.display = "none";
+    } else if (e.value === "referensi") {
+        //
+    } else if (e.value === "takeaway") {
+        //
+    }
+}
+
 //function load city
 $(document).on("change", ".changeProvince", function () {
-    var get_index = $(this).attr('id');
-    var index = get_index.slice(-1);
+    const get_index = $(this).attr('id');
+    const index = get_index.slice(-1);
 
-    var id = $(this).val();
+    const id = $(this).val();
 
     $("#city-" + index).html("");
     $.get('{{ route("fetchCity", ['province' => ""]) }}/' + id)
         .done(function (result) {
             result = result['rajaongkir']['results'];
-            var arrCity = "<option selected disabled value=\"\" hidden>Pilihan Kota</option>";
+            let arrCity = "<option selected disabled value=\"\" hidden>Pilihan Kota</option>";
 
             if (result.length > 0) {
                 $.each( result, function (key, value) {
                     if (value['type'] == "Kabupaten") {
-                        arrCity += "<option value=\""+value['city_id'] + "\">Kabupaten " + value['city_name'] + "</option>";
+                        arrCity += "<option value=\"" + value['city_id'] + "\">Kabupaten " + value['city_name'] + "</option>";
                     }
 
                     if (value['type'] == "Kota") {
@@ -621,27 +829,22 @@ $(document).on("change", ".changeProvince", function () {
             }
         });
 })
-</script>
-<script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
-<script type="text/javascript">
-for (let input of document.querySelectorAll('#tags')) {
-    tagsInput(input);
-}
-</script>
-<script>
-$(document).ready(function () {
+
+document.addEventListener("DOMContentLoaded", function () {
+    changeType(document.getElementById("type_register"));
+
     $("#cso").on("input", function () {
         check_cso($("#cso").val());
     });
 
     $("#province").on("change", function () {
-        var id = $(this).val();
+        const id = $(this).val();
         $("#city").html("");
 
         $.get('{{ route("fetchCity", ['province' => ""]) }}/' + id)
             .done(function (result) {
                 result = result['rajaongkir']['results'];
-                var arrCity = "<option selected disabled value=\"\" hidden>Pilihan Kota</option>";
+                let arrCity = "<option selected disabled value=\"\" hidden>Pilihan Kota</option>";
 
                 if (result.length > 0) {
                     $.each(result, function (key, value) {
@@ -660,13 +863,13 @@ $(document).ready(function () {
     });
 
     $("#city").on("change", function () {
-        var id = $(this).val();
+        const id = $(this).val();
         $("#subDistrict").html("");
 
-        $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/' + id )
+        $.get('{{ route("fetchDistrict", ['city' => ""]) }}/' + id)
             .done(function (result) {
                 result = result['rajaongkir']['results'];
-                var arrSubDistsrict = "<option selected disabled value=\"\" hidden>Pilihan Kecamatan</option>";
+                let arrSubDistsrict = "<option selected disabled value=\"\" hidden>Pilihan Kecamatan</option>";
 
                 if (result.length > 0) {
                     $.each( result, function (key, value) {
@@ -694,42 +897,40 @@ $(document).ready(function () {
     }
 
     {{-- KHUSUS Philiphin --}}
-    @if (true)
-        $(".pilihan-product").change(function (e) {
-            if ($(this).val() == 'other') {
-                $(this).parent().next().next().removeClass("d-none");
-                $(this).parent().next().next().children().attr('required', '');
-            } else {
-                $(this).parent().next().next().addClass("d-none");
-                $(this).parent().next().next().children().removeAttr('required', '');
-            }
-        });
-    @endif
-
-    // Memunculkan form file upload untuk image-proof
-    function showHideImageproof() {
-        if ($("#type_register").val() === "Refrensi") {
-            $(".image-proof").prop("disabled", false);
-            $(".image-proof").show();
+    $(".pilihan-product").change(function (e) {
+        if ($(this).val() == 'other') {
+            $(this).parent().next().next().removeClass("d-none");
+            $(this).parent().next().next().children().attr('required', '');
         } else {
-            $(".image-proof").prop("disabled", true);
-            $(".image-proof").hide();
+            $(this).parent().next().next().addClass("d-none");
+            $(this).parent().next().next().children().removeAttr('required', '');
         }
-    }
-
-    $("#type_register").on('change', function (e) {
-        if ($(this).val() === "Refrensi" || $(this).val() === "MGM") {
-            $("#member_label").html("No. MPC");
-            $("#member_input").attr("required", true);
-        } else {
-            $("#member_label").html("No. MPC (opsional)");
-            $("#member_input").removeAttr("required");
-        }
-
-        showHideImageproof();
     });
 
-    showHideImageproof();
+    // Memunculkan form file upload untuk image-proof
+    // function showHideImageproof() {
+    //     if ($("#type_register").val() === "Refrensi") {
+    //         $(".image-proof").prop("disabled", false);
+    //         $(".image-proof").show();
+    //     } else {
+    //         $(".image-proof").prop("disabled", true);
+    //         $(".image-proof").hide();
+    //     }
+    // }
+
+    // $("#type_register").on('change', function (e) {
+    //     if ($(this).val() === "Refrensi" || $(this).val() === "MGM") {
+    //         $("#member_label").html("No. MPC");
+    //         $("#member_input").attr("required", true);
+    //     } else {
+    //         $("#member_label").html("No. MPC (opsional)");
+    //         $("#member_input").removeAttr("required");
+    //     }
+
+    //     showHideImageproof();
+    // });
+
+    // showHideImageproof();
 
     // Memunculkan alert apabila gambar lebih dari 5
     $("#addDeliveryOrder").click(function () {
@@ -755,12 +956,6 @@ $(document).ready(function () {
             }
         }
     });
-
-    // $.when($("#province").val("1").change()).then(function () {
-    //     setTimeout(function () {
-    //         $("#city").val("17").change();
-    //     }, 1000);
-    // });
-});
+}, false);
 </script>
 @endsection

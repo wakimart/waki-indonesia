@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\User;
+use App\HomeService;
+use App\Order;
+use App\RegistrationPromotion;
 use App\Role;
-use App\RoleUser;
+use App\User;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
@@ -17,19 +21,55 @@ class DashboardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
-        //update role user yg baru
-        $role = Role::where('slug', Auth::user()->roles[0]['slug'])->get();
+    {
+        try {
+            // Update role user yg baru
+            $role = Role::where('slug', Auth::user()->roles[0]['slug'])->get();
+            $users = User::find(Auth::user()->id);
+            $check_permission = Str::contains($users->permissions, 'add-service');
 
-        $users = User::find(Auth::user()->id);
-        
-        $check_permission = Str::contains($users->permissions, 'add-service');
-        if(!$check_permission){
-            $users->permissions = $role[0]['permissions'];
-            $users->save();
+            if (!$check_permission) {
+                $users->permissions = $role[0]['permissions'];
+                $users->save();
+            }
+        } catch (Exception $e) {
+            unset($e);
+            return redirect()->route("login");
         }
 
-        return view('admin.dashboard');
+        // Bulan ini
+        $startMonth = date("Y-m-01 00:00:00");
+        $endMonth = date("Y-m-t 23:59:59");
+
+        // Hari ini
+        $startToday = date("Y-m-d 00:00:00");
+        $endToday = date("Y-m-d 23:59:59");
+
+        $order = Order::select(DB::raw("SUM(total_payment) AS total_payment"))
+        ->whereBetween("created_at", [$startMonth, $endMonth])
+        ->where("active", true)
+        ->first();
+
+        $homeServiceToday = HomeService::select(DB::raw("COUNT(id) AS count"))
+        ->whereBetween("appointment", [$startToday, $endToday])
+        ->where("active", true)
+        ->first();
+
+        $registration = RegistrationPromotion::select(
+            DB::raw("COUNT(id) AS count")
+        )
+        ->whereBetween("created_at", [$startMonth, $endMonth])
+        ->where("active", true)
+        ->first();
+
+        return view(
+            "admin.dashboard",
+            compact(
+                "homeServiceToday",
+                "order",
+                "registration",
+            )
+        );
     }
 
     /**
@@ -96,5 +136,25 @@ class DashboardController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function countHS() {
+        $startMonth = date("Y-m-01 00:00:00");
+        $endMonth = date("Y-m-t 23:59:59");
+
+        $homeServiceMonth = HomeService::select(
+            DB::raw("DAYOFMONTH(appointment) AS appointment_date"),
+            DB::raw("COUNT(id) AS data_count"),
+        )
+        ->whereBetween("appointment", [$startMonth, $endMonth])
+        ->where("active", true)
+        ->groupBy("appointment_date")
+        ->orderBy("appointment_date", "asc")
+        ->get();
+
+        return response()->json([
+            "result" => 1,
+            "data" => $homeServiceMonth,
+        ]);
     }
 }

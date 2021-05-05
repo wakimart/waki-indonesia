@@ -26,27 +26,39 @@
         					<table class="table table-bordered">
           						<thead>
 						            <tr>
-						              	<th> No. </th>
-						              	<th> Product Name </th>
-        										<th> Qty </th>
-        										<th> Warehouse </th>
+						              	<th rowspan="2" class="align-middle"> No. </th>
+						              	<th rowspan="2" class="align-middle"> Product Name </th>
+        								<th colspan="2" class="text-center"> Qty </th>
+        								{{-- <th> Warehouse </th> --}}
 						            </tr>
+									<tr>
+										<td class="text-center"> Display </td>
+										<td class="text-center"> Ready </td>
+									</tr>
           						</thead>
           						<tbody>
-          							@foreach($stocks as $key => $stock)
+								
+								@php
+									$i = 0;								
+								@endphp
+
+          						@foreach($stocks as $key => $stock)
 		                        <tr>
-		                        	<td>{{$key+1}}</td>
+		                        	<td>{{ ++$i }}</td>
 
-                              @if($stock['product_id'] != null)
-                                <td>{{$stock->product['name']}}</td>
-                              @elseif($stock['product_id'] == null)
-                                <td>{{$stock['other_product']}}</td>
-                              @endif
-
-                              <td>{{$stock['quantity']}}</td>
-                              <td>{{$stock['type_warehouse']}}</td>
+									@if($stock[0]['product_id'] != null)
+										
+										<td>{{$stock[0]->product['name']}}</td>
+										
+									@elseif($stock[0]['product_id'] == null)
+										<td>{{$stock[0]['other_product']}}</td>
+									@endif
+									
+									<td>{{$stock[0]['quantity'] }}</td>
+									<td>{{$stock[1]['quantity'] }}</td>
+								
 		                        </tr>
-		                    @endforeach
+		                    	@endforeach
           						</tbody>
         					</table>
 

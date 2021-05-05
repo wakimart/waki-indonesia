@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\File;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Acceptance;
 use App\AcceptanceStatusLog;
 use App\Branch;
 use App\Cso;
 use App\User;
-use App\Utils;
 use App\Product;
 use App\Upgrade;
 use App\HistoryUpdate;
-use App\Role;
-use DB;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
+use Intervention\Image\ImageManagerStatic as Image;
 
 
 class AcceptanceController extends Controller
@@ -37,7 +38,7 @@ class AcceptanceController extends Controller
             'branch_id.required' => 'The Branch must be selected.',
             'branch_id.exists' => 'Please choose the branch.'
         );
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => ['required', 'exists:branches,id'],
@@ -80,7 +81,13 @@ class AcceptanceController extends Controller
 
                     foreach ($request->file("image") as $imgNya) {
                         $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()). $idxImg . "_upgrade." . $imgNya->getClientOriginalExtension();
-                        $imgNya->move($path, $fileName);
+
+                        //compressed img
+                        $compres = Image::make($imgNya->getRealPath());
+                        $compres->resize(540, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })->save($path.'/'.$fileName);
+
                         array_push($data['image'], $fileName);
                         $idxImg++;
                     }
@@ -95,7 +102,7 @@ class AcceptanceController extends Controller
 
                 DB::commit();
 
-                $this->sendNotif($acc);                
+                $this->sendNotif($acc);
                 return response()->json(['success' => $acc]);
             } catch (\Exception $ex) {
                 DB::rollback();
@@ -126,7 +133,7 @@ class AcceptanceController extends Controller
         return view('admin.detail_acceptance', compact('acceptance', 'historyUpdate'));
     }
 
-    public function edit($id){        
+    public function edit($id){
         $acceptance = Acceptance::find($id);
         $products = Product::all();
         $branches = Branch::where('active', true)->get();
@@ -165,9 +172,11 @@ class AcceptanceController extends Controller
                 $createData = HistoryUpdate::create($historyUpdate);
 
                 DB::commit();
+
+                $this->sendNotif($acceptance);
                 return redirect()->route('detail_acceptance_form', ['id'=>$data['id']]);
             }
-            catch (\Exception $ex) {
+            catch (Exception $ex) {
                 DB::rollback();
                 return redirect()->route('detail_acceptance_form', ['id'=>$data['id']]);
             }
@@ -179,7 +188,7 @@ class AcceptanceController extends Controller
                 'branch_id.required' => 'The Branch must be selected.',
                 'branch_id.exists' => 'Please choose the branch.'
             );
-            $validator = \Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
                 'name' => 'required',
                 'cso_id' => ['required', 'exists:csos,code'],
                 'branch_id' => ['required', 'exists:branches,id'],
@@ -234,8 +243,10 @@ class AcceptanceController extends Controller
                     $historyUpdate['user_id'] = Auth::user()['id'];
                     $historyUpdate['menu_id'] = $acceptance->id;
                     $createData = HistoryUpdate::create($historyUpdate);
-                    
+
                     DB::commit();
+
+                    $this->sendNotif($acceptance);
                     return response()->json(['success' => $acceptance]);
                 }
                 catch (\Exception $ex) {
@@ -273,7 +284,7 @@ class AcceptanceController extends Controller
 
     //================ Khusus Notifikasi ================//
     function sendFCM($body){
-        
+
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
         curl_setopt($curl, CURLOPT_POST, true);
@@ -297,10 +308,20 @@ class AcceptanceController extends Controller
 
     public function sendNotif($acceptance){
         $fcm_tokenNya = [];
-        $userNya = Role::where('slug', 'head-admin')->first()->users;
-        foreach ($userNya as $value) {
-            if($value['fmc_token'] != null){
-                $fcm_tokenNya = array_merge($fcm_tokenNya, $value['fmc_token']);
+
+        if(strtolower($acceptance['status']) == "new"){
+            $userNya = User::where('users.fmc_token', '!=', null)
+                        ->whereIn('role_users.role_id', [1,6])
+                        ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                        ->get();
+            foreach ($userNya as $value) {
+                if($value['fmc_token'] != null){
+                    foreach ($value['fmc_token'] as $fcmSatuan) {
+                        if($fcmSatuan != null){
+                            array_push($fcm_tokenNya, $fcmSatuan);
+                        }
+                    }
+                }
             }
         }
 
@@ -312,11 +333,39 @@ class AcceptanceController extends Controller
         $branch = $acceptance->branch['code'];
         $cso = $acceptance->cso['code'];
 
+        $txtNotif = "New ";
+        if(strtolower($acceptance['status']) == "approved"){
+            $txtNotif = "Approved ";
+            if($acceptance->cso->user != null){
+                if($acceptance->cso->user['fmc_token'] != null){
+                    foreach ($acceptance->cso->user['fmc_token'] as $fcmSatuan) {
+                        if($fcmSatuan != null){
+                            array_push($fcm_tokenNya, $fcmSatuan);
+                        }
+                    }
+                }
+            }
+        }
+        else if(strtolower($acceptance['status']) == "rejected"){
+            $txtNotif = "Rejected ";
+            if($acceptance->cso->user != null){
+                if($acceptance->cso->user['fmc_token'] != null){
+                    foreach ($acceptance->cso->user['fmc_token'] as $fcmSatuan) {
+                        if($fcmSatuan != null){
+                            array_push($fcm_tokenNya, $fcmSatuan);
+                        }
+                    }
+                }
+            }
+        }
+
         $body = ['registration_ids'=>$fcm_tokenNya,
             'collapse_key'=>"type_a",
+            "content_available" => true,
+            "priority" => "high",
             "notification" => [
                 "body" => "Upgrade from ".$oldProduct." to ".$newProduct.". By ".$branch."-".$cso,
-                "title" => "New Acceptance [Upgrade]",
+                "title" => $txtNotif."Acceptance [Upgrade]",
                 "icon" => "ic_launcher"
             ],
             "data" => [
@@ -325,9 +374,11 @@ class AcceptanceController extends Controller
                 "product" => $oldProduct." to ".$newProduct,
                 "price" => "Rp. ".number_format($acceptance->request_price),
             ]];
-            // 'data'=> $homeservice];
 
-        $this->sendFCM(json_encode($body));
+        if(sizeof($fcm_tokenNya) > 0)
+        {
+            $this->sendFCM(json_encode($body));
+        }
     }
     //===================================================//
 
@@ -340,7 +391,7 @@ class AcceptanceController extends Controller
             'branch_id.exists' => 'Please choose the branch.'
         ];
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => ['required', 'exists:branches,id']
@@ -439,7 +490,7 @@ class AcceptanceController extends Controller
             'branch_id.required' => 'The Branch must be selected.',
             'branch_id.exists' => 'Please choose the branch.'
         ];
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => ['required', 'exists:branches,id'],
@@ -529,6 +580,8 @@ class AcceptanceController extends Controller
                     $acceptance["oldproduct_id"] = $data["oldproduct_id"];
                 }
 
+                $acceptance["product_addons_id"] = $data["product_addons_id"];
+
                 $acceptance->save();
 
                 $accStatusLog['acceptance_id'] = $data['id'];
@@ -580,7 +633,7 @@ class AcceptanceController extends Controller
             }
         }
     }
-    
+
     public function listApi(Request $request)
     {
         $messages = [
@@ -588,7 +641,7 @@ class AcceptanceController extends Controller
             'user_id.exists' => 'There\'s an error with the data.'
         ];
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'user_id' => ['required', 'exists:users,id'],
         ], $messages);
 
@@ -727,7 +780,9 @@ class AcceptanceController extends Controller
             "raja_ongkir__subdistricts.subdistrict_name AS district_name",
             "acceptances.other_product AS other_product",
             "op.code AS old_product_code",
-            "op.name AS old_product_name"
+            "op.name AS old_product_name",
+            "pao.code AS product_addons_code",
+            "pao.name AS product_addons_name",
         )
         ->leftJoin(
             "products AS np",
@@ -764,6 +819,12 @@ class AcceptanceController extends Controller
             "acceptances.oldproduct_id",
             "=",
             "op.id"
+        )
+        ->leftJoin(
+            "product as pao",
+            "acceptances.product_addons_id",
+            "=",
+            "pao.id"
         )
         ->where('acceptances.active', true)
         ->where("acceptances.id", $id)
@@ -804,7 +865,7 @@ class AcceptanceController extends Controller
             'id.exists' => 'There\'s an error with the data.'
         ];
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'id' => ['required', 'exists:home_services,id,active,1']
         ], $messages);
 

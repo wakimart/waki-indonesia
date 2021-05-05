@@ -27,6 +27,10 @@
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
+
+	.check label{
+		width: 25em;
+	}
 </style>
 @endsection
 
@@ -123,26 +127,26 @@
 			                    	</div>
 			                    </div>
 
-			                    <div class="form-group">
+			                    <div class="form-group check">
 				                	<label for="">Issues</label>
 				                	<br>
-				                	<label style="margin-right: 20%;" class="checkbox-inline">
+				                	<label class="checkbox-inline">
 								      	<input id="cbx_issue-0-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Kerusakan Listrik">Kerusakan Listrik
 								    </label>
-								    <label style="margin-right: 20%;" class="checkbox-inline">
+								    <label class="checkbox-inline">
 								      	<input id="cbx_issue-1-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Bersuara/Bergetar">Bersuara/Bergetar
 								    </label>
-								    <label style="margin-right: 20%;" class="checkbox-inline">
+								    <label class="checkbox-inline">
 								      	<input id="cbx_issue-2-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Heating">Heating
 								    </label>
 								    <br>
-								    <label style="margin-right: 20%;" class="checkbox-inline">
+								    <label class="checkbox-inline">
 								      	<input id="cbx_issue-3-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Jatuh, Pecah, Unit Lepas">Jatuh, Pecah, Unit Lepas
 								    </label>
-								    <label style="margin-right: 20%;" class="checkbox-inline">
+								    <label class="checkbox-inline">
 								      	<input id="cbx_issue-4-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Kerusakan Mekanik">Kerusakan Mekanik
 								    </label>
-								    <label style="margin-right: 20%;" class="checkbox-inline">
+								    <label class="checkbox-inline">
 								      	<input id="cbx_issue-5-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Lainnya...">Lainnya...
 								    </label>
 
@@ -275,26 +279,26 @@
 							    </div>\
 							</div>\
 						</div>\
-						<div class="form-group">\
+						<div class="form-group check">\
 							<label for="">Issues</label>\
 							<br>\
-							<label style="margin-right: 20%;" class="checkbox-inline">\
+							<label class="checkbox-inline">\
 						      	<input id="cbx_issue-0-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Kerusakan Listrik">Kerusakan Listrik\
 						    </label>\
-						    <label style="margin-right: 20%;" class="checkbox-inline">\
+						    <label class="checkbox-inline">\
 						      	<input id="cbx_issue-1-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Bersuara/Bergetar">Bersuara/Bergetar\
 						    </label>\
-						    <label style="margin-right: 20%;" class="checkbox-inline">\
+						    <label class="checkbox-inline">\
 						      	<input id="cbx_issue-2-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Heating">Heating\
 						    </label>\
 						    <br>\
-						    <label style="margin-right: 20%;" class="checkbox-inline">\
+						    <label class="checkbox-inline">\
 						      	<input id="cbx_issue-3-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Jatuh, Pecah, Unit Lepas">Jatuh, Pecah, Unit Lepas\
 						    </label>\
-						    <label style="margin-right: 20%;" class="checkbox-inline">\
+						    <label class="checkbox-inline">\
 						      	<input id="cbx_issue-4-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Kerusakan Mekanik">Kerusakan Mekanik\
 						    </label>\
-						    <label style="margin-right: 20%;" class="checkbox-inline">\
+						    <label class="checkbox-inline">\
 						      	<input id="cbx_issue-5-'+detailProductService+'" name="cbx_issue-'+detailProductService+'" style="margin-right: 10px;" type="checkbox" value="Lainnya...">Lainnya...\
 						    </label>\
 						    \

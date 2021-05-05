@@ -1,12 +1,10 @@
 <?php
-    $menu_item_page = "acceptance";
-    $menu_item_second = "add_acceptance_form";
+$menu_item_page = "acceptance";
+$menu_item_second = "add_acceptance_form";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-
 <style type="text/css">
     #intro {
         padding-top: 2em;
@@ -88,21 +86,58 @@
 	input[type='checkbox'], input[type='radio']{
 		margin-left: 0px !important;
 	}
+
+	@media (max-width: 768px){
+		#desktop{
+			display: none;
+		}
+
+		#mobile{
+			display: block;
+		}
+	}
+
+	@media (min-width: 768px){
+		#desktop{
+			display: block;
+		}
+
+		#mobile{
+			display: none;
+		}
+	}
+
 </style>
 @endsection
 
 @section('content')
 <div class="main-panel">
   	<div class="content-wrapper">
-    	<div class="page-header">
-      		<h3 class="page-title">Add Acceptance</h3>
-      		<nav aria-label="breadcrumb">
-	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">Acceptance</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Add Acceptance</li>
-	        	</ol>
-      		</nav>
-    	</div>
+		<!-- header mobile -->
+    	<div id="mobile">
+			<h3 class="text-center">Add Acceptance</h3>
+			<div class="row">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">Acceptance</a></li>
+						<li class="breadcrumb-item active" aria-current="page">Add Acceptance</li>
+					</ol>
+				</nav>
+		  	</div>
+	  	</div>
+
+		<!-- header desktop -->
+		<div id="desktop">
+			<div class="page-header">
+				<h3 class="page-title">Add Acceptance</h3>
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						  <li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="deliveryorder-dd">Acceptance</a></li>
+						  <li class="breadcrumb-item active" aria-current="page">Add Acceptance</li>
+					</ol>
+				</nav>
+		  	</div>
+		</div>
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
@@ -169,7 +204,7 @@
 									<option selected disabled value="">Pilihan Kecamatan</option>
 								</select>
 								<div class="validation"></div>
-	              			</div> 
+	              			</div>
 	              			<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
 				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address Lengkap" required></textarea>
@@ -187,6 +222,21 @@
 								</select>
 	                			<div class="validation"></div>
 	              			</div>
+                            <div class="form-group">
+                                <label for="product-add-ons">
+                                    Product Add-ons
+                                </label>
+                                <select name="product_addons_id"
+                                    id="product-add-ons"
+                                    class="form-control">
+                                    <option value="" selected>Choose Product</option>
+                                    @foreach ($products as $product)
+                                        <option value="{{ $product['id'] }}">
+                                            {{ $product['code'] }} - {{ $product['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 	              			<div class="form-group">
 	                			<label for="">Old Product</label>
 	                			<select class="form-control" id="oldproduct_id" name="oldproduct_id" data-msg="Mohon Pilih Produk Lama" required>
@@ -328,7 +378,7 @@
         $("#cso").on("input", function(){
             check_cso($("#cso").val());
 		});
-		
+
 		$("#province").on("change", function(){
             var id = $(this).val();
             $( "#city" ).html("");
@@ -341,8 +391,8 @@
                     	if(value['type'] == "Kabupaten"){
                         	arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
                         }
-                        
-                        if(value['type'] == "Kota"){                            
+
+                        if(value['type'] == "Kota"){
                             arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                         }
                     });
@@ -359,14 +409,14 @@
 				console.log(result);
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
-                    $.each( result, function( key, value ) {                            
+                    $.each( result, function( key, value ) {
                         arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
                     });
                     $( "#subDistrict" ).append(arrSubDistsrict);
                 }
             });
 		});
-		
+
         function check_cso(code) {
         	$.get( '{{route("fetchCso")}}', { cso_code: code })
             .done(function( result ) {
@@ -384,8 +434,8 @@
         };
 
         document.getElementById("image").onchange = function() {
-        	if(this.files[0].size > 2000000){
-        		alert("File foto terlalu besar !\nMaksimal 5MB");
+        	if(this.files[0].size > 15000000){
+        		alert("File foto terlalu besar !\nMaksimal 15MB");
         		this.value = "";
         	};
         };

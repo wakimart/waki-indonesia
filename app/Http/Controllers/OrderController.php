@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Http\Request;
 use App\Exports\OrderExport;
 use App\DeliveryOrder;
 use App\Order;
@@ -14,8 +11,13 @@ use App\CategoryProduct;
 use App\User;
 use App\RajaOngkir_City;
 use App\HistoryUpdate;
-use DB;
+use App\Promo;
 use App\Utils;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends Controller
 {
@@ -44,13 +46,13 @@ class OrderController extends Controller
 		$data['arr_product'] = [];
     	foreach ($data as $key => $value) {
     		$arrKey = explode("_", $key);
-    		if($arrKey[0] == 'product'){
-    			if(isset($data['qty_'.$arrKey[1]])){
+    		if ($arrKey[0] == 'product'){
+    			if (isset($data['qty_'.$arrKey[1]])) {
     				$data['arr_product'][$index] = [];
     				$data['arr_product'][$index]['id'] = $value;
 
                     // {{-- KHUSUS Philiphin --}}
-                    if($value == 'other'){
+                    if ($value == 'other') {
                         $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
                     }
                     //===========================
@@ -110,8 +112,9 @@ class OrderController extends Controller
         return view('order_success', compact('order'));
     }
 
-    public function admin_AddOrder(){
-        $promos = DeliveryOrder::$Promo;
+    public function admin_AddOrder()
+    {
+        $promos = Promo::all();
         $branches = Branch::where('active', true)->get();
         $csos = Cso::all();
         $cashUpgrades = Order::$CashUpgrade;
@@ -136,18 +139,18 @@ class OrderController extends Controller
             $data['arr_product'] = [];
             foreach ($data as $key => $value) {
                 $arrKey = explode("_", $key);
-                if($arrKey[0] == 'product'){
-                    if(isset($data['qty_'.$arrKey[1]])){
+                if ($arrKey[0] == 'product') {
+                    if (isset($data['qty_' . $arrKey[1]])) {
                         $data['arr_product'][$index] = [];
                         $data['arr_product'][$index]['id'] = $value;
 
                         // {{-- KHUSUS Philiphin --}}
-                        if($value == 'other'){
-                            $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
+                        if ($value == 'other') {
+                            $data['arr_product'][$index]['id'] = $data['product_other_' . $arrKey[1]];
                         }
                         //===========================
 
-                        $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
+                        $data['arr_product'][$index]['qty'] = $data['qty_' . $arrKey[1]];
                         $index++;
                     }
                 }
@@ -254,7 +257,7 @@ class OrderController extends Controller
         if($request->has('id')){
             $orders = Order::find($request->get('id'));
             $orders['district'] = $orders->getDistrict();
-            $promos = DeliveryOrder::$Promo;
+            $promos = Promo::all();
             $branches = Branch::all();
             $csos = Cso::all();
             $cashUpgrades = Order::$CashUpgrade;
@@ -454,7 +457,7 @@ class OrderController extends Controller
                 'old_product.required_if' => 'The old product field is required when upgrade.'
             );
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
@@ -566,7 +569,7 @@ class OrderController extends Controller
                 'user_id.exists' => 'There\'s an error with the data.'
             );
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'user_id' => ['required', 'exists:users,id'],
         ], $messages);
 
@@ -656,7 +659,7 @@ class OrderController extends Controller
             'old_product.required_if' => 'The old product field is required when upgrade.'
         );
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'name' => 'required',
             'address' => 'required',
             'phone' => 'required',
@@ -832,7 +835,7 @@ class OrderController extends Controller
             'id.exists' => 'There\'s an error with the data.'
         );
 
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'id' => ['required', 'exists:orders,id,active,1']
         ], $messages);
 
