@@ -238,9 +238,9 @@
 				                  		<h4>Follow Us</h4>
 				                  	@endif
 
-			                      	<a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
-			                      	<a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
-			                      	<a href="#" class="youtube"><i class="fa fa-youtube"></i></a>
+			                      	<a href="https://web.facebook.com/wakimart.id" class="facebook"><i class="fa fa-facebook"></i></a>
+			                      	<a href="https://www.instagram.com/wakimart.id/" class="instagram"><i class="fa fa-instagram"></i></a>
+			                      	<a href="https://www.youtube.com/channel/UCI2G97LQi4lHZ0yQtug1Wqw" class="youtube"><i class="fa fa-youtube"></i></a>
 			                    </div>
                   			</div>
               			</div>
