@@ -71,13 +71,14 @@ $menu_item_second = "list_promo";
                                       			</div>
 				                            </td> --}}
 
-				                            @foreach($ProductPromos as $key => $ProductPromo)
+				                            @foreach($ProductPromos as $key1 => $ProductPromo)
 				                                <td>
-                                                    {{ $promo->product_list()[$key]['name'] }}
+                                                    {{ $promo->product_list()[$key1]['name'] }}
                                                 </td>
 				                                <td>
                                                     {{ $ProductPromo['qty'] }}
                                                 </td>
+				                                @php break; @endphp
 				                            @endforeach
 
 				                            <td rowspan="{{ $totalProduct }}">
@@ -100,7 +101,7 @@ $menu_item_second = "list_promo";
                                             </td>
 				                        </tr>
 				                        @php $first = true; @endphp
-				                        @foreach ($ProductPromos as $ProductPromo)
+				                        @foreach ($ProductPromos as $key2 => $ProductPromo)
 				                            @php
 				                                if ($first) {
 				                                    $first = false;
@@ -109,7 +110,7 @@ $menu_item_second = "list_promo";
 				                            @endphp
 				                            <tr>
 				                                <td>
-                                                    {{ $promo->product_list()[$key]['name'] }}
+                                                    {{ $promo->product_list()[$key2]['name'] }}
                                                 </td>
 				                                <td>
                                                     {{ $ProductPromo['qty'] }}
