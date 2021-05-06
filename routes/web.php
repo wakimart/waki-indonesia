@@ -409,6 +409,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update_upgrade/', 'ProductServiceController@updateUpgrade')
             ->name('update_taskupgrade')
             ->middleware('can:edit-service');
+
+        Route::post("/update/failrepair", "ProductServiceController@updateFailRepair")
+            ->name("update_fail_repair")
+            ->middleware("can:edit-service");
     });
 
     Route::group(['prefix' => 'sparepart', 'middleware' => 'auth'], function() {

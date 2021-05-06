@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\ProductService;
 use App\Product;
-use App\Sparepart;
+use App\ProductService;
 use App\Service;
+use App\Sparepart;
 use App\Upgrade;
-use DB;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProductServiceController extends Controller
 {
@@ -19,7 +20,7 @@ class ProductServiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {   
+    {
         $services = Service::where('active', true)->get();
         $upgrades = Upgrade::where('active', true)->get();
         $countServices = $services->count();
@@ -66,26 +67,24 @@ class ProductServiceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Request $request)
-    {   
+    {
         if($request->has('id')){
             $product_services = ProductService::where('service_id',$request->get('id'))->get();
             $products = Product::all();
             $spareparts = Sparepart::where('active', true)->get();
-            return view('admin.update_productservice', compact('product_services','products', 'spareparts'));    
+            return view('admin.update_productservice', compact('product_services','products', 'spareparts'));
         }
-        
     }
 
     public function editUpgrade(Request $request)
-    {   
+    {
         if($request->has('id')){
             $upgrades = Upgrade::where('id', $request->get('id'))->get();
             $product_services = ProductService::where('upgrade_id',$request->get('id'))->get();
             $products = Product::all();
             $spareparts = Sparepart::where('active', true)->get();
-            return view('admin.update_productupgrade', compact('upgrades', 'product_services','products', 'spareparts'));    
+            return view('admin.update_productupgrade', compact('upgrades', 'product_services','products', 'spareparts'));
         }
-        
     }
 
     /**
@@ -141,20 +140,20 @@ class ProductServiceController extends Controller
             $services = Service::find($get_allProductService[0][2]);
 
             if($request->repairedservices == "true"){
-                
+
                 $arr_history = json_decode($services['history_status']);
-                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "repaired", 'updated_at' => date("Y-m-d h:i:s")]);
+                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "repaired", 'updated_at' => date("Y-m-d H:i:s")]);
                 $services->history_status = json_encode($arr_history);
                 $services->status = "Repaired";
                 $services->save();
             }else if($request->repairedservices == "false"){
                 $arr_history = array();
-                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "process", 'updated_at' => date("Y-m-d h:i:s")]);
+                array_push($arr_history, ['user_id' => Auth::user()['id'], 'status' => "process", 'updated_at' => date("Y-m-d H:i:s")]);
                 $services->history_status = json_encode($arr_history);
                 $services->status = "Process";
-                $services->save();      
-            }       
-            
+                $services->save();
+            }
+
             DB::commit();
             return response()->json(['success' => 'Berhasil!!!']);
         } catch (\Exception $ex) {
@@ -206,7 +205,7 @@ class ProductServiceController extends Controller
                 }
                 $product_services->save();
             }
-            
+
             if($request->repairedservices == "true"){
                 $upgrades = Upgrade::find($get_allProductService[0][2]);
                 $arr_old_history = $upgrades['history_status'];
@@ -216,12 +215,46 @@ class ProductServiceController extends Controller
                 $upgrades->status = "Repaired";
                 $upgrades->save();
             }
-            
+
             DB::commit();
             return response()->json(['success' => 'Berhasil!!!']);
         } catch (\Exception $ex) {
             DB::rollback();
             return response()->json(['errors' => $ex]);
+        }
+    }
+
+    public function updateFailRepair(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $service = Service::find($request->id);
+            $service->fill($request->only(
+                "status",
+                "fail_repair_description",
+            ));
+            $service->history_status = json_encode(
+                [
+                    "user_id" => Auth::user()["id"],
+                    "status" => "repaired",
+                    "updated_at" => date("Y-m-d H:i:s"),
+                ],
+                JSON_THROW_ON_ERROR
+            );
+            $service->save();
+
+            DB::commit();
+
+            return redirect()->route("edit_taskservice", ["id" => $request->id]);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "result" => 0,
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ]);
         }
     }
 
