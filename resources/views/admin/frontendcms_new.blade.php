@@ -83,7 +83,7 @@ $menu_item_page = "index_frontendcms";
                                 data-toggle="modal">
                                 Add Photo
                             </button>
-                            <h4 class="card-title">GALLERY PHOTO</h4>
+                            <h4 class="card-title">Photo Gallery</h4>
                             <p class="card-description">
                                 Image Size (1280x500 pixel)
                             </p>
@@ -100,16 +100,12 @@ $menu_item_page = "index_frontendcms";
 
                             @for ($x = 0; $x < $count_photo; $x++)
                                 <div id="photo_{{ $x }}"
-                                    class="col-xs-12 col-sm-6 col-md-4 form-group"
+                                    class="col-xs-12 col-sm-6 col-md-4"
                                     style="padding: 15px; float: left;">
                                     <label>Photo {{ $x + 1 }}</label>
                                     @if (!empty($photos[$x]))
                                         <div class="imagePreview"
                                             style="background-image: url({{ $defaultImg . '/' . $photos[$x] }});">
-                                        </div>
-                                    @else
-                                        <div class="imagePreview"
-                                            style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
                                         </div>
                                     @endif
                                     <form method="POST"
@@ -141,7 +137,7 @@ $menu_item_page = "index_frontendcms";
                                         onclick="clickDeleteImage(this)"
                                         data-sequence="{{ $x }}"
                                         data-toggle="modal"
-                                        data-target="#delete-image-modal">
+                                        data-target="#delete-modal">
                                         Delete
                                     </button>
                                 </div>
@@ -149,96 +145,67 @@ $menu_item_page = "index_frontendcms";
                             <div id="tambahan_photo"></div>
                         </div>
                         <div class="clearfix"></div>
+                        <br>
+                        <br>
                         <div class="form-group">
                             <?php
                             $urlvideo = json_decode($galleries['url_youtube']);
                             $count_url = sizeof($urlvideo);
                             ?>
-                            <h4 class="card-title">GALLERY VIDEO</h4>
+                            <button class="btn btn-gradient-primary"
+                                style="float: right;"
+                                data-target="#add-video-modal"
+                                data-toggle="modal">
+                                Add Video
+                            </button>
+                            <h4 class="card-title">Video Gallery</h4>
+                            <br>
                             @if (!empty($urlvideo))
                                 @for ($v = 0; $v < $count_url; $v++)
                                     <div id="video_{{ $v }}"
-                                        style="padding: 15px;">
-                                        <div class="form-group"
-                                            style="width: 72%; display: inline-block;">
-                                            <label for="title-{{ $v }}">
-                                                Video Title {{ $v + 1 }}
-                                            </label>
-                                            <input type="text"
-                                                id="title-{{ $v }}"
-                                                name="title_{{ $v }}"
-                                                class="text-uppercase form-control"
-                                                value="{{ $urlvideo[$v]->title }}"
-                                                style="margin: 5px 0px;" />
-                                            <div class="validation"></div>
-
-                                            <label for="video-{{ $v }}">
-                                                URL Video {{ $v + 1 }}
-                                            </label>
-                                            <input type="text"
-                                                id="video-{{ $v }}"
-                                                name="video_{{ $v }}"
-                                                class="text-uppercase form-control"
-                                                value="{{ $urlvideo[$v]->url }}"
-                                                style="margin: 5px 0px;" />
-                                            <div class="validation"></div>
+                                        class="col-xs-12 col-sm-6 col-md-4"
+                                        style="padding: 15px; float: left;">
+                                        <label>Video {{ $v + 1 }}</label>
+                                        <div class="imagePreview embed-responsive embed-responsive-16by9">
+                                            <iframe class="embed-responsive-item"
+                                                src="{{ $urlvideo[$v]->url }}"
+                                                allowfullscreen></iframe>
                                         </div>
-
-                                        @if ($v === 0)
-                                            <span>
-                                                <label id="btnAddUrl"
-                                                    class="btn btn-gradient-primary"
-                                                    style="float: right; display: inline-block; margin-top: 1.8em;">
-                                                    Add URL
-                                                </label>
-                                            </span>
-                                        @else
-                                            <span>
-                                                <label class="btn btn-gradient-danger delete_url"
-                                                    style="float: right; display: inline-block; margin-top: 1.8em;"
-                                                    value="{{ $v }}">
-                                                    Delete URL
-                                                </label>
-                                            </span>
-                                        @endif
+                                        <form method="POST"
+                                            id="update-video-{{ $v }}"
+                                            action="{{ route("update_frontendcms_video") }}">
+                                            @csrf
+                                            <input type="hidden"
+                                                name="sequence"
+                                                value="{{ $v }}" />
+                                            <input type="text"
+                                                id="video-title-{{ $v }}"
+                                                class="form-control"
+                                                placeholder="Video Title"
+                                                value="{{ $urlvideo[$v]->title }}"
+                                                name="title" />
+                                            <input type="url"
+                                                id="video-url-{{ $v }}"
+                                                class="form-control"
+                                                placeholder="Video URL"
+                                                pattern="https://.*"
+                                                value="{{ $urlvideo[$v]->url }}"
+                                                name="url" />
+                                        </form>
+                                        <input type="submit"
+                                            form="update-video-{{ $v }}"
+                                            value="Update"
+                                            class="btn btn-gradient-primary" />
+                                        <button class="btn btn-gradient-danger"
+                                            onclick="clickDeleteVideo(this)"
+                                            data-sequence="{{ $v }}"
+                                            data-toggle="modal"
+                                            data-target="#delete-modal">
+                                            Delete
+                                        </button>
                                     </div>
                                 @endfor
-                            @else
-                                <div id="video_0" style="padding: 15px;">
-                                    <div class="form-group"
-                                        style="width: 72%; display: inline-block;">
-                                        <span>Video Title 1</span>
-                                        <input type="text"
-                                            name="title_0"
-                                            class="text-uppercase form-control"
-                                            placeholder="Video Title"
-                                            style="margin: 5px 0px;" />
-                                        <div class="validation"></div>
-                                        <span>URL Video 1</span>
-                                        <input type="text"
-                                            name="video_0"
-                                            class="text-uppercase form-control"
-                                            placeholder="URL Video"
-                                            style="margin: 5px 0px;" />
-                                        <div class="validation"></div>
-                                    </div>
-
-                                    <span>
-                                        <label id="btnAddUrl"
-                                            class="btn btn-gradient-primary"
-                                            style="float: right; display: inline-block; margin-top: 2.5%; width: 16%;">
-                                            Add URL
-                                        </label>
-                                    </span>
-                                </div>
                             @endif
-                            <div id="tambahan_video"></div>
-                            <input type="hidden"
-                                id="totalVideo"
-                                value="{{ $count_url }}" />
-                            <input type="hidden"
-                                id="totalPhoto"
-                                value="{{ $count_photo }}" />
                         </div>
                     </div>
                 </div>
@@ -300,7 +267,7 @@ $menu_item_page = "index_frontendcms";
 </div>
 
 <div class="modal fade"
-    id="delete-image-modal"
+    id="delete-modal"
     tabindex="-1"
     role="dialog"
     aria-hidden="true">
@@ -318,18 +285,77 @@ $menu_item_page = "index_frontendcms";
             </div>
             <div class="modal-body">
                 <div id="delete-image-body"></div>
-                <form id="delete-image"
+                <form id="delete-form"
                     method="POST"
-                    action="{{ route("delete_frontendcms_image") }}">
+                    action="">
                     @csrf
                     <input type="hidden" id="delete-sequence" name="sequence" value="" />
                 </form>
             </div>
             <div class="modal-footer">
                 <input type="submit"
-                    form="delete-image"
+                    form="delete-form"
                     value="Confirm Delete"
                     class="btn btn-gradient-danger" />
+                <button class="btn btn-light"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="add-video-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Add Video</h5>
+                <button type="button"
+                    id="edit-close"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="add-video"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    action="{{ route("store_frontendcms_video") }}">
+                    @csrf
+                    <div class="form-group">
+                        <label for="video-title">Title</label>
+                        <input type="text"
+                            id="video-title"
+                            class="form-control"
+                            placeholder="Video Title"
+                            name="title"
+                            required />
+                    </div>
+                    <div class="form-group">
+                        <label for="video-url">URL</label>
+                        <input type="url"
+                            id="video-url"
+                            class="form-control"
+                            pattern="https://.*"
+                            placeholder="Video URL (e.g. https://www.youtube.com/embed/xfQWGp805O4)"
+                            name="url"
+                            required />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="submit"
+                    form="add-video"
+                    value="Add"
+                    class="btn btn-gradient-primary" />
                 <button class="btn btn-light"
                     data-dismiss="modal"
                     aria-label="Close">
@@ -344,6 +370,14 @@ $menu_item_page = "index_frontendcms";
 @section("script")
 <script type="application/javascript">
 function clickDeleteImage(e) {
+    const DELETE_URL = '<?php echo route("delete_frontendcms_image"); ?>';
+    document.getElementById("delete-form").setAttribute("action", DELETE_URL);
+    document.getElementById("delete-sequence").setAttribute("value", e.dataset.sequence);
+}
+
+function clickDeleteVideo(e) {
+    const DELETE_URL = '<?php echo route("delete_frontendcms_video"); ?>';
+    document.getElementById("delete-form").setAttribute("action", DELETE_URL);
     document.getElementById("delete-sequence").setAttribute("value", e.dataset.sequence);
 }
 </script>

@@ -51,17 +51,6 @@ class FrontendCmsController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
     public function storeImageGallery(Request $request)
     {
         DB::beginTransaction();
@@ -82,6 +71,38 @@ class FrontendCmsController extends Controller
             return redirect()
                 ->route("index_frontendcms")
                 ->with("success", "Image successfully added.");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+                "error line" => $e->getLine(),
+                "error file" => $e->getFile(),
+            ]);
+        }
+    }
+
+    public function storeVideoGallery(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $videoGallery = OurGallery::where("id", 1)->first();
+            $videoArray = json_decode($videoGallery->url_youtube, JSON_THROW_ON_ERROR);
+            $videoArray[] = [
+                "title" => $request->title,
+                "url" => $request->url,
+            ];
+
+            $videoGallery->url_youtube = json_encode($videoArray, JSON_THROW_ON_ERROR);
+            $videoGallery->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route("index_frontendcms")
+                ->with("success", "Video successfully added.");
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -193,7 +214,7 @@ class FrontendCmsController extends Controller
                     {
                         File::delete("sources/banners/" . $namaGambar[$value]->img);
                     }
-                   // return response()->json(['success' => $value ]);
+
                     unset($arr_image_before[$value]);
                 }
 
@@ -218,19 +239,10 @@ class FrontendCmsController extends Controller
                         File::delete("sources/portfolio/" . $arr_photo_before[$i]->img);
                     }
                 }
-                //return response()->json(['success' => $request->dlt_img ]);
-                // $path = "public/portfolio/" . $codePath;
-                // $path = str_replace("\\", "", $path);
+
                 $file = $request->file('photos' . $i);
                 $filename = $file->getClientOriginalName();
-
-                // $image_resize = Image::make($file->getRealPath());
-                // $image_resize->resize(720, 720);
-
-                //storing gambar - gambar
-                //$pathForImage = "sources/portfolio/" . $codePath;
                 $file->move("sources/portfolio/", $filename);
-                //$image_resize->save(public_path($pathForImage.'/'.$filename));
 
                 if(array_key_exists($i, $arr_photo_before)){
                     $arr_photo_before[$i] = $namaPhoto[$i];
@@ -317,7 +329,7 @@ class FrontendCmsController extends Controller
 
             return redirect()
                 ->route("index_frontendcms")
-                ->with("success", "Image #" . $request->sequence . " successfully updated.");
+                ->with("success", "Image #" . ((int)$request->sequence + 1) . " successfully updated.");
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -330,15 +342,36 @@ class FrontendCmsController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function updateVideoGallery(Request $request)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $videoGallery = OurGallery::where("id", 1)->first();
+            $videoArray = json_decode($videoGallery->url_youtube, JSON_THROW_ON_ERROR);
+            $videoArray[(int)$request->sequence] = [
+                "title" => $request->title,
+                "url" => $request->url,
+            ];
+
+            $videoGallery->url_youtube = json_encode($videoArray, JSON_THROW_ON_ERROR);
+            $videoGallery->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route("index_frontendcms")
+                ->with("success", "Video #" . ((int)$request->sequence + 1) . " successfully updated.");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+                "error line" => $e->getLine(),
+                "error file" => $e->getFile(),
+            ]);
+        }
     }
 
     public function destroyImage(Request $request)
@@ -363,7 +396,37 @@ class FrontendCmsController extends Controller
 
             return redirect()
                 ->route("index_frontendcms")
-                ->with("success", "Image #" . $request->sequence . " successfully deleted.");
+                ->with("success", "Image #" . ((int)$request->sequence + 1) . " successfully deleted.");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+                "error line" => $e->getLine(),
+                "error file" => $e->getFile(),
+            ]);
+        }
+    }
+
+    public function destroyVideo(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $videoGallery = OurGallery::where("id", 1)->first();
+            $videoArray = json_decode($videoGallery->url_youtube, JSON_THROW_ON_ERROR);
+
+            array_splice($videoArray, (int)$request->sequence, 1);
+
+            $videoGallery->url_youtube = json_encode($videoArray, JSON_THROW_ON_ERROR);
+            $videoGallery->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route("index_frontendcms")
+                ->with("success", "Video #" . ((int)$request->sequence + 1) . " successfully deleted.");
         } catch (Exception $e) {
             DB::rollBack();
 
