@@ -202,10 +202,16 @@ Route::group(['prefix' => 'cms-admin'], function () {
         ->middleware('can:browse-frontendcms');
     //add frontendcms
     Route::post('/frontend-cms', 'FrontendCmsController@store')
-            ->name('store_frontendcms');
+        ->name('store_frontendcms');
+    Route::post("/frontend-cms/add/image", "FrontendCmsController@storeImageGallery")
+        ->name("store_frontendcms_image");
     //update frontendcms
     Route::post('/frontend-cms/update', 'FrontendCmsController@update')
-            ->name('update_frontendcms');
+        ->name('update_frontendcms');
+    Route::post("/frontend-cms/update/image", "FrontendCmsController@updateImageGallery")
+        ->name("update_frontendcms_image");
+    Route::post("frontend-cms/delete/image", "FrontendCmsController@destroyImage")
+        ->name("delete_frontendcms_image");
 
     //change password admin
     Route::post('/changePassword','UserAdminController@changePassword')

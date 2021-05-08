@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Banner;
 use App\OurGallery;
-use DB;
-use Intervention\Image\ImageManagerStatic as Image;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 
 class FrontendCmsController extends Controller
 {
@@ -20,28 +18,27 @@ class FrontendCmsController extends Controller
      */
     public function index()
     {
-        $banners = Banner::all()->first();
-        //dd($banners);
+        $banners = Banner::first();
 
-        if($banners == null){
-            $data = array(
-                        "id" => "1",
-                        "image" => "[]",
-                    );
+        if ($banners === null) {
+            $data = [
+                "id" => "1",
+                "image" => "[]",
+            ];
             $banners = Banner::create($data);
         }
 
-        $galleries = OurGallery::all()->first();
-        if($galleries == null){
-            $data = array(
-                        "id" => "1",
-                        "photo" => "[]",
-                        "url_youtube" => "[]",
-                    );
+        $galleries = OurGallery::first();
+        if ($galleries === null) {
+            $data = [
+                "id" => "1",
+                "photo" => "[]",
+                "url_youtube" => "[]",
+            ];
             $galleries = OurGallery::create($data);
         }
 
-        return view('admin.frontendcms', compact('banners', 'galleries'));
+        return view('admin.frontendcms_new', compact('banners', 'galleries'));
     }
 
     /**
@@ -62,7 +59,39 @@ class FrontendCmsController extends Controller
      */
     public function store(Request $request)
     {
-        
+        //
+    }
+
+    public function storeImageGallery(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $imageGallery = OurGallery::where("id", 1)->first();
+            $imageArray = json_decode($imageGallery->photo, JSON_THROW_ON_ERROR);
+
+            $fileName = $request->file("photo")->getClientOriginalName();
+            $request->file("photo")->move("sources/portfolio/", $fileName);
+            $imageArray[] = $fileName;
+
+            $imageGallery->photo = json_encode($imageArray, JSON_THROW_ON_ERROR);
+            $imageGallery->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route("index_frontendcms")
+                ->with("success", "Image successfully added.");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+                "error line" => $e->getLine(),
+                "error file" => $e->getFile(),
+            ]);
+        }
     }
 
     /**
@@ -97,52 +126,39 @@ class FrontendCmsController extends Controller
     public function update(Request $request)
     {
         $data = Banner::all()[0];
-        
+
         //restore image
         $arr_image_before = json_decode($data['image']);
         $namaGambar = [];
         $namaGambar = array_values($arr_image_before);
 
         if ($request->hasFile('images0') || $request->hasFile('images1') || $request->hasFile('images2') || $request->hasFile('images3') || $request->hasFile('images4') || $request->hasFile('images5')){
-            
-            //store image
 
-            for ($i = 0; $i < $request->total_images; $i++) {   
+            //store image
+            for ($i = 0; $i < $request->total_images; $i++) {
                 if ($request->hasFile('images' . $i)) {
                     if(array_key_exists($i, $arr_image_before)){
                         if(File::exists("sources/banners/" . $arr_image_before[$i]->img))
                         {
                             File::delete("sources/banners/" . $arr_image_before[$i]->img);
                         }
-                    }  
-                    //return response()->json(['success' => $request->dlt_img ]);
-                    // $path = "public/banners/" . $codePath;
-                    // $path = str_replace("\\", "", $path);
+                    }
+
                     $file = $request->file('images' . $i);
                     $filename = $file->getClientOriginalName();
-
-                    // $image_resize = Image::make($file->getRealPath());
-                    // $image_resize->resize(720, 720);
-
-                    //storing gambar - gambar
-                    //$pathForImage = "sources/banners/" . $codePath;
                     $file->move("sources/banners/", $filename);
-                    //$image_resize->save(public_path($pathForImage.'/'.$filename));
 
                     if(array_key_exists($i, $arr_image_before)){
                         $arr_image_before[$i]->img = $filename;
                         $arr_image_before[$i]->url = $request->input('url_banner'.$i);
-                        //return response()->json(['test' => "WOY"]);
                     }else{
                         $json =array(
                             "img" => $filename,
                             "url" => $request->input('url_banner'.$i),
                         );
-                        array_push($arr_image_before, $json);    
-                    }                    
-                }
-
-                else{
+                        array_push($arr_image_before, $json);
+                    }
+                } else {
                     if(array_key_exists($i, $arr_image_before)){
                         $arr_image_before[$i] = $namaGambar[$i];
                     }
@@ -160,13 +176,11 @@ class FrontendCmsController extends Controller
                         {
                             File::delete("sources/banners/" . $namaGambar[$value]);
                         }
-                       // return response()->json(['success' => $value ]);
-                        //unset($namaGambar[$value]);
+
                         unset($arr_image_before[$value]);
                     }
-                   
                 }
-            }  
+            }
         }
 
         if($request->dlt_img!="")
@@ -182,7 +196,7 @@ class FrontendCmsController extends Controller
                    // return response()->json(['success' => $value ]);
                     unset($arr_image_before[$value]);
                 }
-               
+
             }
         }
 
@@ -196,7 +210,7 @@ class FrontendCmsController extends Controller
         $namaPhoto = array_values($arr_photo_before);
 
 
-        for ($i = 0; $i < $request->total_photos; $i++) { 
+        for ($i = 0; $i < $request->total_photos; $i++) {
             if ($request->hasFile('photos' . $i)) {
                 if(array_key_exists($i, $arr_photo_before)){
                     if(File::exists("sources/portfolio/" . $arr_photo_before[$i]->img))
@@ -221,7 +235,7 @@ class FrontendCmsController extends Controller
                 if(array_key_exists($i, $arr_photo_before)){
                     $arr_photo_before[$i] = $namaPhoto[$i];
                 }else{
-                    array_push($arr_photo_before, $filename);    
+                    array_push($arr_photo_before, $filename);
                 }
             }
 
@@ -242,10 +256,9 @@ class FrontendCmsController extends Controller
                     {
                         File::delete("sources/portfolio/" . $namaPhoto[$value]);
                     }
-                   // return response()->json(['success' => $value ]);
+
                     unset($namaPhoto[$value]);
                 }
-               
             }
         }
 
@@ -256,7 +269,7 @@ class FrontendCmsController extends Controller
         for ($v=0; $v < $request->total_videos; $v++) {
 
             if($request->input('video_' . $v) != null){
-                
+
                 if(array_key_exists($v, $arr_vid_before)){
                     $arr_vid_before[$v]->title = $request->input('title_'.$v);
                     $arr_vid_before[$v]->url = $request->input('video_'.$v);
@@ -265,11 +278,10 @@ class FrontendCmsController extends Controller
                         "title" => $request->input('title_'.$v),
                         "url" => $request->input('video_'.$v),
                     );
-                    array_push($arr_vid_before, $json_vid);    
+                    array_push($arr_vid_before, $json_vid);
                 }
             }
-        }        
-        //return response()->json(['test' => json_encode($arr_vid_before)]);
+        }
 
         DB::table('our_galleries')
             ->where('id', 1)
@@ -277,9 +289,45 @@ class FrontendCmsController extends Controller
                 'photo' => json_encode($arr_photo_before),
                 'url_youtube' => json_encode($arr_vid_before)
             ]);
-        
-        return response()->json(['success' => 'Berhasil!']);        
-        
+
+        return response()->json(['success' => 'Berhasil!']);
+    }
+
+    public function updateImageGallery(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $imageGallery = OurGallery::where("id", 1)->first();
+            $imageArray = json_decode($imageGallery->photo, JSON_THROW_ON_ERROR);
+
+            $oldFile = "sources/portfolio/" . $imageArray[(int)$request->sequence];
+            if (File::exists($oldFile)) {
+                File::delete($oldFile);
+            }
+
+            $fileName = $request->file("photo")->getClientOriginalName();
+            $request->file("photo")->move("sources/portfolio/", $fileName);
+            $imageArray[(int)$request->sequence] = $fileName;
+
+            $imageGallery->photo = json_encode($imageArray, JSON_THROW_ON_ERROR);
+            $imageGallery->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route("index_frontendcms")
+                ->with("success", "Image #" . $request->sequence . " successfully updated.");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+                "error line" => $e->getLine(),
+                "error file" => $e->getFile(),
+            ]);
+        }
     }
 
     /**
@@ -291,5 +339,40 @@ class FrontendCmsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function destroyImage(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $imageGallery = OurGallery::where("id", 1)->first();
+            $imageArray = json_decode($imageGallery->photo, JSON_THROW_ON_ERROR);
+
+            $oldFile = "sources/portfolio" . $imageArray[(int)$request->sequence];
+            if (File::exists($oldFile)) {
+                File::delete($oldFile);
+            }
+
+            array_splice($imageArray, (int)$request->sequence, 1);
+
+            $imageGallery->photo = json_encode($imageArray, JSON_THROW_ON_ERROR);
+            $imageGallery->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route("index_frontendcms")
+                ->with("success", "Image #" . $request->sequence . " successfully deleted.");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+                "error line" => $e->getLine(),
+                "error file" => $e->getFile(),
+            ]);
+        }
     }
 }
