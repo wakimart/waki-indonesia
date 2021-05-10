@@ -40,7 +40,6 @@ $menu_item_second = "list_promo";
 						            <tr>
 						              	<th>No.</th>
 						              	<th>Code</th>
-			                            {{-- <th>Image</th> --}}
 			                            <th colspan="2">Product</th>
 			                            <th>Price</th>
 						              	<th colspan="2">Edit / Delete</th>
@@ -48,10 +47,10 @@ $menu_item_second = "list_promo";
           						</thead>
           						<tbody>
           							@foreach($promos as $key => $promo)
-          								@php
-				                            $ProductPromos = json_decode($promo['product'], true);
-				                            $totalProduct = count($ProductPromos);
-				                        @endphp
+          								<?php
+                                        $ProductPromos = json_decode($promo['product'], true);
+                                        $totalProduct = count($ProductPromos);
+				                        ?>
 				                        <tr>
 				                        	<td rowspan="{{ $totalProduct }}">
                                                 {{ $key + 1 }}
@@ -59,26 +58,15 @@ $menu_item_second = "list_promo";
 				                        	<td rowspan="{{ $totalProduct }}">
                                                 {{ $promo['code'] }}
                                             </td>
-				                            {{-- <td rowspan="{{ $totalProduct }}">
-				                            	<div class="product-thumbnail product__image center-block">
-                                          			<div class="product-thumbnail__wrapper">
-                                              			@php
-                                                  			$img = json_decode($promo->image);
-                                                  			$defaultImg = asset('sources/promo_images/') . '/' . strtolower($promo['code']) . '/' . $img[0];
-                                              			@endphp
-                                              			<img alt="#" class="product-thumbnail__image" src="{{ $defaultImg }}">
-                                          			</div>
-                                      			</div>
-				                            </td> --}}
-
-				                            @foreach($ProductPromos as $key1 => $ProductPromo)
-				                                <td>
-                                                    {{ $promo->product_list()[$key1]['name'] }}
-                                                </td>
-				                                <td>
-                                                    {{ $ProductPromo['qty'] }}
-                                                </td>
-				                                @php break; @endphp
+				                            @foreach ($ProductPromos as $key => $ProductPromo)
+                                                @if ($key < 1)
+                                                    <td>
+                                                        {{ $promo->product_list()[$key]['name'] }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $ProductPromo['qty'] }}
+                                                    </td>
+                                                @endif
 				                            @endforeach
 
 				                            <td rowspan="{{ $totalProduct }}">

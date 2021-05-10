@@ -104,7 +104,7 @@
 		}
 
 		.breadcrumb-item + .breadcrumb-item {
-			padding-left: 0.5rem; 
+			padding-left: 0.5rem;
 		}
 	}
 
@@ -190,7 +190,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- filter desktop -->
 		<div id="desktop">
 			<div class="row">
@@ -257,7 +257,7 @@
 													@foreach($service->product_services as $product_service)
 														@php
 															$issues = json_decode($product_service['issues']);
-															$count_main_issue = count($issues[0]->issues);								
+															$count_main_issue = count($issues[0]->issues);
 															$due_date = explode(' ',$product_service['due_date']);
 															$due_date = $due_date[0];
 														@endphp
@@ -267,7 +267,7 @@
 														@elseif($product_service['product_id'] == null)
 															<td>{{$product_service['other_product']}}</td>
 														@endif
-														
+
 														<td>{{implode(",",$issues[0]->issues)}}</td>
 														<td>{{$service_date}}</td>
 														<td>{{$due_date}}</td>
@@ -295,7 +295,7 @@
 						                            	@elseif($service->product_services[$i]['product_id'] == null)
 						                            		<td>{{$service->product_services[$i]['other_product']}}</td>
 						                            	@endif
-						                                
+
 						                                <td>{{implode(",",$issues_sec[0]->issues)}}</td>
 						                                <td>{{$service_date}}</td>
 						                                <td>{{$due_date_sec}}</td>
@@ -304,8 +304,7 @@
 											@endforeach
 										</tbody>
 									</table>
-									</br>
-									
+									<br>
 				    			</div>
 				  			</div>
 						 </div>
@@ -363,8 +362,7 @@
 											@endforeach
 										</tbody>
 									</table>
-									</br>
-									
+									<br>
 				    			</div>
 				  			</div>
 						 </div>
@@ -387,6 +385,6 @@
 	        console.log("dhuaaarr");
 	    });
 	});
-    
+
 </script>
 @endsection
