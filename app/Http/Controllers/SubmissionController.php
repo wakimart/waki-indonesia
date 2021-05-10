@@ -852,8 +852,8 @@ class SubmissionController extends Controller
             DB::rollBack();
 
             return response()->json([
-                "error" => $e,
-                "error message" => $e->getMessage(),
+                "result" => 0,
+                "data" => $e->getMessage(),
             ], 400);
         }
     }
@@ -1131,14 +1131,10 @@ class SubmissionController extends Controller
             } catch (Exception $e) {
                 DB::rollback();
 
-                $data = [
+                return response()->json([
                     "result" => 0,
-                    "error" => $e,
-                    "error line" => $e->getLine(),
-                    "error messages" => $e->getMessage(),
-                ];
-
-                return response()->json($data, 501);
+                    "data" => $e->getMessage(),
+                ], 500);
             }
         }
     }
@@ -1221,25 +1217,32 @@ class SubmissionController extends Controller
      */
     public function detailApi(Request $request): \Illuminate\Http\JsonResponse
     {
-        $references = "";
-        if ($request->type === "mgm") {
-            $submission = $this->querySubmissionMGM($request->id);
-            $references = $this->queryReferenceMGM($request->id);
-        } elseif ($request->type === "referensi") {
-            $submission = $this->querySubmissionReferensi($request->id);
-            $references = $this->queryReferenceReferensi($request->id);
-        } elseif ($request->type === "takeaway") {
-            $submission = $this->querySubmissionTakeaway($request->id);
+        try {
+            $references = "";
+            if ($request->type === "mgm") {
+                $submission = $this->querySubmissionMGM($request->id);
+                $references = $this->queryReferenceMGM($request->id);
+            } elseif ($request->type === "referensi") {
+                $submission = $this->querySubmissionReferensi($request->id);
+                $references = $this->queryReferenceReferensi($request->id);
+            } elseif ($request->type === "takeaway") {
+                $submission = $this->querySubmissionTakeaway($request->id);
+            }
+
+            $historySubmission = $this->queryHistory($request->id);
+
+            return response()->json([
+                "result" => 1,
+                "dataSubmission" => $submission,
+                "dataReference" => $references,
+                "history" => $historySubmission,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "result" => 0,
+                "data" => $e->getMessage(),
+            ], 500);
         }
-
-        $historySubmission = $this->queryHistory($request->id);
-
-        return response()->json([
-            "result" => 1,
-            "dataSubmission" => $submission,
-            "dataReference" => $references,
-            "history" => $historySubmission,
-        ]);
     }
 
     /**
