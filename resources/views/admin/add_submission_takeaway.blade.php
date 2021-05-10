@@ -95,7 +95,7 @@ $menu_item_second = "add_submission_takeaway";
 
 @section('content')
 <div class="main-panel">
-      <div class="content-wrapper">
+    <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">Add Submission - Takeaway</h3>
             <nav aria-label="breadcrumb">
@@ -431,7 +431,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             + "</option>";
                     });
 
-                    $( "#district" ).append(arrSubDistsrict);
+                    $("#district").append(arrSubDistsrict);
                 }
             });
     });

@@ -29,22 +29,22 @@
     }
 
 	.select-sparepart{
-		width: 72%; 
+		width: 72%;
 		display: inline-block;
 	}
 
 	.qty{
-		width: 16%; 
+		width: 16%;
 		display: inline-block;
 	}
 
 	.btn-minus{
-		display: inline-block; 
+		display: inline-block;
 		float: right;
 	}
 
 	.btn-plus{
-		display: inline-block; 
+		display: inline-block;
 		float: right;
 	}
 
@@ -62,7 +62,7 @@
 			display: block;
 		}
 		.select-sparepart{
-			width: 100%; 
+			width: 100%;
 			display: block;
 		}
 
@@ -73,12 +73,12 @@
 
 		.btn-minus{
 			display: block;
-			margin-bottom: 1em; 
+			margin-bottom: 1em;
 		}
 
 		.btn-plus{
 			display: block;
-			margin-bottom: 1em; 
+			margin-bottom: 1em;
 		}
 
 		.issue{
@@ -100,7 +100,7 @@
 		}
 	}
 
-	
+
 </style>
 @endsection
 
@@ -203,9 +203,9 @@
 					                    @if($index > 0)
 					                    	<div class='text-center btn-minus'><button class='remove_sparepart btn btn-gradient-danger mr-2' type='button' title='Remove Sparepart' style='padding: 0.4em 0.7em;'><i class='mdi mdi-minus'></i></button></div>
 					                    @else
-					                    	<div class="text-center btn-plus"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>	
+					                    	<div class="text-center btn-plus"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
 					                    @endif
-					                    
+
 					                    <div class="form-group d-none" style="width: 72%; display: inline-block;">
 				                            <input type="text" class="form-control" id="sparepart_other-{{$index}}-{{$key}}" placeholder="Sparepart Name" data-msg="Please fill in the product"/>
 				                            <div class="validation"></div>
@@ -214,7 +214,7 @@
 				                            <input type="number" class="form-control" id="price_other-{{$index}}-{{$key}}" placeholder="Price (Rp.)" data-msg="Please fill in the product"/>
 				                            <div class="validation"></div>
 				                        </div>
-					                    
+
 			                    	</div>
 			                    	@endforeach
 			                    </div>
@@ -237,7 +237,7 @@
 					                        <div class="validation"></div>
 					                    </div>
 					                    <div class="text-center btn-plus"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
-					                    
+
 					                    <div class="form-group d-none" style="width: 72%; display: inline-block;">
 				                            <input type="text" class="form-control" id="sparepart_other-0-{{$key}}" placeholder="Sparepart Name" data-msg="Please fill in the product"/>
 				                            <div class="validation"></div>
@@ -250,7 +250,7 @@
 			                    	</div>
 			                    </div>
 			                    @endif
-			                    
+
 
 			                    @php
 			                    	$issues = json_decode($product_service['issues']);
@@ -289,14 +289,14 @@
 										<strong></strong>
 									</span>
 								</div>
-								<hr>			                    
+								<hr>
 			                </div>
 			                <input type="hidden" id="id_productservice-{{$key}}" name="id_productservice" value="{{$product_service['id']}}">
 			                <input type="hidden" id="id_service-{{$key}}" name="id_service" value="{{$product_service['service_id']}}">
 							@endforeach
 
 							<input type="hidden" id="lastIdSparepart" value="{{$counterSparepart}}">
-			                
+
 	              			<div id="errormessage"></div>
 
 	              			@php $total_productservice = count($product_services); @endphp
@@ -309,12 +309,22 @@
 	              				@elseif($product_services[0]->service['status'] == "Process")
 	              					<button id="updateService" type="submit" class="btn btn-light btn-save mr-2">Save</button>
 	              					@can('change-status-repaired-service')
-	              					<button id="updateServiceRepaired" type="submit" class="btn btn-gradient-primary mr-2 updateServiceRepaired">Repaired</button>
+                                        <button id="updateServiceRepaired"
+                                            type="submit"
+                                            class="btn btn-gradient-primary mr-2 updateServiceRepaired">
+                                            Repaired
+                                        </button>
+                                        <button id="update-service-fail-repair"
+                                            type="button"
+                                            class="btn btn-gradient-danger"
+                                            data-toggle="modal"
+                                            data-target="#modal-fail-repair">
+                                            Unable to repair
+                                        </button>
 	              					@endcan
 	              				@endif
 	              			</div>
 	            		</form>
-
 	          		</div>
 	        	</div>
 	      	</div>
@@ -360,13 +370,55 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" role="dialog" tabindex="-1" id="modal-fail-repair">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Unable to repair</h4>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="fail-repair-form" method="POST" action="{{ route("update_fail_repair") }}">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $_GET["id"] }}" />
+                    <input type="hidden" name="status" value="Repaired" />
+                    <div class="form-group">
+                        <label for="fail-repair-reason">Reason:</label>
+                        <textarea id="fail-repair-reason"
+                            class="form-control"
+                            name="fail_repair_description"
+                            required>
+                        </textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <input type="submit"
+                    form="fail-repair-form"
+                    value="Confirm - Unable to repair"
+                    class="btn btn-gradient-danger" />
+                <button class="btn btn-light"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		var idService = $('#total_productservice').val();		
+		var idService = $('#total_productservice').val();
 
 		var idSparepart = $('#lastIdSparepart').val();
 		var idQtySparepart = $('#lastIdSparepart').val();
@@ -426,7 +478,7 @@
 	        e.preventDefault();
 	        frmAdd = _("actionAdd");
 	        frmAdd = new FormData(document.getElementById("actionAdd"));
-	        frmAdd.enctype = "multipart/form-data";       
+	        frmAdd.enctype = "multipart/form-data";
 
 	        var arr_productservice = [];
 	        for (var i = 0; i < idService; i++) {
@@ -501,7 +553,7 @@
 	            }
 	            alert(hasil['errors']);
 	        }
-	        else{ 
+	        else{
 	            alert("Input Success !!!");
 	           	window.location.reload()
 	        }
@@ -512,7 +564,7 @@
 	        document.getElementById("updateService").innerHTML = "SAVE";
 	    }
 	});
-	
+
 
 </script>
 @endsection

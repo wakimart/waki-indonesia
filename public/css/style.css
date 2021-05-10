@@ -840,7 +840,7 @@ p.titleprodcat{
 }
 
 #about .about-content {
-  padding-top: 90px;
+  padding-top: 40px;
 }
 
 #about h2 {
@@ -875,7 +875,9 @@ p.titleprodcat{
 
 #about .about-img {
   position: relative;
-  margin: 30px 30px 30px 30px;
+  margin: 10px;
+  padding-top: 40px;
+  /* margin: 30px; */
 }
 
 #about .about-img img {
@@ -2161,6 +2163,11 @@ CORE
   #about .section-header h2 {
     font-size: 2em;
   }
+
+  #about .about-img {
+    padding-top: 1em;
+  }
+
   #about .about-content {
     padding-top: 1em;
   }

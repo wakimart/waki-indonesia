@@ -150,7 +150,7 @@
 
           <div class="col-lg-5 col-md-6">
             <div class="about-img wow fadeInLeft">
-              <img src="{{asset('sources/waki-building.jpg')}}" alt="">
+              <img src="{{asset('sources/waki-building2.jpg')}}" alt="">
             </div>
           </div>
 

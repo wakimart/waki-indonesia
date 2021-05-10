@@ -58,6 +58,7 @@ $menu_item_second = "add_submission_mgm";
 
     .invalid {
         border: 1px solid red !important;
+        border-color: #f50000 !important;
     }
 
     /* Hide all steps by default: */
@@ -95,7 +96,7 @@ $menu_item_second = "add_submission_mgm";
 
 @section('content')
 <div class="main-panel">
-      <div class="content-wrapper">
+    <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">Add Submission - MGM</h3>
             <nav aria-label="breadcrumb">
@@ -282,6 +283,7 @@ $menu_item_second = "add_submission_mgm";
                                                 class="form-control"
                                                 name="name_ref[]"
                                                 placeholder="Name"
+                                                oninput="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }} />
                                             <div class="validation"></div>
                                         </div>
@@ -295,6 +297,7 @@ $menu_item_second = "add_submission_mgm";
                                                 class="form-control"
                                                 name="age_ref[]"
                                                 placeholder="Age"
+                                                oninput="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }} />
                                             <div class="validation"></div>
                                         </div>
@@ -308,6 +311,7 @@ $menu_item_second = "add_submission_mgm";
                                                 class="form-control"
                                                 name="phone_ref[]"
                                                 placeholder="Phone Number"
+                                                oninput="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }} />
                                             <div class="validation"></div>
                                         </div>
@@ -317,9 +321,10 @@ $menu_item_second = "add_submission_mgm";
                                                 Province
                                             </label>
                                             <select class="form-control changeProvince"
-                                                id="province-{{ $x }}"
+                                                id="member-province-{{ $x }}"
                                                 name="province_ref[]"
                                                 data-msg="Mohon Pilih Provinsi"
+                                                onchange="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }}>
                                                 <option selected
                                                     disabled
@@ -345,9 +350,10 @@ $menu_item_second = "add_submission_mgm";
                                                 City
                                             </label>
                                             <select class="form-control"
-                                                id="city-{{ $x }}"
+                                                id="member-city-{{ $x }}"
                                                 name="city_ref[]"
                                                 data-msg="Mohon Pilih Kota"
+                                                onchange="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }}>
                                                 <option selected
                                                     disabled
@@ -370,14 +376,14 @@ $menu_item_second = "add_submission_mgm";
                                                             Promo {{ $j + 1 }} {{ $j > 0 ? "(optional)" : "" }}
                                                         </label>
                                                         <select class="form-control pilihan-product"
-                                                            id="promo-{{ $j + 1 }}"
+                                                            id="promo-{{ $j + 1 }}-{{ $x }}"
                                                             name="promo_{{ $j + 1 }}[]"
                                                             data-msg="Mohon Pilih Promo"
                                                             {{ $j > 0 || $x > 0 ? "" : "required" }}>
                                                             <option selected
-                                                                disabled
                                                                 value=""
-                                                                {{ $j > 0 && $x > 0 ? "" : "hidden" }}>
+                                                                {{ $j === 0 && $x === 0 ? "selected" : "" }}
+                                                                {{ $j === 0 && $x === 0 ? "hidden" : "" }}>
                                                                 Choose Promo {{ $j > 0 ? "(optional)" : ""}}
                                                             </option>
                                                             <?php foreach ($promos as $key => $promo): ?>
@@ -401,7 +407,7 @@ $menu_item_second = "add_submission_mgm";
                                                             Qty
                                                         </label>
                                                         <select class="form-control"
-                                                            id="qty-{{ $j + 1 }}"
+                                                            id="qty-{{ $j + 1 }}-{{ $x }}"
                                                             name="qty_{{ $j + 1 }}[]"
                                                             data-msg="Mohon Pilih Jumlah"
                                                             {{ $j > 0 ? "" : "required" }}>
@@ -436,7 +442,7 @@ $menu_item_second = "add_submission_mgm";
                                             </label>
                                             <input type="file"
                                                 class="form-control-file"
-                                                id="do-proof"
+                                                id="do-proof-{{ $x }}"
                                                 name="do-image_{{ $x + 1 }}[]"
                                                 {{ $x > 0 ? "" : "required" }} />
                                         </div>
@@ -534,7 +540,7 @@ function validateForm() {
     // This function deals with validation of the form fields
     let valid = true;
 
-    const inputArray = ["member-name-", "member-age-", "member-phone-", "province-", "city-"];
+    const inputArray = ["member-name-", "member-age-", "member-phone-", "member-province-", "member-city-", "promo-1-", "qty-1-", "do-proof-"];
 
     inputArray.forEach(function (currentValue) {
         const inputBeingChecked = document.getElementById(currentValue + currentTab);
@@ -570,30 +576,66 @@ function fixStepIndicator(n) {
     x[n].className += " active";
 }
 
+function requiredAttributeHandler(e) {
+    const REF_SEQ = e.id.split("-")[2];
+    if (REF_SEQ === 0) {
+        return;
+    }
+
+    const inputArray = ["member-name-", "member-age-", "member-phone-", "member-province-", "member-city-", "promo-1-", "qty-1-", "do-proof-"];
+    let isEmpty = true;
+
+    if (e.value) {
+        isEmpty = false;
+    } else if (e.value === null || e.value === undefined) {
+        inputArray.forEach(function (currentValue) {
+            if (document.getElementById(currentValue + REF_SEQ).value === null) {
+                isEmpty = false;
+            }
+        });
+    }
+
+    if (!isEmpty) {
+        inputArray.forEach(function (currentValue) {
+            document.getElementById(currentValue + REF_SEQ).setAttribute("required", "");
+        });
+
+        return;
+    }
+
+    if (isEmpty) {
+        inputArray.forEach(function (currentValue) {
+            document.getElementById(currentValue + REF_SEQ).removeAttribute("required");
+        });
+
+        return;
+    }
+}
+
 $(document).on("change", ".changeProvince", function () {
     const get_index = $(this).attr('id');
     const index = get_index.slice(-1);
 
     const id = $(this).val();
 
-    $("#city-" + index).html("");
+    $("#member-city-" + index).html("");
     $.get('{{ route("fetchCity", ['province' => ""]) }}/' + id)
         .done(function (result) {
             result = result['rajaongkir']['results'];
-            let arrCity = "<option selected disabled value=\"\" hidden>Pilihan Kota</option>";
+            let arrCity = `<option selected disabled value="" hidden>Pilihan Kota</option>`;
 
             if (result.length > 0) {
                 $.each( result, function (key, value) {
                     if (value['type'] == "Kabupaten") {
-                        arrCity += "<option value=\"" + value['city_id'] + "\">Kabupaten " + value['city_name'] + "</option>";
+                        arrCity += `<option value="${value['city_id']}">Kabupaten ${value['city_name']}</option>`;
                     }
 
                     if (value['type'] == "Kota") {
-                        arrCity += "<option value=\"" + value['city_id'] + "\">Kota " + value['city_name'] + "</option>";
+                        arrCity += `<option value="${value['city_id']}">Kota ${value['city_name']}</option>`;
                     }
                 });
 
-                $("#city-" + index).append(arrCity);
+                $("#member-city-" + index).append(arrCity);
             }
         });
 })
@@ -615,11 +657,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (result.length > 0) {
                     $.each(result, function (key, value) {
                         if (value['type'] == "Kabupaten") {
-                            arrCity += "<option value=\"" + value['city_id'] + "\">Kabupaten " + value['city_name'] + "</option>";
+                            arrCity += `<option value="${value['city_id']}">Kabupaten ${value['city_name']}</option>`;
                         }
 
                         if (value['type'] == "Kota") {
-                            arrCity += "<option value=\"" + value['city_id'] + "\">Kota " + value['city_name'] + "</option>";
+                            arrCity += `<option value="${value['city_id']}">Kota ${value['city_name']}</option>`;
                         }
                     });
 
@@ -642,13 +684,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         arrSubDistsrict += "<option value=\"" + value['subdistrict_id'] + "\">" + value['subdistrict_name'] + "</option>";
                     });
 
-                    $( "#subDistrict" ).append(arrSubDistsrict);
+                    $("#subDistrict").append(arrSubDistsrict);
                 }
             });
     });
 
     function check_cso(code) {
-        $.get('{{route("fetchCso")}}', { cso_code: code })
+        $.get('{{ route("fetchCso") }}', { cso_code: code })
             .done(function (result) {
                 if (result['result'] == "true" && result['data'].length > 0) {
                     $('#validation_cso').html('Kode CSO Benar');

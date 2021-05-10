@@ -58,6 +58,7 @@ $menu_item_second = "add_submission_reference";
 
     .invalid {
         border: 1px solid red !important;
+        border-color: #f50000 !important;
     }
 
     /* Hide all steps by default: */
@@ -95,7 +96,7 @@ $menu_item_second = "add_submission_reference";
 
 @section('content')
 <div class="main-panel">
-      <div class="content-wrapper">
+    <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">Add Submission - Referensi Sehat Bersama WAKi</h3>
             <nav aria-label="breadcrumb">
@@ -294,6 +295,7 @@ $menu_item_second = "add_submission_reference";
                                                 class="form-control"
                                                 name="name_ref[]"
                                                 placeholder="Name"
+                                                oninput="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }} />
                                             <div class="validation"></div>
                                         </div>
@@ -307,6 +309,7 @@ $menu_item_second = "add_submission_reference";
                                                 class="form-control"
                                                 name="age_ref[]"
                                                 placeholder="Age"
+                                                oninput="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }} />
                                             <div class="validation"></div>
                                         </div>
@@ -320,6 +323,7 @@ $menu_item_second = "add_submission_reference";
                                                 class="form-control"
                                                 name="phone_ref[]"
                                                 placeholder="Phone Number"
+                                                oninput="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }} />
                                             <div class="validation"></div>
                                         </div>
@@ -329,9 +333,10 @@ $menu_item_second = "add_submission_reference";
                                                 Province
                                             </label>
                                             <select class="form-control changeProvince"
-                                                id="province-{{ $x }}"
+                                                id="member-province-{{ $x }}"
                                                 name="province_ref[]"
                                                 data-msg="Mohon Pilih Provinsi"
+                                                onchange="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }}>
                                                 <option selected
                                                     disabled
@@ -357,9 +362,10 @@ $menu_item_second = "add_submission_reference";
                                                 City
                                             </label>
                                             <select class="form-control"
-                                                id="city-{{ $x }}"
+                                                id="member-city-{{ $x }}"
                                                 name="city_ref[]"
                                                 data-msg="Mohon Pilih Kota"
+                                                onchange="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }}>
                                                 <option selected
                                                     disabled
@@ -376,8 +382,9 @@ $menu_item_second = "add_submission_reference";
                                                 Souvenir
                                             </label>
                                             <select class="form-control"
-                                                id="souvenir-{{ $x }}"
+                                                id="member-souvenir-{{ $x }}"
                                                 name="souvenir_id[]"
+                                                onchange="requiredAttributeHandler(this)"
                                                 {{ $x > 0 ? "" : "required" }}>
                                                 <option selected
                                                     disabled
@@ -403,6 +410,7 @@ $menu_item_second = "add_submission_reference";
                                                 name="link_hs[]"
                                                 pattern="https://.*"
                                                 maxlength="191"
+                                                oninput="requiredAttributeHandler(this)"
                                                 placeholder="Link Home Service" />
                                         </div>
                                     </div>
@@ -455,6 +463,11 @@ $menu_item_second = "add_submission_reference";
 let currentTab = 0;
 showTab(currentTab);
 
+const souvenirArray = []
+for (let i = 0; i < 10; i++) {
+    souvenirArray.push(-1);
+};
+
 function showTab(n) {
     // This function will display the specified tab of the form ...
     const x = document.getElementsByClassName("tab");
@@ -499,7 +512,7 @@ function validateForm() {
     // This function deals with validation of the form fields
     let valid = true;
 
-    const inputArray = ["member-name-", "member-age-", "member-phone-", "province-", "city-", "souvenir-", "link-hs-"];
+    const inputArray = ["member-name-", "member-age-", "member-phone-", "member-province-", "member-city-", "member-souvenir-", "link-hs-"];
 
     inputArray.forEach(function (currentValue) {
         const inputBeingChecked = document.getElementById(currentValue + currentTab);
@@ -511,6 +524,22 @@ function validateForm() {
             addOrRemoveInvalid(inputBeingChecked, "remove");
         }
     });
+
+    const souvenirInput = document.getElementById("member-souvenir-" + currentTab);
+    const souvenirValue = parseInt(souvenirInput.value, 10);
+    if (souvenirValue) {
+        souvenirArray[currentTab] = souvenirValue;
+        const findDuplicate = souvenirArray.filter(function (currentValue) {
+            return currentValue === souvenirValue;
+        });
+
+        if (findDuplicate.length > 2) {
+            addOrRemoveInvalid(souvenirInput, "add");
+            valid = false;
+        } else {
+            addOrRemoveInvalid(souvenirInput, "remove");
+        }
+    }
 
     return valid; // return the valid status
 }
@@ -535,13 +564,49 @@ function fixStepIndicator(n) {
     x[n].className += " active";
 }
 
+function requiredAttributeHandler(e) {
+    const REF_SEQ = e.id.split("-")[2];
+    if (REF_SEQ === 0) {
+        return;
+    }
+
+    const inputArray = ["member-name-", "member-age-", "member-phone-", "member-province-", "member-city-", "member-souvenir-"];
+    let isEmpty = true;
+
+    if (e.value) {
+        isEmpty = false;
+    } else if (e.value === null || e.value === undefined) {
+        inputArray.forEach(function (currentValue) {
+            if (document.getElementById(currentValue + REF_SEQ).value === null) {
+                isEmpty = false;
+            }
+        });
+    }
+
+    if (!isEmpty) {
+        inputArray.forEach(function (currentValue) {
+            document.getElementById(currentValue + REF_SEQ).setAttribute("required", "");
+        });
+
+        return;
+    }
+
+    if (isEmpty) {
+        inputArray.forEach(function (currentValue) {
+            document.getElementById(currentValue + REF_SEQ).removeAttribute("required");
+        });
+
+        return;
+    }
+}
+
 $(document).on("change", ".changeProvince", function () {
     const get_index = $(this).attr('id');
     const index = get_index.slice(-1);
 
     const id = $(this).val();
 
-    $("#city-" + index).html("");
+    $("#member-city-" + index).html("");
     $.get('{{ route("fetchCity", ['province' => ""]) }}/' + id)
         .done(function (result) {
             result = result['rajaongkir']['results'];
@@ -550,15 +615,15 @@ $(document).on("change", ".changeProvince", function () {
             if (result.length > 0) {
                 $.each( result, function (key, value) {
                     if (value['type'] == "Kabupaten") {
-                        arrCity += "<option value=\"" + value['city_id'] + "\">Kabupaten " + value['city_name'] + "</option>";
+                        arrCity += `<option value="${value['city_id']}">Kabupaten ${value['city_name']}</option>`;
                     }
 
                     if (value['type'] == "Kota") {
-                        arrCity += "<option value=\"" + value['city_id'] + "\">Kota " + value['city_name'] + "</option>";
+                        arrCity += `<option value="${value['city_id']}">Kota ${value['city_name']}</option>`;
                     }
                 });
 
-                $("#city-" + index).append(arrCity);
+                $("#member-city-" + index).append(arrCity);
             }
         });
 })
@@ -607,13 +672,13 @@ document.addEventListener("DOMContentLoaded", function () {
                         arrSubDistsrict += "<option value=\"" + value['subdistrict_id'] + "\">" + value['subdistrict_name'] + "</option>";
                     });
 
-                    $( "#subDistrict" ).append(arrSubDistsrict);
+                    $("#subDistrict").append(arrSubDistsrict);
                 }
             });
     });
 
     function check_cso(code) {
-        $.get('{{route("fetchCso")}}', { cso_code: code })
+        $.get('{{ route("fetchCso") }}', { cso_code: code })
             .done(function (result) {
                 if (result['result'] == "true" && result['data'].length > 0) {
                     $('#validation_cso').html('Kode CSO Benar');

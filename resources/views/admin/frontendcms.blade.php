@@ -255,7 +255,7 @@
       }
 
 
-      $(document).on("click", ".delete_photo" , function() {
+      $(document).on("click", ".del" , function() {
           $(this).closest(".imgUp").find('.imagePreview').css("background-image", "");
           $(this).closest(".imgUp").find('input[type=text]').removeAttr("required");
           $(this).closest(".imgUp").find('.btn').find('.img').val("");
