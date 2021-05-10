@@ -124,7 +124,7 @@ $menu_item_second = "add_submission_takeaway";
                             class="forms-sample"
                             method="POST"
                             enctype="multipart/form-data"
-                            action="{{ route("update_submission_MGM") }}">
+                            action="{{ route("update_submission_mgm") }}">
                             @csrf
                             <input type="hidden"
                                 name="id"
