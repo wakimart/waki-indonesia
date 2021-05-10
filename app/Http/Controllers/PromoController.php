@@ -258,32 +258,11 @@ class PromoController extends Controller
         )
         ->get();
         foreach ($promos as $key => $promo) {
-            $productPromo = json_decode($promo["product"]);
-            $arrayProductId = [];
-
-            foreach ($productPromo as $pp) {
-                $arrayProductId[] = $pp->id;
-            }
-
-            $getProduct = Product::select("code")
-            ->whereIn("id", $arrayProductId)
-            ->get();
-
-            $arrayProductCode = [];
-
-            foreach ($getProduct as $product) {
-                $arrayProductCode[] = $product->code;
-            }
-
-            $productCode = implode(", ", $arrayProductCode);
-
             $promos[$key]->product = $promo["code"]
                 . " - ("
-                . $productCode
+                . implode(", ", $promo->productName())
                 . ") - Rp. "
                 . number_format((int) $promo["price"], 0, null, ",");
-
-            unset($promos[$key]->code, $promos[$key]->price);
         }
 
         $data = [

@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Promo extends Model
 {
     protected $fillable = [
-        'code', 'image', 'product', 'price'
+        'code',
+        'image',
+        'product',
+        'price',
     ];
 
     public function product_list()
@@ -36,5 +39,21 @@ class Promo extends Model
         }
 
         return $productCode;
+    }
+
+    public function productName()
+    {
+        $products = json_decode($this->product, true);
+        $productName = [];
+
+        foreach ($products as $product) {
+            $queryProduct = Product::select("name")
+            ->where("id", $product["id"])
+            ->first();
+
+            $productName[] = $queryProduct->name;
+        }
+
+        return $productName;
     }
 }
