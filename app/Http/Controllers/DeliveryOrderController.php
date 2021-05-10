@@ -320,8 +320,8 @@ class DeliveryOrderController extends Controller
             array_push($promos, $value);
         }
 
-        $other = ['id'=>sizeof($data)+1, 'name'=>"OTHER", 'harga'=>"-"];
-        array_push($promos, $other);
+        // $other = ['id'=>sizeof($data)+1, 'name'=>"OTHER", 'harga'=>"-"];
+        // array_push($promos, $other);
 
         $data = ['result' => 1,
                      'data' => $promos
