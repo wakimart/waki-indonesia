@@ -1,7 +1,4 @@
 <?php
-
-use App\Product;
-
 $menu_item_page = "order";
 $menu_item_second = "add_order";
 ?>
@@ -9,11 +6,15 @@ $menu_item_second = "add_order";
 
 @section('style')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" /> --}}
+{{-- <link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" /> --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.bootstrap4.min.css" />
 <style type="text/css">
     #intro {
         padding-top: 2em;
     }
-    button{
+
+    button {
         background: #1bb1dc;
         border: 0;
         border-radius: 3px;
@@ -21,11 +22,13 @@ $menu_item_second = "add_order";
         color: #fff;
         transition: 0.3s;
     }
-    .validation{
+
+    .validation {
         color: red;
         font-size: 9pt;
     }
-    input, select, textarea{
+
+    input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
@@ -36,329 +39,538 @@ $menu_item_second = "add_order";
 
 @section('content')
 <div class="main-panel">
-  	<div class="content-wrapper">
-    	<div class="page-header">
-      		<h3 class="page-title">Add Order</h3>
-      		<nav aria-label="breadcrumb">
-	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#order-dd" aria-expanded="false" aria-controls="order-dd">Order</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Add Order</li>
-	        	</ol>
-      		</nav>
-    	</div>
-	    <div class="row">
-	      	<div class="col-12 grid-margin stretch-card">
-	        	<div class="card">
-	          		<div class="card-body">
-	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_order') }}">
-							{{ csrf_field() }}
-							<div class="form-group">
-								<label for="">Waktu Order</label>
-								<input type="date" class="form-control" name="orderDate" id="orderDate" placeholder="Tanggal Order" value="<?php echo date("Y-m-d"); ?>" required data-msg="Mohon Isi Tanggal" />
-								<div class="validation"></div>
-								<span class="invalid-feedback">
-									<strong></strong>
-								</span>
-							</div>
-	              			<div class="form-group">
-	                			<label for="">No. Member (optional)</label>
-	                			<input type="number" class="form-control" id="no_member" name="no_member" placeholder="No. Member">
-	                			<div class="validation"></div>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="">Name</label>
-				                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
-				                <div class="validation"></div>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="">Phone Number</label>
-				                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number">
-				                <div class="validation"></div>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="">Province</label>
-								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
-									<option selected disabled value="">Pilihan Provinsi</option>
+      <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Add Order</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a data-toggle="collapse"
+                            href="#order-dd"
+                            aria-expanded="false"
+                            aria-controls="order-dd">
+                            Order
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        Add Order
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="row">
+              <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                      <div class="card-body">
+                        <form id="actionAdd"
+                            class="forms-sample"
+                            method="POST"
+                            action="{{ route('admin_store_order') }}">
+                            @csrf
+                            <div class="form-group">
+                                <label for="orderDate">Waktu Order</label>
+                                <input type="date"
+                                    class="form-control"
+                                    name="orderDate"
+                                    id="orderDate"
+                                    placeholder="Tanggal Order"
+                                    value="<?php echo date("Y-m-d"); ?>"
+                                    required
+                                    data-msg="Mohon Isi Tanggal" />
+                                <div class="validation"></div>
+                                <span class="invalid-feedback">
+                                    <strong></strong>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label for="no_member">
+                                    No. Member (optional)
+                                </label>
+                                <input type="number"
+                                    class="form-control"
+                                    id="no_member"
+                                    name="no_member"
+                                    placeholder="No. Member" />
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text"
+                                    class="form-control"
+                                    id="name"
+                                    name="name"
+                                    placeholder="Name" />
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="number"
+                                    class="form-control"
+                                    id="phone"
+                                    name="phone"
+                                    placeholder="Phone Number">
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Province</label>
+                                <select class="form-control"
+                                    id="province"
+                                    name="province_id"
+                                    data-msg="Mohon Pilih Provinsi"
+                                    required>
+                                    <option selected disabled value="">
+                                        Pilihan Provinsi
+                                    </option>
 
-									@php
-										$result = RajaOngkir::FetchProvince();
-										$result = $result['rajaongkir']['results'];
-										$arrProvince = [];
-										if(sizeof($result) > 0){
-											foreach ($result as $value) {
-												echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
-											}
-										}
-									@endphp
-								</select>
-								<div class="validation"></div>
-							  </div>
-							<div class="form-group">
-				                <label for="">City</label>
-								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
-									<option selected disabled value="">Pilihan Kota</option>
-								</select>
-								<div class="validation"></div>
-							</div>
-							<div class="form-group">
-				                <label for="">Sub District</label>
-								<select class="form-control" id="subDistrict" name="distric" data-msg="Mohon Pilih Kecamatan" required>
-									<option selected disabled value="">Pilihan Kecamatan</option>
-								</select>
-								<div class="validation"></div>
-	              			</div>
+                                    <?php
+                                    $result = RajaOngkir::FetchProvince();
+                                    $result = $result['rajaongkir']['results'];
 
-							<div class="form-group">
-				                <label for="exampleTextarea1">Address</label>
-				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address"></textarea>
-				                <div class="validation"></div>
-	              			</div>
-							<div class="form-group">
-				                <label for="">Know From</label>
-								<select class="form-control" id="know_from" name="know_from" data-msg="Mohon Pilih Kecamatan" required>
-									@foreach($from_know as $key=>$value)
-										<option value="{{ $value }}">{{ $value }}</option>
-									@endforeach
-								</select>
-								<div class="validation"></div>
-	              			</div>
+                                    if (sizeof($result) > 0) {
+                                        foreach ($result as $value) {
+                                            echo '<option value="' . $value['province_id'] . '">'
+                                                . $value['province']
+                                                . "</option>";
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <select class="form-control"
+                                    id="city"
+                                    name="city"
+                                    data-msg="Mohon Pilih Kota"
+                                    required>
+                                    <option selected disabled value="">
+                                        Pilihan Kota
+                                    </option>
+                                </select>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="subDistrict">Sub District</label>
+                                <select class="form-control"
+                                    id="subDistrict"
+                                    name="distric"
+                                    data-msg="Mohon Pilih Kecamatan"
+                                    required>
+                                    <option selected disabled value="">
+                                        Pilihan Kecamatan
+                                    </option>
+                                </select>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea class="form-control"
+                                    id="address"
+                                    name="address"
+                                    rows="4"
+                                    placeholder="Address"></textarea>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Know From</label>
+                                <select class="form-control"
+                                    id="know_from"
+                                    name="know_from"
+                                    data-msg="Mohon Pilih Kecamatan"
+                                    required>
+                                    @foreach ($from_know as $key => $value)
+                                        <option value="{{ $value }}">
+                                            {{ $value }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="validation"></div>
+                            </div>
+                            <br>
+                            <h5 class="add-customer d-none">Customer 2</h5>
+                            <div class="form-group add-customer d-none">
+                                <input type="text"
+                                    name="no_member-2"
+                                    class="form-control"
+                                    id="no_member-2"
+                                    placeholder="No. Member (optional)" />
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group add-customer d-none">
+                                <input type="text"
+                                    class="form-control cust-2"
+                                    name="name-2"
+                                    id="name-2"
+                                    placeholder="Nama"
+                                    data-msg="Mohon Isi Nama" />
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group add-customer d-none">
+                                <input type="text"
+                                    class="form-control cust-2"
+                                    name="phone-2"
+                                    id="phone-2"
+                                    placeholder="No. Telepon"
+                                    data-msg="Mohon Isi Nomor Telepon" />
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group add-customer d-none">
+                                <input type="text"
+                                    class="form-control cust-2"
+                                    name="city-2"
+                                    id="city-2"
+                                    placeholder="Kota"
+                                    data-msg="Mohon Isi Kota" />
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group add-customer d-none">
+                                <textarea class="form-control cust-2"
+                                    name="address-2"
+                                    id="address-2"
+                                    rows="5"
+                                    data-msg="Mohon Isi Alamat"
+                                    placeholder="Alamat"></textarea>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="text-center">
+                                <button id="tambah_member"
+                                    type="button"
+                                    style="background: #4caf3ab3">
+                                    Tambah Pembeli
+                                </button>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="">CASH/UPGRADE</label>
+                                <select class="form-control"
+                                    id="cash_upgarde"
+                                    name="cash_upgrade"
+                                    data-msg="Mohon Pilih Tipe"
+                                    required>
+                                    <option selected disabled value="">
+                                        Choose CASH/UPGRADE
+                                    </option>
 
-	              			<br>
-			                <h5 class="add-customer d-none">Customer 2</h5>
-			                <div class="form-group add-customer d-none">
-			                    <input type="text" name="no_member-2" class="form-control" id="no_member-2" placeholder="No. Member (optional)"/>
-			                    <div class="validation"></div>
-			                </div>
-			                <div class="form-group add-customer d-none">
-			                    <input type="text" class="form-control cust-2" name="name-2" id="name-2" placeholder="Nama" data-msg="Mohon Isi Nama" />
-			                    <div class="validation"></div>
-			                </div>
-			                <div class="form-group add-customer d-none">
-			                    <input type="text" class="form-control cust-2" name="phone-2" id="phone-2" placeholder="No. Telepon" data-msg="Mohon Isi Nomor Telepon" />
-			                    <div class="validation"></div>
-			                </div>
-			                <div class="form-group add-customer d-none">
-			                    <input type="text" class="form-control cust-2" name="city-2" id="city-2" placeholder="Kota" data-msg="Mohon Isi Kota" />
-			                    <div class="validation"></div>
-			                </div>
-			                <div class="form-group add-customer d-none">
-			                    <textarea class="form-control cust-2" name="address-2" id="address-2" rows="5" data-msg="Mohon Isi Alamat" placeholder="Alamat"></textarea>
-			                    <div class="validation"></div>
-			                </div>
-			                <div class="text-center"><button id="tambah_member" type="button" style="background: #4caf3ab3">Tambah Pembeli</button></div>
-			                <br>
+                                    @foreach ($cashUpgrades as $key => $cashUpgrade)
+                                        <option value="{{ $key }}">
+                                            {{ strtoupper($cashUpgrade) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="validation"></div>
+                            </div>
 
-	              			<div class="form-group">
-	              				<label for="">CASH/UPGRADE</label>
-			                    <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Mohon Pilih Tipe" required>
-			                        <option selected disabled value="">Choose CASH/UPGRADE</option>
+                            <div id="container-cashupgrade"
+                                class="col-md-12"
+                                style="display: none; padding: 0;">
+                                {{-- ++++++++++++++ Product ++++++++++++++ --}}
+                                <div class="form-group"
+                                    style="width: 72%; display: inline-block;">
+                                    <select class="form-control pilihan-product selectpicker"
+                                        id="product_0"
+                                        name="product_0"
+                                        data-msg="Mohon Pilih Product"
+                                        required>
+                                        <option selected disabled value="">
+                                            Choose Product
+                                        </option>
 
-			                        @foreach ($cashUpgrades as $key=>$cashUpgrade)
-			                            <option value="{{ $key }}">{{ strtoupper($cashUpgrade) }}</option>
-			                        @endforeach
-			                    </select>
-			                    <div class="validation"></div>
-			                </div>
-
-			                <div id="container-cashupgrade" class="col-md-12"  style="display: none; padding: 0;" >
-			                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
-			                    <div class="form-group" style="width: 72%; display: inline-block;">
-			                        <select class="form-control pilihan-product" name="product_0" data-msg="Mohon Pilih Product" required="">
-			                            <option selected disabled value="">Choose Product</option>
-
-			                            <?php foreach ($promos as $key => $promo): ?>
-			                                <option value="<?php echo $key; ?>">
+                                        <?php foreach ($promos as $key => $promo): ?>
+                                            <option value="<?php echo $promo["id"]; ?>">
                                                 <?php
-                                                $productPromo = json_decode($promo["product"]);
-                                                $arrayProductId = [];
-
-                                                foreach ($productPromo as $pp) {
-                                                    $arrayProductId[] = $pp->id;
-                                                }
-
-                                                $getProduct = Product::select("code")
-                                                ->whereIn(
-                                                    "id",
-                                                    $arrayProductId
-                                                )
-                                                ->get();
-
-                                                $arrayProductCode = [];
-
-                                                foreach ($getProduct as $product) {
-                                                    $arrayProductCode[] = $product->code;
-                                                }
-
-                                                $productCode = implode(", ", $arrayProductCode);
-
-                                                echo $promo["code"]
+                                                echo $promo->code
                                                     . " - ("
-                                                    . $productCode
+                                                    . implode(", ", $promo->productName())
                                                     . ") - Rp. "
-                                                    . number_format(
-                                                        (int) $promo["price"],
-                                                        0,
-                                                        null,
-                                                        ","
-                                                    );
+                                                    . number_format($promo->price);
                                                 ?>
                                             </option>
-			                            <?php endforeach; ?>
+                                        <?php endforeach; ?>
 
-			                            {{-- KHUSUS Philiphin --}}
-										<option value="other">OTHER</option>
-			                        </select>
-			                        <div class="validation"></div>
-			                    </div>
-			                    <div class="form-group" style="width: 16%; display: inline-block;">
-			                        <select class="form-control" name="qty_0" data-msg="Mohon Pilih Jumlah" required="">
-			                            <option selected value="1">1</option>
-
-			                            @for ($i=2; $i<=10;$i++)
-			                                <option value="{{ $i }}">{{ $i }}</option>
-			                            @endfor
-			                        </select>
-			                        <div class="validation"></div>
-			                    </div>
-			                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
-
-                                <div class="form-group d-none">
-                                    <input type="text" class="form-control" name="product_other_0" placeholder="Product Name" data-msg="Please fill in the product" />
+                                        <option value="other">OTHER</option>
+                                    </select>
                                     <div class="validation"></div>
                                 </div>
 
-			                    <div id="tambahan_product"></div>
-			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
+                                <div class="form-group"
+                                    style="width: 16%; display: inline-block;">
+                                    <select class="form-control"
+                                        name="qty_0"
+                                        data-msg="Mohon Pilih Jumlah"
+                                        required>
+                                        <option selected value="1">1</option>
 
-			                    <div class="form-group" style="display: none">
-			                        <input type="text" class="form-control" name="old_product" id="old_product" placeholder="Old Product" data-msg="Mohon Isi Produk Lama" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
-			                    <div class="form-group">
-			                        <input type="text" class="form-control" name="prize" id="prize" placeholder="Prize Product" data-msg="Mohon Isi Hadiah" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
-			                </div>
-			                <br>
+                                        @for ($i = 2; $i <= 10; $i++)
+                                            <option value="{{ $i }}">
+                                                {{ $i }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="text-center"
+                                    style="display: inline-block; float: right;">
+                                    <button id="tambah_product"
+                                        title="Tambah Product"
+                                        style="padding: 0.4em 0.7em;">
+                                        <i class="mdi mdi-plus"></i>
+                                    </button>
+                                </div>
 
-			                <div class="form-group">
-			                	<label for="">Payment Method</label>
-			                    <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe" required>
-			                        <option selected disabled value="">Choose Payment Method</option>
+                                <div class="form-group d-none">
+                                    <input type="text"
+                                        class="form-control"
+                                        name="product_other_0"
+                                        placeholder="Product Name"
+                                        data-msg="Please fill in the product" />
+                                    <div class="validation"></div>
+                                </div>
 
-			                        @foreach($paymentTypes as $key=>$paymentType)
-			                            <option value="{{ $key }}">{{ strtoupper($paymentType) }}</option>
-			                        @endforeach
-			                    </select>
-			                    <div class="validation"></div>
-			                </div>
-			                <div id="container-jenispembayaran" style="display: none;">
-			                    {{-- ++++++++ BANK ++++++++ --}}
-			                    <div class="form-group bank_select" style="width: 62%; display: inline-block;">
-			                        <select class="form-control bank_name" name="bank_0" data-msg="Mohon Pilih Bank">
-			                            <option selected disabled value="">Choose Bank</option>
+                                <div id="tambahan_product"></div>
+                                {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 
-			                            @foreach($banks as $key=>$bank)
-			                                <option value="{{ $key }}">{{ $bank }}</option>
-			                            @endforeach
-			                        </select>
-			                        <div class="validation"></div>
-			                    </div>
-			                    <div class="form-group bank_select" style="width: 26%; display: inline-block;">
-			                        <select class="form-control bank_cicilan" name="cicilan_0" data-msg="Mohon Pilih Jumlah Cicilan">
-			                            <option selected value="1">1X</option>
-			                            @for($i=2; $i<=12;$i+=2)
-			                                <option class="other_valCicilan" value="{{ $i }}">{{ $i }}X</option>
-			                            @endfor
-			                        </select>
-			                        <div class="validation"></div>
-			                    </div>
-			                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_bank" title="Tambah Bank" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
+                                <div class="form-group" style="display: none;">
+                                    <input type="text"
+                                        class="form-control"
+                                        name="old_product"
+                                        id="old_product"
+                                        placeholder="Old Product"
+                                        data-msg="Mohon Isi Produk Lama"
+                                        style="text-transform:uppercase;" />
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text"
+                                        class="form-control"
+                                        name="prize"
+                                        id="prize"
+                                        placeholder="Prize Product"
+                                        data-msg="Mohon Isi Hadiah"
+                                        style="text-transform: uppercase;" />
+                                    <div class="validation"></div>
+                                </div>
+                            </div>
+                            <br>
 
-			                    <div id="tambahan_bank"></div>
-			                    {{-- ++++++++ ==== ++++++++ --}}
-			                    <div class="form-group">
-			                        <input type="number" class="form-control" name="total_payment" id="total_payment" placeholder="Total Payment" required data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
-			                    <div class="form-group">
-			                        <input type="number" class="form-control" name="down_payment" id="down_payment" placeholder="Down Payment(DP)" required data-msg="Mohon Isi Down Payment(DP)" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
-			                    <div class="form-group">
-			                        <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" placeholder="Remaining Payment" required data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
-			                </div>
-			                <br>
+                            <div class="form-group">
+                                <label for="payment_type">Payment Method</label>
+                                <select class="form-control"
+                                    id="payment_type"
+                                    name="payment_type"
+                                    data-msg="Mohon Pilih Tipe"
+                                    required>
+                                    <option selected disabled value="">
+                                        Choose Payment Method
+                                    </option>
 
-			                <div class="form-group">
-			                	<label for="">Branch</label>
-			                    <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-			                        <option selected disabled value="">Choose Branch</option>
+                                    @foreach ($paymentTypes as $key => $paymentType)
+                                        <option value="{{ $key }}">
+                                            {{ strtoupper($paymentType) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="validation"></div>
+                            </div>
+                            <div id="container-jenispembayaran"
+                                style="display: none;">
+                                {{-- ++++++++ BANK ++++++++ --}}
+                                <div class="form-group bank_select"
+                                    style="width: 62%; display: inline-block;">
+                                    <select class="form-control bank_name"
+                                        name="bank_0"
+                                        data-msg="Mohon Pilih Bank">
+                                        <option selected disabled value="">
+                                            Choose Bank
+                                        </option>
 
-			                        @foreach($branches as $branch)
-			                            <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-			                        @endforeach
-			                    </select>
-			                    <div class="validation"></div>
-			                </div>
-			                <div id="container-Cabang" style="display: none;">
-			                    <div class="form-group">
-			                    	<label for="">CSO Code</label>
-			                        <input type="text" class="form-control cso" name="cso_id" id="cso" placeholder="CSO Code" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['code'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
-			                        <div class="validation"></div>
-			                    </div>
-			                    <div class="form-group">
-			                    	<label for="">CSO Code 30%</label>
-			                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" placeholder="CSO Code 30%" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
-			                    <div class="form-group">
-			                    	<label for="">CSO Code 70%</label>
-			                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" placeholder="CSO Code 70%" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
-			                </div>
-			                <br>
+                                        @foreach ($banks as $key => $bank)
+                                            <option value="{{ $key }}">
+                                                {{ $bank }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group bank_select"
+                                    style="width: 26%; display: inline-block;">
+                                    <select class="form-control bank_cicilan"
+                                        name="cicilan_0"
+                                        data-msg="Mohon Pilih Jumlah Cicilan">
+                                        <option selected value="1">1X</option>
+                                        @for ($i = 2; $i <= 12; $i += 2)
+                                            <option class="other_valCicilan"
+                                                value="{{ $i }}">
+                                                {{ $i }}X
+                                            </option>
+                                        @endfor
+                                    </select>
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="text-center"
+                                    style="display: inline-block; float: right;">
+                                    <button id="tambah_bank"
+                                        title="Tambah Bank"
+                                        style="padding: 0.4em 0.7em;">
+                                        <i class="mdi mdi-plus"></i>
+                                    </button>
+                                </div>
 
+                                <div id="tambahan_bank"></div>
+                                {{-- ++++++++ ==== ++++++++ --}}
+                                <div class="form-group">
+                                    <input type="number"
+                                        class="form-control"
+                                        name="total_payment"
+                                        id="total_payment"
+                                        placeholder="Total Payment"
+                                        required
+                                        data-msg="Mohon Isi Total Harga"
+                                        style="text-transform: uppercase;" />
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number"
+                                        class="form-control"
+                                        name="down_payment"
+                                        id="down_payment"
+                                        placeholder="Down Payment(DP)"
+                                        required
+                                        data-msg="Mohon Isi Down Payment(DP)"
+                                        style="text-transform: uppercase;" />
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="number"
+                                        class="form-control"
+                                        name="remaining_payment"
+                                        id="remaining_payment"
+                                        placeholder="Remaining Payment"
+                                        required
+                                        data-msg="Mohon Isi Sisa Pembayaran"
+                                        style="text-transform: uppercase;" />
+                                    <div class="validation"></div>
+                                </div>
+                            </div>
+                            <br>
 
-			                <div class="form-group">
-			                    <span>Type Customer</span>
-			                    <select id="customer_type" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="customer_type" value="" required>
-			                        <option value="VVIP (Type A)">VVIP (Type A)</option>
-			                        <option value="WAKi Customer (Type B)">WAKi Customer (Type B)</option>
-			                        <option value="New Customer (Type C)">New Customer (Type C)</option>
-			                    </select>
-			                    <div class="validation"></div>
-			                </div>
-			                <div class="form-group">
-			                	<label for="">Description</label>
-			                    <textarea class="form-control" name="description" rows="5" data-msg="Mohon Isi Description" placeholder="Description"></textarea>
-			                    <div class="validation"></div>
-			                </div>
+                            <div class="form-group">
+                                <label for="branch">Branch</label>
+                                <select class="form-control"
+                                    id="branch"
+                                    name="branch_id"
+                                    data-msg="Mohon Pilih Cabang"
+                                    required>
+                                    <option selected disabled value="">
+                                        Choose Branch
+                                    </option>
 
-	              			<div id="errormessage"></div>
+                                    @foreach ($branches as $branch)
+                                        <option value="{{ $branch['id'] }}">
+                                            {{ $branch['code'] }} - {{ $branch['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="validation"></div>
+                            </div>
+                            <div id="container-Cabang" style="display: none;">
+                                <div class="form-group">
+                                    <label for="cso">CSO Code</label>
+                                    <input type="text"
+                                        class="form-control cso"
+                                        name="cso_id"
+                                        id="cso"
+                                        placeholder="CSO Code"
+                                        required
+                                        data-msg="Mohon Isi Kode CSO"
+                                        style="text-transform: uppercase;"
+                                        {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=" . Auth::user()->cso['code'] : "" }}
+                                        {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="30_cso">CSO Code 30%</label>
+                                    <input type="text"
+                                        class="form-control cso"
+                                        name="30_cso_id"
+                                        id="30_cso"
+                                        placeholder="CSO Code 30%"
+                                        data-msg="Mohon Isi Kode CSO"
+                                        style="text-transform: uppercase;" />
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="70_cso">CSO Code 70%</label>
+                                    <input type="text"
+                                        class="form-control cso"
+                                        name="70_cso_id"
+                                        id="70_cso"
+                                        placeholder="CSO Code 70%"
+                                        data-msg="Mohon Isi Kode CSO"
+                                        style="text-transform: uppercase;" />
+                                    <div class="validation"></div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label for="customer_type">Type Customer</label>
+                                <select id="customer_type"
+                                    style="margin-top: 0.5em; height: auto;"
+                                    class="form-control selectpicker"
+                                    name="customer_type"
+                                    value=""
+                                    required>
+                                    <option value="VVIP (Type A)">
+                                        VVIP (Type A)
+                                    </option>
+                                    <option value="WAKi Customer (Type B)">
+                                        WAKi Customer (Type B)
+                                    </option>
+                                    <option value="New Customer (Type C)">
+                                        New Customer (Type C)
+                                    </option>
+                                </select>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control"
+                                    id="description"
+                                    name="description"
+                                    rows="5"
+                                    data-msg="Mohon Isi Description"
+                                    placeholder="Description"></textarea>
+                                <div class="validation"></div>
+                            </div>
 
-	              			<div class="form-group">
-	              				<button id="submit" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
-	              				<button class="btn btn-light">Cancel</button>
-	              			</div>
-	            		</form>
+                            <div id="errormessage"></div>
 
-	          		</div>
-	        	</div>
-	      	</div>
-	    </div>
-	</div>
+                            <div class="form-group">
+                                <button id="submit"
+                                    type="submit"
+                                    class="btn btn-gradient-primary mr-2">
+                                    Save
+                                </button>
+                                <button class="btn btn-light">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 <!-- modal success -->
 <div class="modal fade" role="dialog" tabindex="-1" id="modal-Success">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Input Success</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
@@ -366,7 +578,11 @@ $menu_item_second = "add_order";
                 <p id="txt-success">Appointment telah berhasil dibuat.</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-gradient-primary" type="button" data-dismiss="modal">OK</button>
+                <button class="btn btn-gradient-primary"
+                    type="button"
+                    data-dismiss="modal">
+                    OK
+                </button>
             </div>
         </div>
     </div>
@@ -378,15 +594,24 @@ $menu_item_second = "add_order";
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Input Failed</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p id="txt-success">"Appointment dengan nomer ini sudah ada!!"</p>
+                <p id="txt-success">
+                    "Appointment dengan nomer ini sudah ada!"
+                </p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-gradient-danger" type="button" data-dismiss="modal">OK</button>
+                <button class="btn btn-gradient-danger"
+                    type="button"
+                    data-dismiss="modal">
+                    OK
+                </button>
             </div>
         </div>
     </div>
@@ -394,12 +619,22 @@ $menu_item_second = "add_order";
 @endsection
 
 @section('script')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script> --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js" defer></script>
 <script type="application/javascript">
 let promoOption = "";
 let quantityOption = "";
 
 document.addEventListener("DOMContentLoaded", function () {
+    // $("#product_0").select2({
+    //     theme: "bootstrap4",
+    // });
+
+    // $("#product_0").selectize({
+    //     create: false,
+    //     persist: false,
+    // });
+
     const URL = '<?php echo route("fetch_promo_dropdown"); ?>';
 
     fetch(
@@ -420,7 +655,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const dataPromo = response.data;
 
         for (const promo in dataPromo) {
-            promoOption += `<option value="${promo}">${dataPromo[promo].product}</option>`;
+            promoOption += `<option value="${dataPromo[promo].id}">${dataPromo[promo].product}</option>`;
         }
     }).catch(function (error) {
         console.error(error);
@@ -430,74 +665,6 @@ document.addEventListener("DOMContentLoaded", function () {
         quantityOption += `<option value="${i}">${i}</option>`;
     }
 }, false);
-</script>
-<script type="application/javascript">
-	// $(document).ready(function() {
- //        var frmAdd;
-
-	//     $("#actionAdd").on("submit", function (e) {
-	//         e.preventDefault();
-	//         frmAdd = _("actionAdd");
-	//         frmAdd = new FormData(document.getElementById("actionAdd"));
-	//         frmAdd.enctype = "multipart/form-data";
-	//         var URLNya = $("#actionAdd").attr('action');
-	//         console.log(URLNya);
-
-	//         var ajax = new XMLHttpRequest();
-	//         ajax.upload.addEventListener("progress", progressHandler, false);
-	//         ajax.addEventListener("load", completeHandler, false);
-	//         ajax.addEventListener("error", errorHandler, false);
-	//         ajax.open("POST", URLNya);
-	//         ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
-	//         ajax.send(frmAdd);
-	//     });
-	//     function progressHandler(event){
-	//         document.getElementById("addOrder").innerHTML = "UPLOADING...";
-	//     }
-	//     function completeHandler(event){
-	//         var hasil = JSON.parse(event.target.responseText);
-	//         console.log(hasil);
-
-	//         for (var key of frmAdd.keys()) {
-	//             $("#actionAdd").find("input[name="+key+"]").removeClass("is-invalid");
-	//             $("#actionAdd").find("select[name="+key+"]").removeClass("is-invalid");
-	//             $("#actionAdd").find("textarea[name="+key+"]").removeClass("is-invalid");
-
-	//             $("#actionAdd").find("input[name="+key+"]").next().find("strong").text("");
-	//             $("#actionAdd").find("select[name="+key+"]").next().find("strong").text("");
-	//             $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text("");
-	//         }
-
-	//         if(hasil['errors'] != null){
-	//             for (var key of frmAdd.keys()) {
-	//                 if(typeof hasil['errors'][key] === 'undefined') {
-
-	//                 }
-	//                 else {
-	//                     $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
-	//                     $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
-	//                     $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
-
-	//                     $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	//                     $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	//                     $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	//                 }
-	//             }
- //              $("#modal-Error").modal("show");
-	//             // alert("Input Error !!!");
-	//         }
-	//         else{
- //              $("#modal-Success").modal("show");
-	//             // alert("Input Success !!!");
-	//             // window.location.reload()
-	//         }
-
-	//         document.getElementById("addOrder").innerHTML = "SAVE";
-	//     }
-	//     function errorHandler(event){
-	//         document.getElementById("addOrder").innerHTML = "SAVE";
-	//     }
- //    });
 </script>
 <script type="application/javascript">
     var total_bank = 0;
@@ -538,7 +705,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
         });
 
-		$("#province").on("change", function(){
+        $("#province").on("change", function(){
             var id = $(this).val();
             $("#city").html("");
             $.get('{{ route("fetchCity", ['province' => ""]) }}/' + id)
@@ -560,10 +727,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         $("#city").append(arrCity);
                     }
                 });
-		});
-		$("#city").on("change", function(){
+        });
+
+        $("#city").on("change", function(){
             var id = $(this).val();
-			$( "#subDistrict" ).html("");
+            $( "#subDistrict" ).html("");
             $.get('{{ route("fetchDistrict", ['city' => ""]) }}/' + id)
                 .done(function( result ) {
                     result = result['rajaongkir']['results'];
@@ -575,7 +743,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         $("#subDistrict").append(arrSubDistsrict);
                     }
                 });
-		});
+        });
+
         $("#tambah_bank").click(function(e){
             e.preventDefault();
             total_bank++;
@@ -591,7 +760,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 $(".other_valCicilan").show();
             }
         });
-        $(document).on("click",".hapus_bank", function(e){
+
+        $(document).on("click", ".hapus_bank", function (e) {
             e.preventDefault();
             total_bank--;
             $('#bank_'+$(this).val()).remove();
@@ -603,8 +773,8 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             total_product++;
 
-            let strIsi = `<div id="product_${total_product}" class="form-group" style="width: 72%; display: inline-block;">`
-                + `<select class="form-control pilihan-product" name="product_${total_product}" data-msg="Mohon Pilih Product" required>`
+            let strIsi = `<div class="form-group" style="width: 72%; display: inline-block;">`
+                + `<select class="form-control pilihan-product" id="product_${total_product}" name="product_${total_product}" data-msg="Mohon Pilih Product" required>`
                 + promoOption
                 + `</select>`
                 + `<div class="validation"></div>`
@@ -621,17 +791,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 + `</button>`
                 + `</div>`;
 
-			strIsi += '<div class="form-group d-none"><input type="text" class="form-control" name="product_other_'
-				+ total_product
-				+ '" placeholder="Product Name" data-msg="Please fill in the product" /><div class="validation"></div></div>';
+            strIsi += '<div class="form-group d-none"><input type="text" class="form-control" name="product_other_'
+                + total_product
+                + '" placeholder="Product Name" data-msg="Please fill in the product" /><div class="validation"></div></div>';
 
             let tambahanProduct = document.getElementById("tambahan_product").innerHTML;
             tambahanProduct += strIsi;
 
-            document.getElementById("tambahan_product").innerHTML = tambahanProduct;
+            document.getElementById("tambahan_product").innerHTML += strIsi;
+            // $("#product_" + total_product).select2({
+            //     theme: "bootstrap4",
+            // });
+
+            // $("#product_" + total_product).selectize({
+            //     create: false,
+            //     persist: false,
+            // });
+
+            // for (let i = 0; i <= total_product; i++) {
+            //     $("#product_" + i).selectize({
+            //         create: false,
+            //         persist: false,
+            //     });
+            // }
         });
 
-        $(document).on("click",".hapus_product", function(e){
+        $(document).on("click", ".hapus_product", function(e){
             e.preventDefault();
             total_product--;
             $('#product_'+$(this).val()).remove();

@@ -243,7 +243,7 @@ $menu_item_page = "order";
                                             ?>
 
                                             <?php foreach ($promos as $key => $promo): ?>
-                                                <option value="<?php echo $key; ?>"
+                                                <option value="<?php echo $promo["id"]; ?>"
                                                     <?php
                                                     if (
                                                         $isPromoIdNumeric
@@ -254,38 +254,11 @@ $menu_item_page = "order";
                                                     ?>
                                                     >
                                                     <?php
-                                                    $productFromPromo = json_decode($promo["product"]);
-                                                    $arrayProductId = [];
-
-                                                    foreach ($productFromPromo as $pp) {
-                                                        $arrayProductId[] = $pp->id;
-                                                    }
-
-                                                    $getProduct = Product::select("code")
-                                                    ->whereIn(
-                                                        "id",
-                                                        $arrayProductId
-                                                    )
-                                                    ->get();
-
-                                                    $arrayProductCode = [];
-
-                                                    foreach ($getProduct as $product) {
-                                                        $arrayProductCode[] = $product->code;
-                                                    }
-
-                                                    $productCode = implode(", ", $arrayProductCode);
-
-                                                    echo $promo["code"]
+                                                    echo $promo->code
                                                         . " - ("
-                                                        . $productCode
+                                                        . implode(", ", $promo->productName())
                                                         . ") - Rp. "
-                                                        . number_format(
-                                                            (int) $promo["price"],
-                                                            0,
-                                                            null,
-                                                            ","
-                                                        );
+                                                        . number_format($promo->price);
                                                     ?>
                                                 </option>
                                             <?php endforeach; ?>
