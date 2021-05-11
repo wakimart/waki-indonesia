@@ -6,9 +6,8 @@ $menu_item_second = "add_order";
 
 @section('style')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" /> --}}
-{{-- <link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" /> --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.bootstrap4.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+<link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
     #intro {
         padding-top: 2em;
@@ -33,6 +32,14 @@ $menu_item_second = "add_order";
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
+    }
+
+    .select2-selection__rendered {
+        line-height: 45px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 45px !important;
     }
 </style>
 @endsection
@@ -516,7 +523,7 @@ $menu_item_second = "add_order";
                                 <label for="customer_type">Type Customer</label>
                                 <select id="customer_type"
                                     style="margin-top: 0.5em; height: auto;"
-                                    class="form-control selectpicker"
+                                    class="form-control"
                                     name="customer_type"
                                     value=""
                                     required>
@@ -619,21 +626,15 @@ $menu_item_second = "add_order";
 @endsection
 
 @section('script')
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script> --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script type="application/javascript">
 let promoOption = "";
 let quantityOption = "";
 
 document.addEventListener("DOMContentLoaded", function () {
-    // $("#product_0").select2({
-    //     theme: "bootstrap4",
-    // });
-
-    // $("#product_0").selectize({
-    //     create: false,
-    //     persist: false,
-    // });
+    $("#product_0").select2({
+        theme: "bootstrap4",
+    });
 
     const URL = '<?php echo route("fetch_promo_dropdown"); ?>';
 
@@ -773,47 +774,60 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             total_product++;
 
-            let strIsi = `<div class="form-group" style="width: 72%; display: inline-block;">`
-                + `<select class="form-control pilihan-product" id="product_${total_product}" name="product_${total_product}" data-msg="Mohon Pilih Product" required>`
-                + promoOption
-                + `</select>`
-                + `<div class="validation"></div>`
-                + `</div>`
-                + `<div id="qty_${total_product}" class="form-group" style="width: 16%; display: inline-block;">`
-                + `<select class="form-control" name="qty_${total_product}" data-msg="Mohon Pilih Jumlah" required>`
-                + quantityOption
-                + `</select>`
-                + `<div class="validation"></div>`
-                + `</div>`
-                + `<div class="text-center" style="display: inline-block; float: right;">`
-                + `<button class="hapus_product" value="${total_product}" title="Tambah Product" style="padding: 0.4em 0.7em; background-color: red;">`
-                + `<i class="fas fa-minus"></i>`
-                + `</button>`
-                + `</div>`;
+            const newDivProduct = document.createElement("div");
+            newDivProduct.className = "form-group";
+            newDivProduct.style = "width: 72%; display: inline-block;";
 
-            strIsi += '<div class="form-group d-none"><input type="text" class="form-control" name="product_other_'
-                + total_product
-                + '" placeholder="Product Name" data-msg="Please fill in the product" /><div class="validation"></div></div>';
+            const newSelectProduct = document.createElement("select");
+            newSelectProduct.id = `product_${total_product}`;
+            newSelectProduct.className = "form-control pilihan-product";
+            newSelectProduct.name = `product_${total_product}`;
+            newSelectProduct.required = true;
+            newSelectProduct.innerHTML = promoOption;
 
-            let tambahanProduct = document.getElementById("tambahan_product").innerHTML;
-            tambahanProduct += strIsi;
+            const newDivQty = document.createElement("div");
+            newDivQty.id = `qty_${total_product}`;
+            newDivQty.className = "form-group";
+            newDivQty.style = "width: 16%; display: inline-block;";
 
-            document.getElementById("tambahan_product").innerHTML += strIsi;
-            // $("#product_" + total_product).select2({
-            //     theme: "bootstrap4",
-            // });
+            const newSelectQty = document.createElement("select");
+            newSelectQty.className = "form-control";
+            newSelectQty.name = `qty_${total_product}`;
+            newSelectQty.innerHTML = quantityOption;
 
-            // $("#product_" + total_product).selectize({
-            //     create: false,
-            //     persist: false,
-            // });
+            const newDivRemove = document.createElement("div");
+            newDivRemove.className = "text-center";
+            newDivRemove.style = "display: inline-block; float: right;";
 
-            // for (let i = 0; i <= total_product; i++) {
-            //     $("#product_" + i).selectize({
-            //         create: false,
-            //         persist: false,
-            //     });
-            // }
+            const newButtonRemove = document.createElement("button");
+            newButtonRemove.className = "hapus_product";
+            newButtonRemove.value = total_product;
+            newButtonRemove.title = "Kurangi Produk";
+            newButtonRemove.style = "padding: 0.4em 0.7em; background-color: red;";
+            newButtonRemove.innerHTML = '<i class="fas fa-minus"></i>';
+
+            const newDivOther = document.createElement("div");
+            newDivOther.className = "form-group d-none";
+
+            const newInputOther = document.createElement("input");
+            newInputOther.type = "text";
+            newInputOther.className = "form-control";
+            newInputOther.name = `product_other_${total_product}`;
+            newInputOther.placeholder = "Product Name";
+
+            newDivProduct.appendChild(newSelectProduct);
+            newDivQty.appendChild(newSelectQty);
+            newDivRemove.appendChild(newButtonRemove);
+            newDivOther.appendChild(newInputOther);
+
+            document.getElementById("tambahan_product").appendChild(newDivProduct);
+            document.getElementById("tambahan_product").appendChild(newDivQty);
+            document.getElementById("tambahan_product").appendChild(newDivRemove);
+            document.getElementById("tambahan_product").appendChild(newDivOther);
+
+            $("#product_" + total_product).select2({
+                theme: "bootstrap4",
+            });
         });
 
         $(document).on("click", ".hapus_product", function(e){
