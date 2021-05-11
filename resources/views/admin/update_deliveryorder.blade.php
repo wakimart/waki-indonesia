@@ -11,8 +11,9 @@ $menu_item_page = "deliveryorder";
         line-height: 45px !important;
     }
 
-    .select2-container .select2-selection--single {
+    .select2-container {
         height: 45px !important;
+        width: auto !important;
     }
 </style>
 @endsection
