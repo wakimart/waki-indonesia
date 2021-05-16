@@ -272,58 +272,68 @@ $menu_item_second = "add_order";
                                 class="col-md-12"
                                 style="display: none; padding: 0;">
                                 {{-- ++++++++++++++ Product ++++++++++++++ --}}
-                                <div class="form-group"
-                                    style="width: 72%; display: inline-block;">
-                                    <select class="form-control pilihan-product selectpicker"
-                                        id="product_0"
-                                        name="product_0"
-                                        data-msg="Mohon Pilih Product"
-                                        required>
-                                        <option selected disabled value="">
-                                            Choose Product
-                                        </option>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <select class="form-control pilihan-product selectpicker"
+                                                id="product_0"
+                                                name="product_0"
+                                                data-msg="Mohon Pilih Product"
+                                                required>
+                                                <option selected disabled value="">
+                                                    Choose Product
+                                                </option>
 
-                                        <?php foreach ($promos as $key => $promo): ?>
-                                            <option value="<?php echo $promo["id"]; ?>">
-                                                <?php
-                                                echo $promo->code
-                                                    . " - ("
-                                                    . implode(", ", $promo->productName())
-                                                    . ") - Rp. "
-                                                    . number_format($promo->price);
-                                                ?>
-                                            </option>
-                                        <?php endforeach; ?>
+                                                <?php foreach ($promos as $key => $promo): ?>
+                                                    <option value="<?php echo $promo["id"]; ?>">
+                                                        <?php
+                                                        echo $promo->code
+                                                            . " - ("
+                                                            . implode(", ", $promo->productName())
+                                                            . ") - Rp. "
+                                                            . number_format($promo->price);
+                                                        ?>
+                                                    </option>
+                                                <?php endforeach; ?>
 
-                                        <option value="other">OTHER</option>
-                                    </select>
-                                    <div class="validation"></div>
+                                                <option value="other">OTHER</option>
+                                            </select>
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <select class="form-control"
+                                                name="qty_0"
+                                                data-msg="Mohon Pilih Jumlah"
+                                                required>
+                                                <option selected value="1">1</option>
+
+                                                @for ($i = 2; $i <= 10; $i++)
+                                                    <option value="{{ $i }}">
+                                                        {{ $i }}
+                                                    </option>
+                                                @endfor
+                                            </select>
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-right"
+                                        style="margin-bottom: 1em;">
+                                        <button id="tambah_product"
+                                            title="Tambah Product"
+                                            style="padding: 0.4em 0.7em;">
+                                            <i class="mdi mdi-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <div class="form-group"
-                                    style="width: 16%; display: inline-block;">
-                                    <select class="form-control"
-                                        name="qty_0"
-                                        data-msg="Mohon Pilih Jumlah"
-                                        required>
-                                        <option selected value="1">1</option>
-
-                                        @for ($i = 2; $i <= 10; $i++)
-                                            <option value="{{ $i }}">
-                                                {{ $i }}
-                                            </option>
-                                        @endfor
-                                    </select>
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="text-center"
-                                    style="display: inline-block; float: right;">
-                                    <button id="tambah_product"
-                                        title="Tambah Product"
-                                        style="padding: 0.4em 0.7em;">
-                                        <i class="mdi mdi-plus"></i>
-                                    </button>
-                                </div>
+                                
 
                                 <div class="form-group d-none">
                                     <input type="text"
@@ -776,7 +786,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const newDivProduct = document.createElement("div");
             newDivProduct.className = "form-group";
-            newDivProduct.style = "width: 72%; display: inline-block;";
+            newDivProduct.style = "width: 74%; float: left; display: inline-block;";
 
             const newSelectProduct = document.createElement("select");
             newSelectProduct.id = `product_${total_product}`;
@@ -788,7 +798,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const newDivQty = document.createElement("div");
             newDivQty.id = `qty_${total_product}`;
             newDivQty.className = "form-group";
-            newDivQty.style = "width: 16%; display: inline-block;";
+            newDivQty.style = "width: 14%; float: right; display: inline-block;";
 
             const newSelectQty = document.createElement("select");
             newSelectQty.className = "form-control";
@@ -796,8 +806,8 @@ document.addEventListener("DOMContentLoaded", function () {
             newSelectQty.innerHTML = quantityOption;
 
             const newDivRemove = document.createElement("div");
-            newDivRemove.className = "text-center";
-            newDivRemove.style = "display: inline-block; float: right;";
+            newDivRemove.className = "col-md-12";
+            newDivRemove.style = "margin-bottom: 1em; display:flex; justify-content: flex-end; padding: 0;";
 
             const newButtonRemove = document.createElement("button");
             newButtonRemove.className = "hapus_product";
