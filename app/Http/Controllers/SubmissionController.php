@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Branch;
 use App\Cso;
-use App\DeliveryOrder;
 use App\HistoryUpdate;
-use App\RajaOngkir_City;
-use App\Product;
 use App\Promo;
 use App\Reference;
 use App\ReferenceImage;
@@ -672,6 +669,37 @@ class SubmissionController extends Controller
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
 
             if ($data["type"] === "mgm") {
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        "no_member" => ["required"],
+                        "name" => ["required", "string", "max:191"],
+                        "phone" => ["required"],
+                        "province" => ["required"],
+                        "city" => ["required"],
+                        "district" => ["required"],
+                        "address" => ["required"],
+                        "branch_id" => ["required"],
+                        "cso_id" => ["required"],
+                        "name_ref" => ["required", "array", "min:1"],
+                        "age_ref" => ["required", "array", "min:1"],
+                        "phone_ref" => ["required", "array", "min:1"],
+                        "province_ref" => ["required", "array", "min:1"],
+                        "city_ref" => ["required", "array", "min:1"],
+                        "promo_1" => ["required", "array", "min:1"],
+                        "qty_1" => ["required", "array", "min:1"],
+                        "do-image_1" => ["required", "array"],
+                        "do-image_1.*" => ["required", "image"],
+                    ]
+                );
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        "result" => 0,
+                        "data" => $validator->errors(),
+                    ], 400);
+                }
+
                 $submission = Submission::create($data);
 
                 $dataCount = count($data["name_ref"]);
@@ -730,6 +758,36 @@ class SubmissionController extends Controller
                     }
                 }
             } elseif ($data["type"] === "referensi") {
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        "no_member" => ["required"],
+                        "name" => ["required", "string", "max:191"],
+                        "phone" => ["required"],
+                        "province" => ["required"],
+                        "city" => ["required"],
+                        "district" => ["required"],
+                        "address" => ["required"],
+                        "branch_id" => ["required"],
+                        "cso_id" => ["required"],
+                        "proof_image" => ["required", "array"],
+                        "proof_image.*" => ["required", "image"],
+                        "name_ref" => ["required", "array", "min:1"],
+                        "age_ref" => ["required", "array", "min:1"],
+                        "phone_ref" => ["required", "array", "min:1"],
+                        "province_ref" => ["required", "array", "min:1"],
+                        "city_ref" => ["required", "array", "min:1"],
+                        "souvenir_id" => ["required", "array", "min:1"],
+                    ]
+                );
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        "result" => 0,
+                        "data" => $validator->errors(),
+                    ], 400);
+                }
+
                 $submission = Submission::create($data);
 
                 $user_id = Auth::user()["id"];
@@ -774,6 +832,32 @@ class SubmissionController extends Controller
                     }
                 }
             } elseif ($data["type"] === "takeaway") {
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        "name" => ["required", "string", "max:191"],
+                        "phone" => ["required"],
+                        "province" => ["required"],
+                        "city" => ["required"],
+                        "district" => ["required"],
+                        "address" => ["required"],
+                        "promo_1" => ["required"],
+                        "qty_1" => ["required"],
+                        "branch_id" => ["required"],
+                        "cso_id" => ["required"],
+                        "nomor_do" => ["required"],
+                        "do_image" => ["required", "array"],
+                        "do_image.*" => ["required", "image"],
+                    ]
+                );
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        "result" => 0,
+                        "data" => $validator->errors(),
+                    ], 400);
+                }
+
                 $submission = Submission::create($data);
 
                 $submissionPromo = new SubmissionPromo();
@@ -824,10 +908,6 @@ class SubmissionController extends Controller
                     $i++;
                 }
                 $submissionImage->save();
-            } else {
-                return response()->json([
-                    "error" => "Bad request.",
-                ], 400);
             }
 
             DB::commit();
@@ -878,8 +958,6 @@ class SubmissionController extends Controller
             'city' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => ['required', 'exists:branches,id'],
-            'product_0' => 'required',
-            'qty_0' => 'required',
         ], $messages);
 
         if ($validator->fails()) {
@@ -888,254 +966,152 @@ class SubmissionController extends Controller
                 'data' => $validator->errors(),
             ];
 
-            return response()->json($data, 401);
-        } else {
-            // Inisialisasi variabel $deliveryOrder untuk memperbarui data
-            $deliveryOrder = DeliveryOrder::find($request->input("idDeliveryOrder"));
+            return response()->json($data, 400);
+        }
 
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            try {
-                $deliveryOrder->no_member = $request->input("no_member");
-                $deliveryOrder->name = $request->input("name");
-                $deliveryOrder->address = $request->input("address");
-                $deliveryOrder->phone = $request->input("phone");
+        try {
+            $submission = Submission::find($request->id);
 
-                // Pembentukan array product
-                $data = $request->all();
-                $data['arr_product'] = [];
-                foreach ($data as $key => $value) {
-                    $arrKey = explode("_", $key);
-                    if ($arrKey[0] == 'product') {
-                        if (isset($data['qty_'.$arrKey[1]])) {
-                            $data['arr_product'][$key] = [];
-                            $data['arr_product'][$key]['id'] = $value;
-                            $data['arr_product'][$key]['qty'] = $data['qty_'.$arrKey[1]];
-                        }
+            if ($request->type === "mgm") {
+                $submission->fill($request->only(
+                    "no_member",
+                    "name",
+                    "phone",
+                    "province",
+                    "city",
+                    "district",
+                    "address",
+                    "branch_id",
+                ));
+                $csoId = Cso::where('code', $request->cso_id)->first()['id'];
+                $submission->cso_id = $csoId;
+                $submission->save();
+            } elseif ($request->type === "referensi") {
+                $submission->fill($request->only(
+                    "no_member",
+                    "name",
+                    "phone",
+                    "province",
+                    "city",
+                    "district",
+                    "address",
+                    "branch_id",
+                ));
+                $csoId = Cso::where('code', $request->cso_id)->first()['id'];
+                $submission->cso_id = $csoId;
+                $submission->save();
+
+                $user_id = Auth::user()["id"];
+                $path = "sources/registration";
+                $submissionImage = SubmissionImage::where("submission_id", $request->id)->first();
+                for ($i = 1; $i <= 5; $i++) {
+                    $imageInput = "proof_image_" . $i;
+                    if ($request->hasFile($imageInput)) {
+                        $fileName = ((string)time())
+                            . "_"
+                            . $user_id
+                            . "_"
+                            . $i
+                            . "."
+                            . $request->file($imageInput)->getClientOriginalExtension();
+
+                        $request->file($imageInput)->move($path, $fileName);
+
+                        $submissionImage["image_" . $i] = $fileName;
                     }
                 }
 
-                $deliveryOrder->arr_product = json_encode($data['arr_product']);
+                $submissionImage->save();
+            } elseif ($request->type === "takeaway") {
+                $submission->fill($request->only(
+                    "no_member",
+                    "name",
+                    "phone",
+                    "province",
+                    "city",
+                    "district",
+                    "address",
+                    "branch_id",
+                ));
+                $csoId = Cso::where('code', $request->cso_id)->first()['id'];
+                $submission->cso_id = $csoId;
+                $submission->save();
 
-                $getCSOid = Cso::where('code', $request->input("cso_id"))->first()['id'];
-                $deliveryOrder->cso_id = $getCSOid;
-                $deliveryOrder->branch_id = $request->input("branch_id");
-                $deliveryOrder->province = $request->input("province_id");
-                $deliveryOrder->city = $request->input("city");
-                $deliveryOrder->distric = $request->input("distric");
-                $deliveryOrder->type_register = $request->input("type_register");
+                $submissionPromo = SubmissionPromo::where("submission_id", $request->id)->first();
+                if ($request->promo_1 !== "other") {
+                    $submissionPromo->promo_1 = $request->promo_1;
+                }
 
-                // Mengecek apakah ada gambar yang diupload atau tidak
-                if ($request->hasFile("image_proof")) {
-                    // Inisialisasi variabel data["image"]
-                    $data["image"] = [];
-                    // Inisialisasi jalur di mana gambar akan diletakkan
-                    $path = "sources/registration";
+                if ($request->promo_2 !== "other") {
+                    $submissionPromo->promo_2 = $request->promo_2;
+                }
 
-                    // Mengecek apakah jalur untuk gambar sudah ada atau belum
-                    if (!is_dir($path)) {
-                        // Jika belum, maka akan membuat folder/directory baru
-                        File::makeDirectory($path, 0777, true, true);
+                $submissionPromo->qty_1 = $request->qty_1;
+
+                if (
+                    !empty($request->promo_2)
+                    || !empty($request->other_2)
+                ) {
+                    $submissionPromo->qty_2 = $request->qty_2;
+                }
+
+                $submissionPromo->other_1 = $request->other_1;
+                $submissionPromo->other_2 = $request->other_2;
+                $submissionPromo->save();
+
+                $submissionDO = SubmissionDeliveryorder::where("submission_id", $request->id)->first();
+                $submissionDO->no_deliveryorder = $request->other_2;
+                $submissionDO->save();
+
+                $user_id = Auth::user()["id"];
+                $path = "sources/registration";
+                $submissionImage = SubmissionImage::where("submission_id", $request->id)->first();
+                for ($i = 1; $i <= 5; $i++) {
+                    $imageInput = "do_image_" . $i;
+                    if ($request->hasFile($imageInput)) {
+                        $fileName = ((string)time())
+                            . "_"
+                            . $user_id
+                            . "_"
+                            . $i
+                            . "."
+                            . $request->file($imageInput)->getClientOriginalExtension();
+
+                        $request->file($imageInput)->move($path, $fileName);
+
+                        $submissionImage["image_" . $i] = $fileName;
                     }
-
-                    // Inisialisasi variabel $j untuk counter dan sebagai suffix nama file
-                    $j = 0;
-                    foreach ($request->file("image_proof") as $image) {
-                        // Inisialisasi nama gambar dengan UNIX Timestamp
-                        $fileName = (string)time();
-                        // Memberikan suffix dengan $j agar nama gambar tidak sama, dan juga menambahkan file extension
-                        $fileName .= "_" . $j . "." . $image->getClientOriginalExtension();
-                        // Menyimpan gambar
-                        $image->move($path, $fileName);
-                        // Push nama gambar ke dalam variabel data["image"]
-                        $data["image"][] = $fileName;
-                        // Increment variabel $j
-                        $j++;
-                    }
-
-                    // Convert array pada $data["image"] menjadi JSON
-                    $data["image"] = json_encode($data["image"], JSON_FORCE_OBJECT);
-
-                    $deliveryOrder->image = $data["image"];
                 }
-
-                // Menyimpan pembaruan data delivery_orders
-                $deliveryOrder->save();
-
-                // Mengisi variabel $historyDeliveryOrder dengan data yang diperbarui
-                $historyDeliveryOrder = [];
-                $historyDeliveryOrder["type_menu"] = "Delivery Order";
-                $historyDeliveryOrder["method"] = "Update";
-                $historyDeliveryOrder["meta"] = json_encode(
-                    [
-                        "user" => $request->input("user_id"),
-                        "createdAt" => date("Y-m-d H:i:s"),
-                        "dataChange" => $deliveryOrder->getChanges(),
-                    ]
-                );
-
-                $historyDeliveryOrder["user_id"] = $request->input("user_id");
-                $historyDeliveryOrder["menu_id"] = $deliveryOrder->id;
-
-                // Menyimpan riwayat pembaruan data delivery_orders ke tabel history_updates
-                HistoryUpdate::create($historyDeliveryOrder);
-
-                $referenceArray = [];
-                $dataCount = count($data["name_ref"]);
-                for ($i = 0; $i < $dataCount; $i++) {
-                    $reference = Reference::find($data["id_reference"][$i]);
-
-                    $reference->name = $data["name_ref"][$i];
-                    $reference->age = $data["age_ref"][$i];
-                    $reference->phone = $data["phone_ref"][$i];
-                    $reference->province = $data["province_ref"][$i];
-                    $reference->city = $data["city_ref"][$i];
-                    $reference->souvenir_id = $data["souvenir_id"][$i];
-                    $reference->link_hs = $data["link_hs"][$i];
-                    $reference->status = $data["status"][$i];
-
-                    // Menyimpan pembaruan data references
-                    $reference->save();
-
-                    $referenceArray[] = $reference;
-
-                    // Mengisi variabel $historyReference dengan data yang diperbarui
-                    $historyReference = [];
-                    $historyReference["type_menu"] = "Reference";
-                    $historyReference["method"] = "Update";
-                    $historyReference["meta"] = json_encode(
-                        [
-                            "user" => $request->input("user_id"),
-                            "createdAt" => date("Y-m-d H:i:s"),
-                            "dataChange" => $reference->getChanges(),
-                        ]
-                    );
-
-                    $historyReference["user_id"] = $request->input("user_id");
-                    $historyReference["menu_id"] = $reference->id;
-
-                    // Menyimpan riwayat pembaruan data references ke tabel history_updates
-                    HistoryUpdate::create($historyReference);
-                }
-
-                DB::commit();
-
-                $dataSubmission = $deliveryOrder;
-
-                $dataSubmission->created_at = date(
-                    "Y-m-d",
-                    strtotime($dataSubmission->created_at)
-                );
-
-                $dataSubmission->customer_name = $dataSubmission->name;
-                $dataSubmission->customer_phone = $dataSubmission->phone;
-
-                $getSubmissionCityAndProvince = RajaOngkir_City::leftJoin(
-                    "raja_ongkir__subdistricts",
-                    "raja_ongkir__subdistricts.city_id",
-                    "=",
-                    "raja_ongkir__cities.city_id"
-                )
-                ->select(
-                    "raja_ongkir__cities.province",
-                    "raja_ongkir__cities.type",
-                    "raja_ongkir__cities.city_name",
-                    "raja_ongkir__subdistricts.subdistrict_name",
-                )
-                ->where(
-                    "raja_ongkir__subdistricts.subdistrict_id",
-                    $dataSubmission->distric
-                )
-                ->first();
-
-                // Provinsi
-                $dataSubmission->province = $getSubmissionCityAndProvince->province;
-
-                // Kota
-                $dataSubmission->city = $getSubmissionCityAndProvince->type
-                    . " "
-                    . $getSubmissionCityAndProvince->city_name;
-
-                // District
-                $dataSubmission->district = $getSubmissionCityAndProvince->subdistrict_name;
-
-                // Promo
-                $dataSubmission->promo = json_decode($dataSubmission->arr_product);
-                $arrayPromo = (Array) $dataSubmission->promo;
-
-                foreach ($arrayPromo as $key => $promoItem) {
-                    $getPromo = DeliveryOrder::$Promo[$promoItem->id];
-                    $arrayPromo[$key]->name = $getPromo["name"];
-                }
-
-                $dataSubmission->promo = $arrayPromo;
-
-                // Branch
-                $getBranch = Branch::where("id", $dataSubmission->branch_id)->first();
-                $dataSubmission->branch_code = $getBranch->code;
-                $dataSubmission->branch_name = $getBranch->name;
-
-                // CSO
-                $getCSO = Cso::where("id", $dataSubmission->cso_id)->first();
-                $dataSubmission->cso_code = $getCSO->code;
-                $dataSubmission->cso_name = $getCSO->name;
-
-                $getReferencesCityAndProvince = RajaOngkir_City::leftJoin(
-                    "references",
-                    "references.city",
-                    "=",
-                    "raja_ongkir__cities.city_id"
-                )
-                ->select(
-                    "raja_ongkir__cities.province",
-                    "raja_ongkir__cities.type",
-                    "raja_ongkir__cities.city_name",
-                )
-                ->where("references.deliveryorder_id", $dataSubmission->id)
-                ->orderBy("references.id")
-                ->get();
-
-                foreach ($getReferencesCityAndProvince as $i => $refCityAndProvince) {
-                    $referenceArray[$i]->province = $refCityAndProvince->province;
-                    $referenceArray[$i]->city = $refCityAndProvince->type
-                        . " "
-                        . $refCityAndProvince->city_name;
-
-                    unset(
-                        $referenceArray[$i]->id,
-                        $referenceArray[$i]->deliveryorder_id,
-                        $referenceArray[$i]->created_at,
-                        $referenceArray[$i]->updated_at,
-                    );
-                }
-
-                unset(
-                    $dataSubmission->name,
-                    $dataSubmission->phone,
-                    $dataSubmission->arr_product,
-                    $dataSubmission->updated_at,
-                    $dataSubmission->cso_id,
-                    $dataSubmission->branch_id,
-                    $dataSubmission->active,
-                    $dataSubmission->distric,
-                );
-
-                $data = [
-                    "result" => 1,
-                    "dataSubmission" => $dataSubmission,
-                    "dataReference" => $referenceArray,
-                ];
-
-
-                return response()->json($data, 200);
-            } catch (Exception $e) {
-                DB::rollback();
-
-                return response()->json([
-                    "result" => 0,
-                    "data" => $e->getMessage(),
-                ], 500);
+                $submissionImage->save();
             }
+
+            DB::commit();
+
+            $queryReference = "";
+            if ($request->type === "mgm") {
+                $querySubmission = $this->querySubmissionMGM($submission->id);
+                $queryReference = $this->queryReferenceMGM($submission->id);
+            } elseif ($request->type === "referensi") {
+                $querySubmission = $this->querySubmissionReferensi($submission->id);
+                $queryReference = $this->queryReferenceReferensi($submission->id);
+            } elseif ($request->type === "takeaway") {
+                $querySubmission = $this->querySubmissionTakeaway($submission->id);
+            }
+
+            return response()->json([
+                "result" => 1,
+                "dataSubmission" => $querySubmission,
+                "dataReference" => $queryReference,
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "result" => 0,
+                "data" => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -1251,9 +1227,9 @@ class SubmissionController extends Controller
      */
     public function deleteApi(Request $request): \Illuminate\Http\JsonResponse
     {
-        $messages = array(
+        $messages = [
             'id.required' => "There's an error with the data.",
-        );
+        ];
 
         $validator = Validator::make($request->all(), [
             'id' => [
