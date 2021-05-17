@@ -155,9 +155,11 @@ $menu_item_second = "list_acceptance_form";
                                         @endcan
                                         @can('edit-acceptance')
                                             <td style="text-align: center;">
-                                                <a href="{{ route('edit_acceptance_form' ,['id' => $acceptance['id']]) }}">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                </a>
+                                                @if(strtolower($acceptance['status']) == "new")
+                                                    <a href="{{ route('edit_acceptance_form' ,['id' => $acceptance['id']]) }}">
+                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                    </a>
+                                                @endif
                                             </td>
                                         @endcan
                                         @can('delete-acceptance')
