@@ -1,14 +1,12 @@
 <?php
-
-use App\DeliveryOrder;
-use App\Product;
-
 $menu_item_page = "order";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+<link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
     .imagePreview {
 	    width: 100%;
@@ -36,12 +34,12 @@ $menu_item_page = "order";
         padding-top: 2em;
     }
 
-    .validation{
+    .validation {
         color: red;
         font-size: 9pt;
     }
 
-    button{
+    button {
         background: #1bb1dc;
         border: 0;
         border-radius: 3px;
@@ -50,11 +48,19 @@ $menu_item_page = "order";
         transition: 0.3s;
     }
 
-    input, select, textarea{
+    input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
+    }
+
+    .select2-selection__rendered {
+        line-height: 45px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 45px !important;
     }
 </style>
 @endsection
@@ -210,84 +216,116 @@ $menu_item_page = "order";
 			                    <div class="validation"></div>
 			                </div>
 
-			                @if($orders['cash_upgrade'] == 1 || $orders['cash_upgrade'] == 2)
+			                @if ($orders['cash_upgrade'] == 1 || $orders['cash_upgrade'] == 2)
 			                <div id="container-cashupgrade">
-			                	@php
-		                            $ProductPromos = json_decode($orders['product'], true);
-		                            $totalProduct = count($ProductPromos);
+			                	<?php
+                                $ProductPromos = json_decode($orders['product'], true);
+                                $totalProduct = count($ProductPromos);
 
-		                            $total_product = -1;
-		                        @endphp
+                                $total_product = -1;
+		                        ?>
 
-			                	@foreach($ProductPromos as $ProductPromo)
-			                		@php
-										$total_product++;
-									@endphp
+			                	@foreach ($ProductPromos as $ProductPromo)
+			                		<?php
+                                    $total_product++;
+									?>
 
 				                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
-				                    <div id="product_{{ $total_product }}"
-                                        class="form-group"
-                                        style="width: 72%; display: inline-block;">
-				                        <select class="form-control pilihan-product"
-                                            name="product_{{ $total_product }}"
-                                            data-msg="Mohon Pilih Product"
-                                            required>
-				                            <option selected disabled value="">
-                                                Choose Product
-                                            </option>
-                                            <?php
-                                            $isPromoIdNumeric = false;
-                                            if (is_numeric($ProductPromo['id'])) {
-                                                $isPromoIdNumeric = true;
-                                            }
-                                            ?>
-
-                                            <?php foreach ($promos as $key => $promo): ?>
-                                                <option value="<?php echo $promo["id"]; ?>"
+				                    <div class="row">
+                                        <div class="col-md-9">
+                                            <div class="form-group">
+                                                <select class="form-control pilihan-product"
+                                                    id="product_{{ $total_product }}"
+                                                    name="product_{{ $total_product }}"
+                                                    data-msg="Mohon Pilih Product"
+                                                    required>
+                                                    <option selected disabled value="">
+                                                        Choose Product
+                                                    </option>
                                                     <?php
-                                                    if (
-                                                        $isPromoIdNumeric
-                                                        && $promo["id"] === $ProductPromo["id"]
-                                                    ) {
-                                                        echo "selected";
+                                                    $isPromoIdNumeric = false;
+                                                    if (is_numeric($ProductPromo['id'])) {
+                                                        $isPromoIdNumeric = true;
                                                     }
                                                     ?>
-                                                    >
-                                                    <?php
-                                                    echo $promo->code
-                                                        . " - ("
-                                                        . implode(", ", $promo->productName())
-                                                        . ") - Rp. "
-                                                        . number_format($promo->price);
-                                                    ?>
-                                                </option>
-                                            <?php endforeach; ?>
 
-                                            <option value="other" <?php echo $isPromoIdNumeric ?: "selected";?>>
-                                                OTHER
-                                            </option>
-				                        </select>
-				                        <div class="validation"></div>
-				                    </div>
-				                    <div id="qty_{{$total_product}}" class="form-group" style="width: 16%; display: inline-block;">
-				                        <select class="form-control" name="qty_{{$total_product}}" data-msg="Mohon Pilih Jumlah" required="">
-				                            <option selected value="1">1</option>
+                                                    <?php foreach ($promos as $key => $promo): ?>
+                                                        <option value="<?php echo $promo["id"]; ?>"
+                                                            <?php
+                                                            if (
+                                                                $isPromoIdNumeric
+                                                                && $promo["id"] === $ProductPromo["id"]
+                                                            ) {
+                                                                echo "selected";
+                                                            }
+                                                            ?>
+                                                            >
+                                                            <?php
+                                                            echo $promo->code
+                                                                . " - ("
+                                                                . implode(", ", $promo->productName())
+                                                                . ") - Rp. "
+                                                                . number_format($promo->price);
+                                                            ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
 
-				                            @for($i = 2; $i <= 10; $i++)
-				                            	@if($ProductPromo['qty'] == $i)
-				                                	<option value="{{ $i }}" selected="true">{{ $i }}</option>
-				                                @else
-				                                	<option value="{{ $i }}">{{ $i }}</option>
-				                                @endif
-				                            @endfor
-				                        </select>
-				                        <div class="validation"></div>
-				                    </div>
+                                                    <option value="other" <?php echo $isPromoIdNumeric ? "" : "selected";?>>
+                                                        OTHER
+                                                    </option>
+                                                </select>
+                                                <div class="validation"></div>
+				                            </div>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <select class="form-control"
+                                                    name="qty_{{ $total_product }}"
+                                                    data-msg="Mohon Pilih Jumlah"
+                                                    required>
+                                                    <option selected value="1">
+                                                        1
+                                                    </option>
+
+                                                    @for ($i = 2; $i <= 10; $i++)
+                                                        @if ($ProductPromo['qty'] == $i)
+                                                            <option value="{{ $i }}" selected="true">
+                                                                {{ $i }}
+                                                            </option>
+                                                        @else
+                                                            <option value="{{ $i }}">{{ $i }}</option>
+                                                        @endif
+                                                    @endfor
+                                                </select>
+                                                <div class="validation"></div>
+                                            </div>
+                                        </div>
+                                    </div>
 
 				                    @if($total_product == 0)
-					                    <div class="text-center" style="display: inline-block; float: right;"><button id="tambah_product" title="Tambah Product" style="padding: 0.4em 0.7em;"><i class="fas fa-plus"></i></button></div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-right"
+                                                style="margin-bottom: 1em;">
+                                                <button id="tambah_product"
+                                                    title="Tambah Product"
+                                                    style="padding: 0.4em 0.7em;">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
 				                    @else
-					                    <div class="text-center" style="display: inline-block; float: right;"><button class="hapus_product" value="{{$total_product}}" title="Hapus Product" style="padding: 0.4em 0.7em; background-color: red;"><i class="fas fa-minus"></i></button></div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-right"
+                                                style="margin-bottom: 1em;">
+                                                <button class="hapus_product"
+                                                    value="{{ $total_product }}"
+                                                    title="Hapus Product"
+                                                    style="padding: 0.4em 0.7em; background-color: red;">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
 				                    @endif
 
 				                    {{-- KHUSUS Philiphin --}}
@@ -458,7 +496,7 @@ $menu_item_page = "order";
 @endsection
 
 @section('script')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script type="application/javascript">
 let promoOption = "";
 let quantityOption = "";
@@ -515,9 +553,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
 	        ajax.send(frmUpdate);
 	    });
+
 	    function progressHandler(event){
 	        document.getElementById("updateOrder").innerHTML = "UPLOADING...";
 	    }
+
 	    function completeHandler(event){
 	        var hasil = JSON.parse(event.target.responseText);
 	        console.log(hasil);
@@ -556,9 +596,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	        document.getElementById("updateOrder").innerHTML = "SAVE";
 	    }
+
 	    function errorHandler(event){
 	        document.getElementById("updateOrder").innerHTML = "SAVE";
 	    }
+
 		$("#province").on("change", function(){
             var id = $(this).val();
             $( "#city" ).html("");
@@ -584,6 +626,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 		});
+
 		$("#city").on("change", function(){
             var id = $(this).val();
 			$( "#subDistrict" ).html("");
@@ -608,8 +651,14 @@ document.addEventListener("DOMContentLoaded", function () {
     var count = 0;
     var arrBooleanCso = ['false', 'false', 'false'];
 
-    $(document).ready(function(){
-        $(".cso").on("input", function(){
+    $(document).ready(function () {
+        for (let i = 0; i <= total_product; i++) {
+            $("#product_" + i).select2({
+                theme: "bootstrap4",
+            });
+        }
+
+        $(".cso").on("input", function () {
             var txtCso = $(this).val();
             var temp = $(this);
             $.get( '{{route("fetchCso")}}', { cso_code: txtCso })
@@ -676,28 +725,60 @@ document.addEventListener("DOMContentLoaded", function () {
             total_product++;
             count = total_product + 1;
 
-            const strIsi = `<div id="product_${total_product}" class="form-group" style="width: 72%; display: inline-block;">`
-                + `<select class="form-control pilihan-product" name="product_${total_product}" data-msg="Mohon Pilih Product" required>`
-                + promoOption
-                + `</select>`
-                + `<div class="validation"></div>`
-                + `</div>`
-                + `<div id="qty_${total_product}" class="form-group" style="width: 16%; display: inline-block;">`
-                + `<select class="form-control" name="qty_${total_product}" data-msg="Mohon Pilih Jumlah" required>`
-                + quantityOption
-                + `</select>`
-                + `<div class="validation"></div>`
-                + `</div>`
-                + `<div class="text-center" style="display: inline-block; float: right;">`
-                + `<button class="hapus_product" value="${total_product}" title="Tambah Product" style="padding: 0.4em 0.7em; background-color: red;">`
-                + `<i class="fas fa-minus"></i>`
-                + `</button>`
-                + `</div>`;
+            const newDivProduct = document.createElement("div");
+            newDivProduct.className = "form-group";
+            newDivProduct.style = "width: 74%; float: left; display: inline-block;";
 
-            let tambahanProduct = document.getElementById("tambahan_product").innerHTML;
-            tambahanProduct += strIsi;
+            const newSelectProduct = document.createElement("select");
+            newSelectProduct.id = `product_${total_product}`;
+            newSelectProduct.className = "form-control pilihan-product";
+            newSelectProduct.name = `product_${total_product}`;
+            newSelectProduct.required = true;
+            newSelectProduct.innerHTML = promoOption;
 
-            document.getElementById("tambahan_product").innerHTML = tambahanProduct;
+            const newDivQty = document.createElement("div");
+            newDivQty.id = `qty_${total_product}`;
+            newDivQty.className = "form-group";
+            newDivQty.style = "width: 14%; float: right; display: inline-block;";
+
+            const newSelectQty = document.createElement("select");
+            newSelectQty.className = "form-control";
+            newSelectQty.name = `qty_${total_product}`;
+            newSelectQty.innerHTML = quantityOption;
+
+            const newDivRemove = document.createElement("div");
+            newDivRemove.className = "col-md-12";
+            newDivRemove.style = "margin-bottom: 1em; display:flex; justify-content: flex-end; padding: 0;";
+
+            const newButtonRemove = document.createElement("button");
+            newButtonRemove.className = "hapus_product";
+            newButtonRemove.value = total_product;
+            newButtonRemove.title = "Kurangi Produk";
+            newButtonRemove.style = "padding: 0.4em 0.7em; background-color: red;";
+            newButtonRemove.innerHTML = '<i class="fas fa-minus"></i>';
+
+            const newDivOther = document.createElement("div");
+            newDivOther.className = "form-group d-none";
+
+            const newInputOther = document.createElement("input");
+            newInputOther.type = "text";
+            newInputOther.className = "form-control";
+            newInputOther.name = `product_other_${total_product}`;
+            newInputOther.placeholder = "Product Name";
+
+            newDivProduct.appendChild(newSelectProduct);
+            newDivQty.appendChild(newSelectQty);
+            newDivRemove.appendChild(newButtonRemove);
+            newDivOther.appendChild(newInputOther);
+
+            document.getElementById("tambahan_product").appendChild(newDivProduct);
+            document.getElementById("tambahan_product").appendChild(newDivQty);
+            document.getElementById("tambahan_product").appendChild(newDivRemove);
+            document.getElementById("tambahan_product").appendChild(newDivOther);
+
+            $("#product_" + total_product).select2({
+                theme: "bootstrap4",
+            });
         });
 
         $(document).on("click",".hapus_product", function(e){
@@ -738,19 +819,16 @@ document.addEventListener("DOMContentLoaded", function () {
             $("#container-Cabang").show();
         });
 
-	    {{-- KHUSUS Philiphin --}}
-        @if(true)
-            $(".pilihan-product").change( function(e){
-                if($(this).val() == 'other'){
-                    $(this).parent().next().next().removeClass("d-none");
-                    $(this).parent().next().next().children().attr('required', '');
-                }
-                else{
-                    $(this).parent().next().next().addClass("d-none");
-                    $(this).parent().next().next().children().removeAttr('required', '');
-                }
-            });
-        @endif
+        $(".pilihan-product").change( function(e){
+            if($(this).val() == 'other'){
+                $(this).parent().next().next().removeClass("d-none");
+                $(this).parent().next().next().children().attr('required', '');
+            }
+            else{
+                $(this).parent().next().next().addClass("d-none");
+                $(this).parent().next().next().children().removeAttr('required', '');
+            }
+        });
     });
 </script>
 @endsection

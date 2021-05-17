@@ -275,7 +275,7 @@ $menu_item_second = "add_order";
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group">
-                                            <select class="form-control pilihan-product selectpicker"
+                                            <select class="form-control pilihan-product"
                                                 id="product_0"
                                                 name="product_0"
                                                 data-msg="Mohon Pilih Product"
@@ -319,8 +319,6 @@ $menu_item_second = "add_order";
                                             <div class="validation"></div>
                                         </div>
                                     </div>
-                                    
-                                    
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 text-right"
@@ -332,8 +330,6 @@ $menu_item_second = "add_order";
                                         </button>
                                     </div>
                                 </div>
-
-                                
 
                                 <div class="form-group d-none">
                                     <input type="text"
