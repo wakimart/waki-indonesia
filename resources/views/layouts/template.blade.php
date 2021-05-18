@@ -182,24 +182,48 @@
       	<div class="footer-top">
         	<div class="container">
           		<div class="row">
-            		<div class="col-lg-6">
-              			<div class="row">
-                 			<div class="col-sm-12">
-			                    <div class="footer-newsletter">
-				                  	@if(Utils::$lang=='id')
-				                  		<h4>Kantor Pusat WAKI</h4>
-				                  	@elseif(Utils::$lang=='eng')
-				                  		<h4>WAKi Headquarter</h4>
-				                  	@endif
+					
+            		<div class="col-lg-4">
+						<div class="row">
+						   <div class="col-sm-12">
+							  <div class="footer-newsletter">
+									@if(Utils::$lang=='id')
+										<h4>Kantor Pusat WAKI</h4>
+									@elseif(Utils::$lang=='eng')
+										<h4>WAKi Headquarter</h4>
+									@endif
 
+								  <p style="margin-bottom: 5px;"><strong>WAKi Indonesia</strong></p>
+									<p>WAKi Darmo Park I, blok 2B no.1 - 6, Jalan Mayjend Sungkono. Kodepos 60225.</p>
 
-			                      	<p style="margin-bottom: 5px;"><strong>WAKi International Group</strong></p>
-			                      	<p>WAKi Tower,
-			                      	S-01-01, Block C, USJ ONE,
-			                      	Persiaran Subang Permai, USJ 1
-			                      	47500 Subang Jaya, Selangor,
-			                      	Malaysia.</p>
-			                    </div>
+									<p style="margin-bottom: 5px;"><strong>WAKi International Group</strong></p>
+									<p>WAKi Tower,
+									S-01-01, Block C, USJ ONE,
+									Persiaran Subang Permai, USJ 1
+									47500 Subang Jaya, Selangor,
+									Malaysia.</p>
+							  </div>
+
+							  
+							  <div class="social-links">
+								@if(Utils::$lang=='id')
+									  <h4>Ikuti Kami</h4>
+								  @elseif(Utils::$lang=='eng')
+									  <h4>Follow Us</h4>
+								  @endif
+
+								  <a href="https://web.facebook.com/wakimart.id" class="facebook"><i class="fa fa-facebook"></i></a>
+								  <a href="https://www.instagram.com/wakimart.id/" class="instagram"><i class="fa fa-instagram"></i></a>
+								  <a href="https://www.youtube.com/channel/UCI2G97LQi4lHZ0yQtug1Wqw" class="youtube"><i class="fa fa-youtube"></i></a>
+							  </div>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-4">
+						<div class="row">
+							<div class="col-sm-12">
 
 			                    <div class="footer-links">
 			                    	@if(Utils::$lang=='id')
@@ -231,22 +255,13 @@
 				                  	@endif
 			                    </div>
 
-			                    <div class="social-links">
-			                    	@if(Utils::$lang=='id')
-				                  		<h4>Ikuti Kami</h4>
-				                  	@elseif(Utils::$lang=='eng')
-				                  		<h4>Follow Us</h4>
-				                  	@endif
+							</div>
 
-			                      	<a href="https://web.facebook.com/wakimart.id" class="facebook"><i class="fa fa-facebook"></i></a>
-			                      	<a href="https://www.instagram.com/wakimart.id/" class="instagram"><i class="fa fa-instagram"></i></a>
-			                      	<a href="https://www.youtube.com/channel/UCI2G97LQi4lHZ0yQtug1Wqw" class="youtube"><i class="fa fa-youtube"></i></a>
-			                    </div>
-                  			</div>
-              			</div>
-              		</div>
+						</div>
 
-		            <div class="col-lg-6">
+					</div>
+
+		            <div class="col-lg-4">
 		              	<div class="form">
 		              	@if(Utils::$lang=='id')
 		              		<h4>Kirim Pesan</h4>
