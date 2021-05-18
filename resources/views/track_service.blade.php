@@ -52,6 +52,12 @@
         position: relative;
     }
 
+    .hidden {
+
+        display: none;
+
+    }
+
     .timeline .timeline-item-last::before {
         background: #fff;
         content: "";
@@ -316,10 +322,10 @@
                         @foreach(json_decode($services['history_status'], true) as $history_status)
                                 <div class="timeline wow bounceInUp clearfix">
                                     <div class="timeline-item">
+                                        @if (strtolower($history_status['status']) == "process")
                                         <div class="timeline-icon">
                                                 <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
                                         </div>
-                                        @if (strtolower($history_status['status']) == "process")
                                         <div class="timeline-content">
                                             <div class="card-body">
                                                 <h6 style="color: #048b32; font-weight: 700;">Processed</h6>
@@ -346,15 +352,32 @@
                                             </div>
                                         </div>
                                         @elseif (strtolower($history_status['status']) == "repaired")
-                                        <div class="timeline-content">
-                                            <div class="card-body">
-                                                <h6 style="color: #048b32; font-weight: 700;">Repaired</h6>
-                                                <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
-                                                <hr>
-                                                <p style="font-weight: 400;">Produk dalam proses Repaired</p>
+                                            <div class="timeline-icon">
+                                                    <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
                                             </div>
+                                            @if ($services['fail_repair_description'] == null)
+                                                <div class="timeline-content">
+                                                    <div class="card-body">
+                                                        <h6 style="color: #048b32; font-weight: 700;">Repaired</h6>
+                                                        <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
+                                                        <hr>
+                                                        <p style="font-weight: 400;">Produk dalam proses Repaired</p>
+                                                    </div>
+                                                </div>
+                                            @else
+                                            <div class="timeline-content">
+                                                <div class="card-body">
+                                                    <h6 style="color: #048b32; font-weight: 700;">Unrepaired</h6>
+                                                    <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
+                                                    <hr>
+                                                    <p style="font-weight: 400;">{{$services['fail_repair_description']}}</p>
+                                                </div>
+                                            </div>
+                                            @endif
+                                        @elseif (strtolower($history_status['status']) == "quality_control" && ($services['fail_repair_description'] == null))
+                                        <div class="timeline-icon">
+                                                <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
                                         </div>
-                                        @elseif (strtolower($history_status['status']) == "quality_control")
                                         <div class="timeline-content">
                                             <div class="card-body">
                                                 <h6 style="color: #048b32; font-weight: 700;">Quality Control</h6>
@@ -364,6 +387,9 @@
                                             </div>
                                         </div>
                                         @elseif (strtolower($history_status['status']) == "delivery")
+                                        <div class="timeline-icon">
+                                                <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
+                                        </div>
                                         <div class="timeline-content">
                                             <div class="card-body">
                                                 <h6 style="color: #048b32; font-weight: 700;">Delivered</h6>
@@ -389,6 +415,9 @@
                                             </div>
                                         </div>
                                         @elseif (strtolower($history_status['status']) == "take_away")
+                                        <div class="timeline-icon">
+                                                <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
+                                        </div>
                                         <div class="timeline-content">
                                             <div class="card-body">
                                                 <h6 style="color: #048b32; font-weight: 700;">Take Away</h6>
@@ -415,6 +444,9 @@
                                             </div>
                                         </div>
                                         @elseif (strtolower($history_status['status']) == "completed")
+                                        <div class="timeline-icon">
+                                                <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
+                                        </div>
                                         <div class="timeline-content">
                                             <div class="card-body">
                                                 <h6 style="color: #048b32; font-weight: 700;">Completed</h6>
@@ -657,10 +689,10 @@
                         @foreach(json_decode($services['history_status'], true) as $history_status)
                                 <div class="timeline wow bounceInUp clearfix">
                                     <div class="timeline-item">
-                                        <div class="timeline-icon">
-                                                <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
-                                        </div>
                                         @if (strtolower($history_status['status']) == "process")
+                                        <div class="timeline-icon">
+                                            <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
+                                        </div>
                                         <div class="timeline-content">
                                             <div class="card-body">
                                                 <h6 style="color: #048b32; font-weight: 700;">Processed</h6>
@@ -685,15 +717,32 @@
                                             </div>
                                         </div>
                                         @elseif (strtolower($history_status['status']) == "repaired")
-                                        <div class="timeline-content">
-                                            <div class="card-body">
-                                                <h6 style="color: #048b32; font-weight: 700;">Repaired</h6>
-                                                <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
-                                                <hr>
-                                                <p style="font-weight: 400;">Produk dalam proses Repaired</p>
+                                            <div class="timeline-icon">
+                                                <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
                                             </div>
+                                            @if ($services['fail_repair_description'] == null)
+                                                <div class="timeline-content">
+                                                    <div class="card-body">
+                                                        <h6 style="color: #048b32; font-weight: 700;">Repaired</h6>
+                                                        <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
+                                                        <hr>
+                                                        <p style="font-weight: 400;">Produk dalam proses Repaired</p>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class="timeline-content">
+                                                    <div class="card-body">
+                                                        <h6 style="color: #048b32; font-weight: 700;">Unrepaired</h6>
+                                                        <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
+                                                        <hr>
+                                                        <p style="font-weight: 400;">{{$services['fail_repair_description']}}</p>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @elseif (strtolower($history_status['status']) == "quality_control" && $services['fail_repair_description'] == null)
+                                        <div class="timeline-icon">
+                                            <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
                                         </div>
-                                        @elseif (strtolower($history_status['status']) == "quality_control")
                                         <div class="timeline-content">
                                             <div class="card-body">
                                                 <h6 style="color: #048b32; font-weight: 700;">Quality Control</h6>
@@ -703,6 +752,9 @@
                                             </div>
                                         </div>
                                         @elseif (strtolower($history_status['status']) == "delivery")
+                                        <div class="timeline-icon">
+                                            <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
+                                        </div>
                                         <div class="timeline-content">
                                             <div class="card-body">
                                                 <h6 style="color: #048b32; font-weight: 700;">Delivered</h6>
@@ -726,7 +778,7 @@
                                                         <div class="col-lg-5 col-md-5 col-sm-5">
                                                             <h6 style="font-size: 1em; font-weight: 600;">Delivery Schedule</h6>
                                                             @if(isset($arr_serviceoption->appointment))
-                                                            <p class="card-text">{{ date("d/m/Y", strtotime($arr_serviceoption->appointment)) }}<br>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</p>
+                                                            <p class="card-text">{{ date("d M Y", strtotime($arr_serviceoption->appointment)) }}<br>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</p>
                                                             @endif
                                                         </div>
                                                       </div>
@@ -737,6 +789,9 @@
                                             </div>
                                         </div>
                                         @elseif (strtolower($history_status['status']) == "take_away")
+                                        <div class="timeline-icon">
+                                            <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
+                                        </div>
                                         <div class="timeline-content">
                                             <div class="card-body">
                                                 <h6 style="color: #048b32; font-weight: 700;">Take Away</h6>
@@ -759,7 +814,7 @@
                                                             <div class="col-lg-5 col-md-5 col-sm-5">
                                                                 <h6 style="font-size: 1em; font-weight: 600;">Delivery Schedule</h6>
                                                                 @if(isset($arr_serviceoption->appointment))
-                                                                <p class="card-text">{{ date("d/m/Y", strtotime($arr_serviceoption->appointment)) }}<br>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</p>
+                                                                <p class="card-text">{{ date('d M Y', strtotime($arr_serviceoption->appointment)) }}<br>{{ date("H:i", strtotime($arr_serviceoption->appointment)) }}</p>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -768,6 +823,9 @@
                                             </div>
                                         </div>
                                         @elseif (strtolower($history_status['status']) == "completed")
+                                        <div class="timeline-icon">
+                                            <i class="fas fa-check" style="color: #fff; text-align: center; width: 100%;"></i>
+                                        </div>
                                         <div class="timeline-content">
                                             <div class="card-body">
                                                 <h6 style="color: #048b32; font-weight: 700;">Completed</h6>
@@ -892,6 +950,13 @@ for (i = 0; i < acc.length; i++) {
     }
   });
 }
+</script>
+<script type="text/javascript">
+ /* $(document).ready(function() {
+        if($('.without-qc').length){
+            $('.timeline-icon').hide();
+        }
+    }); */
 </script>
 <!--accordion -->
 @endsection
