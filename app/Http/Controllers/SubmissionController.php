@@ -199,20 +199,24 @@ class SubmissionController extends Controller
                     $path = "sources/registration";
                     $referenceImage = new ReferenceImage();
                     $referenceImage->reference_id = $reference->id;
+
+                    $idxImg = 1;
                     foreach ($request->file("do-image_" . ($i + 1)) AS $image) {
                         $fileName = ((string)time())
                             . "_"
                             . $user_id
                             . "_"
                             . $i
+                            . "_"
+                            . $idxImg
                             . "."
                             . $image->getClientOriginalExtension();
 
                         $image->move($path, $fileName);
 
-                        $referenceImage["image_" . ($i + 1)] = $fileName;
+                        $referenceImage["image_" . ($idxImg)] = $fileName;
 
-                        $i++;
+                        $idxImg++;
                     }
                     $referenceImage->save();
                 }
