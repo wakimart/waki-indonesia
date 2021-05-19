@@ -238,6 +238,9 @@ $menu_item_page = "order";
                                                     id="product_{{ $total_product }}"
                                                     name="product_{{ $total_product }}"
                                                     data-msg="Mohon Pilih Product"
+                                                    onload="selectOther(this)"
+                                                    onchange="selectOther(this)"
+                                                    data-sequence="{{ $total_product }}"
                                                     required>
                                                     <option selected disabled value="">
                                                         Choose Product
@@ -303,7 +306,7 @@ $menu_item_page = "order";
                                         </div>
                                     </div>
 
-				                    @if($total_product == 0)
+				                    @if ($total_product == 0)
                                         <div class="row">
                                             <div class="col-md-12 text-right"
                                                 style="margin-bottom: 1em;">
@@ -328,10 +331,16 @@ $menu_item_page = "order";
                                         </div>
 				                    @endif
 
-				                    {{-- KHUSUS Philiphin --}}
-                                    @if(!is_numeric($ProductPromo['id']))
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" name="product_other_{{ $total_product }}" placeholder="Product Name" data-msg="Please fill in the product" value="{{ $ProductPromo['id'] }}" />
+                                    @if (!is_numeric($ProductPromo['id']))
+                                        <div class="form-group"
+                                            id="product_other_container_{{ $total_product }}">
+                                            <input type="text"
+                                                class="form-control"
+                                                id="product_other_{{ $total_product }}"
+                                                name="product_other_{{ $total_product }}"
+                                                placeholder="Product Name"
+                                                data-msg="Please fill in the product"
+                                                value="{{ $ProductPromo['id'] }}" />
                                             <div class="validation"></div>
                                         </div>
                                     @endif
@@ -524,6 +533,8 @@ document.addEventListener("DOMContentLoaded", function () {
         for (const promo in dataPromo) {
             promoOption += `<option value="${promo}">${dataPromo[promo].product}</option>`;
         }
+
+        promoOption += `<option value="other">OTHER</option>`;
 	}).catch(function (error) {
 		console.error(error);
 	});
@@ -735,6 +746,8 @@ document.addEventListener("DOMContentLoaded", function () {
             newSelectProduct.name = `product_${total_product}`;
             newSelectProduct.required = true;
             newSelectProduct.innerHTML = promoOption;
+            newSelectProduct.setAttribute("onchange", "selectOther(this)");
+            newSelectProduct.setAttribute("data-sequence", total_product);
 
             const newDivQty = document.createElement("div");
             newDivQty.id = `qty_${total_product}`;
@@ -758,9 +771,11 @@ document.addEventListener("DOMContentLoaded", function () {
             newButtonRemove.innerHTML = '<i class="fas fa-minus"></i>';
 
             const newDivOther = document.createElement("div");
+            newDivOther.id = `product_other_container_${total_product}`;
             newDivOther.className = "form-group d-none";
 
             const newInputOther = document.createElement("input");
+            newInputOther.id = `product_other_${total_product}`;
             newInputOther.type = "text";
             newInputOther.className = "form-control";
             newInputOther.name = `product_other_${total_product}`;
@@ -818,17 +833,18 @@ document.addEventListener("DOMContentLoaded", function () {
          $("#branch").change( function(e){
             $("#container-Cabang").show();
         });
-
-        $(".pilihan-product").change( function(e){
-            if($(this).val() == 'other'){
-                $(this).parent().next().next().removeClass("d-none");
-                $(this).parent().next().next().children().attr('required', '');
-            }
-            else{
-                $(this).parent().next().next().addClass("d-none");
-                $(this).parent().next().next().children().removeAttr('required', '');
-            }
-        });
     });
+
+    function selectOther(e) {
+        const sequence = e.dataset.sequence;
+
+        if (e.value === "other") {
+            document.getElementById("product_other_container_" + sequence).classList.remove("d-none");
+            document.getElementById("product_other_" + sequence).setAttribute("required", "");
+        } else if (e.value !== "other") {
+            document.getElementById("product_other_container_" + sequence).classList.add("d-none");
+            document.getElementById("product_other_" + sequence).removeAttribute("required");
+        }
+    }
 </script>
 @endsection

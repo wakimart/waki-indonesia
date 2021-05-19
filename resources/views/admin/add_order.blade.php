@@ -279,6 +279,8 @@ $menu_item_second = "add_order";
                                                 id="product_0"
                                                 name="product_0"
                                                 data-msg="Mohon Pilih Product"
+                                                data-sequence="0"
+                                                onchange="selectOther(this)"
                                                 required>
                                                 <option selected disabled value="">
                                                     Choose Product
@@ -296,7 +298,9 @@ $menu_item_second = "add_order";
                                                     </option>
                                                 <?php endforeach; ?>
 
-                                                <option value="other">OTHER</option>
+                                                <option value="other">
+                                                    OTHER
+                                                </option>
                                             </select>
                                             <div class="validation"></div>
                                         </div>
@@ -331,9 +335,11 @@ $menu_item_second = "add_order";
                                     </div>
                                 </div>
 
-                                <div class="form-group d-none">
+                                <div class="form-group d-none"
+                                    id="product_other_container_0">
                                     <input type="text"
                                         class="form-control"
+                                        id="product_other_0"
                                         name="product_other_0"
                                         placeholder="Product Name"
                                         data-msg="Please fill in the product" />
@@ -664,6 +670,8 @@ document.addEventListener("DOMContentLoaded", function () {
         for (const promo in dataPromo) {
             promoOption += `<option value="${dataPromo[promo].id}">${dataPromo[promo].product}</option>`;
         }
+
+        promoOption += `<option value="other">OTHER</option>`;
     }).catch(function (error) {
         console.error(error);
     });
@@ -705,7 +713,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     if (arrBooleanCso[0] == true && arrBooleanCso[1] == true && arrBooleanCso[2] == true) {
                         $('#submit').removeAttr('disabled');
-                        console.log("masuk");
                     } else {
                         $('#submit').attr('disabled',"");
                     }
@@ -790,6 +797,8 @@ document.addEventListener("DOMContentLoaded", function () {
             newSelectProduct.name = `product_${total_product}`;
             newSelectProduct.required = true;
             newSelectProduct.innerHTML = promoOption;
+            newSelectProduct.setAttribute("onchange", "selectOther(this)");
+            newSelectProduct.setAttribute("data-sequence", total_product);
 
             const newDivQty = document.createElement("div");
             newDivQty.id = `qty_${total_product}`;
@@ -813,9 +822,11 @@ document.addEventListener("DOMContentLoaded", function () {
             newButtonRemove.innerHTML = '<i class="fas fa-minus"></i>';
 
             const newDivOther = document.createElement("div");
+            newDivOther.id = `product_other_container_${total_product}`;
             newDivOther.className = "form-group d-none";
 
             const newInputOther = document.createElement("input");
+            newInputOther.id = `product_other_${total_product}`;
             newInputOther.type = "text";
             newInputOther.className = "form-control";
             newInputOther.name = `product_other_${total_product}`;
@@ -874,18 +885,6 @@ document.addEventListener("DOMContentLoaded", function () {
             $("#container-Cabang").show();
         });
 
-        {{-- KHUSUS Philiphin --}}
-        $(document).on("change", ".pilihan-product", function(e){
-            if($(this).val() == 'other'){
-                $(this).parent().next().next().next().removeClass("d-none");
-                $(this).parent().next().next().next().children().attr('required', '');
-            }
-            else{
-                $(this).parent().next().next().next().addClass("d-none");
-                $(this).parent().next().next().next().children().removeAttr('required', '');
-            }
-        });
-
         //KHUSUS Untuk tambah customer indo
         $("#tambah_member").click(function(e){
             $(".add-customer").removeClass("d-none");
@@ -909,6 +908,18 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     });
+
+    function selectOther(e) {
+        const sequence = e.dataset.sequence;
+
+        if (e.value === "other") {
+            document.getElementById("product_other_container_" + sequence).classList.remove("d-none");
+            document.getElementById("product_other_" + sequence).setAttribute("required", "");
+        } else if (e.value !== "other") {
+            document.getElementById("product_other_container_" + sequence).classList.add("d-none");
+            document.getElementById("product_other_" + sequence).removeAttribute("required");
+        }
+    }
 </script>
 <script type="application/javascript" src="{{ asset('js/tags-input.js') }}"></script>
 <script type="application/javascript">
