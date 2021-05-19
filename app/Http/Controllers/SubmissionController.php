@@ -668,7 +668,7 @@ class SubmissionController extends Controller
             $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
 
-            if ($data["type"] === "mgm") {
+            if ($data["type"] === "MGM") {
                 $validator = Validator::make(
                     $request->all(),
                     [
@@ -697,7 +697,7 @@ class SubmissionController extends Controller
                     return response()->json([
                         "result" => 0,
                         "data" => $validator->errors(),
-                    ], 400);
+                    ], 401);
                 }
 
                 $submission = Submission::create($data);
@@ -785,7 +785,7 @@ class SubmissionController extends Controller
                     return response()->json([
                         "result" => 0,
                         "data" => $validator->errors(),
-                    ], 400);
+                    ], 401);
                 }
 
                 $submission = Submission::create($data);
@@ -855,7 +855,7 @@ class SubmissionController extends Controller
                     return response()->json([
                         "result" => 0,
                         "data" => $validator->errors(),
-                    ], 400);
+                    ], 401);
                 }
 
                 $submission = Submission::create($data);
@@ -966,7 +966,7 @@ class SubmissionController extends Controller
                 'data' => $validator->errors(),
             ];
 
-            return response()->json($data, 400);
+            return response()->json($data, 401);
         }
 
         DB::beginTransaction();
