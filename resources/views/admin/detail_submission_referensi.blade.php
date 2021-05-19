@@ -329,10 +329,16 @@ if (
                 <form id="edit-form"
                     method="POST"
                     enctype="multipart/form-data"
-                    action="<?php echo route("update_reference"); ?>">
+                    action="<?php echo route("store_reference_referensi"); ?>">
                     @csrf
-                    <input type="hidden" id="edit-id" name="id" value="" />
-                    <input type="hidden" id="url" name="url" value="{{ url()->full() }}" />
+                    <input type="hidden"
+                        id="edit-id"
+                        name="submission_id"
+                        value="{{ $submission->id }}" />
+                    <input type="hidden"
+                        id="url"
+                        name="url"
+                        value="{{ url()->full() }}" />
                     <div class="form-group">
                         <label for="edit-name">Name</label>
                         <input type="text"

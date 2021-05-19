@@ -1406,7 +1406,8 @@ class SubmissionController extends Controller
             "=",
             "raja_ongkir__cities.city_id"
         )
-        ->where("references.submission_id", $submissionId);
+        ->where("references.submission_id", $submissionId)
+        ->orderBy("references.id");
     }
 
     private function queryReferenceMGM($submissionId)

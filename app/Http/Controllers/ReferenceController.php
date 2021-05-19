@@ -73,6 +73,7 @@ class ReferenceController extends Controller
         try {
             $reference = new Reference();
             $reference->fill($request->only(
+                "submission_id",
                 "name",
                 "age",
                 "phone",
@@ -82,7 +83,7 @@ class ReferenceController extends Controller
             $reference->save();
 
             $referenceSouvenir = new ReferenceSouvenir();
-            $reference->reference_id = $reference->id;
+            $referenceSouvenir->reference_id = $reference->id;
             $referenceSouvenir->fill($request->only(
                 "souvenir_id",
                 "link_hs",
