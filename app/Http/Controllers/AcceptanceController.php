@@ -725,7 +725,8 @@ class AcceptanceController extends Controller
                     "=",
                     "op.id"
                 )
-                ->get();
+                ->orderBy('id', 'DESC')
+                ->paginate(10);
 
                 $data = [
                     'result' => count($acceptance),
@@ -821,7 +822,7 @@ class AcceptanceController extends Controller
             "op.id"
         )
         ->leftJoin(
-            "product as pao",
+            "products as pao",
             "acceptances.product_addons_id",
             "=",
             "pao.id"
