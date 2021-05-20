@@ -688,6 +688,10 @@ class AcceptanceController extends Controller
                     )
                     ->where('acceptances.active', true);
                 }
+                
+                if (!empty($request->status)) {
+                    $acceptance = $acceptance->where("acceptances.status", $request->status);
+                }
 
                 $acceptance = $acceptance->select(
                     'acceptances.id AS id',
@@ -699,7 +703,8 @@ class AcceptanceController extends Controller
                     'csos.code AS cso_code',
                     "np.code AS new_product",
                     "op.name AS old_product",
-                    "acceptances.other_product AS other_product"
+                    "acceptances.other_product AS other_product",
+                    "users.name AS status_by",
                 )
                 ->leftJoin(
                     'branches',
@@ -724,6 +729,17 @@ class AcceptanceController extends Controller
                     "acceptances.oldproduct_id",
                     "=",
                     "op.id"
+                )
+                ->leftJoin("acceptance_status_logs AS asl", function ($join)
+                {
+                    $join->on("acceptances.id", "=", "asl.acceptance_id");
+                    $join->on("acceptances.status", "=", "asl.status");
+                })
+                ->leftJoin(
+                    "users",
+                    "asl.user_id",
+                    "=",
+                    "users.id"
                 )
                 ->orderBy('id', 'DESC')
                 ->paginate(10);
