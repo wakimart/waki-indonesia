@@ -366,7 +366,7 @@ $menu_item_second = "detail_service";
 												</span>
 											@endif
 										</td>
-										<td class="center">{{ $services->statusBy("process")->user_id['name'] }}</td>
+										<td class="center">{{ $services->statusBy(strtolower($history_status['status']))->user_id['name'] }}</td>
 										<td class="center">{{ date("d/m/Y", strtotime($history_status['updated_at'])) }}</td>
 									</tr>
 									@endforeach
