@@ -383,7 +383,7 @@ class AcceptanceController extends Controller
     //===================================================//
 
     public function addApi(Request $request)
-    {
+    {   
         $messages = [
             'cso_id.required' => 'The CSO Code field is required.',
             'cso_id.exists' => 'Wrong CSO Code.',
@@ -391,91 +391,127 @@ class AcceptanceController extends Controller
             'branch_id.exists' => 'Please choose the branch.'
         ];
 
-        $validator = Validator::make($request->all(), [
+        $get_accData = json_decode($request->acc_data, true);
+        $validator = Validator::make($get_accData, [
+            'description' => 'required',
             'name' => 'required',
+            'phone' => 'required|string|min:7',
+            'address' => 'required',
+            'province' => 'required',
+            'city' => 'required',
+            'district' => 'required',
+            'newproduct_id' => 'required',
+            'oldproduct_id' => 'required',
             'cso_id' => ['required', 'exists:csos,code'],
             'branch_id' => ['required', 'exists:branches,id'],
-            'phone' => 'required|string|min:7',
+            'request_price' => 'required',
+            'kelengkapan' => 'required',
+            'upgrade_date' => 'required',
+            'newproduct_id' => 'required',
+            'purchase_date' => 'required',
         ], $messages);
 
         if ($validator->fails()) {
             return response()->json([
                 'result' => 0,
                 'data' => $validator->errors(),
-            ], 400);
-        }
+            ], 401);
+        }else{
+            DB::beginTransaction();
+            try {
 
-        DB::beginTransaction();
+                if($request->acc_data){
+                    $get_accData = json_decode($request->acc_data);
 
-        try {
-            $data = $request->all();
-            $branch = Branch::find($data['branch_id']);
-            $cso = Cso::where('code', $data['cso_id'])->first();
-            $data['branch_id'] = $branch['id'];
-            $data['cso_id'] = $cso['id'];
-            $data['user_id'] = Auth::user()['id'];
-            $data['status'] = "new";
-            $data['code'] = "ACC/UPGRADE/"
-                . $branch->code
-                . "/"
-                . $data['cso_id']
-                . "/"
-                . date("Ymd");
+                    $acceptance = new Acceptance();
+                    $acceptance->no_do = "ABC89999920";
+                    $acceptance->name = $get_accData->name;
+                    $acceptance->status = "new";
+                    $acceptance->description = $get_accData->description;
+                    $acceptance->active = true;
 
-            if (in_array('other', $data['kelengkapan'])) {
-                $data['kelengkapan']['other'][] = $data['other_kelengkapan'];
-            }
+                    $branch = Branch::find($get_accData->branch_id);
+                    $cso = Cso::where('code', $get_accData->cso_id)->first()['id'];
+                    $acceptance->branch_id = $get_accData->branch_id;
+                    $acceptance->cso_id = $cso;
+                    $acceptance->user_id = $get_accData->user_id;
+                    $acceptance->order_id = null;
+                    $acceptance->no_mpc = $get_accData->no_mpc;
+                    $acceptance->address = $get_accData->address;
+                    $acceptance->phone = $get_accData->phone;
+                    //$acceptance->type_acc = $get_accData->type_acc;
+                    $acceptance->upgrade_date = $get_accData->upgrade_date;
+                    $acceptance->newproduct_id = $get_accData->newproduct_id;
+                    $acceptance->purchase_date = $get_accData->purchase_date;
+                    
+                    //IMAGE
+                    if($request->hasFile('images')){
+                        $path = "sources/acceptance";
+                        $idxImg = 1;
 
-            $data['arr_condition'] = [
-                'kelengkapan' => $data['kelengkapan'],
-                'kondisi' => $data['kondisi'],
-                'tampilan' => $data['tampilan'],
-            ];
+                        $get_img = $request->file('images');
+                        if (!is_dir($path)) {
+                            File::makeDirectory($path, 0777, true, true);
+                        }
 
-            if ($request->hasFile("image")) {
-                $data['image'] = [];
-                $path = "sources/acceptance";
-                $idxImg = 1;
+                        $arr_images = [];
+                        for ($i=0; $i < $request->imageCount; $i++) { 
+                            $fileName = str_replace(
+                                [' ', ':'],
+                                '',
+                                Carbon::now()->toDateTimeString()
+                            )
+                            . $idxImg
+                            . "_upgrade."
+                            . $get_img[$i]->getClientOriginalExtension();
 
-                if (!is_dir($path)) {
-                    File::makeDirectory($path, 0777, true, true);
+                            $idxImg++;
+                            $get_img[$i]->move($path, $fileName);
+                            array_push($arr_images, $fileName);
+                        }
+                        $acceptance->image = $arr_images;
+                    }
+                    //END IMAGE
+
+                    if (in_array('other', $get_accData->kelengkapan)) {
+                        $get_accData->kelengkapan['other'][] = $get_accData->other_kelengkapan;
+                    }                
+                    $acceptance->arr_condition = [
+                        'kelengkapan' => $get_accData->kelengkapan,
+                        'kondisi' => $get_accData->kondisi,
+                        'tampilan' => $get_accData->tampilan,
+                    ];
+
+                    $acceptance->request_price = $get_accData->request_price;
+                    $acceptance->province = $get_accData->province;
+                    $acceptance->city = $get_accData->city;
+                    $acceptance->district = $get_accData->district;
+                    $acceptance->other_product = null;
+                    $acceptance->oldproduct_id = $get_accData->oldproduct_id;
+                    $acceptance->code = "ACC/UPGRADE/" . $branch->code . "/" . $acceptance->cso_id . "/" . date("Ymd");
+                    //$acceptance->product_addons_id = null;
+                    
+                    $acceptance->save();
+
+                    $accStatusLog = [];
+                    $accStatusLog['acceptance_id'] = $acceptance->id;
+                    $accStatusLog['user_id'] =  $get_accData->user_id;
+                    $accStatusLog['status'] = "new";
+                    AcceptanceStatusLog::create($accStatusLog);
+
+                    $acceptanceView = $this->getDetail($acceptance->id, true);
+
+                    DB::commit();
+                    return response()->json([
+                        'result' => 1,
+                        'data' => $acceptanceView,
+                    ]);
                 }
 
-                foreach ($request->file("image") as $imgNya) {
-                    $fileName = str_replace(
-                            [' ', ':'],
-                            '',
-                            Carbon::now()->toDateTimeString()
-                        )
-                        . $idxImg
-                        . "_upgrade."
-                        . $imgNya->getClientOriginalExtension();
-
-                    $imgNya->move($path, $fileName);
-                    $data["image"][] = $fileName;
-                    $idxImg++;
-                }
+            } catch (\Exception $ex) {
+                DB::rollback();
+                return response()->json(['error' => $ex->getMessage()], 500);
             }
-
-            $acceptance = Acceptance::create($data);
-
-            $accStatusLog['acceptance_id'] = $acceptance->id;
-            $accStatusLog['user_id'] =  $data['user_id'];
-            $accStatusLog['status'] = "new";
-            AcceptanceStatusLog::create($accStatusLog);
-
-            DB::commit();
-
-            $acceptanceView = $this->getDetail($acceptance->id, true);
-
-            return response()->json([
-                'result' => 1,
-                'data' => $acceptanceView,
-            ]);
-        } catch (Exception $ex) {
-            DB::rollback();
-
-            return response()->json(['error' => $ex->getMessage()], 500);
         }
     }
 

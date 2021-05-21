@@ -255,4 +255,15 @@ class ProductController extends Controller
 
         return response()->json(["result" => "Data tidak ditemukan."], 400);
     }
+
+    //===================================================//
+
+    public function fetchProductApi(){
+        $data = Product::all();
+
+        $data = ['result' => 1,
+                     'data' => $data
+                    ];
+        return response()->json($data, 200);
+    }
 }
