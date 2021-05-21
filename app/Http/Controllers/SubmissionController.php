@@ -664,8 +664,12 @@ class SubmissionController extends Controller
 
     public function addApi(Request $request): \Illuminate\Http\JsonResponse
     {
-        $data = $request->all();
-
+        $data = json_decode($request->acc_data, true)[0];
+        // $temp = (json_decode($data[0], true));
+        return response()->json([
+                        "result" => 0,
+                        "data" => ($data["type"] === "MGM"),
+                    ], 401);
         DB::beginTransaction();
 
         try {
@@ -673,9 +677,7 @@ class SubmissionController extends Controller
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
 
             if ($data["type"] === "MGM") {
-                $validator = Validator::make(
-                    $request->all(),
-                    [
+                $arrValidator = [
                         "no_member" => ["required"],
                         "name" => ["required", "string", "max:191"],
                         "phone" => ["required"],
@@ -699,9 +701,22 @@ class SubmissionController extends Controller
                         "promo_1.*" => ["required"],
                         "qty_1" => ["required", "array", "min:1"],
                         "qty_1.*" => ["required"],
+
+                        "promo_2" => ["array"],
+                        "promo_2.*" => ["required_with_all:qty_2.*"],
+                        "qty_2" => ["array"],
+                        "qty_2.*" => ["required_with_all:promo_2.*"],
+
                         "do-image_1" => ["required", "array"],
                         "do-image_1.*" => ["required", "image"],
-                    ]
+                    ];
+                for ($i=2; $i <= count($data["name_ref"]); $i++) { 
+                    $arrValidator["do-image_".$i] = ["required", "array"];
+                    $arrValidator["do-image_".$i.".*"] = ["required", "image"];
+                }
+
+                $validator = Validator::make(
+                    $data, $arrValidator
                 );
 
                 if ($validator->fails()) {
