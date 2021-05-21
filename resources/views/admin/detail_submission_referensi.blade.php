@@ -432,15 +432,6 @@ if (
                             value=""
                             placeholder="Link Home Service" />
                     </div>
-                    <div class="form-group">
-                        <label for="edit-status">Status</label>
-                        <select class="form-control"
-                            id="edit-status"
-                            name="status">
-                            <option value="pending">pending</option>
-                            <option value="success">success</option>
-                        </select>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">
