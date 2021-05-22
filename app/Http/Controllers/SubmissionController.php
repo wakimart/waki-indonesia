@@ -69,10 +69,11 @@ class SubmissionController extends Controller
                 "branch_id",
                 $arrBranches
             )
+            ->orderBy(DB::raw("DATE(submissions.created_at)"), "desc")
             ->where($whereArray)
             ->paginate(10);
         } else {
-            $submissions = Submission::where($whereArray)->paginate(10);
+            $submissions = Submission::where($whereArray)->orderBy(DB::raw("DATE(submissions.created_at)"), "desc")->paginate(10);
         }
 
         $countSubmission = $submissions->count();
@@ -710,7 +711,7 @@ class SubmissionController extends Controller
                         "do-image_1" => ["required", "array"],
                         "do-image_1.*" => ["required", "image"],
                     ];
-                for ($i=2; $i <= count($data["name_ref"]); $i++) { 
+                for ($i=2; $i <= count($data["name_ref"]); $i++) {
                     $arrValidator["do-image_".$i] = ["required", "array"];
                     $arrValidator["do-image_".$i.".*"] = ["required", "image"];
                 }
@@ -1176,7 +1177,7 @@ class SubmissionController extends Controller
                 "submissions.cso_id"
             )
             ->where("submissions.active", true)
-            ->orderBy("submissions.id");
+            ->orderBy(DB::raw("DATE(submissions.created_at)"), "desc");
 
             $user = User::find($request->user_id);
             if ($user->roles[0]->slug === "cso") {
