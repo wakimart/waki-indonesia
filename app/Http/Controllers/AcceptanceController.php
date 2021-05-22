@@ -407,7 +407,6 @@ class AcceptanceController extends Controller
             'request_price' => 'required',
             'kelengkapan' => 'required',
             'upgrade_date' => 'required',
-            'newproduct_id' => 'required',
             'purchase_date' => 'required',
         ], $messages);
 
@@ -424,7 +423,6 @@ class AcceptanceController extends Controller
                     $get_accData = json_decode($request->acc_data);
 
                     $acceptance = new Acceptance();
-                    $acceptance->no_do = "ABC89999920";
                     $acceptance->name = $get_accData->name;
                     $acceptance->status = "new";
                     $acceptance->description = $get_accData->description;
@@ -486,10 +484,10 @@ class AcceptanceController extends Controller
                     $acceptance->province = $get_accData->province;
                     $acceptance->city = $get_accData->city;
                     $acceptance->district = $get_accData->district;
-                    $acceptance->other_product = null;
+                    $acceptance->other_product = $get_accData->other_product;
                     $acceptance->oldproduct_id = $get_accData->oldproduct_id;
                     $acceptance->code = "ACC/UPGRADE/" . $branch->code . "/" . $acceptance->cso_id . "/" . date("Ymd");
-                    //$acceptance->product_addons_id = null;
+                    $acceptance->product_addons_id = $get_accData->product_addons_id;
                     
                     $acceptance->save();
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Acceptance extends Model
 {
     protected $fillable = [
-        'code', 'no_do', 'no_mpc', 'name', 'address', 'phone', 'upgrade_date', 'oldproduct_id', 'newproduct_id', 'purchase_date', 'arr_condition', 'request_price', 'description', 'image', 'user_id', 'order_id', 'branch_id', 'cso_id', 'status', 'active', 'province', 'city', 'district', 'other_product'
+        'code', 'no_do', 'no_mpc', 'name', 'address', 'phone', 'upgrade_date', 'oldproduct_id', 'newproduct_id', 'purchase_date', 'arr_condition', 'request_price', 'description', 'image', 'user_id', 'order_id', 'branch_id', 'cso_id', 'status', 'active', 'province', 'city', 'district', 'other_product', 'product_addons_id'
     ];
 
     protected $casts = [
@@ -23,6 +23,11 @@ class Acceptance extends Model
     public function newproduct()
     {
         return $this->belongsTo('App\Product');
+    }
+
+    public function productAddons()
+    {
+        return $this->belongsTo("App\Product", "product_addons_id");
     }
 
     public function cso()
