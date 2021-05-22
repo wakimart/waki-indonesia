@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Branch;
 use App\Cso;
 use App\HistoryUpdate;
+use App\HomeService;
 use App\Promo;
 use App\Reference;
 use App\ReferenceImage;
@@ -20,11 +21,61 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class SubmissionController extends Controller
 {
+    private function isJSON($string)
+    {
+        return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
+    }
+
+    public function convertHsToForeign()
+    {
+        if (Auth::user()->roles[0]->slug !== "head-admin") {
+            return response()->json([
+                "message" => "Tidak memiliki hak akses. ",
+            ], 401);
+        }
+
+        DB::beginTransaction();
+        try {
+            $references = ReferenceSouvenir::all();
+
+            foreach ($references as $reference) {
+                $findHSCode = strpos($reference->link_hs, "HS");
+                $hsCode = substr($reference->link_hs, $findHSCode);
+                $getHS = HomeService::select("id", "code")
+                    ->where("code", $hsCode)
+                    ->first();
+
+                if (!empty($getHS)) {
+                    $reference->link_hs = json_encode(
+                        [$getHS->id],
+                        JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+                    );
+                } else {
+                    if (!$this->isJSON($reference->link_hs)) {
+                        $reference->link_hs = json_encode(
+                            [$reference->link_hs],
+                            JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+                        );
+                    }
+                }
+
+                $reference->save();
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *

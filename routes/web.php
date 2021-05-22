@@ -634,6 +634,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
+        // Convert Link_HS in ReferenceSouvenirs to JSON
+        Route::get("/converths", "SubmissionController@convertHsToForeign")
+            ->name("submission_convert_hs");
         // Create submission form page
         Route::get("/mgm", "SubmissionController@createMGM")
             ->name("add_submission_mgm");
