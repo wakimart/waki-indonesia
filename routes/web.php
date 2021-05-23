@@ -796,6 +796,32 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("/delete", "SouvenirController@destroy")
             ->name("delete_souvenir");
     });
+
+    Route::group(["prefix" => "prize", "middleware" => "auth"], function () {
+        // List prize
+        Route::get("/list", "PrizeController@index")
+            ->name("list_prize");
+
+        // Create prize
+        Route::get("/add", "PrizeController@create")
+            ->name("add_prize");
+
+        // Store prize
+        Route::post("/add", "PrizeController@store")
+            ->name("store_prize");
+
+        // Edit prize
+        Route::get("/edit", "PrizeController@edit")
+            ->name("edit_prize");
+
+        // Update prize
+        Route::post("/update", "PrizeController@update")
+            ->name("update_prize");
+
+        // Delete prize
+        Route::post("/delete", "PrizeController@destroy")
+            ->name("delete_prize");
+    });
 });
 
 Auth::routes();
