@@ -1199,6 +1199,16 @@ class HomeServiceController extends Controller
         // return $this->admin_ListHomeService($req);
     }
 
+    public function ListHSforSubmission(Request $request)
+    {
+        $date = date("Y-m-d");
+        if($request->has('date')){
+            $date = $request->date;
+        }
+
+        
+    }
+
     public function export_to_xls(Request $request)
     {
         $city = null;

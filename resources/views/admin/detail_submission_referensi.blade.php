@@ -430,7 +430,9 @@ if (
                             pattern="https://.*"
                             maxlength="191"
                             value=""
-                            placeholder="Link Home Service" />
+                            placeholder="Link Home Service"
+                            readonly="" 
+                            onclick="show_modal_hs()"//>
                     </div>
                 </form>
             </div>
@@ -445,6 +447,57 @@ if (
                     Close
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="modal-hs"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Choose HomeServices</h5>
+                <button type="button"
+                    id="edit-close"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="edit-phone">By Date</label>
+                    <input type="date"
+                        class="form-control"
+                        id="hs-filter-date"
+                        name="date"
+                        value="<?php echo date("Y-m-d"); ?>"/>
+                </div>
+
+                <table class="col-md-12" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Time</td>
+                            <td>Detail</td>
+                            <td>Choose</td>
+                        </thead>
+                        <tbody id="table-hs"></tbody>
+                    </table>
+            </div>
+            {{-- <div class="modal-footer">
+                <input type="submit"
+                    form="edit-form"
+                    value="Submit"
+                    class="btn btn-gradient-primary mr-2" />
+                <button class="btn btn-light"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    Close
+                </button>
+            </div> --}}
         </div>
     </div>
 </div>
@@ -840,6 +893,17 @@ function submitEdit(e) {
     document.getElementById("btn-edit-save_" + refSeq).innerHTML = `<i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>`;
     }).catch(function (error){
         console.error(error);
+    });
+}
+
+// NEW
+function show_modal_hs(e) {
+    console.log('masuk');
+    $("#modal-hs").modal('show');
+
+    $.post( '{{route("fetchCso")}}', { cso_code: txtCso })
+    .done(function( result ) {
+        
     });
 }
 </script>
