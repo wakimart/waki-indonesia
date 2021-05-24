@@ -263,25 +263,6 @@
                 </table>
             </div>
             
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <tr>
-                        <th>Produk Hadiah</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <ul>
-                                <li style="text-transform: uppercase; font-weight: 600;">
-                                    ECO DISINFECTANT</li>
-                                <li style="text-transform: uppercase; font-weight: 600;">
-                                    BEDSHEET </li>
-                                <li style="text-transform: uppercase; font-weight: 600;">
-                                    BIO ENERGY WATER SYSTEM (WKB8002) </li>
-                            </ul>
-                        </td>
-                    </tr>
-                </table>
-            </div>
             <div class="table-responsive sk">
                 <table class="table table-bordered">
                     <tr>
