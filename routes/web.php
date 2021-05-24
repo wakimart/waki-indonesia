@@ -45,6 +45,10 @@ Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeService
 Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
+//Program Refrence
+Route::get('/referenceuntung', 'ReferenceController@untungBiayaIklan')->name('refrence_untung');
+Route::get('/referencesehat', 'ReferenceController@referenceSehat')->name('refrence_sehat');
+
 //WAKi Di Rumah Aja
 Route::get('/wakidirumahaja', 'RegistrationPromotionController@index')->name('landing_waki');
 Route::post('/wakidirumahaja', 'RegistrationPromotionController@store')->name('store_registrationPromotion');
