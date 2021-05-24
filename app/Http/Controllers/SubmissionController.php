@@ -6,6 +6,7 @@ use App\Branch;
 use App\Cso;
 use App\HistoryUpdate;
 use App\HomeService;
+use App\Prize;
 use App\Promo;
 use App\Reference;
 use App\ReferenceImage;
@@ -25,6 +26,10 @@ use Illuminate\Support\Facades\Validator;
 
 class SubmissionController extends Controller
 {
+    /**
+     * @param string
+     * @return bool
+     */
     private function isJSON($string)
     {
         return is_string($string)
@@ -175,8 +180,11 @@ class SubmissionController extends Controller
         $csos = Cso::all();
         $promos = Promo::all();
         $souvenirs = Souvenir::select("id", "name")
-        ->where("active", true)
-        ->get();
+            ->where("active", true)
+            ->get();
+        $prizes = Prize::select("id", "name")
+            ->where("active", true)
+            ->get();
 
         return view(
             "admin.add_submission_reference",
@@ -185,6 +193,7 @@ class SubmissionController extends Controller
                 'branches',
                 'csos',
                 "souvenirs",
+                "prizes",
             )
         );
     }
@@ -345,7 +354,30 @@ class SubmissionController extends Controller
                     $referenceSouvenir = new ReferenceSouvenir();
                     $referenceSouvenir->reference_id = $reference->id;
                     $referenceSouvenir->souvenir_id = $data["souvenir_id"][$i];
-                    $referenceSouvenir->link_hs = $data["link_hs"][$i];
+                    if (
+                        isset($data["link_hs"][$i])
+                        && !empty($data["link_hs"][$i])
+                    ) {
+                        $referenceSouvenir->link_hs = json_encode(
+                            explode(", ", $data["link_hs"][$i]),
+                            JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+                        );
+                    }
+
+                    if (
+                        isset($data["order_id"][$i])
+                        && !empty($data["order_id"][$i])
+                    ) {
+                        $referenceSouvenir->order_id = $data["order_id"][$i];
+                    }
+
+                    if (
+                        isset($data["prize_id"][$i])
+                        && !empty($data["prize_id"][$i])
+                    ) {
+                        $referenceSouvenir->order_id = $data["order_id"][$i];
+                    }
+
                     $referenceSouvenir->save();
                 }
             }
@@ -445,6 +477,7 @@ class SubmissionController extends Controller
         $references = "";
         $promos = "";
         $souvenirs = "";
+        $prizes = "";
         if ($request->type === "mgm") {
             $submission = $this->querySubmissionMGM($request->id);
             $references = $this->queryReferenceMGM($request->id);
@@ -453,6 +486,7 @@ class SubmissionController extends Controller
             $submission = $this->querySubmissionReferensi($request->id);
             $references = $this->queryReferenceReferensi($request->id);
             $souvenirs = Souvenir::where("active", true)->get();
+            $prizes = Prize::where("active", true)->get();
         } elseif ($request->type === "takeaway") {
             $submission = $this->querySubmissionTakeaway($request->id);
         }
@@ -467,6 +501,7 @@ class SubmissionController extends Controller
                 "historySubmission",
                 "promos",
                 "souvenirs",
+                "prizes",
             )
         );
     }

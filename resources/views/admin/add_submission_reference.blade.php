@@ -1,7 +1,4 @@
 <?php
-
-use App\Product;
-
 $menu_item_page = "submission";
 $menu_item_second = "add_submission_reference";
 ?>
@@ -98,7 +95,9 @@ $menu_item_second = "add_submission_reference";
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Add Submission - Referensi Sehat Bersama WAKi</h3>
+            <h3 class="page-title">
+                Add Submission - Referensi Sehat Bersama WAKi/Keuntungan Biaya Iklan
+            </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -129,8 +128,13 @@ $menu_item_second = "add_submission_reference";
                             @csrf
                             <div class="form-group">
                                 <label>Type Register</label>
-                                <input type="hidden" name="type" value="referensi" />
-                                <input type="text" readonly disabled value="Referensi Sehat Bersama WAKi" />
+                                <input type="hidden"
+                                    name="type"
+                                    value="referensi" />
+                                <input type="text"
+                                    readonly
+                                    disabled
+                                    value="Referensi Sehat Bersama WAKi/Keuntungan Biaya Iklan" />
                             </div>
 
                             <div class="form-group">
@@ -174,6 +178,8 @@ $menu_item_second = "add_submission_reference";
                                     id="province"
                                     name="province"
                                     data-msg="Mohon Pilih Provinsi"
+                                    data-targetselect="city"
+                                    onchange="setCity(this)"
                                     required>
                                     <option selected disabled value="" hidden>
                                         Pilihan Provinsi
@@ -200,6 +206,7 @@ $menu_item_second = "add_submission_reference";
                                     id="city"
                                     name="city"
                                     data-msg="Mohon Pilih Kota"
+                                    onchange="setDistrict(this)"
                                     required>
                                     <option selected disabled value="" hidden>
                                         Pilihan Kota
@@ -274,172 +281,186 @@ $menu_item_second = "add_submission_reference";
                                     name="proof_image[]"
                                     class="proof-image"
                                     accept=".jpg, .jpeg, .png"
-                                    multiple required/>
+                                    multiple
+                                    required />
                             </div>
                             <br>
                             <br>
                             <div id="refrensiForm" class="form-group">
                                 <h3>Reference Data</h3>
                                 <br>
-                                @for ($x = 0; $x < 10; $x++)
-                                    <div class="tab">
+                                @for ($x = 0; $x < 1; $x++)
+                                    <label for="member-name-{{ $x }}">
+                                        Member {{ $x + 1 }}
+                                    </label>
+                                    <div class="form-group">
                                         <label for="member-name-{{ $x }}">
-                                            Member {{ $x + 1 }}
+                                            Name
                                         </label>
-                                        <div class="form-group">
-                                            <label for="member-name-{{ $x }}">
-                                                Name
-                                            </label>
-                                            <input type="text"
-                                                id="member-name-{{ $x }}"
-                                                class="form-control"
-                                                name="name_ref[]"
-                                                placeholder="Name"
-                                                oninput="requiredAttributeHandler(this)"
-                                                {{ $x > 0 ? "" : "required" }} />
-                                            <div class="validation"></div>
-                                        </div>
+                                        <input type="text"
+                                            id="member-name-{{ $x }}"
+                                            class="form-control"
+                                            name="name_ref[]"
+                                            placeholder="Name"
+                                            {{ $x > 0 ? "" : "required" }} />
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="member-age-{{ $x }}">
-                                                Age
-                                            </label>
-                                            <input type="number"
-                                                id="member-age-{{ $x }}"
-                                                class="form-control"
-                                                name="age_ref[]"
-                                                placeholder="Age"
-                                                oninput="requiredAttributeHandler(this)"
-                                                {{ $x > 0 ? "" : "required" }} />
-                                            <div class="validation"></div>
-                                        </div>
+                                    <div class="form-group">
+                                        <label for="member-age-{{ $x }}">
+                                            Age
+                                        </label>
+                                        <input type="number"
+                                            id="member-age-{{ $x }}"
+                                            class="form-control"
+                                            name="age_ref[]"
+                                            placeholder="Age"
+                                            {{ $x > 0 ? "" : "required" }} />
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="member-phone-{{ $x }}">
-                                                Phone Number
-                                            </label>
-                                            <input type="number"
-                                                id="member-phone-{{ $x }}"
-                                                class="form-control"
-                                                name="phone_ref[]"
-                                                placeholder="Phone Number"
-                                                oninput="requiredAttributeHandler(this)"
-                                                {{ $x > 0 ? "" : "required" }} />
-                                            <div class="validation"></div>
-                                        </div>
+                                    <div class="form-group">
+                                        <label for="member-phone-{{ $x }}">
+                                            Phone Number
+                                        </label>
+                                        <input type="number"
+                                            id="member-phone-{{ $x }}"
+                                            class="form-control"
+                                            name="phone_ref[]"
+                                            placeholder="Phone Number"
+                                            {{ $x > 0 ? "" : "required" }} />
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="province-{{ $x }}">
-                                                Province
-                                            </label>
-                                            <select class="form-control changeProvince"
-                                                id="member-province-{{ $x }}"
-                                                name="province_ref[]"
-                                                data-msg="Mohon Pilih Provinsi"
-                                                onchange="requiredAttributeHandler(this)"
-                                                {{ $x > 0 ? "" : "required" }}>
-                                                <option selected
-                                                    disabled
-                                                    value=""
-                                                    hidden>
-                                                    Pilih Provinsi
-                                                </option>
-                                                <?php
-                                                $result = RajaOngkir::FetchProvince();
-                                                $result = $result['rajaongkir']['results'];
-                                                if (sizeof($result) > 0) {
-                                                    foreach ($result as $value) {
-                                                        echo '<option value="' . $value['province_id'] . '">' . $value['province'] . "</option>";
-                                                    }
+                                    <div class="form-group">
+                                        <label for="member-province-{{ $x }}">
+                                            Province
+                                        </label>
+                                        <select class="form-control changeProvince"
+                                            id="member-province-{{ $x }}"
+                                            name="province_ref[]"
+                                            data-msg="Mohon Pilih Provinsi"
+                                            data-targetselect="member-city-{{ $x }}"
+                                            onchange="setCity(this)"
+                                            {{ $x > 0 ? "" : "required" }}>
+                                            <option selected
+                                                disabled
+                                                value=""
+                                                hidden>
+                                                Pilih Provinsi
+                                            </option>
+                                            <?php
+                                            $result = RajaOngkir::FetchProvince();
+                                            $result = $result['rajaongkir']['results'];
+                                            if (sizeof($result) > 0) {
+                                                foreach ($result as $value) {
+                                                    echo '<option value="'
+                                                        . $value['province_id']
+                                                        . '">'
+                                                        . $value['province']
+                                                        . "</option>";
                                                 }
-                                                ?>
-                                            </select>
-                                            <div class="validation"></div>
-                                        </div>
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="city-{{ $x }}">
-                                                City
-                                            </label>
-                                            <select class="form-control"
-                                                id="member-city-{{ $x }}"
-                                                name="city_ref[]"
-                                                data-msg="Mohon Pilih Kota"
-                                                onchange="requiredAttributeHandler(this)"
-                                                {{ $x > 0 ? "" : "required" }}>
-                                                <option selected
-                                                    disabled
-                                                    value=""
-                                                    hidden>
-                                                    Pilih Kota
+                                    <div class="form-group">
+                                        <label for="member-city-{{ $x }}">
+                                            City
+                                        </label>
+                                        <select class="form-control"
+                                            id="member-city-{{ $x }}"
+                                            name="city_ref[]"
+                                            data-msg="Mohon Pilih Kota"
+                                            {{ $x > 0 ? "" : "required" }}>
+                                            <option selected
+                                                disabled
+                                                value=""
+                                                hidden>
+                                                Pilih Kota
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="member-souvenir-{{ $x }}">
+                                            Souvenir
+                                        </label>
+                                        <select class="form-control"
+                                            id="member-souvenir-{{ $x }}"
+                                            name="souvenir_id[]"
+                                            {{ $x > 0 ? "" : "required" }}>
+                                            <option selected
+                                                disabled
+                                                hidden
+                                                value="">
+                                                Pilih Souvenir
+                                            </option>
+                                            @foreach ($souvenirs as $souvenir)
+                                                <option value="{{ $souvenir->id }}">
+                                                    {{ $souvenir->name }}
                                                 </option>
-                                            </select>
-                                            <div class="validation"></div>
-                                        </div>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label for="souvenir-{{ $x }}">
-                                                Souvenir
-                                            </label>
-                                            <select class="form-control"
-                                                id="member-souvenir-{{ $x }}"
-                                                name="souvenir_id[]"
-                                                onchange="requiredAttributeHandler(this)"
-                                                {{ $x > 0 ? "" : "required" }}>
-                                                <option selected
-                                                    disabled
-                                                    hidden
-                                                    value="">
-                                                    Pilih Souvenir
+                                    <div class="form-group">
+                                        <label for="link-hs-{{ $x }}">
+                                            Home Service
+                                        </label>
+                                        <input type="hidden"
+                                            id="link-hs-{{ $x }}"
+                                            name="link_hs[]"
+                                            value="" />
+                                        <br>
+                                        <button class="btn btn-gradient-info"
+                                            type="button"
+                                            data-toggle="modal"
+                                            data-target="#choose-hs">
+                                            Choose Home Service
+                                        </button>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="member-order-{{ $x }}">
+                                            Order
+                                        </label>
+                                        <input type="hidden"
+                                            id="member-order-{{ $x }}"
+                                            name="order_id[]"
+                                            value="" />
+                                        <br>
+                                        <button class="btn btn-gradient-info"
+                                            type="button"
+                                            data-toggle="modal"
+                                            data-target="#choose-order">
+                                            Choose Order
+                                        </button>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="member-prize-{{ $x }}">
+                                            Prize
+                                        </label>
+                                        <select class="form-control"
+                                            id="member-prize-{{ $x }}"
+                                            name="prize_id[]"
+                                            {{ $x > 0 ? "" : "required" }}>
+                                            <option selected
+                                                disabled
+                                                hidden
+                                                value="">
+                                                Choose Prize
+                                            </option>
+                                            @foreach ($prizes as $prize)
+                                                <option value="{{ $prize->id }}">
+                                                    {{ $prize->name }}
                                                 </option>
-                                                <?php foreach ($souvenirs as $souvenir): ?>
-                                                    <option value="<?php echo $souvenir->id; ?>">
-                                                        <?php echo $souvenir->name; ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="link-hs-{{ $x }}">
-                                                Link Home Service
-                                            </label>
-                                            <input type="url"
-                                                class="form-control"
-                                                id="link-hs-{{ $x }}"
-                                                name="link_hs[]"
-                                                pattern="https://.*"
-                                                maxlength="191"
-                                                oninput="requiredAttributeHandler(this)"
-                                                placeholder="Link Home Service" />
-                                        </div>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 @endfor
-
-                                <div style="overflow:auto;">
-                                    <div style="float:right;">
-                                        <button type="button"
-                                            id="prevBtn"
-                                            onclick="nextPrev(-1)">
-                                            Previous
-                                        </button>
-                                        <button type="button"
-                                            id="nextBtn"
-                                            onclick="nextPrev(1)">
-                                            Next
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <!-- Circles which indicates the steps of the form: -->
-                                <div style="text-align:center; margin-top:40px;">
-                                    @for ($x = 0; $x < 10; $x++)
-                                        <span class="step"></span>
-                                    @endfor
-                                </div>
                             </div>
-                            <div id="errormessage"></div>
-
+                            <br>
+                            <br>
                             <div class="form-group">
                                 <button id="addDeliveryOrder"
                                     type="submit"
@@ -456,63 +477,102 @@ $menu_item_second = "add_submission_reference";
         </div>
     </div>
 </div>
+
+<div class="modal fade"
+    id="choose-hs"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Choose Home Service
+                </h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-gradient-primary"
+                    type="button"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    Ok
+                </button>
+                <button class="btn btn-gradient-dark"
+                    type="button"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="choose-order"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Choose Order
+                </h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-gradient-primary"
+                    type="button"
+                    data-dismiss="modal">
+                    Ok
+                </button>
+                <button class="btn btn-gradient-dark"
+                    type="button"
+                    data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section("script")
 <script type="application/javascript">
-let currentTab = 0;
-showTab(currentTab);
-
 const souvenirArray = []
 for (let i = 0; i < 10; i++) {
     souvenirArray.push(-1);
 };
 
-function showTab(n) {
-    // This function will display the specified tab of the form ...
-    const x = document.getElementsByClassName("tab");
-    x[n].style.display = "block";
-
-    // ... and fix the Previous/Next buttons:
-    if (n == 0) {
-        document.getElementById("prevBtn").style.display = "none";
-    } else {
-        document.getElementById("prevBtn").style.display = "inline";
-    }
-
-    if (n == (x.length - 1)) {
-        document.getElementById("nextBtn").style.display = "none";
-    } else {
-        document.getElementById("nextBtn").style.display = "inline";
-    }
-
-    // ... and run a function that displays the correct step indicator:
-    fixStepIndicator(n)
-}
-
-function nextPrev(n) {
-    // This function will figure out which tab to display
-    const x = document.getElementsByClassName("tab");
-
-    // Exit the function if any field in the current tab is invalid:
-    if (n == 1 && !validateForm()) {
-        return false;
-    }
-
-    // Hide the current tab:
-    x[currentTab].style.display = "none";
-    // Increase or decrease the current tab by 1:
-    currentTab = currentTab + n;
-
-    // Otherwise, display the correct tab:
-    showTab(currentTab);
-}
-
 function validateForm() {
     // This function deals with validation of the form fields
     let valid = true;
 
-    const inputArray = ["member-name-", "member-age-", "member-phone-", "member-province-", "member-city-", "member-souvenir-", "link-hs-"];
+    const inputArray = [
+        "member-name-",
+        "member-age-",
+        "member-phone-",
+        "member-province-",
+        "member-city-",
+        "member-souvenir-",
+        "link-hs-",
+    ];
 
     inputArray.forEach(function (currentValue) {
         const inputBeingChecked = document.getElementById(currentValue + currentTab);
@@ -541,7 +601,8 @@ function validateForm() {
         }
     }
 
-    return valid; // return the valid status
+    // return the valid status
+    return valid;
 }
 
 function addOrRemoveInvalid(element, command) {
@@ -552,25 +613,20 @@ function addOrRemoveInvalid(element, command) {
     }
 }
 
-function fixStepIndicator(n) {
-    // This function removes the "active" class of all steps...
-    const x = document.getElementsByClassName("step");
-
-    for (let i = 0; i < x.length; i++) {
-        x[i].className = x[i].className.replace(" active", "");
-    }
-
-    //... and adds the "active" class to the current step:
-    x[n].className += " active";
-}
-
 function requiredAttributeHandler(e) {
     const REF_SEQ = e.id.split("-")[2];
     if (REF_SEQ === 0) {
         return;
     }
 
-    const inputArray = ["member-name-", "member-age-", "member-phone-", "member-province-", "member-city-", "member-souvenir-"];
+    const inputArray = [
+        "member-name-",
+        "member-age-",
+        "member-phone-",
+        "member-province-",
+        "member-city-",
+        "member-souvenir-",
+    ];
     let isEmpty = true;
 
     if (e.value) {
@@ -600,81 +656,91 @@ function requiredAttributeHandler(e) {
     }
 }
 
-$(document).on("change", ".changeProvince", function () {
-    const get_index = $(this).attr('id');
-    const index = get_index.slice(-1);
+function setCity(e) {
+    const URL = '{{ route("fetchCity", ["province" => ""]) }}/' + e.value;
 
-    const id = $(this).val();
+    fetch(
+        URL,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-    $("#member-city-" + index).html("");
-    $.get('{{ route("fetchCity", ['province' => ""]) }}/' + id)
-        .done(function (result) {
-            result = result['rajaongkir']['results'];
-            let arrCity = "<option selected disabled value=\"\" hidden>Pilihan Kota</option>";
+        return response.json();
+    }).then(function (response) {
+        const result = response["rajaongkir"]["results"];
 
-            if (result.length > 0) {
-                $.each( result, function (key, value) {
-                    if (value['type'] == "Kabupaten") {
-                        arrCity += `<option value="${value['city_id']}">Kabupaten ${value['city_name']}</option>`;
-                    }
+        const arrCity = [];
+        arrCity[0] = '<option disabled value="">Pilihan Kabupaten</option>';
+        arrCity[1] = '<option disabled value="">Pilihan Kota</option>';
 
-                    if (value['type'] == "Kota") {
-                        arrCity += `<option value="${value['city_id']}">Kota ${value['city_name']}</option>`;
-                    }
-                });
+        if (result.length > 0) {
+            result.forEach(function (currentValue) {
+                if (currentValue["type"] === "Kabupaten") {
+                    arrCity[0] += `<option value="${currentValue["city_id"]}">`
+                        + `${currentValue['type']} ${currentValue['city_name']}`
+                        + `</option>`;
+                } else {
+                    arrCity[1] += `<option value="${currentValue['city_id']}">`
+                        + `${currentValue['type']} ${currentValue['city_name']}`
+                        + `</option>`;
+                }
+            });
 
-                $("#member-city-" + index).append(arrCity);
-            }
-        });
-})
+            document.getElementById(e.dataset.targetselect).innerHTML = arrCity[0] + arrCity[1];
+        }
+    }).catch(function(error) {
+        console.error(error);
+    });
+}
+
+function setDistrict(e) {
+    const URL = '{{ route("fetchDistrict", ['city' => ""]) }}/' + e.value;
+
+    fetch(
+        URL,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const result = response["rajaongkir"]["results"];
+
+        let optionsDistrict = "";
+
+        if (result.length > 0) {
+            result.forEach(function (currentValue) {
+                optionsDistrict += '<option value="'
+                    + currentValue["subdistrict_id"]
+                    + '">'
+                    + currentValue['subdistrict_name']
+                    + '</option>';
+            });
+
+            document.getElementById("subDistrict").innerHTML = optionsDistrict;
+        }
+    }).catch(function (error) {
+        console.error(error);
+    })
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     $("#cso").on("input", function () {
         check_cso($("#cso").val());
-    });
-
-    $("#province").on("change", function () {
-        const id = $(this).val();
-        $("#city").html("");
-
-        $.get('{{ route("fetchCity", ['province' => ""]) }}/' + id)
-            .done(function (result) {
-                result = result['rajaongkir']['results'];
-                let arrCity = "<option selected disabled value=\"\" hidden>Pilihan Kota</option>";
-
-                if (result.length > 0) {
-                    $.each(result, function (key, value) {
-                        if (value['type'] == "Kabupaten") {
-                            arrCity += "<option value=\"" + value['city_id'] + "\">Kabupaten " + value['city_name'] + "</option>";
-                        }
-
-                        if (value['type'] == "Kota") {
-                            arrCity += "<option value=\"" + value['city_id'] + "\">Kota " + value['city_name'] + "</option>";
-                        }
-                    });
-
-                    $("#city").append(arrCity);
-                }
-            });
-    });
-
-    $("#city").on("change", function () {
-        const id = $(this).val();
-        $("#subDistrict").html("");
-
-        $.get('{{ route("fetchDistrict", ['city' => ""]) }}/' + id)
-            .done(function (result) {
-                result = result['rajaongkir']['results'];
-                let arrSubDistsrict = "<option selected disabled value=\"\" hidden>Pilihan Kecamatan</option>";
-
-                if (result.length > 0) {
-                    $.each( result, function (key, value) {
-                        arrSubDistsrict += "<option value=\"" + value['subdistrict_id'] + "\">" + value['subdistrict_name'] + "</option>";
-                    });
-
-                    $("#subDistrict").append(arrSubDistsrict);
-                }
-            });
     });
 
     function check_cso(code) {
@@ -687,7 +753,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else {
                     $('#validation_cso').html('Kode CSO Salah');
                     $('#validation_cso').css('color', 'red');
-                    $('#submit').attr('disabled',"");
+                    $('#submit').attr('disabled', "");
                 }
             });
     }

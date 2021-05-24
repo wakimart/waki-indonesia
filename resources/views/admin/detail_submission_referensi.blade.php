@@ -1,6 +1,6 @@
 <?php
 
-use App\Promo;
+use App\HomeService;
 
 $menu_item_page = "submission";
 $menu_item_second = "detail_submission_form";
@@ -177,7 +177,7 @@ if (
                     <?php endfor; ?>
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="9">Reference</td>
+                            <td colspan="12">Reference</td>
                         </thead>
                         <thead style="background-color: #80808012 !important;">
                             <tr>
@@ -189,6 +189,9 @@ if (
                                 <td>Souvenir</td>
                                 <td>Link HS</td>
                                 <td>Status</td>
+                                <td>Order</td>
+                                <td>Prize</td>
+                                <td>Deliv. Status</td>
                                 <td>Edit</td>
                             </tr>
                         </thead>
@@ -225,18 +228,54 @@ if (
                                 </td>
                                 <td class="center"
                                     id="link-hs_{{ $key }}">
-                                    <?php if (!empty($reference->link_hs)): ?>
-                                        <a id="link-hs-href_{{ $key }}"
-                                            href="{{ $reference->link_hs }}"
-                                            target="_blank">
-                                            <i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>
-                                        </a>
-                                    <?php endif; ?>
+                                    @if (!empty($reference->link_hs))
+                                        <?php
+                                        $i = 1;
+                                        $link_hs = json_decode($reference->link_hs, JSON_THROW_ON_ERROR);
+                                        ?>
+                                        @foreach ($link_hs as $value)
+                                            @if (is_numeric($value))
+                                                <?php
+                                                $hs = HomeService::select("code")->where("id", $value)->first();
+                                                ?>
+                                                <a id="link-hs-href_{{ $key }}"
+                                                    href="{{ $hs->code }}"
+                                                    target="_blank">
+                                                    <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                                                </a>
+                                            @else
+                                            <a id="link-hs-href_{{ $key }}"
+                                                href="{{ $value }}"
+                                                target="_blank">
+                                                <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: red;"></i>
+                                            </a>
+                                            @endif
+                                            <?php $i++; ?>
+                                        @endforeach
+                                    @endif
                                 </td>
                                 <td class="center"
                                     id="status_{{ $key }}"
                                     data-permission="{{ $specialPermission }}">
                                     {{ $reference->status }}
+                                </td>
+                                <td class="center"
+                                    id="order_{{ $key }}"
+                                    data-order="{{ $reference->order_id }}"
+                                    data-permission="{{ $specialPermission }}">
+                                    {{ $reference->order_id }}
+                                </td>
+                                <td class="center"
+                                    id="prize_{{ $key }}"
+                                    data-prize="{{ $reference->prize_id }}"
+                                    data-permission="{{ $specialPermission }}">
+                                    {{ $reference->prize_id }}
+                                </td>
+                                <td class="center"
+                                    id="deliverystatus_{{ $key }}"
+                                    data-delivery="{{ $reference->delivery_status }}"
+                                    data-permission="{{ $specialPermission }}">
+                                    {{ $reference->delivery_status }}
                                 </td>
                                 <td class="center">
                                     <button class="btn"
@@ -259,7 +298,7 @@ if (
                 <button class="btn btn-gradient-primary mt-2"
                     data-toggle="modal"
                     data-target="#edit-reference">
-                    Add Reference - Sehat Bersama WAKi
+                    Add Reference - Sehat Bersama WAKi/Keuntungan Biaya Iklan
                 </button>
             </div>
 
@@ -422,17 +461,62 @@ if (
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="edit-link-hs">Link Home Service</label>
-                        <input type="url"
-                            class="form-control"
+                        <label for="edit-link-hs">Home Service</label>
+                        <input type="hidden"
                             id="edit-link-hs"
                             name="link_hs"
-                            pattern="https://.*"
-                            maxlength="191"
-                            value=""
-                            placeholder="Link Home Service"
-                            readonly="" 
-                            onclick="show_modal_hs()"//>
+                            value="" />
+                        <br>
+                        <button class="btn btn-gradient-info"
+                            type="button"
+                            onclick="show_modal_hs(this)"
+                            name="homeservice_id"
+                            value="">
+                            Choose Home Service
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-link-hs">Order</label>
+                        <input type="hidden"
+                            id="edit-order"
+                            name="order_id"
+                            value="" />
+                        <br>
+                        <button class="btn btn-gradient-info"
+                            type="button"
+                            data-toggle="modal"
+                            data-target="#choose-order">
+                            Choose Order
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-prize">Prize</label>
+                        <select class="form-control"
+                            id="edit-prize"
+                            name="prize_id">
+                            <option selected disabled>
+                                Choose Prize
+                            </option>
+                            <?php foreach ($prizes as $prize): ?>
+                                <option value="<?php echo $prize->id; ?>">
+                                    <?php echo $prize->name; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-delivery-status">
+                            Delivery Status
+                        </label>
+                        <select class="form-control"
+                            id="edit-delivery-status"
+                            name="delivery_status">
+                            <option selected disabled>
+                                Choose Delivery Status
+                            </option>
+                            <option value="undelivered">Undelivered</option>
+                            <option value="delivered">Delivered</option>
+                        </select>
                     </div>
                 </form>
             </div>
@@ -452,16 +536,17 @@ if (
 </div>
 
 <div class="modal fade"
-    id="modal-hs"
+    id="choose-hs"
     tabindex="-1"
     role="dialog"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-title">Choose HomeServices</h5>
+                <h5 class="modal-title">
+                    Choose Home Service
+                </h5>
                 <button type="button"
-                    id="edit-close"
                     class="close"
                     data-dismiss="modal"
                     aria-label="Close">
@@ -498,6 +583,43 @@ if (
                     Close
                 </button>
             </div> --}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="choose-order"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Choose Order
+                </h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-gradient-primary"
+                    type="button"
+                    data-dismiss="modal">
+                    Ok
+                </button>
+                <button class="btn btn-gradient-dark"
+                    type="button"
+                    data-dismiss="modal">
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -899,12 +1021,14 @@ function submitEdit(e) {
 // NEW
 function show_modal_hs(e) {
     console.log('masuk');
-    $("#modal-hs").modal('show');
+    $("#choose-hs").modal('show');
+    $("#edit-reference").modal('hide');
 
-    $.post( '{{route("fetchCso")}}', { cso_code: txtCso })
-    .done(function( result ) {
+
+    // $.post( '{{route("fetchCso")}}', { cso_code: txtCso })
+    // .done(function( result ) {
         
-    });
+    // });
 }
 </script>
 @endsection

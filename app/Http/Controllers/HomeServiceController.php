@@ -1203,10 +1203,15 @@ class HomeServiceController extends Controller
     {
         $date = date("Y-m-d");
         if($request->has('date')){
-            $date = $request->date;
+            $date = date_create($request->date);
         }
 
-        
+        $homeServices = HomeService::whereDate('home_services.appointment', '=', $date)
+                        ->where('home_services.active', true)
+                        ->where('home_services.branch_id', $request->branch_id)
+                        ->get();
+        $data = ['hs' => $homeServices;]
+        return response()->json($data, 200);
     }
 
     public function export_to_xls(Request $request)
