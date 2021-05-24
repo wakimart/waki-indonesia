@@ -80,6 +80,13 @@ if (
     select.form-control {
         color: black !important;
     }
+
+
+    /* @media (min-width: 768px) { 
+		.table-responsive::-webkit-scrollbar {
+            display: none;
+        }
+	} */
 </style>
 @endsection
 
@@ -231,12 +238,13 @@ if (
                                 <?php
                                 if (!empty($reference->link_hs)) {
                                     $i = 1;
-                                    $link_hs = json_decode($reference->link_hs, JSON_THROW_ON_ERROR);
+                                    $link_hs = json_decode($reference->link_hs);
                                 }
                                 ?>
                                 <td class="center"
                                     id="link-hs_{{ $key }}"
-                                    data-hs="{{ implode(", ", $link_hs) }}">
+                                    {{-- data-hs="{{ implode(", ", $link_hs) }}" --}}
+                                    style="overflow-x:auto;">
                                     @if (!empty($reference->link_hs))
                                         @foreach ($link_hs as $value)
                                             @if (is_numeric($value))
@@ -273,7 +281,8 @@ if (
                                 <td class="center"
                                     id="order_{{ $key }}"
                                     data-order="{{ $reference->order_id }}"
-                                    data-permission="{{ $specialPermission }}">
+                                    data-permission="{{ $specialPermission }}"
+                                    style="overflow-x:auto;">
                                     {{ $reference->order_id }}
                                 </td>
                                 <td class="center"
@@ -924,7 +933,7 @@ function clickEdit(e) {
 
     const hsButton = document.createElement("button");
     hsButton.type = "button";
-    hsButton.className = "btn btn-gradient-info";
+    hsButton.className = "btn btn-gradient-info btn-sm";
     hsButton.id = "btn_choose_hs-edit_" + refSeq;
     hsButton.innerHTML = "Choose Home Service";
     document.getElementById("link-hs_" + refSeq).innerHTML = "";
@@ -968,7 +977,7 @@ function clickEdit(e) {
 
         const orderButton = document.createElement("button");
         orderButton.type = "button";
-        orderButton.className = "btn btn-gradient-info";
+        orderButton.className = "btn btn-gradient-info btn-sm";
         orderButton.id = "btn_choose_order-edit_" + refSeq;
         orderButton.innerHTML = "Choose Order";
         document.getElementById("order_" + refSeq).innerHTML = "";
