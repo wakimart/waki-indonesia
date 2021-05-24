@@ -199,116 +199,115 @@ if (
                         </thead>
                         <tbody>
                             <?php foreach ($references as $key => $reference): ?>
-                            <input type="hidden"
-                                id="edit-id_{{ $key }}"
-                                class="d-none"
-                                name="id"
-                                form="edit-form_{{ $key }}"
-                                value="{{ $reference->id }}" />
-                            <tr>
-                                <td id="name_{{ $key }}">
-                                    {{ $reference->name }}
-                                </td>
-                                <td class="center" id="age_{{ $key }}">
-                                    {{ $reference->age }}
-                                </td>
-                                <td class="center" id="phone_{{ $key }}">
-                                    {{ $reference->phone }}
-                                </td>
-                                <td id="province_{{ $key }}"
-                                    data-province="{{ $reference->province_id }}">
-                                    {{ $reference->province }}
-                                </td>
-                                <td id="city_{{ $key }}"
-                                    data-city="{{ $reference->city_id }}">
-                                    {{ $reference->city }}
-                                </td>
-                                <td id="souvenir_{{ $key }}"
-                                    data-permission="{{ $specialPermission }}"
-                                    data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
-                                    {{ $reference->souvenir_name }}
-                                </td>
-                                <?php
-                                if (!empty($reference->link_hs)) {
-                                    $i = 1;
-                                    $link_hs = json_decode(
-                                        $reference->link_hs,
-                                        JSON_THROW_ON_ERROR
-                                    );
-                                }
-                                ?>
-                                <td class="center"
-                                    id="link-hs_{{ $key }}"
-                                    data-hs="{{ implode(", ", $link_hs) }}"
-                                    style="overflow-x: auto;">
-                                    @if (!empty($reference->link_hs))
-                                        @foreach ($link_hs as $value)
-                                            @if (is_numeric($value))
-                                                <?php
-                                                $hs = HomeService::select("code")->where("id", $value)->first();
-                                                ?>
-                                                <a id="link-hs-href_{{ $key }}"
-                                                    href="{{ $hs->code }}"
-                                                    target="_blank">
-                                                    <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
-                                                </a>
-                                            @else
-                                            <a id="link-hs-href_{{ $key }}"
-                                                href="{{ $value }}"
-                                                target="_blank">
-                                                <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: red;"></i>
-                                            </a>
-                                            @endif
-                                            <?php $i++; ?>
-                                        @endforeach
-                                    @endif
-                                </td>
-                                <td class="center"
-                                    id="status_souvenir_{{ $key }}"
-                                    data-permission="{{ $specialPermission }}">
-                                    {{ $reference->status_souvenir }}
-                                </td>
-                                <td class="center"
-                                    id="delivery_status_souvenir_{{ $key }}"
-                                    data-deliverysouvenir="{{ $reference->delivery_status_souvenir }}"
-                                    data-permission="{{ $specialPermission }}">
-                                    {{ $reference->delivery_status_souvenir }}
-                                </td>
-                                <td class="center"
-                                    id="order_{{ $key }}"
-                                    data-order="{{ $reference->order_id }}"
-                                    data-permission="{{ $specialPermission }}"
-                                    style="overflow-x:auto;">
-                                    {{ $reference->order_id }}
-                                </td>
-                                <td class="center"
-                                    id="prize_{{ $key }}"
-                                    data-prize="{{ $reference->prize_id }}"
-                                    data-permission="{{ $specialPermission }}">
-                                    {{ $reference->prize_id }}
-                                </td>
-                                <td class="center"
-                                    id="status_prize_{{ $key }}"
-                                    data-permission="{{ $specialPermission }}">
-                                    {{ $reference->status_prize }}
-                                </td>
-                                <td class="center"
-                                    id="delivery_status_prize_{{ $key }}"
-                                    data-deliveryprize="{{ $reference->delivery_status_prize }}"
-                                    data-permission="{{ $specialPermission }}">
-                                    {{ $reference->delivery_status_prize }}
-                                </td>
-                                <td class="center">
-                                    <button class="btn"
-                                        id="btn-edit-save_{{ $key }}"
-                                        style="padding: 0;"
-                                        data-edit="edit_{{ $key }}"
-                                        onclick="clickEdit(this)"
-                                        value="{{ $reference->id }}">
-                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                                <input type="hidden"
+                                    id="edit-id_{{ $key }}"
+                                    class="d-none"
+                                    name="id"
+                                    form="edit-form_{{ $key }}"
+                                    value="{{ $reference->id }}" />
+                                <tr>
+                                    <td id="name_{{ $key }}">
+                                        {{ $reference->name }}
+                                    </td>
+                                    <td class="center" id="age_{{ $key }}">
+                                        {{ $reference->age }}
+                                    </td>
+                                    <td class="center" id="phone_{{ $key }}">
+                                        {{ $reference->phone }}
+                                    </td>
+                                    <td id="province_{{ $key }}"
+                                        data-province="{{ $reference->province_id }}">
+                                        {{ $reference->province }}
+                                    </td>
+                                    <td id="city_{{ $key }}"
+                                        data-city="{{ $reference->city_id }}">
+                                        {{ $reference->city }}
+                                    </td>
+                                    <td id="souvenir_{{ $key }}"
+                                        data-permission="{{ $specialPermission }}"
+                                        data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
+                                        {{ $reference->souvenir_name }}
+                                    </td>
+                                    <?php
+                                    if (!empty($reference->link_hs)) {
+                                        $i = 1;
+                                        $link_hs = json_decode(
+                                            $reference->link_hs,
+                                            JSON_THROW_ON_ERROR
+                                        );
+                                    }
+                                    ?>
+                                    <td class="center"
+                                        id="link-hs_{{ $key }}"
+                                        data-hs="{{ implode(", ", $link_hs) }}"
+                                        style="overflow-x: auto;">
+                                        @if (!empty($reference->link_hs))
+                                            @foreach ($link_hs as $value)
+                                                @if (is_numeric($value))
+                                                    <?php
+                                                    $hs = HomeService::select("code")->where("id", $value)->first();
+                                                    ?>
+                                                    <a id="link-hs-href_{{ $key }}"
+                                                        href="{{ $hs->code }}"
+                                                        target="_blank">
+                                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                                                    </a>
+                                                @else
+                                                    <a id="link-hs-href_{{ $key }}"
+                                                        href="{{ $value }}"
+                                                        target="_blank">
+                                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: red;"></i>
+                                                    </a>
+                                                @endif
+                                                <?php $i++; ?>
+                                            @endforeach
+                                        @endif
+                                    </td>
+                                    <td class="center"
+                                        id="status_souvenir_{{ $key }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->status_souvenir }}
+                                    </td>
+                                    <td class="center"
+                                        id="delivery_status_souvenir_{{ $key }}"
+                                        data-deliverysouvenir="{{ $reference->delivery_status_souvenir }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->delivery_status_souvenir }}
+                                    </td>
+                                    <td class="center"
+                                        id="order_{{ $key }}"
+                                        data-order="{{ $reference->order_id }}"
+                                        style="overflow-x:auto;">
+                                        {{ $reference->order_id }}
+                                    </td>
+                                    <td class="center"
+                                        id="prize_{{ $key }}"
+                                        data-prize="{{ $reference->prize_id }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->prize_id }}
+                                    </td>
+                                    <td class="center"
+                                        id="status_prize_{{ $key }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->status_prize }}
+                                    </td>
+                                    <td class="center"
+                                        id="delivery_status_prize_{{ $key }}"
+                                        data-deliveryprize="{{ $reference->delivery_status_prize }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->delivery_status_prize }}
+                                    </td>
+                                    <td class="center">
+                                        <button class="btn"
+                                            id="btn-edit-save_{{ $key }}"
+                                            style="padding: 0;"
+                                            data-edit="edit_{{ $key }}"
+                                            onclick="clickEdit(this)"
+                                            value="{{ $reference->id }}">
+                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -866,6 +865,7 @@ function clickEdit(e) {
             return "";
         }
     }
+
     const permission = document.getElementById("status_souvenir_" + refSeq).dataset.permission;
 
     const FORM_ATTR = `form="edit-form_${refSeq}" `;
@@ -904,7 +904,6 @@ function clickEdit(e) {
         + `required>`
         + provinceOption
         + `</select>`;
-
     document.getElementById("edit-province_" + refSeq).value = province;
 
     document.getElementById("city_" + refSeq).innerHTML = `<select `
@@ -917,16 +916,10 @@ function clickEdit(e) {
 
     setCity(document.getElementById("edit-province_" + refSeq));
 
-    // document.getElementById("link-hs_" + refSeq).innerHTML = `<input type="url" `
-    //     + `id="edit-link-hs_${refSeq}" `
-    //     + INPUT_CLASS
-    //     + FORM_ATTR
-    //     + `name="link_hs" `
-    //     + `pattern="https://.*" `
-    //     + `maxlength="191" `
-    //     + `value="${linkHS()}" `
-    //     + `placeholder="Link HS" />`;
-
+    const hsInput = document.createElement("input");
+    hsInput.type = "hidden";
+    hsInput.id = "link_hs_" + refSeq;
+    hsInput.name = "link_hs";
     const hsButton = document.createElement("button");
     hsButton.type = "button";
     hsButton.className = "btn btn-gradient-info btn-sm";
@@ -936,6 +929,21 @@ function clickEdit(e) {
     document.getElementById("link-hs_" + refSeq).appendChild(hsButton);
     document.getElementById("btn_choose_hs-edit_" + refSeq).setAttribute("data-toggle", "modal");
     document.getElementById("btn_choose_hs-edit_" + refSeq).setAttribute("data-target", "#choose-hs");
+
+    const orderInput = document.createElement("input");
+    orderInput.type = "hidden";
+    orderInput.id = "order_id_" + refSeq;
+    orderInput.name = "order_id";
+    const orderButton = document.createElement("button");
+    orderButton.type = "button";
+    orderButton.className = "btn btn-gradient-info btn-sm";
+    orderButton.id = "btn_choose_order-edit_" + refSeq;
+    orderButton.innerHTML = "Choose Order";
+    document.getElementById("order_" + refSeq).innerHTML = "";
+    document.getElementById("order_" + refSeq).appendChild(orderInput);
+    document.getElementById("order_" + refSeq).appendChild(orderButton);
+    document.getElementById("btn_choose_order-edit_" + refSeq).setAttribute("data-toggle", "modal");
+    document.getElementById("btn_choose_order-edit_" + refSeq).setAttribute("data-target", "#choose-order");
 
     if (permission) {
         document.getElementById("souvenir_" + refSeq).innerHTML = `<select `
@@ -970,16 +978,6 @@ function clickEdit(e) {
         document.getElementById("delivery_status_souvenir_" + refSeq).innerHTML = "";
         document.getElementById("delivery_status_souvenir_" + refSeq).appendChild(deliveryStatusSouvenirSelect);
         document.getElementById("edit-delivery-status-souvenir_" + refSeq).value = deliverySouvenir();
-
-        const orderButton = document.createElement("button");
-        orderButton.type = "button";
-        orderButton.className = "btn btn-gradient-info btn-sm";
-        orderButton.id = "btn_choose_order-edit_" + refSeq;
-        orderButton.innerHTML = "Choose Order";
-        document.getElementById("order_" + refSeq).innerHTML = "";
-        document.getElementById("order_" + refSeq).appendChild(orderButton);
-        document.getElementById("btn_choose_order-edit_" + refSeq).setAttribute("data-toggle", "modal");
-        document.getElementById("btn_choose_order-edit_" + refSeq).setAttribute("data-target", "#choose-order");
 
         const prizeSelect = document.createElement("select");
         prizeSelect.className = "form-control";
