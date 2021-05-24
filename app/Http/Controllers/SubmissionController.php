@@ -1509,4 +1509,13 @@ class SubmissionController extends Controller
         ->where("history_updates.menu_id", $submissionId)
         ->get();
     }
+
+    public function untungBiayaIklan(Request $request){
+        $submission = Submission::find($request->id);
+        return view('keuntunganbiayaiklan', compact('submission'));
+    }
+
+    public function referenceSehat(Request $request){
+        return view('sehatbersamawaki', compact('references'));
+    }
 }

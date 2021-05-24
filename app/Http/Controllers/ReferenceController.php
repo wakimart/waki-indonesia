@@ -51,15 +51,6 @@ class ReferenceController extends Controller
     }
 
 
-    public function untungBiayaIklan(Request $request){
-        return view('keuntunganbiayaiklan', compact('references'));
-    }
-
-    public function referenceSehat(Request $request){
-        return view('sehatbersamawaki', compact('references'));
-    }
-
-
     /**
      * Show the form for creating a new resource.
      *

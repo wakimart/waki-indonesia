@@ -31,23 +31,27 @@ class Submission extends Model
         return $this->belongsTo("App\Cso");
     }
 
-    public function province()
+    public function province_obj()
     {
-        return $this->belongsTo("App\RajaOngkir_Province", "province");
+        return $this->belongsTo("App\RajaOngkir_Province", "province", "province_id");
     }
 
-    public function city()
+    public function city_obj()
     {
-        return $this->belongsTo("App\RajaOngkir_City", "city");
+        return $this->belongsTo("App\RajaOngkir_City", "city", "city_id");
     }
 
-    public function district()
+    public function district_obj()
     {
-        return $this->belongsTo("App\RajaOngkir_Subdistrict", "district");
+        return $this->belongsTo("App\RajaOngkir_Subdistrict", "district", "subdistrict_id");
     }
 
     public function submissionDeliveryorder()
     {
         return $this->hasOne("App\SubmissionDeliveryorder");
+    }    
+    public function reference()
+    {
+        return $this->hasMany('App\Reference');
     }
 }

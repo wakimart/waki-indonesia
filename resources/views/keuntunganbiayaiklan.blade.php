@@ -104,7 +104,7 @@
                         <b><p>Cabang</p></b>
                     </div>
                     <div class="col-6">
-                        <p>: Pakuwon</p>
+                        <p>: {{$submission->branch['code']}} - {{$submission->branch['name']}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -112,7 +112,7 @@
                         <b><p>Tanggal</p></b>
                     </div>
                     <div class="col-6">
-                        <p>: 3/05/2021</p>
+                        <p>: {{$submission['created_at']}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -120,7 +120,7 @@
                         <b><p>Nama Customer</p></b>
                     </div>
                     <div class="col-6">
-                        <p>: Bpk Iskandriono</p>
+                        <p>: {{$submission['name']}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -128,8 +128,8 @@
                         <b><p>Alamat</p></b>
                     </div>
                     <div class="col-6">
-                        <p>: Jl wana kencana 2 blok j1 no 3 bsd serpong
-                            Banten, Kota Tangerang Selatan, Serpong</p>
+                        <p>: {{$submission['address']}} <br>
+                            {{$submission->province_obj['province']}}, {{$submission->city_obj['city_name']}}, {{$submission->district_obj['subdistrict_name']}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -137,15 +137,7 @@
                         <b><p>Telp. / HP</p></b>
                     </div>
                     <div class="col-6">
-                        <p>: 08136525488</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <b><p>Produk WAKi</p></b>
-                    </div>
-                    <div class="col-6">
-                        <p>: WKA2021 ( AIR WASHER )</p>
+                        <p>: {{$submission['phone']}}</p>
                     </div>
                 </div>
                 <div class="row">
@@ -153,7 +145,7 @@
                         <b><p>No. MPC</p></b>
                     </div>
                     <div class="col-6">
-                        <p>: 189001948</p>
+                        <p>: {{$submission['no_mpc']}}</p>
                     </div>
                 </div>
             </div>
@@ -166,45 +158,45 @@
                         <b><p>Cabang</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
-                        <p>: Pakuwon</p>
+                        <p>: {{$submission->branch['code']}} - {{$submission->branch['name']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>Tanggal</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
-                        <p>: 3/05/2021</p>
+                        <p>: {{$submission['created_at']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>Nama Customer</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
-                        <p>: Bpk Iskandriono</p>
+                        <p>: {{$submission['name']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>No. MPC</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
-                        <p>: 189001948</p>
+                        <p>: {{$submission['no_mpc']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>Alamat</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
-                        <p>: Jl wana kencana 2 blok j1 no 3 bsd serpong
-                            Banten, Kota Tangerang Selatan, Serpong</p>
+                        <p>: {{$submission['address']}} <br>
+                            {{$submission->province_obj['province']}}, {{$submission->city_obj['city_name']}}, {{$submission->district_obj['subdistrict_name']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>Telp. / HP</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
-                        <p>: 08136525488</p>
+                        <p>: {{$submission['phone']}}</p>
                     </div>
-                    <div class="col-md-2 col-sm-2">
+                    {{-- <div class="col-md-2 col-sm-2">
                         <b><p>Produk WAKi</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
                         <p>: WKA2021 ( AIR WASHER )</p>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
@@ -252,14 +244,16 @@
                         <th>Produk yang dipilih (Pereferensi)</th>
                         <th>Tanggal Appointment</th>
                     </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>Iskandriono</td>
-                        <td>08136525488</td>
-                        <td>Tangerang Selatan</td>
-                        <td>WKA2021 ( AIR WASHER )</td>
-                        <td>3/05/2021</td>
-                    </tr>
+                    @foreach($submission->reference as $keyNya => $referenceNya)
+                        <tr>
+                            <td>{{ $keyNya+1 }}</td>
+                            <td>{{ $referenceNya['name'] }}</td>
+                            <td>{{ $referenceNya['phone'] }}</td>
+                            <td>{{ $referenceNya->getCityName() }}</td>
+                            <td></td>
+                            <td>{{ $referenceNya['created_at'] }}</td>
+                        </tr>
+                    @endforeach
                 </table>
             </div>
             
