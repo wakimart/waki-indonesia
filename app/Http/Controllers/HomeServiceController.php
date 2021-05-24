@@ -1206,12 +1206,25 @@ class HomeServiceController extends Controller
             $date = date_create($request->date);
         }
 
-        $homeServices = HomeService::whereDate('home_services.appointment', '=', $date)
-                        ->where('home_services.active', true)
-                        ->where('home_services.branch_id', $request->branch_id)
-                        ->get();
-        $data = ['hs' => $homeServices;]
-        return response()->json($data, 200);
+        if($request->has('submission_id')){
+            $branch_id = \App\Submission::find($request->submission_id)->branch['id'];
+        }
+        else{
+            $branch_id = $request->branch_id;
+        }
+
+        DB::beginTransaction();
+        try {
+            $homeServices = HomeService::whereDate('home_services.appointment', '=', $date)
+                            ->where('home_services.active', true)
+                            ->where('home_services.branch_id', $branch_id)
+                            ->get();
+            $data = ['hs' => $homeServices];
+            return response()->json($data, 200);
+        }
+        catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
     public function export_to_xls(Request $request)

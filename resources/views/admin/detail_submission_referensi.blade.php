@@ -480,9 +480,9 @@ if (
                         <br>
                         <button class="btn btn-gradient-info"
                             type="button"
-                            onclick="show_modal_hs(this)"
-                            name="homeservice_id"
-                            value="">
+                            id="btn_choose_hs" 
+                            data-toggle="modal"
+                            data-target="#choose-hs">
                             Choose Home Service
                         </button>
                     </div>
@@ -495,6 +495,7 @@ if (
                         <br>
                         <button class="btn btn-gradient-info"
                             type="button"
+                            id="btn_choose_order"
                             data-toggle="modal"
                             data-target="#choose-order">
                             Choose Order
@@ -559,8 +560,8 @@ if (
                         name="date"
                         value="<?php echo date("Y-m-d"); ?>"/>
                 </div>
-
-                <table class="col-md-12" style="margin: 1em 0em;">
+                <div style="overflow-y: auto; height: 20em;">
+                    <table class="col-md-12" style="margin: 1em 0em;">
                         <thead>
                             <td>Time</td>
                             <td>Detail</td>
@@ -568,6 +569,7 @@ if (
                         </thead>
                         <tbody id="table-hs"></tbody>
                     </table>
+                </div>
             </div>
             {{-- <div class="modal-footer">
                 <input type="submit"
@@ -604,8 +606,27 @@ if (
                 </button>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label for="order-filter-name_phone">By Name / Phone</label>
+                    <input type="text"
+                        class="form-control"
+                        id="order-filter-name_phone"
+                        maxlength="191"
+                        value=""
+                        placeholder="Name / Phone"/>
+                </div>
+                <div style="overflow-y: auto; height: 20em;">
+                    <table class="col-md-12" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Date</td>
+                            <td>Detail</td>
+                            <td>Choose</td>
+                        </thead>
+                        <tbody id="table-order"></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="modal-footer">
+            {{-- <div class="modal-footer">
                 <button class="btn btn-gradient-primary"
                     type="button"
                     data-dismiss="modal">
@@ -616,7 +637,7 @@ if (
                     data-dismiss="modal">
                     Close
                 </button>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
@@ -1015,17 +1036,109 @@ function submitEdit(e) {
     });
 }
 
-// NEW
-function show_modal_hs(e) {
-    console.log('masuk');
-    $("#choose-hs").modal('show');
-    $("#edit-reference").modal('hide');
+// NEW System
+$(document).ready(function(){
 
+    $("#edit-reference").on('shown.bs.modal', function(){
+        if($(".modal-backdrop").length > 1){
+            $(".modal-backdrop")[0].remove();
+        }
+    });
 
-    // $.post( '{{route("fetchCso")}}', { cso_code: txtCso })
-    // .done(function( result ) {
-        
-    // });
+    // KHUSUS UNTUK HS
+    $("#choose-hs").on('shown.bs.modal', function(){
+        $("#edit-reference").modal('hide');
+
+        let submission_id = "{{$submission->id}}";
+        let date = $('#hs-filter-date').val();
+        getHsSubmission(date, submission_id);
+    });
+    $("#choose-hs").on('hidden.bs.modal', function(){
+        $("#edit-reference").modal('show');
+    });
+    $('#hs-filter-date').on('change', function(e) {
+        let submission_id = "{{$submission->id}}";
+        let date = $('#hs-filter-date').val();
+        getHsSubmission(date, submission_id);
+    });
+    function getHsSubmission(date, submission_id) {
+        $('#table-hs').html("");
+        $.get( '{{route("list_hs_submission")}}', { date: date, submission_id: submission_id })
+        .done(function( result ) {
+            if(result.hs.length > 0){
+                let hsNya = result.hs;
+
+                $.each( hsNya, function( key, value ) {
+                    let JamNya = new Date(value.appointment);
+
+                    let isiNya = "<tr><td>"+JamNya.getHours()+":"+(JamNya.getMinutes()<10?'0':'') + JamNya.getMinutes()+"</td><td>"+
+                    "<b>Name</b> : "+value.name+"<br>"+
+                    "<b>Phone</b> : "+value.phone+"<br>"+
+                    "<b>Address</b> : "+value.address+"<br>"+
+                    "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
+                    $('#table-hs').append(isiNya);
+                });
+            }
+            else{
+                let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
+                $('#table-hs').append(isiNya);
+            }
+        });
+    }
+
+    // KHUSUS UNTUK ORDER
+    $("#choose-order").on('shown.bs.modal', function(){
+        $("#edit-reference").modal('hide');
+
+        let submission_id = "{{$submission->id}}";
+        getOrderSubmission("", submission_id);
+    });
+    $("#choose-order").on('hidden.bs.modal', function(){
+        $("#edit-reference").modal('show');
+    });
+    $('#order-filter-name_phone').on('input', function(e) {
+        let submission_id = "{{$submission->id}}";
+        let filter = $(this).val();
+        getOrderSubmission(filter, submission_id);
+    });
+    function getOrderSubmission(filter, submission_id) {
+        $('#table-order').html("");
+        let isiNya = "<tr><td colspan='3' style='text-align: center'>Loading...</td></tr>";
+        $('#table-order').append(isiNya);
+
+        $.get( '{{route("list_order_submission")}}', { filter: filter, submission_id: submission_id })
+        .done(function( result ) {
+            $('#table-order').html("");
+            if(result.orders.length > 0){
+                let orderNya = result.orders;
+
+                $.each( orderNya, function( key, value ) {
+
+                    let isiNya = "<tr><td>"+value.orderDate+"</td><td>"+
+                    "<b>Name</b> : "+value.name+"<br>"+
+                    "<b>Phone</b> : "+value.phone+"<br>"+
+                    "<b>Address</b> : "+value.address+"<br>"+
+                    "<b>Product</b> : "+value.product+"<br>"+
+                    "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
+                    $('#table-order').append(isiNya);
+                });
+            }
+            else{
+                let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
+                $('#table-order').append(isiNya);
+            }
+        });
+    }
+});
+function selectHsNya(id, code){
+    $('#edit-link-hs').val(id);
+    $('#btn_choose_hs').html("HS Code : "+code);
+    $("#choose-hs").modal('hide');
+}
+function selectOrderNya(id, code){
+    $('#edit-order').val(id);
+    $('#btn_choose_order').html("Order Code : "+code);
+    $("#choose-order").modal('hide');
 }
 </script>
 @endsection

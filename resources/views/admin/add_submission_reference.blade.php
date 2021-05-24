@@ -413,6 +413,7 @@ $menu_item_second = "add_submission_reference";
                                         <br>
                                         <button class="btn btn-gradient-info"
                                             type="button"
+                                            id="btn_choose_hs" 
                                             data-toggle="modal"
                                             data-target="#choose-hs">
                                             Choose Home Service
@@ -430,6 +431,7 @@ $menu_item_second = "add_submission_reference";
                                         <br>
                                         <button class="btn btn-gradient-info"
                                             type="button"
+                                            id="btn_choose_order" 
                                             data-toggle="modal"
                                             data-target="#choose-order">
                                             Choose Order
@@ -497,20 +499,36 @@ $menu_item_second = "add_submission_reference";
                 </button>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label for="edit-phone">By Date</label>
+                    <input type="date"
+                        class="form-control"
+                        id="hs-filter-date"
+                        name="date"
+                        value="<?php echo date("Y-m-d"); ?>"/>
+                </div>
+                <div style="overflow-y: auto; height: 20em;">
+                    <table class="col-md-12" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Time</td>
+                            <td>Detail</td>
+                            <td>Choose</td>
+                        </thead>
+                        <tbody id="table-hs"></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-gradient-primary"
-                    type="button"
-                    data-dismiss="modal"
-                    aria-label="Close">
-                    Ok
-                </button>
-                <button class="btn btn-gradient-dark"
-                    type="button"
+            {{-- <div class="modal-footer">
+                <input type="submit"
+                    form="edit-form"
+                    value="Submit"
+                    class="btn btn-gradient-primary mr-2" />
+                <button class="btn btn-light"
                     data-dismiss="modal"
                     aria-label="Close">
                     Close
                 </button>
+            </div> --}}
             </div>
         </div>
     </div>
@@ -535,8 +553,27 @@ $menu_item_second = "add_submission_reference";
                 </button>
             </div>
             <div class="modal-body">
+                <div class="form-group">
+                    <label for="order-filter-name_phone">By Name / Phone</label>
+                    <input type="text"
+                        class="form-control"
+                        id="order-filter-name_phone"
+                        maxlength="191"
+                        value=""
+                        placeholder="Name / Phone"/>
+                </div>
+                <div style="overflow-y: auto; height: 20em;">
+                    <table class="col-md-12" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Date</td>
+                            <td>Detail</td>
+                            <td>Choose</td>
+                        </thead>
+                        <tbody id="table-order"></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="modal-footer">
+            {{-- <div class="modal-footer">
                 <button class="btn btn-gradient-primary"
                     type="button"
                     data-dismiss="modal">
@@ -547,7 +584,7 @@ $menu_item_second = "add_submission_reference";
                     data-dismiss="modal">
                     Close
                 </button>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
@@ -793,5 +830,102 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 }, false);
+
+// NEW System
+$(document).ready(function(){
+
+    // KHUSUS UNTUK HS
+    $("#choose-hs").on('shown.bs.modal', function(){
+        if($(".modal-backdrop").length > 1){
+            $(".modal-backdrop")[0].remove();
+        }
+
+        let branch_id = $('#branch').val();
+        let date = $('#hs-filter-date').val();
+        getHsSubmission(date, branch_id);
+    });
+    $('#hs-filter-date').on('change', function(e) {
+        let branch_id = $('#branch').val();
+        let date = $('#hs-filter-date').val();
+        getHsSubmission(date, branch_id);
+    });
+    function getHsSubmission(date, branch_id) {
+        $('#table-hs').html("");
+        $.get( '{{route("list_hs_submission")}}', { date: date, branch_id: branch_id })
+        .done(function( result ) {
+            if(result.hs.length > 0){
+                let hsNya = result.hs;
+
+                $.each( hsNya, function( key, value ) {
+                    let JamNya = new Date(value.appointment);
+
+                    let isiNya = "<tr><td>"+JamNya.getHours()+":"+(JamNya.getMinutes()<10?'0':'') + JamNya.getMinutes()+"</td><td>"+
+                    "<b>Name</b> : "+value.name+"<br>"+
+                    "<b>Phone</b> : "+value.phone+"<br>"+
+                    "<b>Address</b> : "+value.address+"<br>"+
+                    "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
+                    $('#table-hs').append(isiNya);
+                });
+            }
+            else{
+                let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
+                $('#table-hs').append(isiNya);
+            }
+        });
+    }
+
+    // KHUSUS UNTUK ORDER
+    $("#choose-order").on('shown.bs.modal', function(){
+        if($(".modal-backdrop").length > 1){
+            $(".modal-backdrop")[0].remove();
+        }
+
+        let branch_id = $('#branch').val();
+        getOrderSubmission("", branch_id);
+    });
+    $('#order-filter-name_phone').on('input', function(e) {
+        let branch_id = $('#branch').val();
+        let filter = $(this).val();
+        getOrderSubmission(filter, branch_id);
+    });
+    function getOrderSubmission(filter, branch_id) {
+        $('#table-order').html("");
+        let isiNya = "<tr><td colspan='3' style='text-align: center'>Loading...</td></tr>";
+        $('#table-order').append(isiNya);
+
+        $.get( '{{route("list_order_submission")}}', { filter: filter, branch_id: branch_id })
+        .done(function( result ) {
+            $('#table-order').html("");
+            if(result.orders.length > 0){
+                let orderNya = result.orders;
+
+                $.each( orderNya, function( key, value ) {
+
+                    let isiNya = "<tr><td>"+value.orderDate+"</td><td>"+
+                    "<b>Name</b> : "+value.name+"<br>"+
+                    "<b>Phone</b> : "+value.phone+"<br>"+
+                    "<b>Address</b> : "+value.address+"<br>"+
+                    "<b>Product</b> : "+value.product+"<br>"+
+                    "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
+                    $('#table-order').append(isiNya);
+                });
+            }
+            else{
+                let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
+                $('#table-order').append(isiNya);
+            }
+        });
+    }
+});
+function selectHsNya(id, code){
+    $('#link-hs-0').val(id);
+    $('#btn_choose_hs').html("HS Code : "+code);
+    $("#choose-hs").modal('hide');
+}
+function selectOrderNya(id, code){
+    $('#member-order-0').val(id);
+    $('#btn_choose_order').html("Order Code : "+code);
+    $("#choose-order").modal('hide');
+}
 </script>
 @endsection

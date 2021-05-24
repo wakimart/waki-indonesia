@@ -322,6 +322,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //Export to XLS By Date
         Route::get('/report-to-xls-by-date', 'OrderController@export_to_xls')
                 ->name('order_export-to-xls');
+
+        // List Order (Khusus untuk Submission)
+        Route::get("/list_order_submission", "OrderController@ListOrderforSubmission")
+            ->name("list_order_submission");
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {
@@ -367,6 +371,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Print home service data detail on a selected day
         Route::post("/homeservice_print_appointment", "HomeServiceController@printDayData")
             ->name("homeservice_print_appointment");
+
+        // List Home Service (Khusus untuk Submission)
+        Route::get("/list_hs_submission", "HomeServiceController@ListHSforSubmission")
+            ->name("list_hs_submission");
 
     });
 
