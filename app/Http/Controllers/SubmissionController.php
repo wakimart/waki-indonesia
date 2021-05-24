@@ -1567,8 +1567,13 @@ class SubmissionController extends Controller
         return $references->addSelect(
             "reference_souvenirs.souvenir_id AS souvenir_id",
             "souvenirs.name AS souvenir_name",
-            "reference_souvenirs.status AS status",
             "reference_souvenirs.link_hs AS link_hs",
+            "reference_souvenirs.status AS status_souvenir",
+            "reference_souvenirs.delivery_status_souvenir AS delivery_status_souvenir",
+            "reference_souvenirs.order_id AS order_id",
+            "reference_souvenirs.prize_id AS prize_id",
+            "reference_souvenirs.status_prize AS status_prize",
+            "reference_souvenirs.delivery_status_prize AS delivery_status_prize",
         )
         ->leftJoin(
             "reference_souvenirs",

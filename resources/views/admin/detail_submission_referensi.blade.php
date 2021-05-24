@@ -177,7 +177,7 @@ if (
                     <?php endfor; ?>
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="12">Reference</td>
+                            <td colspan="13">Reference</td>
                         </thead>
                         <thead style="background-color: #80808012 !important;">
                             <tr>
@@ -189,9 +189,10 @@ if (
                                 <td>Souvenir</td>
                                 <td>Link HS</td>
                                 <td>Status</td>
+                                <td>Deliv. Status Souvenir</td>
                                 <td>Order</td>
                                 <td>Prize</td>
-                                <td>Deliv. Status</td>
+                                <td>Deliv. Status Prize</td>
                                 <td>Edit</td>
                             </tr>
                         </thead>
@@ -226,13 +227,16 @@ if (
                                     data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
                                     {{ $reference->souvenir_name }}
                                 </td>
+                                <?php
+                                if (!empty($reference->link_hs)) {
+                                    $i = 1;
+                                    $link_hs = json_decode($reference->link_hs, JSON_THROW_ON_ERROR);
+                                }
+                                ?>
                                 <td class="center"
-                                    id="link-hs_{{ $key }}">
+                                    id="link-hs_{{ $key }}"
+                                    data-hs="{{ implode(", ", $link_hs) }}">
                                     @if (!empty($reference->link_hs))
-                                        <?php
-                                        $i = 1;
-                                        $link_hs = json_decode($reference->link_hs, JSON_THROW_ON_ERROR);
-                                        ?>
                                         @foreach ($link_hs as $value)
                                             @if (is_numeric($value))
                                                 <?php
@@ -257,7 +261,13 @@ if (
                                 <td class="center"
                                     id="status_{{ $key }}"
                                     data-permission="{{ $specialPermission }}">
-                                    {{ $reference->status }}
+                                    {{ $reference->status_souvenir }}
+                                </td>
+                                <td class="center"
+                                    id="deliverystatus_{{ $key }}"
+                                    data-deliverysouvenir="{{ $reference->delivery_status_souvenir }}"
+                                    data-permission="{{ $specialPermission }}">
+                                    {{ $reference->delivery_status_souvenir }}
                                 </td>
                                 <td class="center"
                                     id="order_{{ $key }}"
@@ -273,9 +283,9 @@ if (
                                 </td>
                                 <td class="center"
                                     id="deliverystatus_{{ $key }}"
-                                    data-delivery="{{ $reference->delivery_status }}"
+                                    data-deliveryprize="{{ $reference->delivery_status_prize }}"
                                     data-permission="{{ $specialPermission }}">
-                                    {{ $reference->delivery_status }}
+                                    {{ $reference->delivery_status_prize }}
                                 </td>
                                 <td class="center">
                                     <button class="btn"
@@ -347,6 +357,7 @@ if (
         <h2>CANNOT FIND SUBMISSION</h2>
     </div>
 @endif
+{{-- INI BUAT ADD REFERENSI, ID-NYA "EDIT" KARENA COPAS DARI VIEW LAIN --}}
 <div class="modal fade"
     id="edit-reference"
     tabindex="-1"
@@ -502,20 +513,6 @@ if (
                                     <?php echo $prize->name; ?>
                                 </option>
                             <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-delivery-status">
-                            Delivery Status
-                        </label>
-                        <select class="form-control"
-                            id="edit-delivery-status"
-                            name="delivery_status">
-                            <option selected disabled>
-                                Choose Delivery Status
-                            </option>
-                            <option value="undelivered">Undelivered</option>
-                            <option value="delivered">Delivered</option>
                         </select>
                     </div>
                 </form>
@@ -799,7 +796,7 @@ function clickEdit(e) {
         try {
             return document.getElementById("link-hs-href_" + refSeq).getAttribute("href");
         } catch (error) {
-            return "";
+            console.error(error);
         }
     };
     const status = document.getElementById("status_" + refSeq).innerHTML.trim();
