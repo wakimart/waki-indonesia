@@ -347,6 +347,7 @@ if (
         <h2>CANNOT FIND SUBMISSION</h2>
     </div>
 @endif
+{{-- INI BUAT ADD REFERENSI, ID-NYA "EDIT" KARENA COPAS DARI VIEW LAIN --}}
 <div class="modal fade"
     id="edit-reference"
     tabindex="-1"
@@ -501,20 +502,6 @@ if (
                                     <?php echo $prize->name; ?>
                                 </option>
                             <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-delivery-status">
-                            Delivery Status
-                        </label>
-                        <select class="form-control"
-                            id="edit-delivery-status"
-                            name="delivery_status">
-                            <option selected disabled>
-                                Choose Delivery Status
-                            </option>
-                            <option value="undelivered">Undelivered</option>
-                            <option value="delivered">Delivered</option>
                         </select>
                     </div>
                 </form>
