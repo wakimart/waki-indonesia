@@ -177,7 +177,7 @@ if (
                     <?php endfor; ?>
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="13">Reference</td>
+                            <td colspan="14">Reference</td>
                         </thead>
                         <thead style="background-color: #80808012 !important;">
                             <tr>
@@ -192,6 +192,7 @@ if (
                                 <td>Deliv. Status Souvenir</td>
                                 <td>Order</td>
                                 <td>Prize</td>
+                                <td>Status Prize</td>
                                 <td>Deliv. Status Prize</td>
                                 <td>Edit</td>
                             </tr>
@@ -259,12 +260,12 @@ if (
                                     @endif
                                 </td>
                                 <td class="center"
-                                    id="status_{{ $key }}"
+                                    id="status_souvenir_{{ $key }}"
                                     data-permission="{{ $specialPermission }}">
                                     {{ $reference->status_souvenir }}
                                 </td>
                                 <td class="center"
-                                    id="deliverystatus_{{ $key }}"
+                                    id="delivery_status_souvenir_{{ $key }}"
                                     data-deliverysouvenir="{{ $reference->delivery_status_souvenir }}"
                                     data-permission="{{ $specialPermission }}">
                                     {{ $reference->delivery_status_souvenir }}
@@ -282,7 +283,12 @@ if (
                                     {{ $reference->prize_id }}
                                 </td>
                                 <td class="center"
-                                    id="deliverystatus_{{ $key }}"
+                                    id="status_prize_{{ $key }}"
+                                    data-permission="{{ $specialPermission }}">
+                                    {{ $reference->status_prize }}
+                                </td>
+                                <td class="center"
+                                    id="delivery_status_prize_{{ $key }}"
                                     data-deliveryprize="{{ $reference->delivery_status_prize }}"
                                     data-permission="{{ $specialPermission }}">
                                     {{ $reference->delivery_status_prize }}
@@ -480,7 +486,7 @@ if (
                         <br>
                         <button class="btn btn-gradient-info"
                             type="button"
-                            id="btn_choose_hs" 
+                            id="btn_choose_hs"
                             data-toggle="modal"
                             data-target="#choose-hs">
                             Choose Home Service
@@ -571,18 +577,6 @@ if (
                     </table>
                 </div>
             </div>
-            {{-- <div class="modal-footer">
-                <input type="submit"
-                    form="edit-form"
-                    value="Submit"
-                    class="btn btn-gradient-primary mr-2" />
-                <button class="btn btn-light"
-                    data-dismiss="modal"
-                    aria-label="Close">
-                    Close
-                </button>
-            </div> --}}
-            </div>
         </div>
     </div>
 </div>
@@ -626,18 +620,6 @@ if (
                     </table>
                 </div>
             </div>
-            {{-- <div class="modal-footer">
-                <button class="btn btn-gradient-primary"
-                    type="button"
-                    data-dismiss="modal">
-                    Ok
-                </button>
-                <button class="btn btn-gradient-dark"
-                    type="button"
-                    data-dismiss="modal">
-                    Close
-                </button>
-            </div> --}}
         </div>
     </div>
 </div>
@@ -647,10 +629,12 @@ if (
 <script type="application/javascript">
 let provinceOption = "";
 let souvenirOption = `<option disabled selected value="">Pilih souvenir</option>`;
+let prizeOption = `<option selected value="">Choose Prize</option>`;
 
 document.addEventListener('DOMContentLoaded', function () {
     const URL_PROVINCE = '<?php echo route("fetchProvince"); ?>';
     const URL_SOUVENIR = '<?php echo route("fetchSouvenir"); ?>';
+    const URL_PRIZE = '<?php echo route("fetchPrize"); ?>';
 
     fetch(
         URL_PROVINCE,
@@ -700,6 +684,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 + currentValue["name"]
                 + `</option>`;
         });
+    }).catch(function (error) {
+        console.error(error);
+    });
+
+    fetch(
+        URL_PRIZE,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const result = response.data;
+
+        result.forEach(function (currentValue) {
+            prizeOption += `<option value="${currentValue["id"]}">`
+                + currentValue["name"]
+                + `</option>`;
+        });
+    }).catch(function (error) {
+        console.error(error);
     });
 }, false);
 
@@ -813,15 +825,43 @@ function clickEdit(e) {
     const province = document.getElementById("province_" + refSeq).getAttribute("data-province");
     const city = document.getElementById("city_" + refSeq).getAttribute("data-city");
     const souvenir = document.getElementById("souvenir_" + refSeq).getAttribute("data-souvenir");
-    const linkHS = function () {
+
+    function linkHS() {
         try {
             return document.getElementById("link-hs-href_" + refSeq).getAttribute("href");
         } catch (error) {
-            console.error(error);
+            return "";
         }
     };
-    const status = document.getElementById("status_" + refSeq).innerHTML.trim();
-    const permission = document.getElementById("status_" + refSeq).dataset.permission;
+
+    const status = document.getElementById("status_souvenir_" + refSeq).innerHTML.trim();
+
+    function deliverySouvenir () {
+        try {
+            return document.getElementById("delivery_status_souvenir_" + refSeq).dataset.deliverysouvenir;
+        } catch (error) {
+            return "";
+        }
+    };
+
+    const prize = document.getElementById("prize_" + refSeq).dataset.prize;
+
+    function statusPrize() {
+        try {
+            document.getElementById("status_prize_" + refSeq).innerHTML.trim();
+        } catch (error) {
+            return "";
+        }
+    }
+
+    function deliveryPrize() {
+        try {
+            return document.getElementById("delivery_status_prize_" + refSeq).dataset.deliveryprize;
+        } catch (error) {
+            return "";
+        }
+    }
+    const permission = document.getElementById("status_souvenir_" + refSeq).dataset.permission;
 
     const FORM_ATTR = `form="edit-form_${refSeq}" `;
     const INPUT_CLASS = `class="form-control" `;
@@ -872,15 +912,25 @@ function clickEdit(e) {
 
     setCity(document.getElementById("edit-province_" + refSeq));
 
-    document.getElementById("link-hs_" + refSeq).innerHTML = `<input type="url" `
-        + `id="edit-link-hs_${refSeq}" `
-        + INPUT_CLASS
-        + FORM_ATTR
-        + `name="link_hs" `
-        + `pattern="https://.*" `
-        + `maxlength="191" `
-        + `value="${linkHS()}" `
-        + `placeholder="Link HS" />`;
+    // document.getElementById("link-hs_" + refSeq).innerHTML = `<input type="url" `
+    //     + `id="edit-link-hs_${refSeq}" `
+    //     + INPUT_CLASS
+    //     + FORM_ATTR
+    //     + `name="link_hs" `
+    //     + `pattern="https://.*" `
+    //     + `maxlength="191" `
+    //     + `value="${linkHS()}" `
+    //     + `placeholder="Link HS" />`;
+
+    const hsButton = document.createElement("button");
+    hsButton.type = "button";
+    hsButton.className = "btn btn-gradient-info";
+    hsButton.id = "btn_choose_hs-edit_" + refSeq;
+    hsButton.innerHTML = "Choose Home Service";
+    document.getElementById("link-hs_" + refSeq).innerHTML = "";
+    document.getElementById("link-hs_" + refSeq).appendChild(hsButton);
+    document.getElementById("btn_choose_hs-edit_" + refSeq).setAttribute("data-toggle", "modal");
+    document.getElementById("btn_choose_hs-edit_" + refSeq).setAttribute("data-target", "#choose-hs");
 
     if (permission) {
         document.getElementById("souvenir_" + refSeq).innerHTML = `<select `
@@ -893,7 +943,7 @@ function clickEdit(e) {
             + `</select>`;
         document.getElementById("edit-souvenir_" + refSeq).value = souvenir;
 
-        document.getElementById("status_" + refSeq).innerHTML = `<select `
+        document.getElementById("status_souvenir_" + refSeq).innerHTML = `<select `
             + `id="edit-status_${refSeq}" `
             + INPUT_CLASS
             + FORM_ATTR
@@ -903,6 +953,62 @@ function clickEdit(e) {
             + `<option value="success">success</option>`
             + `</select>`;
         document.getElementById("edit-status_" + refSeq).value = status || "pending";
+
+        const deliveryStatusSouvenirSelect = document.createElement("select");
+        deliveryStatusSouvenirSelect.className = "form-control";
+        deliveryStatusSouvenirSelect.form = `edit-form_${refSeq}`;
+        deliveryStatusSouvenirSelect.id = `edit-delivery-status-souvenir_${refSeq}`;
+        deliveryStatusSouvenirSelect.name = "delivery_status_souvenir";
+        deliveryStatusSouvenirSelect.innerHTML = '<option value="">Choose Souvenir Delivery Status</option>'
+            + '<option value="undelivered">Undelivered</option>'
+            + '<option value="delivered">Delivered</option>';
+        document.getElementById("delivery_status_souvenir_" + refSeq).innerHTML = "";
+        document.getElementById("delivery_status_souvenir_" + refSeq).appendChild(deliveryStatusSouvenirSelect);
+        document.getElementById("edit-delivery-status-souvenir_" + refSeq).value = deliverySouvenir();
+
+        const orderButton = document.createElement("button");
+        orderButton.type = "button";
+        orderButton.className = "btn btn-gradient-info";
+        orderButton.id = "btn_choose_order-edit_" + refSeq;
+        orderButton.innerHTML = "Choose Order";
+        document.getElementById("order_" + refSeq).innerHTML = "";
+        document.getElementById("order_" + refSeq).appendChild(orderButton);
+        document.getElementById("btn_choose_order-edit_" + refSeq).setAttribute("data-toggle", "modal");
+        document.getElementById("btn_choose_order-edit_" + refSeq).setAttribute("data-target", "#choose-order");
+
+        const prizeSelect = document.createElement("select");
+        prizeSelect.className = "form-control";
+        prizeSelect.form = `edit-form_${refSeq}`;
+        prizeSelect.id = `edit-prize_${refSeq}`;
+        prizeSelect.name = "prize_id";
+        prizeSelect.innerHTML = prizeOption;
+        document.getElementById("prize_" + refSeq).innerHTML = "";
+        document.getElementById("prize_" + refSeq).appendChild(prizeSelect);
+        document.getElementById("edit-prize_" + refSeq).value = prize;
+
+        const statusPrizeSelect = document.createElement("select");
+        statusPrizeSelect.className = "form-control";
+        statusPrizeSelect.form = `edit-form_${refSeq}`;
+        statusPrizeSelect.id = `edit-status-prize_${refSeq}`;
+        statusPrizeSelect.name = "status_prize";
+        prizeSelect.innerHTML = '<option value="">Choose Prize Status</option>'
+            + '<option value="pending">Pending</option>'
+            + '<option value="success">Success</option>';
+        document.getElementById("status_prize_" + refSeq).innerHTML = "";
+        document.getElementById("status_prize_" + refSeq).appendChild(statusPrizeSelect);
+        document.getElementById("edit-status-prize_" + refSeq).value = statusPrize();
+
+        const deliveryStatusPrizeSelect = document.createElement("select");
+        deliveryStatusPrizeSelect.className = "form-control";
+        deliveryStatusPrizeSelect.form = `edit-form_${refSeq}`;
+        deliveryStatusPrizeSelect.id = `edit-delivery-status-prize_${refSeq}`;
+        deliveryStatusPrizeSelect.name = "delivery_status_prize";
+        deliveryStatusPrizeSelect.innerHTML = '<option value="">Choose Prize Delivery Status</option>'
+            + '<option value="undelivered">Undelivered</option>'
+            + '<option value="delivered">Delivered</option>';
+        document.getElementById("delivery_status_prize_" + refSeq).innerHTML = "";
+        document.getElementById("delivery_status_prize_" + refSeq).appendChild(deliveryStatusPrizeSelect);
+        document.getElementById("edit-delivery-status-prize_" + refSeq).value = deliveryPrize();
     }
 
     document.getElementById("btn-edit-save_" + refSeq).setAttribute("onclick", "submitEdit(this)");
@@ -1038,7 +1144,6 @@ function submitEdit(e) {
 
 // NEW System
 $(document).ready(function(){
-
     $("#edit-reference").on('shown.bs.modal', function(){
         if($(".modal-backdrop").length > 1){
             $(".modal-backdrop")[0].remove();

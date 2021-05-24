@@ -67,6 +67,7 @@ Route::get('/fetchDistrict/{city}', function ($city) {
     return RajaOngkir::FetchDistrict($city);
 })->name('fetchDistrict');
 Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSouvenir");
+Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
 
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)

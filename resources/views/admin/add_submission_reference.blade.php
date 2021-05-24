@@ -413,7 +413,7 @@ $menu_item_second = "add_submission_reference";
                                         <br>
                                         <button class="btn btn-gradient-info"
                                             type="button"
-                                            id="btn_choose_hs" 
+                                            id="btn_choose_hs"
                                             data-toggle="modal"
                                             data-target="#choose-hs">
                                             Choose Home Service
@@ -431,7 +431,7 @@ $menu_item_second = "add_submission_reference";
                                         <br>
                                         <button class="btn btn-gradient-info"
                                             type="button"
-                                            id="btn_choose_order" 
+                                            id="btn_choose_order"
                                             data-toggle="modal"
                                             data-target="#choose-order">
                                             Choose Order
@@ -517,18 +517,6 @@ $menu_item_second = "add_submission_reference";
                         <tbody id="table-hs"></tbody>
                     </table>
                 </div>
-            </div>
-            {{-- <div class="modal-footer">
-                <input type="submit"
-                    form="edit-form"
-                    value="Submit"
-                    class="btn btn-gradient-primary mr-2" />
-                <button class="btn btn-light"
-                    data-dismiss="modal"
-                    aria-label="Close">
-                    Close
-                </button>
-            </div> --}}
             </div>
         </div>
     </div>

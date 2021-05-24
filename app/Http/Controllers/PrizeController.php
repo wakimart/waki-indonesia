@@ -167,4 +167,16 @@ class PrizeController extends Controller
 
         HistoryUpdate::create($historyPrize);
     }
+
+    public function fetchPrize()
+    {
+        $prizes = Prize::select("id", "name")
+            ->where("active", true)
+            ->get();
+
+        return response()->json([
+            "result" => $prizes->count(),
+            "data" => $prizes,
+        ]);
+    }
 }
