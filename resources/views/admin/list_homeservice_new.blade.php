@@ -1292,7 +1292,8 @@ $menu_item_second = "list_homeservice";
             <div class="modal-content">
                 <form id="frmCash"
                     method="post"
-                    action="{{ route('update_homeService') }}">
+                    action="{{ route('update_homeService') }}"
+                    enctype="multipart/form-data">
                     <div class="modal-header">
                         <button type="button"
                             class="close"
@@ -1314,6 +1315,11 @@ $menu_item_second = "list_homeservice";
                                 rows="5"
                                 required
                                 placeholder="Cash Description"></textarea>
+                            <label for="">Bukti Foto (WAJIB): </label>
+                            <div id="divImageCash" style="padding: 0.5em;">
+                                <img id="showImageCash" src="" height="300px" width="450px">
+                            </div>
+                            <input type="file" class="form-control" name="cash_image" id="cash_image" accept="image/*" placeholder="Bukti Foto" required data-msg="Mohon Sertakan Foto" style="text-transform:uppercase"/>
                             <div class="validation"></div>
                         </div>
                     </div>
@@ -1324,14 +1330,14 @@ $menu_item_second = "list_homeservice";
                             name="id"
                             value="-" />
                         <button type="submit"
-                            id="btn-Cash"
+                            id="btn-CashNoCash"
                             class="btn btn-gradient-success mr-2"
                             name="cash"
                             value="1">
                             Yes
                         </button>
                         <button type="submit"
-                            id="btn-NoCash"
+                            id="btn-CashNoCash"
                             class="btn btn-gradient-danger mr-2"
                             name="cash"
                             value="0">
@@ -1439,7 +1445,7 @@ $menu_item_second = "list_homeservice";
                         value="1" />
                     <button type="submit"
                         data-dismiss="modal"
-                        id="btn-exportByInputDate"
+                        id="btn-exportByInp"
                         class="btn btn-gradient-danger mr-2"
                         name="id"
                         value="-">
@@ -1982,6 +1988,19 @@ function clickCash(e) {
             document.getElementById("footer-cash").classList.add("d-none");
             document.getElementById("edit-cash_description").innerHTML = result.cash_description;
             document.getElementById("edit-cash_description").setAttribute("readonly", "");
+
+            document.getElementById("cash_image").classList.add("d-none");
+            //document.getElementById("divImageCash").classList.remove("d-none");
+            document.getElementById("showImageCash").src = "{{asset('sources/homeservice/')}}" + '/' + result.image[0];
+
+        }else{
+            document.getElementById("footer-cash").classList.add("d-none");
+            document.getElementById("edit-cash_description").innerHTML = result.cash_description;
+            document.getElementById("edit-cash_description").setAttribute("readonly", "");
+
+            document.getElementById("cash_image").classList.add("d-none");
+            //document.getElementById("divImageCash").classList.remove("d-none");
+            document.getElementById("showImageCash").src = "{{asset('sources/homeservice/')}}" + '/' + result.image[0];
         }
     }).catch(function (error) {
         console.log(error);
