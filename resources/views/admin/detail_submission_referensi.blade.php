@@ -80,13 +80,6 @@ if (
     select.form-control {
         color: black !important;
     }
-
-
-    /* @media (min-width: 768px) { 
-		.table-responsive::-webkit-scrollbar {
-            display: none;
-        }
-	} */
 </style>
 @endsection
 
@@ -238,13 +231,16 @@ if (
                                 <?php
                                 if (!empty($reference->link_hs)) {
                                     $i = 1;
-                                    $link_hs = json_decode($reference->link_hs);
+                                    $link_hs = json_decode(
+                                        $reference->link_hs,
+                                        JSON_THROW_ON_ERROR
+                                    );
                                 }
                                 ?>
                                 <td class="center"
                                     id="link-hs_{{ $key }}"
-                                    {{-- data-hs="{{ implode(", ", $link_hs) }}" --}}
-                                    style="overflow-x:auto;">
+                                    data-hs="{{ implode(", ", $link_hs) }}"
+                                    style="overflow-x: auto;">
                                     @if (!empty($reference->link_hs))
                                         @foreach ($link_hs as $value)
                                             @if (is_numeric($value))

@@ -169,7 +169,7 @@ class SubmissionController extends Controller
             compact(
                 'promos',
                 'branches',
-                'csos'
+                'csos',
             )
         );
     }
@@ -193,7 +193,7 @@ class SubmissionController extends Controller
                 'branches',
                 'csos',
                 "souvenirs",
-                "prizes"
+                "prizes",
             )
         );
     }
@@ -209,7 +209,7 @@ class SubmissionController extends Controller
             compact(
                 'promos',
                 'branches',
-                'csos'
+                'csos',
             )
         );
     }
@@ -501,7 +501,7 @@ class SubmissionController extends Controller
                 "historySubmission",
                 "promos",
                 "souvenirs",
-                "prizes"
+                "prizes",
             )
         );
     }
@@ -529,7 +529,7 @@ class SubmissionController extends Controller
                     "branches",
                     "promos",
                     "submission",
-                    "references"
+                    "references",
                 )
             );
         }
@@ -555,7 +555,7 @@ class SubmissionController extends Controller
                 "city",
                 "district",
                 "address",
-                "branch_id"
+                "branch_id",
             ));
             $csoId = Cso::where('code', $request->cso_id)->first()['id'];
             $submission->cso_id = $csoId;
@@ -589,7 +589,7 @@ class SubmissionController extends Controller
                 "city",
                 "district",
                 "address",
-                "branch_id"
+                "branch_id",
             ));
             $csoId = Cso::where('code', $request->cso_id)->first()['id'];
             $submission->cso_id = $csoId;
@@ -644,7 +644,7 @@ class SubmissionController extends Controller
                 "city",
                 "district",
                 "address",
-                "branch_id"
+                "branch_id",
             ));
             $csoId = Cso::where('code', $request->cso_id)->first()['id'];
             $submission->cso_id = $csoId;
@@ -1104,7 +1104,7 @@ class SubmissionController extends Controller
                     "city",
                     "district",
                     "address",
-                    "branch_id"
+                    "branch_id",
                 ));
                 $csoId = Cso::where('code', $request->cso_id)->first()['id'];
                 $submission->cso_id = $csoId;
@@ -1118,7 +1118,7 @@ class SubmissionController extends Controller
                     "city",
                     "district",
                     "address",
-                    "branch_id"
+                    "branch_id",
                 ));
                 $csoId = Cso::where('code', $request->cso_id)->first()['id'];
                 $submission->cso_id = $csoId;
@@ -1154,7 +1154,7 @@ class SubmissionController extends Controller
                     "city",
                     "district",
                     "address",
-                    "branch_id"
+                    "branch_id",
                 ));
                 $csoId = Cso::where('code', $request->cso_id)->first()['id'];
                 $submission->cso_id = $csoId;
@@ -1256,7 +1256,7 @@ class SubmissionController extends Controller
                 "branches.code AS branch_code",
                 "branches.name AS branch_name",
                 "csos.code AS cso_code",
-                "csos.name AS cso_name"
+                "csos.name AS cso_name",
             )
             ->leftJoin(
                 "branches",
@@ -1423,7 +1423,7 @@ class SubmissionController extends Controller
             DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
             "submissions.district AS district_id",
             "raja_ongkir__subdistricts.subdistrict_name AS district",
-            "submissions.created_at AS created_at"
+            "submissions.created_at AS created_at",
         )
         ->leftJoin("branches", "submissions.branch_id", "=", "branches.id")
         ->leftJoin("csos", "submissions.cso_id", "=", "csos.id")
@@ -1458,7 +1458,7 @@ class SubmissionController extends Controller
             "submission_images.image_2 AS image_2",
             "submission_images.image_3 AS image_3",
             "submission_images.image_4 AS image_4",
-            "submission_images.image_5 AS image_5"
+            "submission_images.image_5 AS image_5",
         )
         ->leftJoin(
             "submission_images",
@@ -1485,7 +1485,7 @@ class SubmissionController extends Controller
             "submission_images.image_2 AS image_2",
             "submission_images.image_3 AS image_3",
             "submission_images.image_4 AS image_4",
-            "submission_images.image_5 AS image_5"
+            "submission_images.image_5 AS image_5",
         )
         ->leftJoin(
             "submission_promos",
@@ -1519,7 +1519,7 @@ class SubmissionController extends Controller
             "references.province AS province_id",
             "raja_ongkir__cities.province AS province",
             "references.city AS city_id",
-            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city")
+            DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
         )
         ->leftJoin(
             "raja_ongkir__cities",
@@ -1543,7 +1543,7 @@ class SubmissionController extends Controller
             "reference_promos.other_1 AS other_1",
             "reference_promos.other_2 AS other_2",
             "reference_images.image_1 AS image_1",
-            "reference_images.image_2 AS image_2"
+            "reference_images.image_2 AS image_2",
         )
         ->leftJoin(
             "reference_promos",
@@ -1573,7 +1573,7 @@ class SubmissionController extends Controller
             "reference_souvenirs.order_id AS order_id",
             "reference_souvenirs.prize_id AS prize_id",
             "reference_souvenirs.status_prize AS status_prize",
-            "reference_souvenirs.delivery_status_prize AS delivery_status_prize"
+            "reference_souvenirs.delivery_status_prize AS delivery_status_prize",
         )
         ->leftJoin(
             "reference_souvenirs",
@@ -1596,7 +1596,7 @@ class SubmissionController extends Controller
             "history_updates.method AS method",
             "history_updates.created_at AS created_at",
             "history_updates.meta AS meta",
-            "users.name AS name"
+            "users.name AS name",
         )
         ->leftJoin(
             "users",
