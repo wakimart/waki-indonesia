@@ -1304,7 +1304,7 @@ $menu_item_second = "list_homeservice";
                     </div>
                     <div class="modal-body">
                         <h5 style="text-align:center;">
-                            Did you manage to get cash?
+                            Did you manage to get cash? <span id="cash_or_not_txt" style="color: black;"></span>
                         </h5>
                         <br>
                         <div class="form-group mb-1">
@@ -1963,6 +1963,7 @@ function clickCash(e) {
     document.getElementById("footer-cash").classList.remove("d-none");
     document.getElementById("edit-cash_description").innerHTML = "";
     document.getElementById("edit-cash_description").removeAttribute("readonly");
+    document.getElementById("divImageCash").classList.add("d-none");
 
     const URL = "<?php echo route('edit_homeService'); ?>";
 
@@ -1984,23 +1985,24 @@ function clickCash(e) {
     }).then(function (response) {
         const result = response.result;
 
-        if (result.cash) {
+        if (result.cash != null) {
+            let desc_cash_or_not = "No";
+            let color_cash_or_not = "red";
+            if(result.cash == 1){
+                desc_cash_or_not = "Yes";
+                color_cash_or_not = "green";
+            }
+
             document.getElementById("footer-cash").classList.add("d-none");
+            document.getElementById("cash_or_not_txt").innerHTML = desc_cash_or_not;
+            document.getElementById("cash_or_not_txt").style.color = color_cash_or_not;
             document.getElementById("edit-cash_description").innerHTML = result.cash_description;
             document.getElementById("edit-cash_description").setAttribute("readonly", "");
 
             document.getElementById("cash_image").classList.add("d-none");
-            //document.getElementById("divImageCash").classList.remove("d-none");
+            document.getElementById("divImageCash").classList.remove("d-none");
             document.getElementById("showImageCash").src = "{{asset('sources/homeservice/')}}" + '/' + result.image[0];
 
-        }else{
-            document.getElementById("footer-cash").classList.add("d-none");
-            document.getElementById("edit-cash_description").innerHTML = result.cash_description;
-            document.getElementById("edit-cash_description").setAttribute("readonly", "");
-
-            document.getElementById("cash_image").classList.add("d-none");
-            //document.getElementById("divImageCash").classList.remove("d-none");
-            document.getElementById("showImageCash").src = "{{asset('sources/homeservice/')}}" + '/' + result.image[0];
         }
     }).catch(function (error) {
         console.log(error);
