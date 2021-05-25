@@ -1,6 +1,8 @@
 <?php
 
 use App\HomeService;
+use App\Order;
+use App\Prize;
 
 $menu_item_page = "submission";
 $menu_item_second = "detail_submission_form";
@@ -248,7 +250,7 @@ if (
                                                     $hs = HomeService::select("code")->where("id", $value)->first();
                                                     ?>
                                                     <a id="link-hs-href_{{ $key }}"
-                                                        href="{{ $hs->code }}"
+                                                        href="{{ route("homeServices_success", ["code" => $hs->code]) }}"
                                                         target="_blank">
                                                         <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
                                                     </a>
@@ -278,13 +280,29 @@ if (
                                         id="order_{{ $key }}"
                                         data-order="{{ $reference->order_id }}"
                                         style="overflow-x:auto;">
-                                        {{ $reference->order_id }}
+                                        <?php
+                                        if (!empty($reference->order_id)) {
+                                            $order = Order::select("id", "code")
+                                                ->where("id", $reference->order_id)
+                                                ->first();
+
+                                            echo $order->code;
+                                        }
+                                        ?>
                                     </td>
                                     <td class="center"
                                         id="prize_{{ $key }}"
                                         data-prize="{{ $reference->prize_id }}"
                                         data-permission="{{ $specialPermission }}">
-                                        {{ $reference->prize_id }}
+                                        <?php
+                                        if (!empty($reference->prize_id)) {
+                                            $prize = Prize::select("id", "name")
+                                                ->where("id", $reference->prize_id)
+                                                ->first();
+
+                                            echo $prize->name;
+                                        }
+                                        ?>
                                     </td>
                                     <td class="center"
                                         id="status_prize_{{ $key }}"
@@ -483,6 +501,7 @@ if (
                     </div>
                     <div class="form-group">
                         <label for="edit-link-hs">Home Service</label>
+                        <div id="link-hs-container"></div>
                         <input type="hidden"
                             id="edit-link-hs"
                             name="link_hs"
@@ -491,6 +510,7 @@ if (
                         <button class="btn btn-gradient-info"
                             type="button"
                             id="btn_choose_hs"
+                            data-originbutton="btn_choose_hs"
                             data-toggle="modal"
                             data-target="#choose-hs">
                             Choose Home Service
@@ -506,6 +526,7 @@ if (
                         <button class="btn btn-gradient-info"
                             type="button"
                             id="btn_choose_order"
+                            data-originbutton="btn_choose_order"
                             data-toggle="modal"
                             data-target="#choose-order">
                             Choose Order
@@ -556,6 +577,7 @@ if (
                 </h5>
                 <button type="button"
                     class="close"
+                    id="choose-hs-close"
                     data-dismiss="modal"
                     aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -598,6 +620,7 @@ if (
                 </h5>
                 <button type="button"
                     class="close"
+                    id="choose-order-close"
                     data-dismiss="modal"
                     aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -848,6 +871,22 @@ function clickEdit(e) {
         }
     };
 
+    function orderId() {
+        try {
+            return document.getElementById("order_" + refSeq).dataset.order;
+        } catch (error) {
+            return "";
+        }
+    }
+
+    function orderCode() {
+        try {
+            return document.getElementById("order_" + refSeq).innerHTML.trim();
+        } catch (error) {
+            return "";
+        }
+    }
+
     const prize = document.getElementById("prize_" + refSeq).dataset.prize;
 
     function statusPrize() {
@@ -918,32 +957,50 @@ function clickEdit(e) {
 
     const hsInput = document.createElement("input");
     hsInput.type = "hidden";
-    hsInput.id = "link_hs_" + refSeq;
+    hsInput.id = "edit-link_hs_" + refSeq;
     hsInput.name = "link_hs";
+    hsInput.value = document.getElementById("link-hs_" + refSeq).dataset.hs;
     const hsButton = document.createElement("button");
     hsButton.type = "button";
     hsButton.className = "btn btn-gradient-info btn-sm";
-    hsButton.id = "btn_choose_hs-edit_" + refSeq;
+    hsButton.id = "btn-choose-hs-edit_" + refSeq;
     hsButton.innerHTML = "Choose Home Service";
     document.getElementById("link-hs_" + refSeq).innerHTML = "";
+    document.getElementById("link-hs_" + refSeq).appendChild(hsInput);
+    document.getElementById("edit-link_hs_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
     document.getElementById("link-hs_" + refSeq).appendChild(hsButton);
-    document.getElementById("btn_choose_hs-edit_" + refSeq).setAttribute("data-toggle", "modal");
-    document.getElementById("btn_choose_hs-edit_" + refSeq).setAttribute("data-target", "#choose-hs");
+    document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("data-toggle", "modal");
+    document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("data-target", "#choose-hs");
+    document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("data-originbutton", "btn-choose-hs-edit_" + refSeq);
 
     const orderInput = document.createElement("input");
     orderInput.type = "hidden";
     orderInput.id = "order_id_" + refSeq;
     orderInput.name = "order_id";
+    orderInput.value = orderId();
     const orderButton = document.createElement("button");
     orderButton.type = "button";
     orderButton.className = "btn btn-gradient-info btn-sm";
-    orderButton.id = "btn_choose_order-edit_" + refSeq;
-    orderButton.innerHTML = "Choose Order";
+    orderButton.id = "btn-choose-order-edit_" + refSeq;
+    orderButton.innerHTML = orderCode() || "Choose Order";
     document.getElementById("order_" + refSeq).innerHTML = "";
     document.getElementById("order_" + refSeq).appendChild(orderInput);
+    document.getElementById("order_id_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
     document.getElementById("order_" + refSeq).appendChild(orderButton);
-    document.getElementById("btn_choose_order-edit_" + refSeq).setAttribute("data-toggle", "modal");
-    document.getElementById("btn_choose_order-edit_" + refSeq).setAttribute("data-target", "#choose-order");
+    document.getElementById("btn-choose-order-edit_" + refSeq).setAttribute("data-originbutton", "btn-choose-order-edit_" + refSeq);
+    document.getElementById("btn-choose-order-edit_" + refSeq).setAttribute("data-toggle", "modal");
+    document.getElementById("btn-choose-order-edit_" + refSeq).setAttribute("data-target", "#choose-order");
+
+    const prizeSelect = document.createElement("select");
+    prizeSelect.className = "form-control";
+    prizeSelect.id = `edit-prize_${refSeq}`;
+    prizeSelect.name = "prize_id";
+    prizeSelect.innerHTML = prizeOption;
+    document.getElementById("prize_" + refSeq).innerHTML = "";
+    document.getElementById("prize_" + refSeq).appendChild(prizeSelect);
+    document.getElementById("edit-prize_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
+    document.getElementById("edit-prize_" + refSeq).value = prize;
+
 
     if (permission) {
         document.getElementById("souvenir_" + refSeq).innerHTML = `<select `
@@ -969,48 +1026,38 @@ function clickEdit(e) {
 
         const deliveryStatusSouvenirSelect = document.createElement("select");
         deliveryStatusSouvenirSelect.className = "form-control";
-        deliveryStatusSouvenirSelect.form = `edit-form_${refSeq}`;
         deliveryStatusSouvenirSelect.id = `edit-delivery-status-souvenir_${refSeq}`;
         deliveryStatusSouvenirSelect.name = "delivery_status_souvenir";
-        deliveryStatusSouvenirSelect.innerHTML = '<option value="">Choose Souvenir Delivery Status</option>'
+        deliveryStatusSouvenirSelect.innerHTML = '<option selected value="">Choose Souvenir Delivery Status</option>'
             + '<option value="undelivered">Undelivered</option>'
             + '<option value="delivered">Delivered</option>';
         document.getElementById("delivery_status_souvenir_" + refSeq).innerHTML = "";
         document.getElementById("delivery_status_souvenir_" + refSeq).appendChild(deliveryStatusSouvenirSelect);
+        document.getElementById("edit-delivery-status-souvenir_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
         document.getElementById("edit-delivery-status-souvenir_" + refSeq).value = deliverySouvenir();
-
-        const prizeSelect = document.createElement("select");
-        prizeSelect.className = "form-control";
-        prizeSelect.form = `edit-form_${refSeq}`;
-        prizeSelect.id = `edit-prize_${refSeq}`;
-        prizeSelect.name = "prize_id";
-        prizeSelect.innerHTML = prizeOption;
-        document.getElementById("prize_" + refSeq).innerHTML = "";
-        document.getElementById("prize_" + refSeq).appendChild(prizeSelect);
-        document.getElementById("edit-prize_" + refSeq).value = prize;
 
         const statusPrizeSelect = document.createElement("select");
         statusPrizeSelect.className = "form-control";
-        statusPrizeSelect.form = `edit-form_${refSeq}`;
         statusPrizeSelect.id = `edit-status-prize_${refSeq}`;
         statusPrizeSelect.name = "status_prize";
-        prizeSelect.innerHTML = '<option value="">Choose Prize Status</option>'
+        statusPrizeSelect.innerHTML = '<option selected value="">Choose Prize Status</option>'
             + '<option value="pending">Pending</option>'
             + '<option value="success">Success</option>';
         document.getElementById("status_prize_" + refSeq).innerHTML = "";
         document.getElementById("status_prize_" + refSeq).appendChild(statusPrizeSelect);
+        document.getElementById("edit-status-prize_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
         document.getElementById("edit-status-prize_" + refSeq).value = statusPrize();
 
         const deliveryStatusPrizeSelect = document.createElement("select");
         deliveryStatusPrizeSelect.className = "form-control";
-        deliveryStatusPrizeSelect.form = `edit-form_${refSeq}`;
         deliveryStatusPrizeSelect.id = `edit-delivery-status-prize_${refSeq}`;
         deliveryStatusPrizeSelect.name = "delivery_status_prize";
-        deliveryStatusPrizeSelect.innerHTML = '<option value="">Choose Prize Delivery Status</option>'
+        deliveryStatusPrizeSelect.innerHTML = '<option selected value="">Choose Prize Delivery Status</option>'
             + '<option value="undelivered">Undelivered</option>'
             + '<option value="delivered">Delivered</option>';
         document.getElementById("delivery_status_prize_" + refSeq).innerHTML = "";
         document.getElementById("delivery_status_prize_" + refSeq).appendChild(deliveryStatusPrizeSelect);
+        document.getElementById("edit-delivery-status-prize_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
         document.getElementById("edit-delivery-status-prize_" + refSeq).value = deliveryPrize();
     }
 
@@ -1047,7 +1094,7 @@ function validateForm(refSeq) {
         }
     });
 
-    if (document.getElementById("status_" + refSeq).dataset.permission) {
+    if (document.getElementById("status_souvenir_" + refSeq).dataset.permission) {
         const souvenirData = [];
         const formLength = parseInt(document.getElementById("form-length").value, 10);
         for (let i = 0; i < formLength; i++) {
@@ -1094,6 +1141,8 @@ function submitEdit(e) {
         data.append(pair[0], pair[1]);
     }
 
+    console.log(data);
+
     if (!validateForm(refSeq)) {
         return false;
     }
@@ -1115,31 +1164,32 @@ function submitEdit(e) {
 
         return response.json();
     }).then(function (response) {
-        const data = response.data;
-        const dataSouvenir = response.dataSouvenir;
+        // const data = response.data;
+        // const dataSouvenir = response.dataSouvenir;
 
-        document.getElementById("name_" + refSeq).innerHTML = data.name;
-        document.getElementById("age_" + refSeq).innerHTML = data.age;
-        document.getElementById("phone_" + refSeq).innerHTML = data.phone;
-        document.getElementById("province_" + refSeq).setAttribute("data-province", data.province);
-        document.getElementById("province_" + refSeq).innerHTML = response.province;
-        document.getElementById("city_" + refSeq).setAttribute("data-city", data.city);
-        document.getElementById("city_" + refSeq).innerHTML = response.city;
-        document.getElementById("souvenir_" + refSeq).setAttribute("data-souvenir", dataSouvenir.souvenir_id);
-        document.getElementById("souvenir_" + refSeq).innerHTML = response.souvenir;
+        // document.getElementById("name_" + refSeq).innerHTML = data.name;
+        // document.getElementById("age_" + refSeq).innerHTML = data.age;
+        // document.getElementById("phone_" + refSeq).innerHTML = data.phone;
+        // document.getElementById("province_" + refSeq).setAttribute("data-province", data.province);
+        // document.getElementById("province_" + refSeq).innerHTML = response.province;
+        // document.getElementById("city_" + refSeq).setAttribute("data-city", data.city);
+        // document.getElementById("city_" + refSeq).innerHTML = response.city;
+        // document.getElementById("souvenir_" + refSeq).setAttribute("data-souvenir", dataSouvenir.souvenir_id);
+        // document.getElementById("souvenir_" + refSeq).innerHTML = response.souvenir;
 
-        if (dataSouvenir.link_hs) {
-            document.getElementById("link-hs_" + refSeq).innerHTML = `<a href="${dataSouvenir.link_hs}" id="link-hs-href_${refSeq}" target="blank">`
-                + `<i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>`
-                + `</a>`;
-        } else {
-            document.getElementById("link-hs_" + refSeq).innerHTML = "";
-        }
+        // if (dataSouvenir.link_hs) {
+        //     document.getElementById("link-hs_" + refSeq).innerHTML = `<a href="${dataSouvenir.link_hs}" id="link-hs-href_${refSeq}" target="blank">`
+        //         + `<i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>`
+        //         + `</a>`;
+        // } else {
+        //     document.getElementById("link-hs_" + refSeq).innerHTML = "";
+        // }
 
-        document.getElementById("status_" + refSeq).innerHTML = dataSouvenir.status;
+        // document.getElementById("status_" + refSeq).innerHTML = dataSouvenir.status;
 
-        document.getElementById("btn-edit-save_" + refSeq).setAttribute("onclick", "clickEdit(this)");
-    document.getElementById("btn-edit-save_" + refSeq).innerHTML = `<i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>`;
+        // document.getElementById("btn-edit-save_" + refSeq).setAttribute("onclick", "clickEdit(this)");
+        // document.getElementById("btn-edit-save_" + refSeq).innerHTML = `<i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>`;
+        location.reload();
     }).catch(function (error){
         console.error(error);
     });
@@ -1147,106 +1197,173 @@ function submitEdit(e) {
 
 // NEW System
 $(document).ready(function(){
-    $("#edit-reference").on('shown.bs.modal', function(){
-        if($(".modal-backdrop").length > 1){
+    let originButton = "";
+
+    $("#edit-reference").on('shown.bs.modal', function () {
+        if ($(".modal-backdrop").length > 1) {
             $(".modal-backdrop")[0].remove();
         }
     });
 
     // KHUSUS UNTUK HS
-    $("#choose-hs").on('shown.bs.modal', function(){
-        $("#edit-reference").modal('hide');
+    $("#choose-hs").on('shown.bs.modal', function (event) {
+        // $("#edit-reference").modal('hide');
+        originButton = event.relatedTarget.dataset.originbutton;
 
-        let submission_id = "{{$submission->id}}";
+        let submission_id = "{{ $submission->id }}";
         let date = $('#hs-filter-date').val();
-        getHsSubmission(date, submission_id);
+        getHsSubmission(date, submission_id, originButton);
     });
-    $("#choose-hs").on('hidden.bs.modal', function(){
-        $("#edit-reference").modal('show');
-    });
-    $('#hs-filter-date').on('change', function(e) {
-        let submission_id = "{{$submission->id}}";
+
+    // $("#choose-hs").on('hidden.bs.modal', function () {
+    //     $("#edit-reference").modal('show');
+    // });
+
+    $('#hs-filter-date').on('change', function (e) {
+        let submission_id = "{{ $submission->id }}";
         let date = $('#hs-filter-date').val();
-        getHsSubmission(date, submission_id);
+        getHsSubmission(date, submission_id, originButton);
     });
-    function getHsSubmission(date, submission_id) {
+
+    function getHsSubmission(date, submission_id, originButton) {
         $('#table-hs').html("");
-        $.get( '{{route("list_hs_submission")}}', { date: date, submission_id: submission_id })
-        .done(function( result ) {
-            if(result.hs.length > 0){
-                let hsNya = result.hs;
+        $.get('{{ route("list_hs_submission") }}', { date: date, submission_id: submission_id })
+            .done(function (result) {
+                if (result.hs.length > 0) {
+                    let hsNya = result.hs;
 
-                $.each( hsNya, function( key, value ) {
-                    let JamNya = new Date(value.appointment);
+                    $.each(hsNya, function (key, value) {
+                        let JamNya = new Date(value.appointment);
 
-                    let isiNya = "<tr><td>"+JamNya.getHours()+":"+(JamNya.getMinutes()<10?'0':'') + JamNya.getMinutes()+"</td><td>"+
-                    "<b>Name</b> : "+value.name+"<br>"+
-                    "<b>Phone</b> : "+value.phone+"<br>"+
-                    "<b>Address</b> : "+value.address+"<br>"+
-                    "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
+                        let isiNya = "<tr><td>" + JamNya.getHours() + ":" + (JamNya.getMinutes() < 10 ? '0' : '') + JamNya.getMinutes() + "</td><td>" +
+                        "<b>Name</b>: " + value.name + "<br>" +
+                        "<b>Phone</b>: " + value.phone + "<br>" +
+                        "<b>Address</b>: " + value.address + "<br>";
+
+                        if (originButton === "btn_choose_hs") {
+                            isiNya += "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsNya(" + value.id + ", \"" + value.code + "\")'>Choose This</button></td></tr>";
+                        } else {
+                            isiNya += `</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsForEdit(${value.id}, "${value.code}", "${originButton}")'>Choose This</button></td></tr>`;
+                        }
+
+                        $('#table-hs').append(isiNya);
+                    });
+                } else {
+                    let isiNya = "<tr><td colspan='3' style='text-align: center;'>No Data</td></tr>";
                     $('#table-hs').append(isiNya);
-                });
-            }
-            else{
-                let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
-                $('#table-hs').append(isiNya);
-            }
-        });
+                }
+            });
     }
 
     // KHUSUS UNTUK ORDER
-    $("#choose-order").on('shown.bs.modal', function(){
-        $("#edit-reference").modal('hide');
+    $("#choose-order").on('shown.bs.modal', function (event) {
+        // $("#edit-reference").modal('hide');
+        originButton = event.relatedTarget.dataset.originbutton;
 
-        let submission_id = "{{$submission->id}}";
-        getOrderSubmission("", submission_id);
+        let submission_id = "{{ $submission->id }}";
+        getOrderSubmission("", submission_id, originButton);
     });
-    $("#choose-order").on('hidden.bs.modal', function(){
-        $("#edit-reference").modal('show');
-    });
-    $('#order-filter-name_phone').on('input', function(e) {
-        let submission_id = "{{$submission->id}}";
+
+    // $("#choose-order").on('hidden.bs.modal', function () {
+    //     $("#edit-reference").modal('show');
+    // });
+
+    $('#order-filter-name_phone').on('input', function (e) {
+        let submission_id = "{{ $submission->id }}";
         let filter = $(this).val();
         getOrderSubmission(filter, submission_id);
     });
-    function getOrderSubmission(filter, submission_id) {
+
+    function getOrderSubmission(filter, submission_id, originButton) {
         $('#table-order').html("");
         let isiNya = "<tr><td colspan='3' style='text-align: center'>Loading...</td></tr>";
         $('#table-order').append(isiNya);
 
-        $.get( '{{route("list_order_submission")}}', { filter: filter, submission_id: submission_id })
-        .done(function( result ) {
-            $('#table-order').html("");
-            if(result.orders.length > 0){
-                let orderNya = result.orders;
+        $.get('{{ route("list_order_submission") }}', { filter: filter, submission_id: submission_id })
+            .done(function (result) {
+                $('#table-order').html("");
+                if (result.orders.length > 0) {
+                    let orderNya = result.orders;
 
-                $.each( orderNya, function( key, value ) {
+                    $.each(orderNya, function (key, value) {
+                        let isiNya = "<tr><td>" + value.orderDate + "</td><td>" +
+                        "<b>Name</b>: " + value.name + "<br>" +
+                        "<b>Phone</b>: " + value.phone + "<br>" +
+                        "<b>Address</b>: " + value.address + "<br>" +
+                        "<b>Product</b>: " + value.product + "<br>";
 
-                    let isiNya = "<tr><td>"+value.orderDate+"</td><td>"+
-                    "<b>Name</b> : "+value.name+"<br>"+
-                    "<b>Phone</b> : "+value.phone+"<br>"+
-                    "<b>Address</b> : "+value.address+"<br>"+
-                    "<b>Product</b> : "+value.product+"<br>"+
-                    "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
+                        if (originButton === "btn_choose_order") {
+                            isiNya += "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya(" + value.id + ", \"" + value.code + "\")'>Choose This</button></td></tr>";
+                        } else {
+                            isiNya += `</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderForEdit(${value.id}, "${value.code}", "${originButton}")'>Choose This</button></td></tr>`;
+                        }
+
+                        $('#table-order').append(isiNya);
+                    });
+                } else {
+                    let isiNya = "<tr><td colspan='3' style='text-align: center;'>No Data</td></tr>";
                     $('#table-order').append(isiNya);
-                });
-            }
-            else{
-                let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
-                $('#table-order').append(isiNya);
-            }
-        });
+                }
+            });
     }
 });
+
 function selectHsNya(id, code){
-    $('#edit-link-hs').val(id);
-    $('#btn_choose_hs').html("HS Code : "+code);
+    let linkHsArray = [];
+
+    if (document.getElementById("edit-link-hs").value) {
+        linkHsArray = (document.getElementById("edit-link-hs").value).split(", ");
+    } else {
+        linkHsArray = [];
+    }
+
+    linkHsArray.push(id);
+    document.getElementById("edit-link-hs").value = linkHsArray.join(", ");
+
+    const hsTextInput = document.createElement("input");
+    hsTextInput.type = "text";
+    hsTextInput.className = "form-control";
+    hsTextInput.disabled = true;
+    hsTextInput.readOnly = true;
+    hsTextInput.value = code;
+    document.getElementById("link-hs-container").appendChild(hsTextInput);
+
     $("#choose-hs").modal('hide');
 }
+
 function selectOrderNya(id, code){
     $('#edit-order').val(id);
-    $('#btn_choose_order').html("Order Code : "+code);
+    $('#btn_choose_order').html("Order Code: " + code);
     $("#choose-order").modal('hide');
+}
+
+function selectHsForEdit(id, code, origin) {
+    const REF_SEQ = origin.split("_")[1];
+    let linkHsArray = [];
+
+    if (document.getElementById("edit-link_hs_" + REF_SEQ).value) {
+        linkHsArray = (document.getElementById("edit-link_hs_" + REF_SEQ).value).split(", ");
+    } else {
+        linkHsArray = [];
+    }
+
+    linkHsArray.push(id);
+    document.getElementById("edit-link_hs_" + REF_SEQ).value = linkHsArray.join(", ");
+    document.getElementById("btn-choose-hs-edit_" + REF_SEQ).innerHTML = code;
+
+    $("#choose-hs-close").click();
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+}
+
+function selectOrderForEdit(id, code, origin) {
+    const REF_SEQ = origin.split("_")[1];
+    document.getElementById("order_id_" + REF_SEQ).value = id;
+    document.getElementById("btn-choose-order-edit_" + REF_SEQ).innerHTML = code;
+
+    $("#choose-order-close").click();
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
 }
 </script>
 @endsection

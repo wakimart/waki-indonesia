@@ -561,18 +561,6 @@ $menu_item_second = "add_submission_reference";
                     </table>
                 </div>
             </div>
-            {{-- <div class="modal-footer">
-                <button class="btn btn-gradient-primary"
-                    type="button"
-                    data-dismiss="modal">
-                    Ok
-                </button>
-                <button class="btn btn-gradient-dark"
-                    type="button"
-                    data-dismiss="modal">
-                    Close
-                </button>
-            </div> --}}
         </div>
     </div>
 </div>
@@ -821,10 +809,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // NEW System
 $(document).ready(function(){
-
     // KHUSUS UNTUK HS
     $("#choose-hs").on('shown.bs.modal', function(){
-        if($(".modal-backdrop").length > 1){
+        if ($(".modal-backdrop").length > 1) {
             $(".modal-backdrop")[0].remove();
         }
 
@@ -832,16 +819,18 @@ $(document).ready(function(){
         let date = $('#hs-filter-date').val();
         getHsSubmission(date, branch_id);
     });
+
     $('#hs-filter-date').on('change', function(e) {
         let branch_id = $('#branch').val();
         let date = $('#hs-filter-date').val();
         getHsSubmission(date, branch_id);
     });
+
     function getHsSubmission(date, branch_id) {
         $('#table-hs').html("");
-        $.get( '{{route("list_hs_submission")}}', { date: date, branch_id: branch_id })
-        .done(function( result ) {
-            if(result.hs.length > 0){
+        $.get( '{{ route("list_hs_submission") }}', { date: date, branch_id: branch_id })
+        .done(function (result) {
+            if (result.hs.length > 0) {
                 let hsNya = result.hs;
 
                 $.each( hsNya, function( key, value ) {
@@ -854,8 +843,7 @@ $(document).ready(function(){
                     "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
                     $('#table-hs').append(isiNya);
                 });
-            }
-            else{
+            } else {
                 let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
                 $('#table-hs').append(isiNya);
             }
@@ -871,24 +859,25 @@ $(document).ready(function(){
         let branch_id = $('#branch').val();
         getOrderSubmission("", branch_id);
     });
+
     $('#order-filter-name_phone').on('input', function(e) {
         let branch_id = $('#branch').val();
         let filter = $(this).val();
         getOrderSubmission(filter, branch_id);
     });
+
     function getOrderSubmission(filter, branch_id) {
         $('#table-order').html("");
         let isiNya = "<tr><td colspan='3' style='text-align: center'>Loading...</td></tr>";
         $('#table-order').append(isiNya);
 
-        $.get( '{{route("list_order_submission")}}', { filter: filter, branch_id: branch_id })
-        .done(function( result ) {
+        $.get( '{{ route("list_order_submission") }}', { filter: filter, branch_id: branch_id })
+        .done(function (result) {
             $('#table-order').html("");
-            if(result.orders.length > 0){
+            if (result.orders.length > 0) {
                 let orderNya = result.orders;
 
                 $.each( orderNya, function( key, value ) {
-
                     let isiNya = "<tr><td>"+value.orderDate+"</td><td>"+
                     "<b>Name</b> : "+value.name+"<br>"+
                     "<b>Phone</b> : "+value.phone+"<br>"+
@@ -897,22 +886,32 @@ $(document).ready(function(){
                     "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
                     $('#table-order').append(isiNya);
                 });
-            }
-            else{
+            } else {
                 let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
                 $('#table-order').append(isiNya);
             }
         });
     }
 });
+
 function selectHsNya(id, code){
-    $('#link-hs-0').val(id);
-    $('#btn_choose_hs').html("HS Code : "+code);
+    let linkHsArray = [];
+
+    if (document.getElementById("link-hs-0").value) {
+        linkHsArray = (document.getElementById("link-hs-0").value).split(", ");
+    } else {
+        linkHsArray = [];
+    }
+
+    linkHsArray.push(id);
+    $('#link-hs-0').val(linkHsArray.join(", "));
+    $('#btn_choose_hs').html(document.getElementById("btn_choose_hs").innerHTML + "<br/>" + "HS Code: " + code);
     $("#choose-hs").modal('hide');
 }
+
 function selectOrderNya(id, code){
     $('#member-order-0').val(id);
-    $('#btn_choose_order').html("Order Code : "+code);
+    $('#btn_choose_order').html("Order Code: " + code);
     $("#choose-order").modal('hide');
 }
 </script>

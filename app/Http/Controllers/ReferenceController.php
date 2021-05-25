@@ -258,12 +258,16 @@ class ReferenceController extends Controller
                 "status",
                 "order_id",
                 "prize_id",
-                "delivery_status",
             ));
-            $referenceSouvenir->link_hs = json_encode(
-                explode(", ", $request->link_hs),
-                JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
-            );
+            $referenceSouvenir->delivery_status_souvenir = $request->delivery_status_souvenir;
+            $referenceSouvenir->status_prize = $request->status_prize;
+            $referenceSouvenir->delivery_status_prize = $request->delivery_status_prize;
+            if (!empty($request->link_hs)) {
+                $referenceSouvenir->link_hs = json_encode(
+                    explode(", ", $request->link_hs),
+                    JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+                );
+            }
             $referenceSouvenir->save();
 
             $this->historyReference($reference, "update", $userId);
