@@ -87,14 +87,21 @@ class ReferenceController extends Controller
             $referenceSouvenir->reference_id = $reference->id;
             $referenceSouvenir->fill($request->only(
                 "souvenir_id",
-                "link_hs",
-                "status"
+                "status",
+                "order_id",
+                "prize_id",
+                "delivery_status",
             ));
+            $referenceSouvenir->link_hs = json_encode(
+                explode(", ", $request->link_hs),
+                JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+            );
             $referenceSouvenir->save();
 
             DB::commit();
 
-            return redirect($request->url)->with("success", "Data referensi berhasil dimasukkan.");
+            return redirect($request->url)
+                ->with("success", "Data referensi berhasil dimasukkan.");
         } catch (Exception $e) {
             DB::rollback();
 
@@ -249,9 +256,15 @@ class ReferenceController extends Controller
             $referenceSouvenir = ReferenceSouvenir::where("reference_id", $reference->id)->first();
             $referenceSouvenir->fill($request->only(
                 "souvenir_id",
-                "link_hs",
-                "status"
+                "status",
+                "order_id",
+                "prize_id",
+                "delivery_status",
             ));
+            $referenceSouvenir->link_hs = json_encode(
+                explode(", ", $request->link_hs),
+                JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+            );
             $referenceSouvenir->save();
 
             $this->historyReference($reference, "update", $userId);

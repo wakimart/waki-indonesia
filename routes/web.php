@@ -71,6 +71,7 @@ Route::get('/fetchDistrict/{city}', function ($city) {
     return RajaOngkir::FetchDistrict($city);
 })->name('fetchDistrict');
 Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSouvenir");
+Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
 
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)
@@ -326,6 +327,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //Export to XLS By Date
         Route::get('/report-to-xls-by-date', 'OrderController@export_to_xls')
                 ->name('order_export-to-xls');
+
+        // List Order (Khusus untuk Submission)
+        Route::get("/list_order_submission", "OrderController@ListOrderforSubmission")
+            ->name("list_order_submission");
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {
@@ -371,6 +376,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Print home service data detail on a selected day
         Route::post("/homeservice_print_appointment", "HomeServiceController@printDayData")
             ->name("homeservice_print_appointment");
+
+        // List Home Service (Khusus untuk Submission)
+        Route::get("/list_hs_submission", "HomeServiceController@ListHSforSubmission")
+            ->name("list_hs_submission");
 
     });
 
@@ -638,6 +647,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
+        // Convert Link_HS in ReferenceSouvenirs to JSON
+        Route::get("/converths", "SubmissionController@convertHsToForeign")
+            ->name("submission_convert_hs");
         // Create submission form page
         Route::get("/mgm", "SubmissionController@createMGM")
             ->name("add_submission_mgm");
@@ -796,6 +808,32 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Delete souvenir
         Route::post("/delete", "SouvenirController@destroy")
             ->name("delete_souvenir");
+    });
+
+    Route::group(["prefix" => "prize", "middleware" => "auth"], function () {
+        // List prize
+        Route::get("/list", "PrizeController@index")
+            ->name("list_prize");
+
+        // Create prize
+        Route::get("/add", "PrizeController@create")
+            ->name("add_prize");
+
+        // Store prize
+        Route::post("/add", "PrizeController@store")
+            ->name("store_prize");
+
+        // Edit prize
+        Route::get("/edit", "PrizeController@edit")
+            ->name("edit_prize");
+
+        // Update prize
+        Route::post("/update", "PrizeController@update")
+            ->name("update_prize");
+
+        // Delete prize
+        Route::post("/delete", "PrizeController@destroy")
+            ->name("delete_prize");
     });
 });
 

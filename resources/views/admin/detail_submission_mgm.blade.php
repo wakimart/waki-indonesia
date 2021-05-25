@@ -363,7 +363,10 @@ $menu_item_second = "detail_submission_form";
                 <form id="edit-form" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="edit-id" name="id" value="" />
-                    <input type="hidden" id="url" name="url" value="{{ url()->full() }}" />
+                    <input type="hidden"
+                        id="url"
+                        name="url"
+                        value="{{ url()->full() }}" />
                     <div class="form-group">
                         <label for="edit-name">Name</label>
                         <input type="text"
