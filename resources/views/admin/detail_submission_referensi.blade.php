@@ -322,6 +322,21 @@ if (
                 </button>
             </div>
 
+            <div class="col-md-12 center" style="margin-top: 2em;">
+               <div class="card">
+                    <div class="card-body">                     
+                        <div class="row justify-content-center">
+                            <h2 class="text-center share">Share Submission Form</h2>
+                        </div>
+                        <form class="forms-sample" method="GET" action="https://wa.me/">
+                            <div class="form-group row justify-content-center">
+                                <button type="submit" class="btn btn-gradient-primary mr-2" name="text" value="Terima Kasih telah mengikuti program *Sehat Bersama WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">Share Sehat bersama Waki</button>
+                                <button type="submit" class="btn btn-gradient-primary mr-2" name="text" value="Terima Kasih telah mengikuti program *Keuntungan Biaya Iklan*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">Share Program Biaya Iklan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>    
             @if ($historySubmission->isNotEmpty())
                 <div class="row justify-content-center"
                     style="margin-top: 2em;">

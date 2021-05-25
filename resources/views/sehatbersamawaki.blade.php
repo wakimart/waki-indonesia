@@ -220,7 +220,7 @@
                         </tr>
                         <tr>
                             <td width="30%"><li>MULTI MASSAGE</li></td>
-                            <td width="30%"><li>VNIFIR UNDERWEAR</li></td>
+                            <td width="30%"><li>NIFIR UNDERWEAR</li></td>
                             <td width="30%"><li>E-VOUCHER Rp. 270.000,-</li></td>
                         </tr>
                     </table>
