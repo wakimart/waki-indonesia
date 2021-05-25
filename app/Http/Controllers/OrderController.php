@@ -413,7 +413,33 @@ class OrderController extends Controller
         return Excel::download(new OrderExport($date, $city, $category, $cso), 'Order Report.xlsx');
     }
 
+    public function ListOrderforSubmission(Request $request)
+    {
+        if($request->has('submission_id')){
+            $branch_id = \App\Submission::find($request->submission_id)->branch['id'];
+        }
+        else{
+            $branch_id = $request->branch_id;
+        }
 
+        DB::beginTransaction();
+        try {
+            $orders = Order::Where([['active', true], ['branch_id', $branch_id]]);
+            if($request->filter != ""){
+                $filter = $request->filter;
+                $orders = $orders->where(function ($q) use ($filter) {
+                                return $q->where("name", "like", "%" . $filter . "%")->orWhere("phone", "like", "%" . $filter . "%");
+                            });
+            }    
+            $orders = $orders->orderBy('id', 'DESC')->take(20)->get();
+            
+            $data = ['orders' => $orders];
+            return response()->json($data, 200);
+        }
+        catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
 
     //KHUSUS API APPS
     public function fetchBanksApi(){

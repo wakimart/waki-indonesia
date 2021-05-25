@@ -50,6 +50,7 @@ class ReferenceController extends Controller
         return view("admin.list_reference", compact("references", "url"));
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -78,7 +79,7 @@ class ReferenceController extends Controller
                 "age",
                 "phone",
                 "province",
-                "city",
+                "city"
             ));
             $reference->save();
 
@@ -86,14 +87,21 @@ class ReferenceController extends Controller
             $referenceSouvenir->reference_id = $reference->id;
             $referenceSouvenir->fill($request->only(
                 "souvenir_id",
-                "link_hs",
                 "status",
+                "order_id",
+                "prize_id",
+                "delivery_status",
             ));
+            $referenceSouvenir->link_hs = json_encode(
+                explode(", ", $request->link_hs),
+                JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+            );
             $referenceSouvenir->save();
 
             DB::commit();
 
-            return redirect($request->url)->with("success", "Data referensi berhasil dimasukkan.");
+            return redirect($request->url)
+                ->with("success", "Data referensi berhasil dimasukkan.");
         } catch (Exception $e) {
             DB::rollback();
 
@@ -115,7 +123,7 @@ class ReferenceController extends Controller
                 "age",
                 "phone",
                 "province",
-                "city",
+                "city"
             ));
             $reference->save();
 
@@ -241,16 +249,22 @@ class ReferenceController extends Controller
                 "age",
                 "phone",
                 "province",
-                "city",
+                "city"
             ));
             $reference->save();
 
             $referenceSouvenir = ReferenceSouvenir::where("reference_id", $reference->id)->first();
             $referenceSouvenir->fill($request->only(
                 "souvenir_id",
-                "link_hs",
                 "status",
+                "order_id",
+                "prize_id",
+                "delivery_status",
             ));
+            $referenceSouvenir->link_hs = json_encode(
+                explode(", ", $request->link_hs),
+                JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+            );
             $referenceSouvenir->save();
 
             $this->historyReference($reference, "update", $userId);
@@ -301,7 +315,7 @@ class ReferenceController extends Controller
                 "age",
                 "phone",
                 "province",
-                "city",
+                "city"
             ));
             $reference->save();
 
@@ -432,7 +446,7 @@ class ReferenceController extends Controller
                     "age",
                     "phone",
                     "province",
-                    "city",
+                    "city"
                 ));
                 $reference->save();
 
@@ -507,7 +521,7 @@ class ReferenceController extends Controller
                     "age",
                     "phone",
                     "province",
-                    "city",
+                    "city"
                 ));
                 $reference->save();
 
@@ -516,7 +530,7 @@ class ReferenceController extends Controller
                 $referenceSouvenir->fill($request->only(
                     "souvenir_id",
                     "link_hs",
-                    "status",
+                    "status"
                 ));
                 $referenceSouvenir->save();
 
@@ -558,7 +572,7 @@ class ReferenceController extends Controller
                 "references.province AS province_id",
                 "raja_ongkir__cities.province AS province",
                 "references.city AS city_id",
-                DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+                DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city")
             )
             ->leftJoin(
                 "raja_ongkir__cities",
@@ -604,7 +618,7 @@ class ReferenceController extends Controller
                 "age",
                 "phone",
                 "province",
-                "city",
+                "city"
             ));
             $reference->save();
 

@@ -152,7 +152,7 @@ class SouvenirController extends Controller
 
                 return redirect()
                     ->route("list_souvenir")
-                    ->with("success", "Data souvenir berhasil diperbarui");
+                    ->with("success", "Data souvenir berhasil diperbarui.");
             } catch (Exception $e) {
                 DB::rollback();
 
@@ -184,7 +184,7 @@ class SouvenirController extends Controller
                 $user = Auth::user();
 
                 $historyUpdateSouvenir["type_menu"] = "Souvenir";
-                $historyUpdateSouvenir["method"] = "Update";
+                $historyUpdateSouvenir["method"] = "Delete";
                 $historyUpdateSouvenir["meta"] = json_encode(
                     [
                         "user" => $user["id"],
@@ -196,6 +196,7 @@ class SouvenirController extends Controller
 
                 $historyUpdateSouvenir["user_id"] = $user["id"];
                 $historyUpdateSouvenir["menu_id"] = $request->id;
+                HistoryUpdate::create($historyUpdateSouvenir);
 
                 DB::commit();
 

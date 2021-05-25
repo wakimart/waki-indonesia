@@ -1,6 +1,6 @@
 <?php
 
-use App\Promo;
+use App\HomeService;
 
 $menu_item_page = "submission";
 $menu_item_second = "detail_submission_form";
@@ -177,7 +177,7 @@ if (
                     <?php endfor; ?>
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="9">Reference</td>
+                            <td colspan="14">Reference</td>
                         </thead>
                         <thead style="background-color: #80808012 !important;">
                             <tr>
@@ -189,66 +189,125 @@ if (
                                 <td>Souvenir</td>
                                 <td>Link HS</td>
                                 <td>Status</td>
+                                <td>Deliv. Status Souvenir</td>
+                                <td>Order</td>
+                                <td>Prize</td>
+                                <td>Status Prize</td>
+                                <td>Deliv. Status Prize</td>
                                 <td>Edit</td>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($references as $key => $reference): ?>
-                            <input type="hidden"
-                                id="edit-id_{{ $key }}"
-                                class="d-none"
-                                name="id"
-                                form="edit-form_{{ $key }}"
-                                value="{{ $reference->id }}" />
-                            <tr>
-                                <td id="name_{{ $key }}">
-                                    {{ $reference->name }}
-                                </td>
-                                <td class="center" id="age_{{ $key }}">
-                                    {{ $reference->age }}
-                                </td>
-                                <td class="center" id="phone_{{ $key }}">
-                                    {{ $reference->phone }}
-                                </td>
-                                <td id="province_{{ $key }}"
-                                    data-province="{{ $reference->province_id }}">
-                                    {{ $reference->province }}
-                                </td>
-                                <td id="city_{{ $key }}"
-                                    data-city="{{ $reference->city_id }}">
-                                    {{ $reference->city }}
-                                </td>
-                                <td id="souvenir_{{ $key }}"
-                                    data-permission="{{ $specialPermission }}"
-                                    data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
-                                    {{ $reference->souvenir_name }}
-                                </td>
-                                <td class="center"
-                                    id="link-hs_{{ $key }}">
-                                    <?php if (!empty($reference->link_hs)): ?>
-                                        <a id="link-hs-href_{{ $key }}"
-                                            href="{{ $reference->link_hs }}"
-                                            target="_blank">
-                                            <i class="mdi mdi-home" style="font-size: 24px; color: #2daaff;"></i>
-                                        </a>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="center"
-                                    id="status_{{ $key }}"
-                                    data-permission="{{ $specialPermission }}">
-                                    {{ $reference->status }}
-                                </td>
-                                <td class="center">
-                                    <button class="btn"
-                                        id="btn-edit-save_{{ $key }}"
-                                        style="padding: 0;"
-                                        data-edit="edit_{{ $key }}"
-                                        onclick="clickEdit(this)"
-                                        value="{{ $reference->id }}">
-                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                                <input type="hidden"
+                                    id="edit-id_{{ $key }}"
+                                    class="d-none"
+                                    name="id"
+                                    form="edit-form_{{ $key }}"
+                                    value="{{ $reference->id }}" />
+                                <tr>
+                                    <td id="name_{{ $key }}">
+                                        {{ $reference->name }}
+                                    </td>
+                                    <td class="center" id="age_{{ $key }}">
+                                        {{ $reference->age }}
+                                    </td>
+                                    <td class="center" id="phone_{{ $key }}">
+                                        {{ $reference->phone }}
+                                    </td>
+                                    <td id="province_{{ $key }}"
+                                        data-province="{{ $reference->province_id }}">
+                                        {{ $reference->province }}
+                                    </td>
+                                    <td id="city_{{ $key }}"
+                                        data-city="{{ $reference->city_id }}">
+                                        {{ $reference->city }}
+                                    </td>
+                                    <td id="souvenir_{{ $key }}"
+                                        data-permission="{{ $specialPermission }}"
+                                        data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
+                                        {{ $reference->souvenir_name }}
+                                    </td>
+                                    <?php
+                                    if (!empty($reference->link_hs)) {
+                                        $i = 1;
+                                        $link_hs = json_decode(
+                                            $reference->link_hs,
+                                            JSON_THROW_ON_ERROR
+                                        );
+                                    }
+                                    ?>
+                                    <td class="center"
+                                        id="link-hs_{{ $key }}"
+                                        data-hs="{{ implode(", ", $link_hs) }}"
+                                        style="overflow-x: auto;">
+                                        @if (!empty($reference->link_hs))
+                                            @foreach ($link_hs as $value)
+                                                @if (is_numeric($value))
+                                                    <?php
+                                                    $hs = HomeService::select("code")->where("id", $value)->first();
+                                                    ?>
+                                                    <a id="link-hs-href_{{ $key }}"
+                                                        href="{{ $hs->code }}"
+                                                        target="_blank">
+                                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                                                    </a>
+                                                @else
+                                                    <a id="link-hs-href_{{ $key }}"
+                                                        href="{{ $value }}"
+                                                        target="_blank">
+                                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: red;"></i>
+                                                    </a>
+                                                @endif
+                                                <?php $i++; ?>
+                                            @endforeach
+                                        @endif
+                                    </td>
+                                    <td class="center"
+                                        id="status_souvenir_{{ $key }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->status_souvenir }}
+                                    </td>
+                                    <td class="center"
+                                        id="delivery_status_souvenir_{{ $key }}"
+                                        data-deliverysouvenir="{{ $reference->delivery_status_souvenir }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->delivery_status_souvenir }}
+                                    </td>
+                                    <td class="center"
+                                        id="order_{{ $key }}"
+                                        data-order="{{ $reference->order_id }}"
+                                        style="overflow-x:auto;">
+                                        {{ $reference->order_id }}
+                                    </td>
+                                    <td class="center"
+                                        id="prize_{{ $key }}"
+                                        data-prize="{{ $reference->prize_id }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->prize_id }}
+                                    </td>
+                                    <td class="center"
+                                        id="status_prize_{{ $key }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->status_prize }}
+                                    </td>
+                                    <td class="center"
+                                        id="delivery_status_prize_{{ $key }}"
+                                        data-deliveryprize="{{ $reference->delivery_status_prize }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->delivery_status_prize }}
+                                    </td>
+                                    <td class="center">
+                                        <button class="btn"
+                                            id="btn-edit-save_{{ $key }}"
+                                            style="padding: 0;"
+                                            data-edit="edit_{{ $key }}"
+                                            onclick="clickEdit(this)"
+                                            value="{{ $reference->id }}">
+                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -259,10 +318,25 @@ if (
                 <button class="btn btn-gradient-primary mt-2"
                     data-toggle="modal"
                     data-target="#edit-reference">
-                    Add Reference - Sehat Bersama WAKi
+                    Add Reference - Sehat Bersama WAKi/Keuntungan Biaya Iklan
                 </button>
             </div>
 
+            <div class="col-md-12 center" style="margin-top: 2em;">
+               <div class="card">
+                    <div class="card-body">                     
+                        <div class="row justify-content-center">
+                            <h2 class="text-center share">Share Submission Form</h2>
+                        </div>
+                        <form class="forms-sample" method="GET" action="https://wa.me/">
+                            <div class="form-group row justify-content-center">
+                                <button type="submit" class="btn btn-gradient-primary mr-2" name="text" value="Terima Kasih telah mengikuti program *Sehat Bersama WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">Share Sehat bersama Waki</button>
+                                <button type="submit" class="btn btn-gradient-primary mr-2" name="text" value="Terima Kasih telah mengikuti program *Keuntungan Biaya Iklan*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">Share Program Biaya Iklan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>    
             @if ($historySubmission->isNotEmpty())
                 <div class="row justify-content-center"
                     style="margin-top: 2em;">
@@ -308,6 +382,7 @@ if (
         <h2>CANNOT FIND SUBMISSION</h2>
     </div>
 @endif
+{{-- INI BUAT ADD REFERENSI, ID-NYA "EDIT" KARENA COPAS DARI VIEW LAIN --}}
 <div class="modal fade"
     id="edit-reference"
     tabindex="-1"
@@ -422,15 +497,49 @@ if (
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="edit-link-hs">Link Home Service</label>
-                        <input type="url"
-                            class="form-control"
+                        <label for="edit-link-hs">Home Service</label>
+                        <input type="hidden"
                             id="edit-link-hs"
                             name="link_hs"
-                            pattern="https://.*"
-                            maxlength="191"
-                            value=""
-                            placeholder="Link Home Service" />
+                            value="" />
+                        <br>
+                        <button class="btn btn-gradient-info"
+                            type="button"
+                            id="btn_choose_hs"
+                            data-toggle="modal"
+                            data-target="#choose-hs">
+                            Choose Home Service
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-link-hs">Order</label>
+                        <input type="hidden"
+                            id="edit-order"
+                            name="order_id"
+                            value="" />
+                        <br>
+                        <button class="btn btn-gradient-info"
+                            type="button"
+                            id="btn_choose_order"
+                            data-toggle="modal"
+                            data-target="#choose-order">
+                            Choose Order
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-prize">Prize</label>
+                        <select class="form-control"
+                            id="edit-prize"
+                            name="prize_id">
+                            <option selected disabled>
+                                Choose Prize
+                            </option>
+                            <?php foreach ($prizes as $prize): ?>
+                                <option value="<?php echo $prize->id; ?>">
+                                    <?php echo $prize->name; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </form>
             </div>
@@ -448,16 +557,103 @@ if (
         </div>
     </div>
 </div>
+
+<div class="modal fade"
+    id="choose-hs"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Choose Home Service
+                </h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="edit-phone">By Date</label>
+                    <input type="date"
+                        class="form-control"
+                        id="hs-filter-date"
+                        name="date"
+                        value="<?php echo date("Y-m-d"); ?>"/>
+                </div>
+                <div style="overflow-y: auto; height: 20em;">
+                    <table class="col-md-12" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Time</td>
+                            <td>Detail</td>
+                            <td>Choose</td>
+                        </thead>
+                        <tbody id="table-hs"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="choose-order"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Choose Order
+                </h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="order-filter-name_phone">By Name / Phone</label>
+                    <input type="text"
+                        class="form-control"
+                        id="order-filter-name_phone"
+                        maxlength="191"
+                        value=""
+                        placeholder="Name / Phone"/>
+                </div>
+                <div style="overflow-y: auto; height: 20em;">
+                    <table class="col-md-12" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Date</td>
+                            <td>Detail</td>
+                            <td>Choose</td>
+                        </thead>
+                        <tbody id="table-order"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('script')
 <script type="application/javascript">
 let provinceOption = "";
 let souvenirOption = `<option disabled selected value="">Pilih souvenir</option>`;
+let prizeOption = `<option selected value="">Choose Prize</option>`;
 
 document.addEventListener('DOMContentLoaded', function () {
     const URL_PROVINCE = '<?php echo route("fetchProvince"); ?>';
     const URL_SOUVENIR = '<?php echo route("fetchSouvenir"); ?>';
+    const URL_PRIZE = '<?php echo route("fetchPrize"); ?>';
 
     fetch(
         URL_PROVINCE,
@@ -507,6 +703,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 + currentValue["name"]
                 + `</option>`;
         });
+    }).catch(function (error) {
+        console.error(error);
+    });
+
+    fetch(
+        URL_PRIZE,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const result = response.data;
+
+        result.forEach(function (currentValue) {
+            prizeOption += `<option value="${currentValue["id"]}">`
+                + currentValue["name"]
+                + `</option>`;
+        });
+    }).catch(function (error) {
+        console.error(error);
     });
 }, false);
 
@@ -620,15 +844,44 @@ function clickEdit(e) {
     const province = document.getElementById("province_" + refSeq).getAttribute("data-province");
     const city = document.getElementById("city_" + refSeq).getAttribute("data-city");
     const souvenir = document.getElementById("souvenir_" + refSeq).getAttribute("data-souvenir");
-    const linkHS = function () {
+
+    function linkHS() {
         try {
             return document.getElementById("link-hs-href_" + refSeq).getAttribute("href");
         } catch (error) {
             return "";
         }
     };
-    const status = document.getElementById("status_" + refSeq).innerHTML.trim();
-    const permission = document.getElementById("status_" + refSeq).dataset.permission;
+
+    const status = document.getElementById("status_souvenir_" + refSeq).innerHTML.trim();
+
+    function deliverySouvenir () {
+        try {
+            return document.getElementById("delivery_status_souvenir_" + refSeq).dataset.deliverysouvenir;
+        } catch (error) {
+            return "";
+        }
+    };
+
+    const prize = document.getElementById("prize_" + refSeq).dataset.prize;
+
+    function statusPrize() {
+        try {
+            document.getElementById("status_prize_" + refSeq).innerHTML.trim();
+        } catch (error) {
+            return "";
+        }
+    }
+
+    function deliveryPrize() {
+        try {
+            return document.getElementById("delivery_status_prize_" + refSeq).dataset.deliveryprize;
+        } catch (error) {
+            return "";
+        }
+    }
+
+    const permission = document.getElementById("status_souvenir_" + refSeq).dataset.permission;
 
     const FORM_ATTR = `form="edit-form_${refSeq}" `;
     const INPUT_CLASS = `class="form-control" `;
@@ -666,7 +919,6 @@ function clickEdit(e) {
         + `required>`
         + provinceOption
         + `</select>`;
-
     document.getElementById("edit-province_" + refSeq).value = province;
 
     document.getElementById("city_" + refSeq).innerHTML = `<select `
@@ -679,15 +931,34 @@ function clickEdit(e) {
 
     setCity(document.getElementById("edit-province_" + refSeq));
 
-    document.getElementById("link-hs_" + refSeq).innerHTML = `<input type="url" `
-        + `id="edit-link-hs_${refSeq}" `
-        + INPUT_CLASS
-        + FORM_ATTR
-        + `name="link_hs" `
-        + `pattern="https://.*" `
-        + `maxlength="191" `
-        + `value="${linkHS()}" `
-        + `placeholder="Link HS" />`;
+    const hsInput = document.createElement("input");
+    hsInput.type = "hidden";
+    hsInput.id = "link_hs_" + refSeq;
+    hsInput.name = "link_hs";
+    const hsButton = document.createElement("button");
+    hsButton.type = "button";
+    hsButton.className = "btn btn-gradient-info btn-sm";
+    hsButton.id = "btn_choose_hs-edit_" + refSeq;
+    hsButton.innerHTML = "Choose Home Service";
+    document.getElementById("link-hs_" + refSeq).innerHTML = "";
+    document.getElementById("link-hs_" + refSeq).appendChild(hsButton);
+    document.getElementById("btn_choose_hs-edit_" + refSeq).setAttribute("data-toggle", "modal");
+    document.getElementById("btn_choose_hs-edit_" + refSeq).setAttribute("data-target", "#choose-hs");
+
+    const orderInput = document.createElement("input");
+    orderInput.type = "hidden";
+    orderInput.id = "order_id_" + refSeq;
+    orderInput.name = "order_id";
+    const orderButton = document.createElement("button");
+    orderButton.type = "button";
+    orderButton.className = "btn btn-gradient-info btn-sm";
+    orderButton.id = "btn_choose_order-edit_" + refSeq;
+    orderButton.innerHTML = "Choose Order";
+    document.getElementById("order_" + refSeq).innerHTML = "";
+    document.getElementById("order_" + refSeq).appendChild(orderInput);
+    document.getElementById("order_" + refSeq).appendChild(orderButton);
+    document.getElementById("btn_choose_order-edit_" + refSeq).setAttribute("data-toggle", "modal");
+    document.getElementById("btn_choose_order-edit_" + refSeq).setAttribute("data-target", "#choose-order");
 
     if (permission) {
         document.getElementById("souvenir_" + refSeq).innerHTML = `<select `
@@ -700,7 +971,7 @@ function clickEdit(e) {
             + `</select>`;
         document.getElementById("edit-souvenir_" + refSeq).value = souvenir;
 
-        document.getElementById("status_" + refSeq).innerHTML = `<select `
+        document.getElementById("status_souvenir_" + refSeq).innerHTML = `<select `
             + `id="edit-status_${refSeq}" `
             + INPUT_CLASS
             + FORM_ATTR
@@ -710,6 +981,52 @@ function clickEdit(e) {
             + `<option value="success">success</option>`
             + `</select>`;
         document.getElementById("edit-status_" + refSeq).value = status || "pending";
+
+        const deliveryStatusSouvenirSelect = document.createElement("select");
+        deliveryStatusSouvenirSelect.className = "form-control";
+        deliveryStatusSouvenirSelect.form = `edit-form_${refSeq}`;
+        deliveryStatusSouvenirSelect.id = `edit-delivery-status-souvenir_${refSeq}`;
+        deliveryStatusSouvenirSelect.name = "delivery_status_souvenir";
+        deliveryStatusSouvenirSelect.innerHTML = '<option value="">Choose Souvenir Delivery Status</option>'
+            + '<option value="undelivered">Undelivered</option>'
+            + '<option value="delivered">Delivered</option>';
+        document.getElementById("delivery_status_souvenir_" + refSeq).innerHTML = "";
+        document.getElementById("delivery_status_souvenir_" + refSeq).appendChild(deliveryStatusSouvenirSelect);
+        document.getElementById("edit-delivery-status-souvenir_" + refSeq).value = deliverySouvenir();
+
+        const prizeSelect = document.createElement("select");
+        prizeSelect.className = "form-control";
+        prizeSelect.form = `edit-form_${refSeq}`;
+        prizeSelect.id = `edit-prize_${refSeq}`;
+        prizeSelect.name = "prize_id";
+        prizeSelect.innerHTML = prizeOption;
+        document.getElementById("prize_" + refSeq).innerHTML = "";
+        document.getElementById("prize_" + refSeq).appendChild(prizeSelect);
+        document.getElementById("edit-prize_" + refSeq).value = prize;
+
+        const statusPrizeSelect = document.createElement("select");
+        statusPrizeSelect.className = "form-control";
+        statusPrizeSelect.form = `edit-form_${refSeq}`;
+        statusPrizeSelect.id = `edit-status-prize_${refSeq}`;
+        statusPrizeSelect.name = "status_prize";
+        prizeSelect.innerHTML = '<option value="">Choose Prize Status</option>'
+            + '<option value="pending">Pending</option>'
+            + '<option value="success">Success</option>';
+        document.getElementById("status_prize_" + refSeq).innerHTML = "";
+        document.getElementById("status_prize_" + refSeq).appendChild(statusPrizeSelect);
+        document.getElementById("edit-status-prize_" + refSeq).value = statusPrize();
+
+        const deliveryStatusPrizeSelect = document.createElement("select");
+        deliveryStatusPrizeSelect.className = "form-control";
+        deliveryStatusPrizeSelect.form = `edit-form_${refSeq}`;
+        deliveryStatusPrizeSelect.id = `edit-delivery-status-prize_${refSeq}`;
+        deliveryStatusPrizeSelect.name = "delivery_status_prize";
+        deliveryStatusPrizeSelect.innerHTML = '<option value="">Choose Prize Delivery Status</option>'
+            + '<option value="undelivered">Undelivered</option>'
+            + '<option value="delivered">Delivered</option>';
+        document.getElementById("delivery_status_prize_" + refSeq).innerHTML = "";
+        document.getElementById("delivery_status_prize_" + refSeq).appendChild(deliveryStatusPrizeSelect);
+        document.getElementById("edit-delivery-status-prize_" + refSeq).value = deliveryPrize();
     }
 
     document.getElementById("btn-edit-save_" + refSeq).setAttribute("onclick", "submitEdit(this)");
@@ -841,6 +1158,110 @@ function submitEdit(e) {
     }).catch(function (error){
         console.error(error);
     });
+}
+
+// NEW System
+$(document).ready(function(){
+    $("#edit-reference").on('shown.bs.modal', function(){
+        if($(".modal-backdrop").length > 1){
+            $(".modal-backdrop")[0].remove();
+        }
+    });
+
+    // KHUSUS UNTUK HS
+    $("#choose-hs").on('shown.bs.modal', function(){
+        $("#edit-reference").modal('hide');
+
+        let submission_id = "{{$submission->id}}";
+        let date = $('#hs-filter-date').val();
+        getHsSubmission(date, submission_id);
+    });
+    $("#choose-hs").on('hidden.bs.modal', function(){
+        $("#edit-reference").modal('show');
+    });
+    $('#hs-filter-date').on('change', function(e) {
+        let submission_id = "{{$submission->id}}";
+        let date = $('#hs-filter-date').val();
+        getHsSubmission(date, submission_id);
+    });
+    function getHsSubmission(date, submission_id) {
+        $('#table-hs').html("");
+        $.get( '{{route("list_hs_submission")}}', { date: date, submission_id: submission_id })
+        .done(function( result ) {
+            if(result.hs.length > 0){
+                let hsNya = result.hs;
+
+                $.each( hsNya, function( key, value ) {
+                    let JamNya = new Date(value.appointment);
+
+                    let isiNya = "<tr><td>"+JamNya.getHours()+":"+(JamNya.getMinutes()<10?'0':'') + JamNya.getMinutes()+"</td><td>"+
+                    "<b>Name</b> : "+value.name+"<br>"+
+                    "<b>Phone</b> : "+value.phone+"<br>"+
+                    "<b>Address</b> : "+value.address+"<br>"+
+                    "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
+                    $('#table-hs').append(isiNya);
+                });
+            }
+            else{
+                let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
+                $('#table-hs').append(isiNya);
+            }
+        });
+    }
+
+    // KHUSUS UNTUK ORDER
+    $("#choose-order").on('shown.bs.modal', function(){
+        $("#edit-reference").modal('hide');
+
+        let submission_id = "{{$submission->id}}";
+        getOrderSubmission("", submission_id);
+    });
+    $("#choose-order").on('hidden.bs.modal', function(){
+        $("#edit-reference").modal('show');
+    });
+    $('#order-filter-name_phone').on('input', function(e) {
+        let submission_id = "{{$submission->id}}";
+        let filter = $(this).val();
+        getOrderSubmission(filter, submission_id);
+    });
+    function getOrderSubmission(filter, submission_id) {
+        $('#table-order').html("");
+        let isiNya = "<tr><td colspan='3' style='text-align: center'>Loading...</td></tr>";
+        $('#table-order').append(isiNya);
+
+        $.get( '{{route("list_order_submission")}}', { filter: filter, submission_id: submission_id })
+        .done(function( result ) {
+            $('#table-order').html("");
+            if(result.orders.length > 0){
+                let orderNya = result.orders;
+
+                $.each( orderNya, function( key, value ) {
+
+                    let isiNya = "<tr><td>"+value.orderDate+"</td><td>"+
+                    "<b>Name</b> : "+value.name+"<br>"+
+                    "<b>Phone</b> : "+value.phone+"<br>"+
+                    "<b>Address</b> : "+value.address+"<br>"+
+                    "<b>Product</b> : "+value.product+"<br>"+
+                    "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
+                    $('#table-order').append(isiNya);
+                });
+            }
+            else{
+                let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
+                $('#table-order').append(isiNya);
+            }
+        });
+    }
+});
+function selectHsNya(id, code){
+    $('#edit-link-hs').val(id);
+    $('#btn_choose_hs').html("HS Code : "+code);
+    $("#choose-hs").modal('hide');
+}
+function selectOrderNya(id, code){
+    $('#edit-order').val(id);
+    $('#btn_choose_order').html("Order Code : "+code);
+    $("#choose-order").modal('hide');
 }
 </script>
 @endsection

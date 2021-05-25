@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Branch;
 use App\Cso;
 use App\HistoryUpdate;
+use App\HomeService;
+use App\Prize;
 use App\Promo;
 use App\Reference;
 use App\ReferenceImage;
@@ -20,11 +22,73 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class SubmissionController extends Controller
 {
+    /**
+     * @param string
+     * @return bool
+     */
+    private function isJSON($string)
+    {
+        return is_string($string)
+            && is_array(json_decode($string, true))
+            && (json_last_error() === JSON_ERROR_NONE)
+            ? true
+            : false;
+    }
+
+    public function convertHsToForeign()
+    {
+        if (Auth::user()->roles[0]->slug !== "head-admin") {
+            return response()->json([
+                "message" => "Tidak memiliki hak akses. ",
+            ], 401);
+        }
+
+        DB::beginTransaction();
+        try {
+            $references = ReferenceSouvenir::all();
+
+            foreach ($references as $reference) {
+                $findHSCode = strpos($reference->link_hs, "HS");
+                $hsCode = substr($reference->link_hs, $findHSCode);
+                $getHS = HomeService::select("id", "code")
+                    ->where("code", $hsCode)
+                    ->first();
+
+                if (!empty($getHS)) {
+                    $reference->link_hs = json_encode(
+                        [$getHS->id],
+                        JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+                    );
+                } else {
+                    if (!$this->isJSON($reference->link_hs)) {
+                        $reference->link_hs = json_encode(
+                            [$reference->link_hs],
+                            JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+                        );
+                    }
+                }
+
+                $reference->save();
+            }
+
+            DB::commit();
+
+            return response()->json([
+                "message" => "Link_HS berhasil dikonversi menjadi JSON.",
+            ]);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -116,8 +180,11 @@ class SubmissionController extends Controller
         $csos = Cso::all();
         $promos = Promo::all();
         $souvenirs = Souvenir::select("id", "name")
-        ->where("active", true)
-        ->get();
+            ->where("active", true)
+            ->get();
+        $prizes = Prize::select("id", "name")
+            ->where("active", true)
+            ->get();
 
         return view(
             "admin.add_submission_reference",
@@ -126,6 +193,7 @@ class SubmissionController extends Controller
                 'branches',
                 'csos',
                 "souvenirs",
+                "prizes",
             )
         );
     }
@@ -286,7 +354,30 @@ class SubmissionController extends Controller
                     $referenceSouvenir = new ReferenceSouvenir();
                     $referenceSouvenir->reference_id = $reference->id;
                     $referenceSouvenir->souvenir_id = $data["souvenir_id"][$i];
-                    $referenceSouvenir->link_hs = $data["link_hs"][$i];
+                    if (
+                        isset($data["link_hs"][$i])
+                        && !empty($data["link_hs"][$i])
+                    ) {
+                        $referenceSouvenir->link_hs = json_encode(
+                            explode(", ", $data["link_hs"][$i]),
+                            JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+                        );
+                    }
+
+                    if (
+                        isset($data["order_id"][$i])
+                        && !empty($data["order_id"][$i])
+                    ) {
+                        $referenceSouvenir->order_id = $data["order_id"][$i];
+                    }
+
+                    if (
+                        isset($data["prize_id"][$i])
+                        && !empty($data["prize_id"][$i])
+                    ) {
+                        $referenceSouvenir->order_id = $data["order_id"][$i];
+                    }
+
                     $referenceSouvenir->save();
                 }
             }
@@ -386,6 +477,7 @@ class SubmissionController extends Controller
         $references = "";
         $promos = "";
         $souvenirs = "";
+        $prizes = "";
         if ($request->type === "mgm") {
             $submission = $this->querySubmissionMGM($request->id);
             $references = $this->queryReferenceMGM($request->id);
@@ -394,6 +486,7 @@ class SubmissionController extends Controller
             $submission = $this->querySubmissionReferensi($request->id);
             $references = $this->queryReferenceReferensi($request->id);
             $souvenirs = Souvenir::where("active", true)->get();
+            $prizes = Prize::where("active", true)->get();
         } elseif ($request->type === "takeaway") {
             $submission = $this->querySubmissionTakeaway($request->id);
         }
@@ -408,6 +501,7 @@ class SubmissionController extends Controller
                 "historySubmission",
                 "promos",
                 "souvenirs",
+                "prizes",
             )
         );
     }
@@ -1473,8 +1567,13 @@ class SubmissionController extends Controller
         return $references->addSelect(
             "reference_souvenirs.souvenir_id AS souvenir_id",
             "souvenirs.name AS souvenir_name",
-            "reference_souvenirs.status AS status",
             "reference_souvenirs.link_hs AS link_hs",
+            "reference_souvenirs.status AS status_souvenir",
+            "reference_souvenirs.delivery_status_souvenir AS delivery_status_souvenir",
+            "reference_souvenirs.order_id AS order_id",
+            "reference_souvenirs.prize_id AS prize_id",
+            "reference_souvenirs.status_prize AS status_prize",
+            "reference_souvenirs.delivery_status_prize AS delivery_status_prize",
         )
         ->leftJoin(
             "reference_souvenirs",
@@ -1508,5 +1607,15 @@ class SubmissionController extends Controller
         ->where("history_updates.type_menu", "Submission")
         ->where("history_updates.menu_id", $submissionId)
         ->get();
+    }
+
+    public function untungBiayaIklan(Request $request){
+        $submission = Submission::find($request->id);
+        return view('keuntunganbiayaiklan', compact('submission'));
+    }
+
+    public function referenceSehat(Request $request){
+        $submission = Submission::find($request->id);
+        return view('sehatbersamawaki', compact('submission'));
     }
 }
