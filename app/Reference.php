@@ -33,6 +33,6 @@ class Reference extends Model
     }
     public function reference_souvenir()
     {
-        return $this->hasMany('App\ReferenceSouvenir');
+        return $this->hasOne('App\ReferenceSouvenir');
     }
 }

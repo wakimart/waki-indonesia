@@ -245,14 +245,24 @@
                         <th>Tanggal Appointment</th>
                     </tr>
                     @foreach($submission->reference as $keyNya => $referenceNya)
+                        @php
+                            $Reference_HS = $referenceNya->reference_souvenir->fetch_hs();
+                            $totReference_HS = sizeof($Reference_HS);
+                        @endphp
+
                         <tr>
-                            <td>{{ $keyNya+1 }}</td>
-                            <td>{{ $referenceNya['name'] }}</td>
-                            <td>{{ $referenceNya['phone'] }}</td>
-                            <td>{{ $referenceNya->getCityName() }}</td>
-                            <td></td>
-                            <td>{{ $referenceNya['created_at'] }}</td>
+                            <td rowspan="{{ $totReference_HS }}">{{ $keyNya+1 }}</td>
+                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya['name'] }}</td>
+                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya['phone'] }}</td>
+                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya->getCityName() }}</td>
+                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya->reference_souvenir->prize['name'] }}</td>
+                            <td>{{ $Reference_HS[0]['appointment'] }}</td>
                         </tr>
+                        @for($i = 1; $i < $totReference_HS; $i++)
+                            <tr>
+                                <td>{{ $Reference_HS[$i]['appointment'] }}</td>
+                            </tr>
+                        @endfor
                     @endforeach
                 </table>
             </div>

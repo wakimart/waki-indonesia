@@ -1615,6 +1615,7 @@ class SubmissionController extends Controller
     }
 
     public function referenceSehat(Request $request){
-        return view('sehatbersamawaki', compact('references'));
+        $submission = Submission::find($request->id);
+        return view('sehatbersamawaki', compact('submission'));
     }
 }
