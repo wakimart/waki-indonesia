@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\HomeService;
 
 class ReferenceSouvenir extends Model
 {
@@ -14,6 +15,10 @@ class ReferenceSouvenir extends Model
         "order_id",
         "prize_id",
         "delivery_status",
+    ];
+
+    protected $casts = [
+        'link_hs' => 'json',
     ];
 
     public function reference()
@@ -34,5 +39,11 @@ class ReferenceSouvenir extends Model
     public function prize()
     {
         return $this->belongsTo("App\Prize");
+    }
+
+    public function fetch_hs()
+    {
+        $result = HomeService::whereIn('id', $this->link_hs)->get();
+        return $result;
     }
 }

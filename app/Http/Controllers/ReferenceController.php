@@ -50,6 +50,7 @@ class ReferenceController extends Controller
         return view("admin.list_reference", compact("references", "url"));
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
@@ -78,7 +79,7 @@ class ReferenceController extends Controller
                 "age",
                 "phone",
                 "province",
-                "city",
+                "city"
             ));
             $reference->save();
 
@@ -122,7 +123,7 @@ class ReferenceController extends Controller
                 "age",
                 "phone",
                 "province",
-                "city",
+                "city"
             ));
             $reference->save();
 
@@ -248,7 +249,7 @@ class ReferenceController extends Controller
                 "age",
                 "phone",
                 "province",
-                "city",
+                "city"
             ));
             $reference->save();
 
@@ -318,7 +319,7 @@ class ReferenceController extends Controller
                 "age",
                 "phone",
                 "province",
-                "city",
+                "city"
             ));
             $reference->save();
 
@@ -449,7 +450,7 @@ class ReferenceController extends Controller
                     "age",
                     "phone",
                     "province",
-                    "city",
+                    "city"
                 ));
                 $reference->save();
 
@@ -524,7 +525,7 @@ class ReferenceController extends Controller
                     "age",
                     "phone",
                     "province",
-                    "city",
+                    "city"
                 ));
                 $reference->save();
 
@@ -533,7 +534,7 @@ class ReferenceController extends Controller
                 $referenceSouvenir->fill($request->only(
                     "souvenir_id",
                     "link_hs",
-                    "status",
+                    "status"
                 ));
                 $referenceSouvenir->save();
 
@@ -575,7 +576,7 @@ class ReferenceController extends Controller
                 "references.province AS province_id",
                 "raja_ongkir__cities.province AS province",
                 "references.city AS city_id",
-                DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
+                DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city")
             )
             ->leftJoin(
                 "raja_ongkir__cities",
@@ -621,7 +622,7 @@ class ReferenceController extends Controller
                 "age",
                 "phone",
                 "province",
-                "city",
+                "city"
             ));
             $reference->save();
 

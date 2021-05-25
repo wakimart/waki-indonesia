@@ -15,11 +15,15 @@ use App\Order;
 use App\User;
 use App\Utils;
 use DateTime;
-use Illuminate\Support\Facades\Auth;
+use Validator;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-use Validator;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class HomeServiceController extends Controller
 {
@@ -1122,6 +1126,31 @@ class HomeServiceController extends Controller
             else{
                 $homeService->cash = true;
             }
+
+            if($request->hasFile('cash_image')){
+                $cash_img = [];
+                $path = "sources/homeservice";
+
+                if (!is_dir($path)) {
+                    File::makeDirectory($path, 0777, true, true);
+                }
+
+                $imgNya = $request->file('cash_image');
+                $fileName = str_replace([' ', ':'], '', 
+                    Carbon::now()->toDateTimeString()) . "_cashimage." . 
+                    $imgNya->getClientOriginalExtension();
+
+                //compressed img
+                $compres = Image::make($imgNya->getRealPath());
+                $compres->resize(540, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($path.'/'.$fileName);
+
+                array_push($cash_img, $fileName);
+
+                $homeService->image = $cash_img;
+            }
+
             $homeService->cash_description = $request['cash_description'];
             $homeService->save();
         }

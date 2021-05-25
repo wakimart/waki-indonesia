@@ -31,4 +31,8 @@ class Reference extends Model
 
         return $queryCity->type . " " . $queryCity->city_name;
     }
+    public function reference_souvenir()
+    {
+        return $this->hasOne('App\ReferenceSouvenir');
+    }
 }
