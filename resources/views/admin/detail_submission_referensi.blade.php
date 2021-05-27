@@ -1224,6 +1224,11 @@ $(document).ready(function(){
         }
     });
 
+    $("#edit-reference").on('hidden.bs.modal', function () {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    });
+
     // KHUSUS UNTUK HS
     $("#choose-hs").on('shown.bs.modal', function (event) {
         // $("#edit-reference").modal('hide');
