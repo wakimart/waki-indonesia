@@ -246,7 +246,7 @@ if (
                                     <td rowspan="2" 
                                         class="center"
                                         id="link-hs_{{ $key }}"
-                                        data-hs="{{ implode(", ", $link_hs) }}"
+                                        data-hs="{{ !empty($reference->link_hs) ? implode(", ", $link_hs) : "" }}"
                                         style="overflow-x: auto;">
                                         @if (!empty($reference->link_hs))
                                             @foreach ($link_hs as $value)

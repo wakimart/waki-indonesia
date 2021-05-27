@@ -115,7 +115,7 @@ class SubmissionController extends Controller
                 Auth::user()->cso["id"],
             ];
 
-            $submissions = Submission::where($whereArray)->paginate(10);
+            $submissions = Submission::where($whereArray)->orderBy('id', "desc")->paginate(10);
         } elseif (
             Auth::user()->roles[0]->slug === "branch"
             || Auth::user()->roles[0]->slug === "area-manager"
@@ -137,7 +137,7 @@ class SubmissionController extends Controller
             ->where($whereArray)
             ->paginate(10);
         } else {
-            $submissions = Submission::where($whereArray)->orderBy(DB::raw("DATE(submissions.created_at)"), "desc")->paginate(10);
+            $submissions = Submission::where($whereArray)->orderBy('id', "desc")->paginate(10);
         }
 
         $countSubmission = $submissions->count();
@@ -375,7 +375,7 @@ class SubmissionController extends Controller
                         isset($data["prize_id"][$i])
                         && !empty($data["prize_id"][$i])
                     ) {
-                        $referenceSouvenir->order_id = $data["order_id"][$i];
+                        $referenceSouvenir->prize_id = $data["prize_id"][$i];
                     }
 
                     $referenceSouvenir->save();
@@ -384,9 +384,14 @@ class SubmissionController extends Controller
 
             DB::commit();
 
-            return redirect()
-                ->route("add_submission_reference")
-                ->with('success', 'Data berhasil dimasukkan.');
+            // return redirect()
+            //     ->route("add_submission_reference")
+            //     ->with('success', 'Data berhasil dimasukkan.');
+
+            $request = new \Illuminate\Http\Request();
+            $request->replace(['id' => $submission->id, 'type' => 'referensi']); 
+            return $this->show($request);
+
         } catch (Exception $e) {
             DB::rollBack();
 
