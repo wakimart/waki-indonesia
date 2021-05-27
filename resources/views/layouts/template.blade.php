@@ -248,7 +248,7 @@
 
 	    <div class="container">
 	      <div class="copyright">
-	        &copy; Copyright <strong>WAKi Indonesia</strong>. All Rights Reserved
+	        &copy; Copyright <strong>WAKi 3D Shop</strong>. All Rights Reserved
 	      </div>
 	      <div class="credits">
 	        <a href="https://waki.asia/">WAKi International Group</a>

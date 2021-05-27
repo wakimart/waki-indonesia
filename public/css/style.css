@@ -1535,8 +1535,10 @@ CORE
 #portfolio {
   padding: 40px 0;
 }
-.grid-container .pic{
+.grid-container img{
   object-fit: cover;
+  width:100%;
+  height: 100%;
 }
 .grid-container {
   display: grid;

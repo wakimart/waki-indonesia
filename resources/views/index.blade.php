@@ -137,7 +137,7 @@
     </header>
 
 
-    <div class="grid-container">
+    <div class="grid-container w-100">
       <div class="long-left">
         <div class="pic">
           <img src="{{asset('sources/portfolio/longleft.png')}}" alt="">
@@ -155,7 +155,7 @@
       </div>
       <div class="normal-bottom">
         <div class="pic">
-          <img src="{{asset('sources/portfolio/notmalbottom.png')}}" alt="">
+          <img src="{{asset('sources/portfolio/normalbottom.png')}}" alt="">
         </div>
       </div>
       <div class="big-left">
