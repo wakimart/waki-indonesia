@@ -12,9 +12,11 @@ class ReferenceSouvenir extends Model
         "souvenir_id",
         "link_hs",
         "status",
+        "delivery_status_souvenir",
         "order_id",
         "prize_id",
-        "delivery_status",
+        "status_prize",
+        "delivery_status_prize",
     ];
 
     public function reference()

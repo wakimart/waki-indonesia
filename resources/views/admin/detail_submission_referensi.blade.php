@@ -82,6 +82,10 @@ if (
     select.form-control {
         color: black !important;
     }
+
+    .modal {
+        overflow-y: auto !important;
+    }
 </style>
 @endsection
 
@@ -352,7 +356,7 @@ if (
 
             <div class="col-md-12 center" style="margin-top: 2em;">
                <div class="card">
-                    <div class="card-body">                     
+                    <div class="card-body">
                         <div class="row justify-content-center">
                             <h2 class="text-center share">Share Submission Form</h2>
                         </div>
@@ -364,7 +368,7 @@ if (
                         </form>
                     </div>
                 </div>
-            </div>    
+            </div>
             @if ($historySubmission->isNotEmpty())
                 <div class="row justify-content-center"
                     style="margin-top: 2em;">

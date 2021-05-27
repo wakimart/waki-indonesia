@@ -90,7 +90,6 @@ class ReferenceController extends Controller
                 "status",
                 "order_id",
                 "prize_id",
-                "delivery_status",
             ));
             $referenceSouvenir->link_hs = json_encode(
                 explode(", ", $request->link_hs),
@@ -257,12 +256,13 @@ class ReferenceController extends Controller
             $referenceSouvenir->fill($request->only(
                 "souvenir_id",
                 "status",
+                "delivery_status_souvenir",
                 "order_id",
                 "prize_id",
+                "status_prize",
+                "delivery_status_prize",
             ));
-            $referenceSouvenir->delivery_status_souvenir = $request->delivery_status_souvenir;
-            $referenceSouvenir->status_prize = $request->status_prize;
-            $referenceSouvenir->delivery_status_prize = $request->delivery_status_prize;
+
             if (!empty($request->link_hs)) {
                 $referenceSouvenir->link_hs = json_encode(
                     explode(", ", $request->link_hs),
