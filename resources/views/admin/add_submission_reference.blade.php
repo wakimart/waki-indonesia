@@ -274,15 +274,14 @@ $menu_item_second = "add_submission_reference";
 
                             <div class="form-group" id="customer-image-group">
                                 <label for="image-proof">
-                                    Proof image
+                                    Proof image (optional)
                                 </label>
                                 <input type="file"
                                     id="proof-image"
                                     name="proof_image[]"
                                     class="proof-image"
                                     accept=".jpg, .jpeg, .png"
-                                    multiple
-                                    required />
+                                    multiple />
                             </div>
                             <br>
                             <br>
