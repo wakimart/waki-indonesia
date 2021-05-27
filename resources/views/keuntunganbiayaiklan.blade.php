@@ -254,11 +254,11 @@
                         @endphp
 
                         <tr>
-                            <td rowspan="{{ $totReference_HS }}">{{ $keyNya+1 }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya['name'] }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya['phone'] }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya->getCityName() }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya->reference_souvenir->prize['name'] }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $keyNya+1 }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya['name'] }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya['phone'] }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->getCityName() }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->reference_souvenir->prize['name'] }}</td>
                             <td>{{ $totReference_HS > 0 ? $Reference_HS[0]['appointment'] : "-" }}</td>
                         </tr>
                         @for($i = 1; $i < $totReference_HS; $i++)
