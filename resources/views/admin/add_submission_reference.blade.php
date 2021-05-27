@@ -401,43 +401,6 @@ $menu_item_second = "add_submission_reference";
                                             @endforeach
                                         </select>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="link-hs-{{ $x }}">
-                                            Home Service
-                                        </label>
-                                        <input type="hidden"
-                                            id="link-hs-{{ $x }}"
-                                            name="link_hs[]"
-                                            value="" />
-                                        <br>
-                                        <button class="btn btn-gradient-info"
-                                            type="button"
-                                            id="btn_choose_hs"
-                                            data-toggle="modal"
-                                            data-target="#choose-hs">
-                                            Choose Home Service
-                                        </button>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="member-order-{{ $x }}">
-                                            Order
-                                        </label>
-                                        <input type="hidden"
-                                            id="member-order-{{ $x }}"
-                                            name="order_id[]"
-                                            value="" />
-                                        <br>
-                                        <button class="btn btn-gradient-info"
-                                            type="button"
-                                            id="btn_choose_order"
-                                            data-toggle="modal"
-                                            data-target="#choose-order">
-                                            Choose Order
-                                        </button>
-                                    </div>
-
                                     <div class="form-group">
                                         <label for="member-prize-{{ $x }}">
                                             Prize
@@ -459,6 +422,42 @@ $menu_item_second = "add_submission_reference";
                                             @endforeach
                                         </select>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label for="link-hs-{{ $x }}">
+                                            Home Service
+                                        </label>
+                                        <input type="hidden"
+                                            id="link-hs-{{ $x }}"
+                                            name="link_hs[]"
+                                            value="" />
+                                        <br>
+                                        <button class="btn btn-gradient-info"
+                                            type="button"
+                                            id="btn_choose_hs"
+                                            data-toggle="modal"
+                                            data-target="#choose-hs">
+                                            Choose Home Service
+                                        </button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="member-order-{{ $x }}">
+                                            Order
+                                        </label>
+                                        <input type="hidden"
+                                            id="member-order-{{ $x }}"
+                                            name="order_id[]"
+                                            value="" />
+                                        <br>
+                                        <button class="btn btn-gradient-info"
+                                            type="button"
+                                            id="btn_choose_order"
+                                            data-toggle="modal"
+                                            data-target="#choose-order">
+                                            Choose Order
+                                        </button>
+                                    </div>
+
                                 @endfor
                             </div>
                             <br>

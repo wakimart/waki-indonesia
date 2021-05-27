@@ -176,12 +176,12 @@
             </li>
         @endif
         @if (Gate::check('browse-reference'))
-            <li class="nav-item">
+           {{--  <li class="nav-item">
                 <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_reference' ? 'active' : '' }}"
                     href="{{ route('list_reference') }}">
                     List Reference
                 </a>
-            </li>
+            </li> --}}
         @endif
         </ul>
     </div>
