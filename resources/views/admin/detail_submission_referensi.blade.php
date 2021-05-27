@@ -212,24 +212,24 @@ if (
                                     form="edit-form_{{ $key }}"
                                     value="{{ $reference->id }}" />
                                 <tr>
-                                    <td rowspan="2" 
+                                    <td rowspan="2"
                                         id="name_{{ $key }}">
                                         {{ $reference->name }}
                                     </td>
-                                    <td rowspan="2" 
+                                    <td rowspan="2"
                                         class="center" id="age_{{ $key }}">
                                         {{ $reference->age }}
                                     </td>
-                                    <td rowspan="2" 
+                                    <td rowspan="2"
                                         class="center" id="phone_{{ $key }}">
                                         {{ $reference->phone }}
                                     </td>
-                                    <td rowspan="2" 
+                                    <td rowspan="2"
                                         id="province_{{ $key }}"
                                         data-province="{{ $reference->province_id }}">
                                         {{ $reference->province }}
                                     </td>
-                                    <td rowspan="2" 
+                                    <td rowspan="2"
                                         id="city_{{ $key }}"
                                         data-city="{{ $reference->city_id }}">
                                         {{ $reference->city }}
@@ -243,10 +243,10 @@ if (
                                         );
                                     }
                                     ?>
-                                    <td rowspan="2" 
+                                    <td rowspan="2"
                                         class="center"
                                         id="link-hs_{{ $key }}"
-                                        data-hs="{{ implode(", ", $link_hs) }}"
+                                        data-hs="{{ !empty($reference->link_hs) ? implode(", ", $link_hs) : "" }}"
                                         style="overflow-x: auto;">
                                         @if (!empty($reference->link_hs))
                                             @foreach ($link_hs as $value)
@@ -270,7 +270,7 @@ if (
                                             @endforeach
                                         @endif
                                     </td>
-                                    <td rowspan="2" 
+                                    <td rowspan="2"
                                         class="center"
                                         id="order_{{ $key }}"
                                         data-order="{{ $reference->order_id }}"
@@ -301,7 +301,7 @@ if (
                                         data-permission="{{ $specialPermission }}">
                                         {{ $reference->delivery_status_souvenir }}
                                     </td>
-                                    <td rowspan="2" 
+                                    <td rowspan="2"
                                         class="center">
                                         <button class="btn"
                                             id="btn-edit-save_{{ $key }}"
