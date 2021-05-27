@@ -73,111 +73,52 @@
 	<!-- End Google Tag Manager (noscript) -->
 	<!--==========================Header============================-->
 	<header id="header" class="fixed-top header-transparent">
-	  <!-- <div id="topbar">
-	    <div class="container">
-	      <div class="social-links">
-	        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-	        <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
-	        <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
-	        <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
-	      </div>
-	    </div>
-	  </div> -->
-	  <div class="container">
+	  <div class="container d-flex">
 
-	      <div class="logo float-left">
-	        <!-- Uncomment below if you prefer to use an image logo -->
-	        <!-- <h1 class="text-light"><a href="#intro" class="scrollto"><span>WAKi</span></a></h1> -->
-	        <a href="#header" class="scrollto"><img src="{{asset('sources/Logo Since.png')}}" alt="" class="img-fluid" style="margin-right: 4em;"></a>
-	      </div>
-	      <nav class="main-nav float-left d-none d-lg-block scrollto">
+			<div class="d-flex align-items-center justify-content-start" style="flex: 1;">
+	      <nav class="main-nav d-none d-lg-block scrollto align-items-start justify-content-start">
 	        <ul>
-	          @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#hero">Beranda</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#hero">Home</a></li>
-	          @endif
 
-			  @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#about">Tentang</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#about">About Us</a></li>
-	          @endif
+	          <li><a href="#about">About</a></li>
 
-						@if(Utils::$lang=='id' || Utils::$lang=='eng')
-	          <li class="drop-down"><a href="#product">Produk</a>
+	          <li class="drop-down"><a href="#product">Services</a>
 	            <ul>
-								@foreach (App\CategoryProduct::all() as $categoryProduct)
-								<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
-									@if( ! $categoryProduct->product->isEmpty())
-										<ul>
-											@foreach($categoryProduct->productIndex as $product)
-												<li><a href="{{route('single_product',['id'=>$product->id])}}">{{ $product->code }}</a></li>
-											@endforeach
-										</ul>
-									@endif
-								  </li>
-								@endforeach
+								<li><a href="" value="">3D Prototyping</a></li>
+								<li><a href="" value="">3D Printing Service</a></li>
+								<li><a href="" value="">3D Desain & Modeling</a></li>
 	            </ul>
 	          </li>
-						@endif
 
-	          @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#portfolio">Galeri</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#portfolio">Gallery</a></li>
-	          @endif
+	          <li><a href="#portfolio">Project</a></li>
 
+	          <li><a href="#footer">Contact</a></li>
 
-						{{-- @if(Utils::$lang=='id')
-						<li class="drop-down {{isset($menu_item_page) && $menu_item_page == 'form'? 'active': '' }}"><a href="#product">Form</a>
-	            <ul>
-	              <li class="{{isset($menu_item_second) && $menu_item_second == 'formregistrasi'? 'active': '' }}"><a href="{{ route('delivery_order') }}">REGISTRASI</a></li>
-								<li class="{{isset($menu_item_second) && $menu_item_second == 'formorder'? 'active': '' }}"><a href="{{ route('add_order') }}">ORDER</a></li>
-								<li class="{{isset($menu_item_second) && $menu_item_second == 'formhomeservice'? 'active': '' }}"><a href="{{ route('add_homeServices') }}">HOME SERVICE</a></li>
-							</ul>
-						</li>
-						@endif --}}
-
-					{{-- 	@if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#team">World Peace</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#team">World Peace</a></li>
-	          @endif --}}
-
-	          @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#footer">Kontak</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#footer">Contact Us</a></li>
-	          @endif
-
-	          <li><a href="{{route('login')}}">Login</a></li>
-
-	          <li><a href="#" class="searchtxtmob"> </a>
-	            <div class="searchicon">
-	                <i id="searchicn" class="fa fa-search hidden-sm"></i>
-	              </div>
-	              <div class="searchbox" style="display: none;" >
-	                <form role="search" method="get" class="searchform" action="">
-	                    <input type="search" class="search-field" placeholder="Search …" value="" name="s">
-	                  <button id="searchbtn" type="submit" class="search-submit btn search-btn"><i class="fa fa-search"></i></button>
-	                </form>
-	              </div>
-	              <div class="searchboxmob" style="display: none;" >
-	                <form role="search" method="get" class="searchform" action="">
-	                    <input type="search" class="search-field" placeholder="Search …" value="" name="s">
-	                  <button id="searchbtn" type="submit" class="search-submit btn search-btn"><i class="fa fa-search"></i></button>
-	                </form>
-	              </div>
-	          </li>
 	        </ul>
 	      </nav><!-- .main-nav -->
+			</div>
+
+			<div class="d-flex align-items-center justify-content-center" style="flex: 1;">
+				<div class="logo justify-content-center align-content-center">
+	        <a href="#header" class="scrollto"><img src="{{asset('sources/waki3dprinting.png')}}" alt="" class="img-fluid" style="margin-right: 4em;"></a>
+	      </div>
+			</div>
+
+			<div class="d-flex align-items-center justify-content-end" style="flex: 1;">
+
+					<div class="d-none d-lg-block social-links">
+		        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
+		        <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
+		        <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
+		        <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
+		      </div>
+			</div>
 
 	    </div>
 	</header>
 	@yield('content')
 
 	<!--==========================Footer============================-->
+	<section id="footer">
   	<footer id="footer" class="section-bg">
       	<div class="footer-top">
         	<div class="container">
@@ -314,6 +255,7 @@
 	      </div>
 	    </div>
   	</footer>
+	</section>
   	<!-- #footer -->
 
   	<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
@@ -340,27 +282,19 @@
   	<script src="{{asset('js/main.js')}}"></script>
 		<script>
 		$(document).ready(function() {
-		  $(".product-carousel").owlCarousel({
-		    items: 4,
-				margin:20,
+			$("#testimonial-slider").owlCarousel({
+		    items: 3,
 		    pagination: true,
 		    autoplay: true,
 		    loop: true,
 		    navigation: true,
 		    dots: false,
 		    responsive:{
-		      1000: {items: 4},
+		      1000: {items: 3},
 		      768: {items: 3},
 		      640: {items: 2},
 		      370: {items: 1}
 		    }
-		  });
-		  console.log("test");
-			$('#video2').on('shown.bs.modal', function (event) {
-		    $('#video-2')[0].play();
-		  });
-		  $('#video2').on('hidden.bs.modal', function (event) {
-		    $('#video-2')[0].pause();
 		  });
 		});
 		</script>

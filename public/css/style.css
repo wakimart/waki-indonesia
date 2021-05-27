@@ -26,6 +26,7 @@ a:focus {
 p {
   padding: 0;
   margin: 0 0 30px 0;
+  font-weight: 600;
 }
 
 h1,
@@ -144,6 +145,16 @@ h6 {
   border-left: 0;
 }
 
+
+#header .social-links a{
+  background-color: #1bc554;
+  color: #fff;
+  border-radius: 50em;
+  width: 25px;
+  display: inline-block;
+  text-align: center;
+  margin: 3px;
+}
 /*--------------------------------------------------------------
 # Search Bar
 --------------------------------------------------------------*/
@@ -259,8 +270,9 @@ h6 {
   margin-top: 0;
   width: 100%;
   height: 100vh;
+  max-height: 800px;
   position: relative;
-  background: url("../sources/hero-bg.png") center top no-repeat;
+  background: url("../sources/hero3d.png") center bottom no-repeat;
   background-size: cover;
   padding: 0 0 60px 0;
 }
@@ -300,11 +312,9 @@ h6 {
 
 
 #hero .hero-info h2 {
-  color: #3b3b3b;
-  margin-bottom: 1em;
-  margin-top: 2em;
-  font-size: 3em;
-  font-weight: 600;
+  color: #2b2b2b;
+  font-size: 4.2em;
+  font-weight: 800;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -325,13 +335,15 @@ h6 {
 }
 
 #hero .hero-info .btn-get-started{
-  background: #048b32;
+  background: #FFDE6C;
+  max-width: 250px;
+  min-width: 150px;
+  padding: 1em 1.5em;
   transition: 0.5s;
   color: #fff;
-  font-size: 1.1em;
-  letter-spacing: 0.05rem;
-  padding: 0.5em 4em;
-  border-radius: 2rem;
+  font-size: 1.2em;
+  text-align: center;
+  border-radius: 0.3em;
   text-transform: capitalize;
   display: inline-block;
   font-family: 'Poppins', sans-serif;
@@ -595,13 +607,13 @@ p.titleprodcat{
 .main-nav a {
   display: block;
   position: relative;
-  color: #413e66;
-  padding: 10px 15px;
+  color: #2b2b2b;
+  padding: 10px;
   transition: 0.3s;
   font-size: 14px;
   font-family: "Open Sans", sans-serif;
-  text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: normal;
 }
 
 .main-nav a:hover,
@@ -793,11 +805,10 @@ p.titleprodcat{
 /* Sections Header
 --------------------------------*/
 .section-header h2 {
-  color: #048B32;
-  font-family: 'Open Sans', sans-serif;
+  color: #2b2b2b;
+  font-family: 'Poppins', sans-serif;
   font-weight: 800;
   font-size: 2.2em;
-  text-align: center;
 }
 
 .section-header h3 {
@@ -834,27 +845,30 @@ p.titleprodcat{
 
 /* About Us Section
 --------------------------------*/
-
+/*
 #about {
   padding: 40px 0;
-}
+} */
 
 #about .about-content {
   padding-top: 40px;
 }
 
-#about h2 {
-  color: #048B32;
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 800;
-  font-size: 2.2em;
-  text-align: center;
+.about-content {
+  padding:1em;
 }
 
-#about .about-content h3 {
-  color: #4E4E4E;
-  font-weight: 600;
-  font-size: 20px;
+#about h2 {
+  color: #2b2b2b;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 2.2em;
+}
+
+.about-content h3 {
+  color: #2b2b2b;
+  font-weight: 800;
+  font-size: 1.5em;
   /* font-style: italic; */
 }
 
@@ -875,10 +889,13 @@ p.titleprodcat{
 
 #about .about-img {
   position: relative;
-  margin: 30px;
+  /* margin: 30px; */
+  margin-bottom: 1em;
+  border-radius: 0.5em;
+  overflow: hidden;
 }
 
-#about .about-img img {
+.about-img img {
   width: 100%;
   /* border: 8px solid #fff; */
   transition: .5s;
@@ -974,6 +991,10 @@ p.titleprodcat{
   flex-grow:0;
 } */
 
+.product-service{
+  margin: 2em 0;
+}
+
 #product .card-img-top {
   width: 100%;
   height: 100%;
@@ -981,8 +1002,8 @@ p.titleprodcat{
 }
 
 #product h2 {
-  color: #048B32;
-  font-family: 'Open Sans', sans-serif;
+  color: #2b2b2b;
+  font-family: 'Poppins', sans-serif;
   font-weight: 800;
   font-size: 2.2em;
   text-align: center;
@@ -1008,8 +1029,9 @@ p.titleprodcat{
   padding: 0;
   margin: 0 0 20px 0;
   font-family: "Poppins", sans-serif;
-  font-size: 0.75em;
+  font-size: 1em
   color: #5e5e5e;
+  font-weight: 500;
 }
 
 #product  .owl-stage {
@@ -1185,6 +1207,105 @@ p.titleprodcat{
 
 /* Testimonials Section
 --------------------------------*/
+
+.testimonial {
+  background-color: white;
+  text-align: center;
+  padding: 20px 10px 40px;
+  margin: 0 5px 10px;
+  position: relative;
+}
+
+.testimonial .icon {
+  display: inline-block;
+  font-size: 80px;
+  color: #016d9b;
+  margin-bottom: 20px;
+  opacity: 0.6;
+}
+.testimonial .titledesc{
+  font-weight: 800;
+  font-family: "Open Sans", sans-serif;
+  margin-top: 5px;
+  font-size: 1.2em;
+}
+
+.testimonial .description {
+  font-size: 1em;
+  color: #2b2b2b;
+  text-align: center;
+  min-height: 200px;
+  margin-bottom: 30px;
+  border-radius: 0.4em;
+  padding: 1em 2em;
+  box-shadow: 0px 0px 20px rgba(127, 137, 161, 0.1);
+  font-family: "Open Sans", sans-serif;
+}
+
+.testimonial .testimonial-content {
+  width: 100%;
+  left: 0;
+  position: absolute;
+  color: #2b2b2b;
+}
+
+.testimonial .pic {
+  display: inline-block;
+  border-radius: 50em;
+  overflow: hidden;
+  z-index: 1;
+  position: relative;
+}
+
+.testimonial .pic img {
+  width: 100px;
+  height: auto;
+}
+
+.testimonial .name {
+  font-size: 15px;
+  font-weight: bold;
+  color: #2d2d2d;
+  text-transform: capitalize;
+  margin: 10px 0 5px 0;
+}
+
+.testimonial .title {
+  display: block;
+  font-size: 14px;
+  color: #ffd9b8;
+}
+
+.owl-controls {
+  margin-top: 20px;
+}
+
+.owl-pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.owl-page {
+  height: 10px;
+  width: 40px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10%;
+}
+
+.owl-page:hover,
+.owl-page.active {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.owl-page:not(first-item) {
+  margin-left: 10px;
+}
+
+.owl-carousel {
+-ms-touch-action: none;
+touch-action: none;
+}
+
 #testimonials {
   padding: 60px 0;
 }
@@ -1204,29 +1325,7 @@ p.titleprodcat{
     text-align: center;
   }
 }
-/*
-#testimonials .testimonial-item .testimonial-img {
-  width: 120px;
-  border-radius: 50%;
-  border: 4px solid #fff;
-  float: left;
-} */
 
-/* @media (max-width: 767px) {
-  #testimonials .testimonial-item .testimonial-img {
-    float: none;
-    margin: auto;
-  }
-} */
-/*
-#testimonials .testimonial-item h3 {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 10px 0 5px 0;
-  color: #111;
-  margin-left: 140px;
-}
- */
 #testimonials .testimonial-item h4 {
   font-size: 14px;
   color: #999;
@@ -1320,7 +1419,7 @@ p.titleprodcat{
 
 /* card group aka PRIMARY */
 .card-group .card-business:hover {
-  box-shadow: 0 40px 60px -20px rgba(12, 5, 62, 0.15);
+  box-shadow: 0px 0px 20px rgba(127, 137, 161, 0.1);
   z-index: 100;
 }
 .card-group .card-business:hover .card-title{
@@ -1368,11 +1467,6 @@ DEPENDENCIES
 }
 
 .text-underlined{
-    /*
-        1. I use pixels units because others units (em, rem, vw, vh, etc) can
-        lead to the mistake of displaying a circumcised line
-    */
-
     --uiTextUnderlinedLineHeight: var(--textUnderlinedLineHeight, 2px); /* 1 */
     --uiTextUnderlinedLineGap: var(--textUnderlinedLineGap, .5rem);
     --uiTextUnderlinedPaddingBottom: calc(var(--uiTextUnderlinedLineHeight) + var(--uiTextUnderlinedLineGap));
@@ -1424,10 +1518,6 @@ CORE
 	transition-duration: .15s;
 }
 
-/*
-* These styles for text decoration. The demo will be work without it
-*/
-
 .link{
 	font-weight: 600;
   font-size: 0.9em;
@@ -1444,6 +1534,74 @@ CORE
 
 #portfolio {
   padding: 40px 0;
+}
+.grid-container .pic{
+  object-fit: cover;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 0.5em 0.5em;
+  grid-template-areas:
+    "long-left wide-right wide-right"
+    "long-left center long-right"
+    "big-left big-left long-right"
+    "big-left big-left normal-bottom";
+}
+.long-left {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ".";
+  grid-area: long-left;
+}
+.wide-right {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ".";
+  grid-area: wide-right;
+}
+.long-right {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ".";
+  grid-area: long-right;
+}
+.normal-bottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ".";
+  grid-area: normal-bottom;
+}
+.big-left {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ".";
+  grid-area: big-left;
+}
+.center {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ".";
+  grid-area: center;
 }
 
 #portfolio #portfolio-flters {
@@ -2126,12 +2284,7 @@ CORE
     margin-top: 1em;
   }
   #hero .hero-info h2 {
-    color: #3b3b3b;
-    margin-bottom: 0.75em;
-    margin-top: 1.75em;
     font-size: 2.5em;
-    font-weight: 600;
-    font-family: 'Poppins', sans-serif;
   }
 
   #hero .hero-info p {
@@ -2142,20 +2295,8 @@ CORE
   }
 
   #hero .hero-info .btn-get-started{
-    background: #048b32;
     transition: 0.5s;
-    color: #fff;
-    font-size: 1.1em;
-    letter-spacing: 0.05rem;
-    padding: 0.4em 3em;
-    border-radius: 2rem;
-    text-transform: capitalize;
-    display: inline-block;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 600;
     font-size: 1em;
-    margin-top: 1em;
-    border: 1px solid transparent;
   }
 
   #about .section-header h2 {
