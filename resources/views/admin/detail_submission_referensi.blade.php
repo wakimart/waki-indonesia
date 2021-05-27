@@ -181,7 +181,7 @@ if (
                     <?php for ($i = 0; $i < $formLength; $i++): ?>
                         <form method="POST" id="edit-form_{{ $i }}"></form>
                     <?php endfor; ?>
-                    <table class="col-md-12">
+                    <table class="col-md-12" style="table-layout: auto;">
                         <thead>
                             <td colspan="14">Reference</td>
                         </thead>
@@ -192,14 +192,14 @@ if (
                                 <td>Phone</td>
                                 <td>Province</td>
                                 <td>City</td>
-                                <td>Souvenir</td>
                                 <td>Link HS</td>
-                                <td>Status</td>
-                                <td>Deliv. Status Souvenir</td>
                                 <td>Order</td>
-                                <td>Prize</td>
+                                <td>Souvenir/Prize</td>
+                                <td>Status</td>
+                                <td>Deliv. Status</td>
+                                {{-- <td>Prize</td>
                                 <td>Status Prize</td>
-                                <td>Deliv. Status Prize</td>
+                                <td>Deliv. Status Prize</td> --}}
                                 <td>Edit</td>
                             </tr>
                         </thead>
@@ -212,27 +212,27 @@ if (
                                     form="edit-form_{{ $key }}"
                                     value="{{ $reference->id }}" />
                                 <tr>
-                                    <td id="name_{{ $key }}">
+                                    <td rowspan="2" 
+                                        id="name_{{ $key }}">
                                         {{ $reference->name }}
                                     </td>
-                                    <td class="center" id="age_{{ $key }}">
+                                    <td rowspan="2" 
+                                        class="center" id="age_{{ $key }}">
                                         {{ $reference->age }}
                                     </td>
-                                    <td class="center" id="phone_{{ $key }}">
+                                    <td rowspan="2" 
+                                        class="center" id="phone_{{ $key }}">
                                         {{ $reference->phone }}
                                     </td>
-                                    <td id="province_{{ $key }}"
+                                    <td rowspan="2" 
+                                        id="province_{{ $key }}"
                                         data-province="{{ $reference->province_id }}">
                                         {{ $reference->province }}
                                     </td>
-                                    <td id="city_{{ $key }}"
+                                    <td rowspan="2" 
+                                        id="city_{{ $key }}"
                                         data-city="{{ $reference->city_id }}">
                                         {{ $reference->city }}
-                                    </td>
-                                    <td id="souvenir_{{ $key }}"
-                                        data-permission="{{ $specialPermission }}"
-                                        data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
-                                        {{ $reference->souvenir_name }}
                                     </td>
                                     <?php
                                     if (!empty($reference->link_hs)) {
@@ -243,7 +243,8 @@ if (
                                         );
                                     }
                                     ?>
-                                    <td class="center"
+                                    <td rowspan="2" 
+                                        class="center"
                                         id="link-hs_{{ $key }}"
                                         data-hs="{{ implode(", ", $link_hs) }}"
                                         style="overflow-x: auto;">
@@ -269,18 +270,8 @@ if (
                                             @endforeach
                                         @endif
                                     </td>
-                                    <td class="center"
-                                        id="status_souvenir_{{ $key }}"
-                                        data-permission="{{ $specialPermission }}">
-                                        {{ $reference->status_souvenir }}
-                                    </td>
-                                    <td class="center"
-                                        id="delivery_status_souvenir_{{ $key }}"
-                                        data-deliverysouvenir="{{ $reference->delivery_status_souvenir }}"
-                                        data-permission="{{ $specialPermission }}">
-                                        {{ $reference->delivery_status_souvenir }}
-                                    </td>
-                                    <td class="center"
+                                    <td rowspan="2" 
+                                        class="center"
                                         id="order_{{ $key }}"
                                         data-order="{{ $reference->order_id }}"
                                         style="overflow-x:auto;">
@@ -294,6 +285,35 @@ if (
                                         }
                                         ?>
                                     </td>
+                                    <td id="souvenir_{{ $key }}"
+                                        data-permission="{{ $specialPermission }}"
+                                        data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
+                                        {{ $reference->souvenir_name }}
+                                    </td>
+                                    <td class="center"
+                                        id="status_souvenir_{{ $key }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->status_souvenir }}
+                                    </td>
+                                    <td class="center"
+                                        id="delivery_status_souvenir_{{ $key }}"
+                                        data-deliverysouvenir="{{ $reference->delivery_status_souvenir }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->delivery_status_souvenir }}
+                                    </td>
+                                    <td rowspan="2" 
+                                        class="center">
+                                        <button class="btn"
+                                            id="btn-edit-save_{{ $key }}"
+                                            style="padding: 0;"
+                                            data-edit="edit_{{ $key }}"
+                                            onclick="clickEdit(this)"
+                                            value="{{ $reference->id }}">
+                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td class="center"
                                         id="prize_{{ $key }}"
                                         data-prize="{{ $reference->prize_id }}"
@@ -318,16 +338,6 @@ if (
                                         data-deliveryprize="{{ $reference->delivery_status_prize }}"
                                         data-permission="{{ $specialPermission }}">
                                         {{ $reference->delivery_status_prize }}
-                                    </td>
-                                    <td class="center">
-                                        <button class="btn"
-                                            id="btn-edit-save_{{ $key }}"
-                                            style="padding: 0;"
-                                            data-edit="edit_{{ $key }}"
-                                            onclick="clickEdit(this)"
-                                            value="{{ $reference->id }}">
-                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                        </button>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -519,6 +529,21 @@ if (
                         </select>
                     </div>
                     <div class="form-group">
+                        <label for="edit-prize">Prize</label>
+                        <select class="form-control"
+                            id="edit-prize"
+                            name="prize_id">
+                            <option selected disabled>
+                                Choose Prize
+                            </option>
+                            <?php foreach ($prizes as $prize): ?>
+                                <option value="<?php echo $prize->id; ?>">
+                                    <?php echo $prize->name; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="edit-link-hs">Home Service</label>
                         <div id="link-hs-container"></div>
                         <input type="hidden"
@@ -550,21 +575,6 @@ if (
                             data-target="#choose-order">
                             Choose Order
                         </button>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-prize">Prize</label>
-                        <select class="form-control"
-                            id="edit-prize"
-                            name="prize_id">
-                            <option selected disabled>
-                                Choose Prize
-                            </option>
-                            <?php foreach ($prizes as $prize): ?>
-                                <option value="<?php echo $prize->id; ?>">
-                                    <?php echo $prize->name; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
                     </div>
                 </form>
             </div>
@@ -983,7 +993,7 @@ function clickEdit(e) {
     hsButton.type = "button";
     hsButton.className = "btn btn-gradient-info btn-sm";
     hsButton.id = "btn-choose-hs-edit_" + refSeq;
-    hsButton.innerHTML = "Choose Home Service";
+    hsButton.innerHTML = "Add Home Service";
     document.getElementById("link-hs_" + refSeq).innerHTML = "";
     document.getElementById("link-hs_" + refSeq).appendChild(hsInput);
     document.getElementById("edit-link_hs_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);

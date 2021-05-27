@@ -19,10 +19,6 @@ class ReferenceSouvenir extends Model
         "delivery_status_prize",
     ];
 
-    // protected $casts = [
-    //     'link_hs' => 'json',
-    // ];
-
     public function reference()
     {
         return $this->belongsTo("App\Reference");
@@ -45,7 +41,7 @@ class ReferenceSouvenir extends Model
 
     public function fetch_hs()
     {
-        $result = HomeService::whereIn('id', $this->link_hs)->get();
+        $result = HomeService::whereIn('id', json_decode($this->link_hs, true))->get();
         return $result;
     }
 }
