@@ -253,7 +253,10 @@
                     @foreach($submission->reference as $keyNya => $referenceNya)
                         @php
                             $Reference_HS = $referenceNya->reference_souvenir->fetch_hs();
-                            $totReference_HS = sizeof($Reference_HS);
+                            $totReference_HS = 0;
+                            if($Reference_HS != null){
+                                $totReference_HS = sizeof($Reference_HS);
+                            }
                         @endphp
 
                         <tr>
