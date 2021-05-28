@@ -46,7 +46,7 @@
 
         <div class="row">
 
-          <div class="col-md-3">
+          <div class="col-sm-6 col-md-3">
             <div class="about-img wow fadeInLeft">
               <img src="{{asset('sources/about1.png')}}" alt="">
             </div>
@@ -54,7 +54,7 @@
               <p>High quality detail model output.</p>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-sm-6 col-md-3">
             <div class="about-img wow fadeInLeft">
               <img src="{{asset('sources/about2.png')}}" alt="">
             </div>
@@ -62,7 +62,7 @@
               <p>High performance 3D printer equipment.</p>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-sm-6 col-md-3">
             <div class="about-img wow fadeInLeft">
               <img src="{{asset('sources/about3.png')}}" alt="">
             </div>
@@ -70,7 +70,7 @@
               <p>High quality filament selected.</p>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-sm-6 col-md-3">
             <div class="about-img wow fadeInLeft">
               <img src="{{asset('sources/about4.png')}}" alt="">
             </div>
@@ -282,7 +282,7 @@
 
       <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="row card-group align-items-center">
-            <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="col-lg-3 col-md-3 col-sm-6">
               <div class="card-business mb-3">
                 <div class="card-img-top">
                   <img src="{{ asset ('sources/wakimartlogo.png')}}" class="img-fluid" style="padding-top: 30px;" />
@@ -297,7 +297,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="col-lg-3 col-md-3 col-sm-6">
               <div class="card-business mb-3">
                 <div class="card-img-top">
                   <img src="{{ asset ('sources/wakishop.png')}}" class="img-fluid" />
@@ -312,7 +312,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="col-lg-3 col-md-3 col-sm-6">
               <div class="card-business mb-3">
                 <div class="card-img-top">
                   <img src="{{ asset ('sources/wakifnb.png')}}" class="img-fluid" style="padding-top: 15px;"/>
@@ -327,7 +327,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="col-lg-3 col-md-3 col-sm-6">
               <div class="card-business mb-3">
                 <div class="card-img-top">
                   <img src="{{ asset ('sources/waki3dprinting.png')}}" class="img-fluid" />

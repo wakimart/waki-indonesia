@@ -123,98 +123,59 @@
       	<div class="footer-top">
         	<div class="container">
           		<div class="row">
-            		<div class="col-lg-6">
+            		<div class="col-lg-4 col-sm-12">
               			<div class="row">
                  			<div class="col-sm-12">
-			                    <div class="footer-newsletter">
-				                  	@if(Utils::$lang=='id')
-				                  		<h4>Kantor Pusat WAKI</h4>
-				                  	@elseif(Utils::$lang=='eng')
-				                  		<h4>WAKi Headquarter</h4>
-				                  	@endif
+			                    <div>
+				                  		<h4>WAKi 3D Printing Industries</h4>
 
-
-			                      	<p style="margin-bottom: 5px;"><strong>WAKi International Group</strong></p>
-			                      	<p>WAKi Tower,
-			                      	S-01-01, Block C, USJ ONE,
-			                      	Persiaran Subang Permai, USJ 1
-			                      	47500 Subang Jaya, Selangor,
-			                      	Malaysia.</p>
+			                      	<p>WAKi 3D Printing Industries since 2021.<br>
+															We design, print and sell 3D model over 5000+ models</p>
 			                    </div>
 
-			                    <div class="footer-links">
-			                    	@if(Utils::$lang=='id')
-				                  		<h4>Kontak Kami</h4>
-				                      	<p>
-				                        	<strong>Telepon:</strong>
-				                        	<br>Malaysia : +60 10 239 3899
-				                        	<br>Indonesia : +62 811 8683 899
-				                        	<br>Philippines: +63 998 988 8899
-				                        	<br>Cambodia: +855 11 762 719
-				                        	<br>Myanmar: +95 9 79653 2299
-				                        	<br>Vietnam: +84 90 143 31 99
-				                        	<br>Thailand: +66 6 1965 9646
-				                      	</p>
-				                  	@elseif(Utils::$lang=='eng')
-				                  		<h4>Contact Us</h4>
-				                      	<p>
-				                        	<strong>Phone:</strong>
-				                        	<br>Malaysia : +60 10 239 3899
-				                        	<br>Indonesia : +62 811 8683 899
-				                        	<br>Philippines: +63 998 988 8899
-				                        	<br>Cambodia: +855 11 762 719
-				                        	<br>Myanmar: +95 9 79653 2299
-				                        	<br>Vietnam: +84 90 143 31 99
-				                        	<br>Thailand: +66 6 1965 9646
-				                      	</p>
-
-				                      	<a href="{{ route('term_cond') }}"><p><strong>Term and Condition</strong></p></a>
-				                  	@endif
+			                    <div>
+			                    	<ul class="fa-ul">
+															<li class="footer-menu-list"><i class="fa-li fas fa-map-marker-alt"></i>WAKi Tower, S-01-01, Block C, USJ ONE, Persiaran Subang Permai, USJ 1 47500 Subang Jaya, Selangor, Malaysia.
+															</li>
+															<li class="footer-menu-list"><i class="fa-li fa fa-phone"></i>+60 16-688 8903
+															</li>
+															<li class="footer-menu-list"><i class="fa-li fas fa-globe"></i>www.waki3dprint.com
+															</li>
+														</ul>
 			                    </div>
 
-			                    <div class="social-links">
-			                    	@if(Utils::$lang=='id')
-				                  		<h4>Ikuti Kami</h4>
-				                  	@elseif(Utils::$lang=='eng')
-				                  		<h4>Follow Us</h4>
-				                  	@endif
 
-			                      	<a href="https://web.facebook.com/wakimart.id" class="facebook"><i class="fa fa-facebook"></i></a>
-			                      	<a href="https://www.instagram.com/wakimart.id/" class="instagram"><i class="fa fa-instagram"></i></a>
-			                      	<a href="https://www.youtube.com/channel/UCI2G97LQi4lHZ0yQtug1Wqw" class="youtube"><i class="fa fa-youtube"></i></a>
-			                    </div>
                   			</div>
               			</div>
               		</div>
 
-		            <div class="col-lg-6">
+								<div class="col-lg-3 d-none d-lg-block">
+									<div class="logo logo-footer justify-content-center align-content-center">
+						        <a href="#header" class="scrollto"><img src="http://localhost/waki-indonesia/public/sources/waki3dprinting.png" alt="" class="img-fluid"></a>
+						      </div>
+             			<div class="col-md-12">
+                    <div class="footer-newsletter">
+	                  		<h4>Menu</h4>
+												<ul class="footer-menu">
+													<li class="footer-menu-list">About
+													</li>
+													<li class="footer-menu-list">Our Service
+													</li>
+													<li class="footer-menu-list">Testimonial
+													</li>
+												</ul>
+                    </div>
+										<div class="social-links text-center">
+												<a href="https://web.facebook.com/wakimart.id" class="facebook"><i class="fa fa-facebook"></i></a>
+												<a href="https://www.instagram.com/wakimart.id/" class="instagram"><i class="fa fa-phone"></i></a>
+												<a href="https://www.youtube.com/channel/UCI2G97LQi4lHZ0yQtug1Wqw" class="youtube"><i class="fa fa-youtube"></i></a>
+										</div>
+              		</div>
+              	</div>
+
+		            <div class="col-lg-5">
 		              	<div class="form">
-		              	@if(Utils::$lang=='id')
-		              		<h4>Kirim Pesan</h4>
-			                <form action="" method="post" role="form" class="contactForm">
-			                  	<div class="form-group">
-			                    	<input type="text" name="name" class="form-control" id="name" placeholder="Nama Lengkap" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
-			                    	<div class="validation"></div>
-			                  	</div>
-			                  	<div class="form-group">
-			                    	<input type="email" class="form-control" name="email" id="email" placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
-			                    	<div class="validation"></div>
-			                  	</div>
-			                  	<div class="form-group">
-			                    	<input type="text" class="form-control" name="subject" id="subject" placeholder="Subyek" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
-			                    	<div class="validation"></div>
-			                  	</div>
-			                  	<div class="form-group">
-			                    	<textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Pesan"></textarea>
-			                    	<div class="validation"></div>
-			                  	</div>
 
-			                  	<div id="sendmessage">Pesan Anda telah terkirim. Thank you!</div>
-			                  	<div id="errormessage"></div>
-
-			                  	<div class="text-center"><button type="submit" title="Send Message">Kirim Pesan</button></div>
-			                </form>
-		              	@elseif(Utils::$lang=='eng')
 		              		<h4>Send us a message</h4>
 			                <form action="" method="post" role="form" class="contactForm">
 			                  	<div class="form-group">
@@ -237,9 +198,9 @@
 			                  	<div id="sendmessage">Your message has been sent. Thank you!</div>
 			                  	<div id="errormessage"></div>
 
-			                  	<div class="text-center"><button type="submit" title="Send Message">Send Message</button></div>
+			                  	<div class="text-center"><button type="submit" title="Send Message">Send
+														<span class="span-padding"></span><i class="fas fa-location-arrow"></i></button></div>
 			                </form>
-		              	@endif
 		              </div>
 		            </div>
           		</div>
@@ -248,7 +209,7 @@
 
 	    <div class="container">
 	      <div class="copyright">
-	        &copy; Copyright <strong>WAKi 3D Shop</strong>. All Rights Reserved
+	        &copy; Copyright <strong>WAKi 3D Print Industries</strong>. All Rights Reserved
 	      </div>
 	      <div class="credits">
 	        <a href="https://waki.asia/">WAKi International Group</a>

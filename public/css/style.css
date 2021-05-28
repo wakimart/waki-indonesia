@@ -1885,18 +1885,43 @@ CORE
 --------------------------------------------------------------*/
 
 #footer {
-  padding: 0 0 30px 0;
+  padding: 0 0 10px 0;
   font-size: 14px;
   background: #fff;
 }
 
+.logo-footer{
+  width: 70%;
+  min-width: 200px;
+  margin: auto;
+  padding-bottom: 1em;
+}
+
+.span-padding{
+  margin-right: 1em;
+}
+
 #footer .footer-top {
-  padding: 60px 0 30px 0;
+  padding: 30px 0 30px 0;
   background: #f1faf2;
 }
 
 #footer .footer-top .footer-info {
   margin-bottom: 30px;
+}
+
+#footer .footer-menu {
+  list-style: none;
+  padding: 0;
+}
+.footer-menu-list {
+  padding: 0.5em 0;
+}
+
+#footer .footer-newsletter {
+  margin-top: 1em;
+  margin: auto;
+  display: table;
 }
 
 #footer .footer-top .footer-info h3 {
@@ -1939,11 +1964,11 @@ CORE
 }
 
 #footer .footer-top h4 {
-  font-size: 14px;
-  font-weight: bold;
-  color: #413e66;
-  text-transform: uppercase;
+  font-size: 1.3em;
+  font-weight: 800;
+  color: #2b2b2b;
   position: relative;
+  font-family: "Poppins", sans-serif;
 }
 
 #footer .footer-top .footer-links {
@@ -2062,12 +2087,15 @@ CORE
 }
 
 #footer .footer-top .form button[type="submit"] {
-  background: #048b32;
-  border: 0;
-  border-radius: 3px;
-  padding: 8px 30px;
+  background: #FFDE6C;
+  border:0;
+  max-width: 200px;
+  min-width: 120px;
+  padding: 0.7em 1.2em;
+  transition: 0.5s;
   color: #fff;
-  transition: 0.3s;
+  font-size: 1.1em;
+  font-weight:800;
 }
 
 #footer .footer-top .form button[type="submit"]:hover {
@@ -2078,7 +2106,7 @@ CORE
 
 #footer .copyright {
   text-align: center;
-  padding-top: 30px;
+  padding-top: 10px;
   color: #535074;
   font-size: 15px;
 }
