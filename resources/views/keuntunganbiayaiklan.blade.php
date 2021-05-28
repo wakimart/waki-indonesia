@@ -176,7 +176,7 @@
                         <b><p>No. MPC</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
-                        <p>: {{$submission['no_mpc']}}</p>
+                        <p>: {{$submission['no_member']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>Alamat</p></b>
@@ -211,6 +211,7 @@
                         <td width="30%"><li>ECO DISINFECTANT</li></td>
                         <td width="30%"><li>BEDSHEET</li></td>
                         <td width="30%"><li>BIO ENERGY WATER SYSTEM (WKB8002)</li></td>
+                        <td width="30%"><li>Voucher WAKimart Rp. 1.000.000</li></td>
                     </tr>
                     <tr>
                         <td></td>

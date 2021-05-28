@@ -152,7 +152,7 @@
                         <b><p>No. MPC</p></b>
                     </div>
                     <div class="col-6">
-                        <p>: {{$submission['no_mpc']}}</p>
+                        <p>: {{$submission['no_member']}}</p>
                     </div>
                 </div>
             </div>
@@ -190,7 +190,8 @@
                     </div>
                     <div class="col-md-4 col-sm-4">
                         <p>: {{$submission['address']}} <br>
-                            {{$submission->province_obj['province']}}, {{$submission->city_obj['city_name']}}, {{$submission->district_obj['subdistrict_name']}}</p>                    </div>
+                            {{$submission->province_obj['province']}}, {{$submission->city_obj['city_name']}}, {{$submission->district_obj['subdistrict_name']}}</p>
+                    </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>Telp. / HP</p></b>
                     </div>
@@ -214,14 +215,20 @@
                             <th colspan="3">Produk Hadiah</th>
                         </tr>
                         <tr>
-                            <td width="30%"><li>FACIAL MASSAGE</li></td>
-                            <td width="30%"><li>VACCU CUPPING</li></td>
-                            <td width="30%"><li>SLIPPER MASSAGE</li></td>
+                            @php
+                                $j = 0;
+                            @endphp
+
+                            @while(isset($souvenirs[$j]) && $j < 3)
+                                <td width="30%"><li>{{ $souvenirs[$j]['name'] }}</li></td>
+                                @php $j++; @endphp
+                            @endwhile
                         </tr>
                         <tr>
-                            <td width="30%"><li>MULTI MASSAGE</li></td>
-                            <td width="30%"><li>NIFIR UNDERWEAR</li></td>
-                            <td width="30%"><li>E-VOUCHER Rp. 270.000,-</li></td>
+                            @while(isset($souvenirs[$j]) && $j < 6)
+                                <td width="30%"><li>{{ $souvenirs[$j]['name'] }}</li></td>
+                                @php $j++; @endphp
+                            @endwhile
                         </tr>
                     </table>
                 </div>

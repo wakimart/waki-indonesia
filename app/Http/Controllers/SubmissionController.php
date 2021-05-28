@@ -1626,6 +1626,7 @@ class SubmissionController extends Controller
 
     public function referenceSehat(Request $request){
         $submission = Submission::find($request->id);
-        return view('sehatbersamawaki', compact('submission'));
+        $souvenirs = Souvenir::where('active', true)->get();
+        return view('sehatbersamawaki', compact('submission', 'souvenirs'));
     }
 }
