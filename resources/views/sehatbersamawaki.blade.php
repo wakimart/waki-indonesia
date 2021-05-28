@@ -95,6 +95,7 @@
                Program Refrensi Sehat Bersama WAKi
             </h2>
         </div>
+        <h5 style="text-align: center;">{{ $submission['code'] }}</h5>
 
         <div id="smmobile" class="row justify-content-center mt-5 pt-3 no-gutters">
             <div class="col-12 no-gutters">
@@ -183,7 +184,7 @@
                         <b><p>No. MPC</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
-                        <p>: {{$submission['no_mpc']}}</p>
+                        <p>: {{$submission['no_member']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>Alamat</p></b>
