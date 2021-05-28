@@ -320,24 +320,29 @@ class SubmissionController extends Controller
             $user_id = Auth::user()["id"];
             $i = 1;
             $path = "sources/registration";
-            $submissionImage = new SubmissionImage();
-            $submissionImage->submission_id = $submission->id;
-            foreach ($request->file("proof_image") as $image) {
-                $fileName = ((string)time())
-                    . "_"
-                    . $user_id
-                    . "_"
-                    . $i
-                    . "."
-                    . $image->getClientOriginalExtension();
+            if ($request->hasFile("proof_image")) {
+                $submissionImage = new SubmissionImage();
+                $submissionImage->submission_id = $submission->id;
 
-                $image->move($path, $fileName);
+                foreach ($request->file("proof_image") as $image) {
+                    $fileName = ((string)time())
+                        . "_"
+                        . $user_id
+                        . "_"
+                        . $i
+                        . "."
+                        . $image->getClientOriginalExtension();
 
-                $submissionImage["image_" . $i] = $fileName;
+                    $image->move($path, $fileName);
 
-                $i++;
+                    $submissionImage["image_" . $i] = $fileName;
+
+                    $i++;
+                }
+
+                $submissionImage->save();
             }
-            $submissionImage->save();
+
 
             $dataCount = count($data["name_ref"]);
             for ($i = 0; $i < $dataCount; $i++) {
@@ -389,7 +394,7 @@ class SubmissionController extends Controller
             //     ->with('success', 'Data berhasil dimasukkan.');
 
             $request = new \Illuminate\Http\Request();
-            $request->replace(['id' => $submission->id, 'type' => 'referensi']); 
+            $request->replace(['id' => $submission->id, 'type' => 'referensi']);
             return $this->show($request);
 
         } catch (Exception $e) {
