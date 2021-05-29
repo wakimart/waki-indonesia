@@ -8,6 +8,8 @@ use App\HistoryUpdate;
 use App\HomeService;
 use App\Prize;
 use App\Promo;
+use App\Order;
+use App\DeliveryOrder;
 use App\Reference;
 use App\ReferenceImage;
 use App\ReferencePromo;
@@ -710,6 +712,68 @@ class SubmissionController extends Controller
                 "error message" => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function fetchDetailPerReference($refs_id){
+        $data = [];
+
+        $reference_souvenirs = ReferenceSouvenir::where('id', $refs_id)->get();
+        $reference = Reference::where('id', $reference_souvenirs[0]['reference_id'])->get();
+        
+        $get_hs = null;
+        if($reference_souvenirs[0]['link_hs'] != null){
+            $get_hs = HomeService::whereIn('id', json_decode($reference_souvenirs[0]['link_hs'], true))->get();
+        }
+
+        $get_souvenir = null;
+        if($reference_souvenirs[0]['souvenir_id'] != null){
+            $get_souvenir = Souvenir::where('id', $reference_souvenirs[0]['souvenir_id'])->get();
+        }
+        
+        $get_order = null;
+        if($reference_souvenirs[0]['order_id'] != null){
+            $get_order = Order::where('id', $reference_souvenirs[0]['order_id'])->get();
+        }
+        
+
+        $get_prize = null;
+        if($reference_souvenirs[0]['prize_id'] != null){
+            $get_prize = Prize::where('id', $reference_souvenirs[0]['prize_id'])->get();    
+        }        
+
+        
+        $arr_product = [];
+        if($get_order != null){
+            $string = "";
+            foreach (json_decode($get_order[0]['product'], true) as $item) {
+                $temp = [];
+                if(is_numeric($item['id']) && $item['id'] != 8){
+                    //$code = DeliveryOrder::$Promo[$item['id']]['code'];
+                    $name = DeliveryOrder::$Promo[$item['id']]['name'];
+                    //$price = DeliveryOrder::$Promo[$item['id']]['harga'];
+
+                    $temp['name'] = DeliveryOrder::$Promo[$item['id']]['name'];
+                    $temp['qty'] = $item['qty']; 
+                    //$string = $code . ' - ' . $name . ' (' . $item['qty'] . ' pcs)';
+                    array_push($arr_product, $temp);
+                }else{
+                    //$string = $item['id'] . ' (' . $item['qty'] . ' pcs)';
+                    $temp['name'] = $item['id'];
+                    $temp['qty'] = $item['qty']; 
+                    array_push($arr_product, $temp);
+                }
+            }
+        }
+        
+        $data['data_refs'] = $reference_souvenirs; //reference souvenir
+        $data['data_ref'] = $reference; //references
+        $data['data_hs'] = $get_hs;
+        $data['data_souvenir'] = $get_souvenir;
+        $data['data_order'] = $get_order;
+        $data['data_prize'] = $get_prize;
+        $data['detail_product'] = $arr_product;
+
+        return json_encode($data);
     }
 
     /**

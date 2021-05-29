@@ -225,6 +225,11 @@ class ReferenceController extends Controller
      */
     public function update(Request $request)
     {
+        // return response()->json([
+        //         "result" => 1,
+        //         "data" => $request->all(),
+        //     ]);
+
         if (!empty($request->id)) {
             $user = Auth::user();
 
