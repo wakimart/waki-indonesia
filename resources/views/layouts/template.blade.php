@@ -106,7 +106,7 @@
 
 						@if(Utils::$lang=='id' || Utils::$lang=='eng')
 	          <li class="drop-down"><a href="#product">Produk</a>
-	            {{-- <ul>
+	            <ul>
 								@foreach (App\CategoryProduct::all() as $categoryProduct)
 								<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
 									@if( ! $categoryProduct->product->isEmpty())
@@ -118,7 +118,7 @@
 									@endif
 								  </li>
 								@endforeach
-	            </ul> --}}
+	            </ul>
 	          </li>
 						@endif
 
