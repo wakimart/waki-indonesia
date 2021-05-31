@@ -394,9 +394,16 @@ $menu_item_second = "add_submission_reference";
                                                 Pilih Souvenir
                                             </option>
                                             @foreach ($souvenirs as $souvenir)
+                                                @if($souvenir->id == 7)
+                                                <option value="{{ $souvenir->id }}" hidden="">
+                                                    {{ $souvenir->name }}
+                                                </option>
+                                                @else
                                                 <option value="{{ $souvenir->id }}">
                                                     {{ $souvenir->name }}
                                                 </option>
+                                                @endif
+                                                
                                             @endforeach
                                         </select>
                                     </div>
@@ -415,9 +422,15 @@ $menu_item_second = "add_submission_reference";
                                                 Choose Prize
                                             </option>
                                             @foreach ($prizes as $prize)
-                                                <option value="{{ $prize->id }}">
-                                                    {{ $prize->name }}
-                                                </option>
+                                                @if($prize->id == 4)
+                                                    <option value="{{ $prize->id }}" hidden="">
+                                                        {{ $prize->name }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $prize->id }}">
+                                                        {{ $prize->name }}
+                                                    </option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>

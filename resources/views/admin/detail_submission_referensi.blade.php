@@ -215,7 +215,10 @@ if (
                                 </div>
 
                                 <div class="table-responsive" style=" margin-left 1em; margin-right: 1em;">
-                                    <?php $formLength = $references->count(); ?>
+                                    <?php 
+                                        $formLength = $references->count(); 
+                                        $arr_souvenir = [];
+                                    ?>
                                     <input type="hidden"
                                         id="form-length"
                                         value="{{ $formLength }}" />
@@ -245,7 +248,11 @@ if (
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($references as $key => $reference): ?>
+                                            <?php 
+                                                foreach ($references as $key => $reference): 
+                                                    array_push($arr_souvenir, $reference['souvenir_id']);
+                                            ?>
+
                                                 <input type="hidden"
                                                     id="edit-id_{{ $key }}"
                                                     class="d-none"
@@ -360,12 +367,17 @@ if (
                                                         data-prize="{{ $reference->prize_id }}"
                                                         data-permission="{{ $specialPermission }}">
                                                         <?php
+                                                        $bonus_prize = ($key + 1) % 3;
                                                         if (!empty($reference->prize_id)) {
                                                             $prize = Prize::select("id", "name")
                                                                 ->where("id", $reference->prize_id)
                                                                 ->first();
 
-                                                            echo $prize->name;
+                                                            if($bonus_prize == 0){
+                                                                echo $prize->name . " + Voucher WAKimart Rp. 1.000.000";    
+                                                            }else{
+                                                                echo $prize->name;
+                                                            }
                                                         }
                                                         ?>
                                                     </td>
@@ -382,15 +394,14 @@ if (
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
+                                            <input type="hidden" id="temp_arr_souvenir" value="{{json_encode($arr_souvenir)}}">
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
                             <div class="col-md-12 center mt-4">
-                                <button class="btn btn-gradient-primary mt-2"
-                                    data-toggle="modal"
-                                    data-target="#edit-reference">
+                                <button class="btn btn-gradient-primary mt-2" id="btnAddReference" onclick="checkAddReference()">
                                     <span>Add Reference - Sehat Bersama WAKi<br>
                                     / Keuntungan Biaya Iklan</span>
                                 </button>
@@ -560,34 +571,34 @@ if (
                             </option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="edit-souvenir">Souvenir</label>
-                        <select class="form-control"
-                            id="edit-souvenir"
-                            name="souvenir_id">
+                    <div id="appendSouvenir" class="form-group">
+                        <label id="label_souvenir" for="edit-souvenir">Souvenir</label>
+                        <select class="form-control" id="edit-souvenir" name="souvenir_id">
                             <option selected disabled>
                                 Pilih Souvenir
                             </option>
-                            <?php foreach ($souvenirs as $souvenir): ?>
-                                <option value="<?php echo $souvenir->id; ?>">
-                                    <?php echo $souvenir->name; ?>
-                                </option>
-                            <?php endforeach; ?>
+                            @foreach($souvenirs as $souvenir)
+                                @if($souvenir['id'] == 7)
+                                    <option value="{{$souvenir['id']}}" hidden="">{{$souvenir['name']}}</option>
+                                @else
+                                    <option value="{{$souvenir['id']}}">{{$souvenir['name']}}</option>
+                                @endif
+                            @endforeach
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="edit-prize">Prize</label>
-                        <select class="form-control"
-                            id="edit-prize"
-                            name="prize_id">
+                    <div id="appendPrize" class="form-group">
+                        <label id="label_prize" for="edit-prize">Prize</label>
+                        <select class="form-control" id="edit-prize" name="prize_id">
                             <option selected disabled>
                                 Choose Prize
                             </option>
-                            <?php foreach ($prizes as $prize): ?>
-                                <option value="<?php echo $prize->id; ?>">
-                                    <?php echo $prize->name; ?>
-                                </option>
-                            <?php endforeach; ?>
+                            @foreach($prizes as $prize)
+                                @if($prize['id'] == 4)
+                                    <option value="{{$prize['id']}}" hidden="">{{$prize['name']}}</option>
+                                @else
+                                    <option value="{{$prize['id']}}">{{$prize['name']}}</option>
+                                @endif
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
@@ -734,7 +745,10 @@ let provinceOption = "";
 let souvenirOption = `<option disabled selected value="">Pilih souvenir</option>`;
 let prizeOption = `<option selected value="">Choose Prize</option>`;
 
+var souvenir_res = null;
+
 document.addEventListener('DOMContentLoaded', function () {
+    //console.log("loaded");
     const URL_PROVINCE = '<?php echo route("fetchProvince"); ?>';
     const URL_SOUVENIR = '<?php echo route("fetchSouvenir"); ?>';
     const URL_PRIZE = '<?php echo route("fetchPrize"); ?>';
@@ -781,11 +795,19 @@ document.addEventListener('DOMContentLoaded', function () {
         return response.json();
     }).then(function (response) {
         const result = response.data;
+        souvenir_res = result;
 
         result.forEach(function (currentValue) {
-            souvenirOption += `<option value="${currentValue["id"]}">`
+            if(currentValue["id"] == 7){
+                souvenirOption += `<option value="${currentValue["id"]}" hidden="">`
+                + currentValue["name"]
+                + `</option>`;    
+            }else{
+                souvenirOption += `<option value="${currentValue["id"]}">`
                 + currentValue["name"]
                 + `</option>`;
+            }
+            
         });
     }).catch(function (error) {
         console.error(error);
@@ -809,9 +831,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const result = response.data;
 
         result.forEach(function (currentValue) {
-            prizeOption += `<option value="${currentValue["id"]}">`
+            if(currentValue["id"] == 4){
+                prizeOption += `<option value="${currentValue["id"]}" hidden="">`
                 + currentValue["name"]
                 + `</option>`;
+            }else{
+                prizeOption += `<option value="${currentValue["id"]}">`
+                + currentValue["name"]
+                + `</option>`;
+            }
+            
         });
     }).catch(function (error) {
         console.error(error);
@@ -919,8 +948,53 @@ function setCityAdd(e) {
     });
 }
 
+
+var total_ref = $('#form-length').val();
+function checkAddReference(){
+    var temp_index_ref = parseInt(total_ref) + 1;
+
+    //checking souvenir 1juta
+    var arrSouvenir = JSON.parse($("#temp_arr_souvenir").val(), true);
+    var check_souvenir = arrSouvenir.includes(7);
+
+    if(check_souvenir == false){
+        if(temp_index_ref >= 6){
+            //showing souvenir voucher 1jt
+            $('#label_souvenir').remove();
+            $('#edit-souvenir').remove();
+            $('#appendSouvenir').append('\
+                <label id="label_souvenir" for="edit-souvenir">Souvenir</label>\
+                <select class="form-control" id="edit-souvenir" name="souvenir_id">\
+                    <option selected disabled>Pilih Souvenir</option>\
+                    @foreach($souvenirs as $souvenir)<option value="{{$souvenir['id']}}">{{$souvenir['name']}}</option>@endforeach\
+                </select>\
+            ');
+        }
+    }
+
+    $("#edit-reference").modal('show');
+    
+}
+
 function clickEdit(e) {
     const refSeq = e.dataset.edit.split("_")[1];
+
+    //checking souvenir 1juta
+    var arrSouvenir = JSON.parse($("#temp_arr_souvenir").val(), true);
+    var check_souvenir = arrSouvenir.includes(7);
+
+    var counter_ref = parseInt(refSeq) + 1;
+    if(check_souvenir == false){
+        if(counter_ref >= 6){
+            souvenirOption = "";
+            souvenir_res.forEach(function(currentValue){
+                souvenirOption += `<option value="${currentValue["id"]}">`
+                    + currentValue["name"]
+                    + `</option>`;
+            });
+        }
+    }
+    
     const id = document.getElementById("edit-id_" + refSeq).value;
     const name = document.getElementById("name_" + refSeq).innerHTML.trim();
     const age = document.getElementById("age_" + refSeq).innerHTML.trim();
