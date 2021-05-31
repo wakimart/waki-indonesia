@@ -1273,6 +1273,7 @@ function clickEdit(e) {
     if(check_souvenir == false){
         if(counter_ref >= 6){
             souvenirOption = "";
+            souvenirOption = `<option disabled selected value="">Pilih souvenir</option>`;
             souvenir_res.forEach(function(currentValue){
                 souvenirOption += `<option value="${currentValue["id"]}">`
                     + currentValue["name"]
