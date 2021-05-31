@@ -1012,7 +1012,7 @@ class HomeServiceController extends Controller
                         }
 
                         $data = $request->all();
-                        $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+                        $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4)."/".$key;
 
                         $getAppointment = $value." ".$get_timeAppointment[$key];
                         $getIdCso = Cso::where('code', $data['cso_id'])->first()['id'];
