@@ -39,7 +39,7 @@ class ReferenceSouvenir extends Model
         return $this->belongsTo("App\Prize");
     }
 
-    public function fetch_hs()
+    public static function fetch_hs()
     {
         if($this->link_hs != null){
             $result = HomeService::whereIn('id', json_decode($this->link_hs, true))->get();

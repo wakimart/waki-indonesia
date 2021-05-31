@@ -73,7 +73,6 @@ Route::get('/fetchDistrict/{city}', function ($city) {
 Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSouvenir");
 Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
 
-
 //KHUSUS WEB SERVICE APPS (for non CSRF)
 Route::group(['prefix' => 'api-apps'], function () {
     Route::post('login','Auth\LoginController@loginApi'); //login
@@ -231,6 +230,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //Check change password admin
     Route::post('/checkChangePassword', 'UserAdminController@checkChangePassword')
             ->name('check-change-password');
+
+    //refrence
+    Route::get('/fetchDetailPerReference/{reference}', 'SubmissionController@fetchDetailPerReference')->name('fetchDetailPerReference');
 
     Route::group(['prefix' => 'useradmin', 'middleware' => 'auth'], function() {
         //Add Form UserAdmin
