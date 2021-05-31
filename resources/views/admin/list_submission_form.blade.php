@@ -94,6 +94,13 @@ $menu_item_second = "list_submission_form";
                         </select>
                     </div>
                 </div>
+                <div class="col-xs-6 col-sm-3"
+                    style="padding: 0; display: inline-block;">
+                    <div class="form-group">
+                        <label for="filter-type">Search by Name/ Phone/ Code</label>
+                        <input class="form-control" type="text" name="filter_text" placeholder="Name, Phone, Code" value="{{ isset($_GET["filter_text"]) ? $_GET["filter_text"] : "" }}">
+                    </div>
+                </div>
                 <div class="col-xs-6 col-sm-6"
                     style="padding: 0; display: inline-block;">
                     <div class="form-group">

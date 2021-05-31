@@ -117,7 +117,7 @@ class SubmissionController extends Controller
                 Auth::user()->cso["id"],
             ];
 
-            $submissions = Submission::where($whereArray)->orderBy('id', "desc")->paginate(10);
+            $submissions = Submission::where($whereArray);
         } elseif (
             Auth::user()->roles[0]->slug === "branch"
             || Auth::user()->roles[0]->slug === "area-manager"
@@ -135,12 +135,20 @@ class SubmissionController extends Controller
                 "branch_id",
                 $arrBranches
             )
-            ->orderBy(DB::raw("DATE(submissions.created_at)"), "desc")
-            ->where($whereArray)
-            ->paginate(10);
+            ->where($whereArray);
         } else {
-            $submissions = Submission::where($whereArray)->orderBy('id', "desc")->paginate(10);
+            $submissions = Submission::where($whereArray);
         }
+
+        if (!empty($request->filter_text)) {
+            $filter_text = $request->filter_text;
+            $submissions = $submissions->where(function ($q) use ($filter_text){
+                $q->where('name', "like", "%" . $filter_text . "%")
+                    ->orWhere('phone', "like", "%" . $filter_text . "%")
+                    ->orWhere('code', "like", "%" . $filter_text . "%");
+            });
+        }
+        $submissions = $submissions->orderBy('id', "desc")->paginate(10);
 
         $countSubmission = $submissions->count();
 
