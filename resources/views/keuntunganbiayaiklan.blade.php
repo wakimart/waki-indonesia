@@ -96,6 +96,7 @@
                Program Refrensi Keuntungan Biaya Iklan
             </h2>
         </div>
+        <h5 style="text-align: center;">{{ $submission['code'] }}</h5>
 
         <div id="smmobile" class="row justify-content-center mt-5 pt-3 no-gutters">
             <div class="col-12 no-gutters">
@@ -145,7 +146,7 @@
                         <b><p>No. MPC</p></b>
                     </div>
                     <div class="col-6">
-                        <p>: {{$submission['no_mpc']}}</p>
+                        <p>: {{$submission['no_member']}}</p>
                     </div>
                 </div>
             </div>
@@ -176,7 +177,7 @@
                         <b><p>No. MPC</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
-                        <p>: {{$submission['no_mpc']}}</p>
+                        <p>: {{$submission['no_member']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>Alamat</p></b>
@@ -205,17 +206,15 @@
             <div class="table-responsive">
                 <table class="table table-borderless produk" style="border:1px #ccc solid;">
                     <tr class="text-center" style="border-bottom: 1px solid #ccc;">
-                        <th colspan="3">Produk Hadiah</th>
+                        <th colspan="2">Produk Hadiah</th>
                     </tr>
                     <tr>
-                        <td width="30%"><li>ECO DISINFECTANT</li></td>
-                        <td width="30%"><li>BEDSHEET</li></td>
-                        <td width="30%"><li>BIO ENERGY WATER SYSTEM (WKB8002)</li></td>
+                        <td width="50%"><li>ECO DISINFECTANT</li></td>
+                        <td width="50%"><li>BEDSHEET</li></td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td width="50%"><li>BIO ENERGY WATER SYSTEM (WKB8002)</li></td>
+                        <td width="50%"><li>Voucher WAKimart Rp. 1.000.000</li></td>
                     </tr>
                 </table>
             </div>
@@ -247,16 +246,19 @@
                     @foreach($submission->reference as $keyNya => $referenceNya)
                         @php
                             $Reference_HS = $referenceNya->reference_souvenir->fetch_hs();
-                            $totReference_HS = sizeof($Reference_HS);
+                            $totReference_HS = 0;
+                            if($Reference_HS != null){
+                                $totReference_HS = sizeof($Reference_HS);
+                            }
                         @endphp
 
                         <tr>
-                            <td rowspan="{{ $totReference_HS }}">{{ $keyNya+1 }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya['name'] }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya['phone'] }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya->getCityName() }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya->reference_souvenir->prize['name'] }}</td>
-                            <td>{{ $Reference_HS[0]['appointment'] }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $keyNya+1 }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya['name'] }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya['phone'] }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->getCityName() }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->reference_souvenir->prize['name'] }}</td>
+                            <td>{{ $totReference_HS > 0 ? $Reference_HS[0]['appointment'] : "-" }}</td>
                         </tr>
                         @for($i = 1; $i < $totReference_HS; $i++)
                             <tr>

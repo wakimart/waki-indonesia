@@ -27,15 +27,16 @@ if (
         margin: 1em;
         font-size: 14px;
     }
-
     .table-responsive table {
-        display: inline-table;
         table-layout:fixed;
-        overflow:scroll;
-    }
+        width: 98%;
+    } 
 
     .table-responsive table td {
         word-wrap:break-word;
+        min-width: 160px;
+        max-width: 160px;
+        white-space:normal
     }
 
     .table-responsive table .form-control {
@@ -72,6 +73,7 @@ if (
 
     .right {
         text-align: right;
+        padding-right: 1em;
     }
 
     .pInTable {
@@ -86,335 +88,384 @@ if (
     .modal {
         overflow-y: auto !important;
     }
+
+    .btn {
+        width: 100%;
+        min-width: 50px;
+        max-width: 400px; 
+    }
+
+   /*  @media (min-width: 768px) { 
+		.table-responsive::-webkit-scrollbar {
+            display: none;
+        }
+	} */
+
+    @media (max-width: 480px) { 
+		.btn span {
+            font-size: 2.5vw;
+            padding: 0 !important;
+        }
+	}
+
+    @media (max-width: 1187px) { 
+		.btn {
+            margin-bottom: 3em;
+        }
+	}
+
+
 </style>
 @endsection
 
 @section('content')
 @if ($submission->code !== null)
-    <section id="intro" class="clearfix">
-        <div class="container">
-            <div class="row justify-content-center">
-                <h2>SUBMISSION SUCCESS</h2>
-            </div>
-            <div class="row justify-content-center">
-                <table class="col-md-12">
-                    <thead>
-                        <td class="right">Submission Date</td>
-                    </thead>
-                    <tr>
-                        <td class="right">
-                            {{ date("d/m/Y H:i:s", strtotime($submission->created_at)) }}
-                        </td>
-                    </tr>
-                </table>
-
-                <table class="col-md-12">
-                    <thead>
-                        <td colspan="2">Customer Data</td>
-                    </thead>
-                    <tr>
-                        <td>Member Code: </td>
-                        <td>{{ $submission->no_member }}</td>
-                    </tr>
-                    <tr>
-                        <td>Name: </td>
-                        <td>{{ $submission->name }}</td>
-                    </tr>
-                    <tr>
-                        <td>Phone Number: </td>
-                        <td>{{ $submission->phone }}</td>
-                    </tr>
-                    <tr>
-                        <td rowspan="2">Address: </td>
-                        <td>{{ $submission->address }}</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <?php
-                            echo $submission->district
-                                . ", "
-                                . $submission->city
-                                . ", "
-                                . $submission->province;
-                            ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Proof (image)</td>
-                        <td>
-                            @for ($i = 1; $i <= 5; $i++)
-                                @if (!empty($submission["image_" . $i]))
-                                    <a href="{{ asset("sources/registration/" . $submission["image_" . $i]) }}"
-                                        target="_blank">
-                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: blue;"></i>
-                                    </a>
-                                @endif
-                            @endfor
-                        </td>
-                    </tr>
-                </table>
-
-                <table class="col-md-12">
-                    <thead>
-                        <td>Sales Branch</td>
-                        <td>Sales Code</td>
-                    </thead>
-                    <tr>
-                        <td style="width:50%; text-align: center">
-                            <?php
-                            echo $submission->branch_code
-                                . " - "
-                                . $submission->branch_name;
-                            ?>
-                        </td>
-                        <td style="width:50%; text-align: center">
-                            {{ $submission->cso_code }}
-                        </td>
-                    </tr>
-                </table>
-
-                <div class="table-responsive">
-                    <?php $formLength = $references->count(); ?>
-                    <input type="hidden"
-                        id="form-length"
-                        value="{{ $formLength }}" />
-                    <?php for ($i = 0; $i < $formLength; $i++): ?>
-                        <form method="POST" id="edit-form_{{ $i }}"></form>
-                    <?php endfor; ?>
-                    <table class="col-md-12" style="table-layout: auto;">
-                        <thead>
-                            <td colspan="14">Reference</td>
-                        </thead>
-                        <thead style="background-color: #80808012 !important;">
-                            <tr>
-                                <td>Name</td>
-                                <td>Age</td>
-                                <td>Phone</td>
-                                <td>Province</td>
-                                <td>City</td>
-                                <td>Link HS</td>
-                                <td>Order</td>
-                                <td>Souvenir/Prize</td>
-                                <td>Status</td>
-                                <td>Deliv. Status</td>
-                                {{-- <td>Prize</td>
-                                <td>Status Prize</td>
-                                <td>Deliv. Status Prize</td> --}}
-                                <th class="center">View</th>
-                                <td>Edit</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($references as $key => $reference): ?>
-                                <input type="hidden"
-                                    id="edit-id_{{ $key }}"
-                                    class="d-none"
-                                    name="id"
-                                    form="edit-form_{{ $key }}"
-                                    value="{{ $reference->id }}" />
-                                <tr>
-                                    <td rowspan="2" 
-                                        id="name_{{ $key }}">
-                                        {{ $reference->name }}
-                                    </td>
-                                    <td rowspan="2" 
-                                        class="center" id="age_{{ $key }}">
-                                        {{ $reference->age }}
-                                    </td>
-                                    <td rowspan="2" 
-                                        class="center" id="phone_{{ $key }}">
-                                        {{ $reference->phone }}
-                                    </td>
-                                    <td rowspan="2" 
-                                        id="province_{{ $key }}"
-                                        data-province="{{ $reference->province_id }}">
-                                        {{ $reference->province }}
-                                    </td>
-                                    <td rowspan="2" 
-                                        id="city_{{ $key }}"
-                                        data-city="{{ $reference->city_id }}">
-                                        {{ $reference->city }}
-                                    </td>
-                                    <?php
-                                    if (!empty($reference->link_hs)) {
-                                        $i = 1;
-                                        $link_hs = json_decode(
-                                            $reference->link_hs,
-                                            JSON_THROW_ON_ERROR
-                                        );
-                                    }
-                                    ?>
-                                    <td rowspan="2" 
-                                        class="center"
-                                        id="link-hs_{{ $key }}"
-                                        data-hs="{{ implode(", ", $link_hs) }}"
-                                        style="overflow-x: auto;">
-                                        @if (!empty($reference->link_hs))
-                                            @foreach ($link_hs as $value)
-                                                @if (is_numeric($value))
-                                                    <?php
-                                                    $hs = HomeService::select("code")->where("id", $value)->first();
-                                                    ?>
-                                                    <a id="link-hs-href_{{ $key }}"
-                                                        href="{{ route("homeServices_success", ["code" => $hs->code]) }}"
-                                                        target="_blank">
-                                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
-                                                    </a>
-                                                @else
-                                                    <a id="link-hs-href_{{ $key }}"
-                                                        href="{{ $value }}"
-                                                        target="_blank">
-                                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: red;"></i>
-                                                    </a>
-                                                @endif
-                                                <?php $i++; ?>
-                                            @endforeach
-                                        @endif
-                                    </td>
-                                    <td rowspan="2" 
-                                        class="center"
-                                        id="order_{{ $key }}"
-                                        data-order="{{ $reference->order_id }}"
-                                        style="overflow-x:auto;">
-                                        <?php
-                                        if (!empty($reference->order_id)) {
-                                            $order = Order::select("id", "code")
-                                                ->where("id", $reference->order_id)
-                                                ->first();
-
-                                            echo $order->code;
-                                        }
-                                        ?>
-                                    </td>
-                                    <td id="souvenir_{{ $key }}"
-                                        data-permission="{{ $specialPermission }}"
-                                        data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
-                                        {{ $reference->souvenir_name }}
-                                    </td>
-                                    <td class="center"
-                                        id="status_souvenir_{{ $key }}"
-                                        data-permission="{{ $specialPermission }}">
-                                        {{ $reference->status_souvenir }}
-                                    </td>
-                                    <td class="center"
-                                        id="delivery_status_souvenir_{{ $key }}"
-                                        data-deliverysouvenir="{{ $reference->delivery_status_souvenir }}"
-                                        data-permission="{{ $specialPermission }}">
-                                        {{ $reference->delivery_status_souvenir }}
-                                    </td>
-                                    <td class="center" rowspan="2">
-                                        <button id="btnDetailRef_{{$key}}" type="button" value="{{ $reference->id }}" onclick="loadDataPerRef(this.value)">
-                                            <i class="mdi mdi-eye" style="font-size: 24px;"></i>
-                                        </button>
-                                    </td>
-                                    <td rowspan="2" 
-                                        class="center">
-                                        <button class="btn"
-                                            id="btn-edit-save_{{ $key }}"
-                                            style="padding: 0;"
-                                            data-edit="edit_{{ $key }}"
-                                            onclick="clickEdit(this)"
-                                            value="{{ $reference->id }}">
-                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="center"
-                                        id="prize_{{ $key }}"
-                                        data-prize="{{ $reference->prize_id }}"
-                                        data-permission="{{ $specialPermission }}">
-                                        <?php
-                                        if (!empty($reference->prize_id)) {
-                                            $prize = Prize::select("id", "name")
-                                                ->where("id", $reference->prize_id)
-                                                ->first();
-
-                                            echo $prize->name;
-                                        }
-                                        ?>
-                                    </td>
-                                    <td class="center"
-                                        id="status_prize_{{ $key }}"
-                                        data-permission="{{ $specialPermission }}">
-                                        {{ $reference->status_prize }}
-                                    </td>
-                                    <td class="center"
-                                        id="delivery_status_prize_{{ $key }}"
-                                        data-deliveryprize="{{ $reference->delivery_status_prize }}"
-                                        data-permission="{{ $specialPermission }}">
-                                        {{ $reference->delivery_status_prize }}
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="col-md-12 center">
-                <button class="btn btn-gradient-primary mt-2"
-                    data-toggle="modal"
-                    data-target="#edit-reference">
-                    Add Reference - Sehat Bersama WAKi/Keuntungan Biaya Iklan
-                </button>
-            </div>
-
-            <div class="col-md-12 center" style="margin-top: 2em;">
-               <div class="card">
-                    <div class="card-body">
-                        <div class="row justify-content-center">
-                            <h2 class="text-center share">Share Submission Form</h2>
-                        </div>
-                        <form class="forms-sample" method="GET" action="https://wa.me/">
-                            <div class="form-group row justify-content-center">
-                                <button type="submit" class="btn btn-gradient-primary mr-2" name="text" value="Terima Kasih telah mengikuti program *Sehat Bersama WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">Share Sehat bersama Waki</button>
-                                <button type="submit" class="btn btn-gradient-primary mr-2" name="text" value="Terima Kasih telah mengikuti program *Keuntungan Biaya Iklan*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">Share Program Biaya Iklan</button>
+<div class="main-panel">
+    <div class="content-wrapper">
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>SUBMISSION SUCCESS</h2>
                             </div>
-                        </form>
+            
+                            <div class="row justify-content-center">
+                                
+                                <div class="table-responsive" style="margin-right: 0.5em;">
+                                    <table class="table">
+                                        <thead>
+                                            <td class="right">Submission Date</td>
+                                        </thead>
+                                        <tr>
+                                            <td class="right">
+                                                {{ date("d/m/Y H:i:s", strtotime($submission->created_at)) }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="table-responsive" style="margin-right: 0.5em;">
+                                    <table class="table">
+                                        <thead>
+                                            <td colspan="2">Customer Data</td>
+                                        </thead>
+                                        <tr>
+                                            <td>Member Code: </td>
+                                            <td>{{ $submission->no_member }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Name: </td>
+                                            <td>{{ $submission->name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Phone Number: </td>
+                                            <td>{{ $submission->phone }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">Address: </td>
+                                            <td>{{ $submission->address }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <?php
+                                                echo $submission->district
+                                                    . ", "
+                                                    . $submission->city
+                                                    . ", "
+                                                    . $submission->province;
+                                                ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Proof (image)</td>
+                                            <td>
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if (!empty($submission["image_" . $i]))
+                                                        <a href="{{ asset("sources/registration/" . $submission["image_" . $i]) }}"
+                                                            target="_blank">
+                                                            <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: blue;"></i>
+                                                        </a>
+                                                    @endif
+                                                @endfor
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="table-responsive" style="margin-right: 0.5em;">
+                                    <table class="table">
+                                        <thead>
+                                            <td>Sales Branch</td>
+                                            <td>Sales Code</td>
+                                        </thead>
+                                        <tr>
+                                            <td style="text-align: center">
+                                                <?php
+                                                echo $submission->branch_code
+                                                    . " - "
+                                                    . $submission->branch_name;
+                                                ?>
+                                            </td>
+                                            <td style="text-align: center">
+                                                {{ $submission->cso_code }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="table-responsive" style=" margin-left 1em; margin-right: 1em;">
+                                    <?php $formLength = $references->count(); ?>
+                                    <input type="hidden"
+                                        id="form-length"
+                                        value="{{ $formLength }}" />
+                                    <?php for ($i = 0; $i < $formLength; $i++): ?>
+                                        <form method="POST" id="edit-form_{{ $i }}"></form>
+                                    <?php endfor; ?>
+                                    <table class="table" style="table-layout: auto;">
+                                        <thead>
+                                            <td colspan="14">Reference</td>
+                                        </thead>
+                                        <thead style="background-color: #80808012 !important;">
+                                            <tr>
+                                                <td>Name</td>
+                                                <td>Age</td>
+                                                <td>Phone</td>
+                                                <td>Province</td>
+                                                <td>City</td>
+                                                <td>Link HS</td>
+                                                <td>Order</td>
+                                                <td>Souvenir/Prize</td>
+                                                <td>Status</td>
+                                                <td>Deliv. Status</td>
+                                                {{-- <td>Prize</td>
+                                                <td>Status Prize</td>
+                                                <td>Deliv. Status Prize</td> --}}
+                                                @if($specialPermission)
+                                                    <th class="center">View</th>
+                                                @endif
+                                                <td>Edit</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($references as $key => $reference): ?>
+                                                <input type="hidden"
+                                                    id="edit-id_{{ $key }}"
+                                                    class="d-none"
+                                                    name="id"
+                                                    form="edit-form_{{ $key }}"
+                                                    value="{{ $reference->id }}" />
+                                                <tr>
+                                                    <td rowspan="2"
+                                                        id="name_{{ $key }}">
+                                                        {{ $reference->name }}
+                                                    </td>
+                                                    <td rowspan="2"
+                                                        class="center" id="age_{{ $key }}">
+                                                        {{ $reference->age }}
+                                                    </td>
+                                                    <td rowspan="2"
+                                                        class="center" id="phone_{{ $key }}">
+                                                        {{ $reference->phone }}
+                                                    </td>
+                                                    <td rowspan="2"
+                                                        id="province_{{ $key }}"
+                                                        data-province="{{ $reference->province_id }}">
+                                                        {{ $reference->province }}
+                                                    </td>
+                                                    <td rowspan="2"
+                                                        id="city_{{ $key }}"
+                                                        data-city="{{ $reference->city_id }}">
+                                                        {{ $reference->city }}
+                                                    </td>
+                                                    <?php
+                                                    if (!empty($reference->link_hs)) {
+                                                        $i = 1;
+                                                        $link_hs = json_decode(
+                                                            $reference->link_hs,
+                                                            JSON_THROW_ON_ERROR
+                                                        );
+                                                    }
+                                                    ?>
+                                                    <td rowspan="2"
+                                                        class="center"
+                                                        id="link-hs_{{ $key }}"
+                                                        data-hs="{{ !empty($reference->link_hs) ? implode(", ", $link_hs) : "" }}"
+                                                        style="overflow-x: auto;">
+                                                        @if (!empty($reference->link_hs))
+                                                            @foreach ($link_hs as $value)
+                                                                @if (is_numeric($value))
+                                                                    <?php
+                                                                    $hs = HomeService::select("code")->where("id", $value)->first();
+                                                                    ?>
+                                                                    <a id="link-hs-href_{{ $key }}"
+                                                                        href="{{ route("homeServices_success", ["code" => $hs->code]) }}"
+                                                                        target="_blank">
+                                                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                                                                    </a>
+                                                                @else
+                                                                    <a id="link-hs-href_{{ $key }}"
+                                                                        href="{{ $value }}"
+                                                                        target="_blank">
+                                                                        <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: red;"></i>
+                                                                    </a>
+                                                                @endif
+                                                                <?php $i++; ?>
+                                                            @endforeach
+                                                        @endif
+                                                    </td>
+                                                    <td rowspan="2"
+                                                        class="center"
+                                                        id="order_{{ $key }}"
+                                                        data-order="{{ $reference->order_id }}"
+                                                        style="overflow-x:auto;">
+                                                        <?php
+                                                        if (!empty($reference->order_id)) {
+                                                            $order = Order::select("id", "code")
+                                                                ->where("id", $reference->order_id)
+                                                                ->first();
+
+                                                            echo $order->code;
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td id="souvenir_{{ $key }}"
+                                                        data-permission="{{ $specialPermission }}"
+                                                        data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
+                                                        {{ $reference->souvenir_name }}
+                                                    </td>
+                                                    <td class="center"
+                                                        id="status_souvenir_{{ $key }}"
+                                                        data-permission="{{ $specialPermission }}">
+                                                        {{ $reference->status_souvenir }}
+                                                    </td>
+                                                    <td class="center"
+                                                        id="delivery_status_souvenir_{{ $key }}"
+                                                        data-deliverysouvenir="{{ $reference->delivery_status_souvenir }}"
+                                                        data-permission="{{ $specialPermission }}">
+                                                        {{ $reference->delivery_status_souvenir }}
+                                                    </td>
+                                                    @if($specialPermission)
+                                                        <td class="center" rowspan="2">
+                                                            <button id="btnDetailRef_{{$key}}" type="button" value="{{ $reference->id }}" onclick="loadDataPerRef(this.value)">
+                                                                <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                            </button>
+                                                        </td>
+                                                    @endif
+                                                    <td rowspan="2"
+                                                        class="center">
+                                                        <button class="btn"
+                                                            id="btn-edit-save_{{ $key }}"
+                                                            style="padding: 0;"
+                                                            data-edit="edit_{{ $key }}"
+                                                            onclick="clickEdit(this)"
+                                                            value="{{ $reference->id }}">
+                                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="center"
+                                                        id="prize_{{ $key }}"
+                                                        data-prize="{{ $reference->prize_id }}"
+                                                        data-permission="{{ $specialPermission }}">
+                                                        <?php
+                                                        if (!empty($reference->prize_id)) {
+                                                            $prize = Prize::select("id", "name")
+                                                                ->where("id", $reference->prize_id)
+                                                                ->first();
+
+                                                            echo $prize->name;
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                    <td class="center"
+                                                        id="status_prize_{{ $key }}"
+                                                        data-permission="{{ $specialPermission }}">
+                                                        {{ $reference->status_prize }}
+                                                    </td>
+                                                    <td class="center"
+                                                        id="delivery_status_prize_{{ $key }}"
+                                                        data-deliveryprize="{{ $reference->delivery_status_prize }}"
+                                                        data-permission="{{ $specialPermission }}">
+                                                        {{ $reference->delivery_status_prize }}
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 center mt-4">
+                                <button class="btn btn-gradient-primary mt-2"
+                                    data-toggle="modal"
+                                    data-target="#edit-reference">
+                                    <span>Add Reference - Sehat Bersama WAKi<br>
+                                    / Keuntungan Biaya Iklan</span>
+                                </button>
+                            </div>
+
+                            <div class="col-md-12 center" style="margin-top: 3em;">
+                                         <div class="row justify-content-center">
+                                             <h2 class="text-center share">Share Submission Form</h2>
+                                         </div>
+                                         <form class="forms-sample" method="GET" action="https://wa.me/">
+                                             <div class="form-group row justify-content-center">
+                                                 <button type="submit" class="btn btn-gradient-primary mr-2 my-2" name="text" value="Terima Kasih telah mengikuti program *Sehat Bersama WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">Share Sehat bersama Waki</button>
+                                                 <button type="submit" class="btn btn-gradient-primary mr-2 my-2" name="text" value="Terima Kasih telah mengikuti program *Keuntungan Biaya Iklan*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">Share Program Biaya Iklan</button>
+                                             </div>
+                                         </form>
+                             </div>
+
+                             
+                            @if ($historySubmission->isNotEmpty())
+                            <div class="row justify-content-center"
+                                style="margin-top: 2em;">
+                                <h2>SUBMISSION HISTORY LOG</h2>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="table-responsive" style="margin-right: 0.5em;">
+                                    <table class="table">
+                                        <thead>
+                                            <td class="center">No.</td>
+                                            <td>Action</td>
+                                            <td>User</td>
+                                            <td>Change</td>
+                                            <td>Time</td>
+                                        </thead>
+                                        @foreach ($historySubmission as $key => $history)
+                                            <?php $dataChange = json_decode($history->meta, true); ?>
+                                            <tr>
+                                                <td class="right">{{ $key + 1 }}</td>
+                                                <td class="center">
+                                                    {{ $history->method }}
+                                                </td>
+                                                <td class="center">
+                                                    {{ $history->name }}
+                                                </td>
+                                                <td>
+                                                    @foreach ($dataChange["dataChange"] as $key => $value)
+                                                        <b>{{ $key }}</b>: {{ var_export($value, true) }}
+                                                        <br>
+                                                    @endforeach
+                                                </td>
+                                                <td class="center">
+                                                    {{ date("d/m/Y H:i:s", strtotime($history->created_at)) }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                </div>
+                            </div>
+                            @endif
+
+                         </div>
                     </div>
                 </div>
             </div>
-            @if ($historySubmission->isNotEmpty())
-                <div class="row justify-content-center"
-                    style="margin-top: 2em;">
-                    <h2>SUBMISSION HISTORY LOG</h2>
-                </div>
-                <div class="row justify-content-center">
-                    <table class="col-md-12">
-                        <thead>
-                            <td class="center">No.</td>
-                            <td>Action</td>
-                            <td>User</td>
-                            <td>Change</td>
-                            <td>Time</td>
-                        </thead>
-                        @foreach ($historySubmission as $key => $history)
-                            <?php $dataChange = json_decode($history->meta, true); ?>
-                            <tr>
-                                <td class="right">{{ $key + 1 }}</td>
-                                <td class="center">
-                                    {{ $history->method }}
-                                </td>
-                                <td class="center">
-                                    {{ $history->name }}
-                                </td>
-                                <td>
-                                    @foreach ($dataChange["dataChange"] as $key => $value)
-                                        <b>{{ $key }}</b>: {{ var_export($value, true) }}
-                                        <br>
-                                    @endforeach
-                                </td>
-                                <td class="center">
-                                    {{ date("d/m/Y H:i:s", strtotime($history->created_at)) }}
-                                </td>
-                            </tr>
-                        @endforeach
-                    </table>
-                </div>
-            @endif
         </div>
-    </section>
+    </div>
 @else
     <div class="row justify-content-center">
         <h2>CANNOT FIND SUBMISSION</h2>
@@ -1136,14 +1187,14 @@ function loadDataPerRef(ref_id){
             }
 
             if(data_souvenir != null || data_prize != null){
-                $('#ref_id').val(data_ref[0]['id']);
-                $('#ref_name').val(data_ref[0]['name']);
-                $('#ref_age').val(data_ref[0]['age']);
-                $('#ref_phone').val(data_ref[0]['phone']);
-                $('#ref_province').val(data_ref[0]['province']);
-                $('#ref_city').val(data_ref[0]['city']);
-                //$('#refs_souvenir').val(data_refs[0]['souvenir_id']);
-                //$('#refs_prize').val(data_refs[0]['prize_id']);
+                $('#ref_id').val(data_ref['id']);
+                $('#ref_name').val(data_ref['name']);
+                $('#ref_age').val(data_ref['age']);
+                $('#ref_phone').val(data_ref['phone']);
+                $('#ref_province').val(data_ref['province']);
+                $('#ref_city').val(data_ref['city']);
+                // $('#refs_souvenir').val(data_refs[0]['souvenir_id']);
+                // $('#refs_prize').val(data_refs[0]['prize_id']);
                 $('#refs_order').val(data_refs[0]['order_id']);
 
             }

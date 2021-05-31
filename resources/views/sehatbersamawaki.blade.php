@@ -95,6 +95,7 @@
                Program Refrensi Sehat Bersama WAKi
             </h2>
         </div>
+        <h5 style="text-align: center;">{{ $submission['code'] }}</h5>
 
         <div id="smmobile" class="row justify-content-center mt-5 pt-3 no-gutters">
             <div class="col-12 no-gutters">
@@ -152,7 +153,7 @@
                         <b><p>No. MPC</p></b>
                     </div>
                     <div class="col-6">
-                        <p>: {{$submission['no_mpc']}}</p>
+                        <p>: {{$submission['no_member']}}</p>
                     </div>
                 </div>
             </div>
@@ -183,14 +184,15 @@
                         <b><p>No. MPC</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
-                        <p>: {{$submission['no_mpc']}}</p>
+                        <p>: {{$submission['no_member']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>Alamat</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
                         <p>: {{$submission['address']}} <br>
-                            {{$submission->province_obj['province']}}, {{$submission->city_obj['city_name']}}, {{$submission->district_obj['subdistrict_name']}}</p>                    </div>
+                            {{$submission->province_obj['province']}}, {{$submission->city_obj['city_name']}}, {{$submission->district_obj['subdistrict_name']}}</p>
+                    </div>
                     <div class="col-md-2 col-sm-2">
                         <b><p>Telp. / HP</p></b>
                     </div>
@@ -214,14 +216,20 @@
                             <th colspan="3">Produk Hadiah</th>
                         </tr>
                         <tr>
-                            <td width="30%"><li>FACIAL MASSAGE</li></td>
-                            <td width="30%"><li>VACCU CUPPING</li></td>
-                            <td width="30%"><li>SLIPPER MASSAGE</li></td>
+                            @php
+                                $j = 0;
+                            @endphp
+
+                            @while(isset($souvenirs[$j]) && $j < 3)
+                                <td width="30%"><li>{{ $souvenirs[$j]['name'] }}</li></td>
+                                @php $j++; @endphp
+                            @endwhile
                         </tr>
                         <tr>
-                            <td width="30%"><li>MULTI MASSAGE</li></td>
-                            <td width="30%"><li>NIFIR UNDERWEAR</li></td>
-                            <td width="30%"><li>E-VOUCHER Rp. 270.000,-</li></td>
+                            @while(isset($souvenirs[$j]) && $j < 6)
+                                <td width="30%"><li>{{ $souvenirs[$j]['name'] }}</li></td>
+                                @php $j++; @endphp
+                            @endwhile
                         </tr>
                     </table>
                 </div>
@@ -253,16 +261,19 @@
                     @foreach($submission->reference as $keyNya => $referenceNya)
                         @php
                             $Reference_HS = $referenceNya->reference_souvenir->fetch_hs();
-                            $totReference_HS = sizeof($Reference_HS);
+                            $totReference_HS = 0;
+                            if($Reference_HS != null){
+                                $totReference_HS = sizeof($Reference_HS);
+                            }
                         @endphp
 
                         <tr>
-                            <td rowspan="{{ $totReference_HS }}">{{ $keyNya+1 }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya['name'] }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya['phone'] }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya->getCityName() }}</td>
-                            <td rowspan="{{ $totReference_HS }}">{{ $referenceNya->reference_souvenir->souvenir['name'] }}</td>
-                            <td>{{ $Reference_HS[0]['appointment'] }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $keyNya+1 }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya['name'] }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya['phone'] }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->getCityName() }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->reference_souvenir->souvenir['name'] }}</td>
+                            <td>{{ $totReference_HS > 0 ? $Reference_HS[0]['appointment'] : "-" }}</td>
                         </tr>
                         @for($i = 1; $i < $totReference_HS; $i++)
                             <tr>
