@@ -164,13 +164,13 @@ $menu_item_second = "list_submission_form";
                                                 <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                             </a>
                                         </td>
-                                        {{-- @can('edit-submission') --}}
+                                        @can('edit-submission')
                                             <td class="center">
                                                 <a href="{{ route('edit_submission_form', ['id' => $submission->id, "type" => $submission->type]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>
-                                        {{-- @endcan --}}
+                                        @endcan
                                         {{-- @can('delete-submission') --}}
                                             <td class="center">
                                                 <button class="btn-delete"
