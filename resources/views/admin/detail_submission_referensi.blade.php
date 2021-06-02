@@ -30,7 +30,7 @@ if (
     .table-responsive table {
         table-layout:fixed;
         width: 98%;
-    } 
+    }
 
     .table-responsive table td {
         word-wrap:break-word;
@@ -92,23 +92,23 @@ if (
     .btn {
         width: 100%;
         min-width: 50px;
-        max-width: 400px; 
+        max-width: 400px;
     }
 
-   /*  @media (min-width: 768px) { 
+   /*  @media (min-width: 768px) {
 		.table-responsive::-webkit-scrollbar {
             display: none;
         }
 	} */
 
-    @media (max-width: 480px) { 
+    @media (max-width: 480px) {
 		.btn span {
             font-size: 2.5vw;
             padding: 0 !important;
         }
 	}
 
-    @media (max-width: 1187px) { 
+    @media (max-width: 1187px) {
 		.btn {
             margin-bottom: 3em;
         }
@@ -129,9 +129,9 @@ if (
                             <div class="row justify-content-center">
                                 <h2>SUBMISSION SUCCESS</h2>
                             </div>
-            
+
                             <div class="row justify-content-center">
-                                
+
                                 <div class="table-responsive" style="margin-right: 0.5em;">
                                     <table class="table">
                                         <thead>
@@ -215,8 +215,8 @@ if (
                                 </div>
 
                                 <div class="table-responsive" style=" margin-left 1em; margin-right: 1em;">
-                                    <?php 
-                                        $formLength = $references->count(); 
+                                    <?php
+                                        $formLength = $references->count();
                                         $arr_souvenir = [];
                                     ?>
                                     <input type="hidden"
@@ -248,11 +248,12 @@ if (
                                                     <th class="center">View</th>
                                                 @endif
                                                 <td>Edit</td>
+                                                <td>Delete</td>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php 
-                                                foreach ($references as $key => $reference): 
+                                            <?php
+                                                foreach ($references as $key => $reference):
                                                     array_push($arr_souvenir, $reference['souvenir_id']);
                                             ?>
 
@@ -370,6 +371,18 @@ if (
                                                             <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                         </button>
                                                     </td>
+                                                    <td rowspan="2"
+                                                        class="text-center">
+                                                        <button class="btn"
+                                                            id="btn-delete-reference_{{ $key }}"
+                                                            style="padding: 0;"
+                                                            onclick="deleteReference(this)"
+                                                            data-id="{{ $reference->id }}"
+                                                            data-toggle="modal"
+                                                            data-target="#delete-reference-modal">
+                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="center"
@@ -384,7 +397,7 @@ if (
                                                                 ->first();
 
                                                             if($bonus_prize == 0){
-                                                                echo $prize->name . " + Voucher WAKimart Rp. 1.000.000";    
+                                                                echo $prize->name . " + Voucher WAKimart Rp. 1.000.000";
                                                             }else{
                                                                 echo $prize->name;
                                                             }
@@ -429,7 +442,7 @@ if (
                                          </form>
                              </div>
 
-                             
+
                             @if ($historySubmission->isNotEmpty())
                             <div class="row justify-content-center"
                                 style="margin-top: 2em;">
@@ -780,7 +793,7 @@ if (
                             <td>Photo</td>
                         </thead>
                         <tbody id="append_tbody_hs">
-                            
+
                         </tbody>
                     </table>
                 </div>
@@ -794,7 +807,7 @@ if (
                             <td>Qty</td>
                         </thead>
                         <tbody id="append_tbody_order">
-                            
+
                         </tbody>
                     </table>
                 </div>
@@ -811,7 +824,7 @@ if (
                                 <td>Status Delivery</td>
                             </thead>
                             <tbody id="append_tbody_other">
-                                
+
                             </tbody>
                         </table>
 
@@ -826,13 +839,50 @@ if (
                         <button class="btn btn-primary" type="submit" id="btn-confirmUpdate">SAVE</button>
                     </div>
                 </form>
-                
+
             </div>
 
         </div>
     </div>
 </div>
 <!-- MODAL PER REF -->
+
+<div class="modal fade"
+    id="delete-reference-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 style="text-align: center;">
+                    Are you sure you want to delete this reference?
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{{ route("delete_reference") }}">
+                    @csrf
+                    <input type="hidden" name="id" id="delete-reference-id" />
+                    <input type="hidden"
+                        name="url"
+                        value="{{ url()->full() }}" />
+                    <button type="submit" class="btn btn-gradient-danger">
+                        Yes
+                    </button>
+                </form>
+                <button class="btn btn-light" type="button">No</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('script')
@@ -897,13 +947,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if(currentValue["id"] == 7){
                 souvenirOption += `<option value="${currentValue["id"]}" hidden="">`
                 + currentValue["name"]
-                + `</option>`;    
+                + `</option>`;
             }else{
                 souvenirOption += `<option value="${currentValue["id"]}">`
                 + currentValue["name"]
                 + `</option>`;
             }
-            
+
         });
     }).catch(function (error) {
         console.error(error);
@@ -936,7 +986,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 + currentValue["name"]
                 + `</option>`;
             }
-            
+
         });
     }).catch(function (error) {
         console.error(error);
@@ -1070,13 +1120,13 @@ function checkAddReference(){
 
     $("#edit-reference").modal('show');
 }
-    
+
 
 function loadDataPerRef(ref_id){
     $.get( '{{ route("fetchDetailPerReference", ['reference' => ""]) }}/'+ref_id )
-    .done(function( result ) { 
+    .done(function( result ) {
         //empty data
-        $('#append_tbody_hs').empty();     
+        $('#append_tbody_hs').empty();
         $('#append_tbody_order').empty();
         $('#append_tbody_other').empty();
 
@@ -1122,9 +1172,9 @@ function loadDataPerRef(ref_id){
                                     <a href="" target="_blank"></a>\
                                 </td>\
                             </tr>\
-                        '); 
+                        ');
                     }
-                    
+
                 }
             }
 
@@ -1255,7 +1305,7 @@ function loadDataPerRef(ref_id){
                 $('#refs_order').val(data_refs[0]['order_id']);
 
             }
-            
+
             $("#modal-per-reference").modal("show");
         }
     });
@@ -1281,7 +1331,7 @@ function clickEdit(e) {
             });
         }
     }
-    
+
     const id = document.getElementById("edit-id_" + refSeq).value;
     const name = document.getElementById("name_" + refSeq).innerHTML.trim();
     const age = document.getElementById("age_" + refSeq).innerHTML.trim();
@@ -1869,6 +1919,10 @@ function selectOrderForEdit(id, code, origin) {
     $("#choose-order-close").click();
     $('body').removeClass('modal-open');
     $('.modal-backdrop').remove();
+}
+
+function deleteReference(e) {
+    document.getElementById("delete-reference-id").value = e.dataset.id;
 }
 </script>
 @endsection

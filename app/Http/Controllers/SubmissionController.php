@@ -1603,6 +1603,7 @@ class SubmissionController extends Controller
             "raja_ongkir__cities.city_id"
         )
         ->where("references.submission_id", $submissionId)
+        ->where("references.active", true)
         ->orderBy("references.id");
     }
 

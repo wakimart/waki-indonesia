@@ -434,12 +434,30 @@ class ReferenceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $reference = Reference::where("id", $request->id)->first();
+            $reference->active = false;
+            $reference->save();
+
+            $this->historyReference($reference, "delete", Auth::user()["id"]);
+
+            DB::commit();
+
+            return redirect($request->url)->with("success", "Data referensi berhasil dihapus.");
+        } catch (Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                "error" => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function addApi(Request $request)

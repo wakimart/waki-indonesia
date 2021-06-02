@@ -13,6 +13,7 @@ class Reference extends Model
         "phone",
         "province",
         "city",
+        "active",
     ];
 
     public function submission()

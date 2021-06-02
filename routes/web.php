@@ -716,6 +716,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::post("/update/mgm", "ReferenceController@updateReferenceMGM")
             ->name("update_reference_mgm");
+
+        Route::post("/delete", "ReferenceController@destroy")
+            ->name("delete_reference");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {
