@@ -118,7 +118,7 @@ $menu_item_second = "list_submission_form";
             <div class="card">
                 <div class="card-body">
                     <h5 style="margin-bottom: 0.5em;">
-                        Total: {{ $countSubmission }} data
+                        Total: {{ $submissions->total() }} data
                     </h5>
                     <div class="table-responsive"
                         style="border: 1px solid #ebedf2;">
@@ -187,7 +187,7 @@ $menu_item_second = "list_submission_form";
                             </tbody>
                         </table>
                         <br>
-                        {{ $submissions->appends($url)->links() }}
+                        {{ $submissions->links() }}
                     </div>
                 </div>
             </div>

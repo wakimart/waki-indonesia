@@ -99,9 +99,6 @@ class SubmissionController extends Controller
      */
     public function index(Request $request)
     {
-        // Menyimpan request ke dalam variabel $url untuk pagination
-        $url = $request->all();
-
         // Memasukkan klausa WHERE yang digunakan berkali-kali ke dalam array
         $whereArray = [];
         $whereArray[] = ["active", true];
@@ -150,14 +147,10 @@ class SubmissionController extends Controller
         }
         $submissions = $submissions->orderBy('id', "desc")->paginate(10);
 
-        $countSubmission = $submissions->count();
-
         return view(
             "admin.list_submission_form",
             compact(
-                "countSubmission",
                 "submissions",
-                "url"
             )
         )
         ->with("i", (request()->input("page", 1) - 1) * 10 + 1);
@@ -737,7 +730,7 @@ class SubmissionController extends Controller
 
         $reference_souvenirs = ReferenceSouvenir::where('reference_id', $refs_id)->get();
         $reference = $reference_souvenirs[0]->reference;
-        
+
         $get_hs = null;
         if($reference_souvenirs[0]['link_hs'] != null){
             $get_hs = HomeService::whereIn('id', json_decode($reference_souvenirs[0]['link_hs'], true))->get();
@@ -747,19 +740,19 @@ class SubmissionController extends Controller
         if($reference_souvenirs[0]['souvenir_id'] != null){
             $get_souvenir = Souvenir::where('id', $reference_souvenirs[0]['souvenir_id'])->get();
         }
-        
+
         $get_order = null;
         if($reference_souvenirs[0]['order_id'] != null){
             $get_order = Order::where('id', $reference_souvenirs[0]['order_id'])->get();
         }
-        
+
 
         $get_prize = null;
         if($reference_souvenirs[0]['prize_id'] != null){
-            $get_prize = Prize::where('id', $reference_souvenirs[0]['prize_id'])->get();    
-        }        
+            $get_prize = Prize::where('id', $reference_souvenirs[0]['prize_id'])->get();
+        }
 
-        
+
         $arr_product = [];
         if($get_order != null){
             $string = "";
@@ -771,18 +764,18 @@ class SubmissionController extends Controller
                     //$price = DeliveryOrder::$Promo[$item['id']]['harga'];
 
                     $temp['name'] = DeliveryOrder::$Promo[$item['id']]['name'];
-                    $temp['qty'] = $item['qty']; 
+                    $temp['qty'] = $item['qty'];
                     //$string = $code . ' - ' . $name . ' (' . $item['qty'] . ' pcs)';
                     array_push($arr_product, $temp);
                 }else{
                     //$string = $item['id'] . ' (' . $item['qty'] . ' pcs)';
                     $temp['name'] = $item['id'];
-                    $temp['qty'] = $item['qty']; 
+                    $temp['qty'] = $item['qty'];
                     array_push($arr_product, $temp);
                 }
             }
         }
-        
+
         $data['data_refs'] = $reference_souvenirs; //reference souvenir
         $data['data_ref'] = $reference; //references
         $data['data_hs'] = $get_hs;
