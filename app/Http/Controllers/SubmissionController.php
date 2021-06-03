@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Branch;
 use App\Cso;
+use App\DeliveryOrder;
 use App\HistoryUpdate;
 use App\HomeService;
 use App\Prize;
 use App\Promo;
 use App\Order;
-use App\DeliveryOrder;
 use App\Reference;
 use App\ReferenceImage;
 use App\ReferencePromo;
@@ -243,13 +243,13 @@ class SubmissionController extends Controller
                     $referencePromo = new ReferencePromo();
                     $referencePromo->reference_id = $reference->id;
 
-                    if (isset($data["promo_1"])){
+                    if (isset($data["promo_1"])) {
                         if ($data["promo_1"][$i] !== "other") {
                             $referencePromo->promo_1 = $data["promo_1"][$i];
                         }
                     }
 
-                    if (isset($data["promo_2"])){
+                    if (isset($data["promo_2"])) {
                         if ($data["promo_2"][$i] !== "other") {
                             $referencePromo->promo_2 = $data["promo_2"][$i];
                         }
@@ -257,7 +257,7 @@ class SubmissionController extends Controller
 
                     $referencePromo->qty_1 = $data["qty_1"][$i];
 
-                    if (isset($data["promo_2"])){
+                    if (isset($data["promo_2"])) {
                         if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
                             $referencePromo->qty_2 = $data["qty_2"][$i];
                         }
@@ -273,7 +273,7 @@ class SubmissionController extends Controller
                     $referenceImage->reference_id = $reference->id;
 
                     $idxImg = 1;
-                    foreach ($request->file("do-image_" . ($i + 1)) AS $image) {
+                    foreach ($request->file("do-image_" . ($i + 1)) as $image) {
                         $fileName = ((string)time())
                             . "_"
                             . $user_id
@@ -391,10 +391,6 @@ class SubmissionController extends Controller
             }
 
             DB::commit();
-
-            // return redirect()
-            //     ->route("add_submission_reference")
-            //     ->with('success', 'Data berhasil dimasukkan.');
 
             $request = new \Illuminate\Http\Request();
             $request->replace(['id' => $submission->id, 'type' => 'referensi']);
@@ -725,50 +721,43 @@ class SubmissionController extends Controller
         }
     }
 
-    public function fetchDetailPerReference($refs_id){
+    public function fetchDetailPerReference($refs_id)
+    {
         $data = [];
 
         $reference_souvenirs = ReferenceSouvenir::where('reference_id', $refs_id)->get();
         $reference = $reference_souvenirs[0]->reference;
 
         $get_hs = null;
-        if($reference_souvenirs[0]['link_hs'] != null){
+        if ($reference_souvenirs[0]['link_hs'] != null) {
             $get_hs = HomeService::whereIn('id', json_decode($reference_souvenirs[0]['link_hs'], true))->get();
         }
 
         $get_souvenir = null;
-        if($reference_souvenirs[0]['souvenir_id'] != null){
+        if ($reference_souvenirs[0]['souvenir_id'] != null) {
             $get_souvenir = Souvenir::where('id', $reference_souvenirs[0]['souvenir_id'])->get();
         }
 
         $get_order = null;
-        if($reference_souvenirs[0]['order_id'] != null){
+        if ($reference_souvenirs[0]['order_id'] != null) {
             $get_order = Order::where('id', $reference_souvenirs[0]['order_id'])->get();
         }
 
-
         $get_prize = null;
-        if($reference_souvenirs[0]['prize_id'] != null){
+        if ($reference_souvenirs[0]['prize_id'] != null) {
             $get_prize = Prize::where('id', $reference_souvenirs[0]['prize_id'])->get();
         }
 
 
         $arr_product = [];
-        if($get_order != null){
-            $string = "";
+        if ($get_order != null) {
             foreach (json_decode($get_order[0]['product'], true) as $item) {
                 $temp = [];
-                if(is_numeric($item['id']) && $item['id'] != 8){
-                    //$code = DeliveryOrder::$Promo[$item['id']]['code'];
-                    $name = DeliveryOrder::$Promo[$item['id']]['name'];
-                    //$price = DeliveryOrder::$Promo[$item['id']]['harga'];
-
+                if (is_numeric($item['id']) && $item['id'] != 8) {
                     $temp['name'] = DeliveryOrder::$Promo[$item['id']]['name'];
                     $temp['qty'] = $item['qty'];
-                    //$string = $code . ' - ' . $name . ' (' . $item['qty'] . ' pcs)';
                     array_push($arr_product, $temp);
-                }else{
-                    //$string = $item['id'] . ' (' . $item['qty'] . ' pcs)';
+                } else {
                     $temp['name'] = $item['id'];
                     $temp['qty'] = $item['qty'];
                     array_push($arr_product, $temp);
@@ -776,8 +765,8 @@ class SubmissionController extends Controller
             }
         }
 
-        $data['data_refs'] = $reference_souvenirs; //reference souvenir
-        $data['data_ref'] = $reference; //references
+        $data['data_refs'] = $reference_souvenirs; // Reference souvenir
+        $data['data_ref'] = $reference; // References
         $data['data_hs'] = $get_hs;
         $data['data_souvenir'] = $get_souvenir;
         $data['data_order'] = $get_order;
@@ -835,11 +824,11 @@ class SubmissionController extends Controller
     public function addApi(Request $request): \Illuminate\Http\JsonResponse
     {
         $data = json_decode($request->acc_data, true)[0];
-        // $temp = (json_decode($data[0], true));
         return response()->json([
-                        "result" => 0,
-                        "data" => ($data["type"] === "MGM"),
-                    ], 401);
+            "result" => 0,
+            "data" => ($data["type"] === "MGM"),
+        ], 401);
+
         DB::beginTransaction();
 
         try {
@@ -848,41 +837,40 @@ class SubmissionController extends Controller
 
             if ($data["type"] === "MGM") {
                 $arrValidator = [
-                        "no_member" => ["required"],
-                        "name" => ["required", "string", "max:191"],
-                        "phone" => ["required"],
-                        "province" => ["required"],
-                        "city" => ["required"],
-                        "district" => ["required"],
-                        "address" => ["required"],
-                        "branch_id" => ["required"],
-                        "cso_id" => ["required"],
-                        "name_ref" => ["required", "array", "min:1"],
-                        "name_ref.*" => ["required"],
-                        "age_ref" => ["required", "array", "min:1"],
-                        "age_ref.*" => ["required"],
-                        "phone_ref" => ["required", "array", "min:1"],
-                        "phone_ref.*" => ["required"],
-                        "province_ref" => ["required", "array", "min:1"],
-                        "province_ref.*" => ["required"],
-                        "city_ref" => ["required", "array", "min:1"],
-                        "city_ref.*" => ["required"],
-                        "promo_1" => ["required", "array", "min:1"],
-                        "promo_1.*" => ["required"],
-                        "qty_1" => ["required", "array", "min:1"],
-                        "qty_1.*" => ["required"],
+                    "no_member" => ["required"],
+                    "name" => ["required", "string", "max:191"],
+                    "phone" => ["required"],
+                    "province" => ["required"],
+                    "city" => ["required"],
+                    "district" => ["required"],
+                    "address" => ["required"],
+                    "branch_id" => ["required"],
+                    "cso_id" => ["required"],
+                    "name_ref" => ["required", "array", "min:1"],
+                    "name_ref.*" => ["required"],
+                    "age_ref" => ["required", "array", "min:1"],
+                    "age_ref.*" => ["required"],
+                    "phone_ref" => ["required", "array", "min:1"],
+                    "phone_ref.*" => ["required"],
+                    "province_ref" => ["required", "array", "min:1"],
+                    "province_ref.*" => ["required"],
+                    "city_ref" => ["required", "array", "min:1"],
+                    "city_ref.*" => ["required"],
+                    "promo_1" => ["required", "array", "min:1"],
+                    "promo_1.*" => ["required"],
+                    "qty_1" => ["required", "array", "min:1"],
+                    "qty_1.*" => ["required"],
+                    "promo_2" => ["array"],
+                    "promo_2.*" => ["required_with_all:qty_2.*"],
+                    "qty_2" => ["array"],
+                    "qty_2.*" => ["required_with_all:promo_2.*"],
+                    "do-image_1" => ["required", "array"],
+                    "do-image_1.*" => ["required", "image"],
+                ];
 
-                        "promo_2" => ["array"],
-                        "promo_2.*" => ["required_with_all:qty_2.*"],
-                        "qty_2" => ["array"],
-                        "qty_2.*" => ["required_with_all:promo_2.*"],
-
-                        "do-image_1" => ["required", "array"],
-                        "do-image_1.*" => ["required", "image"],
-                    ];
-                for ($i=2; $i <= count($data["name_ref"]); $i++) {
-                    $arrValidator["do-image_".$i] = ["required", "array"];
-                    $arrValidator["do-image_".$i.".*"] = ["required", "image"];
+                for ($i = 2; $i <= count($data["name_ref"]); $i++) {
+                    $arrValidator["do-image_" . $i] = ["required", "array"];
+                    $arrValidator["do-image_" . $i . ".*"] = ["required", "image"];
                 }
 
                 $validator = Validator::make(
@@ -913,42 +901,52 @@ class SubmissionController extends Controller
                         $referencePromo = new ReferencePromo();
                         $referencePromo->reference_id = $reference->id;
 
-                        if ($data["promo_1"][$i] !== "other") {
-                            $referencePromo->promo_1 = $data["promo_1"][$i];
+                        if (isset($data["promo_1"])) {
+                            if ($data["promo_1"][$i] !== "other") {
+                                $referencePromo->promo_1 = $data["promo_1"][$i];
+                            }
                         }
 
-                        if ($data["promo_2"][$i] !== "other") {
-                            $referencePromo->promo_2 = $data["promo_2"][$i];
+                        if (isset($data["promo_2"])) {
+                            if ($data["promo_2"][$i] !== "other") {
+                                $referencePromo->promo_2 = $data["promo_2"][$i];
+                            }
                         }
 
                         $referencePromo->qty_1 = $data["qty_1"][$i];
 
-                        if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
-                            $referencePromo->qty_2 = $data["qty_2"][$i];
+                        if (isset($data["promo_2"])) {
+                            if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
+                                $referencePromo->qty_2 = $data["qty_2"][$i];
+                            }
                         }
 
                         $referencePromo->other_1 = $data["other_1"][$i];
                         $referencePromo->other_2 = $data["other_2"][$i];
                         $referencePromo->save();
 
-                        $user_id = Auth::user()["id"];
+                        $user_id = $request->user_id;
                         $path = "sources/registration";
                         $referenceImage = new ReferenceImage();
                         $referenceImage->reference_id = $reference->id;
+
+                        $idxImg = 1;
                         foreach ($request->file("do-image_" . ($i + 1)) as $image) {
                             $fileName = ((string)time())
                                 . "_"
                                 . $user_id
                                 . "_"
                                 . $i
+                                . "_"
+                                . $idxImg
                                 . "."
                                 . $image->getClientOriginalExtension();
 
                             $image->move($path, $fileName);
 
-                            $referenceImage["image_" . ($i + 1)] = $fileName;
+                            $referenceImage["image_" . ($idxImg)] = $fileName;
 
-                            $i++;
+                            $idxImg++;
                         }
                         $referenceImage->save();
                     }
@@ -986,27 +984,32 @@ class SubmissionController extends Controller
 
                 $submission = Submission::create($data);
 
-                $user_id = Auth::user()["id"];
+                $user_id = $request->user_id;
                 $i = 1;
                 $path = "sources/registration";
-                $submissionImage = new SubmissionImage();
-                $submissionImage->submission_id = $submission->id;
-                foreach ($request->file("proof_image") as $image) {
-                    $fileName = ((string)time())
-                        . "_"
-                        . $user_id
-                        . "_"
-                        . $i
-                        . "."
-                        . $image->getClientOriginalExtension();
+                if ($request->hasFile("proof_image")) {
+                    $submissionImage = new SubmissionImage();
+                    $submissionImage->submission_id = $submission->id;
 
-                    $image->move($path, $fileName);
+                    foreach ($request->file("proof_image") as $image) {
+                        $fileName = ((string)time())
+                            . "_"
+                            . $user_id
+                            . "_"
+                            . $i
+                            . "."
+                            . $image->getClientOriginalExtension();
 
-                    $submissionImage["image_" . $i] = $fileName;
+                        $image->move($path, $fileName);
 
-                    $i++;
+                        $submissionImage["image_" . $i] = $fileName;
+
+                        $i++;
+                    }
+
+                    $submissionImage->save();
                 }
-                $submissionImage->save();
+
 
                 $dataCount = count($data["name_ref"]);
                 for ($i = 0; $i < $dataCount; $i++) {
@@ -1023,7 +1026,30 @@ class SubmissionController extends Controller
                         $referenceSouvenir = new ReferenceSouvenir();
                         $referenceSouvenir->reference_id = $reference->id;
                         $referenceSouvenir->souvenir_id = $data["souvenir_id"][$i];
-                        $referenceSouvenir->link_hs = $data["link_hs"][$i];
+                        if (
+                            isset($data["link_hs"][$i])
+                            && !empty($data["link_hs"][$i])
+                        ) {
+                            $referenceSouvenir->link_hs = json_encode(
+                                explode(", ", $data["link_hs"][$i]),
+                                JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+                            );
+                        }
+
+                        if (
+                            isset($data["order_id"][$i])
+                            && !empty($data["order_id"][$i])
+                        ) {
+                            $referenceSouvenir->order_id = $data["order_id"][$i];
+                        }
+
+                        if (
+                            isset($data["prize_id"][$i])
+                            && !empty($data["prize_id"][$i])
+                        ) {
+                            $referenceSouvenir->prize_id = $data["prize_id"][$i];
+                        }
+
                         $referenceSouvenir->save();
                     }
                 }
@@ -1082,7 +1108,7 @@ class SubmissionController extends Controller
                 $submissionDO->no_deliveryorder = $data["nomor_do"];
                 $submissionDO->save();
 
-                $user_id = Auth::user()["id"];
+                $user_id = $request->user_id;
                 $i = 1;
                 $path = "sources/registration";
 
@@ -1130,7 +1156,7 @@ class SubmissionController extends Controller
             return response()->json([
                 "result" => 0,
                 "data" => $e->getMessage(),
-            ], 400);
+            ], 500);
         }
     }
 
@@ -1199,7 +1225,7 @@ class SubmissionController extends Controller
                 $submission->cso_id = $csoId;
                 $submission->save();
 
-                $user_id = Auth::user()["id"];
+                $user_id = $request->user_id;
                 $path = "sources/registration";
                 $submissionImage = SubmissionImage::where("submission_id", $request->id)->first();
                 for ($i = 1; $i <= 5; $i++) {
@@ -1261,7 +1287,7 @@ class SubmissionController extends Controller
                 $submissionDO->no_deliveryorder = $request->other_2;
                 $submissionDO->save();
 
-                $user_id = Auth::user()["id"];
+                $user_id = $request->user_id;
                 $path = "sources/registration";
                 $submissionImage = SubmissionImage::where("submission_id", $request->id)->first();
                 for ($i = 1; $i <= 5; $i++) {
@@ -1685,12 +1711,14 @@ class SubmissionController extends Controller
         ->get();
     }
 
-    public function untungBiayaIklan(Request $request){
+    public function untungBiayaIklan(Request $request)
+    {
         $submission = Submission::find($request->id);
         return view('keuntunganbiayaiklan', compact('submission'));
     }
 
-    public function referenceSehat(Request $request){
+    public function referenceSehat(Request $request)
+    {
         $submission = Submission::find($request->id);
         $souvenirs = Souvenir::where('active', true)->get();
         return view('sehatbersamawaki', compact('submission', 'souvenirs'));
