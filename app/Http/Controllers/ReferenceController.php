@@ -226,11 +226,6 @@ class ReferenceController extends Controller
      */
     public function update(Request $request)
     {
-        // return response()->json([
-        //         "result" => 1,
-        //         "data" => $request->all(),
-        //     ]);
-
         if (!empty($request->id)) {
             $user = Auth::user();
 
@@ -518,7 +513,7 @@ class ReferenceController extends Controller
                 $path = "sources/registration";
                 $referenceImage = new ReferenceImage();
                 $referenceImage->reference_id = $reference->id;
-                $userId = Auth::user()["id"];
+                $userId = $request->user_id;
                 for ($i = 1; $i <= 2; $i++) {
                     $imageInput = "image_" . $i;
                     if ($request->hasFile($imageInput)) {
