@@ -362,14 +362,16 @@ if (
                                                     @endif
                                                     <td rowspan="2"
                                                         class="center">
-                                                        <button class="btn"
-                                                            id="btn-edit-save_{{ $key }}"
-                                                            style="padding: 0;"
-                                                            data-edit="edit_{{ $key }}"
-                                                            onclick="clickEdit(this)"
-                                                            value="{{ $reference->id }}">
-                                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                        </button>
+                                                        @if ($reference->status_souvenir !== "success")
+                                                            <button class="btn"
+                                                                id="btn-edit-save_{{ $key }}"
+                                                                style="padding: 0;"
+                                                                data-edit="edit_{{ $key }}"
+                                                                onclick="clickEdit(this)"
+                                                                value="{{ $reference->id }}">
+                                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                            </button>
+                                                        @endif
                                                     </td>
                                                     <td rowspan="2"
                                                         class="text-center">
