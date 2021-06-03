@@ -9,6 +9,7 @@ use App\ReferenceImage;
 use App\ReferencePromo;
 use App\ReferenceSouvenir;
 use App\Souvenir;
+use App\HomeService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -269,6 +270,11 @@ class ReferenceController extends Controller
             ));
 
             if (!empty($request->link_hs)) {
+                //updating status homeservice
+                $homeservices = HomeService::find($request->link_hs);
+                $homeservices->status_reference = true;
+                $homeservices->save();
+
                 $referenceSouvenir->link_hs = json_encode(
                     explode(", ", $request->link_hs),
                     JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR

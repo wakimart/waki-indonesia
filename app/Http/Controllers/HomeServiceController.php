@@ -1245,6 +1245,7 @@ class HomeServiceController extends Controller
         DB::beginTransaction();
         try {
             $homeServices = HomeService::whereDate('home_services.appointment', '=', $date)
+                            ->where('home_services.status_reference', false)
                             ->where('home_services.active', true)
                             ->where('home_services.branch_id', $branch_id)
                             ->get();
@@ -1463,7 +1464,7 @@ class HomeServiceController extends Controller
 
 
                     $data = $request->all();
-                    $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+                    $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4)."/".$key;
                     $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
                     $data['cso_phone'] = Cso::where('id', $data['cso_id'])->first()['phone'];
                     if($request->has('cso2_id')){
