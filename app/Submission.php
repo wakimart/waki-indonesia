@@ -52,6 +52,6 @@ class Submission extends Model
     }    
     public function reference()
     {
-        return $this->hasMany('App\Reference');
+        return $this->hasMany('App\Reference')->where('active', true);
     }
 }
