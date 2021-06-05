@@ -823,11 +823,8 @@ class SubmissionController extends Controller
 
     public function addApi(Request $request): \Illuminate\Http\JsonResponse
     {
-        $data = json_decode($request->acc_data, true)[0];
-        return response()->json([
-            "result" => 0,
-            "data" => ($data["type"] === "MGM"),
-        ], 401);
+        $data = json_decode($request->acc_data, true);
+        $data['do-image_1'] = [$request->file('do-image_1')];
 
         DB::beginTransaction();
 
@@ -836,6 +833,11 @@ class SubmissionController extends Controller
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
 
             if ($data["type"] === "MGM") {
+
+                $arrValidatorMsf = [
+
+                ];
+
                 $arrValidator = [
                     "no_member" => ["required"],
                     "name" => ["required", "string", "max:191"],
