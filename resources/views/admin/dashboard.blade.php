@@ -48,7 +48,7 @@
                             class="card-img-absolute"
                             alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">
-                            Today Home Service
+                            Total Models Created
                             <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
                         </h4>
                         <h2 class="mb-5">
@@ -64,7 +64,7 @@
                             class="card-img-absolute"
                             alt="circle-image" />
                         <h4 class="font-weight-normal mb-3">
-                            Total Registration This Month
+                            Total Models Printed
                             <i class="mdi mdi-diamond mdi-24px float-right"></i>
                         </h4>
                         <h2 class="mb-5">
@@ -80,7 +80,7 @@
                     <div class="card-body">
                         <div class="clearfix">
                             <h4 class="card-title float-left">
-                                Home Service - <?php echo date("F Y"); ?>
+                                Data - <?php echo date("F Y"); ?>
                             </h4>
                         </div>
                         <canvas id="homeservice-chart" class="mt-4"></canvas>

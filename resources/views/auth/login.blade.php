@@ -10,7 +10,7 @@
                         <div class="brand-logo">
                             <img src="{{ asset('sources/logosince.svg') }}">
                         </div>
-                        <h4>WAKi Indonesia Admin</h4>
+                        <h4>WAKi Dimsum Admin</h4>
                         <h6 class="font-weight-light">
                             Masuk untuk melanjutkan.
                         </h6>

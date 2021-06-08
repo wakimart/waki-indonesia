@@ -20,7 +20,6 @@
 
 
 
-<main id="main">
   <!--==========================About Us Section============================-->
   <section id="about" style="position: relative; z-index: -1;">
     <div class="container">
@@ -349,5 +348,4 @@
     </div>
   </section>
   <!-- #business -->
-</main>
 @endsection

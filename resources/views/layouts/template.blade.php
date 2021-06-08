@@ -79,19 +79,19 @@
 	      <nav class="main-nav d-none d-lg-block scrollto align-items-start justify-content-start">
 	        <ul>
 
-	          <li><a href="#about">About</a></li>
+	          <li><a href="{{route('index')}}#about">About</a></li>
 
 	          <li class="drop-down"><a href="#product">Services</a>
 	            <ul>
-								<li><a href="" value="">3D Prototyping</a></li>
+								<li><a href="{{route('single_product',1)}}#intro" value="">3D Prototyping</a></li>
 								<li><a href="" value="">3D Printing Service</a></li>
 								<li><a href="" value="">3D Desain & Modeling</a></li>
 	            </ul>
 	          </li>
 
-	          <li><a href="#portfolio">Project</a></li>
+	          <li><a href="{{route('index')}}#portfolio">Project</a></li>
 
-	          <li><a href="#footer">Contact</a></li>
+	          <li><a href="{{route('index')}}#footer">Contact</a></li>
 
 	        </ul>
 	      </nav><!-- .main-nav -->
@@ -99,7 +99,7 @@
 
 			<div class="d-flex align-items-center justify-content-center" style="flex: 1;">
 				<div class="logo justify-content-center align-content-center">
-	        <a href="#header" class="scrollto"><img src="{{asset('sources/waki3dprinting.png')}}" alt="" class="img-fluid" style="margin-right: 4em;"></a>
+	        <a href="#header" class="scrollto"><img src="{{asset('sources/waki3dprinting.png')}}" alt="" class="img-fluid"></a>
 	      </div>
 			</div>
 
