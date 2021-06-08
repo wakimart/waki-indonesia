@@ -145,12 +145,22 @@ class SubmissionController extends Controller
                     ->orWhere('code', "like", "%" . $filter_text . "%");
             });
         }
+
+        if (!empty($request->filter_cso)) {
+            $submissions = $submissions->where("cso_id", $request->filter_cso);
+        }
+
+        $csos = Cso::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("id")
+            ->get();
         $submissions = $submissions->orderBy('id', "desc")->paginate(10);
 
         return view(
             "admin.list_submission_form",
             compact(
                 "submissions",
+                "csos",
             )
         )
         ->with("i", (request()->input("page", 1) - 1) * 10 + 1);

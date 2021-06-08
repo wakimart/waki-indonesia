@@ -5,6 +5,7 @@ $menu_item_second = "list_submission_form";
 @extends('admin.layouts.template')
 
 @section("style")
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <style type="text/css">
     .center {
         text-align: center;
@@ -12,6 +13,18 @@ $menu_item_second = "list_submission_form";
 
     .right {
         text-align: right;
+    }
+
+    .select2-selection__rendered {
+        line-height: 45px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 45px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 10px;
     }
 </style>
 @endsection
@@ -101,6 +114,25 @@ $menu_item_second = "list_submission_form";
                         <input class="form-control" type="text" name="filter_text" placeholder="Name, Phone, Code" value="{{ isset($_GET["filter_text"]) ? $_GET["filter_text"] : "" }}">
                     </div>
                 </div>
+                @if (Auth::user()->roles[0]->slug !== "branch" && Auth::user()->roles[0]->slug !== "cso")
+                    <div class="col-xs-6 col-sm-3"
+                        style="padding: 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="filter-cso">Search by CSO</label>
+                            <select class="form-control"
+                                id="filter-cso"
+                                name="filter_cso">
+                                <option value="">Choose CSO</option>
+                                @foreach ($csos as $cso)
+                                    <option value="{{ $cso->id }}"
+                                        {!! isset($_GET["filter_cso"]) && $_GET["filter_cso"] == $cso->id ? "selected" : "" !!}>
+                                        {{ $cso->code }} - {{ $cso->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                @endif
                 <div class="col-xs-6 col-sm-6"
                     style="padding: 0; display: inline-block;">
                     <div class="form-group">
@@ -233,8 +265,15 @@ $menu_item_second = "list_submission_form";
 @endsection
 
 @section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script type="application/javascript">
 document.addEventListener("DOMContentLoaded", function () {
+    try {
+        $("#filter-cso").select2();
+    } catch (error) {
+        delete error;
+    }
+
     $(".btn-delete").click(function (e) {
         $("#frmDelete").attr("action",  $(this).val());
     });
