@@ -1748,4 +1748,24 @@ class SubmissionController extends Controller
         $souvenirs = Souvenir::where('active', true)->get();
         return view('sehatbersamawaki', compact('submission', 'souvenirs'));
     }
+
+    public function firstRunStatus(){
+        $submission_all = Submission::where([['active', true], ['type', 'referensi']])->get();
+
+        foreach ($submission_all as $eachSub) {
+            foreach ($eachSub->reference as $eachRef) {
+                $tempHs = $eachRef->reference_souvenir->fetch_hs();
+                if($tempHs != null){
+                    foreach ($tempHs as $eachHs) {
+                        $eachHs->status_reference = true;
+                        $eachHs->save();
+                    }
+                }
+            }
+        }
+        $data = ['result' => 0,
+                 'data' => "Berhasil"
+                ];
+        return response()->json($data, 200);
+    }
 }
