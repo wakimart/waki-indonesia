@@ -824,7 +824,7 @@ class SubmissionController extends Controller
     public function addApi(Request $request): \Illuminate\Http\JsonResponse
     {
         $data = json_decode($request->acc_data, true);
-        $data['do-image_1'] = [$request->file('do-image_1')];
+        $data['do-image_1'] = $request->file('do-image_1');
 
         DB::beginTransaction();
 
@@ -834,9 +834,17 @@ class SubmissionController extends Controller
 
             if ($data["type"] === "MGM") {
 
-                $arrValidatorMsf = [
-
-                ];
+                $arrValidatorMsg = array(
+                    'name_ref.*.required' => 'The reference name field is required.',
+                    'age_ref.*.required' => 'The reference age field is required.',
+                    'phone_ref.*.required' => 'The reference phone field is required.',
+                    'province_ref.*.required' => 'The reference province field is required.',
+                    'city_ref.*.required' => 'The reference city field is required.',
+                    'promo_1.*.required' => 'The reference promo field is required at least 1.',
+                    'qty_1.*.required' => 'The reference promo quantity field is required.',
+                    'promo_2.*.required_with_all' => 'The reference promo 2 field is required.',
+                    'qty_2.*.required_with_all' => 'The reference promo 2 quantity field is required.',
+                );
 
                 $arrValidator = [
                     "no_member" => ["required"],
@@ -876,7 +884,7 @@ class SubmissionController extends Controller
                 }
 
                 $validator = Validator::make(
-                    $data, $arrValidator
+                    $data, $arrValidator, $arrValidatorMsg
                 );
 
                 if ($validator->fails()) {
@@ -885,6 +893,11 @@ class SubmissionController extends Controller
                         "data" => $validator->errors(),
                     ], 401);
                 }
+
+                return response()->json([
+                        "result" => 0,
+                        "data" => $data['name'],
+                    ], 200);
 
                 $submission = Submission::create($data);
 

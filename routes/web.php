@@ -175,6 +175,11 @@ Route::group(['prefix' => 'api-apps'], function () {
     Route::group(["prefix" => "souvenir"], function () {
         Route::post("fetch_souvenir", "SouvenirController@fetchSouvenir");
     });
+
+    // Prize API
+    Route::group(["prefix" => "prize"], function () {
+        Route::post("fetch_prize", "PrizeController@fetchPrize");
+    });
 });
 
 Auth::routes(['verify' => true]);
