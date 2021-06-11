@@ -5,12 +5,22 @@
 
 <!--==========================Hero Section============================-->
 <section id="hero" class="clearfix">
-  <div class="container h-100 d-flex">
-    <div class="justify-content-center align-self-center" data-aos="fade-up">
-      <div class="col-md-12 hero-info order-md-first order-last" data-aos="zoom-in" data-aos-delay="100">
-        <h2>Print Your <br>Imagination With Us.</h2>
-        <div>
-          <a href="#main" class="btn-get-started scrollto">Get Started</a>
+  <div class="container d-flex">
+    <div class="justify-content-center align-self-center herobg" data-aos="fade-up" style="margin: 0 15px;">
+      <div class="row">
+        <div class="col-md-7" style="padding:0;">
+            <div class="about-img" style="visibility: visible; animation-name: fadeInLeft;">
+              <img src="{{asset('sources/wakishophero.png')}}" alt="">
+            </div>
+          </div>
+        <div class="col-md-5 order-last herodesc">
+          <div class="p-4">
+              <h2>Welcome to WAKi Shop.</h2>
+              <p>Find and shop all your daily needs. Let’s shopping with us!</p>
+              <div class="text-center">
+                <a href="#main" class="btn-get-started scrollto">Get Started</a>
+              </div>
+          </div>
         </div>
       </div>
     </div>
@@ -18,68 +28,31 @@
   </div>
 </section><!-- End Hero -->
 
-
-
   <!--==========================About Us Section============================-->
-  <section id="about" style="position: relative; z-index: -1;">
+  <section id="about" style="position: relative;">
     <div class="container">
-      <div class="col-lg-12 col-md-12" style="padding: 2em 0;">
-        <div class="row">
-          <div class="col-md-6">
-            <h2>We Print Your Creation.</h2>
-          </div>
-          <div class="col-md-6">
-            <p>WAKi 3D Printing Industries believe that 3D printing is the next huge thing in the upcomig years and following decades.</p>
-          </div>
-        </div>
+      <div class="col-lg-12 col-md-12" style="padding: 1em 0;">
+        <h4>ABOUT________</h4>
+        <h2>WAKi Shop Overview</h2>
+      </div>
 
         <div class="col-lg-12 col-md-12" data-aos="zoom-in" data-aos-delay="100" style="padding:0;">
-          <div class="about-img wow fadeInLeft" style="visibility: visible; animation-name: fadeInLeft;margin-bottom: 3.5em;">
-            <img src="{{asset('sources/coverimage.png')}}" alt="">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="about-img wow fadeInLeft img-responsive" style="visibility: visible; animation-name: fadeInLeft;">
+                <img src="{{asset('sources/overview.png')}}" alt="">
+              </div>
+            </div>
+            <div class="col-md-6 align-self-center">
+              <p>WAKi has become a popular brand for health product expanded internationally venturing into Asia Pacific and Europe countries. Expanding the business, WAKi Malaysia ventures into shop business.
+              <br><br>
+              Waki SHOP have the complete product for your daily needs and other needs with total of the 8000 product variation.
+              The mission of WAKishop is to provide and serve customer with “High Value, Worth Having” product and service.
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="col-md-12" style="padding:0;">
-          <h2>We Choose the Best Option.</h2>
-        </div>
-
-        <div class="row">
-
-          <div class="col-sm-6 col-md-3">
-            <div class="about-img wow fadeInLeft">
-              <img src="{{asset('sources/about1.png')}}" alt="">
-            </div>
-            <div>
-              <p>High quality detail model output.</p>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-3">
-            <div class="about-img wow fadeInLeft">
-              <img src="{{asset('sources/about2.png')}}" alt="">
-            </div>
-            <div>
-              <p>High performance 3D printer equipment.</p>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-3">
-            <div class="about-img wow fadeInLeft">
-              <img src="{{asset('sources/about3.png')}}" alt="">
-            </div>
-            <div>
-              <p>High quality filament selected.</p>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-3">
-            <div class="about-img wow fadeInLeft">
-              <img src="{{asset('sources/about4.png')}}" alt="">
-            </div>
-            <div>
-              <p>Detailing and finishing the model.</p>
-            </div>
-          </div>
-
-
-          </div>
         </div>
       </div>
 
@@ -90,36 +63,63 @@
   <section id="product">
     <div class="container">
 
-        <header class="section-header">
-          <h2>Our Service</h2>
-        </header>
-      <div class="row justify-content-center">
-        <div class="row" style="padding:0; margin: 2em 0">
+      <div class="col-lg-12 col-md-12" style="padding: 1em 0;">
+        <h4>CATEGORIES________</h4>
+        <h2>Variety of Choices</h2>
+      </div>
 
-          <div class="col-lg-6 col-md-6">
-            <div class="about-img wow fadeInLeft img-responsive" style="visibility: visible; animation-name: fadeInLeft;">
-              <img src="{{asset('sources/ourservice.png')}}" alt="">
-            </div>
-          </div>
-
-          <div class="col-lg-6 col-md-6 d-flex">
-            <div class="about-content align-self-center">
-              <div class="product-service">
-                <h3>3D Prototyping</h3>
-                <p>We can reverse engineering to improve or remodel the 3D model from the existed product to your desire.</p>
+      <div class="row" style="padding:0 40px;">
+          <div id="product-slider" class="owl-carousel">
+            <div class="product">
+              <div class="pic">
+                <img src="{{asset('sources/testcat1.png')}}" alt="">
               </div>
-              <div class="product-service">
-                <h3>3D Printing Service</h3>
-                <p>We can print your 3d model like souvenir, speciial gift, statue, car accessories, and many more with selected filament.</p>
-              </div>
-              <div class="product-service">
-                <h3>3D Design & Modeling</h3>
-                <p>We can specialized 3d model for car part like exterior body kit, plastic mechanism part and interior car parts that based on plastic material.</p>
+              <div class="description">
+                <h4 class="titledesc">Foods____</h4>
               </div>
             </div>
-          </div>
-        </div>
+            <div class="product">
+              <div class="pic">
+                <img src="{{asset('sources/testcat2.png')}}" alt="">
+              </div>
+              <div class="description">
+                <h4 class="titledesc">Kitchenatte____</h4>
+              </div>
+            </div>
+            <div class="product">
+              <div class="pic">
+                <img src="{{asset('sources/testcat3.png')}}" alt="">
+              </div>
+              <div class="description">
+                <h4 class="titledesc">Stylish____</h4>
+              </div>
+            </div>
+            <div class="product">
+              <div class="pic">
+                <img src="{{asset('sources/testcat1.png')}}" alt="">
+              </div>
+              <div class="description">
+                <h4 class="titledesc">Foods____</h4>
+              </div>
+            </div>
+            <div class="product">
+              <div class="pic">
+                <img src="{{asset('sources/testcat2.png')}}" alt="">
+              </div>
+              <div class="description">
+                <h4 class="titledesc">Kitchenatte____</h4>
+              </div>
+            </div>
+            <div class="product">
+              <div class="pic">
+                <img src="{{asset('sources/testcat3.png')}}" alt="">
+              </div>
+              <div class="description">
+                <h4 class="titledesc">Stylish____</h4>
+              </div>
 
+            </div>
+          </div>
       </div>
 
     </div>
@@ -131,148 +131,107 @@
 <section id="portfolio">
   <div class="container">
 
-    <header class="section-header">
-      <h2 class="section-title">Recent Project</h2>
-    </header>
-
-
-    <div class="grid-container w-100">
-      <div class="long-left">
-        <div class="pic">
-          <img src="{{asset('sources/portfolio/longleft.png')}}" alt="">
-        </div>
-      </div>
-      <div class="wide-right">
-        <div class="pic">
-          <img src="{{asset('sources/portfolio/wideright.png')}}" alt="">
-        </div>
-      </div>
-      <div class="long-right">
-        <div class="pic">
-          <img src="{{asset('sources/portfolio/longright.png')}}" alt="">
-        </div>
-      </div>
-      <div class="normal-bottom">
-        <div class="pic">
-          <img src="{{asset('sources/portfolio/normalbottom.png')}}" alt="">
-        </div>
-      </div>
-      <div class="big-left">
-        <div class="pic">
-          <img src="{{asset('sources/portfolio/bigleft.png')}}" alt="">
-        </div>
-      </div>
-      <div class="center">
-        <div class="pic">
-          <img src="{{asset('sources/portfolio/center.png')}}" alt="">
-        </div>
-      </div>
+    <div class="col-lg-12 col-md-12" style="padding: 1em 0;">
+      <h4>GALLERY________</h4>
+      <h2>Some Photos from Our Store</h2>
     </div>
+
+    <div class="row portfolio-container">
+
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/our1.png')}}" class="img-fluid" alt="">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/our2.png')}}" class="img-fluid" alt="">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/our3.png')}}" class="img-fluid" alt="">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/our6.png')}}" class="img-fluid" alt="">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/our4.png')}}" class="img-fluid" alt="">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/our5.png')}}" class="img-fluid" alt="">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/our7.png')}}" class="img-fluid" alt="">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/our9.png')}}" class="img-fluid" alt="">
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+          <div class="portfolio-wrap">
+            <img src="{{asset('sources/portfolio/our8.png')}}" class="img-fluid" alt="">
+          </div>
+        </div>
+
+      </div>
+
+
   </div>
 </section>
 
+<!--==========================Our Business Section============================-->
+<section id="location" class="location">
+  <div class="container" data-aos="zoom-in">
 
-<!-- Testimoni #1
-============================================= -->
-<section id="testimonial" class="section portfolio portfolio-grid portfolio-2 pb-70">
-    <div class="container">
-      <header class="section-header" style="text-align:center;">
-        <h2>Customer Review</h2>
-      </header>
-
-        <div class="row">
-            <div id="testimonial-slider" class="owl-carousel">
-              <div class="testimonial">
-                <div class="description">
-                  <h4 class="titledesc">Detailed Model</h4>
-                  <p>Excellent job for detailing and finishing my 3d model sculpture, smooth surface like i want.
-                  </p>
-                </div>
-                <div class="pic">
-                  <img src="{{asset('sources/testface1.jpg')}}" alt="">
-                </div>
-                <div class="testimonial-content">
-                  <h3 class="name">Bapak Suprapto</h3>
-                </div>
-              </div>
-              <div class="testimonial">
-                <div class="description">
-                  <h4 class="titledesc">Detailed Model</h4>
-                  <p>Excellent job for detailing and finishing my 3d model sculpture, smooth surface like i want.
-                  </p>
-                </div>
-                <div class="pic">
-                  <img src="{{asset('sources/testface1.jpg')}}" alt="">
-                </div>
-                <div class="testimonial-content">
-                  <h3 class="name">Ibu Meiske</h3>
-                </div>
-              </div>
-              <div class="testimonial">
-                <div class="description">
-                  <h4 class="titledesc">Detailed Model</h4>
-                  <p>Excellent job for detailing and finishing my 3d model sculpture, smooth surface like i want.
-                  </p>
-                </div>
-                <div class="pic">
-                  <img src="{{asset('sources/testface1.jpg')}}" alt="">
-                </div>
-                <div class="testimonial-content">
-                  <h3 class="name">Bapak Moh. Lontara</h3>
-                </div>
-              </div>
-              <div class="testimonial">
-                <div class="description">
-                  <h4 class="titledesc">Detailed Model</h4>
-                  <p>Excellent job for detailing and finishing my 3d model sculpture, smooth surface like i want.
-                  </p>
-                </div>
-                <div class="pic">
-                  <img src="{{asset('sources/testface1.jpg')}}" alt="">
-                </div>
-                <div class="testimonial-content">
-                  <h3 class="name">Ibu Wiwik Sulastri</h3>
-                </div>
-              </div>
-              <div class="testimonial">
-                <div class="description">
-                  <h4 class="titledesc">Detailed Model</h4>
-                  <p>Excellent job for detailing and finishing my 3d model sculpture, smooth surface like i want.
-                  </p>
-                </div>
-                <div class="pic">
-                  <img src="{{asset('sources/testface1.jpg')}}" alt="">
-                </div>
-                <div class="testimonial-content">
-                  <h3 class="name">Bapak Samsul Arifin</h3>
-                </div>
-              </div>
-              <div class="testimonial">
-                <div class="description">
-                  <h4 class="titledesc">Detailed Model</h4>
-                  <p>Excellent job for detailing and finishing my 3d model sculpture, smooth surface like i want.
-                  </p>
-                </div>
-                <div class="pic">
-                  <img src="{{asset('sources/testface1.jpg')}}" alt="">
-                </div>
-                <div class="testimonial-content">
-                  <h3 class="name">Ibu Imas Dedeh</h3>
-                </div>
-              </div>
-            </div>
-        </div>
-
-
-        <!-- .row end -->
+    <div class="col-lg-12 col-md-12" style="padding: 1em 0;">
+      <h4>LOCATION________</h4>
+      <h2>Our Shops Location</h2>
     </div>
-    <!-- .container end -->
-</section>
-<!-- #Testimoni end -->
 
+    <div class="col-lg-12 col-md-12" style="padding:0;">
+      <ul id="location-flters">
+          <li data-filter=".filter-shop1" class="filter-active">WAKiShop Kajang</li>
+          <li data-filter=".filter-shop2">WAKiShop Bangi</li>
+      </ul>
+    </div>
+
+    <div class="row col-lg-12 col-md-12 justify-content-center align-self-center herobg" style="padding:0;margin: 0 15px;">
+      <div class="col-md-3" style="background-color:#f1faf2;display:flex;align-items:center;font-size:0.9em;font-weight:600;">
+        WAKI Shop, Kajang<br><br>
+        D-G, 30, Jalan Prima Saujana<br>
+        2/A, Taman Prima Saujana <br>
+        Seksyen 2, 43000 <br>
+        Kajang, Selangor<br><br>
+        Opening Hours<br><br>
+        Monday - Sunday<br>
+        10:00 a.m - 10:00 p.m<br>
+      </div>
+      <div class="col-md-9 order-last" style="padding: 0;">
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDvgWknP6hbVFgnvWzAgI-aoLQ89IySh4I"></script>
+        <div style="overflow:hidden;height:370px;width:100%;">
+            <div id="gmap_canvas" style="height:370px;width:100%;"></div>
+            <style>#gmap_canvas img{max-width:none!important;background:none!important}</style>
+        </div>
+        <script type="text/javascript">function init_map(){var myOptions = {zoom:16, center:new google.maps.LatLng( 3.0583106, 101.5978456), mapTypeId: google.maps.MapTypeId.ROADMAP}; map = new google.maps.Map(document.getElementById('gmap_canvas'), myOptions); marker = new google.maps.Marker({map: map, position: new google.maps.LatLng(  3.0583106, 101.5978456)}); infowindow = new google.maps.InfoWindow({content:'<strong> WAKiMart Malaysia</strong><br> WAKi Tower Block C, S01 01 USJ ONE, Persiaran Subang Permai. <br>'}); google.maps.event.addListener(marker, 'click', function(){infowindow.open(map, marker); }); infowindow.open(map, marker); }google.maps.event.addDomListener(window, 'load', init_map);</script>
+      </div>
+    </div>
+
+  </div>
+</section>
 
   <!--==========================Our Business Section============================-->
-  <section id="business" class="business">
+  <!-- <section id="business" class="business">
     <div class="container" data-aos="zoom-in">
 
       <header class="section-header text-center pb-3">
@@ -346,6 +305,6 @@
       </div>
 
     </div>
-  </section>
+  </section> -->
   <!-- #business -->
 @endsection

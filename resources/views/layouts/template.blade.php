@@ -76,41 +76,23 @@
 	  <div class="container d-flex">
 
 			<div class="d-flex align-items-center justify-content-start" style="flex: 1;">
-	      <nav class="main-nav d-none d-lg-block scrollto align-items-start justify-content-start">
-	        <ul>
-
-	          <li><a href="{{route('index')}}#about">About</a></li>
-
-	          <li class="drop-down"><a href="#product">Services</a>
-	            <ul>
-								<li><a href="{{route('single_product',1)}}#intro" value="">3D Prototyping</a></li>
-								<li><a href="" value="">3D Printing Service</a></li>
-								<li><a href="" value="">3D Desain & Modeling</a></li>
-	            </ul>
-	          </li>
-
-	          <li><a href="{{route('index')}}#portfolio">Project</a></li>
-
-	          <li><a href="{{route('index')}}#footer">Contact</a></li>
-
-	        </ul>
-	      </nav><!-- .main-nav -->
-			</div>
-
-			<div class="d-flex align-items-center justify-content-center" style="flex: 1;">
 				<div class="logo justify-content-center align-content-center">
-	        <a href="#header" class="scrollto"><img src="{{asset('sources/waki3dprinting.png')}}" alt="" class="img-fluid"></a>
+	        <a href="#header" class="scrollto"><img src="{{asset('sources/wakishoplogo.png')}}" alt="" class="img-fluid"></a>
 	      </div>
 			</div>
 
 			<div class="d-flex align-items-center justify-content-end" style="flex: 1;">
+	      <nav class="main-nav d-none d-lg-block scrollto align-items-start justify-content-start">
+	        <ul>
 
-					<div class="d-none d-lg-block social-links">
-		        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-		        <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
-		        <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
-		        <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
-		      </div>
+	          <li><a href="#about">About</a></li>
+	          <li><a href="#product">Categories</a></li>
+	          <li><a href="#portfolio">Gallery</a></li>
+	          <li><a href="#footer">Location</a></li>
+	          <li><a href="#footer">Contact</a></li>
+
+	        </ul>
+	      </nav><!-- .main-nav -->
 			</div>
 
 	    </div>
@@ -127,19 +109,21 @@
               			<div class="row">
                  			<div class="col-sm-12">
 			                    <div>
-				                  		<h4>WAKi 3D Printing Industries</h4>
+														<div class="logo logo-footer justify-content-center align-content-center">
+															<a href="#header" class="scrollto"><img src="http://localhost/waki-indonesia/public/sources/waki3dprinting.png" alt="" class="img-fluid"></a>
+														</div>
 
-			                      	<p>WAKi 3D Printing Industries since 2021.<br>
-															We design, print and sell 3D model over 5000+ models</p>
+			                      	<p>WAKi SHOP since 2021.<br>
+															We provide product for your daily needs and other needs with total of the 8000 products variation.</p>
 			                    </div>
 
 			                    <div>
 			                    	<ul class="fa-ul">
-															<li class="footer-menu-list"><i class="fa-li fas fa-map-marker-alt"></i>WAKi Tower, S-01-01, Block C, USJ ONE, Persiaran Subang Permai, USJ 1 47500 Subang Jaya, Selangor, Malaysia.
+															<li class="footer-menu-list"><i class="fa-li fa fa-envelope"></i>wakishopmalaysia@gmail.com
 															</li>
 															<li class="footer-menu-list"><i class="fa-li fa fa-phone"></i>+60 16-688 8903
 															</li>
-															<li class="footer-menu-list"><i class="fa-li fas fa-globe"></i>www.waki3dprint.com
+															<li class="footer-menu-list"><i class="fa-li fas fa-globe"></i>www.wakishop.com
 															</li>
 														</ul>
 			                    </div>
@@ -150,22 +134,18 @@
               		</div>
 
 								<div class="col-lg-3 d-none d-lg-block">
-									<div class="logo logo-footer justify-content-center align-content-center">
-						        <a href="#header" class="scrollto"><img src="http://localhost/waki-indonesia/public/sources/waki3dprinting.png" alt="" class="img-fluid"></a>
-						      </div>
+
              			<div class="col-md-12">
                     <div class="footer-newsletter">
 	                  		<h4>Menu</h4>
 												<ul class="footer-menu">
-													<li class="footer-menu-list">About
-													</li>
-													<li class="footer-menu-list">Our Service
-													</li>
-													<li class="footer-menu-list">Testimonial
-													</li>
+													<li class="footer-menu-list">About</li>
+													<li class="footer-menu-list">Categories</li>
+													<li class="footer-menu-list">Gallery</li>
+													<li class="footer-menu-list">Location</li>
 												</ul>
                     </div>
-										<div class="social-links text-center">
+										<div class="social-links text-center" style="padding-top: 4em;">
 												<a href="https://web.facebook.com/wakimart.id" class="facebook"><i class="fa fa-facebook"></i></a>
 												<a href="https://www.instagram.com/wakimart.id/" class="instagram"><i class="fa fa-phone"></i></a>
 												<a href="https://www.youtube.com/channel/UCI2G97LQi4lHZ0yQtug1Wqw" class="youtube"><i class="fa fa-youtube"></i></a>
@@ -209,7 +189,7 @@
 
 	    <div class="container">
 	      <div class="copyright">
-	        &copy; Copyright <strong>WAKi 3D Print Industries</strong>. All Rights Reserved
+	        &copy; Copyright <strong>Waki SHOP</strong>. All Rights Reserved
 	      </div>
 	      <div class="credits">
 	        <a href="https://waki.asia/">WAKi International Group</a>
@@ -243,14 +223,15 @@
   	<script src="{{asset('js/main.js')}}"></script>
 		<script>
 		$(document).ready(function() {
-			$("#testimonial-slider").owlCarousel({
+			$("#product-slider").owlCarousel({
 		    items: 3,
 		    pagination: true,
 		    autoplay: true,
 		    loop: true,
-		    navigation: true,
+		    nav: true,
 		    dots: false,
-		    responsive:{
+				navText:["<div class='nav-btn prev-slide'></div>","<div class='nav-btn next-slide'></div>"],
+	   		responsive:{
 		      1000: {items: 3},
 		      768: {items: 3},
 		      640: {items: 2},
