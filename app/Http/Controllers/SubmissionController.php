@@ -145,12 +145,22 @@ class SubmissionController extends Controller
                     ->orWhere('code', "like", "%" . $filter_text . "%");
             });
         }
+
+        if (!empty($request->filter_cso)) {
+            $submissions = $submissions->where("cso_id", $request->filter_cso);
+        }
+
+        $csos = Cso::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("id")
+            ->get();
         $submissions = $submissions->orderBy('id', "desc")->paginate(10);
 
         return view(
             "admin.list_submission_form",
             compact(
                 "submissions",
+                "csos",
             )
         )
         ->with("i", (request()->input("page", 1) - 1) * 10 + 1);
@@ -823,11 +833,8 @@ class SubmissionController extends Controller
 
     public function addApi(Request $request): \Illuminate\Http\JsonResponse
     {
-        $data = json_decode($request->acc_data, true)[0];
-        return response()->json([
-            "result" => 0,
-            "data" => ($data["type"] === "MGM"),
-        ], 401);
+        $data = json_decode($request->acc_data, true);
+        $data['do-image_1'] = $request->file('do-image_1');
 
         DB::beginTransaction();
 
@@ -836,6 +843,19 @@ class SubmissionController extends Controller
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
 
             if ($data["type"] === "MGM") {
+
+                $arrValidatorMsg = array(
+                    'name_ref.*.required' => 'The reference name field is required.',
+                    'age_ref.*.required' => 'The reference age field is required.',
+                    'phone_ref.*.required' => 'The reference phone field is required.',
+                    'province_ref.*.required' => 'The reference province field is required.',
+                    'city_ref.*.required' => 'The reference city field is required.',
+                    'promo_1.*.required' => 'The reference promo field is required at least 1.',
+                    'qty_1.*.required' => 'The reference promo quantity field is required.',
+                    'promo_2.*.required_with_all' => 'The reference promo 2 field is required.',
+                    'qty_2.*.required_with_all' => 'The reference promo 2 quantity field is required.',
+                );
+
                 $arrValidator = [
                     "no_member" => ["required"],
                     "name" => ["required", "string", "max:191"],
@@ -874,7 +894,7 @@ class SubmissionController extends Controller
                 }
 
                 $validator = Validator::make(
-                    $data, $arrValidator
+                    $data, $arrValidator, $arrValidatorMsg
                 );
 
                 if ($validator->fails()) {
@@ -883,6 +903,11 @@ class SubmissionController extends Controller
                         "data" => $validator->errors(),
                     ], 401);
                 }
+
+                return response()->json([
+                        "result" => 0,
+                        "data" => $data['name'],
+                    ], 200);
 
                 $submission = Submission::create($data);
 
@@ -1722,5 +1747,25 @@ class SubmissionController extends Controller
         $submission = Submission::find($request->id);
         $souvenirs = Souvenir::where('active', true)->get();
         return view('sehatbersamawaki', compact('submission', 'souvenirs'));
+    }
+
+    public function firstRunStatus(){
+        $submission_all = Submission::where([['active', true], ['type', 'referensi']])->get();
+
+        foreach ($submission_all as $eachSub) {
+            foreach ($eachSub->reference as $eachRef) {
+                $tempHs = $eachRef->reference_souvenir->fetch_hs();
+                if($tempHs != null){
+                    foreach ($tempHs as $eachHs) {
+                        $eachHs->status_reference = true;
+                        $eachHs->save();
+                    }
+                }
+            }
+        }
+        $data = ['result' => 0,
+                 'data' => "Berhasil"
+                ];
+        return response()->json($data, 200);
     }
 }

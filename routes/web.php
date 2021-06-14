@@ -73,6 +73,8 @@ Route::get('/fetchDistrict/{city}', function ($city) {
 Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSouvenir");
 Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
 
+Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
+
 //KHUSUS WEB SERVICE APPS (for non CSRF)
 Route::group(['prefix' => 'api-apps'], function () {
     Route::post('login','Auth\LoginController@loginApi'); //login
@@ -174,6 +176,11 @@ Route::group(['prefix' => 'api-apps'], function () {
     // Souvenir API
     Route::group(["prefix" => "souvenir"], function () {
         Route::post("fetch_souvenir", "SouvenirController@fetchSouvenir");
+    });
+
+    // Prize API
+    Route::group(["prefix" => "prize"], function () {
+        Route::post("fetch_prize", "PrizeController@fetchPrize");
     });
 });
 
