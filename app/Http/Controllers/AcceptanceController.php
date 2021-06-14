@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Acceptance;
 use App\AcceptanceStatusLog;
+use App\Exports\AcceptanceExport;
 use App\Branch;
 use App\Cso;
 use App\User;
@@ -15,6 +16,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -280,6 +282,23 @@ class AcceptanceController extends Controller
             DB::rollback();
             return redirect()->route('list_acceptance_form');
         }
+    }
+
+    public function export_to_xls_byDate(Request $request)
+    {
+        $status = null;
+        $startDate = null;
+        $endDate = null;
+
+        if($request->has('filter_startDate') && $request->has('filter_endDate') && $request->has('filter_statusexport')){
+            $startDate = $request->filter_startDate;
+            $endDate = $request->filter_endDate;
+            $endDate = new \DateTime($endDate);
+            $endDate = $endDate->modify('+1 day')->format('Y-m-d');
+            $status = $request->filter_statusexport;
+        }
+
+        return Excel::download(new AcceptanceExport($status, array($startDate, $endDate)), 'AcceptanceByDate.xlsx');
     }
 
     //================ Khusus Notifikasi ================//
