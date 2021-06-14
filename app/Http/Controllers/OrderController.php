@@ -430,9 +430,9 @@ class OrderController extends Controller
                 $orders = $orders->where(function ($q) use ($filter) {
                                 return $q->where("name", "like", "%" . $filter . "%")->orWhere("phone", "like", "%" . $filter . "%");
                             });
-            }    
+            }
             $orders = $orders->orderBy('id', 'DESC')->take(20)->get();
-            
+
             $data = ['orders' => $orders];
             return response()->json($data, 200);
         }
@@ -898,5 +898,22 @@ class OrderController extends Controller
 
             return response()->json($data, 200);
         }
+    }
+
+    public function fetchCustomer(Request $request)
+    {
+        $customer = Order::select(
+                "name",
+                "phone",
+                "province",
+                "city",
+                "distric AS district",
+                "address",
+            )
+            ->where("no_member", $request->no_member)
+            ->orderBy("id", "desc")
+            ->first();
+
+        return response()->json(["data" => $customer]);
     }
 }

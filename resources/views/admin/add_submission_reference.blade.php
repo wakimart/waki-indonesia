@@ -149,6 +149,7 @@ $menu_item_second = "add_submission_reference";
                                     id="no_member"
                                     name="no_member"
                                     placeholder="No. Member"
+                                    oninput="customerByNoMember(this)"
                                     required />
                             </div>
 
@@ -215,9 +216,9 @@ $menu_item_second = "add_submission_reference";
                             </div>
 
                             <div class="form-group">
-                                <label for="subDistrict">Sub District</label>
+                                <label for="district">Sub District</label>
                                 <select class="form-control"
-                                    id="subDistrict"
+                                    id="district"
                                     name="district"
                                     data-msg="Mohon Pilih Kecamatan"
                                     required>
@@ -403,7 +404,7 @@ $menu_item_second = "add_submission_reference";
                                                     {{ $souvenir->name }}
                                                 </option>
                                                 @endif
-                                                
+
                                             @endforeach
                                         </select>
                                     </div>
@@ -584,6 +585,59 @@ for (let i = 0; i < 10; i++) {
     souvenirArray.push(-1);
 };
 
+function customerByNoMember(e) {
+    fetch(
+        `{{ route("fetch_customer_by_mpc") }}?no_member=${e.value}`,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const data = response.data;
+
+        // document.getElementById("name").value = data.name;
+        // document.getElementById("phone").value = data.phone;
+        // document.getElementById("province").value = data.province;
+        // document.getElementById("province").onchange();
+        // setCity(document.getElementById("province"));
+        // document.getElementById("city").value = data.city;
+        // document.getElementById("city").onchange();
+        // setDistrict(document.getElementById("city"));
+        // document.getElementById("district").value = data.district;
+        // document.getElementById("address").value = data.address;
+
+        if (data !== undefined && data !== null) {
+            Object.keys(data).forEach(function (key) {
+                document.getElementById(key).value = data[key];
+
+                if (key === "province") {
+                    setTimeout(function () {
+                        document.getElementById(key).onchange();
+                    }, 500);
+                }
+
+                if (key === "city") {
+                    setTimeout(function () {
+                        document.getElementById(key).onchange();
+                    }, 1000);
+                }
+            });
+        }
+    }).catch(function (error) {
+        console.error(error);
+    });
+}
+
 function validateForm() {
     // This function deals with validation of the form fields
     let valid = true;
@@ -755,7 +809,7 @@ function setDistrict(e) {
                     + '</option>';
             });
 
-            document.getElementById("subDistrict").innerHTML = optionsDistrict;
+            document.getElementById("district").innerHTML = optionsDistrict;
         }
     }).catch(function (error) {
         console.error(error);

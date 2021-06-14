@@ -340,6 +340,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // List Order (Khusus untuk Submission)
         Route::get("/list_order_submission", "OrderController@ListOrderforSubmission")
             ->name("list_order_submission");
+
+        // Fetch Customer Data By MPC Number
+        Route::get("/fetch-customer", "OrderController@fetchCustomer")
+            ->name("fetch_customer_by_mpc");
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {
