@@ -146,11 +146,19 @@ class SubmissionController extends Controller
             });
         }
 
+        if (!empty($request->filter_branch)) {
+            $submissions = $submissions->where("branch_id", $request->filter_branch);
+        }
+
         if (!empty($request->filter_cso)) {
             $submissions = $submissions->where("cso_id", $request->filter_cso);
         }
 
         $csos = Cso::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("id")
+            ->get();
+        $branches = Branch::select("id", "code", "name")
             ->where("active", true)
             ->orderBy("id")
             ->get();
@@ -161,6 +169,7 @@ class SubmissionController extends Controller
             compact(
                 "submissions",
                 "csos",
+                "branches",
             )
         )
         ->with("i", (request()->input("page", 1) - 1) * 10 + 1);
