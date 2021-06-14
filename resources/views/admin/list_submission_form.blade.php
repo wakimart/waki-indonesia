@@ -7,14 +7,6 @@ $menu_item_second = "list_submission_form";
 @section("style")
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <style type="text/css">
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
     .select2-selection__rendered {
         line-height: 45px !important;
     }
@@ -158,25 +150,25 @@ $menu_item_second = "list_submission_form";
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th class="center">No.</th>
+                                    <th class="text-center">No.</th>
                                     <th>Registration Date</th>
                                     <th>Member Name</th>
                                     <th>Type</th>
                                     <th>Branch</th>
                                     <th>CSO</th>
-                                    <th class="center">View</th>
+                                    <th class="text-center">View</th>
                                     {{-- @if (Gate::check('edit-submission')) --}}
-                                        <th class="center">Edit</th>
+                                        <th class="text-center">Edit</th>
                                     {{-- @endif --}}
-                                    @if (Gate::check('delete-submission'))
-                                        <th class="center">Delete</th>
-                                    @endif
+                                    {{-- @if (Gate::check('delete-submission')) --}}
+                                        <th class="text-center">Delete</th>
+                                    {{-- @endif --}}
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($submissions as $key => $submission)
                                     <tr>
-                                        <td class="right">{{ $i }}</td>
+                                        <td class="text-right">{{ $i }}</td>
                                         <td>
                                             {{ date("d F Y", strtotime($submission->created_at)) }}
                                         </td>
@@ -192,20 +184,20 @@ $menu_item_second = "list_submission_form";
                                         <td>
                                             {{ $submission->cso->code }} - {{ $submission->cso->name }}
                                         </td>
-                                        <td class="center">
+                                        <td class="text-center">
                                             <a href="{{ route("detail_submission_form", ["id" => $submission->id, "type" => $submission->type]) }}">
                                                 <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                             </a>
                                         </td>
                                         {{-- @can('edit-submission') --}}
-                                            <td class="center">
+                                            <td class="text-center">
                                                 <a href="{{ route('edit_submission_form', ['id' => $submission->id, "type" => $submission->type]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>
                                         {{-- @endcan --}}
                                         {{-- @can('delete-submission') --}}
-                                            <td class="center">
+                                            <td class="text-center">
                                                 <button class="btn-delete"
                                                     data-toggle="modal"
                                                     data-target="#deleteDoModal"
@@ -246,7 +238,7 @@ $menu_item_second = "list_submission_form";
                 </button>
             </div>
             <div class="modal-body">
-                <h5 style="text-align:center;">
+                <h5 class="text-center">
                     Are you sure you want to delete this?
                 </h5>
             </div>

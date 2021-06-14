@@ -67,10 +67,6 @@ if (
 
     }
 
-    .center {
-        text-align: center;
-    }
-
     .right {
         text-align: right;
         padding-right: 1em;
@@ -95,12 +91,6 @@ if (
         max-width: 400px;
     }
 
-   /*  @media (min-width: 768px) {
-		.table-responsive::-webkit-scrollbar {
-            display: none;
-        }
-	} */
-
     @media (max-width: 480px) {
 		.btn span {
             font-size: 2.5vw;
@@ -113,8 +103,6 @@ if (
             margin-bottom: 3em;
         }
 	}
-
-
 </style>
 @endsection
 
@@ -132,7 +120,8 @@ if (
 
                             <div class="row justify-content-center">
 
-                                <div class="table-responsive" style="margin-right: 0.5em;">
+                                <div class="table-responsive"
+                                    style="margin-right: 0.5em;">
                                     <table class="table">
                                         <thead>
                                             <td class="right">Submission Date</td>
@@ -145,7 +134,8 @@ if (
                                     </table>
                                 </div>
 
-                                <div class="table-responsive" style="margin-right: 0.5em;">
+                                <div class="table-responsive"
+                                    style="margin-right: 0.5em;">
                                     <table class="table">
                                         <thead>
                                             <td colspan="2">Customer Data</td>
@@ -193,21 +183,22 @@ if (
                                     </table>
                                 </div>
 
-                                <div class="table-responsive" style="margin-right: 0.5em;">
+                                <div class="table-responsive"
+                                    style="margin-right: 0.5em;">
                                     <table class="table">
                                         <thead>
                                             <td>Sales Branch</td>
                                             <td>Sales Code</td>
                                         </thead>
                                         <tr>
-                                            <td style="text-align: center">
+                                            <td class="text-center">
                                                 <?php
                                                 echo $submission->branch_code
                                                     . " - "
                                                     . $submission->branch_name;
                                                 ?>
                                             </td>
-                                            <td style="text-align: center">
+                                            <td class="text-center">
                                                 {{ $submission->cso_code }}
                                             </td>
                                         </tr>
@@ -241,11 +232,8 @@ if (
                                                 <td>Souvenir/Prize</td>
                                                 <td>Status</td>
                                                 <td>Deliv. Status</td>
-                                                {{-- <td>Prize</td>
-                                                <td>Status Prize</td>
-                                                <td>Deliv. Status Prize</td> --}}
                                                 @if($specialPermission)
-                                                    <th class="center">View</th>
+                                                    <th class="text-center">View</th>
                                                 @endif
                                                 <td>Edit</td>
                                                 <td>Delete</td>
@@ -253,8 +241,8 @@ if (
                                         </thead>
                                         <tbody>
                                             <?php
-                                                foreach ($references as $key => $reference):
-                                                    array_push($arr_souvenir, $reference['souvenir_id']);
+                                            foreach ($references as $key => $reference):
+                                                array_push($arr_souvenir, $reference['souvenir_id']);
                                             ?>
 
                                                 <input type="hidden"
@@ -269,11 +257,13 @@ if (
                                                         {{ $reference->name }}
                                                     </td>
                                                     <td rowspan="2"
-                                                        class="center" id="age_{{ $key }}">
+                                                        class="text-center"
+                                                        id="age_{{ $key }}">
                                                         {{ $reference->age }}
                                                     </td>
                                                     <td rowspan="2"
-                                                        class="center" id="phone_{{ $key }}">
+                                                        class="text-center"
+                                                        id="phone_{{ $key }}">
                                                         {{ $reference->phone }}
                                                     </td>
                                                     <td rowspan="2"
@@ -296,7 +286,7 @@ if (
                                                     }
                                                     ?>
                                                     <td rowspan="2"
-                                                        class="center"
+                                                        class="text-center"
                                                         id="link-hs_{{ $key }}"
                                                         data-hs="{{ !empty($reference->link_hs) ? implode(", ", $link_hs) : "" }}"
                                                         style="overflow-x: auto;">
@@ -323,7 +313,7 @@ if (
                                                         @endif
                                                     </td>
                                                     <td rowspan="2"
-                                                        class="center"
+                                                        class="text-center"
                                                         id="order_{{ $key }}"
                                                         data-order="{{ $reference->order_id }}"
                                                         style="overflow-x:auto;">
@@ -342,26 +332,32 @@ if (
                                                         data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
                                                         {{ $reference->souvenir_name }}
                                                     </td>
-                                                    <td class="center"
+                                                    <td class="text-center"
                                                         id="status_souvenir_{{ $key }}"
                                                         data-permission="{{ $specialPermission }}">
                                                         {{ $reference->status_souvenir }}
                                                     </td>
-                                                    <td class="center"
+                                                    <td class="text-center"
                                                         id="delivery_status_souvenir_{{ $key }}"
                                                         data-deliverysouvenir="{{ $reference->delivery_status_souvenir }}"
                                                         data-permission="{{ $specialPermission }}">
                                                         {{ $reference->delivery_status_souvenir }}
                                                     </td>
                                                     @if($specialPermission)
-                                                        <td class="center" rowspan="2">
-                                                            <button id="btnDetailRef_{{$key}}" type="button" value="{{ $reference->id }}" onclick="loadDataPerRef(this.value)">
-                                                                <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                        <td class="text-center"
+                                                            rowspan="2">
+                                                            <button id="btnDetailRef_{{ $key }}"
+                                                                type="button"
+                                                                class="btn"
+                                                                style="padding: 0;"
+                                                                value="{{ $reference->id }}"
+                                                                onclick="loadDataPerRef(this.value)">
+                                                                <i class="mdi mdi-eye" style="font-size: 24px; color: #007bff;"></i>
                                                             </button>
                                                         </td>
                                                     @endif
                                                     <td rowspan="2"
-                                                        class="center">
+                                                        class="text-center">
                                                         @if ($reference->status_souvenir !== "success")
                                                             <button class="btn"
                                                                 id="btn-edit-save_{{ $key }}"
@@ -387,7 +383,7 @@ if (
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="center"
+                                                    <td class="text-center"
                                                         id="prize_{{ $key }}"
                                                         data-prize="{{ $reference->prize_id }}"
                                                         data-permission="{{ $specialPermission }}">
@@ -406,12 +402,12 @@ if (
                                                         }
                                                         ?>
                                                     </td>
-                                                    <td class="center"
+                                                    <td class="text-center"
                                                         id="status_prize_{{ $key }}"
                                                         data-permission="{{ $specialPermission }}">
                                                         {{ $reference->status_prize }}
                                                     </td>
-                                                    <td class="center"
+                                                    <td class="text-center"
                                                         id="delivery_status_prize_{{ $key }}"
                                                         data-deliveryprize="{{ $reference->delivery_status_prize }}"
                                                         data-permission="{{ $specialPermission }}">
@@ -419,71 +415,90 @@ if (
                                                     </td>
                                                 </tr>
                                             <?php endforeach; ?>
-                                            <input type="hidden" id="temp_arr_souvenir" value="{{json_encode($arr_souvenir)}}">
+                                            <input type="hidden"
+                                                id="temp_arr_souvenir"
+                                                value="{{ json_encode($arr_souvenir) }}" />
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <div class="col-md-12 center mt-4">
-                                <button class="btn btn-gradient-primary mt-2" id="btnAddReference" onclick="checkAddReference()">
+                            <div class="col-md-12 text-center mt-4">
+                                <button class="btn btn-gradient-primary mt-2"
+                                    id="btnAddReference"
+                                    onclick="checkAddReference()">
                                     <span>Add Reference - Sehat Bersama WAKi<br>
                                     / Keuntungan Biaya Iklan</span>
                                 </button>
                             </div>
 
-                            <div class="col-md-12 center" style="margin-top: 3em;">
-                                         <div class="row justify-content-center">
-                                             <h2 class="text-center share">Share Submission Form</h2>
-                                         </div>
-                                         <form class="forms-sample" method="GET" action="https://wa.me/">
-                                             <div class="form-group row justify-content-center">
-                                                 <button type="submit" class="btn btn-gradient-primary mr-2 my-2" name="text" value="Terima Kasih telah mengikuti program *Sehat Bersama WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">Share Sehat bersama Waki</button>
-                                                 <button type="submit" class="btn btn-gradient-primary mr-2 my-2" name="text" value="Terima Kasih telah mengikuti program *Keuntungan Biaya Iklan*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">Share Program Biaya Iklan</button>
-                                             </div>
-                                         </form>
+                            <div class="col-md-12 text-center"
+                                style="margin-top: 3em;">
+                                <div class="row justify-content-center">
+                                    <h2 class="text-center share">
+                                        Share Submission Form
+                                    </h2>
+                                </div>
+                                <form class="forms-sample"
+                                    method="GET"
+                                    action="https://wa.me/">
+                                    <div class="form-group row justify-content-center">
+                                        <button type="submit"
+                                            class="btn btn-gradient-primary mr-2 my-2"
+                                            name="text"
+                                            value="Terima Kasih telah mengikuti program *Sehat Bersama WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">
+                                            Share Sehat bersama Waki
+                                        </button>
+                                        <button type="submit"
+                                            class="btn btn-gradient-primary mr-2 my-2"
+                                            name="text"
+                                            value="Terima Kasih telah mengikuti program *Keuntungan Biaya Iklan*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">
+                                            Share Program Biaya Iklan
+                                        </button>
+                                    </div>
+                                </form>
                              </div>
 
 
                             @if ($historySubmission->isNotEmpty())
-                            <div class="row justify-content-center"
-                                style="margin-top: 2em;">
-                                <h2>SUBMISSION HISTORY LOG</h2>
-                            </div>
-                            <div class="row justify-content-center">
-                                <div class="table-responsive" style="margin-right: 0.5em;">
-                                    <table class="table">
-                                        <thead>
-                                            <td class="center">No.</td>
-                                            <td>Action</td>
-                                            <td>User</td>
-                                            <td>Change</td>
-                                            <td>Time</td>
-                                        </thead>
-                                        @foreach ($historySubmission as $key => $history)
-                                            <?php $dataChange = json_decode($history->meta, true); ?>
-                                            <tr>
-                                                <td class="right">{{ $key + 1 }}</td>
-                                                <td class="center">
-                                                    {{ $history->method }}
-                                                </td>
-                                                <td class="center">
-                                                    {{ $history->name }}
-                                                </td>
-                                                <td>
-                                                    @foreach ($dataChange["dataChange"] as $key => $value)
-                                                        <b>{{ $key }}</b>: {{ var_export($value, true) }}
-                                                        <br>
-                                                    @endforeach
-                                                </td>
-                                                <td class="center">
-                                                    {{ date("d/m/Y H:i:s", strtotime($history->created_at)) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </table>
+                                <div class="row justify-content-center"
+                                    style="margin-top: 2em;">
+                                    <h2>SUBMISSION HISTORY LOG</h2>
                                 </div>
-                            </div>
+                                <div class="row justify-content-center">
+                                    <div class="table-responsive" style="margin-right: 0.5em;">
+                                        <table class="table">
+                                            <thead>
+                                                <td class="text-center">No.</td>
+                                                <td>Action</td>
+                                                <td>User</td>
+                                                <td>Change</td>
+                                                <td>Time</td>
+                                            </thead>
+                                            @foreach ($historySubmission as $key => $history)
+                                                <?php $dataChange = json_decode($history->meta, true); ?>
+                                                <tr>
+                                                    <td class="right">{{ $key + 1 }}</td>
+                                                    <td class="text-center">
+                                                        {{ $history->method }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $history->name }}
+                                                    </td>
+                                                    <td>
+                                                        @foreach ($dataChange["dataChange"] as $key => $value)
+                                                            <b>{{ $key }}</b>: {{ var_export($value, true) }}
+                                                            <br>
+                                                        @endforeach
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ date("d/m/Y H:i:s", strtotime($history->created_at)) }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                </div>
                             @endif
 
                          </div>
@@ -865,7 +880,7 @@ if (
                 </button>
             </div>
             <div class="modal-body">
-                <h5 style="text-align: center;">
+                <h5 class="text-center">
                     Are you sure you want to delete this reference?
                 </h5>
             </div>
