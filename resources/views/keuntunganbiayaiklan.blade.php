@@ -242,6 +242,8 @@
                         <th>Kota</th>
                         <th>Produk yang dipilih (Pereferensi)</th>
                         <th>Tanggal Appointment</th>
+                        <th>Status Referensi</th>
+                        <th>Status Produk</th>
                     </tr>
                     @foreach($submission->reference as $keyNya => $referenceNya)
                         @php
@@ -259,6 +261,8 @@
                             <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->getCityName() }}</td>
                             <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->reference_souvenir->prize['name'] }}</td>
                             <td>{{ $totReference_HS > 0 ? $Reference_HS[0]['appointment'] : "-" }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ ucfirst($referenceNya->reference_souvenir['status_prize']) }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ ucfirst($referenceNya->reference_souvenir['delivery_status_prize']) }}</td>
                         </tr>
                         @for($i = 1; $i < $totReference_HS; $i++)
                             <tr>

@@ -7,6 +7,7 @@ use App\Order;
 use App\RegistrationPromotion;
 use App\Role;
 use App\User;
+use App\ReferenceSouvenir;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -62,12 +63,23 @@ class DashboardController extends Controller
         ->where("active", true)
         ->first();
 
+        //Khusus untuk Submission reference need to review
+        $references = ReferenceSouvenir::where(function ($q){
+                        $q->whereJsonLength('reference_souvenirs.link_hs', '>=', 3)->where('reference_souvenirs.status', 'pending');
+                    })->orWhere(function ($q){
+                        $q->where([['reference_souvenirs.order_id', '!=', null], ['reference_souvenirs.status_prize', 'pending'], ['orders.total_payment', '>=', 20000000]]);
+                    })
+                    ->leftJoin("orders", "reference_souvenirs.order_id", "=", "orders.id")
+                    ->select('reference_souvenirs.*')
+                    ->get();
+
         return view(
             "admin.dashboard",
             compact(
                 "homeServiceToday",
                 "order",
                 "registration",
+                "references",
             )
         );
     }
