@@ -749,6 +749,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Process acceptance delete
         Route::post("/{id}", "AcceptanceController@destroy")
             ->name("delete_acceptance_form");
+        
+        //export xls
+        Route::get('/export-acceptance-to-xls-by-date', 'AcceptanceController@export_to_xls_byDate')
+                ->name('acceptance_export-to-xls-by-date');
+
     });
 
     Route::group(["prefix" => "upgrade", "middleware" => "auth"], function () {

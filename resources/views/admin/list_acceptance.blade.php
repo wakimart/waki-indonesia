@@ -91,6 +91,8 @@ $menu_item_second = "list_acceptance_form";
                 <label for=""></label>
                 <div class="form-group">
                     <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+
+                    <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" data-toggle="modal" href="#modal-export-excel" value="-"><span class="mdi mdi-file-document"></span>Export XLS</button>
                 </div>
             </div>
         </div>
@@ -185,6 +187,78 @@ $menu_item_second = "list_acceptance_form";
 </div>
 <!-- partial -->
 
+<!-- Modal Export XLS -->
+<div class="modal fade"
+    id="modal-export-excel"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label for="">Pick a Date</label>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Filter Acceptance</label>
+                    <select class="form-control" id="filter_statusexport" required="">
+                        <option value="">All</option>
+                        <option value="new">New</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Awal</label>
+                    <input type="date"
+                        class="form-control"
+                        name="date"
+                        id="filter_startDate"
+                        placeholder="Awal Tanggal"
+                        required
+                        data-msg="Mohon Isi Tanggal"
+                        onload="getDate()" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Akhir</label>
+                    <input type="date"
+                        class="form-control"
+                        name="date"
+                        id="filter_endDate"
+                        placeholder="Akhir Tanggal"
+                        required
+                        data-msg="Mohon Isi Tanggal"
+                        onload="getDate()" />
+                    <div class="validation"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                {{ csrf_field() }}
+                <input type="hidden"
+                    id="hiddenInput"
+                    name="cancel"
+                    value="1" />
+                <button type="submit"
+                    data-dismiss="modal"
+                    id="btn-exportByDate"
+                    class="btn btn-gradient-danger mr-2"
+                    name="id"
+                    value="-"
+                    onclick="submitExportXLSWithDate();">
+                    Export
+                </button>
+                <button type="button"
+                    data-dismiss="modal"
+                    class="btn btn-light">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Export XLS -->
+
 <!-- Modal Delete -->
 @can('delete-acceptance')
     <div class="modal fade"
@@ -245,5 +319,21 @@ $(document).ready(function (e) {
         $("#frmDelete").attr("action",  $(this).attr('value'));
     });
 });
+
+function submitExportXLSWithDate() {
+    console.log("masuk");
+    let urlParamStr = "";
+
+    let startDate = document.getElementById("filter_startDate").value;
+    let endDate = document.getElementById("filter_endDate").value;
+    let status = document.getElementById("filter_statusexport").value;
+
+    urlParamStr += "filter_startDate=" + startDate + "&";
+    urlParamStr += "filter_endDate=" + endDate + "&";
+    urlParamStr += "filter_statusexport=" + status;
+
+
+    window.location.href = "<?php echo route('acceptance_export-to-xls-by-date'); ?>" + "?" + urlParamStr;
+}
 </script>
 @endsection
