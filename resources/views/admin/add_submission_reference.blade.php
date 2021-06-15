@@ -957,7 +957,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // NEW System
 let hsRef = 0;
 let orderRef = 0;
-$(document).ready(function(){
+$(document).ready(function () {
     // KHUSUS UNTUK HS
     $("#choose-hs").on('shown.bs.modal', function (event) {
         hsRef = event.relatedTarget.dataset.reference;
@@ -1096,7 +1096,7 @@ function removeHS(e) {
     document.getElementById(`hs-row-ref_${reference}`).value = hsRow;
 }
 
-function selectOrderNya(id, code){
+function selectOrderNya(id, code) {
     $(`#member-order-${orderRef}`).val(id);
     $(`#btn_choose_order_${orderRef}`).html("Order Code: " + code);
     $("#choose-order").modal('hide');
