@@ -365,7 +365,6 @@ class SubmissionController extends Controller
                 $submissionImage->save();
             }
 
-
             $dataCount = count($data["name_ref"]);
             for ($i = 0; $i < $dataCount; $i++) {
                 if (!empty($data["name_ref"][$i])) {
@@ -529,7 +528,7 @@ class SubmissionController extends Controller
                 "historySubmission",
                 "promos",
                 "souvenirs",
-                "prizes"
+                "prizes",
             )
         );
     }

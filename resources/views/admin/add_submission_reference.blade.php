@@ -470,7 +470,6 @@ $menu_item_second = "add_submission_reference";
                                             Choose Order
                                         </button>
                                     </div>
-
                                 @endfor
                             </div>
                             <br>
