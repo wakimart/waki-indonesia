@@ -718,6 +718,7 @@ if (
                         id="hs-filter-date"
                         name="date"
                         value="<?php echo date("Y-m-d"); ?>"/>
+                    <button class='btn btn-gradient-info btn-sm' type='button' onclick=''>New Home Service</button>
                 </div>
                 <div style="overflow-y: auto; height: 20em;">
                     <table class="col-md-12" style="margin: 1em 0em;">
