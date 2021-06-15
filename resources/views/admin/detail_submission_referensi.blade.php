@@ -1915,6 +1915,7 @@ function selectHsNya(id, code){
     buttonRemove.type = "button";
     buttonRemove.className = "btn btn-gradient-danger col-4";
     buttonRemove.innerHTML = "Remove";
+    buttonRemove.setAttribute("data-hs", id);
     buttonRemove.setAttribute("data-sequence", hsRow);
     buttonRemove.setAttribute("onclick", "removeHS(this)");
 
@@ -1930,8 +1931,10 @@ function selectHsNya(id, code){
 
 function removeHS(e) {
     const linkHsArray = (document.getElementById("edit-link-hs").value).split(", ");
-    linkHsArray.splice(e.dataset.sequence, 1);
-    document.getElementById("edit-link-hs").value = linkHsArray.join(", ");
+    const reconstructedHsArray = linkHsArray.filter(function (value) {
+        return value !== e.dataset.hs;
+    });
+    document.getElementById("edit-link-hs").value = reconstructedHsArray.join(", ");
 
     document.getElementById(`hs-row_${e.dataset.sequence}`).remove();
 
