@@ -35,25 +35,25 @@ $menu_item_second = "add_submission_mgm";
     }
 
     #regForm {
-      background-color: #ffffff;
-      margin: 100px auto;
-      padding: 40px;
-      width: 70%;
-      min-width: 300px;
+        background-color: #ffffff;
+        margin: 100px auto;
+        padding: 40px;
+        width: 70%;
+        min-width: 300px;
     }
 
     /* Style the input fields */
     input {
-      padding: 10px;
-      width: 100%;
-      font-size: 17px;
-      font-family: Raleway;
-      border: 1px solid #aaaaaa;
+        padding: 10px;
+        width: 100%;
+        font-size: 17px;
+        font-family: Raleway;
+        border: 1px solid #aaaaaa;
     }
 
     /* Mark input boxes that gets an error on validation: */
     input.invalid {
-      background-color: #ffdddd;
+        background-color: #ffdddd;
     }
 
     .invalid {
@@ -63,33 +63,33 @@ $menu_item_second = "add_submission_mgm";
 
     /* Hide all steps by default: */
     .tab {
-      display: none;
+        display: none;
     }
 
     /* Make circles that indicate the steps of the form: */
     .step {
-      height: 15px;
-      width: 15px;
-      margin: 0 2px;
-      background-color: #bbbbbb;
-      border: none;
-      border-radius: 50%;
-      display: inline-block;
-      opacity: 0.5;
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbbbbb;
+        border: none;
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 0.5;
     }
 
     /* Mark the active step: */
     .step.active {
-      opacity: 1;
+        opacity: 1;
     }
 
     /* Mark the steps that are finished and valid: */
     .step.finish {
-      background-color: #4CAF50;
+        background-color: #4CAF50;
     }
 
     select {
-      color: black !important;
+        color: black !important;
     }
 </style>
 @endsection
@@ -449,8 +449,8 @@ $menu_item_second = "add_submission_mgm";
                                     </div>
                                 @endfor
 
-                                <div style="overflow:auto;">
-                                    <div style="float:right;">
+                                <div style="overflow: auto;">
+                                    <div style="float: right;">
                                         <button type="button"
                                             id="prevBtn"
                                             onclick="nextPrev(-1)">
@@ -465,21 +465,19 @@ $menu_item_second = "add_submission_mgm";
                                 </div>
 
                                 <!-- Circles which indicates the steps of the form: -->
-                                <div style="text-align:center; margin-top:40px;">
+                                <div style="text-align: center; margin-top: 40px;">
                                     @for ($x = 0; $x < 10; $x++)
                                         <span class="step"></span>
                                     @endfor
                                 </div>
                             </div>
-                            <div id="errormessage"></div>
 
                             <div class="form-group">
                                 <button id="addDeliveryOrder"
                                     type="submit"
-                                    class="btn btn-gradient-primary mr-2">
+                                    class="btn btn-gradient-primary">
                                     Save
                                 </button>
-                                <button class="btn btn-light">Cancel</button>
                             </div>
                         </form>
 
