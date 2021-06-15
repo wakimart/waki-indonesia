@@ -27,6 +27,7 @@ if (
         margin: 1em;
         font-size: 14px;
     }
+
     .table-responsive table {
         table-layout:fixed;
         width: 98%;
@@ -141,19 +142,19 @@ if (
                                             <td colspan="2">Customer Data</td>
                                         </thead>
                                         <tr>
-                                            <td>Member Code: </td>
+                                            <td>Member Code:</td>
                                             <td>{{ $submission->no_member }}</td>
                                         </tr>
                                         <tr>
-                                            <td>Name: </td>
+                                            <td>Name:</td>
                                             <td>{{ $submission->name }}</td>
                                         </tr>
                                         <tr>
-                                            <td>Phone Number: </td>
+                                            <td>Phone Number:</td>
                                             <td>{{ $submission->phone }}</td>
                                         </tr>
                                         <tr>
-                                            <td rowspan="2">Address: </td>
+                                            <td rowspan="2">Address:</td>
                                             <td>{{ $submission->address }}</td>
                                         </tr>
                                         <tr>
@@ -205,18 +206,20 @@ if (
                                     </table>
                                 </div>
 
-                                <div class="table-responsive" style=" margin-left 1em; margin-right: 1em;">
+                                <div class="table-responsive"
+                                    style=" margin-left 1em; margin-right: 1em;">
                                     <?php
-                                        $formLength = $references->count();
-                                        $arr_souvenir = [];
+                                    $formLength = $references->count();
+                                    $arr_souvenir = [];
                                     ?>
                                     <input type="hidden"
                                         id="form-length"
                                         value="{{ $formLength }}" />
-                                    <?php for ($i = 0; $i < $formLength; $i++): ?>
+                                    @for ($i = 0; $i < $formLength; $i++)
                                         <form method="POST" id="edit-form_{{ $i }}"></form>
-                                    <?php endfor; ?>
-                                    <table class="table" style="table-layout: auto;">
+                                    @endfor
+                                    <table class="table"
+                                        style="table-layout: auto;">
                                         <thead>
                                             <td colspan="14">Reference</td>
                                         </thead>
@@ -232,7 +235,7 @@ if (
                                                 <td>Souvenir/Prize</td>
                                                 <td>Status</td>
                                                 <td>Deliv. Status</td>
-                                                @if($specialPermission)
+                                                @if ($specialPermission)
                                                     <th class="text-center">View</th>
                                                 @endif
                                                 <td>Edit</td>
@@ -240,11 +243,10 @@ if (
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php
-                                            foreach ($references as $key => $reference):
+                                            @foreach ($references as $key => $reference)
+                                                <?php
                                                 array_push($arr_souvenir, $reference['souvenir_id']);
-                                            ?>
-
+                                                ?>
                                                 <input type="hidden"
                                                     id="edit-id_{{ $key }}"
                                                     class="d-none"
@@ -328,6 +330,7 @@ if (
                                                         ?>
                                                     </td>
                                                     <td id="souvenir_{{ $key }}"
+                                                        class="text-center"
                                                         data-permission="{{ $specialPermission }}"
                                                         data-souvenir="{{ $reference->souvenir_id ?? -1 }}">
                                                         {{ $reference->souvenir_name }}
@@ -343,7 +346,7 @@ if (
                                                         data-permission="{{ $specialPermission }}">
                                                         {{ $reference->delivery_status_souvenir }}
                                                     </td>
-                                                    @if($specialPermission)
+                                                    @if ($specialPermission)
                                                         <td class="text-center"
                                                             rowspan="2">
                                                             <button id="btnDetailRef_{{ $key }}"
@@ -394,9 +397,9 @@ if (
                                                                 ->where("id", $reference->prize_id)
                                                                 ->first();
 
-                                                            if($bonus_prize == 0){
+                                                            if ($bonus_prize == 0) {
                                                                 echo $prize->name . " + Voucher WAKimart Rp. 1.000.000";
-                                                            }else{
+                                                            } else {
                                                                 echo $prize->name;
                                                             }
                                                         }
@@ -414,7 +417,7 @@ if (
                                                         {{ $reference->delivery_status_prize }}
                                                     </td>
                                                 </tr>
-                                            <?php endforeach; ?>
+                                            @endforeach
                                             <input type="hidden"
                                                 id="temp_arr_souvenir"
                                                 value="{{ json_encode($arr_souvenir) }}" />
@@ -459,7 +462,6 @@ if (
                                 </form>
                              </div>
 
-
                             @if ($historySubmission->isNotEmpty())
                                 <div class="row justify-content-center"
                                     style="margin-top: 2em;">
@@ -476,7 +478,9 @@ if (
                                                 <td>Time</td>
                                             </thead>
                                             @foreach ($historySubmission as $key => $history)
-                                                <?php $dataChange = json_decode($history->meta, true); ?>
+                                                <?php
+                                                $dataChange = json_decode($history->meta, true);
+                                                ?>
                                                 <tr>
                                                     <td class="right">{{ $key + 1 }}</td>
                                                     <td class="text-center">
@@ -534,7 +538,7 @@ if (
                 <form id="edit-form"
                     method="POST"
                     enctype="multipart/form-data"
-                    action="<?php echo route("store_reference_referensi"); ?>">
+                    action="{{ route("store_reference_referensi") }}">
                     @csrf
                     <input type="hidden"
                         id="edit-id"
@@ -612,42 +616,56 @@ if (
                         </select>
                     </div>
                     <div id="appendSouvenir" class="form-group">
-                        <label id="label_souvenir" for="edit-souvenir">Souvenir</label>
-                        <select class="form-control" id="edit-souvenir" name="souvenir_id">
+                        <label id="label_souvenir" for="edit-souvenir">
+                            Souvenir
+                        </label>
+                        <select class="form-control"
+                            id="edit-souvenir"
+                            name="souvenir_id">
                             <option selected disabled>
                                 Pilih Souvenir
                             </option>
                             @foreach($souvenirs as $souvenir)
                                 @if($souvenir['id'] == 7)
-                                    <option value="{{$souvenir['id']}}" hidden="">{{$souvenir['name']}}</option>
+                                    <option value="{{ $souvenir['id'] }}" hidden>
+                                        {{ $souvenir['name'] }}
+                                    </option>
                                 @else
-                                    <option value="{{$souvenir['id']}}">{{$souvenir['name']}}</option>
+                                    <option value="{{ $souvenir['id'] }}">
+                                        {{ $souvenir['name'] }}
+                                    </option>
                                 @endif
                             @endforeach
                         </select>
                     </div>
                     <div id="appendPrize" class="form-group">
                         <label id="label_prize" for="edit-prize">Prize</label>
-                        <select class="form-control" id="edit-prize" name="prize_id">
+                        <select class="form-control"
+                            id="edit-prize"
+                            name="prize_id">
                             <option selected disabled>
                                 Choose Prize
                             </option>
                             @foreach($prizes as $prize)
                                 @if($prize['id'] == 4)
-                                    <option value="{{$prize['id']}}" hidden="">{{$prize['name']}}</option>
+                                    <option value="{{ $prize['id'] }}" hidden>
+                                        {{ $prize['name'] }}
+                                    </option>
                                 @else
-                                    <option value="{{$prize['id']}}">{{$prize['name']}}</option>
+                                    <option value="{{ $prize['id'] }}">
+                                        {{ $prize['name'] }}
+                                    </option>
                                 @endif
                             @endforeach
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="edit-link-hs">Home Service</label>
-                        <div id="link-hs-container"></div>
                         <input type="hidden"
                             id="edit-link-hs"
                             name="link_hs"
                             value="" />
+                        <div id="link-hs-container"></div>
                         <br>
                         <button class="btn btn-gradient-info"
                             type="button"
@@ -657,6 +675,7 @@ if (
                             data-target="#choose-hs">
                             Choose Home Service
                         </button>
+                        <input type="hidden" id="hs-row-count" value="0" />
                     </div>
                     <div class="form-group">
                         <label for="edit-link-hs">Order</label>
@@ -906,13 +925,14 @@ if (
 @section('script')
 <script type="application/javascript">
 let provinceOption = "";
-let souvenirOption = `<option disabled selected value="">Pilih souvenir</option>`;
+let souvenirOptionAll = `<option disabled selected value="">Choose Souvenir</option>`;
+let souvenirOption = `<option disabled selected value="">Choose Souvenir</option>`;
+let prizeOptionAll = `<option selected value="">Choose Prize</option>`;
 let prizeOption = `<option selected value="">Choose Prize</option>`;
 
 var souvenir_res = null;
 
 document.addEventListener('DOMContentLoaded', function () {
-    //console.log("loaded");
     const URL_PROVINCE = '<?php echo route("fetchProvince"); ?>';
     const URL_SOUVENIR = '<?php echo route("fetchSouvenir"); ?>';
     const URL_PRIZE = '<?php echo route("fetchPrize"); ?>';
@@ -962,16 +982,19 @@ document.addEventListener('DOMContentLoaded', function () {
         souvenir_res = result;
 
         result.forEach(function (currentValue) {
-            if(currentValue["id"] == 7){
+            if (currentValue["id"] === 7) {
                 souvenirOption += `<option value="${currentValue["id"]}" hidden="">`
-                + currentValue["name"]
-                + `</option>`;
-            }else{
+                    + currentValue["name"]
+                    + `</option>`;
+            } else {
                 souvenirOption += `<option value="${currentValue["id"]}">`
-                + currentValue["name"]
-                + `</option>`;
+                    + currentValue["name"]
+                    + `</option>`;
             }
 
+            souvenirOptionAll += `<option value="${currentValue["id"]}">`
+                + currentValue["name"]
+                + `</option>`;
         });
     }).catch(function (error) {
         console.error(error);
@@ -995,16 +1018,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const result = response.data;
 
         result.forEach(function (currentValue) {
-            if(currentValue["id"] == 4){
-                prizeOption += `<option value="${currentValue["id"]}" hidden="">`
-                + currentValue["name"]
-                + `</option>`;
-            }else{
+            if (currentValue["id"] === 4) {
+                prizeOption += `<option value="${currentValue["id"]}" hidden>`
+                    + currentValue["name"]
+                    + `</option>`;
+            } else {
                 prizeOption += `<option value="${currentValue["id"]}">`
-                + currentValue["name"]
-                + `</option>`;
+                    + currentValue["name"]
+                    + `</option>`;
             }
 
+            prizeOptionAll += `<option value="${currentValue["id"]}">`
+                + currentValue["name"]
+                + `</option>`;
         });
     }).catch(function (error) {
         console.error(error);
@@ -1112,12 +1138,11 @@ function setCityAdd(e) {
     });
 }
 
-
 var total_ref = $('#form-length').val();
-function checkAddReference(){
+function checkAddReference() {
     var temp_index_ref = parseInt(total_ref) + 1;
 
-    //checking souvenir 1juta
+    // Checking souvenir 1juta
     var arrSouvenir = JSON.parse($("#temp_arr_souvenir").val(), true);
     var check_souvenir = arrSouvenir.includes(7);
 
@@ -1128,10 +1153,9 @@ function checkAddReference(){
             $('#edit-souvenir').remove();
             $('#appendSouvenir').append('\
                 <label id="label_souvenir" for="edit-souvenir">Souvenir</label>\
-                <select class="form-control" id="edit-souvenir" name="souvenir_id">\
-                    <option selected disabled>Pilih Souvenir</option>\
-                    @foreach($souvenirs as $souvenir)<option value="{{$souvenir['id']}}">{{$souvenir['name']}}</option>@endforeach\
-                </select>\
+                <select class="form-control" id="edit-souvenir" name="souvenir_id">'
+                + souvenirOptionAll +
+                '</select>\
             ');
         }
     }
@@ -1139,35 +1163,34 @@ function checkAddReference(){
     $("#edit-reference").modal('show');
 }
 
-
-function loadDataPerRef(ref_id){
-    $.get( '{{ route("fetchDetailPerReference", ['reference' => ""]) }}/'+ref_id )
+function loadDataPerRef(ref_id) {
+    $.get('{{ route("fetchDetailPerReference", ['reference' => ""]) }}/' + ref_id )
     .done(function( result ) {
-        //empty data
+        // Empty data
         $('#append_tbody_hs').empty();
         $('#append_tbody_order').empty();
         $('#append_tbody_other').empty();
 
         if(result.length > 0){
             var data = JSON.parse(result);
-            var data_refs = data['data_refs'];//reference souvenir
-            var data_ref = data['data_ref']; //reference
+            var data_refs = data['data_refs'];// Reference souvenir
+            var data_ref = data['data_ref']; // Reference
             var data_hs = data['data_hs'];
             var data_order = data['data_order'];
             var data_souvenir = data['data_souvenir'];
             var data_prize = data['data_prize'];
             var detail_product = data['detail_product'];
 
-            //detail HS
-            if(data_hs != null){
+            // Detail HS
+            if (data_hs != null) {
                 $('#div_detailhs').removeClass('d-none');
                 for (var i = 0; i < data_hs.length; i++) {
-                    var url = "{{ route('homeServices_success', ['code'=>"codeTmp"])}}";
+                    var url = "{{ route('homeServices_success', ['code'=>"codeTmp"]) }}";
                     url = url.replace('codeTmp', data_hs[i]['code']);
 
                     var img_url = "{{ asset('sources/homeservice/') }}" +"/"+ data_hs[i]['image'];
 
-                    if(data_hs[i]['image'] != null){
+                    if (data_hs[i]['image'] != null) {
                         $('#append_tbody_hs').append('\
                             <tr id="tr_detail_hs_'+i+'">\
                                 <td id="td_date_'+i+'">'+ data_hs[i]['appointment']+'</td>\
@@ -1180,7 +1203,7 @@ function loadDataPerRef(ref_id){
                                 </td>\
                             </tr>\
                         ');
-                    }else{
+                    } else {
                        $('#append_tbody_hs').append('\
                             <tr id="tr_detail_hs_'+i+'">\
                                 <td id="td_date_'+i+'">'+ data_hs[i]['appointment']+'</td>\
@@ -1237,19 +1260,15 @@ function loadDataPerRef(ref_id){
                 ');
             }
 
-            if(data_souvenir != null){
+            if (data_souvenir != null) {
                 for (var a = 0; a < data_souvenir.length; a++) {
                     $('#append_tbody_other').append('\
                         <tr id="tr_detail_souvenir">\
                             <td>SOUVENIR</td>\
                             <td>\
-                                <select id="select_edit-souvenir_'+a+'" class="form-control" name="souvenir_id" >\
-                                    <?php foreach ($souvenirs as $souvenir): ?>
-                                        <option value="<?php echo $souvenir->id; ?>">\
-                                            <?php echo $souvenir->name; ?>
-                                        </option>\
-                                    <?php endforeach; ?>
-                                </select>\
+                                <select id="select_edit-souvenir_'+a+'" class="form-control" name="souvenir_id">'
+                                + souvenirOptionAll +
+                                '</select>\
                             </td>\
                             <td>\
                                 <select id="select_edit-status_'+a+'" class="form-control" name="status" >\
@@ -1274,19 +1293,15 @@ function loadDataPerRef(ref_id){
                 }
             }
 
-            if(data_prize != null){
+            if (data_prize != null) {
                 for (var p = 0; p < data_prize.length; p++) {
                     $('#append_tbody_other').append('\
                         <tr id="tr_detail_souvenir">\
                             <td>PRIZE</td>\
                             <td>\
-                                <select id="select_edit-prize_'+p+'" class="form-control" name="prize_id">\
-                                    <?php foreach ($prizes as $prize): ?>
-                                        <option value="<?php echo $prize->id; ?>">\
-                                            <?php echo $prize->name; ?>
-                                        </option>\
-                                    <?php endforeach; ?>
-                                </select>\
+                                <select id="select_edit-prize_'+p+'" class="form-control" name="prize_id">'
+                                + prizeOptionAll +
+                                '</select>\
                             </td>\
                             <td>\
                                 <select id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
@@ -1311,7 +1326,7 @@ function loadDataPerRef(ref_id){
                 }
             }
 
-            if(data_souvenir != null || data_prize != null){
+            if (data_souvenir != null || data_prize != null) {
                 $('#ref_id').val(data_ref['id']);
                 $('#ref_name').val(data_ref['name']);
                 $('#ref_age').val(data_ref['age']);
@@ -1321,14 +1336,12 @@ function loadDataPerRef(ref_id){
                 // $('#refs_souvenir').val(data_refs[0]['souvenir_id']);
                 // $('#refs_prize').val(data_refs[0]['prize_id']);
                 $('#refs_order').val(data_refs[0]['order_id']);
-
             }
 
             $("#modal-per-reference").modal("show");
         }
     });
 }
-
 
 function clickEdit(e) {
     const refSeq = e.dataset.edit.split("_")[1];
@@ -1339,14 +1352,8 @@ function clickEdit(e) {
 
     var counter_ref = parseInt(refSeq) + 1;
     if(check_souvenir == false){
-        if(counter_ref >= 6){
-            souvenirOption = "";
-            souvenirOption = `<option disabled selected value="">Pilih souvenir</option>`;
-            souvenir_res.forEach(function(currentValue){
-                souvenirOption += `<option value="${currentValue["id"]}">`
-                    + currentValue["name"]
-                    + `</option>`;
-            });
+        if (counter_ref >= 6) {
+            souvenirOption = souvenirOptionAll;
         }
     }
 
@@ -1505,7 +1512,6 @@ function clickEdit(e) {
     document.getElementById("prize_" + refSeq).appendChild(prizeSelect);
     document.getElementById("edit-prize_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
     document.getElementById("edit-prize_" + refSeq).value = prize;
-
 
     if (permission) {
         document.getElementById("souvenir_" + refSeq).innerHTML = `<select `
@@ -1893,18 +1899,52 @@ function selectHsNya(id, code){
     linkHsArray.push(id);
     document.getElementById("edit-link-hs").value = linkHsArray.join(", ");
 
+    let hsRow = document.getElementById("hs-row-count").value;
+
+    const divRow = document.createElement("div");
+    divRow.id = `hs-row_${hsRow}`;
+    divRow.className = "form-row";
+
     const hsTextInput = document.createElement("input");
     hsTextInput.type = "text";
-    hsTextInput.className = "form-control";
+    hsTextInput.className = "form-control col-8";
     hsTextInput.disabled = true;
     hsTextInput.readOnly = true;
     hsTextInput.value = code;
-    document.getElementById("link-hs-container").appendChild(hsTextInput);
+
+    const buttonRemove = document.createElement("button");
+    buttonRemove.type = "button";
+    buttonRemove.className = "btn btn-gradient-danger col-4";
+    buttonRemove.innerHTML = "Remove";
+    buttonRemove.setAttribute("data-hs", id);
+    buttonRemove.setAttribute("data-sequence", hsRow);
+    buttonRemove.setAttribute("onclick", "removeHS(this)");
+
+    divRow.appendChild(hsTextInput);
+    divRow.appendChild(buttonRemove);
+    document.getElementById("link-hs-container").appendChild(divRow);
+
+    hsRow++;
+    document.getElementById("hs-row-count").value = hsRow;
 
     $("#choose-hs").modal('hide');
 }
 
-function selectOrderNya(id, code){
+function removeHS(e) {
+    const linkHsArray = (document.getElementById("edit-link-hs").value).split(", ");
+    const reconstructedHsArray = linkHsArray.filter(function (value) {
+        return value !== e.dataset.hs;
+    });
+    document.getElementById("edit-link-hs").value = reconstructedHsArray.join(", ");
+
+    document.getElementById(`hs-row_${e.dataset.sequence}`).remove();
+
+    let hsRow = document.getElementById("hs-row-count").value;
+    hsRow--;
+    document.getElementById("hs-row-count").value = hsRow;
+}
+
+function selectOrderNya(id, code) {
     $('#edit-order').val(id);
     $('#btn_choose_order').html("Order Code: " + code);
     $("#choose-order").modal('hide');
