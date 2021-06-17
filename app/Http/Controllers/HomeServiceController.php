@@ -8,12 +8,14 @@ use App\Cso;
 use App\DeliveryOrder;
 use App\Exports\HomeServicesExport;
 use App\Exports\HomeServicesExportByDate;
+use App\Exports\HomeServicesCompareExport;
 use App\HistoryUpdate;
 use App\HomeService;
 use App\Http\Controllers\gCalendarController;
 use App\Order;
 use App\User;
 use App\Utils;
+use App\Reference;
 use DateTime;
 use Validator;
 use Carbon\Carbon;
@@ -34,9 +36,13 @@ class HomeServiceController extends Controller
         return view('homeservice', compact('branches', 'categoryProducts'));
     }
 
-    public function indexAdmin()
+    public function indexAdmin(Request $request)
     {
         $branches = Branch::where('active', true)->get();
+        if(isset($request->reference_id)){
+            $autofill = Reference::find($request->reference_id);
+            return view('admin.add_home_service', compact('branches', 'autofill'));
+        }
         return view('admin.add_home_service', compact('branches'));
     }
 
@@ -1317,6 +1323,20 @@ class HomeServiceController extends Controller
             $inputDate = $request->inputDate;
         }
         return Excel::download(new HomeServicesExportByDate($city, $branch, $cso, $search, array($startDate, $endDate), $inputDate), 'Home Service By Date.xlsx');
+    }
+    public function export_to_xls_compare(Request $request)
+    {
+        $startDate = null;
+        $endDate = null;
+
+        if($request->has('filter_startDate')&&$request->has('filter_endDate')){
+            $startDate = $request->filter_startDate;
+            $endDate = $request->filter_endDate;
+            $endDate = new \DateTime($endDate);
+            $endDate = $endDate->modify('+1 day')->format('Y-m-d');
+        }
+
+        return Excel::download(new HomeServicesCompareExport(array($startDate, $endDate)), 'Home Service Comparison By Date.xlsx');
     }
     public function delete(Request $request) {
         $homeService = HomeService::find($request->id);

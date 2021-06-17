@@ -737,7 +737,10 @@ if (
                         id="hs-filter-date"
                         name="date"
                         value="<?php echo date("Y-m-d"); ?>"/>
-                    <button class='btn btn-gradient-info btn-sm' type='button' onclick=''>New Home Service</button>
+
+                    <form target="_blank" id="make-new-hs" action="{{ route('admin_add_homeService') }}" style="text-align: center;">
+                        <button  name="reference_id" value="" class='btn btn-gradient-primary btn-sm' type='submit' style="width: 100%; margin: 1em 0em 0em 0em;" >New Home Service</button>
+                    </form>
                 </div>
                 <div style="overflow-y: auto; height: 20em;">
                     <table class="col-md-12" style="margin: 1em 0em;">
@@ -1484,6 +1487,7 @@ function clickEdit(e) {
     document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("data-toggle", "modal");
     document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("data-target", "#choose-hs");
     document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("data-originbutton", "btn-choose-hs-edit_" + refSeq);
+    document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("value", id);
 
     const orderInput = document.createElement("input");
     orderInput.type = "hidden";
@@ -1729,6 +1733,11 @@ $(document).ready(function(){
 
         let submission_id = "{{ $submission->id }}";
         let date = $('#hs-filter-date').val();
+
+        //khusus untuk ngirim reference ID nya untuk autofill add HS
+        let referenceID = $('#'+originButton).val();
+        $("#make-new-hs > button").val(referenceID);
+
         getHsSubmission(date, submission_id, originButton);
     });
 

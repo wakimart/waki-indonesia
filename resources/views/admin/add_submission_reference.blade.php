@@ -517,6 +517,9 @@ $menu_item_second = "add_submission_reference";
                         id="hs-filter-date"
                         name="date"
                         value="<?php echo date("Y-m-d"); ?>"/>
+                    <form target="_blank" id="make-new-hs" action="{{ route('admin_add_homeService') }}" style="text-align: center;">
+                        <button class='btn btn-gradient-primary btn-sm' type='submit' style="width: 100%; margin: 1em 0em 0em 0em;" >New Home Service</button>
+                    </form>
                 </div>
                 <div style="overflow-y: auto; height: 20em;">
                     <table class="col-md-12" style="margin: 1em 0em;">
