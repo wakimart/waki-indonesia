@@ -1571,7 +1571,7 @@ function submitExportXLSWithDate() {
     urlParamStr += "filter_startDate=" + startDate + "&";
     urlParamStr += "filter_endDate=" + endDate;
 
-    if(typeExport == detail){
+    if(typeExport == "detail"){
         window.location.href = "<?php echo route('homeservice_export-to-xls-by-date'); ?>" + "?" + urlParamStr;
     }
     else{
