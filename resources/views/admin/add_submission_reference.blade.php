@@ -32,25 +32,25 @@ $menu_item_second = "add_submission_reference";
     }
 
     #regForm {
-      background-color: #ffffff;
-      margin: 100px auto;
-      padding: 40px;
-      width: 70%;
-      min-width: 300px;
+        background-color: #ffffff;
+        margin: 100px auto;
+        padding: 40px;
+        width: 70%;
+        min-width: 300px;
     }
 
     /* Style the input fields */
     input {
-      padding: 10px;
-      width: 100%;
-      font-size: 17px;
-      font-family: Raleway;
-      border: 1px solid #aaaaaa;
+        padding: 10px;
+        width: 100%;
+        font-size: 17px;
+        font-family: Raleway;
+        border: 1px solid #aaaaaa;
     }
 
     /* Mark input boxes that gets an error on validation: */
     input.invalid {
-      background-color: #ffdddd;
+        background-color: #ffdddd;
     }
 
     .invalid {
@@ -60,33 +60,33 @@ $menu_item_second = "add_submission_reference";
 
     /* Hide all steps by default: */
     .tab {
-      display: none;
+        display: none;
     }
 
     /* Make circles that indicate the steps of the form: */
     .step {
-      height: 15px;
-      width: 15px;
-      margin: 0 2px;
-      background-color: #bbbbbb;
-      border: none;
-      border-radius: 50%;
-      display: inline-block;
-      opacity: 0.5;
+        height: 15px;
+        width: 15px;
+        margin: 0 2px;
+        background-color: #bbbbbb;
+        border: none;
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 0.5;
     }
 
     /* Mark the active step: */
     .step.active {
-      opacity: 1;
+        opacity: 1;
     }
 
     /* Mark the steps that are finished and valid: */
     .step.finish {
-      background-color: #4CAF50;
+        background-color: #4CAF50;
     }
 
     select {
-      color: black !important;
+        color: black !important;
     }
 </style>
 @endsection
@@ -289,198 +289,226 @@ $menu_item_second = "add_submission_reference";
                             <div id="refrensiForm" class="form-group">
                                 <h3>Reference Data</h3>
                                 <br>
-                                @for ($x = 0; $x < 1; $x++)
-                                    <label for="member-name-{{ $x }}">
-                                        Member {{ $x + 1 }}
-                                    </label>
-                                    <div class="form-group">
+                                @for ($x = 0; $x < 5; $x++)
+                                    <div class="tab">
                                         <label for="member-name-{{ $x }}">
-                                            Name
+                                            Member {{ $x + 1 }}
                                         </label>
-                                        <input type="text"
-                                            id="member-name-{{ $x }}"
-                                            class="form-control"
-                                            name="name_ref[]"
-                                            placeholder="Name"
-                                            {{ $x > 0 ? "" : "required" }} />
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="member-name-{{ $x }}">
+                                                Name
+                                            </label>
+                                            <input type="text"
+                                                id="member-name-{{ $x }}"
+                                                class="form-control"
+                                                name="name_ref[]"
+                                                placeholder="Name"
+                                                {{ $x > 0 ? "" : "required" }} />
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="member-age-{{ $x }}">
-                                            Age
-                                        </label>
-                                        <input type="number"
-                                            id="member-age-{{ $x }}"
-                                            class="form-control"
-                                            name="age_ref[]"
-                                            placeholder="Age"
-                                            {{ $x > 0 ? "" : "required" }} />
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="member-age-{{ $x }}">
+                                                Age
+                                            </label>
+                                            <input type="number"
+                                                id="member-age-{{ $x }}"
+                                                class="form-control"
+                                                name="age_ref[]"
+                                                placeholder="Age"
+                                                {{ $x > 0 ? "" : "required" }} />
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="member-phone-{{ $x }}">
-                                            Phone Number
-                                        </label>
-                                        <input type="number"
-                                            id="member-phone-{{ $x }}"
-                                            class="form-control"
-                                            name="phone_ref[]"
-                                            placeholder="Phone Number"
-                                            {{ $x > 0 ? "" : "required" }} />
-                                    </div>
+                                        <div class="form-group">
+                                            <label for="member-phone-{{ $x }}">
+                                                Phone Number
+                                            </label>
+                                            <input type="number"
+                                                id="member-phone-{{ $x }}"
+                                                class="form-control"
+                                                name="phone_ref[]"
+                                                placeholder="Phone Number"
+                                                {{ $x > 0 ? "" : "required" }} />
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="member-province-{{ $x }}">
-                                            Province
-                                        </label>
-                                        <select class="form-control changeProvince"
-                                            id="member-province-{{ $x }}"
-                                            name="province_ref[]"
-                                            data-msg="Mohon Pilih Provinsi"
-                                            data-targetselect="member-city-{{ $x }}"
-                                            onchange="setCity(this)"
-                                            {{ $x > 0 ? "" : "required" }}>
-                                            <option selected
-                                                disabled
-                                                value=""
-                                                hidden>
-                                                Pilih Provinsi
-                                            </option>
-                                            <?php
-                                            $result = RajaOngkir::FetchProvince();
-                                            $result = $result['rajaongkir']['results'];
-                                            if (sizeof($result) > 0) {
-                                                foreach ($result as $value) {
-                                                    echo '<option value="'
-                                                        . $value['province_id']
-                                                        . '">'
-                                                        . $value['province']
-                                                        . "</option>";
+                                        <div class="form-group">
+                                            <label for="member-province-{{ $x }}">
+                                                Province
+                                            </label>
+                                            <select class="form-control changeProvince"
+                                                id="member-province-{{ $x }}"
+                                                name="province_ref[]"
+                                                data-msg="Mohon Pilih Provinsi"
+                                                data-targetselect="member-city-{{ $x }}"
+                                                onchange="setCity(this)"
+                                                {{ $x > 0 ? "" : "required" }}>
+                                                <option selected
+                                                    disabled
+                                                    value=""
+                                                    hidden>
+                                                    Pilih Provinsi
+                                                </option>
+                                                <?php
+                                                $result = RajaOngkir::FetchProvince();
+                                                $result = $result['rajaongkir']['results'];
+                                                if (sizeof($result) > 0) {
+                                                    foreach ($result as $value) {
+                                                        echo '<option value="'
+                                                            . $value['province_id']
+                                                            . '">'
+                                                            . $value['province']
+                                                            . "</option>";
+                                                    }
                                                 }
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
+                                                ?>
+                                            </select>
+                                        </div>
 
-                                    <div class="form-group">
-                                        <label for="member-city-{{ $x }}">
-                                            City
-                                        </label>
-                                        <select class="form-control"
-                                            id="member-city-{{ $x }}"
-                                            name="city_ref[]"
-                                            data-msg="Mohon Pilih Kota"
-                                            {{ $x > 0 ? "" : "required" }}>
-                                            <option selected
-                                                disabled
-                                                value=""
-                                                hidden>
-                                                Pilih Kota
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="member-souvenir-{{ $x }}">
-                                            Souvenir
-                                        </label>
-                                        <select class="form-control"
-                                            id="member-souvenir-{{ $x }}"
-                                            name="souvenir_id[]"
-                                            {{ $x > 0 ? "" : "required" }}>
-                                            <option selected
-                                                disabled
-                                                hidden
-                                                value="">
-                                                Pilih Souvenir
-                                            </option>
-                                            @foreach ($souvenirs as $souvenir)
-                                                @if($souvenir->id == 7)
-                                                <option value="{{ $souvenir->id }}" hidden="">
-                                                    {{ $souvenir->name }}
+                                        <div class="form-group">
+                                            <label for="member-city-{{ $x }}">
+                                                City
+                                            </label>
+                                            <select class="form-control"
+                                                id="member-city-{{ $x }}"
+                                                name="city_ref[]"
+                                                data-msg="Mohon Pilih Kota"
+                                                {{ $x > 0 ? "" : "required" }}>
+                                                <option selected
+                                                    disabled
+                                                    value=""
+                                                    hidden>
+                                                    Pilih Kota
                                                 </option>
-                                                @else
-                                                <option value="{{ $souvenir->id }}">
-                                                    {{ $souvenir->name }}
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="member-souvenir-{{ $x }}">
+                                                Souvenir
+                                            </label>
+                                            <select class="form-control"
+                                                id="member-souvenir-{{ $x }}"
+                                                name="souvenir_id[]"
+                                                {{ $x > 0 ? "" : "required" }}>
+                                                <option selected
+                                                    disabled
+                                                    hidden
+                                                    value="">
+                                                    Choose Souvenir
                                                 </option>
-                                                @endif
+                                                @foreach ($souvenirs as $souvenir)
+                                                    @if ($souvenir->id === 7)
+                                                        <option value="{{ $souvenir->id }}" hidden>
+                                                            {{ $souvenir->name }}
+                                                        </option>
+                                                    @else
+                                                        <option value="{{ $souvenir->id }}">
+                                                            {{ $souvenir->name }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="member-prize-{{ $x }}">
+                                                Prize
+                                            </label>
+                                            <select class="form-control"
+                                                id="member-prize-{{ $x }}"
+                                                name="prize_id[]"
+                                                {{ $x > 0 ? "" : "required" }}>
+                                                <option selected
+                                                    disabled
+                                                    hidden
+                                                    value="">
+                                                    Choose Prize
+                                                </option>
+                                                @foreach ($prizes as $prize)
+                                                    @if ($prize->id === 4)
+                                                        <option value="{{ $prize->id }}" hidden>
+                                                            {{ $prize->name }}
+                                                        </option>
+                                                    @else
+                                                        <option value="{{ $prize->id }}">
+                                                            {{ $prize->name }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
 
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="member-prize-{{ $x }}">
-                                            Prize
-                                        </label>
-                                        <select class="form-control"
-                                            id="member-prize-{{ $x }}"
-                                            name="prize_id[]"
-                                            {{ $x > 0 ? "" : "required" }}>
-                                            <option selected
-                                                disabled
-                                                hidden
-                                                value="">
-                                                Choose Prize
-                                            </option>
-                                            @foreach ($prizes as $prize)
-                                                @if($prize->id == 4)
-                                                    <option value="{{ $prize->id }}" hidden="">
-                                                        {{ $prize->name }}
-                                                    </option>
-                                                @else
-                                                    <option value="{{ $prize->id }}">
-                                                        {{ $prize->name }}
-                                                    </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="link-hs-{{ $x }}">
-                                            Home Service
-                                        </label>
-                                        <input type="hidden"
-                                            id="link-hs-{{ $x }}"
-                                            name="link_hs[]"
-                                            value="" />
-                                        <br>
-                                        <button class="btn btn-gradient-info"
-                                            type="button"
-                                            id="btn_choose_hs"
-                                            data-toggle="modal"
-                                            data-target="#choose-hs">
-                                            Choose Home Service
-                                        </button>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="member-order-{{ $x }}">
-                                            Order
-                                        </label>
-                                        <input type="hidden"
-                                            id="member-order-{{ $x }}"
-                                            name="order_id[]"
-                                            value="" />
-                                        <br>
-                                        <button class="btn btn-gradient-info"
-                                            type="button"
-                                            id="btn_choose_order"
-                                            data-toggle="modal"
-                                            data-target="#choose-order">
-                                            Choose Order
-                                        </button>
+                                        <div class="form-group">
+                                            <label for="link-hs-{{ $x }}">
+                                                Home Service
+                                            </label>
+                                            <input type="hidden"
+                                                id="link-hs-{{ $x }}"
+                                                name="link_hs[]"
+                                                value="" />
+                                            <input type="hidden"
+                                                id="hs-row-ref_{{ $x }}"
+                                                value="0" />
+                                            <br>
+                                            <div id="hs-container_{{ $x }}"></div>
+                                            <button class="btn btn-gradient-info"
+                                                type="button"
+                                                id="btn_choose_hs"
+                                                data-reference="{{ $x }}"
+                                                data-toggle="modal"
+                                                data-target="#choose-hs">
+                                                Choose Home Service
+                                            </button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="member-order-{{ $x }}">
+                                                Order
+                                            </label>
+                                            <input type="hidden"
+                                                id="member-order-{{ $x }}"
+                                                name="order_id[]"
+                                                value="" />
+                                            <br>
+                                            <button class="btn btn-gradient-info"
+                                                type="button"
+                                                id="btn_choose_order_{{ $x }}"
+                                                class="btn_choose_order"
+                                                data-reference="{{ $x }}"
+                                                data-toggle="modal"
+                                                data-target="#choose-order">
+                                                Choose Order
+                                            </button>
+                                        </div>
                                     </div>
                                 @endfor
+
+                                <div style="text-align: center; margin-top: 40px;">
+                                    @for ($x = 0; $x < 5; $x++)
+                                        <span class="step"></span>
+                                    @endfor
+                                </div>
+
+                                <div style="overflow: auto;">
+                                    <div style="float: right;">
+                                        <button type="button"
+                                            id="prevBtn"
+                                            onclick="nextPrev(-1)">
+                                            Previous
+                                        </button>
+                                        <button type="button"
+                                            id="nextBtn"
+                                            onclick="nextPrev(1)">
+                                            Next
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                             <br>
                             <br>
                             <div class="form-group">
                                 <button id="addDeliveryOrder"
                                     type="submit"
-                                    class="btn btn-gradient-primary mr-2">
+                                    class="btn btn-gradient-primary">
                                     Save
                                 </button>
-                                <button class="btn btn-light">Cancel</button>
                             </div>
                         </form>
 
@@ -582,6 +610,61 @@ $menu_item_second = "add_submission_reference";
 
 @section("script")
 <script type="application/javascript">
+let currentTab = 0;
+showTab(currentTab);
+
+function showTab(n) {
+    // This function will display the specified tab of the form ...
+    const x = document.getElementsByClassName("tab");
+    x[n].style.display = "block";
+
+    // ... and fix the Previous/Next buttons:
+    if (n == 0) {
+        document.getElementById("prevBtn").style.display = "none";
+    } else {
+        document.getElementById("prevBtn").style.display = "inline";
+    }
+
+    if (n == (x.length - 1)) {
+        document.getElementById("nextBtn").style.display = "none";
+    } else {
+        document.getElementById("nextBtn").style.display = "inline";
+    }
+
+    // ... and run a function that displays the correct step indicator:
+    fixStepIndicator(n)
+}
+
+function nextPrev(n) {
+    // This function will figure out which tab to display
+    const x = document.getElementsByClassName("tab");
+
+    // Exit the function if any field in the current tab is invalid:
+    if (n == 1 && !validateForm()) {
+        return false;
+    }
+
+    // Hide the current tab:
+    x[currentTab].style.display = "none";
+    // Increase or decrease the current tab by 1:
+    currentTab = currentTab + n;
+
+    // Otherwise, display the correct tab:
+    showTab(currentTab);
+}
+
+function fixStepIndicator(n) {
+    // This function removes the "active" class of all steps...
+    const x = document.getElementsByClassName("step");
+
+    for (let i = 0; i < x.length; i++) {
+        x[i].className = x[i].className.replace(" active", "");
+    }
+
+    //... and adds the "active" class to the current step:
+    x[n].className += " active";
+}
+
 const souvenirArray = []
 for (let i = 0; i < 10; i++) {
     souvenirArray.push(-1);
@@ -875,9 +958,13 @@ document.addEventListener("DOMContentLoaded", function () {
 }, false);
 
 // NEW System
-$(document).ready(function(){
+let hsRef = 0;
+let orderRef = 0;
+$(document).ready(function () {
     // KHUSUS UNTUK HS
-    $("#choose-hs").on('shown.bs.modal', function(){
+    $("#choose-hs").on('shown.bs.modal', function (event) {
+        hsRef = event.relatedTarget.dataset.reference;
+
         if ($(".modal-backdrop").length > 1) {
             $(".modal-backdrop")[0].remove();
         }
@@ -918,8 +1005,10 @@ $(document).ready(function(){
     }
 
     // KHUSUS UNTUK ORDER
-    $("#choose-order").on('shown.bs.modal', function(){
-        if($(".modal-backdrop").length > 1){
+    $("#choose-order").on('shown.bs.modal', function (event) {
+        orderRef = event.relatedTarget.dataset.reference;
+
+        if ($(".modal-backdrop").length > 1) {
             $(".modal-backdrop")[0].remove();
         }
 
@@ -963,22 +1052,56 @@ $(document).ready(function(){
 
 function selectHsNya(id, code){
     let linkHsArray = [];
+    let hsRow = document.getElementById(`hs-row-ref_${hsRef}`).value;
 
-    if (document.getElementById("link-hs-0").value) {
-        linkHsArray = (document.getElementById("link-hs-0").value).split(", ");
+    if (document.getElementById(`link-hs-${hsRef}`).value) {
+        linkHsArray = (document.getElementById(`link-hs-${hsRef}`).value).split(", ");
     } else {
         linkHsArray = [];
     }
 
     linkHsArray.push(id);
-    $('#link-hs-0').val(linkHsArray.join(", "));
-    $('#btn_choose_hs').html(document.getElementById("btn_choose_hs").innerHTML + "<br/>" + "HS Code: " + code);
+    $(`#link-hs-${hsRef}`).val(linkHsArray.join(", "));
     $("#choose-hs").modal('hide');
+
+    const newDiv = document.createElement("div");
+    newDiv.id = `hs-con_${hsRef}_${hsRow}`;
+
+    const hsButton = document.createElement("button");
+    hsButton.type = "button";
+    hsButton.className = "btn btn-gradient-danger";
+    hsButton.innerHTML = `HS Code: ${code}`;
+    hsButton.setAttribute("data-reference", hsRef);
+    hsButton.setAttribute("data-hs", id);
+    hsButton.setAttribute("data-sequence", hsRow);
+    hsButton.setAttribute("onclick", "removeHS(this)");
+
+    newDiv.appendChild(hsButton);
+    document.getElementById(`hs-container_${hsRef}`).appendChild(newDiv);
+
+    hsRow++;
+    document.getElementById(`hs-row-ref_${hsRef}`).value = hsRow;
 }
 
-function selectOrderNya(id, code){
-    $('#member-order-0').val(id);
-    $('#btn_choose_order').html("Order Code: " + code);
+function removeHS(e) {
+    const reference = e.dataset.reference;
+    const sequence = e.dataset.sequence;
+    const linkHsArray = (document.getElementById(`link-hs-${reference}`).value).split(", ");
+    const reconstructedHsArray = linkHsArray.filter(function (value) {
+        return value !== e.dataset.hs;
+    });
+    document.getElementById(`link-hs-${reference}`).value = reconstructedHsArray.join(", ");
+
+    document.getElementById(`hs-con_${reference}_${sequence}`).remove();
+
+    let hsRow = document.getElementById(`hs-row-ref_${reference}`).value;
+    hsRow--;
+    document.getElementById(`hs-row-ref_${reference}`).value = hsRow;
+}
+
+function selectOrderNya(id, code) {
+    $(`#member-order-${orderRef}`).val(id);
+    $(`#btn_choose_order_${orderRef}`).html("Order Code: " + code);
     $("#choose-order").modal('hide');
 }
 </script>

@@ -413,7 +413,6 @@ class SubmissionController extends Controller
             $request = new \Illuminate\Http\Request();
             $request->replace(['id' => $submission->id, 'type' => 'referensi']);
             return $this->show($request);
-
         } catch (Exception $e) {
             DB::rollBack();
 

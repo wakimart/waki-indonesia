@@ -573,7 +573,6 @@ function setMinAppointmentTime(e) {
             $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
             .done(function( result ) {
 				result = result['rajaongkir']['results'];
-				console.log(result);
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
@@ -584,6 +583,40 @@ function setMinAppointmentTime(e) {
             });
         });
     });
+
+    @if(isset($autofill))
+        $( "#city" ).html("");
+        $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+{{ $autofill['province'] }} )
+        .done(function( result ) {
+            result = result['rajaongkir']['results'];
+            var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+            if(result.length > 0){
+                $.each( result, function( key, value ) {
+                    if(value['type'] == "Kota"){
+                        let selected = "";
+                        if({{ $autofill['city'] }} == value['city_id']){
+                            selected = "selected";
+                        }
+                        arrCity += "<option "+selected+" value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
+                    }
+                });
+                $( "#city" ).append(arrCity);
+            }
+        });
+
+        $( "#subDistrict" ).html("");
+        $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+{{ $autofill['city'] }} )
+        .done(function( result ) {
+            result = result['rajaongkir']['results'];
+            var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+            if(result.length > 0){
+                $.each( result, function( key, value ) {
+                    arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
+                });
+                $( "#subDistrict" ).append(arrSubDistsrict);
+            }
+        });
+    @endif
 </script>
 <script>
   $(document).ready(function(){

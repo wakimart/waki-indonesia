@@ -298,7 +298,8 @@ if (
                                                                     <?php
                                                                     $hs = HomeService::select("code")->where("id", $value)->first();
                                                                     ?>
-                                                                    <a id="link-hs-href_{{ $key }}"
+                                                                    <a id="link-hs-href_{{ $value }}"
+                                                                        data-hs={{ $hs->code }}
                                                                         href="{{ route("homeServices_success", ["code" => $hs->code]) }}"
                                                                         target="_blank">
                                                                         <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
@@ -367,6 +368,8 @@ if (
                                                                 style="padding: 0;"
                                                                 data-edit="edit_{{ $key }}"
                                                                 onclick="clickEdit(this)"
+                                                                data-toggle="modal"
+                                                                data-target="#edit-reference"
                                                                 value="{{ $reference->id }}">
                                                                 <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                             </button>
@@ -542,7 +545,7 @@ if (
                     @csrf
                     <input type="hidden"
                         id="edit-id"
-                        name="submission_id"
+                        name="id"
                         value="{{ $submission->id }}" />
                     <input type="hidden"
                         id="url"
@@ -678,7 +681,7 @@ if (
                         <input type="hidden" id="hs-row-count" value="0" />
                     </div>
                     <div class="form-group">
-                        <label for="edit-link-hs">Order</label>
+                        <label for="edit-order">Order</label>
                         <input type="hidden"
                             id="edit-order"
                             name="order_id"
@@ -739,7 +742,7 @@ if (
                         value="<?php echo date("Y-m-d"); ?>"/>
 
                     <form target="_blank" id="make-new-hs" action="{{ route('admin_add_homeService') }}" style="text-align: center;">
-                        <button  name="reference_id" value="" class='btn btn-gradient-primary btn-sm' type='submit' style="width: 100%; margin: 1em 0em 0em 0em;" >New Home Service</button>
+                        <button name="reference_id" id="btn_add_hs_reference" value="186" class='btn btn-gradient-primary btn-sm' type='submit' style="width: 100%; margin: 1em 0em 0em 0em;" >New Home Service</button>
                     </form>
                 </div>
                 <div style="overflow-y: auto; height: 20em;">
@@ -1143,6 +1146,8 @@ function setCityAdd(e) {
 
 var total_ref = $('#form-length').val();
 function checkAddReference() {
+    clearModal();
+
     var temp_index_ref = parseInt(total_ref) + 1;
 
     // Checking souvenir 1juta
@@ -1346,7 +1351,26 @@ function loadDataPerRef(ref_id) {
     });
 }
 
+function clearModal() {
+    const submissionId = '{{ $submission->id }}';
+    const actionStore = '{{ route("store_reference_referensi") }}';
+    document.getElementById("edit-form").setAttribute("action", actionStore);
+    document.getElementById("edit-id").value = submissionId;
+    document.getElementById("edit-name").value = "";
+    document.getElementById("edit-age").value = "";
+    document.getElementById("edit-phone").value = "";
+    document.getElementById("edit-province").selectedIndex = 0;
+    document.getElementById("edit-city").value = "";
+    document.getElementById("edit-souvenir").selectedIndex = 0;
+    document.getElementById("edit-prize").selectedIndex = 0;
+    document.getElementById("edit-link-hs").value = "";
+    document.getElementById("link-hs-container").innerHTML = "";
+    document.getElementById("edit-order").value = "";
+    document.getElementById("btn_choose_order").innerHTML = "Choose Order";
+}
+
 function clickEdit(e) {
+    clearModal();
     const refSeq = e.dataset.edit.split("_")[1];
 
     //checking souvenir 1juta
@@ -1354,12 +1378,15 @@ function clickEdit(e) {
     var check_souvenir = arrSouvenir.includes(7);
 
     var counter_ref = parseInt(refSeq) + 1;
-    if(check_souvenir == false){
+    if (check_souvenir == false) {
         if (counter_ref >= 6) {
-            souvenirOption = souvenirOptionAll;
+            souvenirOptionEdit = souvenirOptionAll;
+        } else {
+            souvenirOptionEdit = souvenirOption;
         }
     }
 
+    const actionUpdate = '{{ route("update_reference") }}';
     const id = document.getElementById("edit-id_" + refSeq).value;
     const name = document.getElementById("name_" + refSeq).innerHTML.trim();
     const age = document.getElementById("age_" + refSeq).innerHTML.trim();
@@ -1367,29 +1394,24 @@ function clickEdit(e) {
     const province = document.getElementById("province_" + refSeq).getAttribute("data-province");
     const city = document.getElementById("city_" + refSeq).getAttribute("data-city");
     const souvenir = document.getElementById("souvenir_" + refSeq).getAttribute("data-souvenir");
+    const prize = document.getElementById("prize_" + refSeq).dataset.prize;
 
     function linkHS() {
         try {
-            return document.getElementById("link-hs-href_" + refSeq).getAttribute("href");
+            return document.getElementById("link-hs_" + refSeq).dataset.hs;
         } catch (error) {
+            delete error;
             return "";
         }
     };
 
-    const status = document.getElementById("status_souvenir_" + refSeq).innerHTML.trim();
-
-    function deliverySouvenir () {
-        try {
-            return document.getElementById("delivery_status_souvenir_" + refSeq).dataset.deliverysouvenir;
-        } catch (error) {
-            return "";
-        }
-    };
+    const hsArray = linkHS() ? linkHS().split(", ") : [];
 
     function orderId() {
         try {
             return document.getElementById("order_" + refSeq).dataset.order;
         } catch (error) {
+            delete error;
             return "";
         }
     }
@@ -1398,186 +1420,55 @@ function clickEdit(e) {
         try {
             return document.getElementById("order_" + refSeq).innerHTML.trim();
         } catch (error) {
+            delete error;
             return "";
         }
     }
 
-    const prize = document.getElementById("prize_" + refSeq).dataset.prize;
+    document.getElementById("edit-form").setAttribute("action", actionUpdate);
+    document.getElementById("edit-id").value = id;
+    document.getElementById("btn_add_hs_reference").value = id;
+    document.getElementById("edit-name").value = name;
+    document.getElementById("edit-age").value = age;
+    document.getElementById("edit-phone").value = phone;
+    document.getElementById("edit-province").value = province;
+    setCityAdd(document.getElementById("edit-province"));
+    setTimeout(function () {
+        document.getElementById("edit-city").value = city;
+    }, 500);
+    document.getElementById("edit-souvenir").innerHTML = souvenirOptionEdit;
+    document.getElementById("edit-souvenir").value = souvenir;
+    document.getElementById("edit-prize").value = prize;
 
-    function statusPrize() {
-        try {
-            document.getElementById("status_prize_" + refSeq).innerHTML.trim();
-        } catch (error) {
-            return "";
-        }
-    }
+    document.getElementById("hs-row-count").value = hsArray.length;
+    hsArray.forEach(function (value, index) {
+        const divRow = document.createElement("div");
+        divRow.id = `hs-row_${index}`;
+        divRow.className = "form-row";
 
-    function deliveryPrize() {
-        try {
-            return document.getElementById("delivery_status_prize_" + refSeq).dataset.deliveryprize;
-        } catch (error) {
-            return "";
-        }
-    }
+        const hsTextInput = document.createElement("input");
+        hsTextInput.type = "text";
+        hsTextInput.className = "form-control col-8";
+        hsTextInput.disabled = true;
+        hsTextInput.readOnly = true;
+        hsTextInput.value = document.getElementById(`link-hs-href_${value}`).dataset.hs;
 
-    const permission = document.getElementById("status_souvenir_" + refSeq).dataset.permission;
+        const buttonRemove = document.createElement("button");
+        buttonRemove.type = "button";
+        buttonRemove.className = "btn btn-gradient-danger col-4";
+        buttonRemove.innerHTML = "Remove";
+        buttonRemove.setAttribute("data-hs", value);
+        buttonRemove.setAttribute("data-sequence", index);
+        buttonRemove.setAttribute("onclick", "removeHS(this)");
 
-    const FORM_ATTR = `form="edit-form_${refSeq}" `;
-    const INPUT_CLASS = `class="form-control" `;
-    document.getElementById("name_" + refSeq).innerHTML = `<input type="text" `
-        + `id="edit-name_${refSeq}" `
-        + INPUT_CLASS
-        + FORM_ATTR
-        + `name="name" `
-        + `value="${name}" `
-        + `placeholder="Name" `
-        + `required />`;
+        divRow.appendChild(hsTextInput);
+        divRow.appendChild(buttonRemove);
+        document.getElementById("link-hs-container").appendChild(divRow);
+    });
+    document.getElementById("edit-link-hs").value = hsArray.join(", ");
 
-    document.getElementById("age_" + refSeq).innerHTML = `<input type="number" `
-        + `id="edit-age_${refSeq}" `
-        + INPUT_CLASS
-        + FORM_ATTR
-        + `name="age" `
-        + `value="${age}" `
-        + `required />`;
-
-    document.getElementById("phone_" + refSeq).innerHTML = `<input type="number" `
-        + `id="edit-phone_${refSeq}" `
-        + INPUT_CLASS
-        + FORM_ATTR
-        + `name="phone" `
-        + `value="${phone}" `
-        + `required />`;
-
-    document.getElementById("province_" + refSeq).innerHTML = `<select `
-        + `id="edit-province_${refSeq}" `
-        + INPUT_CLASS
-        + FORM_ATTR
-        + `name="province" `
-        + `onchange="setCity(this)"`
-        + `required>`
-        + provinceOption
-        + `</select>`;
-    document.getElementById("edit-province_" + refSeq).value = province;
-
-    document.getElementById("city_" + refSeq).innerHTML = `<select `
-        + `id="edit-city_${refSeq}" `
-        + INPUT_CLASS
-        + FORM_ATTR
-        + `name="city" `
-        + `required>`
-        + `</select>`;
-
-    setCity(document.getElementById("edit-province_" + refSeq));
-
-    const hsInput = document.createElement("input");
-    hsInput.type = "hidden";
-    hsInput.id = "edit-link_hs_" + refSeq;
-    hsInput.name = "link_hs";
-    hsInput.value = document.getElementById("link-hs_" + refSeq).dataset.hs;
-    const hsButton = document.createElement("button");
-    hsButton.type = "button";
-    hsButton.className = "btn btn-gradient-info btn-sm";
-    hsButton.id = "btn-choose-hs-edit_" + refSeq;
-    hsButton.innerHTML = "Add Home Service";
-    document.getElementById("link-hs_" + refSeq).innerHTML = "";
-    document.getElementById("link-hs_" + refSeq).appendChild(hsInput);
-    document.getElementById("edit-link_hs_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
-    document.getElementById("link-hs_" + refSeq).appendChild(hsButton);
-    document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("data-toggle", "modal");
-    document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("data-target", "#choose-hs");
-    document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("data-originbutton", "btn-choose-hs-edit_" + refSeq);
-    document.getElementById("btn-choose-hs-edit_" + refSeq).setAttribute("value", id);
-
-    const orderInput = document.createElement("input");
-    orderInput.type = "hidden";
-    orderInput.id = "order_id_" + refSeq;
-    orderInput.name = "order_id";
-    orderInput.value = orderId();
-    const orderButton = document.createElement("button");
-    orderButton.type = "button";
-    orderButton.className = "btn btn-gradient-info btn-sm";
-    orderButton.id = "btn-choose-order-edit_" + refSeq;
-    orderButton.innerHTML = orderCode() || "Choose Order";
-    document.getElementById("order_" + refSeq).innerHTML = "";
-    document.getElementById("order_" + refSeq).appendChild(orderInput);
-    document.getElementById("order_id_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
-    document.getElementById("order_" + refSeq).appendChild(orderButton);
-    document.getElementById("btn-choose-order-edit_" + refSeq).setAttribute("data-originbutton", "btn-choose-order-edit_" + refSeq);
-    document.getElementById("btn-choose-order-edit_" + refSeq).setAttribute("data-toggle", "modal");
-    document.getElementById("btn-choose-order-edit_" + refSeq).setAttribute("data-target", "#choose-order");
-
-    const prizeSelect = document.createElement("select");
-    prizeSelect.className = "form-control";
-    prizeSelect.id = `edit-prize_${refSeq}`;
-    prizeSelect.name = "prize_id";
-    prizeSelect.innerHTML = prizeOption;
-    document.getElementById("prize_" + refSeq).innerHTML = "";
-    document.getElementById("prize_" + refSeq).appendChild(prizeSelect);
-    document.getElementById("edit-prize_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
-    document.getElementById("edit-prize_" + refSeq).value = prize;
-
-    if (permission) {
-        document.getElementById("souvenir_" + refSeq).innerHTML = `<select `
-            + `id="edit-souvenir_${refSeq}" `
-            + INPUT_CLASS
-            + FORM_ATTR
-            + `name="souvenir_id" `
-            + `required>`
-            + souvenirOption
-            + `</select>`;
-        document.getElementById("edit-souvenir_" + refSeq).value = souvenir;
-
-        document.getElementById("status_souvenir_" + refSeq).innerHTML = `<select `
-            + `id="edit-status_${refSeq}" `
-            + INPUT_CLASS
-            + FORM_ATTR
-            + `name="status" `
-            + `required>`
-            + `<option value="pending">pending</option>`
-            + `<option value="success">success</option>`
-            + `</select>`;
-        document.getElementById("edit-status_" + refSeq).value = status || "pending";
-
-        const deliveryStatusSouvenirSelect = document.createElement("select");
-        deliveryStatusSouvenirSelect.className = "form-control";
-        deliveryStatusSouvenirSelect.id = `edit-delivery-status-souvenir_${refSeq}`;
-        deliveryStatusSouvenirSelect.name = "delivery_status_souvenir";
-        deliveryStatusSouvenirSelect.innerHTML = '<option selected value="">Choose Souvenir Delivery Status</option>'
-            + '<option value="undelivered">Undelivered</option>'
-            + '<option value="delivered">Delivered</option>';
-        document.getElementById("delivery_status_souvenir_" + refSeq).innerHTML = "";
-        document.getElementById("delivery_status_souvenir_" + refSeq).appendChild(deliveryStatusSouvenirSelect);
-        document.getElementById("edit-delivery-status-souvenir_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
-        document.getElementById("edit-delivery-status-souvenir_" + refSeq).value = deliverySouvenir();
-
-        const statusPrizeSelect = document.createElement("select");
-        statusPrizeSelect.className = "form-control";
-        statusPrizeSelect.id = `edit-status-prize_${refSeq}`;
-        statusPrizeSelect.name = "status_prize";
-        statusPrizeSelect.innerHTML = '<option selected value="">Choose Prize Status</option>'
-            + '<option value="pending">Pending</option>'
-            + '<option value="success">Success</option>';
-        document.getElementById("status_prize_" + refSeq).innerHTML = "";
-        document.getElementById("status_prize_" + refSeq).appendChild(statusPrizeSelect);
-        document.getElementById("edit-status-prize_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
-        document.getElementById("edit-status-prize_" + refSeq).value = statusPrize();
-
-        const deliveryStatusPrizeSelect = document.createElement("select");
-        deliveryStatusPrizeSelect.className = "form-control";
-        deliveryStatusPrizeSelect.id = `edit-delivery-status-prize_${refSeq}`;
-        deliveryStatusPrizeSelect.name = "delivery_status_prize";
-        deliveryStatusPrizeSelect.innerHTML = '<option selected value="">Choose Prize Delivery Status</option>'
-            + '<option value="undelivered">Undelivered</option>'
-            + '<option value="delivered">Delivered</option>';
-        document.getElementById("delivery_status_prize_" + refSeq).innerHTML = "";
-        document.getElementById("delivery_status_prize_" + refSeq).appendChild(deliveryStatusPrizeSelect);
-        document.getElementById("edit-delivery-status-prize_" + refSeq).setAttribute("form", `edit-form_${refSeq}`);
-        document.getElementById("edit-delivery-status-prize_" + refSeq).value = deliveryPrize();
-    }
-
-    document.getElementById("btn-edit-save_" + refSeq).setAttribute("onclick", "submitEdit(this)");
-    document.getElementById("btn-edit-save_" + refSeq).innerHTML = `<i class="mdi mdi-content-save" style="font-size: 24px; color: blue;"></i>`;
+    document.getElementById("edit-order").value = orderId();
+    document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Order";
 }
 
 function validateForm(refSeq) {
@@ -1712,7 +1603,7 @@ function submitEdit(e) {
 }
 
 // NEW System
-$(document).ready(function(){
+$(document).ready(function () {
     let originButton = "";
 
     $("#edit-reference").on('shown.bs.modal', function () {
@@ -1734,16 +1625,12 @@ $(document).ready(function(){
         let submission_id = "{{ $submission->id }}";
         let date = $('#hs-filter-date').val();
 
-        //khusus untuk ngirim reference ID nya untuk autofill add HS
-        let referenceID = $('#'+originButton).val();
-        $("#make-new-hs > button").val(referenceID);
-
         getHsSubmission(date, submission_id, originButton);
     });
 
-    // $("#choose-hs").on('hidden.bs.modal', function () {
-    //     $("#edit-reference").modal('show');
-    // });
+    $("#choose-hs").on('hidden.bs.modal', function () {
+        $('#btn_add_hs_reference').val("");
+    });
 
     $('#hs-filter-date').on('change', function (e) {
         let submission_id = "{{ $submission->id }}";
@@ -1896,13 +1783,11 @@ $(document).ready(function(){
     }
 });
 
-function selectHsNya(id, code){
+function selectHsNya(id, code) {
     let linkHsArray = [];
 
     if (document.getElementById("edit-link-hs").value) {
         linkHsArray = (document.getElementById("edit-link-hs").value).split(", ");
-    } else {
-        linkHsArray = [];
     }
 
     linkHsArray.push(id);
@@ -1947,10 +1832,6 @@ function removeHS(e) {
     document.getElementById("edit-link-hs").value = reconstructedHsArray.join(", ");
 
     document.getElementById(`hs-row_${e.dataset.sequence}`).remove();
-
-    let hsRow = document.getElementById("hs-row-count").value;
-    hsRow--;
-    document.getElementById("hs-row-count").value = hsRow;
 }
 
 function selectOrderNya(id, code) {
