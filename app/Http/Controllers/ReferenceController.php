@@ -226,6 +226,7 @@ class ReferenceController extends Controller
      */
     public function update(Request $request)
     {
+        $request['id'] = $request->submission_id;
         if (!empty($request->id)) {
             $user = Auth::user();
 

@@ -545,7 +545,7 @@ if (
                     @csrf
                     <input type="hidden"
                         id="edit-id"
-                        name="id"
+                        name="submission_id"
                         value="{{ $submission->id }}" />
                     <input type="hidden"
                         id="url"
