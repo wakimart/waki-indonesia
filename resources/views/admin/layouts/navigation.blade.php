@@ -1,4 +1,4 @@
-@if(Auth::user()->roles[0]['slug'] == 'head-admin')
+@if(Gate::check('show-dashboard'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'dashboard'? 'active': '' }} nav-item">
 	<a class="nav-link" href="{{ route('dashboard')}}">
 		<span class="menu-title">Dashboard</span>

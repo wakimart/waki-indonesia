@@ -226,7 +226,9 @@ class ReferenceController extends Controller
      */
     public function update(Request $request)
     {
-        $request['id'] = $request->submission_id;
+        if(isset($request->submission_id)){
+            $request['id'] = $request->submission_id;
+        }
         if (!empty($request->id)) {
             $user = Auth::user();
 
@@ -241,6 +243,10 @@ class ReferenceController extends Controller
 
     private function updateReference(Request $request, int $userId)
     {
+        return response()->json([
+                "result" => 0,
+                "data" => $request->all(),
+            ]);
         DB::beginTransaction();
 
         try {
