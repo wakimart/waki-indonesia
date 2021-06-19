@@ -243,10 +243,6 @@ class ReferenceController extends Controller
 
     private function updateReference(Request $request, int $userId)
     {
-        return response()->json([
-                "result" => 0,
-                "data" => $request->all(),
-            ]);
         DB::beginTransaction();
 
         try {
