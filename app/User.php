@@ -53,7 +53,7 @@ class User extends Authenticatable
                 return true;
         }
         return false;
-        
+
         // foreach ($this->roles as $role) {
         //     if($role->hasAccess($permissions)) {
         //         return true;
@@ -90,5 +90,10 @@ class User extends Authenticatable
 
     public function routeNotificationForFcm(){
         return $this->fcm_token;
+    }
+
+    public function userGeolocation()
+    {
+        return $this->hasMany("App\UserGeolocation");
     }
 }

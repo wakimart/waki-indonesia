@@ -109,6 +109,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 	    Route::post('list','HomeServiceController@listApi'); //list home service
 		Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
 		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
+        Route::post("/add/geolocation", "UserGeolocationController@addApi"); // Upload geolocation data
 	});
 
 	Route::group(['prefix' => 'register'], function () {
@@ -397,6 +398,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("/list_hs_submission", "HomeServiceController@ListHSforSubmission")
             ->name("list_hs_submission");
 
+        Route::get("/track", "UserGeolocationController@show")
+            ->name("track_homeservice");
+
+        Route::get("/fetch/geolocation", "UserGeolocationController@fetchGeolocationData")
+            ->name("fetch_geolocation");
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
@@ -763,7 +769,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Process acceptance delete
         Route::post("/{id}", "AcceptanceController@destroy")
             ->name("delete_acceptance_form");
-        
+
         //export xls
         Route::get('/export-acceptance-to-xls-by-date', 'AcceptanceController@export_to_xls_byDate')
                 ->name('acceptance_export-to-xls-by-date');
