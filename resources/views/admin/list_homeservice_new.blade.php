@@ -150,6 +150,7 @@ $menu_item_second = "list_homeservice";
                                         <input class="form-control"
                                             id="search"
                                             name="filter_search"
+                                            {!! isset($_GET['filter_search']) ? 'value="' . $_GET['filter_search'] . '"' : "" !!}
                                             placeholder="Search By Name, Phone, and Code Homeservice" />
                                         <div class="validation"></div>
                                     </div>
