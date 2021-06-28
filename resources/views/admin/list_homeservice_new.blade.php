@@ -149,7 +149,7 @@ $menu_item_second = "list_homeservice";
                                     <div class="form-group">
                                         <input class="form-control"
                                             id="search"
-                                            name="search"
+                                            name="filter_search"
                                             placeholder="Search By Name, Phone, and Code Homeservice" />
                                         <div class="validation"></div>
                                     </div>

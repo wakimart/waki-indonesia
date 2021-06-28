@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\URL;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class HomeServiceController extends Controller
@@ -923,13 +922,11 @@ class HomeServiceController extends Controller
         return response()->json($homeServices);
     }
 
-
     protected $gCalendarController;
     public function __construct(gCalendarController $gCalendarController)
     {
         $this->gCalendarController = $gCalendarController;
     }
-
 
     public function admin_addHomeService(Request $request){
         // dd($request->all());
@@ -1100,9 +1097,6 @@ class HomeServiceController extends Controller
         }
     }
 
-
-
-
     public function edit(Request $request)
     {
         if($request->has('id')){
@@ -1142,8 +1136,8 @@ class HomeServiceController extends Controller
                 }
 
                 $imgNya = $request->file('cash_image');
-                $fileName = str_replace([' ', ':'], '', 
-                    Carbon::now()->toDateTimeString()) . "_cashimage." . 
+                $fileName = str_replace([' ', ':'], '',
+                    Carbon::now()->toDateTimeString()) . "_cashimage." .
                     $imgNya->getClientOriginalExtension();
 
                 //compressed img
