@@ -41,6 +41,28 @@ $menu_item_second = "add_order";
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
+
+    .imagePreview {
+        width: 100%;
+        height: 150px;
+        background-position: center center;
+        background-color: #fff;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: inline-block;
+    }
+
+    .del {
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+    }
 </style>
 @endsection
 
@@ -310,7 +332,10 @@ $menu_item_second = "add_order";
                                         <div class="form-group">
                                             <select class="form-control"
                                                 name="qty_0"
+                                                id="qty_0" 
                                                 data-msg="Mohon Pilih Jumlah"
+                                                data-sequence="0"
+                                                onchange="selectQty(this)" 
                                                 required>
                                                 <option selected value="1">1</option>
 
@@ -552,6 +577,35 @@ $menu_item_second = "add_order";
                                 <div class="validation"></div>
                             </div>
                             <div class="form-group">
+                                <div class="col-xs-12">
+                                    <label>Bukti Pembayaran</label>
+                                    <span style="float: right;">min. 1 picture</span>
+                                </div>
+                                @for ($i = 0; $i < 3; $i++)
+                                    <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                        style="padding: 15px; float: left;">
+                                        <label>Image {{ $i + 1 }}</label>
+                                        <div class="imagePreview"
+                                            style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
+                                        </div>
+                                        <label class="file-upload-browse btn btn-gradient-primary"
+                                            style="margin-top: 15px;">
+                                            Upload
+                                            <input name="images{{ $i }}"
+                                                id="productimg-{{ $i }}"
+                                                type="file"
+                                                accept=".jpg,.jpeg,.png"
+                                                class="uploadFile img"
+                                                value="Upload Photo"
+                                                style="width: 0px; height: 0px; overflow: hidden;"
+                                                {{ $i === 0 ? "required" : "" }} />
+                                        </label>
+                                        <i class="mdi mdi-window-close del"></i>
+                                    </div>
+                                @endfor
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
                                 <label for="description">Description</label>
                                 <textarea class="form-control"
                                     id="description"
@@ -565,7 +619,7 @@ $menu_item_second = "add_order";
                             <div id="errormessage"></div>
 
                             <div class="form-group">
-                                <button id="submit"
+                                <button id="addOrder"
                                     type="submit"
                                     class="btn btn-gradient-primary mr-2">
                                     Save
@@ -640,7 +694,7 @@ $menu_item_second = "add_order";
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script type="application/javascript">
-let promoOption = "";
+let promoOption = `<option selected disabled value="">Choose Product</option>`;
 let quantityOption = "";
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -801,14 +855,16 @@ document.addEventListener("DOMContentLoaded", function () {
             newSelectProduct.setAttribute("data-sequence", total_product);
 
             const newDivQty = document.createElement("div");
-            newDivQty.id = `qty_${total_product}`;
             newDivQty.className = "form-group";
             newDivQty.style = "width: 14%; float: right; display: inline-block;";
 
             const newSelectQty = document.createElement("select");
             newSelectQty.className = "form-control";
+            newSelectQty.id = `qty_${total_product}`;
             newSelectQty.name = `qty_${total_product}`;
             newSelectQty.innerHTML = quantityOption;
+            newSelectQty.setAttribute("onchange", "selectQty(this)");
+            newSelectQty.setAttribute("data-sequence", total_product);
 
             const newDivRemove = document.createElement("div");
             newDivRemove.className = "col-md-12";
@@ -850,9 +906,27 @@ document.addEventListener("DOMContentLoaded", function () {
         $(document).on("click", ".hapus_product", function(e){
             e.preventDefault();
             total_product--;
+
             $('#product_'+$(this).val()).remove();
             $('#qty_'+$(this).val()).remove();
+            $('#product_other_container_'+$(this).val()).remove();
+            $('#product_other_'+$(this).val()).remove();
+            $("#product_"+$(this).val()).select2('destroy'); 
             $(this).remove();
+
+            //kurangi total price
+            for (var i = 0; i < arr_index_temp.length; i++) {
+                if(arr_index_temp[i][0] == $(this).val()){
+                    var min_price = parseInt(arr_index_temp[i][2]);
+                    var min_qty = parseInt(arr_index_temp[i][3]);
+
+                    total_price = total_price - (min_price * min_qty);
+                    $("#total_payment").val(total_price);
+                }
+            }
+
+            //remove dari array
+            arr_index_temp.splice($(this).val(), 1);
         });
 
         $("#cash_upgarde").change( function(e){
@@ -891,26 +965,22 @@ document.addEventListener("DOMContentLoaded", function () {
             $(".cust-2").attr('required', '');
             $(this).hide();
         });
-
-        $('#submit').click(function(){
-            var appointment =
-            $.ajax({
-                type: 'POST',
-                data: {
-                    date: date
-                },
-                success: function(data){
-                    console.log(data.data);
-                },
-                error: function(xhr){
-                    console.log(xhr.responseText);
-                }
-            });
-        });
     });
-
+    
+    
+    function checkProductArray(array, index){
+        for (var i = 0; i < array.length; i++) {
+            if(array[i][0] === index){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    var total_price = 0;
+    var arr_index_temp = [];
     function selectOther(e) {
-        const sequence = e.dataset.sequence;
+        const sequence = e.dataset.sequence; //index select nya
 
         if (e.value === "other") {
             document.getElementById("product_other_container_" + sequence).classList.remove("d-none");
@@ -918,13 +988,174 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (e.value !== "other") {
             document.getElementById("product_other_container_" + sequence).classList.add("d-none");
             document.getElementById("product_other_" + sequence).removeAttribute("required");
+
+            //auto fill price and qty
+            var promo_id = e.value;
+            var get_qty = $('#qty_'+sequence).val();
+            $.get( '{{ route("fetchDetailPromo", ['promo' => ""]) }}/'+promo_id )
+            .done(function (result){
+                if(result.length > 0){
+                    var data = JSON.parse(result);
+                    var price = parseInt(data['price']);
+                    
+                    if(arr_index_temp.length == 0){
+                        arr_index_temp.push([sequence, promo_id, price, get_qty]);
+                        total_price = total_price + (price * get_qty);
+                    }else{
+                        if(checkProductArray(arr_index_temp, sequence) == true){
+                            //kurangi total price dengan harga lama
+                            var old_price = parseInt(arr_index_temp[sequence][2]);
+                            var old_qty = parseInt(arr_index_temp[sequence][3]);
+                            total_price = total_price - (old_price * old_qty);
+
+                            //simpan promo id yg baru & harga
+                            arr_index_temp[sequence][1] = promo_id;
+                            arr_index_temp[sequence][2] = price;
+                            arr_index_temp[sequence][3] = get_qty;
+
+                            //update total price yg baru
+                            total_price = total_price + (price * get_qty);
+                        }else{
+                            //kalau ga exist, push ke array
+                            arr_index_temp.push([sequence, promo_id, price, get_qty]);
+
+                            //update total price
+                            total_price = total_price + (price * get_qty);
+                        }
+                    }
+                    console.log(arr_index_temp);
+                    console.log(total_price);
+
+                    $("#total_payment").val(total_price);
+                }
+            });
         }
     }
+
+    function selectQty(e){
+        const sequence = e.dataset.sequence; //index select nya
+
+        var get_qty = $('#qty_'+sequence).val();
+
+        if(checkProductArray(arr_index_temp, sequence) == true){
+            //kurangi price dengan harga lama
+            var old_price = parseInt(arr_index_temp[sequence][2]);
+            var old_qty = parseInt(arr_index_temp[sequence][3]);
+            total_price = total_price - (old_price * old_qty);
+
+            //simpan qty yg baru
+            arr_index_temp[sequence][3] = get_qty;
+
+            //update total price
+            total_price = total_price + (old_price * get_qty);
+            $("#total_payment").val(total_price);
+        }
+
+    }
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var frmAdd;
+
+        $("#actionAdd").on("submit", function (e) {
+            e.preventDefault();
+
+            // var $fileUpload = $("input[type='file']");
+            // if (parseInt($fileUpload.get(0).files.length)>5){
+            //     alert("You can only upload a maximum of 5 files");
+            //     return false;
+            // }
+
+            frmAdd = _("actionAdd");
+            frmAdd = new FormData(document.getElementById("actionAdd"));
+            frmAdd.enctype = "multipart/form-data";
+            var URLNya = $("#actionAdd").attr('action');
+            console.log(URLNya);
+
+            var ajax = new XMLHttpRequest();
+            ajax.upload.addEventListener("progress", progressHandler, false);
+            ajax.addEventListener("load", completeHandler, false);
+            ajax.addEventListener("error", errorHandler, false);
+            ajax.open("POST", URLNya);
+            ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+            ajax.send(frmAdd);
+        });
+        function progressHandler(event){
+            document.getElementById("addOrder").innerHTML = "UPLOADING...";
+        }
+        function completeHandler(event){
+            var hasil = JSON.parse(event.target.responseText);
+
+            for (var key of frmAdd.keys()) {
+                $("#actionAdd").find("input[name="+key.name+"]").removeClass("is-invalid");
+                $("#actionAdd").find("select[name="+key.name+"]").removeClass("is-invalid");
+                $("#actionAdd").find("textarea[name="+key.name+"]").removeClass("is-invalid");
+
+                $("#actionAdd").find("input[name="+key.name+"]").next().find("strong").text("");
+                $("#actionAdd").find("select[name="+key.name+"]").next().find("strong").text("");
+                $("#actionAdd").find("textarea[name="+key.name+"]").next().find("strong").text("");
+            }
+
+            if(hasil['errors'] != null){
+                for (var key of frmAdd.keys()) {
+                    if(typeof hasil['errors'][key] === 'undefined') {
+
+                    }
+                    else {
+                        $("#actionAdd").find("input[name="+key+"]").addClass("is-invalid");
+                        $("#actionAdd").find("select[name="+key+"]").addClass("is-invalid");
+                        $("#actionAdd").find("textarea[name="+key+"]").addClass("is-invalid");
+
+                        $("#actionAdd").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionAdd").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                    }
+                }
+                alert(hasil['errors']);
+            }
+            else{
+                var kode = hasil['success']['code'].replace('/', "%2F");
+                var url = "{{ route('detail_order', ['code'=>"codeTmp"])}}";
+                url = url.replace('codeTmp', kode);
+                window.location.href = url;
+                // alert("Input Success !!!");
+                // window.location.reload()
+            }
+            document.getElementById("addOrder").innerHTML = "SAVE";
+        }
+        function errorHandler(event){
+            document.getElementById("addOrder").innerHTML = "SAVE";
+        }
+    })
 </script>
 <script type="application/javascript" src="{{ asset('js/tags-input.js') }}"></script>
 <script type="application/javascript">
     for (let input of document.querySelectorAll('#tags')) {
         tagsInput(input);
     }
+</script>
+<script type="application/javascript">
+    $(document).on("change", ".uploadFile", function () {
+        const uploadFile = $(this);
+        const files = this.files ? this.files : [];
+
+        // no file selected, or no FileReader support
+        if (!files.length || !window.FileReader) {
+            return;
+        }
+
+        // only image file
+        if (/^image/.test(files[0].type)) {
+            // instance of the FileReader
+            const reader = new FileReader();
+            // read the local file
+            reader.readAsDataURL(files[0]);
+
+            // set image data as background of div
+            reader.onloadend = function () {
+                uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+            };
+        }
+    });
 </script>
 @endsection

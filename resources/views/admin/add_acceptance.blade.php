@@ -264,7 +264,7 @@ $menu_item_second = "add_acceptance_form";
 		                        <div class="validation"></div>
 		                    </div>
 		                    <div class="form-group">
-	              				<label for="">Old Product Photo< (Max. 5 Photo)/label>
+	              				<label for="">Old Product Photo (Max. 5 Photo)</label>
 		                        <input multiple type="file" class="form-control" name="image[]" id="image" accept="image/*" placeholder="Old Product Photo" required data-msg="Mohon Sertakan Foto" style="text-transform:uppercase"/>
 		                        <div class="validation"></div>
 		                    </div>

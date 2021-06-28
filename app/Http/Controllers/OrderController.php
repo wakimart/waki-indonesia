@@ -13,11 +13,14 @@ use App\RajaOngkir_City;
 use App\HistoryUpdate;
 use App\Promo;
 use App\Utils;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class OrderController extends Controller
 {
@@ -174,6 +177,33 @@ class OrderController extends Controller
             }
             $data['bank'] = json_encode($data['arr_bank']);
             $data['province'] = $data['province_id'];
+
+
+            $data['image'] = [];
+            $idxImg = 1;
+            for ($i = 0; $i < 3; $i++) {
+                if ($request->hasFile('images' . $i)) {
+                    $path = "sources/order";
+                    $file = $request->file('images' . $i);
+                    $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()). $idxImg . "_order." . $file->getClientOriginalExtension();
+
+                    // Cek ada folder tidak
+                    if (!is_dir($path)) {
+                        File::makeDirectory($path, 0777, true, true);
+                    }
+
+                    //compressed img
+                    $compres = Image::make($file->getRealPath());
+                    $compres->resize(540, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save($path.'/'.$fileName);
+
+                    //array_push($data['image'], $fileName);
+                    $data['image'][$i] = $fileName;
+                    $idxImg++;
+                }
+            }
+
             $order = Order::create($data);
             DB::commit();
 
@@ -185,12 +215,12 @@ class OrderController extends Controller
             }
             $phone = "62".$phone;
             Utils::sendSms($phone, "Terima kasih telah melakukan transaksi di WAKi Indonesia. Berikut link detail transaksi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
-            return redirect()->route('detail_order', ['code'=>$order['code']]);
+            //return redirect()->route('detail_order', ['code'=>$order['code']]);
+            return response()->json(['success' => $order]);
         } catch (\Exception $ex) {
             DB::rollback();
-            return response()->json(['errors' => $ex]);
+            return response()->json(['errors' => $ex->getMessage()]);
         }
-
     }
 
     public function admin_ListOrder(Request $request){
@@ -264,7 +294,9 @@ class OrderController extends Controller
             $paymentTypes = Order::$PaymentType;
             $banks = Order::$Banks;
             $from_know = Order::$Know_From;
-            return view('admin.update_order', compact('orders','promos', 'from_know','branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks'));
+
+            $arr_price = $orders->getPrice();
+            return view('admin.update_order', compact('orders','promos', 'from_know','branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks', 'arr_price'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -279,85 +311,143 @@ class OrderController extends Controller
      */
     public function update(Request $request)
     {
-        $historyUpdate= [];
-        $data = $request->all();
-        $orders = Order::find($request->input('idOrder'));
-        $dataBefore = Order::find($request->input('idOrder'));
-        $orders['no_member'] = $request->input('no_member');
-        $orders['name'] = $request->input('name');
-        $orders['address'] = $request->input('address');
-        $orders['phone'] = $request->input('phone');
-        $orders['cash_upgrade'] = $request->input('cash_upgrade');
-        $orders['total_payment'] = $request->input('total_payment');
-        $orders['down_payment'] = $request->input('down_payment');
-        $orders['remaining_payment'] = $request->input('remaining_payment');
-
-        //pembentukan array product
-        $index = 0;
-        $data['arr_product'] = [];
-        foreach ($data as $key => $value) {
-            $arrKey = explode("_", $key);
-            if($arrKey[0] == 'product'){
-                if(isset($data['qty_'.$arrKey[1]])){
-                    $data['arr_product'][$index] = [];
-                    $data['arr_product'][$index]['id'] = $value;
-
-                    // {{-- KHUSUS Philiphin --}}
-                    if($value == 'other'){
-                        $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
-                    }
-                    //===========================
-
-                    $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
-                    $index++;
-                }
-            }
-        }
-        $orders['product'] = json_encode($data['arr_product']);
-
-        //pembentukan array Bank
-        $index = 0;
-        $data['arr_bank'] = [];
-        foreach ($data as $key => $value) {
-            $arrKey = explode("_", $key);
-            if($arrKey[0] == 'bank'){
-                if(isset($data['cicilan_'.$arrKey[1]])){
-                    $data['arr_bank'][$index] = [];
-                    $data['arr_bank'][$index]['id'] = $value;
-                    $data['arr_bank'][$index]['cicilan'] = $data['cicilan_'.$arrKey[1]];
-                    $index++;
-                }
-            }
-        }
-        $orders['bank'] = json_encode($data['arr_bank']);
-        $orders['old_product'] = $request->input('old_product');
-        $orders['prize'] = $request->input('prize');
-        $orders['cso_id'] = $request->input('idCSO');
-        $orders['30_cso_id'] = $request->input('idCSO30');
-        $orders['70_cso_id'] = $request->input('idCSO70');
-        $orders['branch_id'] = $request->input('branch_id');
-        $orders['province'] = $data['province_id'];
-        $orders['city'] = $data['city'];;
-        $orders['distric'] = $data['distric'];
-        $orders['customer_type'] = $request->input('customer_type');
-        $orders['description'] = $request->input('description');
-        $orders['know_from'] = $request->input('know_from');
-        DB::beginTransaction();
+        DB::beginTransaction();       
         try{
+            $historyUpdate= [];
+            $data = $request->all();
+            $orders = Order::find($request->input('idOrder'));
+            $dataBefore = Order::find($request->input('idOrder'));
+            $orders['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $orders['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
+            $orders['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
+
+            //pembentukan array product
+            $index = 0;
+            $data['arr_product'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($data['qty_'.$arrKey[1]])){
+                        $data['arr_product'][$index] = [];
+                        $data['arr_product'][$index]['id'] = $value;
+
+                        // {{-- KHUSUS Philiphin --}}
+                        if($value == 'other'){
+                            $data['arr_product'][$index]['id'] = $data['product_other_'.$arrKey[1]];
+                        }
+                        //===========================
+
+                        $data['arr_product'][$index]['qty'] = $data['qty_'.$arrKey[1]];
+                        $index++;
+                    }
+                }
+            }
+            $orders['product'] = json_encode($data['arr_product']);
+
+            //pembentukan array Bank
+            $index = 0;
+            $data['arr_bank'] = [];
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'bank'){
+                    if(isset($data['cicilan_'.$arrKey[1]])){
+                        $data['arr_bank'][$index] = [];
+                        $data['arr_bank'][$index]['id'] = $value;
+                        $data['arr_bank'][$index]['cicilan'] = $data['cicilan_'.$arrKey[1]];
+                        $index++;
+                    }
+                }
+            }
+            $orders['bank'] = json_encode($data['arr_bank']);
+
+            //update image
+            $arr_image_before = $orders['image'];
+            $namaGambar = [];
+            $namaGambar = array_values($arr_image_before);
+            $idxImg = 1;
+
+            if ($request->hasFile('images0') || $request->hasFile('images1') || $request->hasFile('images2')){
+                // Store image
+                for ($i = 0; $i < $request->total_images; $i++) {
+                    if ($request->hasFile('images' . $i)) {
+                        if (array_key_exists($i, $arr_image_before)) {
+                            if (File::exists("sources/order/" . $codePath . "/" . $arr_image_before[$i])) {
+                                File::delete("sources/order/" . $codePath . "/" . $arr_image_before[$i]);
+                            }
+                        }
+
+                        $path = "sources/order";
+                        $file = $request->file('images' . $i);
+                        $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()). $idxImg . "_order." . $file->getClientOriginalExtension();
+
+                        //compressed img
+                        $compres = Image::make($file->getRealPath());
+                        $compres->resize(540, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })->save($path.'/'.$fileName);
+
+                        //array_push($data['image'], $fileName);
+                        $namaGambar[$i] = $fileName;
+                        $idxImg++;
+                    } else {
+                        if (array_key_exists($i, $arr_image_before)) {
+                            $namaGambar[$i] = $arr_image_before[$i];
+                        }
+                    }
+                }
+            }
+
+            if ($request->dlt_img != "") {
+                $deletes = explode(",", $request->dlt_img);
+                foreach ($deletes as $value) {
+                    if (array_key_exists($value, $namaGambar)) {
+                        if (File::exists("sources/order/" . $codePath . "/" . $namaGambar[$value])) {
+                            File::delete("sources/order/" . $codePath . "/" . $namaGambar[$value]);
+                        }
+                        unset($namaGambar[$value]);
+                    }
+                }
+            }
+
+            // $namaGambarFix = "[";
+
+            // for ($key = 0; $key < 3; $key++) {
+            //     if ($key == 2) {
+            //         if (array_key_exists($key, $namaGambar)) {
+            //             $namaGambarFix .= '"' . $namaGambar[$key] . '"';
+            //         } else {
+            //             $namaGambarFix .= '""';
+            //         }
+            //     } else {
+            //         if (array_key_exists($key, $namaGambar)) {
+            //             $namaGambarFix .= '"' . $namaGambar[$key] . '",';
+            //         } else {
+            //             $namaGambarFix .= '"",';
+            //         }
+            //     }
+            // }
+
+            //$namaGambarFix .= "]";
+            $orders['image'] = $namaGambar;
             $orders->save();
 
             $user = Auth::user();
             $historyUpdate['type_menu'] = "Order";
             $historyUpdate['method'] = "Update";
-            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"),'dataChange'=> array_diff(json_decode($orders, true), json_decode($dataBefore,true))]);
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> array_diff(json_decode($orders, true), json_decode($dataBefore,true))
+            ]);
             $historyUpdate['user_id'] = $user['id'];
             $historyUpdate['menu_id'] = $orders->id;
             $createData = HistoryUpdate::create($historyUpdate);
+
             DB::commit();
             return response()->json(['success' => 'Berhasil!']);
         } catch (\Exception $ex) {
             DB::rollback();
-            return response()->json(['error' => $ex->getMessage()], 500);
+            return response()->json(['errors' => $ex->getMessage()], 500);
         }
 
     }
@@ -439,6 +529,12 @@ class OrderController extends Controller
         catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    public function fetchDetailPromo($promo_id)
+    {   
+        $promos = Promo::find($promo_id);
+        return json_encode($promos);
     }
 
     //KHUSUS API APPS

@@ -196,6 +196,23 @@
                         </tr>
                     </table>
                 @endif
+                @if($order['image'] != null)
+                    <table class="col-md-12">
+                        <thead>
+                            <td>Payment Proof</td>
+                        </thead>
+                        <tr>
+                            <td>
+                                @foreach($order['image'] as $key => $payment)
+                                    <a href="{{ asset('sources/order/' . $payment) }}"
+                                        target="_blank">
+                                        <i class="mdi mdi-numeric-{{ $key+1 }}-box" style="font-size: 24px; color: blue;"></i>
+                                    </a>
+                                @endforeach
+                            </td>
+                        </tr>
+                    </table>
+                @endif
                 <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share"
                 class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
             </div>

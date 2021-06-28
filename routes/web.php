@@ -241,6 +241,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //refrence
     Route::get('/fetchDetailPerReference/{reference}', 'SubmissionController@fetchDetailPerReference')->name('fetchDetailPerReference');
 
+    //fetchperpromo
+    Route::get('/fetchDetailPromo/{promo}', 'OrderController@fetchDetailPromo')->name('fetchDetailPromo');
+
     Route::group(['prefix' => 'useradmin', 'middleware' => 'auth'], function() {
         //Add Form UserAdmin
         Route::get('/', 'UserAdminController@create')
