@@ -25,8 +25,8 @@ class OrderController extends Controller
     public function index()
     {
     	$promos = DeliveryOrder::$Promo;
-    	$branches = Branch::where('active', true)->get();
-    	$csos = Cso::where('active', true)->get();
+    	$branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
+    	$csos = Cso::where('active', true)->orderBy("code", 'asc')->get();
     	$cashUpgrades = Order::$CashUpgrade;
     	$paymentTypes = Order::$PaymentType;
         $banks = Order::$Banks;
@@ -115,7 +115,7 @@ class OrderController extends Controller
     public function admin_AddOrder()
     {
         $promos = Promo::all();
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
         $csos = Cso::all();
         $cashUpgrades = Order::$CashUpgrade;
         $paymentTypes = Order::$PaymentType;
@@ -194,7 +194,7 @@ class OrderController extends Controller
     }
 
     public function admin_ListOrder(Request $request){
-        $branches = Branch::Where('active', true)->get();
+        $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
         //khususu head-manager, head-admin, admin
         $orders = Order::where('active', true);
 
@@ -258,7 +258,7 @@ class OrderController extends Controller
             $orders = Order::find($request->get('id'));
             $orders['district'] = $orders->getDistrict();
             $promos = Promo::all();
-            $branches = Branch::all();
+            $branches = Branch::all()->sortBy("code");
             $csos = Cso::all();
             $cashUpgrades = Order::$CashUpgrade;
             $paymentTypes = Order::$PaymentType;

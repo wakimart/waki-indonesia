@@ -19,7 +19,8 @@ class BranchController extends Controller
      */
     public function index(Request $request)
     {   
-        $branches = Branch::where('branches.active', true);
+        // $branches = Branch::where('branches.active', true);   
+        $branches = Branch::where('branches.active', true)->orderBy('code', 'asc')->get();
         $countBranches = Branch::where('branches.active', true)->count();
 
         if($request->has('search')){

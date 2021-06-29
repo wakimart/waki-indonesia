@@ -143,7 +143,7 @@
 							<option value="">All CSO</option>
 							@php
 							if(isset($_GET['filter_branch'])){
-								$csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where('active', true)->get();
+								$csos = App\Cso::Where('branch_id', $_GET['filter_branch'])->where("active", true)->get();
 
 								foreach ($csos as $cso) {
 								if(isset($_GET['filter_cso'])){

@@ -30,14 +30,14 @@ class HomeServiceController extends Controller
 {
     public function index()
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
         $categoryProducts = CategoryProduct::all();
         return view('homeservice', compact('branches', 'categoryProducts'));
     }
 
     public function indexAdmin(Request $request)
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
         if(isset($request->reference_id)){
             $autofill = Reference::find($request->reference_id);
             return view('admin.add_home_service', compact('branches', 'autofill'));
@@ -214,6 +214,7 @@ class HomeServiceController extends Controller
             ]
         )
         ->where("active", true)
+        ->orderBy("code", 'asc')
         ->get();
 
         // Inisialisasi variabel $csos dan diisi dengan data dari tabel "csos"
@@ -224,6 +225,7 @@ class HomeServiceController extends Controller
             ]
         )
         ->where("active", true)
+        ->orderBy("code", 'asc')
         ->get();
 
         // Inisialisasi variabel $arrBranches
