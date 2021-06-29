@@ -80,7 +80,7 @@
 	  	<div class="col-lg-12 col-md-12" style="padding:0;">
 	    	<div class="intro-content">
 	      	<br>
-	      	<h2>WAKi High Potential Therapy Range</h2>
+	      	<h2>{{ $product[0]->category['name'] }}</h2>
 	    	</div>
 	  	</div>
 

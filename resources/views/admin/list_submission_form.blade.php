@@ -7,14 +7,6 @@ $menu_item_second = "list_submission_form";
 @section("style")
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <style type="text/css">
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
     .select2-selection__rendered {
         line-height: 45px !important;
     }
@@ -23,7 +15,9 @@ $menu_item_second = "list_submission_form";
         height: 45px !important;
     }
 
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
+    .select2-container--default
+    .select2-selection--single
+    .select2-selection__arrow {
         top: 10px;
     }
 </style>
@@ -63,45 +57,23 @@ $menu_item_second = "list_submission_form";
                         <select id="filter-type"
                             class="form-control"
                             name="filter_type">
+                            <?php
+                            $filterType = isset($_GET["filter_type"]);
+                            ?>
                             <option value=""
-                                <?php
-                                if (!isset($_GET["filter_type"])) {
-                                    echo "selected";
-                                }
-                                ?>>
+                                {!! !$filterType ? "selected" : "" !!}>
                                 No Filter
                             </option>
                             <option value="mgm"
-                                <?php
-                                if (
-                                    isset($_GET["filter_type"])
-                                    && $_GET["filter_type"] === "mgm"
-                                ) {
-                                    echo "selected";
-                                }
-                                ?>>
+                                {!! $filterType && $_GET["filter_type"] === "mgm" ? "selected" : "" !!}>
                                 MGM
                             </option>
                             <option value="referensi"
-                                <?php
-                                if (
-                                    isset($_GET["filter_type"])
-                                    && $_GET["filter_type"] === "referensi"
-                                ) {
-                                    echo "selected";
-                                }
-                                ?>>
+                                {!! $filterType && $_GET["filter_type"] === "referensi" ? "selected" : "" !!}>
                                 Referensi
                             </option>
                             <option value="takeaway"
-                                <?php
-                                if (
-                                    isset($_GET["filter_type"])
-                                    && $_GET["filter_type"] === "takeaway"
-                                ) {
-                                    echo "selected";
-                                }
-                                ?>>
+                                {!! $filterType && $_GET["filter_type"] === "takeaway" ? "selected" : "" !!}>
                                 Takeaway
                             </option>
                         </select>
@@ -111,10 +83,31 @@ $menu_item_second = "list_submission_form";
                     style="padding: 0; display: inline-block;">
                     <div class="form-group">
                         <label for="filter-type">Search by Name/ Phone/ Code</label>
-                        <input class="form-control" type="text" name="filter_text" placeholder="Name, Phone, Code" value="{{ isset($_GET["filter_text"]) ? $_GET["filter_text"] : "" }}">
+                        <input class="form-control"
+                            type="text"
+                            name="filter_text"
+                            placeholder="Name, Phone, Code"
+                            value="{{ isset($_GET["filter_text"]) ? $_GET["filter_text"] : "" }}" />
                     </div>
                 </div>
                 @if (Auth::user()->roles[0]->slug !== "branch" && Auth::user()->roles[0]->slug !== "cso")
+                    <div class="col-xs-6 col-sm-3"
+                        style="padding: 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="filter-branch">Search by Branch</label>
+                            <select class="form-control"
+                                id="filter-branch"
+                                name="filter_branch">
+                                <option value="">Choose Branch</option>
+                                @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}"
+                                        {!! isset($_GET["filter_branch"]) && $_GET["filter_branch"] == $branch->id ? "selected" : "" !!}>
+                                        {{ $branch->code }} - {{ $branch->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-xs-6 col-sm-3"
                         style="padding: 0; display: inline-block;">
                         <div class="form-group">
@@ -157,25 +150,25 @@ $menu_item_second = "list_submission_form";
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th class="center">No.</th>
+                                    <th class="text-center">No.</th>
                                     <th>Registration Date</th>
                                     <th>Member Name</th>
                                     <th>Type</th>
                                     <th>Branch</th>
                                     <th>CSO</th>
-                                    <th class="center">View</th>
+                                    <th class="text-center">View</th>
                                     {{-- @if (Gate::check('edit-submission')) --}}
-                                        <th class="center">Edit</th>
+                                        <th class="text-center">Edit</th>
                                     {{-- @endif --}}
-                                    @if (Gate::check('delete-submission'))
-                                        <th class="center">Delete</th>
-                                    @endif
+                                    {{-- @if (Gate::check('delete-submission')) --}}
+                                        <th class="text-center">Delete</th>
+                                    {{-- @endif --}}
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($submissions as $key => $submission)
                                     <tr>
-                                        <td class="right">{{ $i }}</td>
+                                        <td class="text-right">{{ $i }}</td>
                                         <td>
                                             {{ date("d F Y", strtotime($submission->created_at)) }}
                                         </td>
@@ -191,20 +184,20 @@ $menu_item_second = "list_submission_form";
                                         <td>
                                             {{ $submission->cso->code }} - {{ $submission->cso->name }}
                                         </td>
-                                        <td class="center">
+                                        <td class="text-center">
                                             <a href="{{ route("detail_submission_form", ["id" => $submission->id, "type" => $submission->type]) }}">
                                                 <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                             </a>
                                         </td>
                                         {{-- @can('edit-submission') --}}
-                                            <td class="center">
+                                            <td class="text-center">
                                                 <a href="{{ route('edit_submission_form', ['id' => $submission->id, "type" => $submission->type]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>
                                         {{-- @endcan --}}
                                         {{-- @can('delete-submission') --}}
-                                            <td class="center">
+                                            <td class="text-center">
                                                 <button class="btn-delete"
                                                     data-toggle="modal"
                                                     data-target="#deleteDoModal"
@@ -245,7 +238,7 @@ $menu_item_second = "list_submission_form";
                 </button>
             </div>
             <div class="modal-body">
-                <h5 style="text-align:center;">
+                <h5 class="text-center">
                     Are you sure you want to delete this?
                 </h5>
             </div>

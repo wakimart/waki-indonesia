@@ -149,7 +149,8 @@ $menu_item_second = "list_homeservice";
                                     <div class="form-group">
                                         <input class="form-control"
                                             id="search"
-                                            name="search"
+                                            name="filter_search"
+                                            {!! isset($_GET['filter_search']) ? 'value="' . $_GET['filter_search'] . '"' : "" !!}
                                             placeholder="Search By Name, Phone, and Code Homeservice" />
                                         <div class="validation"></div>
                                     </div>
@@ -359,10 +360,9 @@ $menu_item_second = "list_homeservice";
                                             name="export"
                                             data-toggle="modal"
                                             data-target="#datePickerHomeServiceModal"
-                                            onclick="submitExportXLSWithDate()"
                                             value="-">
                                             <span class="mdi mdi-file-document"></span>
-                                            Export XLS with Date
+                                            Export XLS with Start-End Date
                                         </button>
                                         <button id="btn-exportByInput"
                                             type="button"
@@ -370,7 +370,6 @@ $menu_item_second = "list_homeservice";
                                             name="export"
                                             data-toggle="modal"
                                             data-target="#datePickerByInput"
-                                            onclick="submitExportXLSByInputDate()"
                                             value="-">
                                             <span class="mdi mdi-file-document"></span>
                                             Export XLS by Input Date
@@ -1386,6 +1385,17 @@ $menu_item_second = "list_homeservice";
                             onload="getDate()" />
                         <div class="validation"></div>
                     </div>
+                    <div class="form-group">
+                        <label>Export Type</label>
+                        <select class="form-control"
+                            id="export_type"
+                            name="export_type"
+                            required>
+                            <option value="detail">Detail Home Service</option>
+                            <option value="compare">Comparison Home Service</option>
+                        </select>
+                        <div class="validation"></div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     {{ csrf_field() }}
@@ -1398,6 +1408,7 @@ $menu_item_second = "list_homeservice";
                         id="btn-exportByDate"
                         class="btn btn-gradient-danger mr-2"
                         name="id"
+                        onclick="submitExportXLSWithDate()"
                         value="-">
                         Export
                     </button>
@@ -1448,6 +1459,7 @@ $menu_item_second = "list_homeservice";
                         id="btn-exportByInp"
                         class="btn btn-gradient-danger mr-2"
                         name="id"
+                        onclick="submitExportXLSByInputDate()"
                         value="-">
                         Export
                     </button>
@@ -1555,11 +1567,18 @@ function submitExportXLSWithDate() {
 
     let startDate = document.getElementById("filter_startDate").value;
     let endDate = document.getElementById("filter_endDate").value;
+    let typeExport = document.getElementById("export_type").value;
 
     urlParamStr += "filter_startDate=" + startDate + "&";
     urlParamStr += "filter_endDate=" + endDate;
 
-    window.location.href = "<?php echo route('homeservice_export-to-xls-by-date'); ?>" + "?" + urlParamStr;
+    if(typeExport == "detail"){
+        window.location.href = "<?php echo route('homeservice_export-to-xls-by-date'); ?>" + "?" + urlParamStr;
+    }
+    else{
+        window.location.href = "<?php echo route('homeservice_export-to-xls-compare'); ?>" + "?" + urlParamStr;
+    }
+
 }
 
 {{-- Export XLS By Input Date --}}

@@ -92,7 +92,9 @@ $menu_item_second = "list_acceptance_form";
                 <div class="form-group">
                     <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
 
-                    <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" data-toggle="modal" href="#modal-export-excel" value="-"><span class="mdi mdi-file-document"></span>Export XLS</button>
+                    @if (Auth::user()->roles[0]->slug !== "branch" && Auth::user()->roles[0]->slug !== "cso")
+                        <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" data-toggle="modal" href="#modal-export-excel" value="-"><span class="mdi mdi-file-document"></span>Export XLS</button>
+                    @endif
                 </div>
             </div>
         </div>

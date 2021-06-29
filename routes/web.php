@@ -343,6 +343,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // List Order (Khusus untuk Submission)
         Route::get("/list_order_submission", "OrderController@ListOrderforSubmission")
             ->name("list_order_submission");
+
+        // Fetch Customer Data By MPC Number
+        Route::get("/fetch-customer", "OrderController@fetchCustomer")
+            ->name("fetch_customer_by_mpc");
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {
@@ -376,6 +380,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //Export to XLS By Date
         Route::get('/export-to-xls-by-date', 'HomeServiceController@export_to_xls_byDate')
                 ->name('homeservice_export-to-xls-by-date');
+        //Export to XLS Compare
+        Route::get('/export-to-xls-compare', 'HomeServiceController@export_to_xls_compare')
+                ->name('homeservice_export-to-xls-compare');
 
         // List Home Service (Revisi)
         Route::get("/list_new", "HomeServiceController@listHomeServiceNew")

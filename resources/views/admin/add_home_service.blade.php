@@ -62,9 +62,9 @@ $menu_item_second = "add_home_service";
 							<div class="form-group">
 								<span>Type Customer</span>
   								<select id="type_customer" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_customer" value="" required>
-                    <option value="VVIP (Type A)">VVIP (Type A)</option>
-                    <option value="WAKi Customer (Type B)">WAKi Customer (Type B)</option>
-                    <option value="New Customer (Type C)">New Customer (Type C)</option>
+                                    <option value="VVIP (Type A)">VVIP (Type A)</option>
+                                    <option value="WAKi Customer (Type B)">WAKi Customer (Type B)</option>
+                                    <option {{ isset($autofill) ? "selected" : "" }} value="New Customer (Type C)">New Customer (Type C)</option>
   								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -73,17 +73,17 @@ $menu_item_second = "add_home_service";
 							<div class="form-group">
 								<span>Type Home Service</span>
 								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
-                    <option value="Home service">Home Service</option>
-                    <option value="Home Tele Voucher">Home Tele Voucher</option>
-                    <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
-                    <option value="Home Free Family Therapy">Home Free Family Therapy</option>
-                    <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
-                    <option value="Home Voucher">Home Voucher</option>
-                    <option value="Home Tele Free Gift">Home Tele Free Gift</option>
-                    <option value="Home Refrensi Product">Home Refrensi Product</option>
-                    <option value="Home Delivery">Home Delivery</option>
-                    <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
-                    <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
+                                    <option value="Home service">Home Service</option>
+                                    <option value="Home Tele Voucher">Home Tele Voucher</option>
+                                    <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                                    <option value="Home Free Family Therapy">Home Free Family Therapy</option>
+                                    <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
+                                    <option value="Home Voucher">Home Voucher</option>
+                                    <option value="Home Tele Free Gift">Home Tele Free Gift</option>
+                                    <option value="Home Refrensi Product">Home Refrensi Product</option>
+                                    <option value="Home Delivery">Home Delivery</option>
+                                    <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
+                                    <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
 								</select>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -96,13 +96,13 @@ $menu_item_second = "add_home_service";
             			<div class="validation"></div>
           			</div>
           			<div class="form-group">
-	                <label for="">Name</label>
-	                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+    	                <label for="">Name</label>
+    	                <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{ isset($autofill) ? $autofill['name'] : "" }}" required>
           			</div>
           			<div class="form-group">
-	                <label for="">Phone Number</label>
-	                <input type="number" class="form-control" name="phone" id="phone" placeholder="Nomor Telepon" required data-msg="Mohon Isi Nomor Telepon"/>
-	                <div class="validation"></div>
+    	                <label for="">Phone Number</label>
+    	                <input type="number" class="form-control" value="{{ isset($autofill) ? $autofill['phone'] : "" }}" name="phone" id="phone" placeholder="Nomor Telepon" required data-msg="Mohon Isi Nomor Telepon"/>
+    	                <div class="validation"></div>
           			</div>
           			<div class="form-group">
 	                <label for="">Province</label>
@@ -114,6 +114,10 @@ $menu_item_second = "add_home_service";
 										$arrProvince = [];
 										if(sizeof($result) > 0){
 											foreach ($result as $value) {
+                                                if(isset($autofill) && $value['province_id'] == $autofill['province']){
+                                                    echo "<option selected value=\"". $value['province_id']."\">".$value['province']."</option>";
+                                                    continue;
+                                                }
 												echo "<option value=\"". $value['province_id']."\">".$value['province']."</option>";
 											}
 										}
@@ -124,8 +128,8 @@ $menu_item_second = "add_home_service";
       			    <div class="form-group">
 	                <label for="exampleTextarea1">Kota</label>
 	                <select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
-  									<option selected disabled value="">Pilihan Kota</option>
-  								</select>
+						<option selected disabled value="">Pilihan Kota</option>
+					</select>
                   <div class="validation"></div>
                 </div>
 							<div class="form-group">
@@ -144,12 +148,18 @@ $menu_item_second = "add_home_service";
 
         			<div class="form-group">
 								<label for=""><h2>Data CSO</h2></label><br/>
-          				<label for="">Cabang</label>
-								  <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-                    <option selected disabled value="">Pilihan Cabang</option>
-                    @foreach($branches as $branch)
+                  				<label for="">Cabang</label>
+								<select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
+                                    <option selected disabled value="">Pilihan Cabang</option>
+                                    @foreach($branches as $branch)
+                                        @php
+                                            if(isset($autofill) && $branch['id'] == $autofill->submission->branch['id']){
+                                                echo "<option selected value=\"". $branch['id']."\">".$branch['code']." - ".$branch['name']."</option>";
+                                                continue;
+                                            }
+                                        @endphp
 										<option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-                    @endforeach
+                                    @endforeach
 					        </select>
 			            <div class="validation"></div>
 							</div>
@@ -563,7 +573,6 @@ function setMinAppointmentTime(e) {
             $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
             .done(function( result ) {
 				result = result['rajaongkir']['results'];
-				console.log(result);
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
@@ -574,6 +583,40 @@ function setMinAppointmentTime(e) {
             });
         });
     });
+
+    @if(isset($autofill))
+        $( "#city" ).html("");
+        $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+{{ $autofill['province'] }} )
+        .done(function( result ) {
+            result = result['rajaongkir']['results'];
+            var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+            if(result.length > 0){
+                $.each( result, function( key, value ) {
+                    if(value['type'] == "Kota"){
+                        let selected = "";
+                        if({{ $autofill['city'] }} == value['city_id']){
+                            selected = "selected";
+                        }
+                        arrCity += "<option "+selected+" value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
+                    }
+                });
+                $( "#city" ).append(arrCity);
+            }
+        });
+
+        $( "#subDistrict" ).html("");
+        $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+{{ $autofill['city'] }} )
+        .done(function( result ) {
+            result = result['rajaongkir']['results'];
+            var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+            if(result.length > 0){
+                $.each( result, function( key, value ) {
+                    arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
+                });
+                $( "#subDistrict" ).append(arrSubDistsrict);
+            }
+        });
+    @endif
 </script>
 <script>
   $(document).ready(function(){

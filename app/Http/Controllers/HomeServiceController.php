@@ -8,12 +8,14 @@ use App\Cso;
 use App\DeliveryOrder;
 use App\Exports\HomeServicesExport;
 use App\Exports\HomeServicesExportByDate;
+use App\Exports\HomeServicesCompareExport;
 use App\HistoryUpdate;
 use App\HomeService;
 use App\Http\Controllers\gCalendarController;
 use App\Order;
 use App\User;
 use App\Utils;
+use App\Reference;
 use DateTime;
 use Validator;
 use Carbon\Carbon;
@@ -22,21 +24,24 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\URL;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class HomeServiceController extends Controller
 {
     public function index()
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
         $categoryProducts = CategoryProduct::all();
         return view('homeservice', compact('branches', 'categoryProducts'));
     }
 
-    public function indexAdmin()
+    public function indexAdmin(Request $request)
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
+        if(isset($request->reference_id)){
+            $autofill = Reference::find($request->reference_id);
+            return view('admin.add_home_service', compact('branches', 'autofill'));
+        }
         return view('admin.add_home_service', compact('branches'));
     }
 
@@ -209,6 +214,7 @@ class HomeServiceController extends Controller
             ]
         )
         ->where("active", true)
+        ->orderBy("code", 'asc')
         ->get();
 
         // Inisialisasi variabel $csos dan diisi dengan data dari tabel "csos"
@@ -219,6 +225,7 @@ class HomeServiceController extends Controller
             ]
         )
         ->where("active", true)
+        ->orderBy("code", 'asc')
         ->get();
 
         // Inisialisasi variabel $arrBranches
@@ -917,13 +924,11 @@ class HomeServiceController extends Controller
         return response()->json($homeServices);
     }
 
-
     protected $gCalendarController;
     public function __construct(gCalendarController $gCalendarController)
     {
         $this->gCalendarController = $gCalendarController;
     }
-
 
     public function admin_addHomeService(Request $request){
         // dd($request->all());
@@ -1094,9 +1099,6 @@ class HomeServiceController extends Controller
         }
     }
 
-
-
-
     public function edit(Request $request)
     {
         if($request->has('id')){
@@ -1136,8 +1138,8 @@ class HomeServiceController extends Controller
                 }
 
                 $imgNya = $request->file('cash_image');
-                $fileName = str_replace([' ', ':'], '', 
-                    Carbon::now()->toDateTimeString()) . "_cashimage." . 
+                $fileName = str_replace([' ', ':'], '',
+                    Carbon::now()->toDateTimeString()) . "_cashimage." .
                     $imgNya->getClientOriginalExtension();
 
                 //compressed img
@@ -1317,6 +1319,20 @@ class HomeServiceController extends Controller
             $inputDate = $request->inputDate;
         }
         return Excel::download(new HomeServicesExportByDate($city, $branch, $cso, $search, array($startDate, $endDate), $inputDate), 'Home Service By Date.xlsx');
+    }
+    public function export_to_xls_compare(Request $request)
+    {
+        $startDate = null;
+        $endDate = null;
+
+        if($request->has('filter_startDate')&&$request->has('filter_endDate')){
+            $startDate = $request->filter_startDate;
+            $endDate = $request->filter_endDate;
+            $endDate = new \DateTime($endDate);
+            $endDate = $endDate->modify('+1 day')->format('Y-m-d');
+        }
+
+        return Excel::download(new HomeServicesCompareExport(array($startDate, $endDate)), 'Home Service Comparison By Date.xlsx');
     }
     public function delete(Request $request) {
         $homeService = HomeService::find($request->id);

@@ -226,6 +226,9 @@ class ReferenceController extends Controller
      */
     public function update(Request $request)
     {
+        if(isset($request->submission_id)){
+            $request['id'] = $request->submission_id;
+        }
         if (!empty($request->id)) {
             $user = Auth::user();
 
@@ -295,15 +298,16 @@ class ReferenceController extends Controller
             }
 
             DB::commit();
+            return redirect($request->url)->with("success", "Data referensi berhasil dimasukkan.");
 
-            return response()->json([
-                "result" => 1,
-                "data" => $reference,
-                "dataSouvenir" => $referenceSouvenir,
-                "province" => $city->province,
-                "city" => $city->city,
-                "souvenir" => $souvenir->name,
-            ]);
+            // return response()->json([
+            //     "result" => 1,
+            //     "data" => $reference,
+            //     "dataSouvenir" => $referenceSouvenir,
+            //     "province" => $city->province,
+            //     "city" => $city->city,
+            //     "souvenir" => $souvenir->name,
+            // ]);
         } catch (Exception $e) {
             DB::rollback();
 

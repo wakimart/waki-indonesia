@@ -366,10 +366,9 @@ $menu_item_second = "add_submission_takeaway";
                             <div class="form-group">
                                 <button id="addDeliveryOrder"
                                     type="submit"
-                                    class="btn btn-gradient-primary mr-2">
+                                    class="btn btn-gradient-primary">
                                     Save
                                 </button>
-                                <button class="btn btn-light">Cancel</button>
                             </div>
                         </form>
 

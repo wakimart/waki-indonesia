@@ -146,13 +146,21 @@ class SubmissionController extends Controller
             });
         }
 
+        if (!empty($request->filter_branch)) {
+            $submissions = $submissions->where("branch_id", $request->filter_branch);
+        }
+
         if (!empty($request->filter_cso)) {
             $submissions = $submissions->where("cso_id", $request->filter_cso);
         }
 
         $csos = Cso::select("id", "code", "name")
             ->where("active", true)
-            ->orderBy("id")
+            ->orderBy("code", 'asc')
+            ->get();
+        $branches = Branch::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code", 'asc')
             ->get();
         $submissions = $submissions->orderBy('id', "desc")->paginate(10);
 
@@ -161,6 +169,7 @@ class SubmissionController extends Controller
             compact(
                 "submissions",
                 "csos",
+                "branches",
             )
         )
         ->with("i", (request()->input("page", 1) - 1) * 10 + 1);
@@ -173,7 +182,7 @@ class SubmissionController extends Controller
      */
     public function createMGM(): \Illuminate\View\View
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         $promos = Promo::all();
 
@@ -189,7 +198,7 @@ class SubmissionController extends Controller
 
     public function createReference(): \Illuminate\View\View
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         $promos = Promo::all();
         $souvenirs = Souvenir::select("id", "name")
@@ -213,7 +222,7 @@ class SubmissionController extends Controller
 
     public function createTakeaway(): \Illuminate\View\View
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         $promos = Promo::all();
 
@@ -356,7 +365,6 @@ class SubmissionController extends Controller
                 $submissionImage->save();
             }
 
-
             $dataCount = count($data["name_ref"]);
             for ($i = 0; $i < $dataCount; $i++) {
                 if (!empty($data["name_ref"][$i])) {
@@ -405,7 +413,6 @@ class SubmissionController extends Controller
             $request = new \Illuminate\Http\Request();
             $request->replace(['id' => $submission->id, 'type' => 'referensi']);
             return $this->show($request);
-
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -520,7 +527,7 @@ class SubmissionController extends Controller
                 "historySubmission",
                 "promos",
                 "souvenirs",
-                "prizes"
+                "prizes",
             )
         );
     }
@@ -539,7 +546,7 @@ class SubmissionController extends Controller
                 $submission = $this->querySubmissionTakeaway($request->id);
             }
 
-            $branches = Branch::where("active", true)->get();
+            $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
             $promos = Promo::all();
 
             return view(

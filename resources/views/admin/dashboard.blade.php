@@ -1,17 +1,6 @@
 @extends('admin.layouts.template')
 
 @section('content')
-@if (Auth::user()->roles[0]['slug'] != 'head-admin')
-<div class="main-panel">
-    <div class="content-wrapper">
-        <div class="page-header">
-            <h3 class="page-title">
-                Welcome, {{ Auth::user()->name }}
-            </h3>
-        </div>
-    </div>
-</div>
-@endif
 @can('show-dashboard')
 <div class="main-panel">
     <div class="content-wrapper">
@@ -80,6 +69,93 @@
                     <div class="card-body">
                         <div class="clearfix">
                             <h4 class="card-title float-left">
+                                New Reference to Review (total : {{ sizeof($references) }})
+                            </h4>
+                        </div>
+                        {{-- <canvas id="homeservice-chart" class="mt-4"></canvas> --}}
+                        <div class="table-responsive"
+                            style="border: 1px solid #ebedf2;">
+                            <table class="table table-bordered">
+                                <thead style="text-align: center; background-color: aliceblue;">
+                                    <tr>
+                                        <td rowspan="2">Submission Code</td>
+                                        <td colspan="4">Reference Data</td>
+                                        <td rowspan="2">View</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>Phone</td>
+                                        <td>Link HS</td>
+                                        <td>Order</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($references as $ref)
+                                        @if($ref->reference['active'] == true && $ref->reference->submission['active'] == true )
+                                            <tr>
+                                                <td>{{ $ref->reference->submission['code'] }}</td>
+                                                <td>{{ $ref->reference['name'] }}</td>
+                                                <td>{{ $ref->reference['phone'] }}</td>
+
+                                                @php
+                                                    if (!empty($ref->link_hs)) {
+                                                        $i = 1;
+                                                        $link_hs = json_decode(
+                                                            $ref->link_hs,
+                                                            JSON_THROW_ON_ERROR
+                                                        );
+                                                    }
+                                                @endphp
+                                                <td>
+                                                    @foreach ($link_hs as $value)
+                                                        @if (is_numeric($value))
+                                                            <?php
+                                                            $hs = App\HomeService::select("code")->where("id", $value)->first();
+                                                            ?>
+                                                            <a href="{{ route("homeServices_success", ["code" => $hs->code]) }}"
+                                                                target="_blank">
+                                                                <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ $value }}"
+                                                                target="_blank">
+                                                                <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: red;"></i>
+                                                            </a>
+                                                        @endif
+                                                        <?php $i++; ?>
+                                                    @endforeach
+                                                </td>
+
+                                                <td>
+                                                    @if($ref['order_id'] != null)
+                                                        <a href="{{ route('detail_order') }}?code={{ $ref->order['code'] }}" target="_blank">
+                                                            {{ $ref->order['code'] }}
+                                                        </a>
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                                <td style="text-align: center;">
+                                                    <a href="{{ route("detail_submission_form", ["id" => $ref->reference->submission['id'], "type" => 'referensi']) }}">
+                                                        <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix">
+                            <h4 class="card-title float-left">
                                 Home Service - <?php echo date("F Y"); ?>
                             </h4>
                         </div>
@@ -87,6 +163,16 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+@else
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">
+                Welcome, {{ Auth::user()->name }}
+            </h3>
         </div>
     </div>
 </div>

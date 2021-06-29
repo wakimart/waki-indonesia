@@ -537,7 +537,7 @@
 
                   <div class="row justify-content-center align-self-center">
                     <div>
-                      <a href="https://www.facebook.com/WAKiShopMalaysia/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
+                      <a href="https://wakishop.asia/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
                     </div>
                   </div>
                 </div>
@@ -552,7 +552,7 @@
 
                   <div class="row justify-content-center align-self-center">
                     <div>
-                      <a href="https://www.facebook.com/wakimalaysiandimsum/" class="r-link link text-underlined" target="_blank" rel="noopener noreferrer">Lihat</a>
+                      <a href="https://wakimalaysiandimsum.com/" class="r-link link text-underlined" target="_blank" rel="noopener noreferrer">Lihat</a>
                     </div>
                   </div>
                 </div>
@@ -567,7 +567,7 @@
 
                   <div class="row justify-content-center align-self-center">
                     <div>
-                      <a href="https://www.facebook.com/waki3Dprintingindustries/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
+                      <a href="https://waki3dprinting.com/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
                     </div>
                   </div>
                 </div>

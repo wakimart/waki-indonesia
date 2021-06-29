@@ -21,7 +21,7 @@ class CsoController extends Controller
      */
     public function index(Request $request)
     {
-        $branches = Branch::Where('active', true)->get();
+        $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
         $csos = Cso::paginate(10);
         $countCso = Cso::count();
     
@@ -31,8 +31,8 @@ class CsoController extends Controller
     public function admin_ListCso(Request $request)
     {
         $url = $request->all();
-        $branches = Branch::Where('active', true)->get();
-        $csos = Cso::where('csos.active', true);
+        $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
+        $csos = Cso::where('csos.active', true)->orderBy('code', 'asc')->get();
         $countCso = Cso::count();
 
         if($request->has('filter_branch')){
@@ -52,7 +52,7 @@ class CsoController extends Controller
      */
     public function create()
     {
-        $branches = Branch::all();
+        $branches = Branch::all()->sortBy("code");
         $banks = Order::$Banks;
         return view('admin.add_cso', compact('branches', 'banks'));
     }
@@ -137,7 +137,7 @@ class CsoController extends Controller
     {
         if($request->has('id')){
             $csos = Cso::find($request->get('id'));
-            $branches = Branch::all();
+            $branches = Branch::all()->sortBy("code");
             $banks = Order::$Banks;
             return view('admin.update_cso', compact('branches', 'banks', 'csos'));
         }else{
