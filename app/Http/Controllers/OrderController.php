@@ -371,8 +371,8 @@ class OrderController extends Controller
                 for ($i = 0; $i < $request->total_images; $i++) {
                     if ($request->hasFile('images' . $i)) {
                         if (array_key_exists($i, $arr_image_before)) {
-                            if (File::exists("sources/order/" . $codePath . "/" . $arr_image_before[$i])) {
-                                File::delete("sources/order/" . $codePath . "/" . $arr_image_before[$i]);
+                            if (File::exists("sources/order/" . $arr_image_before[$i])) {
+                                File::delete("sources/order/" . $arr_image_before[$i]);
                             }
                         }
 
@@ -431,6 +431,9 @@ class OrderController extends Controller
             $orders['image'] = $namaGambar;
             $orders->save();
 
+            $orders['image'] = json_encode($orders['image']);
+            $dataBefore['image'] = json_encode($dataBefore['image']);
+
             $user = Auth::user();
             $historyUpdate['type_menu'] = "Order";
             $historyUpdate['method'] = "Update";
@@ -439,10 +442,10 @@ class OrderController extends Controller
                 'createdAt' => date("Y-m-d h:i:s"),
                 'dataChange'=> array_diff(json_decode($orders, true), json_decode($dataBefore,true))
             ]);
+
             $historyUpdate['user_id'] = $user['id'];
             $historyUpdate['menu_id'] = $orders->id;
             $createData = HistoryUpdate::create($historyUpdate);
-
             DB::commit();
             return response()->json(['success' => 'Berhasil!']);
         } catch (\Exception $ex) {
