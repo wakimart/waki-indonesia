@@ -30,14 +30,14 @@ class HomeServiceController extends Controller
 {
     public function index()
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
         $categoryProducts = CategoryProduct::all();
         return view('homeservice', compact('branches', 'categoryProducts'));
     }
 
     public function indexAdmin(Request $request)
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
         if(isset($request->reference_id)){
             $autofill = Reference::find($request->reference_id);
             return view('admin.add_home_service', compact('branches', 'autofill'));
@@ -146,63 +146,6 @@ class HomeServiceController extends Controller
         return view('homeservicesuccess', compact('homeService', $categoryProducts));
     }
 
-    /* public function admin_ListHomeService(Request $request){
-        $branches = Branch::Where('active', true)->get();
-        $csos = Cso::where('active', true)->get();
-        $awalBulan = Carbon::now()->startOfMonth()->subMonth(1);
-        $akhirBulan = Carbon::now()->startOfMonth()->addMonth(2); // 5
-        // $awalBulan = "2020-10-01 00:00:00";
-        // $akhirBulan = "2021-01-01 00:00:00";
-        $arrbranches = [];
-
-        //khususu head-manager, head-admin, admin
-        $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-                     ->where('active', true);
-
-        //khusus akun CSO
-        if(Auth::user()->roles[0]['slug'] == 'cso'){
-            // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))->where('cso_id', Auth::user()->cso['id'])->where('active', true);
-            $homeServices = $homeServices->where('home_services.cso_id', Auth::user()->cso['id']);
-        }
-
-        //khusus akun branch dan area-manager
-        if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
-            foreach (Auth::user()->listBranches() as $value) {
-                array_push($arrbranches, $value['id']);
-            }
-            // $homeServices = HomeService::whereBetween('appointment', array($awalBulan, $akhirBulan))
-            //          ->whereIn('branch_id', $arrbranches)->where('active', true);
-            $homeServices = $homeServices->whereIn('home_services.branch_id', $arrbranches);
-        }
-
-        //kalau ada filter
-        if($request->has('filter_province')){
-            $homeServices = $homeServices->where('home_services.province', $request->filter_province);
-        }
-        if($request->has('filter_city')){
-            $homeServices = $homeServices->where('home_services.city', $request->filter_city);
-        }
-        if($request->has('filter_district')){
-            $homeServices = $homeServices->where('home_services.distric', $request->filter_district);
-        }
-        if($request->has('filter_search')){
-            $homeServices = $homeServices->where('home_services.name', 'like', '%'.$request->filter_search.'%')
-            ->orWhere('home_services.phone', 'like', '%'.$request->filter_search.'%')
-            ->orWhere('home_services.code', 'like', '%'.$request->filter_search.'%');
-        }
-        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
-            $homeServices = $homeServices->where('home_services.branch_id', $request->filter_branch);
-        }
-        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
-            $cso_id = Cso::where('code', $request->filter_cso)->get();
-            $homeServices = $homeServices->where('home_services.cso_id', $cso_id[0]['id']);
-        }
-
-        $homeServices = $homeServices->get();
-
-        return view('admin.list_homeservice', compact('homeServices', 'awalBulan', 'akhirBulan', 'branches', 'csos'));
-    } */
-
     public function admin_ListHomeService(Request $request)
     {
         // Inisialisasi variabel $branches dan diisi dengan data dari tabel "branches"
@@ -214,6 +157,7 @@ class HomeServiceController extends Controller
             ]
         )
         ->where("active", true)
+        ->orderBy("code", 'asc')
         ->get();
 
         // Inisialisasi variabel $csos dan diisi dengan data dari tabel "csos"
@@ -224,6 +168,7 @@ class HomeServiceController extends Controller
             ]
         )
         ->where("active", true)
+        ->orderBy("code", 'asc')
         ->get();
 
         // Inisialisasi variabel $arrBranches
@@ -322,14 +267,11 @@ class HomeServiceController extends Controller
         // Inisialisasi tanggal akhir bulan dari $startDate
         $end = date("Y-m-t 23:59:59", strtotime($startdate));
 
-        $currentMonthDataCount = DB::table("home_services")
-        ->select(
-            [
+        $currentMonthDataCount = HomeService::select(
                 DB::raw("DATE(appointment) AS appointment_date"),
                 DB::raw("COUNT(id) AS data_count"),
-            ]
-        )
-        ->where("active", 1);
+            )
+            ->where("active", 1);
 
         if (!empty($filterProvince) && !$isAdminManagement) {
             $currentMonthDataCount = $currentMonthDataCount->where(
@@ -370,19 +312,23 @@ class HomeServiceController extends Controller
 
         if (!empty($filterSearch) && !$isAdminManagement) {
             $currentMonthDataCount = $currentMonthDataCount->where(
-                "name",
-                "like",
-                "%" . $filterSearch . "%"
-            )
-            ->orWhere(
-                "phone",
-                "like",
-                "%" . $filterSearch . "%"
-            )
-            ->orWhere(
-                "code",
-                "like",
-                "%" . $filterSearch . "%"
+                function ($query) use ($filterSearch) {
+                    $query->where(
+                        "name",
+                        "like",
+                        "%" . $filterSearch . "%"
+                    )
+                    ->orWhere(
+                        "phone",
+                        "like",
+                        "%" . $filterSearch . "%"
+                    )
+                    ->orWhere(
+                        "code",
+                        "like",
+                        "%" . $filterSearch . "%"
+                    );
+                }
             );
         }
 
@@ -683,19 +629,23 @@ class HomeServiceController extends Controller
 
         if (!empty($filterSearch) && !$isAdminManagement) {
             $currentDayData = $currentDayData->where(
-                "h.name",
-                "like",
-                "%" . $filterSearch . "%"
-            )
-            ->orWhere(
-                "h.phone",
-                "like",
-                "%" . $filterSearch . "%"
-            )
-            ->orWhere(
-                "h.code",
-                "like",
-                "%" . $filterSearch . "%"
+                function ($query) use ($filterSearch) {
+                    $query->where(
+                        "h.name",
+                        "like",
+                        "%" . $filterSearch . "%"
+                    )
+                    ->orWhere(
+                        "h.phone",
+                        "like",
+                        "%" . $filterSearch . "%"
+                    )
+                    ->orWhere(
+                        "h.code",
+                        "like",
+                        "%" . $filterSearch . "%"
+                    );
+                }
             );
         }
 

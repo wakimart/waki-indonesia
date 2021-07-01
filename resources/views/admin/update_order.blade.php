@@ -187,9 +187,12 @@ $menu_item_page = "order";
 							<div class="form-group">
 				                <label for="">Know From</label>
 								<select class="form-control" id="know_from" name="know_from" data-msg="Mohon Pilih Kecamatan" required>
-									<option selected disabled value="">{{$orders['know_from']}}</option>
 									@foreach($from_know as $key=>$value)
-										<option value="{{ $value }}">{{ $value }}</option>
+										@if($value == $orders['know_from'])
+											<option value="{{ $value }}" selected="true">{{ $value }}</option>
+										@else
+											<option value="{{ $value }}">{{ $value }}</option>
+										@endif
 									@endforeach
 								</select>
 								<div class="validation"></div>
@@ -225,6 +228,10 @@ $menu_item_page = "order";
                                 $total_product = -1;
 		                        ?>
 
+		                        @for($p = 0; $p < count($arr_price); $p++)
+		                        	<input type="hidden" id="promoprice_{{$p}}" value="{{$arr_price[$p]}}">
+		                        @endfor
+
 			                	@foreach ($ProductPromos as $ProductPromo)
 			                		<?php
                                     $total_product++;
@@ -242,11 +249,12 @@ $menu_item_page = "order";
                                                     onchange="selectOther(this)"
                                                     data-sequence="{{ $total_product }}"
                                                     required>
-                                                    <option selected disabled value="">
-                                                        Choose Product
+                                                    <option disabled value="">
+                                                        Choose Product 
                                                     </option>
                                                     <?php
                                                     $isPromoIdNumeric = false;
+                                                    $arr_price = [];
                                                     if (is_numeric($ProductPromo['id'])) {
                                                         $isPromoIdNumeric = true;
                                                     }
@@ -257,7 +265,7 @@ $menu_item_page = "order";
                                                             <?php
                                                             if (
                                                                 $isPromoIdNumeric
-                                                                && $promo["id"] === $ProductPromo["id"]
+                                                                && $promo["id"] == $ProductPromo["id"]
                                                             ) {
                                                                 echo "selected";
                                                             }
@@ -284,8 +292,11 @@ $menu_item_page = "order";
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <select class="form-control"
+                                                	id="qty_{{ $total_product }}" 
                                                     name="qty_{{ $total_product }}"
                                                     data-msg="Mohon Pilih Jumlah"
+                                                    onchange="selectQty(this)"
+                                                    data-sequence="{{ $total_product }}"
                                                     required>
                                                     <option selected value="1">
                                                         1
@@ -343,8 +354,18 @@ $menu_item_page = "order";
                                                 value="{{ $ProductPromo['id'] }}" />
                                             <div class="validation"></div>
                                         </div>
+                                    @else
+                                    	<div class="form-group d-none" id="product_other_container_{{ $total_product }}">
+		                                    <input type="text"
+		                                        class="form-control"
+		                                        id="product_other_{{ $total_product }}"
+		                                        name="product_other_{{ $total_product }}"
+		                                        placeholder="Product Name"
+		                                        data-msg="Please fill in the product" />
+		                                    <div class="validation"></div>
+		                                </div>
                                     @endif
-
+                                    
 			                    @endforeach
 			                    <div id="tambahan_product"></div>
 			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
@@ -481,6 +502,40 @@ $menu_item_page = "order";
 			                    <input type="text" class="form-control" name="customer_type" id="customer_type" value="{{$orders['customer_type']}}" required data-msg="Mohon Isi Tipe Customer" />
 			                    <div class="validation"></div>
 			                </div>
+			                
+			                <div class="form-group">
+                                <div class="col-xs-12">
+                                    <label>Bukti Pembayaran</label>
+                                </div>
+                                @for ($i = 0; $i < 3; $i++)
+                                    <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                        style="padding: 15px; float: left;">
+                                        <label>Image {{ $i + 1 }}</label>
+                                        @if (!empty($orders['image'][$i]))
+                                            <div class="imagePreview"
+                                                style="background-image: url({{ asset("sources/order/" . $orders['image'][$i]) }});"></div>
+                                        @else
+                                            <div class="imagePreview"
+                                                style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});"></div>
+                                        @endif
+                                        <label class="file-upload-browse btn btn-gradient-primary"
+                                            style="margin-top: 15px;">
+                                            Upload
+                                            <input name="arr_image[]"
+                                                data-name="arr_image"
+                                                id="gambars-{{ $i }}"
+                                                type="file"
+                                                accept=".jpg,.jpeg,.png"
+                                                class="uploadFile img"
+                                                value="Upload Photo"
+                                                style="width: 0px; height: 0px; overflow: hidden;" />
+                                        </label>
+                                        <i class="mdi mdi-window-close del"></i>
+                                    </div>
+                                @endfor
+                            </div>
+			                
+
 			                <div class="form-group">
 			                	<label for="">Description</label>
 			                    <textarea class="form-control" name="description" rows="5" data-msg="Mohon Isi Keterangan" value="{{$orders['description']}}">{{$orders['description']}}</textarea>
@@ -490,8 +545,9 @@ $menu_item_page = "order";
 	              			<div id="errormessage"></div>
 
 	              			<div class="form-group">
+	              				<input type="hidden" id="fixed_payment" value="{{$orders['total_payment']}}">
 	              				<input type="hidden" name="idOrder" value="{{$orders['id']}}">
-	              				<input type="hidden" id="lastTotalProduct" value="{{$total_product}}">
+	              				<input type="hidden" id="lastTotalProduct" value="{{$totalProduct}}">
 	              				<button id="updateOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
 	              				<button class="btn btn-light">Cancel</button>
 	              			</div>
@@ -545,17 +601,33 @@ document.addEventListener("DOMContentLoaded", function () {
 }, false);
 </script>
 <script type="application/javascript">
+	const deleted_img = [];
 	$(document).ready(function() {
         var frmUpdate;
 
 	    $("#actionUpdate").on("submit", function (e) {
 	        e.preventDefault();
+
 	        frmUpdate = _("actionUpdate");
 	        frmUpdate = new FormData(document.getElementById("actionUpdate"));
 	        frmUpdate.enctype = "multipart/form-data";
-	        var URLNya = $("#actionUpdate").attr('action');
-	        console.log(URLNya);
 
+	        for (let i = 0; i < 3; i++) {
+                frmUpdate.append('images' + i, $("#gambars-" + i)[0].files[0]);
+
+                if ($("#gambars-" + i)[0].files[0] != null) {
+                    for (let j = 0; j < deleted_img.length; j++) {
+                        if (deleted_img[j] == i) {
+                            deleted_img.splice(j, 1);
+                        }
+                    }
+                }
+            }
+
+            frmUpdate.append('total_images', 3);
+            frmUpdate.append('dlt_img', deleted_img);
+
+	        var URLNya = $("#actionUpdate").attr('action');
 	        var ajax = new XMLHttpRequest();
 	        ajax.upload.addEventListener("progress", progressHandler, false);
 	        ajax.addEventListener("load", completeHandler, false);
@@ -574,13 +646,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	        console.log(hasil);
 
 	        for (var key of frmUpdate.keys()) {
-	            $("#actionUpdate").find("input[name="+key+"]").removeClass("is-invalid");
-	            $("#actionUpdate").find("select[name="+key+"]").removeClass("is-invalid");
-	            $("#actionUpdate").find("textarea[name="+key+"]").removeClass("is-invalid");
+	            $("#actionUpdate").find("input[name="+key.name+"]").removeClass("is-invalid");
+	            $("#actionUpdate").find("select[name="+key.name+"]").removeClass("is-invalid");
+	            $("#actionUpdate").find("textarea[name="+key.name+"]").removeClass("is-invalid");
 
-	            $("#actionUpdate").find("input[name="+key+"]").next().find("strong").text("");
-	            $("#actionUpdate").find("select[name="+key+"]").next().find("strong").text("");
-	            $("#actionUpdate").find("textarea[name="+key+"]").next().find("strong").text("");
+	            $("#actionUpdate").find("input[name="+key.name+"]").next().find("strong").text("");
+	            $("#actionUpdate").find("select[name="+key.name+"]").next().find("strong").text("");
+	            $("#actionUpdate").find("textarea[name="+key.name+"]").next().find("strong").text("");
 	        }
 
 	        if(hasil['errors'] != null){
@@ -602,7 +674,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	        }
 	        else{
 	            alert("Input Success !!!");
-	            window.location.reload()
+	            //window.location.reload()
 	        }
 
 	        document.getElementById("updateOrder").innerHTML = "SAVE";
@@ -654,6 +726,40 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
         });
+
+        $(document).on("click", "i.del", function () {
+	        $(this).closest(".imgUp").find('.imagePreview').css("background-image", "");
+	        $(this).closest(".imgUp").find('input[type=text]').removeAttr("required");
+	        $(this).closest(".imgUp").find('.btn').find('.img').val("");
+	        $(this).closest(".imgUp").find('.form-control').val("");
+	        deleted_img.push($(this).closest(".imgUp").find(".img").attr('id').substring(8));
+	    });
+
+	    $(function () {
+	        $(document).on("change", ".uploadFile", function () {
+	            const uploadFile = $(this);
+	            const files = this.files ? this.files : [];
+
+	            // no file selected, or no FileReader support
+	            if (!files.length || !window.FileReader) {
+	                return;
+	            }
+
+	            // only image file
+	            if (/^image/.test(files[0].type)) {
+	                // instance of the FileReader
+	                const reader = new FileReader();
+	                // read the local file
+	                reader.readAsDataURL(files[0]);
+
+	                // set image data as background of div
+	                reader.onloadend = function () {
+	                    uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+	                };
+	            }
+
+	        });
+	    });
 	});
 </script>
 <script type="application/javascript">
@@ -662,12 +768,27 @@ document.addEventListener("DOMContentLoaded", function () {
     var count = 0;
     var arrBooleanCso = ['false', 'false', 'false'];
 
-    $(document).ready(function () {
-        for (let i = 0; i <= total_product; i++) {
+    var temp_total_price = parseInt($('#fixed_payment').val()); //buat temporary price lama
+    var total_price = parseInt($('#fixed_payment').val());
+    var arr_index_temp = [];
+
+    $(document).ready(function () {  
+    	console.log(total_price);
+        for (let i = 0; i < total_product; i++) {
             $("#product_" + i).select2({
                 theme: "bootstrap4",
             });
+
+            //isi array_product dgn product lama
+            var t_index = i.toString();
+	   		var t_id_promo = $('#product_'+i).val();
+	   		var t_price = parseInt($('#promoprice_'+i).val());
+	   		var t_qty = $('#qty_'+i).val();
+
+	   		arr_index_temp.push([t_index, t_id_promo, t_price, t_qty]);
         }
+
+        console.log(arr_index_temp);
 
         $(".cso").on("input", function () {
             var txtCso = $(this).val();
@@ -756,8 +877,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const newSelectQty = document.createElement("select");
             newSelectQty.className = "form-control";
+            newSelectQty.id = `qty_${total_product}`;
             newSelectQty.name = `qty_${total_product}`;
             newSelectQty.innerHTML = quantityOption;
+            newSelectQty.setAttribute("onchange", "selectQty(this)");
+            newSelectQty.setAttribute("data-sequence", total_product);
 
             const newDivRemove = document.createElement("div");
             newDivRemove.className = "col-md-12";
@@ -802,6 +926,20 @@ document.addEventListener("DOMContentLoaded", function () {
             $('#product_'+$(this).val()).remove();
             $('#qty_'+$(this).val()).remove();
             $(this).remove();
+
+            //kurangi total price
+            for (var i = 0; i < arr_index_temp.length; i++) {
+                if(arr_index_temp[i][0] == $(this).val()){
+                    var min_price = parseInt(arr_index_temp[i][2]);
+                    var min_qty = parseInt(arr_index_temp[i][3]);
+
+                    total_price = total_price - (min_price * min_qty);
+                    $("#total_payment").val(total_price);
+                }
+            }
+
+            //remove dari array
+            arr_index_temp.splice($(this).val(), 1);
         });
 
         $("#cash_upgarde").change( function(e){
@@ -834,7 +972,16 @@ document.addEventListener("DOMContentLoaded", function () {
             $("#container-Cabang").show();
         });
     });
-
+	
+	function checkProductArray(array, index){
+        for (var i = 0; i < array.length; i++) {
+            if(array[i][0] === index){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     function selectOther(e) {
         const sequence = e.dataset.sequence;
 
@@ -844,7 +991,78 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (e.value !== "other") {
             document.getElementById("product_other_container_" + sequence).classList.add("d-none");
             document.getElementById("product_other_" + sequence).removeAttribute("required");
+
+            //auto fill price and qty
+	        var promo_id = e.value;
+	        var get_qty = $('#qty_'+sequence).val();
+	        $.get( '{{ route("fetchDetailPromo", ['promo' => ""]) }}/'+promo_id )
+	        .done(function (result){
+	            if(result.length > 0){
+	                var data = JSON.parse(result);
+	                var price = parseInt(data['price']);
+	                
+	                if(arr_index_temp.length == 0){
+	                    arr_index_temp.push([sequence, promo_id, price, get_qty]);
+	                    total_price = total_price + (price * get_qty);
+	                }else{
+	                    if(checkProductArray(arr_index_temp, sequence) == true){
+	                        //kurangi total price dengan harga lama
+	                        var old_price = parseInt(arr_index_temp[sequence][2]);
+	                        var old_qty = parseInt(arr_index_temp[sequence][3]);
+	                        total_price = total_price - (old_price * old_qty);
+
+	                        //simpan promo id yg baru & harga
+	                        arr_index_temp[sequence][1] = promo_id;
+	                        arr_index_temp[sequence][2] = price;
+	                        arr_index_temp[sequence][3] = get_qty;
+
+	                        //update total price yg baru
+	                        total_price = total_price + (price * get_qty);
+	                    }else{
+	                        //kalau ga exist, push ke array
+	                        arr_index_temp.push([sequence, promo_id, price, get_qty]);
+
+	                        //update total price
+	                        total_price = total_price + (price * get_qty);
+	                    }
+	                }
+	                console.log(arr_index_temp);
+	                console.log(total_price);
+
+	                $("#total_payment").val(total_price);
+	            }
+	        });
         }
+    }
+
+    function selectQty(e){
+        const sequence = e.dataset.sequence; //index select nya
+
+        var get_qty = $('#qty_'+sequence).val();
+
+        if(checkProductArray(arr_index_temp, sequence) == true){
+            //kurangi price dengan harga lama
+            var old_price = parseInt(arr_index_temp[sequence][2]);
+            var old_qty = parseInt(arr_index_temp[sequence][3]);
+            total_price = total_price - (old_price * old_qty);
+
+            //simpan qty yg baru
+            arr_index_temp[sequence][3] = get_qty;
+
+            //update total price
+            total_price = total_price + (old_price * get_qty);
+            console.log(total_price);
+            $("#total_payment").val(total_price);
+        }
+
+        console.log(arr_index_temp);
+
+    }
+</script>
+<script type="application/javascript" src="{{ asset('js/tags-input.js') }}"></script>
+<script type="application/javascript">
+    for (let input of document.querySelectorAll('#tags')) {
+        tagsInput(input);
     }
 </script>
 @endsection

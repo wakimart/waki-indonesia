@@ -161,11 +161,11 @@ class SubmissionController extends Controller
 
         $csos = Cso::select("id", "code", "name")
             ->where("active", true)
-            ->orderBy("id")
+            ->orderBy("code", 'asc')
             ->get();
         $branches = Branch::select("id", "code", "name")
             ->where("active", true)
-            ->orderBy("id")
+            ->orderBy("code", 'asc')
             ->get();
         $submissions = $submissions->orderBy('id', "desc")->paginate(10);
 
@@ -188,7 +188,7 @@ class SubmissionController extends Controller
      */
     public function createMGM(): \Illuminate\View\View
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         $promos = Promo::all();
 
@@ -204,7 +204,7 @@ class SubmissionController extends Controller
 
     public function createReference(): \Illuminate\View\View
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         $promos = Promo::all();
         $souvenirs = Souvenir::select("id", "name")
@@ -228,7 +228,7 @@ class SubmissionController extends Controller
 
     public function createTakeaway(): \Illuminate\View\View
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         $promos = Promo::all();
 
@@ -552,7 +552,7 @@ class SubmissionController extends Controller
                 $submission = $this->querySubmissionTakeaway($request->id);
             }
 
-            $branches = Branch::where("active", true)->get();
+            $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
             $promos = Promo::all();
 
             return view(

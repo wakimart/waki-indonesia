@@ -22,7 +22,7 @@ class DeliveryOrderController extends Controller
     public function index()
     {
     	$promos = DeliveryOrder::$Promo;
-    	$branches = Branch::all();
+    	$branches = Branch::all()->sortBy("code");
         $csos = Cso::all();
         $categoryProducts = CategoryProduct::all();
         return view('deliveryorder', compact('promos', 'branches', 'csos', 'categoryProducts'));
@@ -82,7 +82,7 @@ class DeliveryOrderController extends Controller
 
     public function admin_AddDeliveryOrder(){
         $promos = DeliveryOrder::$Promo;
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         return view('admin.add_deliveryorder', compact('promos', 'branches', 'csos'));
     }
@@ -150,7 +150,7 @@ class DeliveryOrderController extends Controller
 
     public function admin_ListDeliveryOrder(Request $request){
         $url = $request->all();
-        $branches = Branch::Where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
 
         //khususu head-manager, head-admin, admin
         $deliveryOrders = DeliveryOrder::where([['delivery_orders.active', true], ['delivery_orders.type_register', 'Normal Register']]);
@@ -211,7 +211,7 @@ class DeliveryOrderController extends Controller
         if($request->has('id')){
             $deliveryOrders = DeliveryOrder::find($request->get('id'));
             $promos = DeliveryOrder::$Promo;
-            $branches = Branch::all();
+            $branches = Branch::all()->sortBy("code");
             $csos = Cso::all();
 
             return view('admin.update_deliveryorder', compact('deliveryOrders', 'promos', 'branches', 'csos'));
