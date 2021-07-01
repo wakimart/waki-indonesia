@@ -61,7 +61,7 @@
           <table class="col-md-12">
               <tr>
                   <td>
-                      <p class="pInTable">&emsp;Terima kasih kepada Bapak/Ibu yang terhormat atas dukungan dan dorongan yang telah 
+                      <p class="pInTable">Terima kasih kepada Bapak/Ibu yang terhormat atas dukungan dan dorongan yang telah 
                       diberikan kepada WAKi Indonesia agar dapat berkembang dan menjadi lebih baik di masa mendatang.</p>
                         @if($homeService->type_homeservices == "Home service")
                           <p class="pInTable">Tujuan Home Service adalah untuk merapatkan hubungan antara
@@ -130,26 +130,27 @@
                     <td>{{ $homeService['district'][0]['province'] }}, {{ $homeService['district'][0]['kota_kab'] }}, {{ $homeService['district'][0]['subdistrict_name'] }}</td>
                 </tr>
             </table>
-            <table class="col-md-12">
-                <thead>
-                    <td colspan="2">Tanggal dan Waktu Janjian </td>
-                </thead>
+            @foreach ($samephones as $key => $samephone)
+                <table class="col-md-12">
+                    <thead>
+                        <td colspan="2">Tanggal dan Waktu Janjian  {{$key + 1}}</td>
+                    </thead>
 
-                @php
-                    $dt = new DateTime($homeService['appointment']);
-                @endphp
+                    @php
+                        $dt = new DateTime($samephone['appointment']);
+                    @endphp
 
-                <tr>
-                    <td>Tanggal : </td>
-                    <td>{{ $dt->format('j/m/Y') }}</td>
-                </tr>
-                <tr>
-                    <td>Waktu : </td>
-                    <td>{{ $dt->format('H:i') }}</td>
-                </tr>
+                    <tr>
+                        <td>Tanggal : </td>
+                        <td>{{ $dt->format('j/m/Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td>Waktu : </td>
+                        <td>{{ $dt->format('H:i') }}</td>
+                    </tr>
 
-            </table>
-
+                </table>
+            @endforeach
             <table class="col-md-12">
                 <thead>
                     <td colspan="2">Kebijakan Home Service WAKi</td>

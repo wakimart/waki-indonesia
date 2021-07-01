@@ -141,9 +141,11 @@ class HomeServiceController extends Controller
 
     public function successRegister(Request $request){
         $homeService = HomeService::where('code', $request['code'])->first();
+        $samephones = HomeService::where('active', true)->where('phone', $homeService['phone'])->where('cash_description', null)->get();
+        // $hs = HomeService::whereNotNull('cash_description', $samephones['cash_description'])->get();
         $homeService['district'] = array($homeService->getDistrict());
         $categoryProducts = CategoryProduct::all();
-        return view('homeservicesuccess', compact('homeService', $categoryProducts));
+        return view('homeservicesuccess', compact('homeService', 'samephones', $categoryProducts));
     }
 
     public function admin_ListHomeService(Request $request)
