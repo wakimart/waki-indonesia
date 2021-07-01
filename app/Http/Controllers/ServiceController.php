@@ -278,8 +278,30 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
+    public function destroy(Request $request)
     {
-        //
+        if (!empty($request->id)) {
+            DB::beginTransaction();
+
+            try {
+                $services = Service::find($request->id);
+                $services->active = false;
+                $services->save();
+
+                DB::commit();
+
+                return redirect()
+                    ->route("list_service")
+                    ->with("success", "Data service berhasil dihapus.");
+            } catch (Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    "error" => $e,
+                ]);
+            }
+        }
+
+        return response()->json(["error" => "Data tidak ditemukan."]);
     }
 }

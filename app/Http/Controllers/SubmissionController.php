@@ -99,6 +99,7 @@ class SubmissionController extends Controller
      */
     public function index(Request $request)
     {
+        $url = $request->all();
         // Memasukkan klausa WHERE yang digunakan berkali-kali ke dalam array
         $whereArray = [];
         $whereArray[] = ["active", true];
@@ -137,7 +138,11 @@ class SubmissionController extends Controller
             $submissions = Submission::where($whereArray);
         }
 
-        if (!empty($request->filter_text)) {
+        if ($request->has('filter_type')) {
+            $submissions = $submissions->where("type", $request->filter_type);
+        }
+
+        if ($request->has('filter_text')) {
             $filter_text = $request->filter_text;
             $submissions = $submissions->where(function ($q) use ($filter_text){
                 $q->where('name', "like", "%" . $filter_text . "%")
@@ -146,11 +151,11 @@ class SubmissionController extends Controller
             });
         }
 
-        if (!empty($request->filter_branch)) {
+        if ($request->has('filter_branch')) {
             $submissions = $submissions->where("branch_id", $request->filter_branch);
         }
 
-        if (!empty($request->filter_cso)) {
+        if ($request->has('filter_cso')) {
             $submissions = $submissions->where("cso_id", $request->filter_cso);
         }
 
@@ -170,6 +175,7 @@ class SubmissionController extends Controller
                 "submissions",
                 "csos",
                 "branches",
+                "url",
             )
         )
         ->with("i", (request()->input("page", 1) - 1) * 10 + 1);

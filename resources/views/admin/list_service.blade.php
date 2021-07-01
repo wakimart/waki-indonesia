@@ -145,9 +145,13 @@
 		                            @endcan
 		                            @can('delete-service')
                       				<td style="text-align: center;">
-                      					<button value="" data-toggle="modal" data-target="#deleteDoModal" class="btn-delete" >
-                      						<i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
-                      					</button>
+                      					<a class="btn-delete"
+                                            data-toggle="modal"
+                                            href="#deleteDoModal"
+                                            onclick="submitDelete(this)"
+                                            data-id="<?php echo $service['id']; ?>">
+                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                        </a>
                       				</td>
                       				@endcan
 								</tr>
@@ -163,4 +167,47 @@
 
 	</div>
 </div>
+
+<div class="modal fade"
+    id="deleteDoModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 style="text-align:center;">
+                    Are you sure you want to delete this?
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <form id="frmDelete"
+                    method="POST"
+                    action="<?php echo route("delete_service"); ?>">
+                    @csrf
+                    <input type="hidden" name="id" id="id-delete" />
+                    <button type="submit" class="btn btn-gradient-danger mr-2">
+                        Yes
+                    </button>
+                </form>
+                <button class="btn btn-light">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+@section('script')
+<script>
+function submitDelete(e) {
+    document.getElementById("id-delete").value = e.dataset.id;
+}
+</script>
 @endsection
