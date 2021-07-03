@@ -37,7 +37,7 @@ class UserGeolocationController extends Controller
         //     . "/"
         //     . $userGeolocation->filename
         //     . ".json";
-        $path = storage_path() . "/geolocation/test/1/geolocation.json";
+        $path = storage_path() . "/geolocation/test/1/geolocation2.json";
         $json = json_decode(file_get_contents($path), true);
 
         return response()->json($json);
@@ -88,55 +88,5 @@ class UserGeolocationController extends Controller
                 "data" => $e->getMessage(),
             ], 500);
         }
-    }
-
-    public function filter($fileLocation, $userId, $date, $fileName)
-    {
-        $minAccuracy = 1;
-        $meterPerSecond = 5;
-        $lastTimeStamp = 0;
-        $lastLat = floatval(0);
-        $lastLng = floatval(0);
-        $variance = -1;
-        $json = json_decode(file_get_contents($fileLocation), true);
-        $result = [];
-
-        foreach ($json as $value) {
-            $accuracy = $value->accuracy;
-            if ($accuracy < $minAccuracy) {
-                $accuracy = $minAccuracy;
-            }
-
-            if ($variance < 0) {
-                $lastTimeStamp = $value->timestamp;
-                $lastLat = $value->lat;
-                $lastLng = $value->lng;
-                $variance = $accuracy * $accuracy;
-                $result[] = [
-                    "lat" => $value->lat,
-                    "lng" => $value->lng,
-                    "timestamp" => $value->timestamp,
-                ];
-            } else {
-                $timestamp2 = $value->timestamp - $lastTimeStamp;
-
-                if ($lastTimeStamp > 0) {
-                    $variance += $timestamp2 * $meterPerSecond * $meterPerSecond / 1000;
-                    $lastTimeStamp = $value->timestamp;
-                }
-
-                $k = $variance / ($variance + ($accuracy * $accuracy));
-                $result[] = [
-                    "lat" => $value->lat + ($k * ($value->lat - $lastLat)),
-                    "lng" => $value->lng + ($k * ($value->lng - $lastLng)),
-                    "timestamp" => $value->timestamp,
-                ];
-            }
-        }
-
-        file_put_contents(
-            storage_path() . "/geolocation/" . $userId . "/" . $date . "/" . $fileName . "_filtered.json",
-            json_encode($result)
-        );
     }
 }
