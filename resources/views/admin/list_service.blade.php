@@ -1,6 +1,6 @@
 <?php
-    $menu_item_page = "service";
-    $menu_item_second = "list_service";
+$menu_item_page = "service";
+$menu_item_second = "list_service";
 ?>
 
 @extends('admin.layouts.template')
@@ -60,7 +60,7 @@
     			</ol>
   			</nav>
 		</div>
-		
+
 		<div id="desktop" class="row">
 			<div class="col-12 grid-margin stretch-card">
 				<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
@@ -108,11 +108,10 @@
 	    				<table class="table table-bordered">
 				     		<thead>
 				            	<tr>
-					              	<th> No. </th>
+                                    <th> Service Date </th>
 					              	<th> Name </th>
 					              	<th> Address </th>
 					              	<th> Phone </th>
-					              	<th> Service Date </th>
 					              	<th> Status </th>
 					              	@if(Gate::check('edit-order') || Gate::check('delete-order'))
 						              	<th colspan="3"> Detail/Edit/Delete </th>
@@ -122,11 +121,10 @@
 							<tbody>
 								@foreach($services as $key => $service)
 								<tr>
-									<td>{{$key+1}}</td>
+									<td>{{$service['service_date']}}</td>
 									<td>{{$service['name']}}</td>
 									<td>{{$service['address']}}</td>
 									<td>{{$service['phone']}}</td>
-									<td>{{$service['service_date']}}</td>
 									<td>{{$service['status']}}</td>
 
 									@can('detail-service')
@@ -158,7 +156,7 @@
 								@endforeach
 							</tbody>
 						</table>
-						</br>
+						<br>
 						{{ $services->appends($url)->links() }}
 	    			</div>
 	  			</div>
