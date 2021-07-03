@@ -43,9 +43,59 @@ class UserGeolocationController extends Controller
         return response()->json($json);
     }
 
+    public function addStartImageApi(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "image" => "required|file",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "result" => 0,
+                "data" => $validator->errors(),
+            ], 400);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            if ($request->hasFile("image")) {
+                $imageFile = $request->file("image");
+
+                $filePath = "sources/geolocation/"
+                    . $request->user_id
+                    . "/"
+                    . date("Y-m-d")
+                    . "_start."
+                    . $imageFile->getClientOriginalExtension();
+                $fileName = time() . "_" . $request->user_id;
+                $imageFile->move($filePath, $fileName);
+
+                $presenseImage[] = $fileName;
+                $currentDate = date("Y-m-d H:i:s");
+                UserGeolocation::create([
+                    "presence_image" => $presenseImage,
+                    "date" => $currentDate,
+                ]);
+
+                DB::commit();
+
+                return response()->json(["result" => 1]);
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "result" => 0,
+                "data" => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function addApi(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            "image" => "required|file",
             "file" => "required|file|mimetypes:application/json",
         ]);
 
@@ -59,25 +109,54 @@ class UserGeolocationController extends Controller
         DB::beginTransaction();
 
         try {
+            // Save Image
+            $endImage = "";
+            if ($request->hasFile("image")) {
+                $imageFile = $request->file("image");
+
+                $filePath = "sources/geolocation/"
+                    . $request->user_id
+                    . "/"
+                    . date("Y-m-d")
+                    . "_end."
+                    . $imageFile->getClientOriginalExtension();
+                $fileName = time() . "_" . $request->user_id;
+                $imageFile->move($filePath, $fileName);
+
+                $endImage = $fileName;
+                $currentDate = date("Y-m-d H:i:s");
+            }
+
+            // Save JSON
             $currentDate = date("Y-m-d H:i:s");
             $fileName = Str::random(16);
             $filePath = storage_path() . "/geolocation/" . $request->user_id . "/" . $currentDate;
             if (!File::exists($filePath)) {
                 File::makeDirectory($filePath);
             }
-
             $file = $request->file("file");
             $file->move($filePath, $fileName . ".json");
 
-            UserGeolocation::create([
-                "user_id" => $request->user_id,
-                "date" => $currentDate,
-                "filename" => $fileName,
-            ]);
+            // Query Geolocation
+            $currentDateForQuery = date("Y-m-d");
+            $userGeolocation = UserGeolocation::where("user_id", $request->id)
+                ->whereBetween(
+                    "date",
+                    [
+                        $currentDateForQuery . " 00:00:00",
+                        $currentDateForQuery . " 23:59:59"
+                    ]
+                )
+                ->first();
+
+            // Save To Database
+            $presenseImage = $userGeolocation->presense_image;
+            $presenseImage[] = $endImage;
+            $userGeolocation->presense_image = $presenseImage;
+            $userGeolocation->filename = $fileName;
+            $userGeolocation->save();
 
             DB::commit();
-
-            $this->filter($filePath . "/" . $fileName, $request->user_id, $currentDate, $fileName);
 
             return response()->json(["result" => 1]);
         } catch (Exception $e) {

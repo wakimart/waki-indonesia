@@ -17,8 +17,9 @@ class CreateUserGeolocationsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger("user_id");
             $table->foreign("user_id")->references("id")->on("users");
-            $table->timestamp("date")->useCurrent();
-            $table->string("filename");
+            $table->json("presence_image")->nullable();
+            $table->timestamp("date")->nullable();
+            $table->string("filename")->nullable();
             $table->timestamps();
         });
     }

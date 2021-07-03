@@ -110,6 +110,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 		Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
 		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
         Route::post("/add/geolocation", "UserGeolocationController@addApi"); // Upload geolocation data
+        Route::post("/add/start-geolocation", "UserGeolocationController@addStartImageApi");
 	});
 
 	Route::group(['prefix' => 'register'], function () {
