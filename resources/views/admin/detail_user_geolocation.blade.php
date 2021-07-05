@@ -123,13 +123,13 @@ let coordinates = [];
 
 document.addEventListener("DOMContentLoaded", function () {
     $("#cso").select2();
-    getGeolocation();
 });
 
 function getGeolocation() {
+    const csoId = document.getElementById("cso").value;
     const date = document.getElementById("date").value;
 
-    fetch('{{ route("fetch_geolocation") }}', {
+    fetch(`{{ route("fetch_geolocation") }}?cso_id=${csoId}&date=${date}`, {
         method: "GET",
         headers: {
             "Accept": "application/json",
@@ -164,10 +164,49 @@ function initMap() {
         strokeWeight: 5,
     });
 
+    let labels = 1;
+    let previousTimestamp = 0;
+    let currentTimestamp = 0;
     const bounds = new google.maps.LatLngBounds();
+    coordinates.forEach(function (value, index) {
+        bounds.extend({ lat: value.lat, lng: value.lng});
 
-    coordinates.forEach(function (value) {
-        bounds.extend(value);
+        if (index === 0) {
+            new google.maps.Marker({
+                position: { lat: value.lat, lng: value.lng },
+                label: labels.toString(),
+                map: map,
+            });
+
+            labels++;
+        }
+
+        if (previousTimestamp === 0) {
+            previousTimestamp = value.timestamp;
+        }
+
+        currentTimestamp = value.timestamp;
+        const timestampDifference = currentTimestamp - previousTimestamp;
+
+        if (timestampDifference >= 900000) {
+            new google.maps.Marker({
+                position: { lat: value.lat, lng: value.lng },
+                label: labels.toString(),
+                map: map,
+            });
+
+            labels++;
+        }
+
+        previousTimestamp = currentTimestamp;
+
+        if (index === coordinates.length - 1) {
+            new google.maps.Marker({
+                position: { lat: value.lat, lng: value.lng },
+                label: labels.toString(),
+                map: map,
+            });
+        }
     });
 
     path.setMap(map);
