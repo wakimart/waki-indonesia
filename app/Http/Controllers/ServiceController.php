@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use DB;
-use App\HomeService;
-use App\ProductService;
-use App\Sparepart;
-use App\Service;
-use App\Product;
 use App\Branch;
 use App\Cso;
+use App\HomeService;
+use App\Product;
+use App\ProductService;
+use App\Service;
+use App\Sparepart;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
@@ -23,7 +23,17 @@ class ServiceController extends Controller
     public function index(Request $request)
     {
         $url = $request->all();
-        $services = Service::where('active', true)->get();
+        $services = Service::select(
+                "id",
+                "name",
+                "address",
+                "phone",
+                DB::raw("DATE(service_date) AS service_date"),
+                "status"
+            )
+            ->where('active', true)
+            ->orderBy("service_date", "desc")
+            ->get();
         $countServices = $services->count();
         $services = $services->paginate(10);
         return view('admin.list_service', compact('services', 'countServices', 'url'));
@@ -84,8 +94,8 @@ class ServiceController extends Controller
                 }else{
                     $data['other_product'] = $value[4];
                 }
-                
-                
+
+
                 // $index = 0;
                 // $data['arr_sparepart'] = [];
                 // foreach ($value[1] as $item_sparepart) {
@@ -247,7 +257,7 @@ class ServiceController extends Controller
                     $cso = Cso::where('code', $request->input('cso_id'))->first();
 
                     if($request->status == "Pickup"){
-                        array_push($arr_serviceoption, 
+                        array_push($arr_serviceoption,
                             [
                                 'recipient_name' => $request->input('name'),
                                 'address' => $request->input('address'),
@@ -279,7 +289,7 @@ class ServiceController extends Controller
                             $data['cso2_id'] = (Cso::where('code', 'SERVICE')->first() != null ? Cso::where('code', 'SERVICE')->first()['id'] : null );
 
                             $homeService = HomeService::create($data);
-                            array_push($arr_serviceoption, 
+                            array_push($arr_serviceoption,
                                 [
                                     'homeService' => $homeService['id']
                                 ]
@@ -287,7 +297,7 @@ class ServiceController extends Controller
                         }
                     }
 
-                    
+
                     $service->service_option = json_encode($arr_serviceoption);
 
                     $service->status = str_replace('_', ' ', $request->status);
@@ -297,7 +307,7 @@ class ServiceController extends Controller
                     $service->history_status = json_encode($arr_old_history);
                     $service->save();
                 }
-                
+
                 DB::commit();
                 return redirect()->route("detail_service", ["id" => $service->id]);
             } catch (\Exception $ex) {
