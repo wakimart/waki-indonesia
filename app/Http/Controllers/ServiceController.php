@@ -140,7 +140,11 @@ class ServiceController extends Controller
             $services = Service::find($request->get('id'));
             $products = Product::all();
             $spareparts = Sparepart::where('active', true)->get();
-            return view('admin.update_service', compact('services','products', 'spareparts'));
+            $product_services = ProductService::where([
+                    ['active', '=', 1],
+                    ['service_id', '=', $request->get('id')]
+                ])->get();
+            return view('admin.update_service', compact('services','products', 'spareparts', 'product_services'));
         }
     }
 
@@ -156,6 +160,7 @@ class ServiceController extends Controller
         DB::beginTransaction();
         try {
             $get_allProductService = json_decode($request->productservices);
+            $get_oldProductService = ProductService::where('service_id', $get_allProductService[0][0])->get();
 
             $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date');
             $service = Service::find($get_allProductService[0][0]);
@@ -167,21 +172,51 @@ class ServiceController extends Controller
             $service->save();
 
             foreach ($get_allProductService as $key => $value) {
-                $product_services = ProductService::find($value[1]);
+                if($value[0] != null ){
+                    $product_services = ProductService::find($value[1]);
 
-                if($value[2] != 'other'){
-                    $product_services->product_id = $value[2];
+                    if($value[2] != 'other'){
+                        $product_services->product_id = $value[2];
+                    }else{
+                        $product_services->other_product = $value[6];
+                    }
+
+                    $data['arr_issues'] = [];
+                    $data['arr_issues'][0]['issues'] = $value[3];
+                    $data['arr_issues'][1]['desc'] = $value[4];
+                    $product_services->issues = json_encode($data['arr_issues']);
+
+                    $product_services->due_date = $value[5];
+
+                    if($value[7] == "0"){
+                        $product_services->active = false;
+                    }
+                    $product_services->save();    
                 }else{
-                    $product_services->other_product = $value[6];
+                    //ada produk service baru
+                    $product_services = new ProductService();
+                    $product_services->service_id = $get_allProductService[0][0];
+
+                    if($value[2] != 'other'){
+                        $product_services->product_id = $value[2];
+                    }else{
+                        $product_services->other_product = $value[6];
+                    }
+
+                    $data['arr_issues'] = [];
+                    $data['arr_issues'][0]['issues'] = $value[3];
+                    $data['arr_issues'][1]['desc'] = $value[4];
+                    $product_services->issues = json_encode($data['arr_issues']);
+
+                    $product_services->due_date = $value[5];
+
+                    if($value[7] == "0"){
+                        $product_services->active = false;
+                    }
+                    $product_services->save();    
+
                 }
-
-                $data['arr_issues'] = [];
-                $data['arr_issues'][0]['issues'] = $value[3];
-                $data['arr_issues'][1]['desc'] = $value[4];
-                $product_services->issues = json_encode($data['arr_issues']);
-
-                $product_services->due_date = $value[5];
-                $product_services->save();
+                
             }
             DB::commit();
             return response()->json(['success' => 'Berhasil!!!']);

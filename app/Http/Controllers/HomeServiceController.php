@@ -214,9 +214,16 @@ class HomeServiceController extends Controller
             $isAdminManagement = true;
         }
 
+        $temp_date = date("Y-m-d");
+
+        if(isset($_GET['isSubmission'])){
+            $get_appointment = strtotime($_GET['appointment']);
+            $temp_date = date("Y-m-d", $get_appointment);
+        }
+
         // Mendapatkan count appointment
         $currentMonthDataCount = $this->getCountAppointment(
-            date("Y-m-d"),
+            $temp_date,
             $request->filter_province,
             $request->filter_city,
             $request->filter_district,

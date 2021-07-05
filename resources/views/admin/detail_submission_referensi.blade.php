@@ -296,11 +296,13 @@ if (
                                                             @foreach ($link_hs as $value)
                                                                 @if (is_numeric($value))
                                                                     <?php
-                                                                    $hs = HomeService::select("code")->where("id", $value)->first();
+                                                                    $hs = HomeService::select("code", "appointment")->where("id", $value)->first();
+
+                                                                    $hs_code = str_replace("%2F", "/", $hs->code);
                                                                     ?>
                                                                     <a id="link-hs-href_{{ $value }}"
                                                                         data-hs={{ $hs->code }}
-                                                                        href="{{ route("homeServices_success", ["code" => $hs->code]) }}"
+                                                                        href="{{ route("admin_list_homeService", ["filter_search" => $hs_code, "isSubmission" => "true", "appointment" => $hs->appointment]) }}"
                                                                         target="_blank">
                                                                         <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
                                                                     </a>
