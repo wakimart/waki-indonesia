@@ -79,14 +79,14 @@
                                 <thead style="text-align: center; background-color: aliceblue;">
                                     <tr>
                                         <td rowspan="2">Submission Code</td>
-                                        <td colspan="4">Reference Data</td>
+                                        <td colspan="3">Reference Data</td>
                                         <td rowspan="2">View</td>
                                     </tr>
                                     <tr>
                                         <td>Name</td>
                                         <td>Phone</td>
                                         <td>Link HS</td>
-                                        <td>Order</td>
+                                        {{-- <td>Order</td> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -126,7 +126,7 @@
                                                     @endforeach
                                                 </td>
 
-                                                <td>
+                                                {{-- <td>
                                                     @if($ref['order_id'] != null)
                                                         <a href="{{ route('detail_order') }}?code={{ $ref->order['code'] }}" target="_blank">
                                                             {{ $ref->order['code'] }}
@@ -134,7 +134,7 @@
                                                     @else
                                                         -
                                                     @endif
-                                                </td>
+                                                </td> --}}
                                                 <td style="text-align: center;">
                                                     <a href="{{ route("detail_submission_form", ["id" => $ref->reference->submission['id'], "type" => 'referensi']) }}">
                                                         <i class="mdi mdi-eye" style="font-size: 24px;"></i>

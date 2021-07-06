@@ -231,8 +231,8 @@ if (
                                                 <td>Province</td>
                                                 <td>City</td>
                                                 <td>Link HS</td>
-                                                <td>Order</td>
-                                                <td>Souvenir/Prize</td>
+                                                {{-- <td>Order</td> --}}
+                                                <td>Souvenir</td>
                                                 <td>Status</td>
                                                 <td>Deliv. Status</td>
                                                 @if ($specialPermission)
@@ -254,27 +254,22 @@ if (
                                                     form="edit-form_{{ $key }}"
                                                     value="{{ $reference->id }}" />
                                                 <tr>
-                                                    <td rowspan="2"
-                                                        id="name_{{ $key }}">
+                                                    <td id="name_{{ $key }}">
                                                         {{ $reference->name }}
                                                     </td>
-                                                    <td rowspan="2"
-                                                        class="text-center"
+                                                    <td class="text-center"
                                                         id="age_{{ $key }}">
                                                         {{ $reference->age }}
                                                     </td>
-                                                    <td rowspan="2"
-                                                        class="text-center"
+                                                    <td class="text-center"
                                                         id="phone_{{ $key }}">
                                                         {{ $reference->phone }}
                                                     </td>
-                                                    <td rowspan="2"
-                                                        id="province_{{ $key }}"
+                                                    <td id="province_{{ $key }}"
                                                         data-province="{{ $reference->province_id }}">
                                                         {{ $reference->province }}
                                                     </td>
-                                                    <td rowspan="2"
-                                                        id="city_{{ $key }}"
+                                                    <td id="city_{{ $key }}"
                                                         data-city="{{ $reference->city_id }}">
                                                         {{ $reference->city }}
                                                     </td>
@@ -287,8 +282,7 @@ if (
                                                         );
                                                     }
                                                     ?>
-                                                    <td rowspan="2"
-                                                        class="text-center"
+                                                    <td class="text-center"
                                                         id="link-hs_{{ $key }}"
                                                         data-hs="{{ !empty($reference->link_hs) ? implode(", ", $link_hs) : "" }}"
                                                         style="overflow-x: auto;">
@@ -317,12 +311,12 @@ if (
                                                             @endforeach
                                                         @endif
                                                     </td>
-                                                    <td rowspan="2"
-                                                        class="text-center"
+                                                    
+                                                    {{-- <td class="text-center"
                                                         id="order_{{ $key }}"
                                                         data-order="{{ $reference->order_id }}"
-                                                        style="overflow-x:auto;">
-                                                        <?php
+                                                        style="overflow-x:auto; display: none;">
+                                                        @php
                                                         if (!empty($reference->order_id)) {
                                                             $order = Order::select("id", "code")
                                                                 ->where("id", $reference->order_id)
@@ -330,8 +324,8 @@ if (
 
                                                             echo $order->code;
                                                         }
-                                                        ?>
-                                                    </td>
+                                                        @endphp
+                                                    </td> --}}
                                                     <td id="souvenir_{{ $key }}"
                                                         class="text-center"
                                                         data-permission="{{ $specialPermission }}"
@@ -350,8 +344,7 @@ if (
                                                         {{ $reference->delivery_status_souvenir }}
                                                     </td>
                                                     @if ($specialPermission)
-                                                        <td class="text-center"
-                                                            rowspan="2">
+                                                        <td class="text-center">
                                                             <button id="btnDetailRef_{{ $key }}"
                                                                 type="button"
                                                                 class="btn"
@@ -362,8 +355,7 @@ if (
                                                             </button>
                                                         </td>
                                                     @endif
-                                                    <td rowspan="2"
-                                                        class="text-center">
+                                                    <td class="text-center">
                                                         @if ($reference->status_souvenir !== "success")
                                                             <button class="btn"
                                                                 id="btn-edit-save_{{ $key }}"
@@ -377,8 +369,7 @@ if (
                                                             </button>
                                                         @endif
                                                     </td>
-                                                    <td rowspan="2"
-                                                        class="text-center">
+                                                    <td class="text-center">
                                                         <button class="btn"
                                                             id="btn-delete-reference_{{ $key }}"
                                                             style="padding: 0;"
@@ -390,12 +381,12 @@ if (
                                                         </button>
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                {{-- <tr>
                                                     <td class="text-center"
                                                         id="prize_{{ $key }}"
                                                         data-prize="{{ $reference->prize_id }}"
                                                         data-permission="{{ $specialPermission }}">
-                                                        <?php
+                                                        @php
                                                         $bonus_prize = ($key + 1) % 3;
                                                         if (!empty($reference->prize_id)) {
                                                             $prize = Prize::select("id", "name")
@@ -408,7 +399,7 @@ if (
                                                                 echo $prize->name;
                                                             }
                                                         }
-                                                        ?>
+                                                        @endphp
                                                     </td>
                                                     <td class="text-center"
                                                         id="status_prize_{{ $key }}"
@@ -421,7 +412,7 @@ if (
                                                         data-permission="{{ $specialPermission }}">
                                                         {{ $reference->delivery_status_prize }}
                                                     </td>
-                                                </tr>
+                                                </tr> --}}
                                             @endforeach
                                             <input type="hidden"
                                                 id="temp_arr_souvenir"
@@ -435,8 +426,7 @@ if (
                                 <button class="btn btn-gradient-primary mt-2"
                                     id="btnAddReference"
                                     onclick="checkAddReference()">
-                                    <span>Add Reference - Sehat Bersama WAKi<br>
-                                    / Keuntungan Biaya Iklan</span>
+                                    <span>Add Reference - Sehat Bersama WAKi</span>
                                 </button>
                             </div>
 
@@ -457,12 +447,12 @@ if (
                                             value="Terima Kasih telah mengikuti program *Sehat Bersama WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">
                                             Share Sehat bersama Waki
                                         </button>
-                                        <button type="submit"
+                                        {{-- <button type="submit"
                                             class="btn btn-gradient-primary mr-2 my-2"
                                             name="text"
                                             value="Terima Kasih telah mengikuti program *Keuntungan Biaya Iklan*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">
                                             Share Program Biaya Iklan
-                                        </button>
+                                        </button> --}}
                                     </div>
                                 </form>
                              </div>
@@ -643,7 +633,7 @@ if (
                             @endforeach
                         </select>
                     </div>
-                    <div id="appendPrize" class="form-group">
+                    {{-- <div id="appendPrize" class="form-group">
                         <label id="label_prize" for="edit-prize">Prize</label>
                         <select class="form-control"
                             id="edit-prize"
@@ -663,7 +653,7 @@ if (
                                 @endif
                             @endforeach
                         </select>
-                    </div>
+                    </div> --}}
                     <div class="form-group">
                         <label for="edit-link-hs">Home Service</label>
                         <input type="hidden"
@@ -682,7 +672,7 @@ if (
                         </button>
                         <input type="hidden" id="hs-row-count" value="0" />
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="edit-order">Order</label>
                         <input type="hidden"
                             id="edit-order"
@@ -697,7 +687,7 @@ if (
                             data-target="#choose-order">
                             Choose Order
                         </button>
-                    </div>
+                    </div> --}}
                 </form>
             </div>
             <div class="modal-footer">
@@ -1188,7 +1178,7 @@ function loadDataPerRef(ref_id) {
             var data_hs = data['data_hs'];
             var data_order = data['data_order'];
             var data_souvenir = data['data_souvenir'];
-            var data_prize = data['data_prize'];
+            // var data_prize = data['data_prize'];
             var detail_product = data['detail_product'];
 
             // Detail HS
@@ -1230,7 +1220,7 @@ function loadDataPerRef(ref_id) {
             }
 
             //detail Order
-            if(data_order != null){
+            if(data_order != null && false){
                 $('#div_detailorder').removeClass('d-none');
 
                 var rowspan = detail_product.length;
@@ -1303,7 +1293,7 @@ function loadDataPerRef(ref_id) {
                 }
             }
 
-            if (data_prize != null) {
+            if (data_prize != null && false) {
                 for (var p = 0; p < data_prize.length; p++) {
                     $('#append_tbody_other').append('\
                         <tr id="tr_detail_souvenir">\
@@ -1345,7 +1335,7 @@ function loadDataPerRef(ref_id) {
                 $('#ref_city').val(data_ref['city']);
                 // $('#refs_souvenir').val(data_refs[0]['souvenir_id']);
                 // $('#refs_prize').val(data_refs[0]['prize_id']);
-                $('#refs_order').val(data_refs[0]['order_id']);
+                // $('#refs_order').val(data_refs[0]['order_id']);
             }
 
             $("#modal-per-reference").modal("show");
@@ -1364,11 +1354,11 @@ function clearModal() {
     document.getElementById("edit-province").selectedIndex = 0;
     document.getElementById("edit-city").value = "";
     document.getElementById("edit-souvenir").selectedIndex = 0;
-    document.getElementById("edit-prize").selectedIndex = 0;
+    // document.getElementById("edit-prize").selectedIndex = 0;
     document.getElementById("edit-link-hs").value = "";
     document.getElementById("link-hs-container").innerHTML = "";
-    document.getElementById("edit-order").value = "";
-    document.getElementById("btn_choose_order").innerHTML = "Choose Order";
+    // document.getElementById("edit-order").value = "";
+    // document.getElementById("btn_choose_order").innerHTML = "Choose Order";
 }
 
 function clickEdit(e) {
@@ -1396,7 +1386,7 @@ function clickEdit(e) {
     const province = document.getElementById("province_" + refSeq).getAttribute("data-province");
     const city = document.getElementById("city_" + refSeq).getAttribute("data-city");
     const souvenir = document.getElementById("souvenir_" + refSeq).getAttribute("data-souvenir");
-    const prize = document.getElementById("prize_" + refSeq).dataset.prize;
+    // const prize = document.getElementById("prize_" + refSeq).dataset.prize;
 
     function linkHS() {
         try {
@@ -1440,7 +1430,7 @@ function clickEdit(e) {
     }, 500);
     document.getElementById("edit-souvenir").innerHTML = souvenirOptionEdit;
     document.getElementById("edit-souvenir").value = souvenir;
-    document.getElementById("edit-prize").value = prize;
+    // document.getElementById("edit-prize").value = prize;
 
     document.getElementById("hs-row-count").value = hsArray.length;
     hsArray.forEach(function (value, index) {
@@ -1469,7 +1459,7 @@ function clickEdit(e) {
     });
     document.getElementById("edit-link-hs").value = hsArray.join(", ");
 
-    document.getElementById("edit-order").value = orderId();
+    // document.getElementById("edit-order").value = orderId();
     document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Order";
 }
 

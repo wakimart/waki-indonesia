@@ -396,19 +396,22 @@ class SubmissionController extends Controller
                         );
                     }
 
-                    if (
-                        isset($data["order_id"][$i])
-                        && !empty($data["order_id"][$i])
-                    ) {
-                        $referenceSouvenir->order_id = $data["order_id"][$i];
-                    }
+                    // MENONAKTIFKAN KEUNTUNGAN BIAYA IKLAN //
+                    // if (
+                    //     isset($data["order_id"][$i])
+                    //     && !empty($data["order_id"][$i])
+                    // ) {
+                    //     $referenceSouvenir->order_id = $data["order_id"][$i];
+                    // }
 
-                    if (
-                        isset($data["prize_id"][$i])
-                        && !empty($data["prize_id"][$i])
-                    ) {
-                        $referenceSouvenir->prize_id = $data["prize_id"][$i];
-                    }
+                    // if (
+                    //     isset($data["prize_id"][$i])
+                    //     && !empty($data["prize_id"][$i])
+                    // ) {
+                    //     $referenceSouvenir->prize_id = $data["prize_id"][$i];
+                    // }
+                    $referenceSouvenir->order_id = null;
+                    $referenceSouvenir->prize_id = null;
 
                     $referenceSouvenir->save();
                 }
