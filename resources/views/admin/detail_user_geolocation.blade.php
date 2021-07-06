@@ -105,6 +105,26 @@ $menu_item_second = "track_homeservice";
                     </div>
                 </div>
             </div>
+
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive"
+                            style="border: 1px solid #ebedf2;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-right">#</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="timetable-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -172,6 +192,7 @@ function initMap() {
         bounds.extend({ lat: value.lat, lng: value.lng});
 
         if (index === 0) {
+            addRowToTable(labels.toString(), value.timestamp);
             new google.maps.Marker({
                 position: { lat: value.lat, lng: value.lng },
                 label: labels.toString(),
@@ -189,6 +210,7 @@ function initMap() {
         const timestampDifference = currentTimestamp - previousTimestamp;
 
         if (timestampDifference >= 900000) {
+            addRowToTable(labels.toString(), previousTimestamp, currentTimestamp);
             new google.maps.Marker({
                 position: { lat: value.lat, lng: value.lng },
                 label: labels.toString(),
@@ -201,6 +223,7 @@ function initMap() {
         previousTimestamp = currentTimestamp;
 
         if (index === coordinates.length - 1) {
+            addRowToTable(labels.toString(), value.timestamp);
             new google.maps.Marker({
                 position: { lat: value.lat, lng: value.lng },
                 label: labels.toString(),
@@ -211,6 +234,26 @@ function initMap() {
 
     path.setMap(map);
     map.fitBounds(bounds);
+}
+
+function addRowToTable(label, unixTimestamp1, unixTimestamp2 = null) {
+    const tableRow = document.createElement("tr");
+    const tableDataNumber = document.createElement("td");
+    const tableDataTime = document.createElement("td");
+
+    tableDataNumber.className = "text-right";
+    tableDataNumber.innerHTML = label;
+
+    const time1 = new Date(unixTimestamp1);
+    tableDataTime.innerHTML = `${("0" + (time1.getHours())).slice(-2)}:${("0" + (time1.getMinutes())).slice(-2)}`;
+    if (unixTimestamp2 !== null) {
+        const time2 = new Date(unixTimestamp2);
+        tableDataTime.innerHTML += ` - ${("0" + (time2.getHours())).slice(-2)}:${("0" + (time2.getMinutes())).slice(-2)}`;
+    }
+
+    tableRow.appendChild(tableDataNumber);
+    tableRow.appendChild(tableDataTime);
+    document.getElementById("timetable-body").appendChild(tableRow);
 }
 </script>
 @endsection
