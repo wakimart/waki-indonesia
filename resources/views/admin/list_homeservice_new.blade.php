@@ -1042,6 +1042,9 @@ $menu_item_second = "list_homeservice";
                                 value=""
                                 readonly
                                 disabled>
+                                <option value="Program Penjelas Ulang">
+                                    Program Penjelas Ulang
+                                </option>
                                 <option value="Home service">
                                     Home Service
                                 </option>
