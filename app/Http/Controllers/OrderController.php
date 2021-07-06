@@ -105,7 +105,7 @@ class OrderController extends Controller
            $phone =  substr($phone, 1);
         }
         $phone = "62".$phone;
-        Utils::sendSms($phone, "Terima kasih telah melakukan transaksi di WAKi Indonesia. Berikut link detail transaksi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
+        // Utils::sendSms($phone, "Terima kasih telah melakukan transaksi di WAKi Indonesia. Berikut link detail transaksi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
     	return redirect()->route('order_success', ['code'=>$order['code']]);
     }
 

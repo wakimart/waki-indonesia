@@ -431,6 +431,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update/', 'ServiceController@update')
             ->name('update_service')
             ->middleware('can:edit-service');
+
+        // Delete service
+        Route::post("/delete", "ServiceController@destroy")
+            ->name("delete_service");
     });
 
     Route::group(['prefix' => 'product_service', 'middleware' => 'auth'], function() {

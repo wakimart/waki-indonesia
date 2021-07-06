@@ -117,7 +117,7 @@ $menu_item_second = "list_souvenir";
                     action="<?php echo route("delete_souvenir"); ?>">
                     @csrf
                     <input type="hidden" name="id" id="id-delete" />
-                    <button type="submit" class="btn btn-gradient-danger mr-2">
+                    <button type="submit" class="btn btn-gradient-danger mr-2" onclick="submitDelete()">
                         Yes
                     </button>
                 </form>

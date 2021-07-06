@@ -1,6 +1,6 @@
 <?php
-    $menu_item_page = "service";
-    $menu_item_second = "list_service";
+$menu_item_page = "service";
+$menu_item_second = "list_service";
 ?>
 
 @extends('admin.layouts.template')
@@ -60,7 +60,7 @@
     			</ol>
   			</nav>
 		</div>
-		
+
 		<div id="desktop" class="row">
 			<div class="col-12 grid-margin stretch-card">
 				<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
@@ -108,11 +108,10 @@
 	    				<table class="table table-bordered">
 				     		<thead>
 				            	<tr>
-					              	<th> No. </th>
+                                    <th> Service Date </th>
 					              	<th> Name </th>
 					              	<th> Address </th>
 					              	<th> Phone </th>
-					              	<th> Service Date </th>
 					              	<th> Status </th>
 					              	@if(Gate::check('edit-order') || Gate::check('delete-order'))
 						              	<th colspan="3"> Detail/Edit/Delete </th>
@@ -122,11 +121,10 @@
 							<tbody>
 								@foreach($services as $key => $service)
 								<tr>
-									<td>{{$key+1}}</td>
+									<td>{{$service['service_date']}}</td>
 									<td>{{$service['name']}}</td>
 									<td>{{$service['address']}}</td>
 									<td>{{$service['phone']}}</td>
-									<td>{{$service['service_date']}}</td>
 									<td>{{$service['status']}}</td>
 
 									@can('detail-service')
@@ -145,16 +143,20 @@
 		                            @endcan
 		                            @can('delete-service')
                       				<td style="text-align: center;">
-                      					<button value="" data-toggle="modal" data-target="#deleteDoModal" class="btn-delete" >
-                      						<i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
-                      					</button>
+                      					<a class="btn-delete"
+                                            data-toggle="modal"
+                                            href="#deleteDoModal"
+                                            onclick="submitDelete(this)"
+                                            data-id="<?php echo $service['id']; ?>">
+                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                        </a>
                       				</td>
                       				@endcan
 								</tr>
 								@endforeach
 							</tbody>
 						</table>
-						</br>
+						<br>
 						{{ $services->appends($url)->links() }}
 	    			</div>
 	  			</div>
@@ -163,4 +165,47 @@
 
 	</div>
 </div>
+
+<div class="modal fade"
+    id="deleteDoModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 style="text-align:center;">
+                    Are you sure you want to delete this?
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <form id="frmDelete"
+                    method="POST"
+                    action="<?php echo route("delete_service"); ?>">
+                    @csrf
+                    <input type="hidden" name="id" id="id-delete" />
+                    <button type="submit" class="btn btn-gradient-danger mr-2">
+                        Yes
+                    </button>
+                </form>
+                <button class="btn btn-light">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+@section('script')
+<script>
+function submitDelete(e) {
+    document.getElementById("id-delete").value = e.dataset.id;
+}
+</script>
 @endsection

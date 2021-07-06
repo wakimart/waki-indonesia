@@ -54,7 +54,7 @@ $menu_item_second = "list_submission_form";
                     style="padding: 0; display: inline-block;">
                     <div class="form-group">
                         <label for="filter-type">Search by type</label>
-                        <select id="filter-type"
+                        <select id="filter_type"
                             class="form-control"
                             name="filter_type">
                             <?php
@@ -85,6 +85,7 @@ $menu_item_second = "list_submission_form";
                         <label for="filter-type">Search by Name/ Phone/ Code</label>
                         <input class="form-control"
                             type="text"
+                            id="filter_text" 
                             name="filter_text"
                             placeholder="Name, Phone, Code"
                             value="{{ isset($_GET["filter_text"]) ? $_GET["filter_text"] : "" }}" />
@@ -96,7 +97,7 @@ $menu_item_second = "list_submission_form";
                         <div class="form-group">
                             <label for="filter-branch">Search by Branch</label>
                             <select class="form-control"
-                                id="filter-branch"
+                                id="filter_branch"
                                 name="filter_branch">
                                 <option value="">Choose Branch</option>
                                 @foreach ($branches as $branch)
@@ -113,7 +114,7 @@ $menu_item_second = "list_submission_form";
                         <div class="form-group">
                             <label for="filter-cso">Search by CSO</label>
                             <select class="form-control"
-                                id="filter-cso"
+                                id="filter_cso"
                                 name="filter_cso">
                                 <option value="">Choose CSO</option>
                                 @foreach ($csos as $cso)
@@ -130,7 +131,7 @@ $menu_item_second = "list_submission_form";
                     style="padding: 0; display: inline-block;">
                     <div class="form-group">
                         <button id="btn-filter"
-                            type="submit"
+                            type="button"
                             class="btn btn-gradient-primary m-1">
                             <span class="mdi mdi-magnify"></span> Search
                         </button>
@@ -212,7 +213,7 @@ $menu_item_second = "list_submission_form";
                             </tbody>
                         </table>
                         <br>
-                        {{ $submissions->links() }}
+                        {{ $submissions->appends($url)->Links() }}
                     </div>
                 </div>
             </div>
@@ -266,6 +267,34 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
         delete error;
     }
+
+    $(document).on("click", "#btn-filter", function(e){
+      var urlParamArray = new Array();
+      var urlParamStr = "";
+
+      if($('#filter_type').val() != ""){
+        urlParamArray.push("filter_type=" + $('#filter_type').val());
+      }
+      if($('#filter_text').val() != ""){
+        urlParamArray.push("filter_text=" + $('#filter_text').val());
+      }
+      if($('#filter_branch').val() != ""){
+        urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+      }
+      if($('#filter_cso').val() != ""){
+        urlParamArray.push("filter_cso=" + $('#filter_cso').val());
+      }
+
+      for (var i = 0; i < urlParamArray.length; i++) {
+        if (i === 0) {
+          urlParamStr += "?" + urlParamArray[i]
+        } else {
+          urlParamStr += "&" + urlParamArray[i]
+        } 
+      }
+
+      window.location.href = "{{route('list_submission_form')}}" + urlParamStr;
+    });
 
     $(".btn-delete").click(function (e) {
         $("#frmDelete").attr("action",  $(this).val());
