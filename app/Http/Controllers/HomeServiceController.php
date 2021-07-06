@@ -141,7 +141,7 @@ class HomeServiceController extends Controller
 
     public function successRegister(Request $request){
         $homeService = HomeService::where('code', $request['code'])->first();
-        $samephones = HomeService::where('active', true)->where('phone', $homeService['phone'])->where('cash_description', null)->get();
+        $samephones = HomeService::where('active', true)->where([['code', $homeService['code']], ['active', true]])->get();
         $homeService['district'] = array($homeService->getDistrict());
         $categoryProducts = CategoryProduct::all();
         return view('homeservicesuccess', compact('homeService', 'samephones', $categoryProducts));
@@ -966,7 +966,7 @@ class HomeServiceController extends Controller
                         }
 
                         $data = $request->all();
-                        $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4)."/".$key;
+                        $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
 
                         $getAppointment = $value." ".$get_timeAppointment[$key];
                         $getIdCso = Cso::where('code', $data['cso_id'])->first()['id'];
@@ -1429,7 +1429,7 @@ class HomeServiceController extends Controller
 
 
                     $data = $request->all();
-                    $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4)."/".$key;
+                    $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
                     $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
                     $data['cso_phone'] = Cso::where('id', $data['cso_id'])->first()['phone'];
                     if($request->has('cso2_id')){
