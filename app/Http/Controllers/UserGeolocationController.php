@@ -16,16 +16,28 @@ class UserGeolocationController extends Controller
 {
     public function show(Request $request)
     {
-        $csos = Cso::select("id", "code", "name")->where("active", true)->get();
+        $csos = Cso::select(
+                "users.id AS user_id",
+                "csos.code AS code",
+                "csos.name AS name",
+            )
+            ->leftJoin(
+                "users",
+                "csos.id",
+                "=",
+                "users.cso_id"
+            )
+            ->where("csos.active", true)
+            ->get();
 
         return view("admin.detail_user_geolocation", compact("csos"));
     }
 
     public function fetchGeolocationData(Request $request)
     {
-        // $user = User::select("id")->where("cso_id", $request->cso_id)->first();
-        // $userGeolocation = UserGeolocation::select("cso_id", "date", "filename")
-        //     ->where("user_id", $user->id)
+        // * UNCOMMENT WHEN IT'S READY TO GO INTO PRODUCTION
+        // $userGeolocation = UserGeolocation::select("user_id", "date", "filename")
+        //     ->where("user_id", $request->user_id)
         //     ->whereDate("date", "=", $request->date)
         //     ->first();
 

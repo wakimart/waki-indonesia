@@ -73,11 +73,10 @@ $menu_item_second = "track_homeservice";
                             <label for="cso">CSO</label>
                             <select class="form-control"
                                 id="cso"
-                                name="cso_id">
+                                name="user_id">
                                 <option value="">Choose CSO</option>
                                 @foreach ($csos as $cso)
-                                    <option value="{{ $cso->id }}"
-                                        {!! isset($_GET["cso"]) && $_GET["cso"] == $cso->id ? "selected" : "" !!}>
+                                    <option value="{{ $cso->user_id }}">
                                         {{ $cso->code }} - {{ $cso->name }}
                                     </option>
                                 @endforeach
@@ -146,10 +145,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function getGeolocation() {
-    const csoId = document.getElementById("cso").value;
+    const userid = document.getElementById("cso").value;
     const date = document.getElementById("date").value;
 
-    fetch(`{{ route("fetch_geolocation") }}?cso_id=${csoId}&date=${date}`, {
+    fetch(`{{ route("fetch_geolocation") }}?user_id=${userid}&date=${date}`, {
         method: "GET",
         headers: {
             "Accept": "application/json",
