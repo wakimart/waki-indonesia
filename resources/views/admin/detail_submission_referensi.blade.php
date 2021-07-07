@@ -1293,7 +1293,8 @@ function loadDataPerRef(ref_id) {
                 }
             }
 
-            if (data_prize != null && false) {
+            //data_prize != null
+            if (false) {
                 for (var p = 0; p < data_prize.length; p++) {
                     $('#append_tbody_other').append('\
                         <tr id="tr_detail_souvenir">\
@@ -1325,8 +1326,9 @@ function loadDataPerRef(ref_id) {
                     $('#select_edit-delivery-status-prize_'+p).val(data_refs[p]['delivery_status_prize']);
                 }
             }
-
-            if (data_souvenir != null || data_prize != null) {
+            
+            // || data_prize != null
+            if (data_souvenir != null) {
                 $('#ref_id').val(data_ref['id']);
                 $('#ref_name').val(data_ref['name']);
                 $('#ref_age').val(data_ref['age']);
