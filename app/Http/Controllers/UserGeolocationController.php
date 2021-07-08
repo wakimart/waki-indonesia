@@ -36,20 +36,20 @@ class UserGeolocationController extends Controller
     public function fetchGeolocationData(Request $request)
     {
         // * UNCOMMENT WHEN IT'S READY TO GO INTO PRODUCTION
-        // $userGeolocation = UserGeolocation::select("user_id", "date", "filename")
-        //     ->where("user_id", $request->user_id)
-        //     ->whereDate("date", "=", $request->date)
-        //     ->first();
+        $userGeolocation = UserGeolocation::select("user_id", "date", "filename")
+            ->where("user_id", $request->user_id)
+            ->whereDate("date", "=", $request->date)
+            ->first();
 
-        // $path = storage_path()
-        //     . "/geolocation/"
-        //     . $userGeolocation->user_id
-        //     . "/"
-        //     . $userGeolocation->date
-        //     . "/"
-        //     . $userGeolocation->filename
-        //     . ".json";
-        $path = storage_path() . "/geolocation/test/1/geolocation2.json";
+        $path = storage_path()
+            . "/geolocation/"
+            . $userGeolocation->user_id
+            . "/"
+            . str_replace([' ', ':'], '', $userGeolocation->date)
+            . "/"
+            . $userGeolocation->filename
+            . ".json";
+        // $path = storage_path() . "/geolocation/test/1/geolocation2.json";
         $json = json_decode(file_get_contents($path), true);
 
         return response()->json($json);
@@ -74,18 +74,19 @@ class UserGeolocationController extends Controller
             if ($request->hasFile("image")) {
                 $imageFile = $request->file("image");
 
-                $filePath = "sources/geolocation/"
-                    . $request->user_id
-                    . "/"
-                    . date("Y-m-d")
-                    . "_start."
-                    . $imageFile->getClientOriginalExtension();
-                $fileName = time() . "_" . $request->user_id;
+                $filePath = "sources/geolocation/" . date("Y-m-d");
+
+                if (!is_dir($filePath)) {
+                    File::makeDirectory($filePath, 0777, true, true);
+                }
+
+                $fileName = $request->user_id ."_". time() . "_start." . $imageFile->getClientOriginalExtension();
                 $imageFile->move($filePath, $fileName);
 
                 $presenseImage[] = $fileName;
-                $currentDate = date("Y-m-d H:i:s");
+                $currentDate = date("Y-m-d");
                 UserGeolocation::create([
+                    "user_id" => $request->user_id,
                     "presence_image" => $presenseImage,
                     "date" => $currentDate,
                 ]);
@@ -108,7 +109,7 @@ class UserGeolocationController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "image" => "required|file",
-            "file" => "required|file|mimetypes:application/json",
+            "file" => "required|file",
         ]);
 
         if ($validator->fails()) {
@@ -126,32 +127,32 @@ class UserGeolocationController extends Controller
             if ($request->hasFile("image")) {
                 $imageFile = $request->file("image");
 
-                $filePath = "sources/geolocation/"
-                    . $request->user_id
-                    . "/"
-                    . date("Y-m-d")
-                    . "_end."
-                    . $imageFile->getClientOriginalExtension();
-                $fileName = time() . "_" . $request->user_id;
+                $filePath = "sources/geolocation/" . date("Y-m-d");
+
+                if (!is_dir($filePath)) {
+                    File::makeDirectory($filePath, 0777, true, true);
+                }
+
+                $fileName = $request->user_id ."_". time() . "_end." . $imageFile->getClientOriginalExtension();
                 $imageFile->move($filePath, $fileName);
 
                 $endImage = $fileName;
-                $currentDate = date("Y-m-d H:i:s");
+                $currentDate = date("Y-m-d");
             }
 
             // Save JSON
-            $currentDate = date("Y-m-d H:i:s");
+            $currentDate = date("Y-m-d");
             $fileName = Str::random(16);
-            $filePath = storage_path() . "/geolocation/" . $request->user_id . "/" . $currentDate;
+            $filePath = storage_path() . "/geolocation/" . $request->user_id . "/" . str_replace([' ', ':'], '', $currentDate);
             if (!File::exists($filePath)) {
-                File::makeDirectory($filePath);
+                File::makeDirectory($filePath, 0777, true, true);
             }
             $file = $request->file("file");
             $file->move($filePath, $fileName . ".json");
 
             // Query Geolocation
             $currentDateForQuery = date("Y-m-d");
-            $userGeolocation = UserGeolocation::where("user_id", $request->id)
+            $userGeolocation = UserGeolocation::where("user_id", $request->user_id)
                 ->whereBetween(
                     "date",
                     [
@@ -162,9 +163,9 @@ class UserGeolocationController extends Controller
                 ->first();
 
             // Save To Database
-            $presenseImage = $userGeolocation->presense_image;
-            $presenseImage[] = $endImage;
-            $userGeolocation->presense_image = $presenseImage;
+            $presenseImage = $userGeolocation->presence_image;
+            array_push($presenseImage, $endImage);
+            $userGeolocation->presence_image = $presenseImage;
             $userGeolocation->filename = $fileName;
             $userGeolocation->save();
 
