@@ -1,6 +1,6 @@
 <?php
 
-use App\Promo;
+use App\Order;
 
 $menu_item_page = "submission";
 $menu_item_second = "detail_submission_form";
@@ -56,14 +56,6 @@ $menu_item_second = "detail_submission_form";
 
     }
 
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
     .pInTable {
         margin-bottom: 6pt !important;
         font-size: 10pt;
@@ -85,10 +77,10 @@ $menu_item_second = "detail_submission_form";
             <div class="row justify-content-center">
                 <table class="col-md-12">
                     <thead>
-                        <td class="right">Submission Date</td>
+                        <td class="text-right">Submission Date</td>
                     </thead>
                     <tr>
-                        <td class="right">
+                        <td class="text-right">
                             {{ date("d/m/Y H:i:s", strtotime($submission->created_at)) }}
                         </td>
                     </tr>
@@ -158,16 +150,19 @@ $menu_item_second = "detail_submission_form";
                                 <td>Phone</td>
                                 <td>Province</td>
                                 <td>City</td>
-                                <td>Promo 1</td>
-                                <td>Qty 1</td>
-                                <td>Promo 2</td>
-                                <td>Qty 2</td>
-                                <td>Image</td>
-                                <td>Edit</td>
+                                <td>Order</td>
+                                <td>Prize</td>
+                                <td>Status</td>
+                                <td>Deliv. Status</td>
+                                @if ($specialPermission)
+                                    <th class="text-center">View</th>
+                                @endif
+                                <td class="text-center">Edit</td>
+                                <td class="text-center">Delete</td>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($references as $key => $reference): ?>
+                            @foreach ($references as $key => $reference)
                                 <input type="hidden"
                                     class="d-none"
                                     id="id_{{ $key }}"
@@ -176,84 +171,67 @@ $menu_item_second = "detail_submission_form";
                                     <td id="name_{{ $key }}">
                                         {{ $reference->name }}
                                     </td>
-                                    <td class="center" id="age_{{ $key }}">
+                                    <td class="text-center"
+                                        id="age_{{ $key }}">
                                         {{ $reference->age }}
                                     </td>
-                                    <td class="right" id="phone_{{ $key }}">
+                                    <td class="text-center"
+                                        id="phone_{{ $key }}">
                                         {{ $reference->phone }}
                                     </td>
                                     <td id="province_{{ $key }}"
-                                        data-province="{{ $reference->province_id }}"
-                                        data-city="{{ $reference->city_id }}">
+                                        data-province="{{ $reference->province_id }}">
                                         {{ $reference->province }}
                                     </td>
                                     <td id="city_{{ $key }}"
                                         data-city="{{ $reference->city_id }}">
                                         {{ $reference->city }}
                                     </td>
-                                    <td id="promo_1_{{ $key }}"
-                                        <?php
-                                        echo 'data-promo1="';
-                                        if ($reference->promo_1 !== null) {
-                                            echo $reference->promo_1 . '"';
-                                        } else {
-                                            echo 'other"';
-                                        }
-                                        ?>
-                                        >
-                                        <?php
-                                        if ($reference->promo_1 !== null) {
-                                            $queryPromo = Promo::find($reference->promo_1);
-                                            $promo = implode(", ", $queryPromo->productCode());
-                                            echo $queryPromo->code . " - (" . $promo . ")";
-                                        } else {
-                                            echo $reference->other_1;
-                                        }
-                                        ?>
-                                    </td>
-                                    <td id="qty_1_{{ $key }}" class="right">
-                                        {{ $reference->qty_1 }}
-                                    </td>
-                                    <td id="promo_2_{{ $key }}"
-                                        <?php
-                                        echo 'data-promo2="';
-                                        if (
-                                            $reference->promo_2 !== null
-                                            && $reference->other_2 === null
-                                        ) {
-                                            echo $reference->promo_2;
-                                        } elseif (
-                                            $reference->promo_2 === null
-                                            && $reference->other_2 !== null
-                                        ) {
-                                            echo 'other';
-                                        }
-                                        echo '"';
-                                        ?>
-                                        >
-                                        <?php
-                                        if ($reference->promo_2 !== null) {
-                                            $queryPromo = Promo::find($reference->promo_2);
-                                            $promo = implode(", ", $queryPromo->productCode());
-                                            echo $queryPromo->code . " - (" . $promo . ")";
-                                        }
+                                    <td class="text-center"
+                                        id="order_{{ $key }}"
+                                        data-order="{{ $reference->order_id }}"
+                                        style="overflow-x:auto; display: none;">
+                                        @php
+                                        if (!empty($reference->order_id)) {
+                                            $order = Order::select("id", "code")
+                                                ->where("id", $reference->order_id)
+                                                ->first();
 
-                                        if (
-                                            $reference->promo_2 === null
-                                            && $reference->other_2 !== null
-                                        ) {
-                                            echo $reference->other_2;
+                                            echo $order->code;
                                         }
-                                        ?>
+                                        @endphp
                                     </td>
-                                    <td id="qty_2_{{ $key }}" class="right">
-                                        <?php
-                                        if ($reference->qty_2 !== null) {
-                                            echo $reference->qty_2;
+                                    <td class="text-center"
+                                        id="prize_{{ $key }}"
+                                        data-prize="{{ $reference->prize_id }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        @php
+                                        $bonus_prize = ($key + 1) % 3;
+                                        if (!empty($reference->prize_id)) {
+                                            $prize = Prize::select("id", "name")
+                                                ->where("id", $reference->prize_id)
+                                                ->first();
+
+                                            if ($bonus_prize == 0) {
+                                                echo $prize->name . " + Voucher WAKimart Rp. 1.000.000";
+                                            } else {
+                                                echo $prize->name;
+                                            }
                                         }
-                                        ?>
+                                        @endphp
                                     </td>
-                                    <td class="center"
+                                    <td class="text-center"
+                                        id="status_prize_{{ $key }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->status_prize }}
+                                    </td>
+                                    <td class="text-center"
+                                        id="delivery_status_prize_{{ $key }}"
+                                        data-deliveryprize="{{ $reference->delivery_status_prize }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->delivery_status_prize }}
+                                    </td>
+                                    {{-- <td class="center"
                                         id="image_{{ $key }}"
                                         data-image1="{{ asset("sources/registration/" . $reference->image_1) }}"
                                         @if ($reference->image_2 !== null)
@@ -268,7 +246,7 @@ $menu_item_second = "detail_submission_form";
                                                 </a>
                                             @endif
                                         @endfor
-                                    </td>
+                                    </td> --}}
                                     <td class="center">
                                         <button class="btn"
                                             id="btn-edit-save_{{ $key }}"
@@ -282,7 +260,7 @@ $menu_item_second = "detail_submission_form";
                                         </button>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -296,33 +274,6 @@ $menu_item_second = "detail_submission_form";
                     Add Reference - MGM
                 </button>
             </div>
-
-            {{-- <div class="col-md-12 text-center"
-                style="margin-top: 3em;">
-                <div class="row justify-content-center">
-                    <h2 class="text-center share">
-                        Share Submission Form
-                    </h2>
-                </div>
-                <form class="forms-sample"
-                    method="GET"
-                    action="https://wa.me/">
-                    <div class="form-group row justify-content-center">
-                        <button type="submit"
-                            class="btn btn-gradient-primary mr-2 my-2"
-                            name="text"
-                            value="Terima Kasih telah mengikuti program *Sehat Bersama WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">
-                            Share Member Get Member
-                        </button>
-                        {{-- <button type="submit"
-                            class="btn btn-gradient-primary mr-2 my-2"
-                            name="text"
-                            value="Terima Kasih telah mengikuti program *Keuntungan Biaya Iklan*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">
-                            Share Program Biaya Iklan
-                        </button> --}}
-                    </div>
-                </form>
-            </div> --}}
 
             @if ($historySubmission->isNotEmpty())
                 <div class="row justify-content-center"
@@ -461,76 +412,43 @@ $menu_item_second = "detail_submission_form";
                             </option>
                         </select>
                     </div>
-                    @for ($i = 1; $i < 3; $i++)
-                        <div class="form-group">
-                            <label for="promo-{{ $i }}">
-                                Promo {{ $i }}
-                            </label>
-                            <select class="form-control"
-                                id="edit-promo-{{ $i }}"
-                                name="promo_{{ $i }}"
-                                onchange="selectOther(this)"
-                                {{ $i > 1 ? "" : "required" }}>
-                                <option selected
-                                    disabled
-                                    value=""
-                                    {{ $i > 1 ? "" : "hidden" }}>
-                                    Choose Promo {{ $i > 1 ? "(optional)" : ""}}
-                                </option>
-                                <?php foreach ($promos as $key => $promo): ?>
-                                    <option value="<?php echo $promo["id"]; ?>">
-                                        <?php
-                                        echo $promo->code
-                                            . " - ("
-                                            . implode(", ", $promo->productCode())
-                                            . ") - Rp. "
-                                            . number_format($promo->price);
-                                        ?>
+                    <div id="appendPrize" class="form-group">
+                        <label id="label_prize" for="edit-prize">Prize</label>
+                        <select class="form-control"
+                            id="edit-prize"
+                            name="prize_id">
+                            <option selected disabled>
+                                Choose Prize
+                            </option>
+                            @foreach($prizes as $prize)
+                                @if($prize['id'] == 4)
+                                    <option value="{{ $prize['id'] }}" hidden>
+                                        {{ $prize['name'] }}
                                     </option>
-                                <?php endforeach; ?>
-                                <option value="other">OTHER</option>
-                            </select>
-                            <div class="form-group d-none"
-                                id="other-{{ $i }}">
-                                <input type="text"
-                                    class="form-control"
-                                    id="edit-other-{{ $i }}"
-                                    name="other_{{ $i }}"
-                                    placeholder="Product Name" />
-                                <div class="validation"></div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="qty-{{ $i }}">
-                                Quantity {{ $i }}
-                            </label>
-                            <input type="number"
-                                id="edit-qty-{{ $i }}"
-                                name="qty_{{ $i }}"
-                                class="form-control"
-                                max="10"
-                                min="1"
-                                {{ $i > 1 ? "" : "required" }} />
-                        </div>
-                    @endfor
-                    @for ($i = 1; $i <= 2; $i++)
-                        <div class="form-group">
-                            <label>
-                                Proof DO (image) - {{ $i }}
-                            </label>
-                            <br>
-                            <img id="edit-image-{{ $i }}"
-                                class="img-fluid img-thumbnail"
-                                src=""
-                                style="max-height: 200px"
-                                alt="Proof DO {{ $i }}" />
-                            <input type="file"
-                                id="proof-image-{{ $i }}"
-                                name="image_{{ $i }}"
-                                class="proof-image form-control"
-                                accept=".jpg, .jpeg, .png" />
-                        </div>
-                    @endfor
+                                @else
+                                    <option value="{{ $prize['id'] }}">
+                                        {{ $prize['name'] }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-order">Order</label>
+                        <input type="hidden"
+                            id="edit-order"
+                            name="order_id"
+                            value="" />
+                        <br>
+                        <button class="btn btn-gradient-info"
+                            type="button"
+                            id="btn_choose_order"
+                            data-originbutton="btn_choose_order"
+                            data-toggle="modal"
+                            data-target="#choose-order">
+                            Choose Order
+                        </button>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -543,6 +461,171 @@ $menu_item_second = "detail_submission_form";
                     aria-label="Close">
                     Close
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="choose-order"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Choose Order
+                </h5>
+                <button type="button"
+                    class="close"
+                    id="choose-order-close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="order-filter-name_phone">By Name / Phone</label>
+                    <input type="text"
+                        class="form-control"
+                        id="order-filter-name_phone"
+                        maxlength="191"
+                        value=""
+                        placeholder="Name / Phone"/>
+                </div>
+                <div style="overflow-y: auto; height: 20em;">
+                    <table class="col-md-12" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Date</td>
+                            <td>Detail</td>
+                            <td>Choose</td>
+                        </thead>
+                        <tbody id="table-order"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="modal-per-reference"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-bottom: 0;">
+                <h5 class="text-center">
+                    Detail Reference
+                </h5>
+                <button type="button"
+                    class="close"
+                    id="modal-ref-close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="div_detailhs" class="form-group d-none">
+                    <table id="table-detail-hs" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Tanggal & Jam</td>
+                            <td>Link HS</td>
+                            <td>Detail</td>
+                            <td>Photo</td>
+                        </thead>
+                        <tbody id="append_tbody_hs">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div id="div_detailorder" class="form-group d-none">
+                    <label>Detail Order</label>
+                    <table id="table-detail-order" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Code</td>
+                            <td>Member</td>
+                            <td>Product</td>
+                            <td>Qty</td>
+                        </thead>
+                        <tbody id="append_tbody_order">
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <form id="formUpdateStatus" method="POST" action="{{ route('update_reference') }}">
+                    @csrf
+                    <div class="form-group">
+                        <label>Other Detail</label>
+                        <table id="table-detail-other" style="margin: 1em 0em;">
+                            <thead>
+                                <td>Item</td>
+                                <td>Name</td>
+                                <td>Status</td>
+                                <td>Status Delivery</td>
+                            </thead>
+                            <tbody id="append_tbody_other">
+
+                            </tbody>
+                        </table>
+
+                        <input id="ref_id" type="hidden" name="id" />
+                        <input id="ref_name" type="hidden" name="name" />
+                        <input id="ref_phone" type="hidden" name="phone" />
+                        <input id="ref_age" type="hidden" name="age" />
+                        <input id="ref_province" type="hidden" name="province" />
+                        <input id="ref_city" type="hidden" name="city" />
+                        <input id="refs_order" type="hidden" name="order_id" />
+
+                        <button class="btn btn-primary"
+                            type="submit"
+                            id="btn-confirmUpdate">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="delete-reference-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-center">
+                    Are you sure you want to delete this reference?
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{{ route("delete_reference") }}">
+                    @csrf
+                    <input type="hidden" name="id" id="delete-reference-id" />
+                    <input type="hidden"
+                        name="url"
+                        value="{{ url()->full() }}" />
+                    <button type="submit" class="btn btn-gradient-danger">
+                        Yes
+                    </button>
+                </form>
+                <button class="btn btn-light" type="button">No</button>
             </div>
         </div>
     </div>
@@ -680,6 +763,7 @@ function submit() {
     editForm.submit();
 }
 
+// TODO: Belum selesai
 function clickEdit(e) {
     const getRefSeq = e.dataset.edit.split("_")[1];
     const id = document.getElementById("id_" + getRefSeq).value;
@@ -688,18 +772,6 @@ function clickEdit(e) {
     const phone = document.getElementById("phone_" + getRefSeq).innerHTML.trim();
     const province = document.getElementById("province_" + getRefSeq).getAttribute("data-province");
     const city = document.getElementById("province_" + getRefSeq).getAttribute("data-city");
-    let promo1 = document.getElementById("promo_1_" + getRefSeq).dataset.promo1;
-    let promo2 = document.getElementById("promo_2_" + getRefSeq).dataset.promo2;
-    const qty1 = document.getElementById("qty_1_" + getRefSeq).innerHTML.trim();
-    const qty2 = document.getElementById("qty_2_" + getRefSeq).innerHTML.trim();
-    const image1 = document.getElementById("image_" + getRefSeq).dataset.image1;
-    const image2 = document.getElementById("image_" + getRefSeq).dataset.image2;
-
-    for (let i = 1; i <= 2; i++) {
-        if (document.getElementById("edit-image-" + i).classList.contains("d-none")) {
-            document.getElementById("edit-image-" + i).classList.remove("d-none");
-        }
-    }
 
     idInput("add");
     modalTitle.innerHTML = "Edit Reference";
@@ -713,45 +785,7 @@ function clickEdit(e) {
     document.getElementById("edit-province").setAttribute("data-city", city);
     setCity(document.getElementById("edit-province"));
 
-    if (promo1 === "other") {
-        promo1 = document.getElementById("promo_1_" + getRefSeq).innerHTML.trim();
-        document.getElementById("edit-other-1").value = promo1;
-    }
-
-    if (promo2 === "other") {
-        promo2 = document.getElementById("promo_2_" + getRefSeq).innerHTML.trim();
-        document.getElementById("edit-other-2").value = promo2;
-    }
-
-    promo1input = document.getElementById("edit-promo-1");
-    promo2input = document.getElementById("edit-promo-2");
-    if (Number.isInteger(parseInt(promo1, 10))) {
-        promo1input.value = promo1;
-    } else {
-        if (promo1 === "other") {
-            promo1input.value = "other";
-        }
-    }
-    selectOther(promo1input);
-
-    if (Number.isInteger(parseInt(promo2, 10))) {
-        promo2input.value = promo2;
-    } else {
-        if (promo2 === "other") {
-            promo2input.value = "other";
-        }
-    }
-    selectOther(promo2input);
-
-    document.getElementById("edit-qty-1").value = qty1;
-    document.getElementById("edit-qty-2").value = qty2;
-
-    document.getElementById("edit-image-1").setAttribute("src", image1);
-    if (image2) {
-        document.getElementById("edit-image-2").setAttribute("src", image2);
-    } else {
-        document.getElementById("edit-image-2").classList.add("d-none");
-    }
+    // TODO: Belum selesai
 }
 </script>
 @endsection

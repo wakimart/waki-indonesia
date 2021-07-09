@@ -191,13 +191,21 @@ class SubmissionController extends Controller
         $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         $promos = Promo::all();
+        $souvenirs = Souvenir::select("id", "name")
+            ->where("active", true)
+            ->get();
+        $prizes = Prize::select("id", "name")
+            ->where("active", true)
+            ->get();
 
         return view(
             "admin.add_submission_mgm",
             compact(
                 'promos',
                 'branches',
-                'csos'
+                'csos',
+                "prizes",
+                "souvenirs",
             )
         );
     }
@@ -221,7 +229,7 @@ class SubmissionController extends Controller
                 'branches',
                 'csos',
                 "souvenirs",
-                "prizes"
+                "prizes",
             )
         );
     }
@@ -265,64 +273,43 @@ class SubmissionController extends Controller
                     $reference->city = $data["city_ref"][$i];
                     $reference->save();
 
-                    $referencePromo = new ReferencePromo();
-                    $referencePromo->reference_id = $reference->id;
-
-                    if (isset($data["promo_1"])) {
-                        if ($data["promo_1"][$i] !== "other") {
-                            $referencePromo->promo_1 = $data["promo_1"][$i];
-                        }
+                    $referenceSouvenir = new ReferenceSouvenir();
+                    $referenceSouvenir->reference_id = $reference->id;
+                    if (
+                        isset($data["link_hs"][$i])
+                        && !empty($data["link_hs"][$i])
+                    ) {
+                        $referenceSouvenir->link_hs = json_encode(
+                            explode(", ", $data["link_hs"][$i]),
+                            JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+                        );
                     }
 
-                    if (isset($data["promo_2"])) {
-                        if ($data["promo_2"][$i] !== "other") {
-                            $referencePromo->promo_2 = $data["promo_2"][$i];
-                        }
+                    if (
+                        isset($data["order_id"][$i])
+                        && !empty($data["order_id"][$i])
+                    ) {
+                        $referenceSouvenir->order_id = $data["order_id"][$i];
                     }
 
-                    $referencePromo->qty_1 = $data["qty_1"][$i];
-
-                    if (isset($data["promo_2"])) {
-                        if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
-                            $referencePromo->qty_2 = $data["qty_2"][$i];
-                        }
+                    if (
+                        isset($data["prize_id"][$i])
+                        && !empty($data["prize_id"][$i])
+                    ) {
+                        $referenceSouvenir->prize_id = $data["prize_id"][$i];
                     }
 
-                    $referencePromo->other_1 = $data["other_1"][$i];
-                    $referencePromo->other_2 = $data["other_2"][$i];
-                    $referencePromo->save();
-
-                    $user_id = Auth::user()["id"];
-                    $path = "sources/registration";
-                    $referenceImage = new ReferenceImage();
-                    $referenceImage->reference_id = $reference->id;
-
-                    $idxImg = 1;
-                    foreach ($request->file("do-image_" . ($i + 1)) as $image) {
-                        $fileName = ((string)time())
-                            . "_"
-                            . $user_id
-                            . "_"
-                            . $i
-                            . "_"
-                            . $idxImg
-                            . "."
-                            . $image->getClientOriginalExtension();
-
-                        $image->move($path, $fileName);
-
-                        $referenceImage["image_" . ($idxImg)] = $fileName;
-
-                        $idxImg++;
-                    }
-                    $referenceImage->save();
+                    $referenceSouvenir->save();
                 }
             }
 
             DB::commit();
 
             return redirect()
-                ->route("add_submission_mgm")
+                ->route("detail_submission_form", [
+                    "id" => $reference->id,
+                    "type" => "mgm",
+                ])
                 ->with('success', 'Data berhasil dimasukkan.');
         } catch (Exception $e) {
             DB::rollBack();

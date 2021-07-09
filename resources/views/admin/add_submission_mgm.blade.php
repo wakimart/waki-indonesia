@@ -365,78 +365,55 @@ $menu_item_second = "add_submission_mgm";
                                             <div class="validation"></div>
                                         </div>
 
-                                        @for ($j = 0; $j < 2; $j++)
-                                            <div class="form-group product-group"
-                                                id="promo-group-{{ $j + 1 }}">
-                                                <div class="col-xs-12 col-sm-12 row"
-                                                    style="margin: 0;padding: 0;">
-                                                    <div class="col-xs-10 col-sm-10"
-                                                        style="padding: 0; display: inline-block;">
-                                                        <label for="promo-{{ $j + 1 }}">
-                                                            Promo {{ $j + 1 }} {{ $j > 0 ? "(optional)" : "" }}
-                                                        </label>
-                                                        <select class="form-control pilihan-product"
-                                                            id="promo-{{ $j + 1 }}-{{ $x }}"
-                                                            name="promo_{{ $j + 1 }}[]"
-                                                            data-msg="Mohon Pilih Promo"
-                                                            {{ $j > 0 || $x > 0 ? "" : "required" }}>
-                                                            <option selected
-                                                                value=""
-                                                                {{ $j === 0 && $x === 0 ? "selected" : "" }}
-                                                                {{ $j === 0 && $x === 0 ? "hidden" : "" }}>
-                                                                Choose Promo {{ $j > 0 ? "(optional)" : ""}}
-                                                            </option>
-                                                            <?php foreach ($promos as $key => $promo): ?>
-                                                                <option value="<?php echo $promo["id"]; ?>">
-                                                                    <?php
-                                                                    echo $promo->code
-                                                                        . " - ("
-                                                                        . implode(", ", $promo->productCode())
-                                                                        . ") - Rp. "
-                                                                        . number_format($promo->price);
-                                                                    ?>
-                                                                </option>
-                                                            <?php endforeach; ?>
-                                                            <option value="other">OTHER</option>
-                                                        </select>
-                                                        <div class="validation"></div>
-                                                    </div>
-                                                    <div class="col-xs-2 col-sm-2"
-                                                        style="padding-right: 0;display: inline-block;">
-                                                        <label for="qty-{{ $j }}">
-                                                            Qty
-                                                        </label>
-                                                        <select class="form-control"
-                                                            id="qty-{{ $j + 1 }}-{{ $x }}"
-                                                            name="qty_{{ $j + 1 }}[]"
-                                                            data-msg="Mohon Pilih Jumlah"
-                                                            {{ $j > 0 ? "" : "required" }}>
-                                                            <option selected value="1">
-                                                                1
-                                                            </option>
-
-                                                            @for ($i = 2; $i <= 10; $i++)
-                                                                <option value="{{ $i }}">
-                                                                    {{ $i }}
-                                                                </option>
-                                                            @endfor
-                                                        </select>
-                                                        <div class="validation"></div>
-                                                    </div>
-
-                                                    <div class="form-group d-none">
-                                                        <input type="text"
-                                                            class="form-control"
-                                                            name="other_{{ $j + 1 }}[]"
-                                                            placeholder="Product Name"
-                                                            data-msg="Please fill in the product" />
-                                                        <div class="validation"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endfor
+                                        <div class="form-group">
+                                            <label for="member-prize-{{ $x }}">
+                                                Prize
+                                            </label>
+                                            <select class="form-control"
+                                                id="member-prize-{{ $x }}"
+                                                name="prize_id[]"
+                                                {{ $x > 0 ? "" : "required" }}>
+                                                <option selected
+                                                    disabled
+                                                    hidden
+                                                    value="">
+                                                    Choose Prize
+                                                </option>
+                                                @foreach ($prizes as $prize)
+                                                    @if ($prize->id === 4)
+                                                        <option value="{{ $prize->id }}" hidden>
+                                                            {{ $prize->name }}
+                                                        </option>
+                                                    @else
+                                                        <option value="{{ $prize->id }}">
+                                                            {{ $prize->name }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
 
                                         <div class="form-group">
+                                            <label for="member-order-{{ $x }}">
+                                                Order
+                                            </label>
+                                            <input type="hidden"
+                                                id="member-order-{{ $x }}"
+                                                name="order_id[]"
+                                                value="" />
+                                            <br>
+                                            <button class="btn btn-gradient-info"
+                                                type="button"
+                                                id="btn_choose_order_{{ $x }}"
+                                                class="btn_choose_order"
+                                                data-reference="{{ $x }}"
+                                                data-toggle="modal"
+                                                data-target="#choose-order">
+                                                Choose Order
+                                            </button>
+                                        </div>
+
+                                        {{-- <div class="form-group">
                                             <label for="do-proof">
                                                 Proof Delivery Order (Image)
                                             </label>
@@ -445,7 +422,7 @@ $menu_item_second = "add_submission_mgm";
                                                 id="do-proof-{{ $x }}"
                                                 name="do-image_{{ $x + 1 }}[]"
                                                 {{ $x > 0 ? "" : "required" }} />
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 @endfor
 
@@ -482,6 +459,49 @@ $menu_item_second = "add_submission_mgm";
                         </form>
 
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="choose-order"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Choose Order
+                </h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="order-filter-name_phone">By Name / Phone</label>
+                    <input type="text"
+                        class="form-control"
+                        id="order-filter-name_phone"
+                        maxlength="191"
+                        value=""
+                        placeholder="Name / Phone"/>
+                </div>
+                <div style="overflow-y: auto; height: 20em;">
+                    <table class="col-md-12" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Date</td>
+                            <td>Detail</td>
+                            <td>Choose</td>
+                        </thead>
+                        <tbody id="table-order"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -638,6 +658,7 @@ $(document).on("change", ".changeProvince", function () {
         });
 })
 
+let orderRef = 0;
 document.addEventListener("DOMContentLoaded", function () {
     $("#cso").on("input", function () {
         check_cso($("#cso").val());
@@ -736,6 +757,56 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
+    $("#choose-order").on('shown.bs.modal', function (event) {
+        orderRef = event.relatedTarget.dataset.reference;
+
+        if ($(".modal-backdrop").length > 1) {
+            $(".modal-backdrop")[0].remove();
+        }
+
+        let branch_id = $('#branch').val();
+        getOrderSubmission("", branch_id);
+    });
+
+    $('#order-filter-name_phone').on('input', function(e) {
+        let branch_id = $('#branch').val();
+        let filter = $(this).val();
+        getOrderSubmission(filter, branch_id);
+    });
+
+    function getOrderSubmission(filter, branch_id) {
+        $('#table-order').html("");
+        let isiNya = "<tr><td colspan='3' style='text-align: center'>Loading...</td></tr>";
+        $('#table-order').append(isiNya);
+
+        $.get('{{ route("list_order_submission") }}', { filter: filter, branch_id: branch_id })
+            .done(function (result) {
+                $('#table-order').html("");
+                if (result.orders.length > 0) {
+                    let orderNya = result.orders;
+
+                    $.each( orderNya, function( key, value ) {
+                        let isiNya = "<tr><td>"+value.orderDate+"</td><td>"+
+                        "<b>Name</b>: "+value.name+"<br>"+
+                        "<b>Phone</b>: "+value.phone+"<br>"+
+                        "<b>Address</b>: "+value.address+"<br>"+
+                        "<b>Product</b>: "+value.product+"<br>"+
+                        "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya("+value.id+",\""+value.code+"\")'>Choose This</button></td></tr>";
+                        $('#table-order').append(isiNya);
+                    });
+                } else {
+                    let isiNya = "<tr><td colspan='3' style='text-align: center'>No Data</td></tr>";
+                    $('#table-order').append(isiNya);
+                }
+            });
+    }
 }, false);
+
+function selectOrderNya(id, code) {
+    $(`#member-order-${orderRef}`).val(id);
+    $(`#btn_choose_order_${orderRef}`).html("Order Code: " + code);
+    $("#choose-order").modal('hide');
+}
 </script>
 @endsection
