@@ -247,16 +247,41 @@ $menu_item_second = "detail_submission_form";
                                             @endif
                                         @endfor
                                     </td> --}}
-                                    <td class="center">
+                                    @if ($specialPermission)
+                                        <td class="text-center">
+                                            <button id="btnDetailRef_{{ $key }}"
+                                                type="button"
+                                                class="btn"
+                                                style="padding: 0;"
+                                                value="{{ $reference->id }}"
+                                                onclick="loadDataPerRef(this.value)">
+                                                <i class="mdi mdi-eye" style="font-size: 24px; color: #007bff;"></i>
+                                            </button>
+                                        </td>
+                                    @endif
+                                    <td class="text-center">
+                                        @if ($reference->status_souvenir !== "success")
+                                            <button class="btn"
+                                                id="btn-edit-save_{{ $key }}"
+                                                style="padding: 0;"
+                                                data-edit="edit_{{ $key }}"
+                                                onclick="clickEdit(this)"
+                                                data-toggle="modal"
+                                                data-target="#edit-reference"
+                                                value="{{ $reference->id }}">
+                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                            </button>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
                                         <button class="btn"
-                                            id="btn-edit-save_{{ $key }}"
+                                            id="btn-delete-reference_{{ $key }}"
                                             style="padding: 0;"
-                                            data-edit="edit_{{ $key }}"
-                                            onclick="clickEdit(this)"
+                                            onclick="deleteReference(this)"
+                                            data-id="{{ $reference->id }}"
                                             data-toggle="modal"
-                                            data-target="#edit-reference"
-                                            value="{{ $reference->id }}">
-                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                            data-target="#delete-reference-modal">
+                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                         </button>
                                     </td>
                                 </tr>
@@ -636,13 +661,11 @@ $menu_item_second = "detail_submission_form";
 <script type="application/javascript">
 let editForm = "";
 let modalTitle = "";
-let submissionId = parseInt("<?php echo $submission->id; ?>", 10);
+let submissionId = parseInt("{{ $submission->id }}", 10);
 
 document.addEventListener("DOMContentLoaded", function () {
     editForm = document.getElementById("edit-form");
     modalTitle = document.getElementById("modal-title");
-    image1 = document.getElementById("image-1");
-    image2 = document.getElementById("image-2");
 }, false);
 
 function getCSRF() {
@@ -657,36 +680,6 @@ function getCSRF() {
     }
 
     return metaCSRF;
-}
-
-function idInput(command) {
-    const idInput = document.getElementById("edit-id");
-    const submissionIdInput = document.getElementById("submission-id");
-
-    if (!idInput && command === "add") {
-        const input = document.createElement("input");
-        input.id = "edit-id";
-        input.type = "hidden";
-        input.name = "id";
-
-        editForm.prepend(input);
-
-        if (submissionIdInput) {
-            submissionIdInput.remove();
-        }
-    } else if (idInput && command === "remove") {
-        idInput.remove();
-
-        if (!submissionIdInput) {
-            const submissionIdHiddenInput = document.createElement("input");
-            submissionIdHiddenInput.id = "submission-id";
-            submissionIdHiddenInput.type = "hidden";
-            submissionIdHiddenInput.name = "submission_id";
-            submissionIdHiddenInput.value = submissionId;
-
-            editForm.prepend(submissionIdHiddenInput);
-        }
-    }
 }
 
 function setCity(e) {
@@ -732,60 +725,368 @@ function setCity(e) {
     });
 }
 
-function selectOther(e) {
-    const getNumber = e.id.split("-")[2];
-    if (e.value === "other") {
-        if (document.getElementById("other-" + getNumber).classList.contains("d-none")) {
-            document.getElementById("other-" + getNumber).classList.remove("d-none");
-        }
-    } else {
-        if (!document.getElementById("other-" + getNumber).classList.contains("d-none")) {
-            document.getElementById("other-" + getNumber).classList.add("d-none");
-            document.getElementById("other-" + getNumber).value = "";
-        }
-    }
-}
-
-function clickAdd() {
-    idInput("remove");
-    modalTitle.innerHTML = "Add Reference";
-
-    for (let i = 1; i <= 2; i++) {
-        if (!document.getElementById("edit-image-" + i).classList.contains("d-none")) {
-            document.getElementById("edit-image-" + i).classList.add("d-none");
-        }
-    }
-
-    editForm.setAttribute("action", '<?php echo route("store_reference_mgm"); ?>');
-}
-
 function submit() {
     editForm.submit();
 }
 
-// TODO: Belum selesai
+function loadDataPerRef(ref_id) {
+    $.get('{{ route("fetchDetailPerReference", ['reference' => ""]) }}/' + ref_id )
+    .done(function( result ) {
+        // Empty data
+        $('#append_tbody_hs').empty();
+        $('#append_tbody_order').empty();
+        $('#append_tbody_other').empty();
+
+        if(result.length > 0){
+            var data = JSON.parse(result);
+            var data_refs = data['data_refs']; // Reference souvenir
+            var data_ref = data['data_ref']; // Reference
+            var data_hs = data['data_hs'];
+            var data_order = data['data_order'];
+            var data_prize = data['data_prize'];
+            var detail_product = data['detail_product'];
+
+            // Detail HS
+            if (data_hs != null) {
+                $('#div_detailhs').removeClass('d-none');
+                for (var i = 0; i < data_hs.length; i++) {
+                    var url = "{{ route('homeServices_success', ['code'=>"codeTmp"]) }}";
+                    url = url.replace('codeTmp', data_hs[i]['code']);
+
+                    var img_url = "{{ asset('sources/homeservice/') }}" +"/"+ data_hs[i]['image'];
+
+                    if (data_hs[i]['image'] != null) {
+                        $('#append_tbody_hs').append('\
+                            <tr id="tr_detail_hs_'+i+'">\
+                                <td id="td_date_'+i+'">'+ data_hs[i]['appointment']+'</td>\
+                                <td id="td_link_'+i+'"><a id="a_link_'+i+'" href="'+url+'" target="_blank">Open Link</a></td>\
+                                <td id="td_detailcust_'+i+'">'+data_hs[i]['name']+'<br>'+data_hs[i]['phone']+'<br>'+data_hs[i]['address']+'</td>\
+                                <td id="td_image_'+i+'">\
+                                    <a href="'+img_url+'" target="_blank">\
+                                        <i class="mdi mdi-numeric-'+i+'-box" style="font-size: 24px; color: blue;"></i>\
+                                    </a>\
+                                </td>\
+                            </tr>\
+                        ');
+                    } else {
+                       $('#append_tbody_hs').append('\
+                            <tr id="tr_detail_hs_'+i+'">\
+                                <td id="td_date_'+i+'">'+ data_hs[i]['appointment']+'</td>\
+                                <td id="td_link_'+i+'"><a id="a_link_'+i+'" href="'+url+'" target="_blank">Open Link</a></td>\
+                                <td id="td_detailcust_'+i+'">'+data_hs[i]['name']+'<br>'+data_hs[i]['phone']+'<br>'+data_hs[i]['address']+'</td>\
+                                <td id="td_image_'+i+'">\
+                                    <a href="" target="_blank"></a>\
+                                </td>\
+                            </tr>\
+                        ');
+                    }
+
+                }
+            }
+
+            // Detail Order
+            if (data_order != null) {
+                $('#div_detailorder').removeClass('d-none');
+
+                var rowspan = detail_product.length;
+                for (var o = 0; o < detail_product.length; o++) {
+                    $('#append_tbody_order').append('\
+                        <tr id="tr_detail_order_'+o+'">\
+                            <td rowspan="'+rowspan+'" id="td_code_'+o+'">'+data_order[o]['code']+'</td>\
+                            <td rowspan="'+rowspan+'" id="td_detailcustorder_'+o+'">'+data_order[o]['name']+'<br>'+data_order[o]['phone']+'<br>'+data_order[o]['address']+'</td>\
+                            <td id="td_detailproduct_'+o+'">'+detail_product[o]['name']+'</td>\
+                            <td id="td_qtyproduct_'+o+'">'+detail_product[o]['qty']+'</td>\
+                        </tr>\
+                    ');
+                    break;
+                }
+
+                var first = true;
+                for (var y = 0; y < detail_product.length; y++) {
+                    if(first){
+                        first = false;
+                        continue;
+                    }
+                    $('#append_tbody_order').append('\
+                        <tr id="tr_detail_order_'+y+'">\
+                            <td id="td_detailproduct_'+y+'">'+detail_product[y]['name']+'</td>\
+                            <td id="td_qtyproduct_'+y+'">'+detail_product[y]['qty']+'</td>\
+                        </tr>\
+                    ');
+                }
+
+                var total_payment = parseInt(data_order[0]['total_payment']);
+                var fix_totalpayment = total_payment.toFixed(0);
+                $('#append_tbody_order').append('\
+                    <tr>\
+                        <td colspan="2" style="text-align: right;"><b>TOTAL (Rp)</b></td>\
+                        <td colspan="2" style="text-align: right;">'+fix_totalpayment+'</td>\
+                    </tr>\
+                ');
+            }
+
+            if (data_prize != null) {
+                for (var p = 0; p < data_prize.length; p++) {
+                    $('#append_tbody_other').append('\
+                        <tr id="tr_detail_souvenir">\
+                            <td>PRIZE</td>\
+                            <td>\
+                                <select id="select_edit-prize_'+p+'" class="form-control" name="prize_id">'
+                                + prizeOptionAll +
+                                '</select>\
+                            </td>\
+                            <td>\
+                                <select id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
+                                    <option value="">Choose Status</option>\
+                                    <option value="pending">pending</option>\
+                                    <option value="success">success</option>\
+                                </select>\
+                            </td>\
+                            <td>\
+                                <select id="select_edit-delivery-status-prize_'+p+'" class="form-control" name="delivery_status_prize">\
+                                    <option value="">Choose Status Delivery</option>\
+                                    <option value="undelivered">undelivered</option>\
+                                    <option value="delivered">delivered</option>\
+                                </select>\
+                            </td>\
+                        </tr>\
+                    ');
+
+                    $('#select_edit-prize_'+p).val(data_refs[p]['prize_id']);
+                    $('#select_edit-status-prize_'+p).val(data_refs[p]['status_prize']);
+                    $('#select_edit-delivery-status-prize_'+p).val(data_refs[p]['delivery_status_prize']);
+                }
+            }
+
+            if (data_prize != null) {
+                $('#ref_id').val(data_ref['id']);
+                $('#ref_name').val(data_ref['name']);
+                $('#ref_age').val(data_ref['age']);
+                $('#ref_phone').val(data_ref['phone']);
+                $('#ref_province').val(data_ref['province']);
+                $('#ref_city').val(data_ref['city']);
+                $('#refs_prize').val(data_refs[0]['prize_id']);
+                $('#refs_order').val(data_refs[0]['order_id']);
+            }
+
+            $("#modal-per-reference").modal("show");
+        }
+    });
+}
+
+function clearModal() {
+    const submissionId = '{{ $submission->id }}';
+    const actionStore = '{{ route("store_reference_referensi") }}';
+    document.getElementById("edit-form").setAttribute("action", actionStore);
+    document.getElementById("edit-id").value = submissionId;
+    document.getElementById("edit-name").value = "";
+    document.getElementById("edit-age").value = "";
+    document.getElementById("edit-phone").value = "";
+    document.getElementById("edit-province").selectedIndex = 0;
+    document.getElementById("edit-city").value = "";
+    document.getElementById("edit-prize").selectedIndex = 0;
+    document.getElementById("edit-order").value = "";
+    document.getElementById("btn_choose_order").innerHTML = "Choose Order";
+}
+
 function clickEdit(e) {
-    const getRefSeq = e.dataset.edit.split("_")[1];
-    const id = document.getElementById("id_" + getRefSeq).value;
-    const name = document.getElementById("name_" + getRefSeq).innerHTML.trim();
-    const age = document.getElementById("age_" + getRefSeq).innerHTML.trim();
-    const phone = document.getElementById("phone_" + getRefSeq).innerHTML.trim();
-    const province = document.getElementById("province_" + getRefSeq).getAttribute("data-province");
-    const city = document.getElementById("province_" + getRefSeq).getAttribute("data-city");
+    clearModal();
+    const refSeq = e.dataset.edit.split("_")[1];
 
-    idInput("add");
-    modalTitle.innerHTML = "Edit Reference";
-    editForm.setAttribute("action", '<?php echo route("update_reference_mgm"); ?>');
+    const actionUpdate = '{{ route("update_reference") }}';
+    const id = document.getElementById("edit-id_" + refSeq).value;
+    const name = document.getElementById("name_" + refSeq).innerHTML.trim();
+    const age = document.getElementById("age_" + refSeq).innerHTML.trim();
+    const phone = document.getElementById("phone_" + refSeq).innerHTML.trim();
+    const province = document.getElementById("province_" + refSeq).getAttribute("data-province");
+    const city = document.getElementById("city_" + refSeq).getAttribute("data-city");
+    const prize = document.getElementById("prize_" + refSeq).dataset.prize;
 
+    function orderId() {
+        try {
+            return document.getElementById("order_" + refSeq).dataset.order;
+        } catch (error) {
+            delete error;
+            return "";
+        }
+    }
+
+    function orderCode() {
+        try {
+            return document.getElementById("order_" + refSeq).innerHTML.trim();
+        } catch (error) {
+            delete error;
+            return "";
+        }
+    }
+
+    document.getElementById("edit-form").setAttribute("action", actionUpdate);
     document.getElementById("edit-id").value = id;
+    document.getElementById("btn_add_hs_reference").value = id;
     document.getElementById("edit-name").value = name;
     document.getElementById("edit-age").value = age;
     document.getElementById("edit-phone").value = phone;
     document.getElementById("edit-province").value = province;
-    document.getElementById("edit-province").setAttribute("data-city", city);
-    setCity(document.getElementById("edit-province"));
+    setCityAdd(document.getElementById("edit-province"));
+    setTimeout(function () {
+        document.getElementById("edit-city").value = city;
+    }, 500);
+    document.getElementById("edit-prize").value = prize;
 
-    // TODO: Belum selesai
+    document.getElementById("edit-order").value = orderId();
+    document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Order";
+}
+
+// NEW System
+$(document).ready(function () {
+    let originButton = "";
+
+    $("#edit-reference").on('shown.bs.modal', function () {
+        if ($(".modal-backdrop").length > 1) {
+            $(".modal-backdrop")[0].remove();
+        }
+    });
+
+    $("#edit-reference").on('hidden.bs.modal', function () {
+        $('body').removeClass('modal-open');
+        $('.modal-backdrop').remove();
+    });
+
+    // KHUSUS UNTUK ORDER
+    $("#choose-order").on('shown.bs.modal', function (event) {
+        originButton = event.relatedTarget.dataset.originbutton;
+
+        let submission_id = "{{ $submission->id }}";
+        getOrderSubmission("", submission_id, originButton);
+    });
+
+    $("#choose-order").on('hidden.bs.modal', function () {
+        $("#edit-reference").modal('show');
+    });
+
+    $('#order-filter-name_phone').on('input', function (e) {
+        let submission_id = "{{ $submission->id }}";
+        let filter = $(this).val();
+        getOrderSubmission(filter, submission_id);
+    });
+
+    function getOrderSubmission(filter, submission_id, originButton) {
+        $('#table-order').html("");
+        let isiNya = "<tr><td colspan='3' style='text-align: center'>Loading...</td></tr>";
+        $('#table-order').append(isiNya);
+
+        $.get('{{ route("list_order_submission") }}', { filter: filter, submission_id: submission_id })
+            .done(function (result) {
+                $('#table-order').html("");
+                if (result.orders.length > 0) {
+                    let orderNya = result.orders;
+
+                    $.each(orderNya, function (key, value) {
+                        let isiNya = "<tr><td>" + value.orderDate + "</td><td>" +
+                        "<b>Name</b>: " + value.name + "<br>" +
+                        "<b>Phone</b>: " + value.phone + "<br>" +
+                        "<b>Address</b>: " + value.address + "<br>" +
+                        "<b>Product</b>: " + value.product + "<br>";
+
+                        if (originButton === "btn_choose_order") {
+                            isiNya += "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya(" + value.id + ", \"" + value.code + "\")'>Choose This</button></td></tr>";
+                        } else {
+                            isiNya += `</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderForEdit(${value.id}, "${value.code}", "${originButton}")'>Choose This</button></td></tr>`;
+                        }
+
+                        $('#table-order').append(isiNya);
+                    });
+                } else {
+                    let isiNya = "<tr><td colspan='3' style='text-align: center;'>No Data</td></tr>";
+                    $('#table-order').append(isiNya);
+                }
+            });
+    }
+
+    //UPDATE STATUS ONLY
+    var frmUpdate;
+
+    $("#formUpdateStatus").on("submit", function (e) {
+        e.preventDefault();
+        frmAdd = _("formUpdateStatus");
+        frmAdd = new FormData(document.getElementById("formUpdateStatus"));
+        frmAdd.enctype = "multipart/form-data";
+        var URLNya = $("#formUpdateStatus").attr('action');
+        console.log(URLNya);
+
+        var ajax = new XMLHttpRequest();
+        ajax.upload.addEventListener("progress", progressHandler, false);
+        ajax.addEventListener("load", completeHandler, false);
+        ajax.addEventListener("error", errorHandler, false);
+        ajax.open("POST", URLNya);
+        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+        ajax.send(frmAdd);
+    });
+
+    function progressHandler(event){
+        document.getElementById("btn-confirmUpdate").innerHTML = "UPLOADING...";
+    }
+
+    function completeHandler(event){
+        var hasil = JSON.parse(event.target.responseText);
+
+        for (var key of frmAdd.keys()) {
+            $("#formUpdateStatus").find("input[name="+key.name+"]").removeClass("is-invalid");
+            $("#formUpdateStatus").find("select[name="+key.name+"]").removeClass("is-invalid");
+            $("#formUpdateStatus").find("textarea[name="+key.name+"]").removeClass("is-invalid");
+
+            $("#formUpdateStatus").find("input[name="+key.name+"]").next().find("strong").text("");
+            $("#formUpdateStatus").find("select[name="+key.name+"]").next().find("strong").text("");
+            $("#formUpdateStatus").find("textarea[name="+key.name+"]").next().find("strong").text("");
+        }
+
+        if(hasil['errors'] != null){
+            for (var key of frmAdd.keys()) {
+                if (typeof hasil['errors'][key] === 'undefined') {
+
+                } else {
+                    $("#formUpdateStatus").find("input[name="+key+"]").addClass("is-invalid");
+                    $("#formUpdateStatus").find("select[name="+key+"]").addClass("is-invalid");
+                    $("#formUpdateStatus").find("textarea[name="+key+"]").addClass("is-invalid");
+
+                    $("#formUpdateStatus").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                    $("#formUpdateStatus").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                    $("#formUpdateStatus").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                }
+            }
+            alert(hasil['errors']);
+        }
+        else{
+            alert("Input Success !!!");
+            window.location.reload()
+        }
+
+        document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";
+    }
+
+    function errorHandler(event){
+        document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";
+    }
+});
+
+function selectOrderNya(id, code) {
+    $('#edit-order').val(id);
+    $('#btn_choose_order').html("Order Code: " + code);
+    $("#choose-order").modal('hide');
+}
+
+function selectOrderForEdit(id, code, origin) {
+    const REF_SEQ = origin.split("_")[1];
+    document.getElementById("order_id_" + REF_SEQ).value = id;
+    document.getElementById("btn-choose-order-edit_" + REF_SEQ).innerHTML = code;
+
+    $("#choose-order-close").click();
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+}
+
+function deleteReference(e) {
+    document.getElementById("delete-reference-id").value = e.dataset.id;
 }
 </script>
 @endsection
