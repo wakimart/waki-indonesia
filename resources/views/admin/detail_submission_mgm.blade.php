@@ -134,14 +134,14 @@ if (
                         <td>Sales Code</td>
                     </thead>
                     <tr>
-                        <td style="width:50%; text-align: center;">
+                        <td style="width:50%; text-align: center">
                             <?php
                             echo $submission->branch_code
                                 . " - "
                                 . $submission->branch_name;
                             ?>
                         </td>
-                        <td style="width:50%; text-align: center;">
+                        <td style="width:50%; text-align: center">
                             {{ $submission->cso_code }}
                         </td>
                     </tr>
@@ -207,16 +207,14 @@ if (
                                         data-order="{{ $reference->order_id }}"
                                         style="overflow-x: auto;">
                                         @php
-                                        $linkOrder = "-";
                                         if (!empty($reference->order_id)) {
                                             $order = Order::select("id", "code")
                                                 ->where("id", $reference->order_id)
                                                 ->first();
 
-                                            $linkOrder = $order->code;
+                                            echo $order->code;
                                         }
                                         @endphp
-                                        <a target="_blank" href="{{ $linkOrder != "-" ? Route('order_success').'?code='.$linkOrder : '#'}}">{{$linkOrder}}</a>
                                     </td>
                                     <td class="text-center"
                                         id="prize_{{ $key }}"
@@ -248,6 +246,22 @@ if (
                                         data-permission="{{ $specialPermission }}">
                                         {{ $reference->delivery_status_prize }}
                                     </td>
+                                    {{-- <td class="center"
+                                        id="image_{{ $key }}"
+                                        data-image1="{{ asset("sources/registration/" . $reference->image_1) }}"
+                                        @if ($reference->image_2 !== null)
+                                            data-image2="{{ asset("sources/registration/" . $reference->image_2) }}"
+                                        @endif
+                                        >
+                                        @for ($i = 1; $i <= 2; $i++)
+                                            @if (!empty($reference["image_" . $i]))
+                                                <a href="{{ asset("sources/registration/" . $reference["image_" . $i]) }}"
+                                                    target="_blank">
+                                                    <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: blue;"></i>
+                                                </a>
+                                            @endif
+                                        @endfor
+                                    </td> --}}
                                     @if ($specialPermission)
                                         <td class="text-center">
                                             <button id="btnDetailRef_{{ $key }}"
@@ -296,7 +310,7 @@ if (
                 <button class="btn btn-gradient-primary mt-2"
                     data-toggle="modal"
                     data-target="#edit-reference"
-                    onclick="clearModal()">
+                    onclick="clickAdd()">
                     Add Reference - MGM
                 </button>
             </div>
@@ -377,7 +391,7 @@ if (
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-title">Reference</h5>
+                <h5 class="modal-title" id="modal-title">Edit Reference</h5>
                 <button type="button"
                     id="edit-close"
                     class="close"
@@ -390,9 +404,6 @@ if (
                 <form id="edit-form" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="edit-id" name="id" value="" />
-                    <input type="hidden"
-                        name="submission_id"
-                        value="{{ $submission->id }}" />
                     <input type="hidden"
                         id="url"
                         name="url"
