@@ -210,12 +210,12 @@
                     </tr>
                     <tr>
                         <td width="50%"><li>ECO DISINFECTANT</li></td>
-                        <td width="50%"><li>BEDSHEET</li></td>
+                        {{-- <td width="50%"><li>BEDSHEET</li></td> --}}
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <td width="50%"><li>BIO ENERGY WATER SYSTEM (WKB8002)</li></td>
                         <td width="50%"><li>Voucher WAKimart Rp. 1.000.000</li></td>
-                    </tr>
+                    </tr> --}}
                 </table>
             </div>
         </div>
