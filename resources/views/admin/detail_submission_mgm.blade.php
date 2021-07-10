@@ -306,7 +306,7 @@ if (
                 </div>
             </div>
 
-            <div class="col-md-12 center">
+            <div class="col-md-12 text-center mt-4">
                 <button class="btn btn-gradient-primary mt-2"
                     data-toggle="modal"
                     data-target="#edit-reference"
@@ -314,6 +314,29 @@ if (
                     Add Reference - MGM
                 </button>
             </div>
+
+
+
+            <div class="col-md-12 center"
+                style="margin-top: 3em;">
+                <div class="row justify-content-center">
+                    <h2 class="text-center share">
+                        Share Submission Form
+                    </h2>
+                </div>
+                <form class="forms-sample"
+                    method="GET"
+                    action="https://wa.me/">
+                    <div class="form-group row justify-content-center">
+                        <button type="submit"
+                            class="btn btn-gradient-primary mr-2 my-2"
+                            name="text"
+                            value="Terima Kasih telah mengikuti program *Member Get Member*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">
+                            Share Program MGM
+                        </button>
+                    </div>
+                </form>
+             </div>
 
             @if ($historySubmission->isNotEmpty())
                 <div class="row justify-content-center"
