@@ -207,14 +207,16 @@ if (
                                         data-order="{{ $reference->order_id }}"
                                         style="overflow-x: auto;">
                                         @php
+                                        $linkOrder = "-";
                                         if (!empty($reference->order_id)) {
                                             $order = Order::select("id", "code")
                                                 ->where("id", $reference->order_id)
                                                 ->first();
 
-                                            echo $order->code;
+                                            $linkOrder = $order->code;
                                         }
                                         @endphp
+                                        <a target="_blank" href="{{ $linkOrder != "-" ? Route('order_success').'?code='.$linkOrder : '#'}}">{{$linkOrder}}</a>
                                     </td>
                                     <td class="text-center"
                                         id="prize_{{ $key }}"
