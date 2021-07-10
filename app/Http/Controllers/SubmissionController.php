@@ -298,7 +298,7 @@ class SubmissionController extends Controller
 
             return redirect()
                 ->route("detail_submission_form", [
-                    "id" => $reference->id,
+                    "id" => $submission->id,
                     "type" => "mgm",
                 ])
                 ->with('success', 'Data berhasil dimasukkan.');
@@ -493,8 +493,8 @@ class SubmissionController extends Controller
         $prizes = "";
         if ($request->type === "mgm") {
             $submission = $this->querySubmissionMGM($request->id);
-            $references = $this->queryReferenceMGM($request->id);
-            $promos = Promo::all();
+            $references = $this->queryReferenceReferensi($request->id);
+            $prizes = Prize::where("active", true)->get();
         } elseif ($request->type === "referensi") {
             $submission = $this->querySubmissionReferensi($request->id);
             $references = $this->queryReferenceReferensi($request->id);

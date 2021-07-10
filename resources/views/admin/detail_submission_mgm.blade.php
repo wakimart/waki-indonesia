@@ -1,9 +1,18 @@
 <?php
 
 use App\Order;
+use App\Prize;
 
 $menu_item_page = "submission";
 $menu_item_second = "detail_submission_form";
+
+$specialPermission = true;
+if (
+    Auth::user()->roles[0]->slug === "branch"
+    || Auth::user()->roles[0]->slug === "cso"
+) {
+    $specialPermission = false;
+}
 ?>
 @extends('admin.layouts.template')
 
@@ -141,7 +150,7 @@ $menu_item_second = "detail_submission_form";
                 <div class="table-responsive">
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="11">Reference</td>
+                            <td colspan="12">Reference</td>
                         </thead>
                         <thead style="background-color: #80808012 !important;">
                             <tr>
@@ -155,7 +164,7 @@ $menu_item_second = "detail_submission_form";
                                 <td>Status</td>
                                 <td>Deliv. Status</td>
                                 @if ($specialPermission)
-                                    <th class="text-center">View</th>
+                                    <td class="text-center">View</td>
                                 @endif
                                 <td class="text-center">Edit</td>
                                 <td class="text-center">Delete</td>
@@ -166,6 +175,12 @@ $menu_item_second = "detail_submission_form";
                                 <input type="hidden"
                                     class="d-none"
                                     id="id_{{ $key }}"
+                                    value="{{ $reference->id }}" />
+                                <input type="hidden"
+                                    id="edit-id_{{ $key }}"
+                                    class="d-none"
+                                    name="id"
+                                    form="edit-form_{{ $key }}"
                                     value="{{ $reference->id }}" />
                                 <tr>
                                     <td id="name_{{ $key }}">
@@ -190,7 +205,7 @@ $menu_item_second = "detail_submission_form";
                                     <td class="text-center"
                                         id="order_{{ $key }}"
                                         data-order="{{ $reference->order_id }}"
-                                        style="overflow-x:auto; display: none;">
+                                        style="overflow-x: auto;">
                                         @php
                                         if (!empty($reference->order_id)) {
                                             $order = Order::select("id", "code")
@@ -662,10 +677,48 @@ $menu_item_second = "detail_submission_form";
 let editForm = "";
 let modalTitle = "";
 let submissionId = parseInt("{{ $submission->id }}", 10);
+let prizeOptionAll = `<option selected value="">Choose Prize</option>`;
+let prizeOption = `<option selected value="">Choose Prize</option>`;
 
 document.addEventListener("DOMContentLoaded", function () {
     editForm = document.getElementById("edit-form");
     modalTitle = document.getElementById("modal-title");
+
+    fetch(
+        '{{ route("fetchPrize") }}',
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const result = response.data;
+
+        result.forEach(function (currentValue) {
+            if (currentValue["id"] === 4) {
+                prizeOption += `<option value="${currentValue["id"]}" hidden>`
+                    + currentValue["name"]
+                    + `</option>`;
+            } else {
+                prizeOption += `<option value="${currentValue["id"]}">`
+                    + currentValue["name"]
+                    + `</option>`;
+            }
+
+            prizeOptionAll += `<option value="${currentValue["id"]}">`
+                + currentValue["name"]
+                + `</option>`;
+        });
+    }).catch(function (error) {
+        console.error(error);
+    });
 }, false);
 
 function getCSRF() {
@@ -719,6 +772,48 @@ function setCity(e) {
 
             document.getElementById("edit-city").innerHTML = arrCity[0] + arrCity[1];
             document.getElementById("edit-city").value = e.dataset.city;
+        }
+    }).catch(function(error) {
+        console.error(error);
+    });
+}
+
+function setCityAdd(e) {
+    fetch(
+        '<?php echo route("fetchCity", ["province" => ""]); ?>/' + e.value,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const result = response["rajaongkir"]["results"];
+
+        const arrCity = [];
+        arrCity[0] = '<option disabled value="">Pilihan Kabupaten</option>';
+        arrCity[1] = '<option disabled value="">Pilihan Kota</option>';
+
+        if (result.length > 0) {
+            result.forEach(function (currentValue) {
+                if (currentValue["type"] === "Kabupaten") {
+                    arrCity[0] += `<option value="${currentValue["city_id"]}">`
+                        + `${currentValue['type']} ${currentValue['city_name']}`
+                        + `</option>`;
+                } else {
+                    arrCity[1] += `<option value="${currentValue['city_id']}">`
+                        + `${currentValue['type']} ${currentValue['city_name']}`
+                        + `</option>`;
+                }
+            });
+
+            document.getElementById("edit-city").innerHTML = arrCity[0] + arrCity[1];
         }
     }).catch(function(error) {
         console.error(error);
@@ -922,7 +1017,6 @@ function clickEdit(e) {
 
     document.getElementById("edit-form").setAttribute("action", actionUpdate);
     document.getElementById("edit-id").value = id;
-    document.getElementById("btn_add_hs_reference").value = id;
     document.getElementById("edit-name").value = name;
     document.getElementById("edit-age").value = age;
     document.getElementById("edit-phone").value = phone;
