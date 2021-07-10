@@ -190,7 +190,7 @@ class SubmissionController extends Controller
     {
         $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
-        $promos = Promo::all();
+        // $promos = Promo::all();
         $souvenirs = Souvenir::select("id", "name")
             ->where("active", true)
             ->get();
@@ -201,7 +201,7 @@ class SubmissionController extends Controller
         return view(
             "admin.add_submission_mgm",
             compact(
-                'promos',
+                // 'promos',
                 'branches',
                 'csos',
                 "prizes",
@@ -275,15 +275,6 @@ class SubmissionController extends Controller
 
                     $referenceSouvenir = new ReferenceSouvenir();
                     $referenceSouvenir->reference_id = $reference->id;
-                    if (
-                        isset($data["link_hs"][$i])
-                        && !empty($data["link_hs"][$i])
-                    ) {
-                        $referenceSouvenir->link_hs = json_encode(
-                            explode(", ", $data["link_hs"][$i]),
-                            JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
-                        );
-                    }
 
                     if (
                         isset($data["order_id"][$i])

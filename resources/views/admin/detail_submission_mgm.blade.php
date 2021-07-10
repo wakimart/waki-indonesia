@@ -583,7 +583,7 @@ $menu_item_second = "detail_submission_form";
                     </table>
                 </div>
 
-                <form id="formUpdateStatus" method="POST" action="{{ route('update_reference') }}">
+                <form id="formUpdateStatus" method="POST" action="{{ route('update_reference_mgm') }}">
                     @csrf
                     <div class="form-group">
                         <label>Other Detail</label>
@@ -876,7 +876,7 @@ function loadDataPerRef(ref_id) {
 
 function clearModal() {
     const submissionId = '{{ $submission->id }}';
-    const actionStore = '{{ route("store_reference_referensi") }}';
+    const actionStore = '{{ route("store_reference_mgm") }}';
     document.getElementById("edit-form").setAttribute("action", actionStore);
     document.getElementById("edit-id").value = submissionId;
     document.getElementById("edit-name").value = "";
@@ -893,7 +893,7 @@ function clickEdit(e) {
     clearModal();
     const refSeq = e.dataset.edit.split("_")[1];
 
-    const actionUpdate = '{{ route("update_reference") }}';
+    const actionUpdate = '{{ route("update_reference_mgm") }}';
     const id = document.getElementById("edit-id_" + refSeq).value;
     const name = document.getElementById("name_" + refSeq).innerHTML.trim();
     const age = document.getElementById("age_" + refSeq).innerHTML.trim();

@@ -558,7 +558,7 @@ function validateForm() {
     // This function deals with validation of the form fields
     let valid = true;
 
-    const inputArray = ["member-name-", "member-age-", "member-phone-", "member-province-", "member-city-", "promo-1-", "qty-1-", "do-proof-"];
+    const inputArray = ["member-name-", "member-age-", "member-phone-", "member-province-", "member-city-"];
 
     inputArray.forEach(function (currentValue) {
         const inputBeingChecked = document.getElementById(currentValue + currentTab);
@@ -600,7 +600,7 @@ function requiredAttributeHandler(e) {
         return;
     }
 
-    const inputArray = ["member-name-", "member-age-", "member-phone-", "member-province-", "member-city-", "promo-1-", "qty-1-", "do-proof-"];
+    const inputArray = ["member-name-", "member-age-", "member-phone-", "member-province-", "member-city-"];
     let isEmpty = true;
 
     if (e.value) {
