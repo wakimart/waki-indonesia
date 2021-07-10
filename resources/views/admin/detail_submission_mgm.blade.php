@@ -20,6 +20,7 @@ if (
 <style type="text/css">
     #intro {
         padding-top: 2em;
+        min-width: 0;
     }
 
     table {
@@ -28,14 +29,9 @@ if (
     }
 
     .table-responsive table {
-        display: inline-table;
-        table-layout:fixed;
+        width: 100%; 
         overflow:scroll;
-    }
-
-    .table-responsive table td {
-        word-wrap:break-word;
-    }
+    } 
 
     .table-responsive table .form-control {
         height: 32px;
@@ -73,6 +69,14 @@ if (
     select.form-control {
         color: black !important;
     }
+
+    @media screen and (max-width: 768px) {
+
+        .table-responsive{
+            margin-right: 10px;
+        }
+    }
+
 </style>
 @endsection
 
