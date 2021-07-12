@@ -225,17 +225,11 @@ if (
                                         data-prize="{{ $reference->prize_id }}"
                                         data-permission="{{ $specialPermission }}">
                                         @php
-                                        $bonus_prize = ($key + 1) % 3;
                                         if (!empty($reference->prize_id)) {
                                             $prize = Prize::select("id", "name")
                                                 ->where("id", $reference->prize_id)
                                                 ->first();
-
-                                            if ($bonus_prize == 0) {
-                                                echo $prize->name . " + Voucher WAKimart Rp. 1.000.000";
-                                            } else {
-                                                echo $prize->name;
-                                            }
+                                            echo $prize->name;
                                         }
                                         @endphp
                                     </td>
