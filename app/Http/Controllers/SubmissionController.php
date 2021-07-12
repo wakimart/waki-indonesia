@@ -99,6 +99,7 @@ class SubmissionController extends Controller
      */
     public function index(Request $request)
     {
+        $url = $request->all();
         // Memasukkan klausa WHERE yang digunakan berkali-kali ke dalam array
         $whereArray = [];
         $whereArray[] = ["active", true];
@@ -137,7 +138,11 @@ class SubmissionController extends Controller
             $submissions = Submission::where($whereArray);
         }
 
-        if (!empty($request->filter_text)) {
+        if ($request->has('filter_type')) {
+            $submissions = $submissions->where("type", $request->filter_type);
+        }
+
+        if ($request->has('filter_text')) {
             $filter_text = $request->filter_text;
             $submissions = $submissions->where(function ($q) use ($filter_text){
                 $q->where('name', "like", "%" . $filter_text . "%")
@@ -146,21 +151,21 @@ class SubmissionController extends Controller
             });
         }
 
-        if (!empty($request->filter_branch)) {
+        if ($request->has('filter_branch')) {
             $submissions = $submissions->where("branch_id", $request->filter_branch);
         }
 
-        if (!empty($request->filter_cso)) {
+        if ($request->has('filter_cso')) {
             $submissions = $submissions->where("cso_id", $request->filter_cso);
         }
 
         $csos = Cso::select("id", "code", "name")
             ->where("active", true)
-            ->orderBy("id")
+            ->orderBy("code", 'asc')
             ->get();
         $branches = Branch::select("id", "code", "name")
             ->where("active", true)
-            ->orderBy("id")
+            ->orderBy("code", 'asc')
             ->get();
         $submissions = $submissions->orderBy('id', "desc")->paginate(10);
 
@@ -170,6 +175,7 @@ class SubmissionController extends Controller
                 "submissions",
                 "csos",
                 "branches",
+                "url",
             )
         )
         ->with("i", (request()->input("page", 1) - 1) * 10 + 1);
@@ -182,23 +188,31 @@ class SubmissionController extends Controller
      */
     public function createMGM(): \Illuminate\View\View
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
-        $promos = Promo::all();
+        // $promos = Promo::all();
+        $souvenirs = Souvenir::select("id", "name")
+            ->where("active", true)
+            ->get();
+        $prizes = Prize::select("id", "name")
+            ->where("active", true)
+            ->get();
 
         return view(
             "admin.add_submission_mgm",
             compact(
-                'promos',
+                // 'promos',
                 'branches',
-                'csos'
+                'csos',
+                "prizes",
+                "souvenirs",
             )
         );
     }
 
     public function createReference(): \Illuminate\View\View
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         $promos = Promo::all();
         $souvenirs = Souvenir::select("id", "name")
@@ -215,14 +229,14 @@ class SubmissionController extends Controller
                 'branches',
                 'csos',
                 "souvenirs",
-                "prizes"
+                "prizes",
             )
         );
     }
 
     public function createTakeaway(): \Illuminate\View\View
     {
-        $branches = Branch::where('active', true)->get();
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         $promos = Promo::all();
 
@@ -259,64 +273,34 @@ class SubmissionController extends Controller
                     $reference->city = $data["city_ref"][$i];
                     $reference->save();
 
-                    $referencePromo = new ReferencePromo();
-                    $referencePromo->reference_id = $reference->id;
+                    $referenceSouvenir = new ReferenceSouvenir();
+                    $referenceSouvenir->reference_id = $reference->id;
 
-                    if (isset($data["promo_1"])) {
-                        if ($data["promo_1"][$i] !== "other") {
-                            $referencePromo->promo_1 = $data["promo_1"][$i];
-                        }
+                    if (
+                        isset($data["order_id"][$i])
+                        && !empty($data["order_id"][$i])
+                    ) {
+                        $referenceSouvenir->order_id = $data["order_id"][$i];
                     }
 
-                    if (isset($data["promo_2"])) {
-                        if ($data["promo_2"][$i] !== "other") {
-                            $referencePromo->promo_2 = $data["promo_2"][$i];
-                        }
+                    if (
+                        isset($data["prize_id"][$i])
+                        && !empty($data["prize_id"][$i])
+                    ) {
+                        $referenceSouvenir->prize_id = $data["prize_id"][$i];
                     }
 
-                    $referencePromo->qty_1 = $data["qty_1"][$i];
-
-                    if (isset($data["promo_2"])) {
-                        if (!empty($data["promo_2"][$i]) || !empty($data["other_2"][$i])) {
-                            $referencePromo->qty_2 = $data["qty_2"][$i];
-                        }
-                    }
-
-                    $referencePromo->other_1 = $data["other_1"][$i];
-                    $referencePromo->other_2 = $data["other_2"][$i];
-                    $referencePromo->save();
-
-                    $user_id = Auth::user()["id"];
-                    $path = "sources/registration";
-                    $referenceImage = new ReferenceImage();
-                    $referenceImage->reference_id = $reference->id;
-
-                    $idxImg = 1;
-                    foreach ($request->file("do-image_" . ($i + 1)) as $image) {
-                        $fileName = ((string)time())
-                            . "_"
-                            . $user_id
-                            . "_"
-                            . $i
-                            . "_"
-                            . $idxImg
-                            . "."
-                            . $image->getClientOriginalExtension();
-
-                        $image->move($path, $fileName);
-
-                        $referenceImage["image_" . ($idxImg)] = $fileName;
-
-                        $idxImg++;
-                    }
-                    $referenceImage->save();
+                    $referenceSouvenir->save();
                 }
             }
 
             DB::commit();
 
             return redirect()
-                ->route("add_submission_mgm")
+                ->route("detail_submission_form", [
+                    "id" => $submission->id,
+                    "type" => "mgm",
+                ])
                 ->with('success', 'Data berhasil dimasukkan.');
         } catch (Exception $e) {
             DB::rollBack();
@@ -390,19 +374,22 @@ class SubmissionController extends Controller
                         );
                     }
 
-                    if (
-                        isset($data["order_id"][$i])
-                        && !empty($data["order_id"][$i])
-                    ) {
-                        $referenceSouvenir->order_id = $data["order_id"][$i];
-                    }
+                    // MENONAKTIFKAN KEUNTUNGAN BIAYA IKLAN //
+                    // if (
+                    //     isset($data["order_id"][$i])
+                    //     && !empty($data["order_id"][$i])
+                    // ) {
+                    //     $referenceSouvenir->order_id = $data["order_id"][$i];
+                    // }
 
-                    if (
-                        isset($data["prize_id"][$i])
-                        && !empty($data["prize_id"][$i])
-                    ) {
-                        $referenceSouvenir->prize_id = $data["prize_id"][$i];
-                    }
+                    // if (
+                    //     isset($data["prize_id"][$i])
+                    //     && !empty($data["prize_id"][$i])
+                    // ) {
+                    //     $referenceSouvenir->prize_id = $data["prize_id"][$i];
+                    // }
+                    $referenceSouvenir->order_id = null;
+                    $referenceSouvenir->prize_id = null;
 
                     $referenceSouvenir->save();
                 }
@@ -506,8 +493,8 @@ class SubmissionController extends Controller
         $prizes = "";
         if ($request->type === "mgm") {
             $submission = $this->querySubmissionMGM($request->id);
-            $references = $this->queryReferenceMGM($request->id);
-            $promos = Promo::all();
+            $references = $this->queryReferenceReferensi($request->id);
+            $prizes = Prize::where("active", true)->get();
         } elseif ($request->type === "referensi") {
             $submission = $this->querySubmissionReferensi($request->id);
             $references = $this->queryReferenceReferensi($request->id);
@@ -546,7 +533,7 @@ class SubmissionController extends Controller
                 $submission = $this->querySubmissionTakeaway($request->id);
             }
 
-            $branches = Branch::where("active", true)->get();
+            $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
             $promos = Promo::all();
 
             return view(
@@ -1756,7 +1743,8 @@ class SubmissionController extends Controller
         return view('sehatbersamawaki', compact('submission', 'souvenirs'));
     }
 
-    public function firstRunStatus(){
+    public function firstRunStatus()
+    {
         $submission_all = Submission::where([['active', true], ['type', 'referensi']])->get();
 
         foreach ($submission_all as $eachSub) {
@@ -1774,5 +1762,38 @@ class SubmissionController extends Controller
                  'data' => "Berhasil"
                 ];
         return response()->json($data, 200);
+    }
+
+    public function queryNewSubmissionMGM(Request $request)
+    {
+        $submission = $this->querySubmission($request->id);
+        $submission = $submission->first();
+
+        $references = $this->queryReference($request->id);
+        $references = $references->addSelect(
+            "reference_souvenirs.order_id AS order_id",
+            DB::raw("'$request->prize' AS prize_id"),
+            "reference_souvenirs.status_prize AS status_prize",
+            "reference_souvenirs.delivery_status_prize AS delivery_status_prize"
+        )
+        ->leftJoin(
+            "reference_souvenirs",
+            "references.id",
+            "=",
+            "reference_souvenirs.reference_id"
+        )
+        ->leftJoin(
+            "souvenirs",
+            "reference_souvenirs.souvenir_id",
+            "=",
+            "souvenirs.id"
+        )
+        ->get();
+
+        return response()->json([
+            "result" => 1,
+            "submission" => $submission,
+            "references" => $references,
+        ]);
     }
 }

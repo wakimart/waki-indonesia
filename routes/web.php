@@ -243,6 +243,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //refrence
     Route::get('/fetchDetailPerReference/{reference}', 'SubmissionController@fetchDetailPerReference')->name('fetchDetailPerReference');
 
+    //fetchperpromo
+    Route::get('/fetchDetailPromo/{promo}', 'OrderController@fetchDetailPromo')->name('fetchDetailPromo');
+
     Route::group(['prefix' => 'useradmin', 'middleware' => 'auth'], function() {
         //Add Form UserAdmin
         Route::get('/', 'UserAdminController@create')
@@ -435,6 +438,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update/', 'ServiceController@update')
             ->name('update_service')
             ->middleware('can:edit-service');
+
+        // Delete service
+        Route::post("/delete", "ServiceController@destroy")
+            ->name("delete_service");
     });
 
     Route::group(['prefix' => 'product_service', 'middleware' => 'auth'], function() {
@@ -718,6 +725,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Process submission form delete
         Route::post("/delete/", "SubmissionController@destroy")
             ->name("delete_submission_form");
+
+        // Submission MGM Query with prize as parameter
+        Route::get("/get/mgm2", "SubmissionController@queryNewSubmissionMGM")
+            ->name("query_new_submission_mgm");
     });
 
     Route::group(["prefix" => "reference", "middleware" => "auth"], function () {

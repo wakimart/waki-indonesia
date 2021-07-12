@@ -21,7 +21,9 @@ class ProductServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::where('active', true)->get();
+        $services = Service::where('active', true)
+            ->orderBy("service_date", "desc")
+            ->get();
         $upgrades = Upgrade::where('active', true)->get();
         $countServices = $services->count();
         $countUpgrades = $upgrades->count();

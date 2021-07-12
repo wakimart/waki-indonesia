@@ -127,59 +127,13 @@ class ReferenceController extends Controller
             ));
             $reference->save();
 
-            $referencePromo = new ReferencePromo();
-            $referencePromo->reference_id = $reference->id;
-            if (isset($request->promo_1)) {
-                if ($request->promo_1 !== "other") {
-                    $referencePromo->promo_1 = $request->promo_1;
-                }
-            }
-
-            if (isset($request->promo_2)) {
-                if ($request->promo_2 !== "other") {
-                    $referencePromo->promo_2 = $request->promo_2;
-                }
-            }
-
-            $referencePromo->qty_1 = $request->qty_1;
-
-            if (
-                isset($request->promo_2)
-                || isset($request->other_2)
-            ) {
-                if (
-                    !empty($request->promo_2)
-                    || !empty($request->other_2)
-                ) {
-                    $referencePromo->qty_2 = $request->qty_2;
-                }
-            }
-
-            $referencePromo->other_1 = $request->other_1;
-            $referencePromo->other_2 = $request->other_2;
-            $referencePromo->save();
-
-            $path = "sources/registration";
-            $referenceImage = new ReferenceImage();
-            $referenceImage->reference_id = $reference->id;
-            $userId = Auth::user()["id"];
-            for ($i = 1; $i <= 2; $i++) {
-                $imageInput = "image_" . $i;
-                if ($request->hasFile($imageInput)) {
-                    $fileName = ((string)time())
-                    . "_"
-                    . $userId
-                    . "_"
-                    . $i
-                    . "."
-                    . $request->file($imageInput)->getClientOriginalExtension();
-
-                    $request->file($imageInput)->move($path, $fileName);
-
-                    $referenceImage["image_" . $i] = $fileName;
-                }
-            }
-            $referenceImage->save();
+            $referenceSouvenir = new ReferenceSouvenir();
+            $referenceSouvenir->reference_id = $reference->id;
+            $referenceSouvenir->fill($request->only(
+                "order_id",
+                "prize_id",
+            ));
+            $referenceSouvenir->save();
 
             DB::commit();
 
@@ -333,59 +287,24 @@ class ReferenceController extends Controller
             ));
             $reference->save();
 
-            $referencePromo = ReferencePromo::where("reference_id", $request->id)->first();
-            if (isset($request->promo_1)) {
-                if ($request->promo_1 !== "other") {
-                    $referencePromo->promo_1 = $request->promo_1;
-                }
-            }
+            $referenceSouvenir = ReferenceSouvenir::where("reference_id", $reference->id)->first();
+            $referenceSouvenir->fill($request->only(
+                "order_id",
+                "prize_id",
+                "status_prize",
+                "delivery_status_prize",
+            ));
 
-            if (isset($request->promo_2)) {
-                if ($request->promo_2 !== "other") {
-                    $referencePromo->promo_2 = $request->promo_2;
-                }
-            }
+            $referenceSouvenir->save();
 
-            $referencePromo->qty_1 = $request->qty_1;
-
-            if (
-                isset($request->promo_2)
-                || isset($request->other_2)
-            ) {
-                if (
-                    !empty($request->promo_2)
-                    || !empty($request->other_2)
-                ) {
-                    $referencePromo->qty_2 = $request->qty_2;
-                }
-            }
-
-            $referencePromo->other_1 = $request->other_1;
-            $referencePromo->other_2 = $request->other_2;
-
-            $path = "sources/registration";
-            $referenceImage = ReferenceImage::where("reference_id", $request->id)->first();
-            for ($i = 1; $i <= 2; $i++) {
-                $imageInput = "image_" . $i;
-                if ($request->hasFile($imageInput)) {
-                    $fileName = ((string)time())
-                    . "_"
-                    . Auth::user()["id"]
-                    . "_"
-                    . $i
-                    . "."
-                    . $request->file($imageInput)->getClientOriginalExtension();
-
-                    $request->file($imageInput)->move($path, $fileName);
-
-                    $referenceImage["image_" . $i] = $fileName;
-                }
-            }
-            $referenceImage->save();
+            $userId = Auth::user()["id"];
+            $this->historyReference($reference, "update", $userId);
+            $this->historyReferenceSouvenir($referenceSouvenir, "update", $userId);
 
             DB::commit();
 
-            return redirect($request->url)->with("success", "Data referensi berhasil dimasukkan.");
+            return redirect($request->url)
+                ->with("success", "Data referensi berhasil dimasukkan.");
         } catch (Exception $e) {
             DB::rollBack();
 

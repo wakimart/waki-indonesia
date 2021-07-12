@@ -14,11 +14,16 @@ class Order extends Model
     static $Know_From = ['1'=>'Pameran/Showroom WAKI', '2'=>'Facebook', '3'=>'Instagram', '4'=>'Waki/Wakimart Customer Service', '5'=>'MGM', '6'=>'Program Refrensi'];
     
     protected $fillable = [
-        'code', 'no_member', 'name', 'address', 'phone', 'cash_upgrade', 'product', 'old_product', 'prize', 'payment_type', 'bank', 'total_payment', 'down_payment', 'remaining_payment', 'customer_type', 'description', '30_cso_id', '70_cso_id', 'cso_id', 'branch_id', 'city', 'active','orderDate', 'distric', 'province', 'know_from',
+        'code', 'no_member', 'name', 'address', 'phone', 'cash_upgrade', 'product', 'old_product', 'prize', 'payment_type', 'bank', 'total_payment', 'down_payment', 'remaining_payment', 'customer_type', 'description', '30_cso_id', '70_cso_id', 'cso_id', 'branch_id', 'city', 'active','orderDate', 'distric', 'province', 'know_from', 'image',
     ];
     public $sortable = [
         'name', 'code', 'created_at', 'name', 'orderDate',
     ];
+
+    protected $casts = [
+        'image' => 'json',
+    ];
+
     public function cso()
     {
         return $this->belongsTo('App\Cso');
@@ -48,5 +53,20 @@ class Order extends Model
             $district['kota_kab'] = $district['type_city'].' '.$district['city']; 
         }
         return $district;
+    }
+
+    public function getPrice()
+    {
+        $result = [];
+        $arr_promo = json_decode($this->product);
+        foreach ($arr_promo as $key => $promo) {
+            if(is_numeric($promo->id)){
+                $promos = Promo::find($promo->id);
+                array_push($result, $promos->price);
+            }else{
+                array_push($result, "0");
+            }
+        }
+        return $result;
     }
 }

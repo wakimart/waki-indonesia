@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use DB;
-use App\HomeService;
-use App\ProductService;
-use App\Sparepart;
-use App\Service;
-use App\Product;
 use App\Branch;
 use App\Cso;
+use App\HomeService;
+use App\Product;
+use App\ProductService;
+use App\Service;
+use App\Sparepart;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
@@ -23,7 +23,17 @@ class ServiceController extends Controller
     public function index(Request $request)
     {
         $url = $request->all();
-        $services = Service::where('active', true)->get();
+        $services = Service::select(
+                "id",
+                "name",
+                "address",
+                "phone",
+                DB::raw("DATE(service_date) AS service_date"),
+                "status"
+            )
+            ->where('active', true)
+            ->orderBy("service_date", "desc")
+            ->get();
         $countServices = $services->count();
         $services = $services->paginate(10);
         return view('admin.list_service', compact('services', 'countServices', 'url'));
@@ -84,8 +94,8 @@ class ServiceController extends Controller
                 }else{
                     $data['other_product'] = $value[4];
                 }
-                
-                
+
+
                 // $index = 0;
                 // $data['arr_sparepart'] = [];
                 // foreach ($value[1] as $item_sparepart) {
@@ -140,7 +150,11 @@ class ServiceController extends Controller
             $services = Service::find($request->get('id'));
             $products = Product::all();
             $spareparts = Sparepart::where('active', true)->get();
-            return view('admin.update_service', compact('services','products', 'spareparts'));
+            $product_services = ProductService::where([
+                    ['active', '=', 1],
+                    ['service_id', '=', $request->get('id')]
+                ])->get();
+            return view('admin.update_service', compact('services','products', 'spareparts', 'product_services'));
         }
     }
 
@@ -156,6 +170,7 @@ class ServiceController extends Controller
         DB::beginTransaction();
         try {
             $get_allProductService = json_decode($request->productservices);
+            $get_oldProductService = ProductService::where('service_id', $get_allProductService[0][0])->get();
 
             $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date');
             $service = Service::find($get_allProductService[0][0]);
@@ -167,21 +182,51 @@ class ServiceController extends Controller
             $service->save();
 
             foreach ($get_allProductService as $key => $value) {
-                $product_services = ProductService::find($value[1]);
+                if($value[0] != null ){
+                    $product_services = ProductService::find($value[1]);
 
-                if($value[2] != 'other'){
-                    $product_services->product_id = $value[2];
+                    if($value[2] != 'other'){
+                        $product_services->product_id = $value[2];
+                    }else{
+                        $product_services->other_product = $value[6];
+                    }
+
+                    $data['arr_issues'] = [];
+                    $data['arr_issues'][0]['issues'] = $value[3];
+                    $data['arr_issues'][1]['desc'] = $value[4];
+                    $product_services->issues = json_encode($data['arr_issues']);
+
+                    $product_services->due_date = $value[5];
+
+                    if($value[7] == "0"){
+                        $product_services->active = false;
+                    }
+                    $product_services->save();    
                 }else{
-                    $product_services->other_product = $value[6];
+                    //ada produk service baru
+                    $product_services = new ProductService();
+                    $product_services->service_id = $get_allProductService[0][0];
+
+                    if($value[2] != 'other'){
+                        $product_services->product_id = $value[2];
+                    }else{
+                        $product_services->other_product = $value[6];
+                    }
+
+                    $data['arr_issues'] = [];
+                    $data['arr_issues'][0]['issues'] = $value[3];
+                    $data['arr_issues'][1]['desc'] = $value[4];
+                    $product_services->issues = json_encode($data['arr_issues']);
+
+                    $product_services->due_date = $value[5];
+
+                    if($value[7] == "0"){
+                        $product_services->active = false;
+                    }
+                    $product_services->save();    
+
                 }
-
-                $data['arr_issues'] = [];
-                $data['arr_issues'][0]['issues'] = $value[3];
-                $data['arr_issues'][1]['desc'] = $value[4];
-                $product_services->issues = json_encode($data['arr_issues']);
-
-                $product_services->due_date = $value[5];
-                $product_services->save();
+                
             }
             DB::commit();
             return response()->json(['success' => 'Berhasil!!!']);
@@ -212,7 +257,7 @@ class ServiceController extends Controller
                     $cso = Cso::where('code', $request->input('cso_id'))->first();
 
                     if($request->status == "Pickup"){
-                        array_push($arr_serviceoption, 
+                        array_push($arr_serviceoption,
                             [
                                 'recipient_name' => $request->input('name'),
                                 'address' => $request->input('address'),
@@ -244,7 +289,7 @@ class ServiceController extends Controller
                             $data['cso2_id'] = (Cso::where('code', 'SERVICE')->first() != null ? Cso::where('code', 'SERVICE')->first()['id'] : null );
 
                             $homeService = HomeService::create($data);
-                            array_push($arr_serviceoption, 
+                            array_push($arr_serviceoption,
                                 [
                                     'homeService' => $homeService['id']
                                 ]
@@ -252,7 +297,7 @@ class ServiceController extends Controller
                         }
                     }
 
-                    
+
                     $service->service_option = json_encode($arr_serviceoption);
 
                     $service->status = str_replace('_', ' ', $request->status);
@@ -262,7 +307,7 @@ class ServiceController extends Controller
                     $service->history_status = json_encode($arr_old_history);
                     $service->save();
                 }
-                
+
                 DB::commit();
                 return redirect()->route("detail_service", ["id" => $service->id]);
             } catch (\Exception $ex) {
@@ -278,8 +323,30 @@ class ServiceController extends Controller
      * @param  \App\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
+    public function destroy(Request $request)
     {
-        //
+        if (!empty($request->id)) {
+            DB::beginTransaction();
+
+            try {
+                $services = Service::find($request->id);
+                $services->active = false;
+                $services->save();
+
+                DB::commit();
+
+                return redirect()
+                    ->route("list_service")
+                    ->with("success", "Data service berhasil dihapus.");
+            } catch (Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    "error" => $e,
+                ]);
+            }
+        }
+
+        return response()->json(["error" => "Data tidak ditemukan."]);
     }
 }

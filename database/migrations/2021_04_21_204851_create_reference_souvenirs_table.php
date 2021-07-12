@@ -17,7 +17,7 @@ class CreateReferenceSouvenirsTable extends Migration
             $table->increments("id");
             $table->integer("reference_id")->unsigned();
             $table->foreign("reference_id")->references("id")->on("references");
-            $table->integer("souvenir_id")->unsigned();
+            $table->integer("souvenir_id")->unsigned()->nullable();
             $table->foreign("souvenir_id")->references("id")->on("souvenirs");
             $table->string("link_hs")->nullable();
             $table->enum("status", ["pending", "success"])->default("pending");
