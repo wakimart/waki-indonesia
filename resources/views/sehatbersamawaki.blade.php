@@ -92,7 +92,7 @@
     <div class="container">
         <div class="row justify-content-center no-gutters">
             <h2 style="margin: 0 5px 0 5px;">
-               Program Refrensi Sehat Bersama WAKi
+               Program BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI
             </h2>
         </div>
         <h5 style="text-align: center;">{{ $submission['code'] }}</h5>
@@ -295,15 +295,13 @@
                     </tr>
                     <tr>
                         <td>
-                            <p class="pInTable">1. Sudah mempunyai produk WAKi minimum WK2079 (di atas 21.900).</p>
-                            <p class="pInTable">2. Minimal usia 35 tahun.</p>
-                            <p class="pInTable">3. Harus sudah menjadi member WAKimart.</p>
-                            <p class="pInTable">4. Memberikan screenshot bukti appointment (share Link) telah dijadwalkan untuk kunjungan.</p>
-                            <p class="pInTable">5. Undangan Refrensi Salam Perkenalan WAKimart harus diisi lengkap dan benar adanya.</p>
-                            <p class="pInTable">6. Voucher belanja dan produk tidak dapat ditukarkan dalam bentuk tunai.</p>
-                            <p class="pInTable">7. Produk yang dipilih harus 6 produk pertama, berlaku kelipatan.</p>
-                            <p class="pInTable">8. Berlaku setelah mengikuti 3 hari coba produk di rumah.</p>
-                            <p class="pInTable">9. Syarat dan ketentuan dapat berubah tanpa pemberitahuan sebelumnya.</p>
+                            <p class="pInTable">1. Harus sudah menjadi member WAKimart.</p>
+                            <p class="pInTable">2. Minimal usia 35 tahun per keluarga dari teman atau saudara.</p>
+                            <p class="pInTable">3. Memberikan screenshot bukti appointment (share Link) telah dijadwalkan untuk kunjungan (minimal 1x).</p>
+                            <p class="pInTable">4. Program Sehat bersama WAKi harus diisi lengkap dan benar adanya.</p>
+                            <p class="pInTable">5. Voucher belanja dan produk tidak dapat ditukarkan dalam bentuk tunai.</p>
+                            <p class="pInTable">6. Pembelanjaan menggunakan E-Voucher harus lebih dari nilai E-Voucher.</p>
+                            <p class="pInTable">7. Syarat dan ketentuan dapat berubah tanpa pemberitahuan sebelumnya.</p>
                         </td>
                     </tr>
                 </table>
