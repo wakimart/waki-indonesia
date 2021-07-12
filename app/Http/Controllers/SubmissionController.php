@@ -1743,7 +1743,8 @@ class SubmissionController extends Controller
         return view('sehatbersamawaki', compact('submission', 'souvenirs'));
     }
 
-    public function firstRunStatus(){
+    public function firstRunStatus()
+    {
         $submission_all = Submission::where([['active', true], ['type', 'referensi']])->get();
 
         foreach ($submission_all as $eachSub) {
@@ -1761,5 +1762,38 @@ class SubmissionController extends Controller
                  'data' => "Berhasil"
                 ];
         return response()->json($data, 200);
+    }
+
+    public function queryNewSubmissionMGM(Request $request)
+    {
+        $submission = $this->querySubmission($request->id);
+        $submission = $submission->first();
+
+        $references = $this->queryReference($request->id);
+        $references = $references->addSelect(
+            "reference_souvenirs.order_id AS order_id",
+            DB::raw("'$request->prize' AS prize_id"),
+            "reference_souvenirs.status_prize AS status_prize",
+            "reference_souvenirs.delivery_status_prize AS delivery_status_prize"
+        )
+        ->leftJoin(
+            "reference_souvenirs",
+            "references.id",
+            "=",
+            "reference_souvenirs.reference_id"
+        )
+        ->leftJoin(
+            "souvenirs",
+            "reference_souvenirs.souvenir_id",
+            "=",
+            "souvenirs.id"
+        )
+        ->get();
+
+        return response()->json([
+            "result" => 1,
+            "submission" => $submission,
+            "references" => $references,
+        ]);
     }
 }

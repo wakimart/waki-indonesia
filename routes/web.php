@@ -718,6 +718,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Process submission form delete
         Route::post("/delete/", "SubmissionController@destroy")
             ->name("delete_submission_form");
+
+        // Submission MGM Query with prize as parameter
+        Route::get("/get/mgm2", "SubmissionController@queryNewSubmissionMGM")
+            ->name("query_new_submission_mgm");
     });
 
     Route::group(["prefix" => "reference", "middleware" => "auth"], function () {
@@ -770,7 +774,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Process acceptance delete
         Route::post("/{id}", "AcceptanceController@destroy")
             ->name("delete_acceptance_form");
-        
+
         //export xls
         Route::get('/export-acceptance-to-xls-by-date', 'AcceptanceController@export_to_xls_byDate')
                 ->name('acceptance_export-to-xls-by-date');
