@@ -276,7 +276,7 @@
                             <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->getCityName() }}</td>
                             <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->reference_souvenir->souvenir['name'] }}</td>
                             <td>{{ $totReference_HS > 0 ? $Reference_HS[0]['appointment'] : "-" }}</td>
-                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}"><a href="http://wakimart.co.id/?success_voucher=">{{ ucfirst($referenceNya->reference_souvenir['status']) }}</a></td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}"><a href="{{ $referenceNya->reference_souvenir['status'] == "success" ? 'http://wakimart.co.id/?success_voucher=' : ''}}">{{ ucfirst($referenceNya->reference_souvenir['status']) }}</a></td>
                             <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ ucfirst($referenceNya->reference_souvenir['delivery_status']) }}</td>
                         </tr>
                         @for($i = 1; $i < $totReference_HS; $i++)
