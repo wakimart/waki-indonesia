@@ -968,7 +968,9 @@ function loadDataPerRef(ref_id) {
                                 <select id="select_edit-delivery-status-prize_'+p+'" class="form-control" name="delivery_status_prize">\
                                     <option value="">Choose Status Delivery</option>\
                                     <option value="undelivered">undelivered</option>\
-                                    <option value="delivered by CSO">delivered by CSO</option>\
+                                    @if(Auth::user()->id == 1)
+                                        <option value="delivered by CSO">delivered by CSO</option>\
+                                    @endif
                                     <option value="delivered by Courier">delivered by Courier</option>\
                                     <option value="success">success</option>\
                                 </select>\
