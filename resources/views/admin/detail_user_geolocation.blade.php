@@ -170,6 +170,8 @@ function getGeolocation() {
 }
 
 function initMap() {
+    document.getElementById("timetable-body").innerHTML = "";
+
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 15,
         mapTypeId: "roadmap",
