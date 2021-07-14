@@ -182,6 +182,7 @@ function getGeolocation() {
         return response.json();
     }).then(function (response) {
         initMap(response);
+        presenceImage(userId, date);
     }).catch(function (error) {
         console.error(error);
     });
