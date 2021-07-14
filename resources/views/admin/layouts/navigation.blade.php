@@ -74,12 +74,15 @@
       @if(Gate::check('browse-home_service'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_homeservice' ? 'active': '' }}" href="{{  route('admin_list_homeService') }}">List Home Service</a></li>
       @endif
+
+      @if(Auth::user()->roles[0]['slug'] == 'head-admin')
         <li class="nav-item">
             <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == "track_homeservice" ? "active" : "" }}"
                 href="{{  route("track_homeservice") }}">
                 Track Home Service
             </a>
         </li>
+      @endif
     </ul>
   </div>
 </li>

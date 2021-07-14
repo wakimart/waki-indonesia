@@ -92,6 +92,9 @@
 <section id="intro" class="clearfix">
     <div class="container">
         <div class="row justify-content-center no-gutters">
+            <h1 style="margin: 0 5px 0 5px;">
+               BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI
+            </h2>
             <h2 style="margin: 0 5px 0 5px;">
                Program Member Get Member
             </h2>
@@ -281,15 +284,12 @@
                     <tr>
                         <td>
                             <p class="pInTable">1. Program ini hanya berlaku untuk member MPC WAKi saja secara gratis.</p>
-                            <p class="pInTable">2. Program ini hanya memperkenalkan teman / saudara untuk memiliki produk 
-                                promosi WAKi sebagai program member get member dari WAKi.</p>
+                            <p class="pInTable">2. Program ini hanya memperkenalkan teman / saudara untuk memiliki produk promosi WAKi sebagai program keuntungan biaya iklan dari WAKi.</p>
                             <p class="pInTable">3. Voucher belanja dan barang tidak dapat ditukarkan dalam bentuk tunai.</p>
-                            <p class="pInTable">4. Quantiti produk kembali yang diberikan akan mengikut quantity memperkenalkan 
-                                teman / saudara untuk memiliki produk promosi WAKi.</p>
+                            <p class="pInTable">4.Quantiti produk kembali yang diberikan akan mengikut quantity memperkenalkan teman / saudara untuk memiliki produk promosi WAKi.</p>
                             <p class="pInTable">5. Hanya berlaku untuk member MPC WAKi yang baru.</p>
                             <p class="pInTable">6. Tidak boleh untuk upgrade produk.</p>
-                            <p class="pInTable">7. Berlaku setelah yang direferensikan mengikuti 5 hari coba produk di rumah 
-                                dan memiliki produk promosi WAKi.</p>
+                            <p class="pInTable">7. Berlaku setelah yang direferensikan memiliki produk promosi WAKi</p>
                             <p class="pInTable">8. Syarat dan ketentuan dapat berubah tanpa pemberitahuan sebelumnya.</p>
                         </td>
                     </tr>

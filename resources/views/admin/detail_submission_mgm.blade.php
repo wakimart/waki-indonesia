@@ -225,17 +225,11 @@ if (
                                         data-prize="{{ $reference->prize_id }}"
                                         data-permission="{{ $specialPermission }}">
                                         @php
-                                        $bonus_prize = ($key + 1) % 3;
                                         if (!empty($reference->prize_id)) {
                                             $prize = Prize::select("id", "name")
                                                 ->where("id", $reference->prize_id)
                                                 ->first();
-
-                                            if ($bonus_prize == 0) {
-                                                echo $prize->name . " + Voucher WAKimart Rp. 1.000.000";
-                                            } else {
-                                                echo $prize->name;
-                                            }
+                                            echo $prize->name;
                                         }
                                         @endphp
                                     </td>
@@ -968,7 +962,11 @@ function loadDataPerRef(ref_id) {
                                 <select id="select_edit-delivery-status-prize_'+p+'" class="form-control" name="delivery_status_prize">\
                                     <option value="">Choose Status Delivery</option>\
                                     <option value="undelivered">undelivered</option>\
-                                    <option value="delivered">delivered</option>\
+                                    @if(Auth::user()->id == 1)
+                                        <option value="delivered by CSO">delivered by CSO</option>\
+                                    @endif
+                                    <option value="delivered by Courier">delivered by Courier</option>\
+                                    <option value="success">success</option>\
                                 </select>\
                             </td>\
                         </tr>\
