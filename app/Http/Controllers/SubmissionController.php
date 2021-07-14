@@ -1766,34 +1766,53 @@ class SubmissionController extends Controller
 
     public function queryNewSubmissionMGM(Request $request)
     {
-        $submission = $this->querySubmission($request->id);
-        $submission = $submission->first();
+        // $submission = $this->querySubmission($request->id);
+        // $submission = $submission->first();
 
-        $references = $this->queryReference($request->id);
-        $references = $references->addSelect(
-            "reference_souvenirs.order_id AS order_id",
-            DB::raw("'$request->prize' AS prize_id"),
-            "reference_souvenirs.status_prize AS status_prize",
-            "reference_souvenirs.delivery_status_prize AS delivery_status_prize"
-        )
-        ->leftJoin(
-            "reference_souvenirs",
-            "references.id",
-            "=",
-            "reference_souvenirs.reference_id"
-        )
-        ->leftJoin(
-            "souvenirs",
-            "reference_souvenirs.souvenir_id",
-            "=",
-            "souvenirs.id"
-        )
-        ->get();
+        // $references = $this->queryReference($request->id);
+        // $references = $references->addSelect(
+        //     "reference_souvenirs.order_id AS order_id",
+        //     DB::raw("'$request->prize' AS prize_id"),
+        //     "reference_souvenirs.status_prize AS status_prize",
+        //     "reference_souvenirs.delivery_status_prize AS delivery_status_prize"
+        // )
+        // ->leftJoin(
+        //     "reference_souvenirs",
+        //     "references.id",
+        //     "=",
+        //     "reference_souvenirs.reference_id"
+        // )
+        // ->leftJoin(
+        //     "souvenirs",
+        //     "reference_souvenirs.souvenir_id",
+        //     "=",
+        //     "souvenirs.id"
+        // )
+        // ->get();
+
+        // return response()->json([
+        //     "result" => 1,
+        //     "submission" => $submission,
+        //     "references" => $references,
+        // ]);
+
+        $allSubmissionMGM = Submission::where([['active', true], ['type', 'mgm']])->get();
+        $resultReference = [];
+
+        foreach ($allSubmissionMGM as $eachSubmission) {
+            foreach ($eachSubmission->reference as $eachReference) {
+                if($eachReference->reference_souvenir == null){
+                    $dataSouvenir = [];
+                    $dataSouvenir['reference_id'] = $eachReference['id'];
+                    $eachTemp = ReferenceSouvenir::create($dataSouvenir);
+                    array_push($resultReference, $eachTemp);
+                }
+            }
+        }
 
         return response()->json([
             "result" => 1,
-            "submission" => $submission,
-            "references" => $references,
+            "hasil" => $resultReference,
         ]);
     }
 }

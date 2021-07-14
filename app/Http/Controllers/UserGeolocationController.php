@@ -41,12 +41,7 @@ class UserGeolocationController extends Controller
             ->whereDate("date", "=", $request->date)
             ->first();
 
-        $path = storage_path()
-            . "/geolocation/"
-            . $userGeolocation->user_id
-            . "/"
-            . str_replace([' ', ':'], '', $userGeolocation->date)
-            . "/"
+        $path = $filePath = "sources/geolocation/" . date("Y-m-d") . "/json/"
             . $userGeolocation->filename
             . ".json";
         // $path = storage_path() . "/geolocation/test/1/geolocation2.json";
@@ -74,7 +69,7 @@ class UserGeolocationController extends Controller
             if ($request->hasFile("image")) {
                 $imageFile = $request->file("image");
 
-                $filePath = "sources/geolocation/" . date("Y-m-d");
+                $filePath = "sources/geolocation/" . date("Y-m-d") . "/img/";
 
                 if (!is_dir($filePath)) {
                     File::makeDirectory($filePath, 0777, true, true);
@@ -127,7 +122,7 @@ class UserGeolocationController extends Controller
             if ($request->hasFile("image")) {
                 $imageFile = $request->file("image");
 
-                $filePath = "sources/geolocation/" . date("Y-m-d");
+                $filePath = "sources/geolocation/" . date("Y-m-d") . "/img/";
 
                 if (!is_dir($filePath)) {
                     File::makeDirectory($filePath, 0777, true, true);
@@ -143,7 +138,7 @@ class UserGeolocationController extends Controller
             // Save JSON
             $currentDate = date("Y-m-d");
             $fileName = Str::random(16);
-            $filePath = storage_path() . "/geolocation/" . $request->user_id . "/" . str_replace([' ', ':'], '', $currentDate);
+            $filePath = "sources/geolocation/" . date("Y-m-d") . "/json/";
             if (!File::exists($filePath)) {
                 File::makeDirectory($filePath, 0777, true, true);
             }
