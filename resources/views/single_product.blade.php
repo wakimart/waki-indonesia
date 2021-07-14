@@ -87,7 +87,7 @@
     		<div class="row">
       			<div class="col-lg-4 col-md-4 col-sm-12">
         			<div class="product_categoriesmenu">
-          				<h5 class="prodcat-title">Product categories</h5>
+          				<h5 class="prodcat-title">Kategori Product</h5>
           				<ul class="product-categories">
 							@foreach ($categoryProducts as $categoryProduct )
 								<li class="cat-item cat-item-24 current-cat"><a href="{{route('product_category',['id' => $categoryProduct->id])}}" id=categoryId value={{$categoryProduct->id}} >{{$categoryProduct->name}}</a></li>
@@ -147,7 +147,7 @@
   		<div class="col-lg-12 col-md-12" style="margin-top: 2em;padding:0;">
 		    <div class="intro-content">
 		      <br>
-		      <h2>Related Product</h2>
+		      <h2>Produk Terkait</h2>
 		    </div>
     		<div class="col-lg-12 col-md-12">
     			<div class="row">
@@ -159,7 +159,7 @@
 				          <p class="titleprodcat">WKT2080 – WAKi Multi Functional Electro Massager Equipment</p>
 				        </div>
 				        <div class="buttonprd">
-				          <a href="single_product.html" class="button">Read More</a>
+				          <a href="single_product.html" class="button">Lihat Semua</a>
 				        </div>
       				</div>
       			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
@@ -170,7 +170,7 @@
 			          <p class="titleprodcat">WK2079 – WAKi High Potential Therapeutic Equipment</p>
 			        </div>
 			        <div class="buttonprd">
-			          <a href="#" class="button">Read More</a>
+			          <a href="#" class="button">Lihat Semua</a>
 			        </div>
       			</div>
       			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
@@ -181,7 +181,7 @@
 			          <p class="titleprodcat">WK2076i – WAKi Multi Functional Ultra Potential Therapy Healthcare Device</p>
 			        </div>
 			        <div class="buttonprd">
-			          <a href="single_product.html" class="button">Read More</a>
+			          <a href="single_product.html" class="button">Lihat Semua</a>
 			        </div>
       			</div>
       			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
@@ -192,7 +192,7 @@
 			          <p class="titleprodcat">WK2076H – Waki Multi Functional High Potential Therapeutic Equipment</p>
 			        </div>
 			        <div class="buttonprd">
-			          <a href="#" class="button">Read More</a>
+			          <a href="#" class="button">Lihat Semua</a>
 			        </div>
       			</div>
     		</div><!-- row -->

@@ -88,7 +88,7 @@
 	    	<div class="row">
 	      		<div class="col-lg-4 col-md-4 col-sm-12">
 	        		<div class="product_categoriesmenu">
-	          			<h5 class="prodcat-title">Product categories</h5>
+	          			<h5 class="prodcat-title">Kategori Produk</h5>
 	          			<ul class="product-categories">
 							  @foreach ($categoryProducts as $categoryProduct )
 						  <li class="cat-item cat-item-24 current-cat"><a href="{{route('product_category',['id' => $categoryProduct->id])}}" id=categoryId value={{$categoryProduct->id}} >{{$categoryProduct->name}}</a></li>
@@ -117,7 +117,7 @@
 									</div>
 									<div class="card-footer" style="background: initial;">
 										<div class="buttonprd">
-											<a href="{{route('single_product',['id' => $product->id])}}" class="button">Read More</a>
+											<a href="{{route('single_product',['id' => $product->id])}}" class="button">Lihat Semua</a>
 										</div>
 									</div>
 								</div>
