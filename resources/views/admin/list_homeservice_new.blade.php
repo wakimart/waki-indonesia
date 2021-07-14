@@ -149,7 +149,8 @@ $menu_item_second = "list_homeservice";
                                     <div class="form-group">
                                         <input class="form-control"
                                             id="search"
-                                            name="search"
+                                            name="filter_search"
+                                            {!! isset($_GET['filter_search']) ? 'value="' . $_GET['filter_search'] . '"' : "" !!}
                                             placeholder="Search By Name, Phone, and Code Homeservice" />
                                         <div class="validation"></div>
                                     </div>
@@ -442,17 +443,32 @@ $menu_item_second = "list_homeservice";
                                 </div>
 
                                 <?php
-                                $currentMonth = date("n");
-                                $previousMonth = (int) $currentMonth - 1;
-                                $nextMonth = (int) $currentMonth + 1;
-                                $month = date("m");
-                                $year = date("Y");
-                                if ($previousMonth < 10) {
-                                    $previousMonth = "0" . $previousMonth;
-                                }
-                                if ($nextMonth < 10) {
-                                    $nextMonth = "0". $nextMonth;
-                                }
+                                    $currentMonth = date("n");
+                                    $previousMonth = (int) $currentMonth - 1;
+                                    $nextMonth = (int) $currentMonth + 1;
+                                    $month = date("m");
+                                    $year = date("Y");
+
+                                    $currentMonth_text = date("F");
+
+                                    if(isset($_GET['isSubmission'])){
+                                        $get_appointment = strtotime($_GET['appointment']);
+
+                                        $currentMonth = date("n", $get_appointment);
+                                        $previousMonth = (int) $currentMonth - 1;
+                                        $nextMonth = (int) $currentMonth + 1;
+                                        $month = date("m", $get_appointment);
+                                        $year = date("Y", $get_appointment);
+
+                                        $currentMonth_text = date("F", $get_appointment);
+                                    }
+
+                                    if ($previousMonth < 10) {
+                                        $previousMonth = "0" . $previousMonth;
+                                    }
+                                    if ($nextMonth < 10) {
+                                        $nextMonth = "0". $nextMonth;
+                                    }
                                 ?>
                                 <div class="cjslib-month"
                                     style="background-color: rgb(255, 193, 7); color: rgb(255, 255, 255);">
@@ -472,7 +488,7 @@ $menu_item_second = "list_homeservice";
                                         </svg>
                                     </div>
                                     <span id="calendar-container-month">
-                                        <?php echo date("F"); ?>
+                                        <?php echo $currentMonth_text; ?>
                                     </span>
                                     <div id="calendarContainer-month-next">
                                         <svg style="width: 24px; height: 24px;"
@@ -527,7 +543,22 @@ $menu_item_second = "list_homeservice";
                                     $startDay = (int) date("w", strtotime(date("Y-m-01")));
                                     $rowCount = 0;
                                     $iMax = 28;
+                                    $temp_search = date("Y-m-");
+
+                                    if(isset($_GET['isSubmission'])){
+                                        $get_appointment = strtotime($_GET['appointment']);
+
+                                        $todayDate = (int) date("j", $get_appointment);
+                                        $month = date("m", $get_appointment);
+                                        $year = date("Y", $get_appointment);
+                                        $maxDate = (int) date("t", $get_appointment);
+                                        $startDay = (int) date("w", strtotime(date("Y-m-01", $get_appointment)));
+
+                                        $temp_search = date("Y-m-", $get_appointment);
+                                    }
+
                                     $startMonthStartDay = $startDay + $maxDate;
+
                                     if ($startMonthStartDay > 28) {
                                         $iMax = 35;
                                     }
@@ -586,9 +617,10 @@ $menu_item_second = "list_homeservice";
                                                     $dayWithZero = "0" . $dayCounter;
                                                 }
 
+
                                                 if (!empty($currentMonthDataCount)) {
                                                     foreach ($currentMonthDataCount as $key => $value) {
-                                                        if ($value->appointment_date === date("Y-m-") . $dayWithZero) {
+                                                        if ($value->appointment_date === $temp_search . $dayWithZero) {
                                                             echo '<span class="cjslib-day-indicator cjslib-indicator-pos-bottom cjslib-indicator-type-numeric" '
                                                                 . 'id="calendarContainer-day-indicator-' . $dayCounter . '">';
                                                             echo $value->data_count;
@@ -1010,6 +1042,9 @@ $menu_item_second = "list_homeservice";
                                 value=""
                                 readonly
                                 disabled>
+                                <option value="Program Penjelas Ulang">
+                                    Program Penjelas Ulang
+                                </option>
                                 <option value="Home service">
                                     Home Service
                                 </option>

@@ -96,7 +96,7 @@ $menu_item_second = "add_submission_reference";
     <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">
-                Add Submission - Referensi Sehat Bersama WAKi/Keuntungan Biaya Iklan
+                Add Submission - Referensi BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI
             </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -134,14 +134,14 @@ $menu_item_second = "add_submission_reference";
                                 <input type="text"
                                     readonly
                                     disabled
-                                    value="Referensi Sehat Bersama WAKi/Keuntungan Biaya Iklan" />
+                                    value="Referensi BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI" />
                             </div>
 
                             <div class="form-group">
                                 <label><h2>Customer Data</h2></label>
                                 <br>
                                 <label id="member_label" for="member_input">
-                                    No. MPC
+                                    No. MPC (optional)
                                 </label>
                                 <input id="member_input"
                                     type="text"
@@ -149,8 +149,7 @@ $menu_item_second = "add_submission_reference";
                                     id="no_member"
                                     name="no_member"
                                     placeholder="No. Member"
-                                    oninput="customerByNoMember(this)"
-                                    required />
+                                    oninput="customerByNoMember(this)"/>
                             </div>
 
                             <div class="form-group">
@@ -408,7 +407,7 @@ $menu_item_second = "add_submission_reference";
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="member-prize-{{ $x }}">
                                                 Prize
                                             </label>
@@ -434,7 +433,7 @@ $menu_item_second = "add_submission_reference";
                                                     @endif
                                                 @endforeach
                                             </select>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="form-group">
                                             <label for="link-hs-{{ $x }}">
@@ -458,7 +457,7 @@ $menu_item_second = "add_submission_reference";
                                                 Choose Home Service
                                             </button>
                                         </div>
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="member-order-{{ $x }}">
                                                 Order
                                             </label>
@@ -476,7 +475,7 @@ $menu_item_second = "add_submission_reference";
                                                 data-target="#choose-order">
                                                 Choose Order
                                             </button>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 @endfor
 
@@ -564,7 +563,7 @@ $menu_item_second = "add_submission_reference";
     </div>
 </div>
 
-<div class="modal fade"
+{{-- <div class="modal fade"
     id="choose-order"
     tabindex="-1"
     role="dialog"
@@ -605,7 +604,7 @@ $menu_item_second = "add_submission_reference";
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection
 
 @section("script")

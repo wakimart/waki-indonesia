@@ -41,7 +41,9 @@ class Cso extends Model
     {
         return $this->hasMany('App\HomeService', 'cso2_id', 'id');
     }
-    public function user(){
+
+    public function user()
+    {
         return $this->hasOne('App\User');
     }
 }

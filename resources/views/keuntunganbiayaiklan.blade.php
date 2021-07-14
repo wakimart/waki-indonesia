@@ -92,8 +92,11 @@
 <section id="intro" class="clearfix">
     <div class="container">
         <div class="row justify-content-center no-gutters">
+            <h1 style="margin: 0 5px 0 5px;">
+               BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI
+            </h2>
             <h2 style="margin: 0 5px 0 5px;">
-               Program Refrensi Keuntungan Biaya Iklan
+               Program Member Get Member
             </h2>
         </div>
         <h5 style="text-align: center;">{{ $submission['code'] }}</h5>
@@ -210,12 +213,12 @@
                     </tr>
                     <tr>
                         <td width="50%"><li>ECO DISINFECTANT</li></td>
-                        <td width="50%"><li>BEDSHEET</li></td>
+                        {{-- <td width="50%"><li>BEDSHEET</li></td> --}}
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <td width="50%"><li>BIO ENERGY WATER SYSTEM (WKB8002)</li></td>
                         <td width="50%"><li>Voucher WAKimart Rp. 1.000.000</li></td>
-                    </tr>
+                    </tr> --}}
                 </table>
             </div>
         </div>
@@ -241,17 +244,17 @@
                         <th>No. Tlp /HP</th>
                         <th>Kota</th>
                         <th>Produk yang dipilih (Pereferensi)</th>
-                        <th>Tanggal Appointment</th>
+                        {{-- <th>Tanggal Appointment</th> --}}
                         <th>Status Referensi</th>
                         <th>Status Produk</th>
                     </tr>
                     @foreach($submission->reference as $keyNya => $referenceNya)
                         @php
-                            $Reference_HS = $referenceNya->reference_souvenir->fetch_hs();
-                            $totReference_HS = 0;
-                            if($Reference_HS != null){
-                                $totReference_HS = sizeof($Reference_HS);
-                            }
+                            // $Reference_HS = $referenceNya->reference_souvenir->fetch_hs();
+                            $totReference_HS = 1;
+                            // if($Reference_HS != null){
+                            //     $totReference_HS = sizeof($Reference_HS);
+                            // }
                         @endphp
 
                         <tr>
@@ -259,10 +262,10 @@
                             <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya['name'] }}</td>
                             <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya['phone'] }}</td>
                             <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->getCityName() }}</td>
-                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->reference_souvenir->prize['name'] }}</td>
-                            <td>{{ $totReference_HS > 0 ? $Reference_HS[0]['appointment'] : "-" }}</td>
-                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ ucfirst($referenceNya->reference_souvenir['status_prize']) }}</td>
-                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ ucfirst($referenceNya->reference_souvenir['delivery_status_prize']) }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->reference_souvenir != null ? $referenceNya->reference_souvenir->prize['name'] : '-' }}</td>
+                            {{-- <td>{{ $totReference_HS > 0 ? $Reference_HS[0]['appointment'] : "-" }}</td> --}}
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->reference_souvenir != null ? ucfirst($referenceNya->reference_souvenir['status_prize']) : '-' }}</td>
+                            <td rowspan="{{ $totReference_HS > 0 ? $totReference_HS : 1 }}">{{ $referenceNya->reference_souvenir != null ? ucfirst($referenceNya->reference_souvenir['delivery_status_prize']) : '-' }}</td>
                         </tr>
                         @for($i = 1; $i < $totReference_HS; $i++)
                             <tr>
@@ -281,15 +284,12 @@
                     <tr>
                         <td>
                             <p class="pInTable">1. Program ini hanya berlaku untuk member MPC WAKi saja secara gratis.</p>
-                            <p class="pInTable">2. Program ini hanya memperkenalkan teman / saudara untuk memiliki produk 
-                                promosi WAKi sebagai program keuntungan biaya iklan dari WAKi.</p>
+                            <p class="pInTable">2. Program ini hanya memperkenalkan teman / saudara untuk memiliki produk promosi WAKi sebagai program keuntungan biaya iklan dari WAKi.</p>
                             <p class="pInTable">3. Voucher belanja dan barang tidak dapat ditukarkan dalam bentuk tunai.</p>
-                            <p class="pInTable">4. Quantiti produk kembali yang diberikan akan mengikut quantity memperkenalkan 
-                                teman / saudara untuk memiliki produk promosi WAKi.</p>
+                            <p class="pInTable">4.Quantiti produk kembali yang diberikan akan mengikut quantity memperkenalkan teman / saudara untuk memiliki produk promosi WAKi.</p>
                             <p class="pInTable">5. Hanya berlaku untuk member MPC WAKi yang baru.</p>
                             <p class="pInTable">6. Tidak boleh untuk upgrade produk.</p>
-                            <p class="pInTable">7. Berlaku setelah yang direferensikan mengikuti 5 hari coba produk di rumah 
-                                dan memiliki produk promosi WAKi.</p>
+                            <p class="pInTable">7. Berlaku setelah yang direferensikan memiliki produk promosi WAKi</p>
                             <p class="pInTable">8. Syarat dan ketentuan dapat berubah tanpa pemberitahuan sebelumnya.</p>
                         </td>
                     </tr>

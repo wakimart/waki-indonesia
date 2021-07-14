@@ -109,6 +109,8 @@ Route::group(['prefix' => 'api-apps'], function () {
 	    Route::post('list','HomeServiceController@listApi'); //list home service
 		Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
 		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
+        Route::post("/add/geolocation", "UserGeolocationController@addApi"); // Upload geolocation data
+        Route::post("/add/start-geolocation", "UserGeolocationController@addStartImageApi");
 	});
 
 	Route::group(['prefix' => 'register'], function () {
@@ -240,6 +242,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
     //refrence
     Route::get('/fetchDetailPerReference/{reference}', 'SubmissionController@fetchDetailPerReference')->name('fetchDetailPerReference');
+
+    //fetchperpromo
+    Route::get('/fetchDetailPromo/{promo}', 'OrderController@fetchDetailPromo')->name('fetchDetailPromo');
 
     Route::group(['prefix' => 'useradmin', 'middleware' => 'auth'], function() {
         //Add Form UserAdmin
@@ -397,6 +402,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("/list_hs_submission", "HomeServiceController@ListHSforSubmission")
             ->name("list_hs_submission");
 
+        Route::get("/track", "UserGeolocationController@show")
+            ->name("track_homeservice");
+
+        Route::get("/fetch/geolocation", "UserGeolocationController@fetchGeolocationData")
+            ->name("fetch_geolocation");
+
+        Route::get("/fetch/presence", "UserGeolocationController@fetchPresenceImage")
+            ->name("fetch_geolocation_presence");
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
@@ -428,6 +441,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update/', 'ServiceController@update')
             ->name('update_service')
             ->middleware('can:edit-service');
+
+        // Delete service
+        Route::post("/delete", "ServiceController@destroy")
+            ->name("delete_service");
     });
 
     Route::group(['prefix' => 'product_service', 'middleware' => 'auth'], function() {
@@ -711,6 +728,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Process submission form delete
         Route::post("/delete/", "SubmissionController@destroy")
             ->name("delete_submission_form");
+
+        // Submission MGM Query with prize as parameter
+        Route::get("/get/mgm2", "SubmissionController@queryNewSubmissionMGM")
+            ->name("query_new_submission_mgm");
     });
 
     Route::group(["prefix" => "reference", "middleware" => "auth"], function () {
@@ -763,7 +784,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Process acceptance delete
         Route::post("/{id}", "AcceptanceController@destroy")
             ->name("delete_acceptance_form");
-        
+
         //export xls
         Route::get('/export-acceptance-to-xls-by-date', 'AcceptanceController@export_to_xls_byDate')
                 ->name('acceptance_export-to-xls-by-date');

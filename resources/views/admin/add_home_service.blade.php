@@ -73,6 +73,7 @@ $menu_item_second = "add_home_service";
 							<div class="form-group">
 								<span>Type Home Service</span>
 								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
+                                    <option value="Program Penjelas Ulang">Program Penjelas Ulang</option>
                                     <option value="Home service">Home Service</option>
                                     <option value="Home Tele Voucher">Home Tele Voucher</option>
                                     <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
