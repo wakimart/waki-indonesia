@@ -176,7 +176,11 @@ $menu_item_second = "list_submission_form";
                                         <td>
                                             {{ $submission->name }}
                                         </td>
-                                        <td style= "background-color:{{ $submission->reference[0]->reference_souvenir == null ? '#ff5050' : '' }}">
+                                        <td style= "background-color:{{ isset($submission->reference[0]) ? 
+                                            (
+                                                $submission->reference[0]->reference_souvenir == null ? '#ff5050' : '') 
+                                            :
+                                            '' }}">
                                             {{ strtoupper($submission->type) }}
                                         </td>
                                         <td>
