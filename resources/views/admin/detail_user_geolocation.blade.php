@@ -64,7 +64,8 @@ $menu_item_second = "track_homeservice";
                                 type="date"
                                 id="date"
                                 name="date"
-                                placeholder="Date" />
+                                placeholder="Date"
+                                required />
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-3"
@@ -73,7 +74,8 @@ $menu_item_second = "track_homeservice";
                             <label for="cso">CSO</label>
                             <select class="form-control"
                                 id="cso"
-                                name="user_id">
+                                name="user_id"
+                                required>
                                 <option value="">Choose CSO</option>
                                 @foreach ($csos as $cso)
                                     <option value="{{ $cso->user_id }}">
@@ -124,6 +126,25 @@ $menu_item_second = "track_homeservice";
                     </div>
                 </div>
             </div>
+
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <img src="#"
+                                    id="presence-start"
+                                    class="img-thumbnail" />
+                            </div>
+                            <div class="col-md-6">
+                                <img src="#"
+                                    id="presence-end"
+                                    class="img-thumbnail" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -138,17 +159,15 @@ $menu_item_second = "track_homeservice";
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASaeppCIyKr3FpfxVSl-KpiTb8xMXCF6Y"
     defer></script>
 <script type="application/javascript">
-let coordinates = [];
-
 document.addEventListener("DOMContentLoaded", function () {
     $("#cso").select2();
 });
 
 function getGeolocation() {
-    const userid = document.getElementById("cso").value;
+    const userId = document.getElementById("cso").value;
     const date = document.getElementById("date").value;
 
-    fetch(`{{ route("fetch_geolocation") }}?user_id=${userid}&date=${date}`, {
+    fetch(`{{ route("fetch_geolocation") }}?user_id=${userId}&date=${date}`, {
         method: "GET",
         headers: {
             "Accept": "application/json",
@@ -162,14 +181,13 @@ function getGeolocation() {
 
         return response.json();
     }).then(function (response) {
-        coordinates = response;
-        initMap();
+        initMap(response);
     }).catch(function (error) {
         console.error(error);
     });
 }
 
-function initMap() {
+function initMap(coordinates) {
     document.getElementById("timetable-body").innerHTML = "";
 
     const map = new google.maps.Map(document.getElementById("map"), {
@@ -255,6 +273,31 @@ function addRowToTable(label, unixTimestamp1, unixTimestamp2 = null) {
     tableRow.appendChild(tableDataNumber);
     tableRow.appendChild(tableDataTime);
     document.getElementById("timetable-body").appendChild(tableRow);
+}
+
+function presenceImage(userId, date) {
+    const directory = '{{ url("/sources/geolocation") }}';
+
+    fetch(`{{ route("fetch_geolocation_presence") }}?user_id=${userId}&date=${date}`, {
+        method: "GET",
+        headers: {
+            "Accept": "application/json",
+        },
+        mode: "same-origin",
+        referrerPolicy: "no-referrer",
+    }).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const data = response.data;
+        document.getElementById("presence-start").setAttribute("src", directory + "/" + date + "/img/" + data[0]);
+        document.getElementById("presence-end").setAttribute("src", directory + "/" + date + "/img/" + data[1]);
+    }).catch(function (error) {
+        console.error(error);
+    });
 }
 </script>
 @endsection

@@ -181,4 +181,23 @@ class UserGeolocationController extends Controller
             ], 500);
         }
     }
+
+    public function fetchPresenceImage(Request $request)
+    {
+        try {
+            $userGeolocation = UserGeolocation::select("presence_image")
+                ->where("user_id", $request->user_id)
+                ->whereDate("date", $request->date)
+                ->first();
+
+            return response()->json([
+                "data" => $userGeolocation->presence_image,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "result" => 0,
+                "data" => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

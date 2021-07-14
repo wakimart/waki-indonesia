@@ -407,6 +407,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::get("/fetch/geolocation", "UserGeolocationController@fetchGeolocationData")
             ->name("fetch_geolocation");
+
+        Route::get("/fetch/presence", "UserGeolocationController@fetchPresenceImage")
+            ->name("fetch_geolocation_presence");
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
