@@ -37,7 +37,8 @@ class OrderController extends Controller
         return view('order', compact('promos', 'branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks', 'categoryProducts'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
   	   	$data = $request->all();
     	$data['code'] = "DO/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
     	$data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
@@ -109,7 +110,8 @@ class OrderController extends Controller
     	return redirect()->route('order_success', ['code'=>$order['code']]);
     }
 
-    public function successorder(Request $request){
+    public function successorder(Request $request)
+    {
     	$order = Order::where('code', $request['code'])->first();
         $order['district'] = array($order->getDistrict());
         return view('order_success', compact('order'));
@@ -127,7 +129,8 @@ class OrderController extends Controller
         return view('admin.add_order', compact('promos', 'branches', 'csos', 'from_know','cashUpgrades', 'paymentTypes', 'banks'));
     }
 
-    public function admin_StoreOrder(Request $request){
+    public function admin_StoreOrder(Request $request)
+    {
         DB::beginTransaction();
         try {
             $data = $request->all();
@@ -223,18 +226,22 @@ class OrderController extends Controller
         }
     }
 
-    public function admin_ListOrder(Request $request){
+    public function admin_ListOrder(Request $request)
+    {
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
-        //khususu head-manager, head-admin, admin
+        // Khusus head-manager, head-admin, admin
         $orders = Order::where('active', true);
 
-        //khusus akun CSO
-        if(Auth::user()->roles[0]['slug'] == 'cso'){
+        // Khusus akun CSO
+        if (Auth::user()->roles[0]['slug'] == 'cso') {
             $orders = Order::where('cso_id', Auth::user()->cso['id'])->where('active', true);
         }
 
-        //khusus akun branch dan area-manager
-        if(Auth::user()->roles[0]['slug'] == 'branch' || Auth::user()->roles[0]['slug'] == 'area-manager'){
+        // Khusus akun branch dan area-manager
+        if (
+            Auth::user()->roles[0]['slug'] == 'branch'
+            || Auth::user()->roles[0]['slug'] == 'area-manager'
+        ) {
             $arrbranches = [];
             foreach (Auth::user()->listBranches() as $value) {
                 array_push($arrbranches, $value['id']);
@@ -242,32 +249,66 @@ class OrderController extends Controller
             $orders = Order::WhereIn('branch_id', $arrbranches)->where('active', true);
         }
 
-        //kalau ada Filter
-        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+        // Kalau ada Filter
+        if (
+            $request->has('filter_branch')
+            && Auth::user()->roles[0]['slug'] != 'branch'
+        ) {
             $orders = $orders->where('branch_id', $request->filter_branch);
         }
-        if($request->has('filter_province')){
+
+        if ($request->has('filter_province')) {
             $orders = $orders->where('province', $request->filter_province);
         }
-        if($request->has('filter_city')){
+
+        if ($request->has('filter_city')) {
             $orders = $orders->where('city', $request->filter_city);
         }
-        if($request->has('filter_district')){
+
+        if ($request->has('filter_district')) {
             $orders = $orders->where('distric', $request->filter_district);
         }
-        if($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso'){
+
+        if ($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso') {
             $orders = $orders->where('cso_id', $request->filter_cso);
         }
-        if($request->has('filter_type') && Auth::user()->roles[0]['slug'] != 'cso'){
+
+        if ($request->has('filter_type') && Auth::user()->roles[0]['slug'] != 'cso') {
             $orders = $orders->where('customer_type', $request->filter_type);
         }
+
+        if ($request->has("filter_string")) {
+            $filterString = $request->filter_string;
+            $orders = $orders->where(
+                function ($query) use ($filterString) {
+                    $query->where(
+                        "name",
+                        "like",
+                        "%" . $filterString . "%"
+                    )
+                    ->orWhere(
+                        "phone",
+                        "like",
+                        "%" . $filterString . "%"
+                    )
+                    ->orWhere(
+                        "code",
+                        "like",
+                        "%" . $filterString . "%"
+                    );
+                }
+            );
+        }
+
         $countOrders = $orders->count();
         $categories = CategoryProduct::all();
         $orders = $orders->sortable(['orderDate' => 'desc'])->paginate(10);
+
         return view('admin.list_order', compact('orders','countOrders','branches', 'categories'));
     }
 
-    public function admin_DetailOrder(Request $request){
+    public function admin_DetailOrder(Request $request)
+    {
         $order = Order::where('code', $request['code'])->first();
         $order['district'] = $order->getDistrict();
         $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
@@ -461,7 +502,8 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         DB::beginTransaction();
         try{
             $order = Order::where('id', $id)->first();
@@ -485,7 +527,8 @@ class OrderController extends Controller
         }
     }
 
-    public function export_to_xls(Request $request){
+    public function export_to_xls(Request $request)
+    {
         $date = null;
         $cso = null;
         $city = null;
@@ -541,7 +584,8 @@ class OrderController extends Controller
     }
 
     //KHUSUS API APPS
-    public function fetchBanksApi(){
+    public function fetchBanksApi()
+    {
         $data = Order::$Banks;
         $banks = [];
         foreach ($data as $key => $value) {
@@ -556,7 +600,8 @@ class OrderController extends Controller
         return response()->json($data, 200);
     }
 
-    public function fetchKnowFromApi(){
+    public function fetchKnowFromApi()
+    {
         $data = Order::$Know_From;
         $know_From = [];
         foreach($data as $key => $value) {
@@ -772,7 +817,6 @@ class OrderController extends Controller
         }
     }
 
-
     public function updateApi(Request $request)
     {
         $messages = array(
@@ -886,7 +930,6 @@ class OrderController extends Controller
         }
     }
 
-
     public function viewApi($id)
     {
         //khususu head-manager, head-admin, admin
@@ -951,7 +994,6 @@ class OrderController extends Controller
                 ];
         return response()->json($data, 200);
     }
-
 
     public function deleteApi(Request $request)
     {
