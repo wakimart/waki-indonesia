@@ -214,7 +214,7 @@ class OrderController extends Controller
                $phone =  substr($phone, 1);
             }
             $phone = "62".$phone;
-            Utils::sendSms($phone, "Terima kasih telah melakukan transaksi di WAKi Indonesia. Berikut link detail transaksi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
+            // Utils::sendSms($phone, "Terima kasih telah melakukan transaksi di WAKi Indonesia. Berikut link detail transaksi anda (".$url."). Info lebih lanjut, hubungi 082138864962.");
             //return redirect()->route('detail_order', ['code'=>$order['code']]);
             return response()->json(['success' => $order]);
         } catch (\Exception $ex) {
@@ -311,7 +311,7 @@ class OrderController extends Controller
      */
     public function update(Request $request)
     {
-        DB::beginTransaction();       
+        DB::beginTransaction();
         try{
             $historyUpdate= [];
             $data = $request->all();
@@ -535,7 +535,7 @@ class OrderController extends Controller
     }
 
     public function fetchDetailPromo($promo_id)
-    {   
+    {
         $promos = Promo::find($promo_id);
         return json_encode($promos);
     }
