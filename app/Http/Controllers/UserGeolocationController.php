@@ -195,4 +195,30 @@ class UserGeolocationController extends Controller
             ], 500);
         }
     }
+
+    public function fetchStatusPresence(Request $request)
+    {
+        try {
+            $userGeolocation = UserGeolocation::select("presence_image")
+                ->where("user_id", $request->user_id)
+                ->whereDate("date", $request->date)
+                ->first();
+
+            if (!empty($userGeolocation->presence_image)) {
+                return response()->json([
+                    "result" => 0,
+                    "data" => "Anda sudah absen pada hari ini.",
+                ]);
+            } else {
+                return response()->json([
+                    "result" => 1,
+                ]);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                "result" => 0,
+                "data" => $e->getMessage(),
+            ], 500);
+        }
+    }
 }

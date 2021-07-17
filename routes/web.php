@@ -410,6 +410,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::get("/fetch/presence", "UserGeolocationController@fetchPresenceImage")
             ->name("fetch_geolocation_presence");
+
+        Route::get("/fetch/status-presence", "UserGeolocationController@fetchStatusPresence")
+            ->name("fetch_geolocation_status_presence");
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
