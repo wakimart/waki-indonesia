@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Cso;
-use App\User;
 use App\UserGeolocation;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,35 +14,52 @@ class UserGeolocationController extends Controller
 {
     public function show(Request $request)
     {
-        $csos = Cso::select(
-                "users.id AS user_id",
-                "csos.code AS code",
-                "csos.name AS name",
-            )
-            ->leftJoin(
-                "users",
-                "csos.id",
-                "=",
-                "users.cso_id"
-            )
-            ->where("csos.active", true)
-            ->get();
+        $userGeolocations = "";
+        if ($request->has("date")) {
+            $userGeolocations = UserGeolocation::select(
+                    "user_geolocations.user_id AS user_id",
+                    "csos.code AS code",
+                    "csos.name AS name",
+                )
+                ->whereBetween(
+                    "user_geolocations.date",
+                    [
+                        $request->date . " 00:00:00",
+                        $request->date . " 23:59:59"
+                    ]
+                )
+                ->leftJoin(
+                    "users",
+                    "user_geolocations.user_id",
+                    "=",
+                    "users.id"
+                )
+                ->leftJoin(
+                    "csos",
+                    "users.cso_id",
+                    "=",
+                    "csos.id"
+                )
+                ->get();
+        }
 
-        return view("admin.detail_user_geolocation", compact("csos"));
+        return view(
+            "admin.detail_user_geolocation",
+            compact("userGeolocations")
+        );
     }
 
     public function fetchGeolocationData(Request $request)
     {
-        // * UNCOMMENT WHEN IT'S READY TO GO INTO PRODUCTION
         $userGeolocation = UserGeolocation::select("user_id", "date", "filename")
             ->where("user_id", $request->user_id)
             ->whereDate("date", "=", $request->date)
             ->first();
 
-        $path = $filePath = "sources/geolocation/" . date("Y-m-d") . "/json/"
+        $path = "sources/geolocation/" . date("Y-m-d") . "/json/"
             . $userGeolocation->filename
             . ".json";
-        // $path = storage_path() . "/geolocation/test/1/geolocation2.json";
+
         $json = json_decode(file_get_contents($path), true);
 
         return response()->json($json);
@@ -75,7 +90,11 @@ class UserGeolocationController extends Controller
                     File::makeDirectory($filePath, 0777, true, true);
                 }
 
-                $fileName = $request->user_id ."_". time() . "_start." . $imageFile->getClientOriginalExtension();
+                $fileName = $request->user_id
+                    . "_"
+                    . time()
+                    . "_start."
+                    . $imageFile->getClientOriginalExtension();
                 $imageFile->move($filePath, $fileName);
 
                 $presenseImage[] = $fileName;
@@ -128,15 +147,17 @@ class UserGeolocationController extends Controller
                     File::makeDirectory($filePath, 0777, true, true);
                 }
 
-                $fileName = $request->user_id ."_". time() . "_end." . $imageFile->getClientOriginalExtension();
+                $fileName = $request->user_id
+                    . "_"
+                    . time()
+                    . "_end."
+                    . $imageFile->getClientOriginalExtension();
                 $imageFile->move($filePath, $fileName);
 
                 $endImage = $fileName;
-                $currentDate = date("Y-m-d");
             }
 
             // Save JSON
-            $currentDate = date("Y-m-d");
             $fileName = Str::random(16);
             $filePath = "sources/geolocation/" . date("Y-m-d") . "/json/";
             if (!File::exists($filePath)) {

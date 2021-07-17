@@ -65,9 +65,24 @@ $menu_item_second = "track_homeservice";
                                 id="date"
                                 name="date"
                                 placeholder="Date"
+                                value="{{ $_GET["date"] ?? "" }}"
                                 required />
                         </div>
+                        <div class="col-xs-6 col-sm-6"
+                            style="padding: 0; display: inline-block;">
+                            <div class="form-group">
+                                <button type="submit"
+                                    class="btn btn-gradient-primary">
+                                    <span class="mdi mdi-filter"></span> Apply
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                </form>
+            </div>
+
+            @if (!empty($userGeolocations) && $userGeolocations->isNotEmpty())
+                <div class="col-12">
                     <div class="col-xs-6 col-sm-3"
                         style="padding: 0; display: inline-block;">
                         <div class="form-group">
@@ -77,9 +92,9 @@ $menu_item_second = "track_homeservice";
                                 name="user_id"
                                 required>
                                 <option value="">Choose CSO</option>
-                                @foreach ($csos as $cso)
-                                    <option value="{{ $cso->user_id }}">
-                                        {{ $cso->code }} - {{ $cso->name }}
+                                @foreach ($userGeolocations as $userGeolocation)
+                                    <option value="{{ $userGeolocation->user_id }}">
+                                        {{ $userGeolocation->code }} - {{ $userGeolocation->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -90,14 +105,14 @@ $menu_item_second = "track_homeservice";
                         <div class="form-group">
                             <button id="btn-filter"
                                 type="button"
-                                class="btn btn-gradient-primary m-1"
+                                class="btn btn-gradient-primary"
                                 onclick="getGeolocation()">
                                 <span class="mdi mdi-magnify"></span> Search
                             </button>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            @endif
 
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
