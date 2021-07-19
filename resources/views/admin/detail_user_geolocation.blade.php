@@ -28,6 +28,7 @@ $menu_item_second = "track_homeservice";
     #map {
         height: 800px;
     }
+
 </style>
 @endsection
 
@@ -55,64 +56,67 @@ $menu_item_second = "track_homeservice";
 
         <div class="row">
             <div class="col-12 grid-margin stretch-card">
-                <form class="col-12">
-                    <div class="col-xs-6 col-sm-3"
-                        style="padding: 0; display: inline-block;">
-                        <div class="form-group">
-                            <label for="date">Date</label>
-                            <input class="form-control"
-                                type="date"
-                                id="date"
-                                name="date"
-                                placeholder="Date"
-                                value="{{ $_GET["date"] ?? "" }}"
-                                required />
-                        </div>
-                        <div class="col-xs-6 col-sm-6"
-                            style="padding: 0; display: inline-block;">
-                            <div class="form-group">
-                                <button type="submit"
-                                    class="btn btn-gradient-primary">
-                                    <span class="mdi mdi-filter"></span> Apply
-                                </button>
+                <div class="col-md-12 col-sm-12 col-xs-12 row">
+                    <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left: 0;"> 
+                        <form>
+                            <div class="col-xs-6 col-sm-6 col-md-6"
+                                style="padding: 0; display: inline-block;">
+                                <div class="form-group">
+                                    <label for="date">Date</label>
+                                    <input class="form-control"
+                                        type="date"
+                                        id="date"
+                                        name="date"
+                                        placeholder="Date"
+                                        value="{{ $_GET["date"] ?? "" }}"
+                                        required />
+                                </div>
                             </div>
-                        </div>
+                            <div style="padding: 0; display: inline-block;">
+                                <div class="form-group">
+                                    <button type="submit"
+                                        class="btn btn-gradient-primary">
+                                        <span class="mdi mdi-filter"></span> Apply
+                                    </button>
+                                </div>
+                            </div>
+                        </form>  
                     </div>
-                </form>
-            </div>
-
-            @if (!empty($userGeolocations) && $userGeolocations->isNotEmpty())
-                <div class="col-12">
-                    <div class="col-xs-6 col-sm-3"
-                        style="padding: 0; display: inline-block;">
-                        <div class="form-group">
-                            <label for="cso">CSO</label>
-                            <select class="form-control"
-                                id="cso"
-                                name="user_id"
-                                required>
-                                <option value="">Choose CSO</option>
-                                @foreach ($userGeolocations as $userGeolocation)
-                                    <option value="{{ $userGeolocation->user_id }}">
-                                        {{ $userGeolocation->code }} - {{ $userGeolocation->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-xs-6 col-sm-6"
-                        style="padding: 0; display: inline-block;">
-                        <div class="form-group">
-                            <button id="btn-filter"
-                                type="button"
-                                class="btn btn-gradient-primary"
-                                onclick="getGeolocation()">
-                                <span class="mdi mdi-magnify"></span> Search
-                            </button>
-                        </div>
+                    <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left: 0;">
+                        @if (!empty($userGeolocations) && $userGeolocations->isNotEmpty())
+                            <div class="col-xs-6 col-sm-6 col-md-6"
+                                style="padding: 0; display: inline-block;">
+                                <div class="form-group">
+                                    <label class="col-sm-12 col-xs-12" for="cso" style="padding-left: 0;">CSO</label>
+                                    <select class="form-control"
+                                        style="width: 100%"
+                                        id="cso"
+                                        name="user_id"
+                                        required>
+                                        <option value="">Choose CSO</option>
+                                        @foreach ($userGeolocations as $userGeolocation)
+                                            <option value="{{ $userGeolocation->user_id }}">
+                                                {{ $userGeolocation->code }} - {{ $userGeolocation->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div 
+                                style="padding: 0; display: inline-block;">
+                                <div class="form-group">
+                                    <button id="btn-filter"
+                                        type="submit"
+                                        class="btn btn-gradient-primary"
+                                        onclick="getGeolocation()">
+                                        <span class="mdi mdi-magnify"></span> Search
+                                    </button>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
-            @endif
+            </div>
 
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
