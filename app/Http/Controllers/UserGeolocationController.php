@@ -81,6 +81,17 @@ class UserGeolocationController extends Controller
         DB::beginTransaction();
 
         try {
+            //check absen
+            $CheckAbsent = UserGeolocation::where("user_id", $request->user_id)
+                                ->whereDate("date", date("Y-m-d"))
+                                ->first();
+            if(!empty($CheckAbsent)){
+                return response()->json([
+                    "result" => 0,
+                    "data" => "Anda Sudah Absen Pada Hari Ini WOIII!",
+                ], 500);
+            }
+
             if ($request->hasFile("image")) {
                 $imageFile = $request->file("image");
 
@@ -220,20 +231,30 @@ class UserGeolocationController extends Controller
     public function fetchStatusPresence(Request $request)
     {
         try {
-            $userGeolocation = UserGeolocation::select("presence_image")
-                ->where("user_id", $request->user_id)
-                ->whereDate("date", $request->date)
-                ->first();
+            $userGeolocation = UserGeolocation::where("user_id", $request->user_id)
+                                ->whereDate("date", date("Y-m-d"))
+                                ->first();
 
-            if (!empty($userGeolocation->presence_image)) {
-                return response()->json([
-                    "result" => 0,
-                    "data" => "Anda sudah absen pada hari ini.",
-                ]);
-            } else {
+            if(empty($userGeolocation)){
                 return response()->json([
                     "result" => 1,
+                    "status" => "check_in",
                 ]);
+            }
+            else{
+                if(empty($userGeolocation->filename)){
+                    return response()->json([
+                        "result" => 1,
+                        "status" => "check_out",
+                    ]);
+                }
+                else{
+                     return response()->json([
+                        "result" => 0,
+                        "status" => "check_in",
+                        "data" => "Anda sudah absen pada hari ini.",
+                    ]);
+                }
             }
         } catch (Exception $e) {
             return response()->json([

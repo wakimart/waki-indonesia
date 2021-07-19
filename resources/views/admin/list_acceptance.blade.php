@@ -5,29 +5,26 @@ $menu_item_second = "list_acceptance_form";
 @extends('admin.layouts.template')
 @section('style')
 <style type="text/css">
+    /*-- mobile --*/
+    @media (max-width: 768px){
+        #desktop {
+            display: none;
+        }
 
-	/*-- mobile --*/
-	@media (max-width: 768px){
+        #mobile {
+            display: block;
+        }
+    }
 
-		#desktop{
-			display: none;
-		}
+    @media (min-width: 768px){
+        #desktop {
+            display: block;
+        }
 
-		#mobile{
-			display: block;
-		}
-	}
-
-	@media (min-width: 768px){
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
-	}
-
+        #mobile {
+            display: none;
+        }
+    }
 </style>
 @endsection
 
@@ -35,19 +32,28 @@ $menu_item_second = "list_acceptance_form";
 <div class="main-panel">
     <div class="content-wrapper">
         <!-- header mobile -->
-		<div id="mobile">
-			<h3 class="text-center">Acceptances List</h3>
-			<div class="row">
-				<nav aria-label="breadcrumb">
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item"><a data-toggle="collapse" href="#" aria-expanded="false" aria-controls="acceptance-dd">Acceptances</a></li>
-						<li class="breadcrumb-item active" aria-current="page">Acceptances List</li>
-					</ol>
-				</nav>
-		  	</div>
-	  	</div>
+        <div id="mobile">
+            <h3 class="text-center">Acceptances List</h3>
+            <div class="row">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a data-toggle="collapse"
+                                href="#"
+                                aria-expanded="false"
+                                aria-controls="acceptance-dd">
+                                Acceptances
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Acceptances List
+                        </li>
+                    </ol>
+                </nav>
+              </div>
+          </div>
 
-		<!-- header desktop -->
+        <!-- header desktop -->
         <div id="desktop">
             <div class="page-header">
                 <h3 class="page-title">Acceptances List</h3>
@@ -70,15 +76,25 @@ $menu_item_second = "list_acceptance_form";
             </div>
         </div>
         <div class="col-12" style="padding: 0;">
-            <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-                <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
+            <div class="col-xs-12 col-sm-12 row"
+                style="margin: 0; padding: 0;">
+                <div class="col-xs-6 col-sm-4"
+                    style="padding: 0; display: inline-block;">
                     <div class="form-group">
                         <label for="">Filter By Status</label>
-                        <select class="form-control" id="filter_status" name="filter_status">
+                        <select class="form-control"
+                            id="filter_status"
+                            name="filter_status">
                             <option value="">All</option>
-                            <option value="new" {{ isset($_GET['status']) ? ($_GET['status'] == "new" ? "selected" : "") : ""}}>New</option>
-                            <option value="approved" {{ isset($_GET['status']) ? ($_GET['status'] == "approved" ? "selected" : "") : ""}}>Approved</option>
-                            <option value="rejected" {{ isset($_GET['status']) ? ($_GET['status'] == "rejected" ? "selected" : "") : ""}}>Rejected</option>
+                            <option value="new" {{ isset($_GET['status']) ? ($_GET['status'] == "new" ? "selected" : "") : "" }}>
+                                New
+                            </option>
+                            <option value="approved" {{ isset($_GET['status']) ? ($_GET['status'] == "approved" ? "selected" : "") : "" }}>
+                                Approved
+                            </option>
+                            <option value="rejected" {{ isset($_GET['status']) ? ($_GET['status'] == "rejected" ? "selected" : "") : "" }}>
+                                Rejected
+                            </option>
                         </select>
                         <div class="validation"></div>
                     </div>
@@ -87,13 +103,27 @@ $menu_item_second = "list_acceptance_form";
         </div>
 
         <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-            <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+            <div class="col-xs-6 col-sm-6"
+                style="padding: 0;display: inline-block;">
                 <label for=""></label>
                 <div class="form-group">
-                    <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-
+                    <button id="btn-filter"
+                        type="button"
+                        class="btn btn-gradient-primary m-1"
+                        name="filter"
+                        value="-">
+                        <span class="mdi mdi-filter"></span> Apply Filter
+                    </button>
                     @if (Auth::user()->roles[0]->slug !== "branch" && Auth::user()->roles[0]->slug !== "cso")
-                        <button id="btn-export" type="button" class="btn btn-gradient-info m-1" name="export" data-toggle="modal" href="#modal-export-excel" value="-"><span class="mdi mdi-file-document"></span>Export XLS</button>
+                        <button id="btn-export"
+                            type="button"
+                            class="btn btn-gradient-info m-1"
+                            name="export"
+                            data-toggle="modal"
+                            href="#modal-export-excel"
+                            value="-">
+                            <span class="mdi mdi-file-document"></span>Export XLS
+                        </button>
                     @endif
                 </div>
             </div>
@@ -111,7 +141,7 @@ $menu_item_second = "list_acceptance_form";
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th>Acceptance Date</th>
+                                    <th>Input Date</th>
                                     <th>Member Name</th>
                                     <th>Acc Type</th>
                                     <th>Acceptance Product</th>
@@ -127,7 +157,7 @@ $menu_item_second = "list_acceptance_form";
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>
-                                            {{ date("d/m/Y", strtotime($acceptance->upgrade_date)) }}
+                                            {{ date("d/m/Y", strtotime($acceptance->created_at)) }}
                                         </td>
                                         <td>
                                             {{ $acceptance->name }}
@@ -142,25 +172,25 @@ $menu_item_second = "list_acceptance_form";
                                             {{ $acceptance->branch->code }} - {{ $acceptance->cso->code }}
                                         </td>
                                         <td>
-                                            @if(strtolower($acceptance['status']) == "new")
+                                            @if (strtolower($acceptance['status']) == "new")
                                                 <span class="badge badge-primary">New</span>
-                                            @elseif(strtolower($acceptance['status']) == "approved")
+                                            @elseif (strtolower($acceptance['status']) == "approved")
                                                 <span class="badge badge-success">Approved by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
-                                            @elseif(strtolower($acceptance['status']) == "rejected")
+                                            @elseif (strtolower($acceptance['status']) == "rejected")
                                                 <span class="badge badge-danger">Rejected by : {{ $acceptance->acceptanceLog[sizeof($acceptance->acceptanceLog)-1]->user['name'] }}</span>
                                             @endif
                                         </td>
                                         @can('detail-acceptance')
                                             <td style="text-align: center;">
-                                                <a href="{{ route('detail_acceptance_form' ,['id' => $acceptance['id']]) }}">
+                                                <a href="{{ route('detail_acceptance_form', ['id' => $acceptance['id']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
                                         @endcan
                                         @can('edit-acceptance')
                                             <td style="text-align: center;">
-                                                @if(strtolower($acceptance['status']) == "new")
-                                                    <a href="{{ route('edit_acceptance_form' ,['id' => $acceptance['id']]) }}">
+                                                @if (strtolower($acceptance['status']) == "new")
+                                                    <a href="{{ route('edit_acceptance_form', ['id' => $acceptance['id']]) }}">
                                                         <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                     </a>
                                                 @endif
@@ -168,8 +198,11 @@ $menu_item_second = "list_acceptance_form";
                                         @endcan
                                         @can('delete-acceptance')
                                             <td style="text-align: center;">
-                                                @if(strtolower($acceptance['status']) == "new")
-                                                    <a class="btn-delete disabled" data-toggle="modal" href="#deleteDoModal" value="{{ route('delete_acceptance_form', ['id' => $acceptance->id]) }}">
+                                                @if (strtolower($acceptance['status']) == "new")
+                                                    <a class="btn-delete disabled"
+                                                        data-toggle="modal"
+                                                        href="#deleteDoModal"
+                                                        value="{{ route('delete_acceptance_form', ['id' => $acceptance->id]) }}">
                                                         <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                     </a>
                                                 @endif
@@ -203,7 +236,9 @@ $menu_item_second = "list_acceptance_form";
             <div class="modal-body">
                 <div class="form-group">
                     <label>Filter Acceptance</label>
-                    <select class="form-control" id="filter_statusexport" required="">
+                    <select class="form-control"
+                        id="filter_statusexport"
+                        required>
                         <option value="">All</option>
                         <option value="new">New</option>
                         <option value="approved">Approved</option>
@@ -285,8 +320,9 @@ $menu_item_second = "list_acceptance_form";
                 </div>
                 <div class="modal-footer">
                     <form id="frmDelete" method="post" action="">
-                        {{csrf_field()}}
-                        <button type="submit" class="btn btn-gradient-danger mr-2">
+                        {{ csrf_field() }}
+                        <button type="submit"
+                            class="btn btn-gradient-danger mr-2">
                             Yes
                         </button>
                     </form>
@@ -300,14 +336,16 @@ $menu_item_second = "list_acceptance_form";
 @endsection
 
 @section('script')
-<script>
+<script type="application/javascript">
 $(document).ready(function (e) {
     $("#btn-filter").click(function (e) {
         var urlParamArray = new Array();
         var urlParamStr = "";
-        if($('#filter_status').val() != ""){
+
+        if ($('#filter_status').val() != "") {
             urlParamArray.push("status=" + $('#filter_status').val());
         }
+
         for (var i = 0; i < urlParamArray.length; i++) {
             if (i === 0) {
                 urlParamStr += "?" + urlParamArray[i]
@@ -315,15 +353,16 @@ $(document).ready(function (e) {
                 urlParamStr += "&" + urlParamArray[i]
             }
         }
-        window.location.href = "{{route('list_acceptance_form')}}" + urlParamStr;
+
+        window.location.href = "{{ route('list_acceptance_form') }}" + urlParamStr;
     });
+
     $(".btn-delete").click(function (e) {
         $("#frmDelete").attr("action",  $(this).attr('value'));
     });
 });
 
 function submitExportXLSWithDate() {
-    console.log("masuk");
     let urlParamStr = "";
 
     let startDate = document.getElementById("filter_startDate").value;
@@ -333,7 +372,6 @@ function submitExportXLSWithDate() {
     urlParamStr += "filter_startDate=" + startDate + "&";
     urlParamStr += "filter_endDate=" + endDate + "&";
     urlParamStr += "filter_statusexport=" + status;
-
 
     window.location.href = "<?php echo route('acceptance_export-to-xls-by-date'); ?>" + "?" + urlParamStr;
 }
