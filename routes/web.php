@@ -111,6 +111,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
         Route::post("/add/geolocation", "UserGeolocationController@addApi"); // Upload geolocation data
         Route::post("/add/start-geolocation", "UserGeolocationController@addStartImageApi");
+        Route::get("/fetch/status-presence", "UserGeolocationController@fetchStatusPresence");
 	});
 
 	Route::group(['prefix' => 'register'], function () {
@@ -410,9 +411,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::get("/fetch/presence", "UserGeolocationController@fetchPresenceImage")
             ->name("fetch_geolocation_presence");
-
-        Route::get("/fetch/status-presence", "UserGeolocationController@fetchStatusPresence")
-            ->name("fetch_geolocation_status_presence");
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
