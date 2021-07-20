@@ -55,8 +55,11 @@ class UserGeolocationController extends Controller
             ->where("user_id", $request->user_id)
             ->whereDate("date", "=", $request->date)
             ->first();
+            
+        $dateNya=date_create($request->date);
 
-        $path = "sources/geolocation/" . date("Y-m-d") . "/json/"
+
+        $path = "sources/geolocation/" . date_format($dateNya,"Y-m-d") . "/json/"
             . $userGeolocation->filename
             . ".json";
 
