@@ -51,21 +51,33 @@ class UserGeolocationController extends Controller
 
     public function fetchGeolocationData(Request $request)
     {
-        $userGeolocation = UserGeolocation::select("user_id", "date", "filename")
-            ->where("user_id", $request->user_id)
-            ->whereDate("date", "=", $request->date)
-            ->first();
-            
-        $dateNya=date_create($request->date);
+        try {
+            $userGeolocation = UserGeolocation::select(
+                    "user_id",
+                    "date",
+                    "filename",
+                )
+                ->where("user_id", $request->user_id)
+                ->whereDate("date", "=", $request->date)
+                ->first();
 
+            $dateNya = date_create($request->date);
 
-        $path = "sources/geolocation/" . date_format($dateNya,"Y-m-d") . "/json/"
-            . $userGeolocation->filename
-            . ".json";
+            $path = "sources/geolocation/"
+                . date_format($dateNya, "Y-m-d")
+                . "/json/"
+                . $userGeolocation->filename
+                . ".json";
 
-        $json = json_decode(file_get_contents($path), true);
+            $json = json_decode(file_get_contents($path), true);
 
-        return response()->json($json);
+            return response()->json($json);
+        } catch (Exception $e) {
+            return response()->json([
+                "result" => 0,
+                "data" => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function addStartImageApi(Request $request)
@@ -84,11 +96,12 @@ class UserGeolocationController extends Controller
         DB::beginTransaction();
 
         try {
-            //check absen
+            // Check absen
             $CheckAbsent = UserGeolocation::where("user_id", $request->user_id)
-                                ->whereDate("date", date("Y-m-d"))
-                                ->first();
-            if(!empty($CheckAbsent)){
+                ->whereDate("date", date("Y-m-d"))
+                ->first();
+
+            if (!empty($CheckAbsent)) {
                 return response()->json([
                     "result" => 0,
                     "data" => "Anda Sudah Absen Pada Hari Ini WOIII!",
@@ -235,23 +248,21 @@ class UserGeolocationController extends Controller
     {
         try {
             $userGeolocation = UserGeolocation::where("user_id", $request->user_id)
-                                ->whereDate("date", date("Y-m-d"))
-                                ->first();
+                ->whereDate("date", date("Y-m-d"))
+                ->first();
 
-            if(empty($userGeolocation)){
+            if (empty($userGeolocation)) {
                 return response()->json([
                     "result" => 1,
                     "status" => "check_in",
                 ]);
-            }
-            else{
-                if(empty($userGeolocation->filename)){
+            } else {
+                if (empty($userGeolocation->filename)) {
                     return response()->json([
                         "result" => 1,
                         "status" => "check_out",
                     ]);
-                }
-                else{
+                } else {
                      return response()->json([
                         "result" => 0,
                         "status" => "check_in",

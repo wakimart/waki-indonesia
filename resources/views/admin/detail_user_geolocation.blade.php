@@ -57,7 +57,8 @@ $menu_item_second = "track_homeservice";
         <div class="row">
             <div class="col-12 grid-margin stretch-card">
                 <div class="col-md-12 col-sm-12 col-xs-12 row">
-                    <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left: 0;"> 
+                    <div class="col-md-6 col-sm-12 col-xs-12"
+                        style="padding-left: 0;">
                         <form>
                             <div class="col-xs-6 col-sm-6 col-md-6"
                                 style="padding: 0; display: inline-block;">
@@ -80,14 +81,19 @@ $menu_item_second = "track_homeservice";
                                     </button>
                                 </div>
                             </div>
-                        </form>  
+                        </form>
                     </div>
-                    <div class="col-md-6 col-sm-12 col-xs-12" style="padding-left: 0;">
+                    <div class="col-md-6 col-sm-12 col-xs-12"
+                        style="padding-left: 0;">
                         @if (!empty($userGeolocations) && $userGeolocations->isNotEmpty())
                             <div class="col-xs-6 col-sm-6 col-md-6"
                                 style="padding: 0; display: inline-block;">
                                 <div class="form-group">
-                                    <label class="col-sm-12 col-xs-12" for="cso" style="padding-left: 0;">CSO</label>
+                                    <label class="col-sm-12 col-xs-12"
+                                        for="cso"
+                                        style="padding-left: 0;">
+                                        CSO
+                                    </label>
                                     <select class="form-control"
                                         style="width: 100%"
                                         id="cso"
@@ -102,8 +108,7 @@ $menu_item_second = "track_homeservice";
                                     </select>
                                 </div>
                             </div>
-                            <div 
-                                style="padding: 0; display: inline-block;">
+                            <div style="padding: 0; display: inline-block;">
                                 <div class="form-group">
                                     <button id="btn-filter"
                                         type="submit"
@@ -136,6 +141,7 @@ $menu_item_second = "track_homeservice";
                                     <tr>
                                         <th class="text-right">#</th>
                                         <th>Time</th>
+                                        <th>Location</th>
                                     </tr>
                                 </thead>
                                 <tbody id="timetable-body">
@@ -232,6 +238,7 @@ function initMap(coordinates) {
 
         if (index === 0) {
             addRowToTable(labels.toString(), value.timestamp);
+
             new google.maps.Marker({
                 position: { lat: value.lat, lng: value.lng },
                 label: labels.toString(),
@@ -249,7 +256,23 @@ function initMap(coordinates) {
         const timestampDifference = currentTimestamp - previousTimestamp;
 
         if (timestampDifference >= 900000) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ location: { lat: value.lat, lng: value.lng } })
+                .then(function (response) {
+                    if (response.results[0]) {
+                        response.results.forEach(function (value) {
+                            //
+                        });
+                    } else {
+                        console.log("kosong");
+                    }
+                })
+                .catch(function (error) {
+                    console.error(error);
+                });
+
             addRowToTable(labels.toString(), previousTimestamp, currentTimestamp);
+
             new google.maps.Marker({
                 position: { lat: value.lat, lng: value.lng },
                 label: labels.toString(),
@@ -263,6 +286,7 @@ function initMap(coordinates) {
 
         if (index === coordinates.length - 1) {
             addRowToTable(labels.toString(), value.timestamp);
+
             new google.maps.Marker({
                 position: { lat: value.lat, lng: value.lng },
                 label: labels.toString(),
@@ -275,10 +299,11 @@ function initMap(coordinates) {
     map.fitBounds(bounds);
 }
 
-function addRowToTable(label, unixTimestamp1, unixTimestamp2 = null) {
+function addRowToTable(label, unixTimestamp1, unixTimestamp2 = null, location = "-") {
     const tableRow = document.createElement("tr");
     const tableDataNumber = document.createElement("td");
     const tableDataTime = document.createElement("td");
+    const tableDataLocation = document.createElement("td");
 
     tableDataNumber.className = "text-right";
     tableDataNumber.innerHTML = label;
@@ -290,8 +315,11 @@ function addRowToTable(label, unixTimestamp1, unixTimestamp2 = null) {
         tableDataTime.innerHTML += ` - ${("0" + (time2.getHours())).slice(-2)}:${("0" + (time2.getMinutes())).slice(-2)}`;
     }
 
+    tableDataLocation.innerHTML = location;
+
     tableRow.appendChild(tableDataNumber);
     tableRow.appendChild(tableDataTime);
+    tableRow.appendChild(tableDataLocation);
     document.getElementById("timetable-body").appendChild(tableRow);
 }
 
