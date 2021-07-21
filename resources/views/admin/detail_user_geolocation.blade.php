@@ -184,6 +184,8 @@ $menu_item_second = "track_homeservice";
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyASaeppCIyKr3FpfxVSl-KpiTb8xMXCF6Y"
     defer></script>
 <script type="application/javascript">
+let tableRowCounter = 0;
+
 document.addEventListener("DOMContentLoaded", function () {
     $("#cso").select2();
 });
@@ -238,6 +240,7 @@ function initMap(coordinates) {
 
         if (index === 0) {
             addRowToTable(labels.toString(), value.timestamp);
+            requestGeocoding(value.lat, value.lng, tableRowCounter - 1);
 
             new google.maps.Marker({
                 position: { lat: value.lat, lng: value.lng },
@@ -256,22 +259,8 @@ function initMap(coordinates) {
         const timestampDifference = currentTimestamp - previousTimestamp;
 
         if (timestampDifference >= 900000) {
-            const geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ location: { lat: value.lat, lng: value.lng } })
-                .then(function (response) {
-                    if (response.results[0]) {
-                        response.results.forEach(function (value) {
-                            //
-                        });
-                    } else {
-                        console.log("kosong");
-                    }
-                })
-                .catch(function (error) {
-                    console.error(error);
-                });
-
             addRowToTable(labels.toString(), previousTimestamp, currentTimestamp);
+            requestGeocoding(value.lat, value.lng, tableRowCounter - 1);
 
             new google.maps.Marker({
                 position: { lat: value.lat, lng: value.lng },
@@ -286,6 +275,7 @@ function initMap(coordinates) {
 
         if (index === coordinates.length - 1) {
             addRowToTable(labels.toString(), value.timestamp);
+            requestGeocoding(value.lat, value.lng, tableRowCounter - 1);
 
             new google.maps.Marker({
                 position: { lat: value.lat, lng: value.lng },
@@ -315,12 +305,15 @@ function addRowToTable(label, unixTimestamp1, unixTimestamp2 = null, location = 
         tableDataTime.innerHTML += ` - ${("0" + (time2.getHours())).slice(-2)}:${("0" + (time2.getMinutes())).slice(-2)}`;
     }
 
+    tableDataLocation.id = `location-${tableRowCounter}`;
     tableDataLocation.innerHTML = location;
 
     tableRow.appendChild(tableDataNumber);
     tableRow.appendChild(tableDataTime);
     tableRow.appendChild(tableDataLocation);
     document.getElementById("timetable-body").appendChild(tableRow);
+
+    tableRowCounter++;
 }
 
 function presenceImage(userId, date) {
@@ -346,6 +339,27 @@ function presenceImage(userId, date) {
     }).catch(function (error) {
         console.error(error);
     });
+}
+
+function requestGeocoding(lat, lng, tableRow) {
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode(
+        {
+            location: {
+                lat: lat,
+                lng: lng,
+            },
+        },
+        function (results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    document.getElementById(`location-${tableRow}`).innerHTML = results[0].formatted_address;
+                } else {
+                    document.getElementById(`location-${tableRow}`).innerHTML = "-";
+                }
+            }
+        }
+    );
 }
 </script>
 @endsection
