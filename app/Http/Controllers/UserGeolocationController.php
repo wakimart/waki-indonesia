@@ -108,6 +108,17 @@ class UserGeolocationController extends Controller
                 ], 500);
             }
 
+            $CheckAbsent = UserGeolocation::where("device_id", $request->device_id)
+                ->whereDate("date", date("Y-m-d"))
+                ->first();
+
+            if (!empty($CheckAbsent)) {
+                return response()->json([
+                    "result" => 0,
+                    "data" => "1 Handphone Hanya Diperbolehkan 1 Absen!",
+                ], 500);
+            }
+
             if ($request->hasFile("image")) {
                 $imageFile = $request->file("image");
 
@@ -130,6 +141,7 @@ class UserGeolocationController extends Controller
                     "user_id" => $request->user_id,
                     "presence_image" => $presenseImage,
                     "date" => $currentDate,
+                    "device_id" => $request->device_id,
                 ]);
 
                 DB::commit();
