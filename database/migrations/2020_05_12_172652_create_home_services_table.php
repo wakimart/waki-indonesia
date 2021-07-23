@@ -13,22 +13,22 @@ class CreateHomeServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('home_services', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('code');
-            $table->string('no_member')->nullable();
-            $table->string('name');
-            $table->string('city');
-            $table->text('address');
-            $table->string('phone');
-            $table->integer('branch_id')->unsigned();
-            $table->foreign('branch_id')->references('id')->on('branches');
-            $table->integer('cso_id')->unsigned();
-            $table->foreign('cso_id')->references('id')->on('csos');
-            $table->string('cso_phone')->nullable();
-            $table->dateTime('appointment', 0);
-            $table->timestamps();
-        });
+        // Schema::create('home_services', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->string('code');
+        //     $table->string('no_member')->nullable();
+        //     $table->string('name');
+        //     $table->string('city');
+        //     $table->text('address');
+        //     $table->string('phone');
+        //     $table->integer('branch_id')->unsigned();
+        //     $table->foreign('branch_id')->references('id')->on('branches');
+        //     $table->integer('cso_id')->unsigned();
+        //     $table->foreign('cso_id')->references('id')->on('csos');
+        //     $table->string('cso_phone')->nullable();
+        //     $table->dateTime('appointment', 0);
+        //     $table->timestamps();
+        // });
     }
 
     /**

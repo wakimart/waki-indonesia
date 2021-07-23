@@ -13,9 +13,9 @@ class AddPhoneOrdersTab extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('phone');
-        });
+        // Schema::table('orders', function (Blueprint $table) {
+        //     $table->string('phone');
+        // });
     }
 
     /**

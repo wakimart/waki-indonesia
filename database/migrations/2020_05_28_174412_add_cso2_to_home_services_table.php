@@ -13,10 +13,10 @@ class AddCso2ToHomeServicesTable extends Migration
      */
     public function up()
     {
-        Schema::table('home_services', function (Blueprint $table) {
-            $table->integer('cso2_id')->unsigned()->nullable();
-            $table->foreign('cso2_id')->references('id')->on('csos');
-        });
+        // Schema::table('home_services', function (Blueprint $table) {
+        //     $table->integer('cso2_id')->unsigned()->nullable();
+        //     $table->foreign('cso2_id')->references('id')->on('csos');
+        // });
     }
 
     /**

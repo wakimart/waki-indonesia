@@ -13,12 +13,12 @@ class AddCsoidBranchidToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dateTime('birth_date', 0)->nullable();
-            $table->string('branches_id')->nullable();
-            $table->integer('cso_id')->unsigned()->nullable();
-            $table->foreign('cso_id')->references('id')->on('csos');
-        });
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->dateTime('birth_date', 0)->nullable();
+        //     $table->string('branches_id')->nullable();
+        //     $table->integer('cso_id')->unsigned()->nullable();
+        //     $table->foreign('cso_id')->references('id')->on('csos');
+        // });
     }
 
     /**

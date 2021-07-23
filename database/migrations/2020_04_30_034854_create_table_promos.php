@@ -13,14 +13,14 @@ class CreateTablePromos extends Migration
      */
     public function up()
     {
-        Schema::create('promos', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('code')->nullable();
-            $table->string('image')->nullable();
-            $table->string('product')->nullable();
-            $table->decimal('price', 20, 2)->nullable();
-            $table->timestamps();
-        });
+        // Schema::create('promos', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->string('code')->nullable();
+        //     $table->string('image')->nullable();
+        //     $table->string('product')->nullable();
+        //     $table->decimal('price', 20, 2)->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**

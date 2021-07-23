@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Utils extends Model
 {
 	//eng = english, id = indonesia
-    public static $lang = "id";
+    public static $lang = "eng";
     public static function sendSms($destination, $text){
         $headers = [
             'Authorization' => 'Bearer x6qcavYzC2AEVj93s7YJmpMUoIGluiLyfqvKWuXIRU',

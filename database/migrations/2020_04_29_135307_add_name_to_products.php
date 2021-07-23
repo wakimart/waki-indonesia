@@ -13,10 +13,10 @@ class AddNameToProducts extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->string('name')->nullable();
-            $table->decimal('price', 20, 2)->nullable();
-        });
+        // Schema::table('products', function (Blueprint $table) {
+        //     $table->string('name')->nullable();
+        //     $table->decimal('price', 20, 2)->nullable();
+        // });
     }
 
     /**

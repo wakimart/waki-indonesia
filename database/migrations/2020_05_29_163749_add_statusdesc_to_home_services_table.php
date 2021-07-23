@@ -13,11 +13,11 @@ class AddStatusdescToHomeServicesTable extends Migration
      */
     public function up()
     {
-        Schema::table('home_services', function (Blueprint $table) {
-            $table->boolean('cash')->nullable();
-            $table->string('cash_description', 220)->nullable();
-            $table->string('description', 700)->nullable();
-        });
+        // Schema::table('home_services', function (Blueprint $table) {
+        //     $table->boolean('cash')->nullable();
+        //     $table->string('cash_description', 220)->nullable();
+        //     $table->string('description', 700)->nullable();
+        // });
     }
 
     /**

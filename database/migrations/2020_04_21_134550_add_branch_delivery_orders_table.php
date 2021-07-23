@@ -13,10 +13,10 @@ class AddBranchDeliveryOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::table('delivery_orders', function (Blueprint $table) {
-            $table->integer('branch_id')->unsigned();
-            $table->foreign('branch_id')->references('id')->on('branches');
-        });
+        // Schema::table('delivery_orders', function (Blueprint $table) {
+        //     $table->integer('branch_id')->unsigned();
+        //     $table->foreign('branch_id')->references('id')->on('branches');
+        // });
     }
 
     /**

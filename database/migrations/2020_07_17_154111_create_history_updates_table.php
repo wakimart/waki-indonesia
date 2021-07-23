@@ -13,15 +13,15 @@ class CreateHistoryUpdatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('history_updates', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('type_menu');
-            $table->string('method');
-            $table->json('meta');
-            $table->unsignedInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->timestamps();
-        });
+        // Schema::create('history_updates', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->string('type_menu');
+        //     $table->string('method');
+        //     $table->json('meta');
+        //     $table->unsignedInteger('user_id');
+        //     $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        //     $table->timestamps();
+        // });
     }
 
     /**

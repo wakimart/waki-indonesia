@@ -13,21 +13,21 @@ class AddActiveAllTable extends Migration
      */
     public function up()
     {
-        Schema::table('delivery_orders', function (Blueprint $table) {
-            $table->boolean('active')->default(true);
-        });
-        Schema::table('orders', function (Blueprint $table) {
-            $table->boolean('active')->default(true);
-        });
-        Schema::table('home_services', function (Blueprint $table) {
-            $table->boolean('active')->default(true);
-        });
-        Schema::table('csos', function (Blueprint $table) {
-            $table->boolean('active')->default(true);
-        });
-        Schema::table('branches', function (Blueprint $table) {
-            $table->boolean('active')->default(true);
-        });
+        // Schema::table('delivery_orders', function (Blueprint $table) {
+        //     $table->boolean('active')->default(true);
+        // });
+        // Schema::table('orders', function (Blueprint $table) {
+        //     $table->boolean('active')->default(true);
+        // });
+        // Schema::table('home_services', function (Blueprint $table) {
+        //     $table->boolean('active')->default(true);
+        // });
+        // Schema::table('csos', function (Blueprint $table) {
+        //     $table->boolean('active')->default(true);
+        // });
+        // Schema::table('branches', function (Blueprint $table) {
+        //     $table->boolean('active')->default(true);
+        // });
     }
 
     /**

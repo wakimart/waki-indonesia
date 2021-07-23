@@ -13,9 +13,9 @@ class AddCityToDeliveryorders extends Migration
      */
     public function up()
     {
-        Schema::table('delivery_orders', function (Blueprint $table) {
-            $table->string('city')->nullable();
-        });
+        // Schema::table('delivery_orders', function (Blueprint $table) {
+        //     $table->string('city')->nullable();
+        // });
     }
 
     /**

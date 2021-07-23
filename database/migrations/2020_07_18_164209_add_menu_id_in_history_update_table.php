@@ -13,9 +13,9 @@ class AddMenuIdInHistoryUpdateTable extends Migration
      */
     public function up()
     {
-        Schema::table('history_updates', function (Blueprint $table) {
-            $table->integer("menu_id");
-        });
+        // Schema::table('history_updates', function (Blueprint $table) {
+        //     $table->integer("menu_id");
+        // });
     }
 
     /**

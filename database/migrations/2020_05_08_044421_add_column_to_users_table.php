@@ -13,12 +13,12 @@ class AddColumnToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('code');
-            $table->boolean('active')->default(true);
-            $table->text('permissions')->nullable();
-            $table->string('user_image')->nullable();
-        });
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->string('code');
+        //     $table->boolean('active')->default(true);
+        //     $table->text('permissions')->nullable();
+        //     $table->string('user_image')->nullable();
+        // });
     }
 
     /**

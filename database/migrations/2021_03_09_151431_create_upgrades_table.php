@@ -15,7 +15,7 @@ class CreateUpgradesTable extends Migration
     {
         Schema::create('upgrades', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('acceptance_id')->unsigned();
+            $table->integer('acceptance_id')->nullable()->unsigned();
             $table->foreign('acceptance_id')->references('id')->on('acceptances');
             $table->dateTime('due_date', 0)->nullable();
             $table->enum('status', ['New', 'Process', 'Approval', 'Complete', 'Reject'])->nullable();
