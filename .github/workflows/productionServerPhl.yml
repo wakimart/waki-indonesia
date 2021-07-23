@@ -1,7 +1,7 @@
 on: 
   push:
     branches:
-      - productionServer
+      - productionServer_Phl
 name: 🚀 Deploy website on push master
 jobs:
   web-deploy:
