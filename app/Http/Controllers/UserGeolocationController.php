@@ -21,6 +21,7 @@ class UserGeolocationController extends Controller
                     "csos.code AS code",
                     "csos.name AS name",
                 )
+                ->whereNotNull("user_geolocations.filename")
                 ->whereBetween(
                     "user_geolocations.date",
                     [
