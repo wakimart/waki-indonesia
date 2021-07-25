@@ -10,7 +10,7 @@ class Utils extends Model
     public static $lang = "eng";
     public static function sendSms($destination, $text){
         $headers = [
-            'Authorization' => 'Bearer x6qcavYzC2AEVj93s7YJmpMUoIGluiLyfqvKWuXIRU',
+            'Authorization' =>  env("SMS_AUTH", "-");,
             'Content-Type' => 'application/json',
         ];
         $client = new \GuzzleHttp\Client();
