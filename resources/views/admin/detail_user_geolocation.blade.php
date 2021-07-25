@@ -28,7 +28,6 @@ $menu_item_second = "track_homeservice";
     #map {
         height: 800px;
     }
-
 </style>
 @endsection
 
@@ -173,6 +172,40 @@ $menu_item_second = "track_homeservice";
         </div>
     </div>
 </div>
+
+<div class="modal fade"
+    id="error-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Error</h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p>
+                    Failed to load geolocation data.
+                    <br>
+                    Reason: 2 account on 1 device.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                    class="btn btn-gradient-primary"
+                    data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section("script")
@@ -206,10 +239,16 @@ function getGeolocation() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        return response.json();
+        return response.text();
     }).then(function (response) {
-        initMap(response);
-        presenceImage(userId, date);
+        try {
+            const json = JSON.parse(response);
+            initMap(json);
+            presenceImage(userId, date);
+        } catch (error) {
+            $("#error-modal").modal("show");
+            console.error(error);
+        }
     }).catch(function (error) {
         console.error(error);
     });
