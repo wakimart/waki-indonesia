@@ -179,8 +179,20 @@
         @if (Gate::check('browse-submission'))
             <li class="nav-item">
                 <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form' ? 'active' : '' }}"
-                    href="{{ route('list_submission_form') }}">
-                    List Submmission
+                    href="{{ route('list_submission_form', ["filter_type" => "mgm"]) }}">
+                    List Submmission - MGM
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form' ? 'active' : '' }}"
+                    href="{{ route('list_submission_form', ["filter_type" => "referensi"]) }}">
+                    List Submmission - Referensi
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form' ? 'active' : '' }}"
+                    href="{{ route('list_submission_form', ["filter_type" => "takeaway"]) }}">
+                    List Submmission - Takeaway
                 </a>
             </li>
         @endif
