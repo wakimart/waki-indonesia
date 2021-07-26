@@ -1,6 +1,14 @@
 <?php
 $menu_item_page = "submission";
-$menu_item_second = "list_submission_form";
+if (isset($_GET["filter_type"])) {
+    if ($_GET["filter_type"] === "mgm") {
+        $menu_item_second = "list_submission_form_mgm";
+    } elseif ($_GET["filter_type"] === "referensi") {
+        $menu_item_second = "list_submission_form_referensi";
+    } elseif ($_GET["filter_type"] === "takeaway") {
+        $menu_item_second = "list_submission_form_takeaway";
+    }
+}
 ?>
 @extends('admin.layouts.template')
 
@@ -85,7 +93,7 @@ $menu_item_second = "list_submission_form";
                         <label for="filter-type">Search by Name/ Phone/ Code</label>
                         <input class="form-control"
                             type="text"
-                            id="filter_text" 
+                            id="filter_text"
                             name="filter_text"
                             placeholder="Name, Phone, Code"
                             value="{{ isset($_GET["filter_text"]) ? $_GET["filter_text"] : "" }}" />
@@ -176,9 +184,9 @@ $menu_item_second = "list_submission_form";
                                         <td>
                                             {{ $submission->name }}
                                         </td>
-                                        <td style= "background-color:{{ isset($submission->reference[0]) ? 
+                                        <td style= "background-color:{{ isset($submission->reference[0]) ?
                                             (
-                                                $submission->reference[0]->reference_souvenir == null ? '#ff5050' : '') 
+                                                $submission->reference[0]->reference_souvenir == null ? '#ff5050' : '')
                                             :
                                             '' }}">
                                             {{ strtoupper($submission->type) }}
@@ -294,7 +302,7 @@ document.addEventListener("DOMContentLoaded", function () {
           urlParamStr += "?" + urlParamArray[i]
         } else {
           urlParamStr += "&" + urlParamArray[i]
-        } 
+        }
       }
 
       window.location.href = "{{route('list_submission_form')}}" + urlParamStr;

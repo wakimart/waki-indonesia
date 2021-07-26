@@ -178,21 +178,21 @@
         @endif
         @if (Gate::check('browse-submission'))
             <li class="nav-item">
-                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form' ? 'active' : '' }}"
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form_mgm' ? 'active' : '' }}"
                     href="{{ route('list_submission_form', ["filter_type" => "mgm"]) }}">
-                    List Submmission - MGM
+                    List Submission - MGM
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form' ? 'active' : '' }}"
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form_referensi' ? 'active' : '' }}"
                     href="{{ route('list_submission_form', ["filter_type" => "referensi"]) }}">
-                    List Submmission - Referensi
+                    List Submission - Referensi
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form' ? 'active' : '' }}"
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form_takeaway' ? 'active' : '' }}"
                     href="{{ route('list_submission_form', ["filter_type" => "takeaway"]) }}">
-                    List Submmission - Takeaway
+                    List Submission - Takeaway
                 </a>
             </li>
         @endif
