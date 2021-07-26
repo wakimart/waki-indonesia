@@ -56,7 +56,7 @@ $menu_item_second = "add_home_service";
                           {{ session('errors') }}
                       </div>
                   @endif
-						@if(Utils::$lang=='id')
+					@if(true)
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_homeService') }}">
 							{{ csrf_field() }}
 							<div class="form-group">
@@ -245,7 +245,7 @@ $menu_item_second = "add_home_service";
                 </div>
 
 	          </form>
-						@elseif(Utils::$lang=='eng')
+				@elseif(false)
 						<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('admin_store_homeService') }}">
 							{{ csrf_field() }}
         			<div class="form-group">
@@ -539,42 +539,23 @@ function setMinAppointmentTime(e) {
             $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
             .done(function( result ) {
                 result = result['rajaongkir']['results'];
-                var arrCity = "<option selected disabled value=\"\">Pilihan Kabupaten</option>";
+                var arrCity = "<option selected disabled value=\"\">Choose City</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
-						if(value['type'] == "Kabupaten"){
-							arrCity += "<option value=\""+value['city_id']+"\">"+value['type']+" "+value['city_name']+"</option>";
-						}
+                        arrCity += "<option value=\""+value['city_id']+"\">"+value['city_name']+"</option>";
                     });
                     $( "#city" ).append(arrCity);
                 }
             });
         });
 
-        $("#province").on("change", function(){
-            var id = $(this).val();
-            $( "#city" ).html("");
-            $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
-            .done(function( result ) {
-                result = result['rajaongkir']['results'];
-                var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
-                if(result.length > 0){
-                    $.each( result, function( key, value ) {
-                        if(value['type'] == "Kota"){
-                            arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
-                        }
-                    });
-                    $( "#city" ).append(arrCity);
-                }
-            });
-		});
 		$("#city").on("change", function(){
             var id = $(this).val();
 			$( "#subDistrict" ).html("");
             $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
             .done(function( result ) {
 				result = result['rajaongkir']['results'];
-                var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+                var arrSubDistsrict = "<option selected disabled value=\"\">Choose Subdistrict</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
                         arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
@@ -590,16 +571,14 @@ function setMinAppointmentTime(e) {
         $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+{{ $autofill['province'] }} )
         .done(function( result ) {
             result = result['rajaongkir']['results'];
-            var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+            var arrCity = "<option selected disabled value=\"\">Choose City</option>";
             if(result.length > 0){
                 $.each( result, function( key, value ) {
-                    if(value['type'] == "Kota"){
-                        let selected = "";
-                        if({{ $autofill['city'] }} == value['city_id']){
-                            selected = "selected";
-                        }
-                        arrCity += "<option "+selected+" value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
+                    let selected = "";
+                    if({{ $autofill['city'] }} == value['city_id']){
+                        selected = "selected";
                     }
+                    arrCity += "<option "+selected+" value=\""+value['city_id']+"\">"+value['city_name']+"</option>";
                 });
                 $( "#city" ).append(arrCity);
             }
@@ -609,7 +588,7 @@ function setMinAppointmentTime(e) {
         $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+{{ $autofill['city'] }} )
         .done(function( result ) {
             result = result['rajaongkir']['results'];
-            var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+            var arrSubDistsrict = "<option selected disabled value=\"\">Choose Subdistrict</option>";
             if(result.length > 0){
                 $.each( result, function( key, value ) {
                     arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
