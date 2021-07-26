@@ -307,8 +307,7 @@ if (
             <div class="col-md-12 text-center mt-4">
                 <button class="btn btn-gradient-primary mt-2"
                     data-toggle="modal"
-                    data-target="#edit-reference"
-                    onclick="clickAdd()">
+                    data-target="#edit-reference">
                     Add Reference - MGM
                 </button>
             </div>
@@ -405,13 +404,17 @@ if (
                 </button>
             </div>
             <div class="modal-body">
-                <form id="edit-form" method="POST" enctype="multipart/form-data">
+                <form id="edit-form" method="POST" action="{{ route("store_reference_mgm") }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="edit-id" name="id" value="" />
                     <input type="hidden"
                         id="url"
                         name="url"
                         value="{{ url()->full() }}" />
+                    <input type="hidden"
+                        id="edit-id"
+                        name="submission_id"
+                        value="{{ $submission->id }}" />
                     <div class="form-group">
                         <label for="edit-name">Name</label>
                         <input type="text"
