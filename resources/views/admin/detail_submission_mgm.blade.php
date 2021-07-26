@@ -332,6 +332,12 @@ if (
                             value="Terima Kasih telah mengikuti program *Member Get Member*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">
                             Share Program MGM
                         </button>
+                        <button type="submit"
+                            class="btn btn-gradient-danger mr-2 my-2"
+                            name="text"
+                            value=" {{ route("detail_submission_form", ["id" => $submission->id, "type" => "mgm"]) }} ">
+                            Share Form MGM for ACC
+                        </button>
                     </div>
                 </form>
              </div>
@@ -947,12 +953,12 @@ function loadDataPerRef(ref_id) {
                         <tr id="tr_detail_souvenir">\
                             <td>PRIZE</td>\
                             <td>\
-                                <select id="select_edit-prize_'+p+'" class="form-control" name="prize_id">'
+                                <select {{ Auth::user()->id == 1 ? "disabled" : "" }} id="select_edit-prize_'+p+'" class="form-control" name="prize_id">'
                                 + prizeOptionAll +
                                 '</select>\
                             </td>\
                             <td>\
-                                <select id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
+                                <select {{ Auth::user()->id == 1 ? "disabled" : "" }} id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
                                     <option value="">Choose Status</option>\
                                     <option value="pending">pending</option>\
                                     <option value="success">success</option>\
@@ -1074,6 +1080,7 @@ $(document).ready(function () {
     // KHUSUS UNTUK ORDER
     $("#choose-order").on('shown.bs.modal', function (event) {
         originButton = event.relatedTarget.dataset.originbutton;
+        console.log(originButton);
 
         let submission_id = "{{ $submission->id }}";
         getOrderSubmission("", submission_id, originButton);
@@ -1086,7 +1093,7 @@ $(document).ready(function () {
     $('#order-filter-name_phone').on('input', function (e) {
         let submission_id = "{{ $submission->id }}";
         let filter = $(this).val();
-        getOrderSubmission(filter, submission_id);
+        getOrderSubmission(filter, submission_id, "btn_choose_order");
     });
 
     function getOrderSubmission(filter, submission_id, originButton) {
