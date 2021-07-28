@@ -74,12 +74,12 @@ $menu_item_second = "list_homeservice";
 
 @section('content')
 <div class="main-panel">
-	<div class="content-wrapper">
+    <div class="content-wrapper">
         <div class="page-header">
-  			<h3 class="page-title">Home Service</h3>
-  			<nav aria-label="breadcrumb">
-    			<ol class="breadcrumb">
-      				<li class="breadcrumb-item">
+            <h3 class="page-title">Home Service</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
                         <a data-toggle="collapse"
                             href="#cso-dd"
                             aria-expanded="false"
@@ -87,26 +87,21 @@ $menu_item_second = "list_homeservice";
                             Home Service
                         </a>
                     </li>
-      				<li class="breadcrumb-item active" aria-current="page">
+                    <li class="breadcrumb-item active" aria-current="page">
                         List Home Service
                     </li>
-    			</ol>
-  			</nav>
-		</div>
+                </ol>
+            </nav>
+        </div>
 
         <div class="row">
-  			<div class="col-12 grid-margin stretch-card">
-    			<div class="card">
-      				<div class="card-body">
-      					<h5 style="margin-bottom: 0.5em;">Appointment</h5>
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 style="margin-bottom: 0.5em;">Appointment</h5>
                         <div class="col-xs-12 col-sm-12 row"
                             style="margin: 0; padding: 0;">
-                            <?php
-                            if (
-                                Utils::$lang === 'id'
-                                && Auth::user()->roles[0]["slug"] !== "admin-management"
-                            ):
-                            ?>
+                            <?php if (Auth::user()->roles[0]["slug"] !== "admin-management"): ?>
                                 <div class="col-xs-6 col-sm-3"
                                     style="padding: 0; display: inline-block;">
                                     <div class="form-group">
@@ -218,7 +213,7 @@ $menu_item_second = "list_homeservice";
                                 <div class="col-xs-6 col-sm-3"
                                     style="padding: 0;display: inline-block;">
                                     <div class="form-group">
-                                        <label style="opacity: 0;" for=""> s</label>
+                                        <label style="opacity: 0;"> s</label>
                                         <select class="form-control"
                                             id="filter_district"
                                             name="filter_district">

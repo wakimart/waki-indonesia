@@ -28,141 +28,138 @@ $menu_item_second = "list_order";
 
         <div class="col-12 grid-margin" style="padding: 0;">
             @if (Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
-                @if (Utils::$lang=='id')
-                    <div class="col-xs-12 col-sm-12 row"
-                        style="margin: 0;padding: 0;">
-                        <div class="col-xs-6 col-sm-4"
-                            style="padding: 0;display: inline-block;">
-                            <div class="form-group">
-                                <label for="">Filter By City</label>
-                                    <select class="form-control"
-                                        id="filter_province"
-                                        name="filter_province">
-                                        <option value="" selected="">
-                                            All Province
-                                        </option>
-                                        @php
-                                        $result = RajaOngkir::FetchProvince();
-                                        $result = $result['rajaongkir']['results'];
-                                        $arrProvince = [];
-                                        if (sizeof($result) > 0) {
-                                            foreach ($result as $value) {
-                                                $terpilihNya = "";
-                                                if (isset($_GET['filter_province'])) {
-                                                    if ($_GET['filter_province'] == $value['province_id']) {
-                                                        $terpilihNya = "selected";
-                                                    }
-                                                }
-
-                                                echo "<option value=\""
-                                                    . $value['province_id']
-                                                    . "\""
-                                                    . $terpilihNya
-                                                    . ">"
-                                                    . $value['province']
-                                                    . "</option>";
-                                            }
-                                        }
-                                        @endphp
-                                </select>
-                                <div class="validation"></div>
-                            </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-4"
-                            style="padding: 0; display: inline-block;">
-                            <div class="form-group">
-                            <label style="opacity: 0;" for=""> s</label>
+                <div class="col-xs-12 col-sm-12 row"
+                    style="margin: 0;padding: 0;">
+                    <div class="col-xs-6 col-sm-4"
+                        style="padding: 0;display: inline-block;">
+                        <div class="form-group">
+                            <label for="">Filter By City</label>
                                 <select class="form-control"
-                                    id="filter_city"
-                                    name="filter_city">
-                                    <option value="">All City</option>
+                                    id="filter_province"
+                                    name="filter_province">
+                                    <option value="" selected="">
+                                        All Province
+                                    </option>
                                     @php
-                                    if (isset($_GET['filter_province'])) {
-                                        $result = RajaOngkir::FetchCity($_GET['filter_province']);
-                                        $result = $result['rajaongkir']['results'];
-                                        $arrCity = [];
-                                        $arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
-                                        $arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
-                                        if (sizeof($result) > 0) {
-                                            foreach ($result as $value) {
-                                                $terpilihNya = "";
-                                                if (isset($_GET['filter_city'])) {
-                                                    if ($_GET['filter_city'] == $value['city_id']) {
-                                                        $terpilihNya = "selected";
-                                                    }
-                                                }
-
-                                                if ($value['type'] == "Kabupaten") {
-                                                    $arrCity[0] .= "<option value=\""
-                                                        . $value['city_id']
-                                                        . "\""
-                                                        . $terpilihNya
-                                                        . ">"
-                                                        . $value['type']
-                                                        . " "
-                                                        . $value['city_name']
-                                                        . "</option>";
-                                                } else {
-                                                    $arrCity[1] .= "<option value=\""
-                                                        . $value['city_id']
-                                                        . "\""
-                                                        . $terpilihNya
-                                                        . ">"
-                                                        . $value['type']
-                                                        . " "
-                                                        . $value['city_name']
-                                                        . "</option>";
+                                    $result = RajaOngkir::FetchProvince();
+                                    $result = $result['rajaongkir']['results'];
+                                    $arrProvince = [];
+                                    if (sizeof($result) > 0) {
+                                        foreach ($result as $value) {
+                                            $terpilihNya = "";
+                                            if (isset($_GET['filter_province'])) {
+                                                if ($_GET['filter_province'] == $value['province_id']) {
+                                                    $terpilihNya = "selected";
                                                 }
                                             }
 
-                                            echo $arrCity[0];
-                                            echo $arrCity[1];
+                                            echo "<option value=\""
+                                                . $value['province_id']
+                                                . "\""
+                                                . $terpilihNya
+                                                . ">"
+                                                . $value['province']
+                                                . "</option>";
                                         }
                                     }
                                     @endphp
-                                </select>
-                                <div class="validation"></div>
-                            </div>
-                        </div>
-                        <div class="col-xs-6 col-sm-4"
-                            style="padding: 0; display: inline-block;">
-                            <div class="form-group">
-                            <label style="opacity: 0;" for=""> s</label>
-                                <select class="form-control"
-                                    id="filter_district"
-                                    name="filter_district">
-                                    <option value="">All District</option>
-                                    @php
-                                    if (isset($_GET['filter_city'])) {
-                                        $result = RajaOngkir::FetchDistrict($_GET['filter_city']);
-                                        $result = $result['rajaongkir']['results'];
-                                        if (sizeof($result) > 0) {
-                                            foreach ($result as $value) {
-                                                $terpilihNya = "";
-                                                if (isset($_GET['filter_district'])) {
-                                                    if ($_GET['filter_district'] == $value['subdistrict_id']) {
-                                                        $terpilihNya = "selected";
-                                                    }
-                                                }
-
-                                                echo "<option value=\""
-                                                    . $value['subdistrict_id']
-                                                    . "\""
-                                                    . $terpilihNya
-                                                    . ">"
-                                                    . $value['subdistrict_name']
-                                                    . "</option>";
-                                            }
-                                        }
-                                    }
-                                    @endphp
-                                </select>
-                                <div class="validation"></div>
-                            </div>
+                            </select>
+                            <div class="validation"></div>
                         </div>
                     </div>
-                @endif
+                    <div class="col-xs-6 col-sm-4"
+                        style="padding: 0; display: inline-block;">
+                        <div class="form-group">
+                        <label style="opacity: 0;" for=""> s</label>
+                            <select class="form-control"
+                                id="filter_city"
+                                name="filter_city">
+                                <option value="">All City</option>
+                                @php
+                                if (isset($_GET['filter_province'])) {
+                                    $result = RajaOngkir::FetchCity($_GET['filter_province']);
+                                    $result = $result['rajaongkir']['results'];
+                                    $arrCity = [];
+                                    $arrCity[0] = "<option disabled value=\"\">Pilihan Kabupaten</option>";
+                                    $arrCity[1] = "<option disabled value=\"\">Pilihan Kota</option>";
+                                    if (sizeof($result) > 0) {
+                                        foreach ($result as $value) {
+                                            $terpilihNya = "";
+                                            if (isset($_GET['filter_city'])) {
+                                                if ($_GET['filter_city'] == $value['city_id']) {
+                                                    $terpilihNya = "selected";
+                                                }
+                                            }
 
+                                            if ($value['type'] == "Kabupaten") {
+                                                $arrCity[0] .= "<option value=\""
+                                                    . $value['city_id']
+                                                    . "\""
+                                                    . $terpilihNya
+                                                    . ">"
+                                                    . $value['type']
+                                                    . " "
+                                                    . $value['city_name']
+                                                    . "</option>";
+                                            } else {
+                                                $arrCity[1] .= "<option value=\""
+                                                    . $value['city_id']
+                                                    . "\""
+                                                    . $terpilihNya
+                                                    . ">"
+                                                    . $value['type']
+                                                    . " "
+                                                    . $value['city_name']
+                                                    . "</option>";
+                                            }
+                                        }
+
+                                        echo $arrCity[0];
+                                        echo $arrCity[1];
+                                    }
+                                }
+                                @endphp
+                            </select>
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-4"
+                        style="padding: 0; display: inline-block;">
+                        <div class="form-group">
+                        <label style="opacity: 0;" for=""> s</label>
+                            <select class="form-control"
+                                id="filter_district"
+                                name="filter_district">
+                                <option value="">All District</option>
+                                @php
+                                if (isset($_GET['filter_city'])) {
+                                    $result = RajaOngkir::FetchDistrict($_GET['filter_city']);
+                                    $result = $result['rajaongkir']['results'];
+                                    if (sizeof($result) > 0) {
+                                        foreach ($result as $value) {
+                                            $terpilihNya = "";
+                                            if (isset($_GET['filter_district'])) {
+                                                if ($_GET['filter_district'] == $value['subdistrict_id']) {
+                                                    $terpilihNya = "selected";
+                                                }
+                                            }
+
+                                            echo "<option value=\""
+                                                . $value['subdistrict_id']
+                                                . "\""
+                                                . $terpilihNya
+                                                . ">"
+                                                . $value['subdistrict_name']
+                                                . "</option>";
+                                        }
+                                    }
+                                }
+                                @endphp
+                            </select>
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="col-xs-12 col-sm-12 row"
                     style="margin: 0;padding: 0;">
