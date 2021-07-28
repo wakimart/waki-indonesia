@@ -29,9 +29,9 @@ if (
     }
 
     .table-responsive table {
-        width: 100%; 
+        width: 100%;
         overflow:scroll;
-    } 
+    }
 
     .table-responsive table .form-control {
         height: 32px;
@@ -71,8 +71,7 @@ if (
     }
 
     @media screen and (max-width: 768px) {
-
-        .table-responsive{
+        .table-responsive {
             margin-right: 10px;
         }
     }
@@ -210,15 +209,18 @@ if (
                                         id="order_{{ $key }}"
                                         data-order="{{ $reference->order_id }}"
                                         style="overflow-x: auto;">
-                                        @php
+                                        <?php
                                         if (!empty($reference->order_id)) {
                                             $order = Order::select("id", "code")
                                                 ->where("id", $reference->order_id)
                                                 ->first();
-
-                                            echo $order->code;
+                                            echo '<a href="'
+                                                . route("detail_order", ["code" => $order->code])
+                                                . '">'
+                                                . $order->code
+                                                . '</a>';
                                         }
-                                        @endphp
+                                        ?>
                                     </td>
                                     <td class="text-center"
                                         id="prize_{{ $key }}"
@@ -273,7 +275,7 @@ if (
                                         </td>
                                     @endif
                                     <td class="text-center">
-                                        @if ($reference->status_souvenir !== "success")
+                                        @if ($reference->status_prize !== "success")
                                             <button class="btn"
                                                 id="btn-edit-save_{{ $key }}"
                                                 style="padding: 0;"
@@ -312,8 +314,6 @@ if (
                 </button>
             </div>
 
-
-
             <div class="col-md-12 center"
                 style="margin-top: 3em;">
                 <div class="row justify-content-center">
@@ -334,7 +334,7 @@ if (
                         <button type="submit"
                             class="btn btn-gradient-danger mr-2 my-2"
                             name="text"
-                            value=" {{ route("detail_submission_form", ["id" => $submission->id, "type" => "mgm"]) }} ">
+                            value="{{ route("detail_submission_form", ["id" => $submission->id, "type" => "mgm"]) }}">
                             Share Form MGM for ACC
                         </button>
                     </div>
