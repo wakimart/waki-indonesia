@@ -14,19 +14,12 @@ class UserGeolocationController extends Controller
 {
     public function show(Request $request)
     {
-        $userGeolocations = "";
-        if ($request->has("date")) {
-            $userGeolocations = UserGeolocation::select(
-                    "user_geolocations.user_id AS user_id",
-                    "csos.code AS code",
-                    "csos.name AS name",
-                )
-                ->whereBetween(
-                    "user_geolocations.date",
-                    [
-                        $request->date . " 00:00:00",
-                        $request->date . " 23:59:59"
-                    ]
+        $branches = "";
+        if ($request->filled("date")) {
+            $branches = UserGeolocation::select(
+                    "branches.id AS id",
+                    "branches.code AS code",
+                    "branches.name AS name",
                 )
                 ->leftJoin(
                     "users",
@@ -40,12 +33,59 @@ class UserGeolocationController extends Controller
                     "=",
                     "csos.id"
                 )
+                ->leftJoin(
+                    "branches",
+                    "csos.branch_id",
+                    "=",
+                    "branches.id"
+                )
+                ->whereDate("user_geolocations.date", $request->date)
+                ->where("csos.active", true)
+                ->where("branches.active", true)
+                ->groupBy("branches.id", "branches.code", "branches.name")
+                ->get();
+        }
+
+        $userGeolocations = "";
+        if ($request->filled("branch_id")) {
+            $userGeolocations = UserGeolocation::select(
+                    "users.id AS user_id",
+                    "csos.code AS cso_code",
+                    "csos.name AS name",
+                    "user_geolocations.presence_image AS presence_image",
+                    "user_geolocations.filename AS filename",
+                )
+                ->leftJoin(
+                    "users",
+                    "user_geolocations.user_id",
+                    "=",
+                    "users.id"
+                )
+                ->leftJoin(
+                    "csos",
+                    "users.cso_id",
+                    "=",
+                    "csos.id"
+                )
+                ->leftJoin(
+                    "branches",
+                    "csos.branch_id",
+                    "=",
+                    "branches.id"
+                )
+                ->whereDate("user_geolocations.date", $request->date)
+                ->where("csos.active", true)
+                ->where("branches.active", true)
+                ->where("branches.id", $request->branch_id)
                 ->get();
         }
 
         return view(
             "admin.detail_user_geolocation",
-            compact("userGeolocations")
+            compact(
+                "branches",
+                "userGeolocations",
+            )
         );
     }
 
