@@ -41,16 +41,16 @@ class User extends Authenticatable
     /**
      * Checks if User has access to $permissions.
      */
-    public function hasAccess(array $permissions) : bool
+    public function hasAccess(array $permissions): bool
     {
         // check if the permission is available in any role
         // $tes = json_decode($this->permissions, true);
         // dd($tes["add-member"]);
 
-        foreach ($permissions as $permission)
-        {
-            if ($this->hasPermission($permission))
+        foreach ($permissions as $permission) {
+            if ($this->hasPermission($permission)) {
                 return true;
+            }
         }
         return false;
 
@@ -62,11 +62,11 @@ class User extends Authenticatable
         // return false;
     }
 
-    public function hasPermission(string $permission) : bool
+    public function hasPermission(string $permission): bool
     {
         // return $this->permissions[$permission] ?? false;
         $permissions = json_decode($this->permissions, true);
-        return $permissions[$permission]??false;
+        return $permissions[$permission] ?? false;
     }
 
     /**
@@ -77,18 +77,22 @@ class User extends Authenticatable
         return $this->roles()->where('slug', $roleSlug)->count() == 1;
     }
 
-    public function listBranches(){
+    public function listBranches()
+    {
         $listBranch = json_decode($this['branches_id'], true);
-        if($listBranch == null){
+        if ($listBranch == null) {
             return null;
         }
-        return Branch::WhereIn('id', $listBranch)->get();
+        return Branch::whereIn('id', $listBranch)->get();
     }
-    public function cso(){
+
+    public function cso()
+    {
         return $this->belongsTo('App\Cso');
     }
 
-    public function routeNotificationForFcm(){
+    public function routeNotificationForFcm()
+    {
         return $this->fcm_token;
     }
 
