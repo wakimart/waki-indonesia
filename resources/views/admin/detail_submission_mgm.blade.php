@@ -6,6 +6,7 @@ use App\Prize;
 $menu_item_page = "submission";
 $menu_item_second = "detail_submission_form";
 
+$canShareAcc = false;
 $specialPermission = true;
 if (
     Auth::user()->roles[0]->slug === "branch"
@@ -175,6 +176,12 @@ if (
                         </thead>
                         <tbody>
                             @foreach ($references as $key => $reference)
+                                @php
+                                    if($reference->status_prize == "success"){
+                                        $canShareAcc = true;
+                                    }
+                                @endphp
+
                                 <input type="hidden"
                                     class="d-none"
                                     id="id_{{ $key }}"
@@ -331,12 +338,14 @@ if (
                             value="Terima Kasih telah mengikuti program *Member Get Member*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">
                             Share Program MGM
                         </button>
-                        <button type="submit"
-                            class="btn btn-gradient-danger mr-2 my-2"
-                            name="text"
-                            value="{{ route("detail_submission_form", ["id" => $submission->id, "type" => "mgm"]) }}">
-                            Share Form MGM for ACC
-                        </button>
+                        @if($canShareAcc)
+                            <button type="submit"
+                                class="btn btn-gradient-danger mr-2 my-2"
+                                name="text"
+                                value="{{ route("detail_submission_form", ["id" => $submission->id, "type" => "mgm"]) }}">
+                                Share Form MGM for ACC
+                            </button>
+                        @endif
                     </div>
                 </form>
              </div>

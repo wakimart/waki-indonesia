@@ -166,6 +166,12 @@ $menu_item_second = "track_homeservice";
                                                         target="_blank">
                                                         <i class="mdi mdi-image" style="font-size: 24px; color: #0d6efd;"></i>
                                                     </a>
+                                                    @php
+                                                        if(isset($userGeolocations->presence_image[0])){
+                                                            $imgName = explode("_", $userGeolocations->presence_image[0]);
+                                                            echo "<p>".date("H:i:s", $imgName[1])."</p>";
+                                                        }
+                                                    @endphp
                                                 </td>
                                                 <td class="text-center">
                                                     @if (isset($userGeolocations->presence_image[1]))
@@ -173,6 +179,10 @@ $menu_item_second = "track_homeservice";
                                                             target="_blank">
                                                             <i class="mdi mdi-image" style="font-size: 24px; color: #0d6efd;"></i>
                                                         </a>
+                                                        @php
+                                                            $imgName = explode("_", $userGeolocations->presence_image[1]);
+                                                            echo "<p>".date("H:i:s", $imgName[1])."</p>";
+                                                        @endphp
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
