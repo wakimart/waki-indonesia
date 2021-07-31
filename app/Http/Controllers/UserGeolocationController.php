@@ -73,7 +73,6 @@ class UserGeolocationController extends Controller
                     "=",
                     "branches.id"
                 )
-                ->whereNotNull("user_geolocations.filename")
                 ->whereDate("user_geolocations.date", $request->date)
                 ->where("csos.active", true)
                 ->where("branches.active", true)

@@ -169,7 +169,7 @@ $menu_item_second = "track_homeservice";
                                                     @php
                                                         if(isset($userGeolocations->presence_image[0])){
                                                             $imgName = explode("_", $userGeolocations->presence_image[0]);
-                                                            echo "<p>".date("H:i:s", $imgName[1])."</p>";
+                                                            echo '<p style="margin-top: 1em">'.date("H:i:s", $imgName[1])."</p>";
                                                         }
                                                     @endphp
                                                 </td>
@@ -181,17 +181,19 @@ $menu_item_second = "track_homeservice";
                                                         </a>
                                                         @php
                                                             $imgName = explode("_", $userGeolocations->presence_image[1]);
-                                                            echo "<p>".date("H:i:s", $imgName[1])."</p>";
+                                                            echo '<p style="margin-top: 1em">'.date("H:i:s", $imgName[1])."</p>";
                                                         @endphp
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
-                                                    <button type="button"
-                                                        class="btn"
-                                                        data-user="{{ $userGeolocations->user_id }}"
-                                                        onclick="getGeolocation(this)">
-                                                        <i class="mdi mdi-eye" style="font-size: 24px; color: #3dd5f3;"></i>
-                                                    </button>
+                                                    @if (isset($userGeolocations->filename))
+                                                        <button type="button"
+                                                            class="btn"
+                                                            data-user="{{ $userGeolocations->user_id }}"
+                                                            onclick="getGeolocation(this)">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: #3dd5f3;"></i>
+                                                        </button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
