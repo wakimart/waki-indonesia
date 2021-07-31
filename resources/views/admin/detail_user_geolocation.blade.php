@@ -102,9 +102,12 @@ $menu_item_second = "track_homeservice";
                                         @foreach ($branches as $branch)
                                             <?php
                                             $selected = false;
-                                            if ($branch->id == $_GET["branch_id"]) {
-                                                $selected = true;
+                                            if(isset($_GET["branch_id"])){
+                                                if ($branch->id == $_GET["branch_id"]) {
+                                                    $selected = true;
+                                                }
                                             }
+                                            
                                             ?>
                                             <option value="{{ $branch->id }}"
                                                 {!! $selected ? "selected" : "" !!}>
