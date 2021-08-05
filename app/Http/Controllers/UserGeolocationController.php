@@ -278,6 +278,85 @@ class UserGeolocationController extends Controller
         }
     }
 
+    public function addApi_2(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "image" => "required|file",
+            "geo_file" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "result" => 0,
+                "data" => $validator->errors(),
+            ], 400);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // Save Image
+            $endImage = "";
+            if ($request->hasFile("image")) {
+                $imageFile = $request->file("image");
+
+                $filePath = "sources/geolocation/" . date("Y-m-d") . "/img/";
+
+                if (!is_dir($filePath)) {
+                    File::makeDirectory($filePath, 0777, true, true);
+                }
+
+                $fileName = $request->user_id
+                    . "_"
+                    . time()
+                    . "_end."
+                    . $imageFile->getClientOriginalExtension();
+                $imageFile->move($filePath, $fileName);
+
+                $endImage = $fileName;
+            }
+
+            // Save JSON
+            $fileName = Str::random(16);
+            $filePath = "sources/geolocation/" . date("Y-m-d") . "/json/";
+            if (!File::exists($filePath)) {
+                File::makeDirectory($filePath, 0777, true, true);
+            }            
+            File::put($filePath.$fileName.".json", $request->geo_file);
+
+
+            // Query Geolocation
+            $currentDateForQuery = date("Y-m-d");
+            $userGeolocation = UserGeolocation::where("user_id", $request->user_id)
+                ->whereBetween(
+                    "date",
+                    [
+                        $currentDateForQuery . " 00:00:00",
+                        $currentDateForQuery . " 23:59:59"
+                    ]
+                )
+                ->first();
+
+            // Save To Database
+            $presenseImage = $userGeolocation->presence_image;
+            array_push($presenseImage, $endImage);
+            $userGeolocation->presence_image = $presenseImage;
+            $userGeolocation->filename = $fileName;
+            $userGeolocation->save();
+
+            DB::commit();
+
+            return response()->json(["result" => 1]);
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "result" => 0,
+                "data" => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function fetchPresenceImage(Request $request)
     {
         try {

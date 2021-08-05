@@ -10,10 +10,12 @@ use App\ReferencePromo;
 use App\ReferenceSouvenir;
 use App\Souvenir;
 use App\HomeService;
+use App\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class ReferenceController extends Controller
 {
@@ -383,6 +385,74 @@ class ReferenceController extends Controller
             ], 500);
         }
     }
+
+    //================ Khusus Notifikasi ================//
+    function sendFCM($body){
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Authorization: key=AAAAfcgwZss:APA91bGg7XK9XjDvLLqR36mKsC-HwEx_l5FPGXDE3bKiysfZ2yzUKczNcAuKED6VCQ619Q8l55yVh4VQyyH2yyzwIJoVajaK4t3TJV-x-4f_a9WUzIcnOYzixPIUB5DeuWRIAh1v8Yld',
+            'Content-Type: application/json'
+        ));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+
+        $result = curl_exec($curl);
+        if ($result === FALSE) {
+            die('Oops! FCM Send Error: ' . curl_error($curl));
+            $this->info(curl_error($curl));
+        }
+        curl_close($curl);
+        // return $result;
+    }
+
+    public function accNotif(Request $request)
+    {
+        $fcm_tokenNya = [];
+        $userNya = User::where('users.fmc_token', '!=', null)
+                    ->whereIn('role_users.role_id', [1,2,7])
+                    ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                    ->get();
+        foreach ($userNya as $value) {
+            if($value['fmc_token'] != null){
+                foreach ($value['fmc_token'] as $fcmSatuan) {
+                    if($fcmSatuan != null){
+                        array_push($fcm_tokenNya, $fcmSatuan);
+                    }
+                }
+            }
+        }
+
+        $referenceNya = Reference::find($request->id);
+
+
+        $body = ['registration_ids'=>$fcm_tokenNya,
+            'collapse_key'=>"type_a",
+            "content_available" => true,
+            "priority" => "high",
+            "notification" => [
+                "body" => "Acc MGM for ".$referenceNya->name." from submission ".$referenceNya->submission->name.". By ".$referenceNya->submission->branch['code']."-".$referenceNya->submission->cso['name'],
+                "title" => "Acceptance [MGM]",
+                "icon" => "ic_launcher"
+            ],
+            "data" => [
+                "url" => URL::to(route('detail_submission_form', ['id'=>$referenceNya->submission['id'], 'type'=>"mgm", "id_ref"=>$referenceNya['id']])),
+                "branch_cso" => $referenceNya->submission->branch['code']."-".$referenceNya->submission->cso['name'],
+                "submission" => $referenceNya->submission,
+                "reference" => $referenceNya,
+            ]];
+
+        if(sizeof($fcm_tokenNya) > 0)
+        {
+            $this->sendFCM(json_encode($body));
+        }
+        return redirect($request->url)->with("success", "Permintaan Acc telah dikirim.");
+    }
+    //===================================================//
 
     public function addApi(Request $request)
     {
