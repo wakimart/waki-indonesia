@@ -14,6 +14,9 @@ use App\RajaOngkir;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+        Route::get("/accNotif", "ReferenceController@accNotif")
+            ->name("acc_notif_reference");
+
 Auth::routes(['verify' => true]);
 Route::resource('gcalendar', 'gCalendarController');
 Route::get('oauth', ['as' => 'oauthCallback', 'uses' => 'gCalendarController@oauth'])->name('oauthCallback');
@@ -109,7 +112,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 	    Route::post('list','HomeServiceController@listApi'); //list home service
 		Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
 		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
-        Route::post("/add/geolocation", "UserGeolocationController@addApi"); // Upload geolocation data
+        Route::post("/add/geolocation", "UserGeolocationController@addApi_2"); // Upload geolocation data
         Route::post("/add/start-geolocation", "UserGeolocationController@addStartImageApi");
         Route::get("/fetch/status-presence", "UserGeolocationController@fetchStatusPresence");
 	});
@@ -755,6 +758,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::post("/delete", "ReferenceController@destroy")
             ->name("delete_reference");
+
+        Route::post("/accNotif", "ReferenceController@accNotif")
+            ->name("acc_notif_reference");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {

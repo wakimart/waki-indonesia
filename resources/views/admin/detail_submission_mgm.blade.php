@@ -6,7 +6,6 @@ use App\Prize;
 $menu_item_page = "submission";
 $menu_item_second = "detail_submission_form";
 
-$canShareAcc = false;
 $specialPermission = true;
 if (
     Auth::user()->roles[0]->slug === "branch"
@@ -154,7 +153,7 @@ if (
                 <div class="table-responsive">
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="12">Reference</td>
+                            <td colspan="13">Reference</td>
                         </thead>
                         <thead style="background-color: #80808012 !important;">
                             <tr>
@@ -171,17 +170,12 @@ if (
                                     <td class="text-center">View</td>
                                 @endif
                                 <td class="text-center">Edit</td>
+                                <td class="text-center">ACC</td>
                                 <td class="text-center">Delete</td>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($references as $key => $reference)
-                                @php
-                                    if($reference->status_prize == "success"){
-                                        $canShareAcc = true;
-                                    }
-                                @endphp
-
                                 <input type="hidden"
                                     class="d-none"
                                     id="id_{{ $key }}"
@@ -296,6 +290,19 @@ if (
                                         @endif
                                     </td>
                                     <td class="text-center">
+                                        @if($reference->status_prize == "success" && $reference->delivery_status_prize == null )
+                                            <button class="btn"
+                                                id="btn-share-acc-reference_{{ $key }}"
+                                                style="padding: 0;"
+                                                onclick="shareAccReference(this)"
+                                                data-id="{{ $reference->id }}"
+                                                data-toggle="modal"
+                                                data-target="#share-acc-reference-modal">
+                                                <i class="mdi mdi-share-variant" style="font-size: 24px; color: #4CAF50;"></i>
+                                            </button>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
                                         <button class="btn"
                                             id="btn-delete-reference_{{ $key }}"
                                             style="padding: 0;"
@@ -338,14 +345,6 @@ if (
                             value="Terima Kasih telah mengikuti program *Member Get Member*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">
                             Share Program MGM
                         </button>
-                        @if($canShareAcc)
-                            <button type="submit"
-                                class="btn btn-gradient-danger mr-2 my-2"
-                                name="text"
-                                value="{{ route("detail_submission_form", ["id" => $submission->id, "type" => "mgm"]) }}">
-                                Share Form MGM for ACC
-                            </button>
-                        @endif
                     </div>
                 </form>
              </div>
@@ -705,6 +704,43 @@ if (
                     </button>
                 </form>
                 <button class="btn btn-light" type="button">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="share-acc-reference-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-center">
+                    Are you sure want to Acc this reference?
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{{ route("acc_notif_reference") }}">
+                    @csrf
+                    <input type="hidden" name="id" id="acc-reference-id" />
+                    <input type="hidden"
+                        name="url"
+                        value="{{ url()->full() }}" />
+                    <button type="submit" class="btn btn-light">
+                        Yes
+                    </button>
+                </form>
+                <button class="btn btn-gradient-danger" type="button">No</button>
             </div>
         </div>
     </div>
@@ -1205,6 +1241,10 @@ $(document).ready(function () {
     function errorHandler(event){
         document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";
     }
+
+    @if(isset($_GET['id_ref']))
+        loadDataPerRef({{$_GET['id_ref']}});
+    @endif
 });
 
 function selectOrderNya(id, code) {
@@ -1225,6 +1265,10 @@ function selectOrderForEdit(id, code, origin) {
 
 function deleteReference(e) {
     document.getElementById("delete-reference-id").value = e.dataset.id;
+}
+
+function shareAccReference(e) {
+    document.getElementById("acc-reference-id").value = e.dataset.id;
 }
 </script>
 @endsection
