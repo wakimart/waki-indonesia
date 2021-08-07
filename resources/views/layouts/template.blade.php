@@ -231,7 +231,7 @@
 				                      	<p>
 				                        	<strong>Telepon:</strong>
 				                        	<br>Malaysia : +60 10 239 3899
-				                        	<br>Indonesia : +62 811 8683 899
+				                        	<br>Indonesia : +62 815 5467 3357
 				                        	<br>Philippines: +63 998 988 8899
 				                        	<br>Cambodia: +855 11 762 719
 				                        	<br>Myanmar: +95 9 79653 2299
