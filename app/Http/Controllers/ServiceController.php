@@ -9,6 +9,7 @@ use App\Product;
 use App\ProductService;
 use App\Service;
 use App\Sparepart;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -182,12 +183,12 @@ class ServiceController extends Controller
             $service->save();
 
             foreach ($get_allProductService as $key => $value) {
-                if($value[0] != null ){
+                if ($value[0] != null ) {
                     $product_services = ProductService::find($value[1]);
 
-                    if($value[2] != 'other'){
+                    if ($value[2] != 'other') {
                         $product_services->product_id = $value[2];
-                    }else{
+                    } else {
                         $product_services->other_product = $value[6];
                     }
 
@@ -198,18 +199,18 @@ class ServiceController extends Controller
 
                     $product_services->due_date = $value[5];
 
-                    if($value[7] == "0"){
+                    if ($value[7] == "0") {
                         $product_services->active = false;
                     }
-                    $product_services->save();    
-                }else{
-                    //ada produk service baru
+                    $product_services->save();
+                } else {
+                    // Ada produk service baru
                     $product_services = new ProductService();
                     $product_services->service_id = $get_allProductService[0][0];
 
-                    if($value[2] != 'other'){
+                    if ($value[2] != 'other') {
                         $product_services->product_id = $value[2];
-                    }else{
+                    } else {
                         $product_services->other_product = $value[6];
                     }
 
@@ -220,13 +221,13 @@ class ServiceController extends Controller
 
                     $product_services->due_date = $value[5];
 
-                    if($value[7] == "0"){
+                    if ($value[7] == "0") {
                         $product_services->active = false;
                     }
-                    $product_services->save();    
+                    $product_services->save();
 
                 }
-                
+
             }
             DB::commit();
             return response()->json(['success' => 'Berhasil!!!']);
@@ -237,26 +238,33 @@ class ServiceController extends Controller
     }
 
 
-    public function updateStatus(Request $request){
-        if(!empty($request->id)){
+    public function updateStatus(Request $request)
+    {
+        if (!empty($request->id)) {
             DB::beginTransaction();
+
             try {
                 $service = Service::find($request->id);
 
-                if($request->status == "Quality_Control" || $request->status == "Completed"){
+                if ($request->status == "Quality_Control" || $request->status == "Completed") {
                     $service->status = str_replace('_', ' ', $request->status);
-
-                    $user = Auth::user();
                     $arr_old_history = json_decode($service->history_status);
 
-                    array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => strtolower($request->status), 'updated_at' => date("Y-m-d H:i:s")]);
+                    array_push(
+                        $arr_old_history,
+                        [
+                            'user_id' => Auth::user()['id'],
+                            'status' => strtolower($request->status),
+                            'updated_at' => date("Y-m-d H:i:s")
+                        ]
+                    );
                     $service->history_status = json_encode($arr_old_history);
                     $service->save();
-                }else if($request->status == "Delivery" || $request->status == "Pickup"){
+                } elseif ($request->status == "Delivery" || $request->status == "Pickup") {
                     $arr_serviceoption = [];
                     $cso = Cso::where('code', $request->input('cso_id'))->first();
 
-                    if($request->status == "Pickup"){
+                    if ($request->status == "Pickup") {
                         array_push($arr_serviceoption,
                             [
                                 'recipient_name' => $request->input('name'),
@@ -266,19 +274,21 @@ class ServiceController extends Controller
                                 'cso_id' => $cso['id']
                             ]
                         );
-                    }
-                    else if($request->status == "Delivery"){
-                        $tglJamNya = $request->date." ".$request->time;
+                    } elseif ($request->status == "Delivery") {
+                        $tglJamNya = $request->date . " " . $request->time;
                         $checkHS = HomeService::where([['cso_id', $cso['id']], ['appointment', $tglJamNya], ['active', true]])->get();
-                        if(sizeof($checkHS) > 0){
+                        if (sizeof($checkHS) > 0) {
                             $reqError = new Request;
-                            $reqError->replace(['input' => $request->all(), 'errMessage' => "Jadwal Home Lapangan Tidak Valid !"]);
+                            $reqError->replace(['input' => $request->all(), 'errMessage' => "Jadwal Home Lapangan Tidak Valid!"]);
+
                             return $this->show($request->id, $reqError);
-                        }
-                        else{
+                        } else {
                             $data = $request->all();
                             $data['no_member'] = $service->no_mpc;
-                            $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
+                            $data['code'] = "HS/"
+                                . strtotime(date("Y-m-d H:i:s"))
+                                . "/"
+                                . substr($data['phone'], -4);
                             $data['province'] = $data['province_id'];
                             $data['distric'] = $data['subDistrict'];
                             $data['type_customer'] = "WAKi Customer (Type B)";
@@ -289,7 +299,8 @@ class ServiceController extends Controller
                             $data['cso2_id'] = (Cso::where('code', 'SERVICE')->first() != null ? Cso::where('code', 'SERVICE')->first()['id'] : null );
 
                             $homeService = HomeService::create($data);
-                            array_push($arr_serviceoption,
+                            array_push(
+                                $arr_serviceoption,
                                 [
                                     'homeService' => $homeService['id']
                                 ]
@@ -297,21 +308,41 @@ class ServiceController extends Controller
                         }
                     }
 
-
                     $service->service_option = json_encode($arr_serviceoption);
-
                     $service->status = str_replace('_', ' ', $request->status);
-                    $user = Auth::user();
                     $arr_old_history = json_decode($service->history_status);
-                    array_push($arr_old_history, ['user_id' => Auth::user()['id'], 'status' => strtolower($request->status), 'updated_at' => date("Y-m-d H:i:s")]);
+                    array_push(
+                        $arr_old_history,
+                        [
+                            'user_id' => Auth::user()['id'],
+                            'status' => strtolower($request->status),
+                            'updated_at' => date("Y-m-d H:i:s")
+                        ]
+                    );
+                    $service->history_status = json_encode($arr_old_history);
+                    $service->save();
+                } elseif ($request->status === "Cancel") {
+                    $arr_old_history = json_decode($service->history_status);
+
+                    array_push(
+                        $arr_old_history,
+                        [
+                            'user_id' => Auth::user()['id'],
+                            'status' => strtolower($request->status),
+                            'updated_at' => date("Y-m-d H:i:s")
+                        ]
+                    );
+
                     $service->history_status = json_encode($arr_old_history);
                     $service->save();
                 }
 
                 DB::commit();
+
                 return redirect()->route("detail_service", ["id" => $service->id]);
             } catch (\Exception $ex) {
                 DB::rollback();
+
                 return response()->json(['errors' => $ex]);
             }
         }
