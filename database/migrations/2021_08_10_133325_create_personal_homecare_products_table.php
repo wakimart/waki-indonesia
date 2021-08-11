@@ -20,8 +20,8 @@ class CreatePersonalHomecareProductsTable extends Migration
             $table->foreign("branch_id")->references("id")->on("branches");
             $table->unsignedInteger("product_id");
             $table->foreign("product_id")->references("id")->on("products");
-            $table->boolean("status");
-            $table->boolean("active");
+            $table->boolean("status")->default(1);
+            $table->boolean("active")->default(1);
             $table->timestamps();
         });
     }
@@ -33,6 +33,9 @@ class CreatePersonalHomecareProductsTable extends Migration
      */
     public function down()
     {
+        Schema::table("personal_homecare_products", function (Blueprint $table) {
+            $table->dropForeign(["branch_id", "product_id"]);
+        });
         Schema::dropIfExists('personal_homecare_products');
     }
 }

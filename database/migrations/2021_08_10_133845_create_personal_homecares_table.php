@@ -15,13 +15,17 @@ class CreatePersonalHomecaresTable extends Migration
     {
         Schema::create('personal_homecares', function (Blueprint $table) {
             $table->increments('id');
-            $table->enum("status", [
-                "new",
-                "approve_out",
-                "process",
-                "waiting_in",
-                "done",
-            ]);
+            $table->enum(
+                    "status",
+                    [
+                        "new",
+                        "approve_out",
+                        "process",
+                        "waiting_in",
+                        "done",
+                    ]
+                )
+                ->default("new");
             $table->date("schedule");
             $table->string("name");
             $table->string("phone", 20);
@@ -45,6 +49,8 @@ class CreatePersonalHomecaresTable extends Migration
                 ->references("id")
                 ->on("personal_homecare_checklists");
 
+
+            $table->boolean("active")->default(1);
             $table->timestamps();
         });
     }
@@ -56,6 +62,9 @@ class CreatePersonalHomecaresTable extends Migration
      */
     public function down()
     {
+        Schema::table("personal_homecares", function (Blueprint $table) {
+            $table->dropForeign(["branch_id", "cso_id", "checklist_out", "checklist_in"]);
+        });
         Schema::dropIfExists('personal_homecares');
     }
 }
