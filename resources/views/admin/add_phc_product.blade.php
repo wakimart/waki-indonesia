@@ -95,6 +95,7 @@ $menu_item_second = "add_phc_product";
                                 <label for="branch_id">Branch</label>
                                 <select class="form-control"
                                     id="branch_id"
+                                    name="branch_id"
                                     onchange="selectBranch(this)">
                                     <option disabled selected>
                                         Select Branch
@@ -111,6 +112,7 @@ $menu_item_second = "add_phc_product";
                                 <label for="branch_id">Product</label>
                                 <select class="form-control"
                                     id="product_id"
+                                    name="product_id"
                                     onchange="selectProduct(this)">
                                     <option disabled selected>
                                         Select Product
@@ -124,7 +126,9 @@ $menu_item_second = "add_phc_product";
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="code-increment">Code</label>
+                                <label for="code-increment">
+                                    Code (please select the branch & product first)
+                                </label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="code-suffix"></span>
@@ -137,12 +141,15 @@ $menu_item_second = "add_phc_product";
                                         inputmode="numeric"
                                         placeholder="Number"
                                         oninput="setCode()"
+                                        disabled
                                         required />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="status">Status</label>
-                                <select class="form-control" id="status">
+                                <select class="form-control"
+                                    id="status"
+                                    name="status">
                                     <option value="0">Not Available</option>
                                     <option value="1" selected>
                                         Available
@@ -197,6 +204,7 @@ function setCodeSuffix() {
     document.getElementById("code-suffix").innerHTML = `${productCode}${branchCode}`;
 
     if (productCode && branchCode) {
+        document.getElementById("code-increment").removeAttribute("disabled");
         getIncrementSuggestion(`${productCode}${branchCode}`);
     }
 }

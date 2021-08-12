@@ -52,7 +52,7 @@ class PersonalHomecareProductController extends Controller
     {
         try {
             $phcProduct = PersonalHomecareProduct::select("id", "code")
-                ->where("code", $request->code . "%")
+                ->where("code", "like", $request->code . "%")
                 ->orderBy("id", "desc")
                 ->first();
 
