@@ -887,6 +887,15 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("/delete", "PrizeController@destroy")
             ->name("delete_prize");
     });
+
+    Route::group(["prefix" => "personal-homecare", "middleware" => "auth"], function () {
+        Route::get("add-product", "PersonalHomecareProductController@create")
+            ->name("add_phc_product");
+        Route::post("store-product", "PersonalHomecareProductController@store")
+            ->name("store_phc_product");
+        Route::get("get-product-increment", "PersonalHomecareProductController@getProductIncrement")
+            ->name("get_phc_product_increment");
+    });
 });
 
 Auth::routes();
