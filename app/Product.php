@@ -14,4 +14,9 @@ class Product extends Model
     {
         return $this->belongsTo('App\CategoryProduct');
     }
+
+    public function personalHomecareProduct()
+    {
+        return $this->hasMany('App\PersonalHomecareProduct');
+    }
 }
