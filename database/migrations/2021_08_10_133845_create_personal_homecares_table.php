@@ -39,6 +39,11 @@ class CreatePersonalHomecaresTable extends Migration
             $table->foreign("cso_id")->references("id")->on("csos");
             $table->string("id_card");
 
+            $table->unsignedInteger("ph_product_id");
+            $table->foreign("ph_product_id")
+                ->references("id")
+                ->on("personal_homecare_products");
+
             $table->unsignedInteger("checklist_out");
             $table->foreign("checklist_out")
                 ->references("id")
