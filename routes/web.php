@@ -14,8 +14,8 @@ use App\RajaOngkir;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-        Route::get("/accNotif", "ReferenceController@accNotif")
-            ->name("acc_notif_reference");
+Route::get("/accNotif", "ReferenceController@accNotif")
+    ->name("acc_notif_reference");
 
 Auth::routes(['verify' => true]);
 Route::resource('gcalendar', 'gCalendarController');
