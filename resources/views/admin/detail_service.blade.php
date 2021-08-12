@@ -134,6 +134,10 @@ $menu_item_second = "detail_service";
                                                 <span class="badge badge-success">
                                                     Completed by: {{ $services->statusBy("completed")->user_id['name'] }}
                                                 </span>
+                                            @elseif (strtolower($services['status']) == "cancel")
+                                                <span class="badge badge-danger">
+                                                    Cancel by: {{ $services->statusBy("cancel")->user_id['name'] }}
+                                                </span>
                                             @endif
                                         </td>
                                         <td class="center">
@@ -405,6 +409,10 @@ $menu_item_second = "detail_service";
                                                     @elseif (strtolower($history_status['status']) == "completed")
                                                         <span class="badge badge-success">
                                                             Completed
+                                                        </span>
+                                                    @elseif (strtolower($history_status['status']) == "cancel")
+                                                        <span class="badge badge-danger">
+                                                            Cancel
                                                         </span>
                                                     @endif
                                                 </td>
@@ -755,7 +763,7 @@ $menu_item_second = "detail_service";
             </div>
         <?php endif; ?>
 
-        @if (strtolower($services->status) === "new")
+        @if (strtolower($services->status) === "new" || strtolower($services->status) === "process")
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -772,7 +780,7 @@ $menu_item_second = "detail_service";
                                     @can('change-status-complete-service')
                                         <button id="upgradeProcess"
                                             type="submit"
-                                            class="btn btn-gradient-primary btn-lg"
+                                            class="btn btn-gradient-danger btn-lg"
                                             name="status"
                                             value="Cancel">
                                             Cancel Service
