@@ -48,8 +48,8 @@ $menu_item_second = "list_product";
             <div class="col-12" style="margin-bottom: 0;">
                     <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
                         <div class="form-group">
-                            <label for="">Search By Name and Code</label>
-                            <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
+                            <label for="">Search By Code</label>
+                            <input class="form-control" id="search" name="search" placeholder="Search By Code">
                             <div class="validation"></div>
                         </div>
                     </div>
@@ -82,16 +82,17 @@ $menu_item_second = "list_product";
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach($phcproducts as $key => $phcproduct)
                                         <tr>
                                             <td class="right">
-                                                1.
+                                            {{ ++$i }}
                                             </td>
-                                            <td>TEST123</td>
-                                            <td>WAKi High Potential Therapeutic Equipment</td>
-                                            <td>B40 - WAKI GAJAH MADA - JAKARTA</td>
-                                            <td>Out</td>
+                                            <td>{{ $phcproduct->code }}</td>
+                                            <td>{{ $phcproduct->product->name }}</td>
+                                            <td>{{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}</td>
+                                            <td>{{ $phcproduct->status }}</td>
                                             <td class="center">
-                                                <a href="">
+                                                <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
                                                 </a>
                                             </td>
@@ -100,15 +101,16 @@ $menu_item_second = "list_product";
                                                     data-toggle="modal"
                                                     href="#deleteDoModal"
                                                     onclick="submitDelete(this)"
-                                                    data-id="">
+                                                    data-id="{{ $phcproduct["id"] }}">
                                                     <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                 </a>
                                             </td>
                                         </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                             <br>
-                            
+                            {{ $phcproducts->links() }}
                         </div>
                     </div>
                 </div>
@@ -177,7 +179,7 @@ $(document).ready(function (e) {
                 urlParamStr += "&" + urlParamArray[i]
             }
         }
-        window.location.href = "{{route('list_homecareproduct')}}" + urlParamStr;
+        window.location.href = "{{route('list_phc_product')}}" + urlParamStr;
     });
 }); 
 

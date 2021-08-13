@@ -213,10 +213,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::get("/dashboard-hs", "DashboardController@countHS")
         ->name("dashboard_hs");
 
-    //List Homecare Product
-    Route::get('/list_homecareproduct', 'PersonalHomecareProductController@index')
-            ->name('list_homecareproduct');
-
     // Frontend CMS
     Route::get('/frontend-cms', 'FrontendCmsController@index')
         ->name('index_frontendcms')
@@ -890,6 +886,19 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Delete prize
         Route::post("/delete", "PrizeController@destroy")
             ->name("delete_prize");
+    });
+
+    Route::group(["prefix" => "personal-homecare", "middleware" => "auth"], function () {
+        Route::get("add-product", "PersonalHomecareProductController@create")
+            ->name("add_phc_product");
+        Route::post("store-product", "PersonalHomecareProductController@store")
+            ->name("store_phc_product");
+        Route::get("get-product-increment", "PersonalHomecareProductController@getProductIncrement")
+            ->name("get_phc_product_increment");
+        Route::get("list-product", 'PersonalHomecareProductController@index')
+            ->name("list_phc_product");
+        Route::get("edit-product", "PersonalHomecareProductController@edit")
+            ->name("edit_phc_product");
     });
 });
 
