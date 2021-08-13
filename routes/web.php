@@ -213,6 +213,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::get("/dashboard-hs", "DashboardController@countHS")
         ->name("dashboard_hs");
 
+    //List Homecare Product
+    Route::get('/list_homecareproduct', 'PersonalHomecareProductController@index')
+            ->name('list_homecareproduct');
+
     // Frontend CMS
     Route::get('/frontend-cms', 'FrontendCmsController@index')
         ->name('index_frontendcms')
