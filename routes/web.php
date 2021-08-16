@@ -899,6 +899,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("list_phc_product");
         Route::get("edit-product", "PersonalHomecareProductController@edit")
             ->name("edit_phc_product");
+        Route::get("list-all", 'PersonalHomecareController@index')
+            ->name("list_all_phc");
     });
 });
 
