@@ -895,6 +895,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("store_phc_product");
         Route::get("get-product-increment", "PersonalHomecareProductController@getProductIncrement")
             ->name("get_phc_product_increment");
+
+        Route::get("add", "PersonalHomecareController@create")
+            ->name("add_personal_homecare");
+        Route::post("store", "PersonalHomecareController@store")
+            ->name("store_personal_homecare");
     });
 });
 

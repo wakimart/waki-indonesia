@@ -21,7 +21,7 @@ $menu_item_page = "user";
         border:solid 1px rgba(128, 128, 128, 0.32941);
         padding:10px;
         border-radius:3px;
-        }
+    }
 
     .del {
         position: absolute;
@@ -38,6 +38,7 @@ $menu_item_page = "user";
     #intro {
         padding-top: 2em;
     }
+
     button{
         background: #1bb1dc;
         border: 0;
