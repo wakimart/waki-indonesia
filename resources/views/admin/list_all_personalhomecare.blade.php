@@ -78,7 +78,7 @@ $menu_item_second = "list_all";
                                         <th>Product</th>
                                         <th>Branch</th>
                                         <th>CSO</th>
-                                        <th colspan="3">View/Edit/Delete</th>
+                                        <th colspan="3" class="center">View/Edit/Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -87,24 +87,29 @@ $menu_item_second = "list_all";
                                             <td class="right">
                                             {{ ++$i }}
                                             </td>
-                                            <td>{{ date("d/m/Y", strtotime($personalhomecare->created_at)) }}</td>
+                                            <td>{{ date("d/m/Y", strtotime($personalhomecare->schedule)) }}</td>
                                             <td>{{ $personalhomecare->name }}</td>
-                                            <td>{{ $personalhomecare->ph_product->code }}</td>
+                                            <td>{{ $personalhomecare->personalHomecareProduct->code }}</td>
                                             <td>{{ $personalhomecare->branch->code }}</td>
                                             <td>{{ $personalhomecare->cso->code }}</td>
                                             <td class="center">
-                                                <a href="">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                                                <a href="{{ route('detail_personal_homecare', ['id' => $personalhomecare['id']]) }}">
+                                                    <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
                                             <td class="center">
-                                                <a class="btn-delete"
-                                                    data-toggle="modal"
-                                                    href="#deleteDoModal"
-                                                    onclick="submitDelete(this)"
-                                                    data-id="">
-                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                </a>
+                                                    <a href="{{ route('edit_personal_homecare', ['id' => $personalhomecare['id']]) }}">
+                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                    </a>
+                                            </td>
+                                            <td class="center">
+                                                    <a class="btn-delete disabled"
+                                                        data-toggle="modal"
+                                                        href="#deleteDoModal"
+                                                        onclick="submitDelete(this)"
+                                                        data-id="">
+                                                        <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                    </a>
                                             </td>
                                         </tr>
                                     @endforeach

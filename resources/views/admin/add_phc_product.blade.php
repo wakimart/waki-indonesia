@@ -1,5 +1,5 @@
 <?php
-$menu_item_page = "personal_homecare";
+$menu_item_page = "personal_homecare_product";
 $menu_item_second = "add_phc_product";
 ?>
 @extends('admin.layouts.template')
@@ -62,7 +62,7 @@ $menu_item_second = "add_phc_product";
                     <li class="breadcrumb-item">
                         <a data-toggle="collapse"
                             aria-expanded="false">
-                            Personal Homecare
+                            Personal Homecare Product
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
