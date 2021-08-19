@@ -281,7 +281,7 @@ class UserGeolocationController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "image" => "required|file",
-            "geo_file" => "required",
+            // "geo_file" => "required",
         ]);
 
         if ($validator->fails()) {
@@ -316,12 +316,15 @@ class UserGeolocationController extends Controller
             }
 
             // Save JSON
-            $fileName = Str::random(16);
-            $filePath = "sources/geolocation/" . date("Y-m-d") . "/json/";
-            if (!File::exists($filePath)) {
-                File::makeDirectory($filePath, 0777, true, true);
-            }            
-            File::put($filePath.$fileName.".json", $request->geo_file);
+            $fileName = null;
+            if($request->has("geo_file")){
+                $fileName = Str::random(16);
+                $filePath = "sources/geolocation/" . date("Y-m-d") . "/json/";
+                if (!File::exists($filePath)) {
+                    File::makeDirectory($filePath, 0777, true, true);
+                }            
+                File::put($filePath.$fileName.".json", $request->geo_file);
+            }
 
 
             // Query Geolocation
@@ -388,7 +391,7 @@ class UserGeolocationController extends Controller
                     "status" => "check_in",
                 ]);
             } else {
-                if (empty($userGeolocation->filename)) {
+                if (sizeof($userGeolocation->presence_image) < 2) {
                     return response()->json([
                         "result" => 1,
                         "status" => "check_out",

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Branch;
-use App\Order;
 use App\Cso;
 use App\HistoryUpdate;
+use App\Order;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use DB;
-use Validator;
 
 class CsoController extends Controller
 {
@@ -24,7 +24,7 @@ class CsoController extends Controller
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
         $csos = Cso::paginate(10);
         $countCso = Cso::count();
-    
+
         return view('admin.list_cso', compact('csos','countCso', 'branches'));
     }
 
@@ -32,16 +32,21 @@ class CsoController extends Controller
     {
         $url = $request->all();
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
-        $csos = Cso::where('csos.active', true)->orderBy('code', 'asc')->get();
+        $csos = Cso::where('csos.active', true)->orderBy('code', 'asc');
         $countCso = Cso::count();
 
-        if($request->has('filter_branch')){
+        if ($request->has('filter_branch')) {
             $csos = $csos->where('branch_id', $request->filter_branch);
         }
-        if($request->has('search')){
-            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')->orWhere('code','LIKE', '%'.$request->search.'%')->orWhere('phone','LIKE', '%'.$request->search.'%');
+
+        if ($request->has('search')) {
+            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')
+                ->orWhere('code','LIKE', '%'.$request->search.'%')
+                ->orWhere('phone','LIKE', '%'.$request->search.'%');
         }
+
         $csos = $csos->paginate(10);
+
         return view('admin.list_cso', compact('csos','countCso', 'branches', 'url'));
     }
 
@@ -65,7 +70,7 @@ class CsoController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'code' => [
                 'required',
                 Rule::unique('csos')->where('active', 1),
@@ -154,7 +159,7 @@ class CsoController extends Controller
      */
     public function update(Request $request)
     {
-        $validator = \Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'code' => [
                 'required',
                 Rule::unique('csos')->whereNot('id', $request->get('id'))->where('active', 1),
@@ -230,7 +235,7 @@ class CsoController extends Controller
                 'data' => $csos
             ];
         }
-        
+
         return [
             'result' =>'false',
             'data' => $csos

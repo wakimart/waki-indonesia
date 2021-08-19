@@ -257,7 +257,7 @@ $menu_item_second = "track_homeservice";
                 <p id="error-body">
                     Failed to load geolocation data.
                     <br>
-                    Reason: 2 account on 1 device.
+                    Reason: There's something wrong with the device GPS.
                 </p>
             </div>
             <div class="modal-footer">
