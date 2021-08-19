@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Branch;
 use App\Cso;
+use App\HistoryUpdate;
 use App\PersonalHomecare;
 use App\PersonalHomecareChecklist;
 use App\PersonalHomecareProduct;
@@ -190,11 +191,52 @@ class PersonalHomecareController extends Controller
         ));
     }
 
+    public function update(Request $request)
+    {
+        //
+    }
+
     public function detail(Request $request){
         $personalhomecare = PersonalHomecare::where("id", $request->id)->first();
 
         return view('admin.detail_personal_homecare', compact(
             'personalhomecare',
         ));
+    }
+
+    public function destroy(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $phc = PersonalHomecare::where("id", $request->id)->first();
+            $phc->active = false;
+            $phc->save();
+
+            $userId = Auth::user()["id"];
+            $historyDeletePhc["type_menu"] = "Personal Homecare";
+            $historyDeletePhc["method"] = "Delete";
+            $historyDeletePhc["meta"] = json_encode(
+                [
+                    "user" => $userId,
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "dataChange" => $phc->getChanges(),
+                ],
+                JSON_THROW_ON_ERROR
+            );
+            $historyDeletePhc["user_id"] = $userId;
+            $historyDeletePhc["menu_id"] = $request->id;
+            HistoryUpdate::create($historyDeletePhc);
+
+            DB::commit();
+
+            return redirect()
+                ->route("list_all_phc")
+                ->with("success", "Personal Homecare has been successfully deleted.");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
     }
 }
