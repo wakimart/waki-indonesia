@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Branch;
+use App\HistoryUpdate;
 use App\PersonalHomecareProduct;
 use App\Product;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PersonalHomecareProductController extends Controller
@@ -102,5 +104,41 @@ class PersonalHomecareProductController extends Controller
         return view("admin.update_phc_product", compact(
             "phcproducts", "branches", "products",
         ));
+    }
+
+    public function destroy(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $phcProduct = PersonalHomecareProduct::where("id", $request->id)
+                ->update(["active" => false]);
+
+            $user = Auth::user();
+            HistoryUpdate::create([
+                "type_menu" => "Personal Homecare Product",
+                "method" => "delete",
+                "meta" => json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $phcProduct->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                ),
+                "user_id" => $user["id"],
+                "menu_id" => $request->id,
+            ]);
+
+            DB::commit();
+
+            return redirect()
+                ->route("list_phc_product")
+                ->with("success", "Personal Homecare Product has been successfully deleted.");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
     }
 }

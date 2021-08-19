@@ -77,6 +77,57 @@ $menu_item_second = "add_personal_homecare";
                 </ol>
             </nav>
         </div>
+
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Agent Data</h2>
+
+                        <div class="form-group">
+                            <label for="branch_id">Branch</label>
+                            <select class="form-control"
+                                id="branch_id"
+                                name="branch_id"
+                                form="add-phc"
+                                onchange="setProduct(this)"
+                                required>
+                                <option disabled selected>
+                                    Select Branch
+                                </option>
+                                @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}">
+                                        {{ $branch->code }} - {{ $branch->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <input type="hidden"
+                            id="cso-id-hidden"
+                            form="add-phc" />
+
+                        <div class="form-group">
+                            <label for="cso_id">CSO</label>
+                            <select  class="form-control"
+                                name="cso_id"
+                                id="cso_id"
+                                form="add-phc">
+                                <option disabled selected>
+                                    Select CSO
+                                </option>
+                                @foreach ($csos as $cso)
+                                    <option value="{{ $cso->id }}">
+                                        {{ $cso->code }} - {{ $cso->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
@@ -95,6 +146,18 @@ $menu_item_second = "add_personal_homecare";
                                     name="schedule"
                                     id="schedule"
                                     required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ph_product_id">Product</label>
+                                <select class="form-control"
+                                    name="ph_product_id"
+                                    id="ph_product_id"
+                                    required>
+                                    <option disabled selected>
+                                        Select Product (Please select branch first)
+                                    </option>
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -171,56 +234,19 @@ $menu_item_second = "add_personal_homecare";
                                     </option>
                                 </select>
                             </div>
+
+                            <div class="form-group">
+                                <label for="id_card_image">
+                                    Customer ID Card
+                                </label>
+                                <input type="file"
+                                    class="form-control"
+                                    accept="image/jpeg, image/png"
+                                    name="id_card_image"
+                                    id="id_card_image"
+                                    required />
+                            </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h2>Agent Data</h2>
-
-                        <div class="form-group">
-                            <label for="branch_id">Branch</label>
-                            <select class="form-control"
-                                id="branch_id"
-                                name="branch_id"
-                                form="add-phc"
-                                required>
-                                <option disabled selected>
-                                    Select Branch
-                                </option>
-                                @foreach ($branches as $branch)
-                                    <option value="{{ $branch->id }}">
-                                        {{ $branch->code }} - {{ $branch->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <input type="hidden"
-                            id="cso-id-hidden"
-                            form="add-phc" />
-
-                        <div class="form-group">
-                            <label for="cso_id">CSO</label>
-                            <select  class="form-control"
-                                name="cso_id"
-                                id="cso_id"
-                                form="add-phc">
-                                <option disabled selected>
-                                    Select CSO
-                                </option>
-                                @foreach ($csos as $cso)
-                                    <option value="{{ $cso->id }}">
-                                        {{ $cso->code }} - {{ $cso->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -384,7 +410,7 @@ $menu_item_second = "add_personal_homecare";
                             <input type="file"
                                 class="form-control"
                                 accept="image/jpeg, image/png"
-                                name="image[]"
+                                name="product_photo_1"
                                 id="product-photo-1"
                                 form="add-phc"
                                 required />
@@ -397,7 +423,7 @@ $menu_item_second = "add_personal_homecare";
                             <input type="file"
                                 class="form-control"
                                 accept="image/jpeg, image/png"
-                                name="image[]"
+                                name="product_photo_2"
                                 id="product-photo-2"
                                 form="add-phc"
                                 required />
@@ -432,12 +458,51 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("cso-id-hidden").setAttribute("name", "cso_id");
     }
 
+    $("#ph_product_id").select2();
     $("#province_id").select2();
     $("#city_id").select2();
     $("#subdistrict_id").select2();
     $("#branch_id").select2();
     $("#cso_id").select2();
 });
+
+function setProduct(e) {
+    fetch(
+        '{{ route("get_phc_product") }}?branch_id=' + e.value,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        $("#ph_product_id").select2("destroy");
+
+        const data = response.data;
+
+        data.forEach(function (value) {
+            const options = document.createElement("option");
+            options.value = value.id;
+            options.innerHTML = `${value.code} - ${value.name}`;
+
+            document.getElementById("ph_product_id").append(options);
+        });
+
+        document.getElementById("ph_product_id").removeAttribute("disabled");
+
+        $("#ph_product_id").select2();
+    }).catch(function(error) {
+        console.error(error);
+    });
+}
 
 function setCity(e) {
     const URL = '{{ route("fetchCity", ["province" => ""]) }}/' + e.value;
@@ -449,6 +514,8 @@ function setCity(e) {
             headers: {
                 "Accept": "application/json",
             },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
         }
     ).then(function (response) {
         if (!response.ok) {
@@ -497,6 +564,8 @@ function setSubdistrict(e) {
             headers: {
                 "Accept": "application/json",
             },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
         }
     ).then(function (response) {
         if (!response.ok) {
