@@ -83,6 +83,29 @@ class PersonalHomecareProductController extends Controller
         }
     }
 
+    public function edit(Request $request)
+    {
+        if (empty($request->id)) {
+            return redirect()
+                ->route("list_phc_product")
+                ->with("danger", "Data not found.");
+        }
+
+        $branches = Branch::select("id", "code", "name")
+            ->where("active", true)
+            ->get();
+
+        $products = Product::select("id", "code", "name")
+            ->where("active", true)
+            ->get();
+
+        $phcproducts = PersonalHomecareProduct::where("id", $request->id)->first();
+
+        return view("admin.update_phc_product", compact(
+            "phcproducts", "branches", "products",
+        ));
+    }
+
     public function destroy(Request $request)
     {
         DB::beginTransaction();
@@ -109,34 +132,13 @@ class PersonalHomecareProductController extends Controller
 
             DB::commit();
 
-            // TODO: Add return and check if this method run properly
+            return redirect()
+                ->route("list_phc_product")
+                ->with("success", "Personal Homecare Product has been successfully deleted.");
         } catch (Exception $e) {
             DB::rollBack();
 
             return response()->json(["error" => $e->getMessage()], 500);
         }
-    }
-
-    public function edit(Request $request)
-    {
-        if (empty($request->id)) {
-            return redirect()
-                ->route("list_phc_product")
-                ->with("danger", "Data not found.");
-        }
-
-        $branches = Branch::select("id", "code", "name")
-            ->where("active", true)
-            ->get();
-
-        $products = Product::select("id", "code", "name")
-            ->where("active", true)
-            ->get();
-
-        $phcproducts = PersonalHomecareProduct::where("id", $request->id)->first();
-
-        return view("admin.update_phc_product", compact(
-            "phcproducts", "branches", "products",
-        ));
     }
 }
