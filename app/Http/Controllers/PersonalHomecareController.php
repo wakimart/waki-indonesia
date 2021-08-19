@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\PersonalHomecare;
-use Exception;
 use App\Branch;
 use App\Cso;
 use App\PersonalHomecare;
@@ -185,7 +183,7 @@ class PersonalHomecareController extends Controller
         $personalhomecare = PersonalHomecare::where("id", $request->id)->first();
 
         return view("admin.update_personal_homecare", compact(
-            "personalhomecare", 
+            "personalhomecare",
             "branches",
             "csos",
             "provinces",
@@ -194,7 +192,7 @@ class PersonalHomecareController extends Controller
 
     public function detail(Request $request){
         $personalhomecare = PersonalHomecare::where("id", $request->id)->first();
-        
+
         return view('admin.detail_personal_homecare', compact(
             'personalhomecare',
         ));
