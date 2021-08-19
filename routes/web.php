@@ -895,6 +895,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("store_phc_product");
         Route::get("get-product-increment", "PersonalHomecareProductController@getProductIncrement")
             ->name("get_phc_product_increment");
+        Route::get("list-product", 'PersonalHomecareProductController@index')
+            ->name("list_phc_product");
+        Route::get("edit-product/{id}", "PersonalHomecareProductController@edit")
+            ->name("edit_phc_product");
 
         Route::get("add", "PersonalHomecareController@create")
             ->name("add_personal_homecare");
@@ -902,6 +906,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("store_personal_homecare");
         Route::get("get-product", "PersonalHomecareController@getPhcProduct")
             ->name("get_phc_product");
+        Route::get("list-all", 'PersonalHomecareController@index')
+            ->name("list_all_phc");
+        Route::get("edit/{id}", "PersonalHomecareController@edit")
+            ->name("edit_personal_homecare");
+        Route::get("detail/{id}", "PersonalHomecareController@detail")
+            ->name("detail_personal_homecare");
     });
 });
 

@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\DB;
 
 class PersonalHomecareProductController extends Controller
 {
+    public function index()
+    {
+        $phcproducts = PersonalHomecareProduct::where('active', true)
+            ->orderBy('code', 'asc')
+            ->paginate(10);
+
+        return view("admin.list_homecareproduct", compact("phcproducts"))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
+    }
+
     public function create()
     {
         $branches = Branch::select("id", "code", "name")
@@ -105,5 +115,28 @@ class PersonalHomecareProductController extends Controller
 
             return response()->json(["error" => $e->getMessage()], 500);
         }
+    }
+
+    public function edit(Request $request)
+    {
+        if (empty($request->id)) {
+            return redirect()
+                ->route("list_phc_product")
+                ->with("danger", "Data not found.");
+        }
+
+        $branches = Branch::select("id", "code", "name")
+            ->where("active", true)
+            ->get();
+
+        $products = Product::select("id", "code", "name")
+            ->where("active", true)
+            ->get();
+
+        $phcproducts = PersonalHomecareProduct::where("id", $request->id)->first();
+
+        return view("admin.update_phc_product", compact(
+            "phcproducts", "branches", "products",
+        ));
     }
 }
