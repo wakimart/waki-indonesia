@@ -71,7 +71,7 @@ $menu_item_page = "personal_homecare";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Edit Personal Homecare
+                        Edit
                     </li>
                 </ol>
             </nav>
@@ -269,6 +269,9 @@ $menu_item_page = "personal_homecare";
                                             name="completeness[]"
                                             id="completeness-machine"
                                             value="machine"
+                                            {{ in_array("machine", $personalhomecare->
+                                            checklistOut['condition']['completeness'][0]) ? 
+                                            "checked" : "" }}
                                             form="add-phc" />
                                         Machine
                                     </label>
@@ -280,6 +283,9 @@ $menu_item_page = "personal_homecare";
                                             name="completeness[]"
                                             id="completeness-filter"
                                             value="filter"
+                                            {{ in_array("filter", $personalhomecare->
+                                            checklistOut['condition']['completeness'][0]) ? 
+                                            "checked" : "" }}
                                             form="add-phc" />
                                         Filter
                                     </label>
@@ -291,6 +297,9 @@ $menu_item_page = "personal_homecare";
                                             name="completeness[]"
                                             id="completeness-accessories"
                                             value="accessories"
+                                            {{ in_array("accessories", $personalhomecare->
+                                            checklistOut['condition']['completeness'][0]) ? 
+                                            "checked" : "" }}
                                             form="add-phc" />
                                         Accessories
                                     </label>
@@ -302,6 +311,9 @@ $menu_item_page = "personal_homecare";
                                             name="completeness[]"
                                             id="completeness-cable"
                                             value="cable"
+                                            {{ in_array("cable", $personalhomecare->
+                                            checklistOut['condition']['completeness'][0]) ? 
+                                            "checked" : "" }}
                                             form="add-phc" />
                                         Cable
                                     </label>
@@ -313,6 +325,9 @@ $menu_item_page = "personal_homecare";
                                             name="completeness[]"
                                             id="completeness-other"
                                             value="other"
+                                            {{ in_array("other", $personalhomecare->
+                                            checklistOut['condition']['completeness'][0]) ? 
+                                            "checked" : "" }}
                                             form="add-phc"
                                             onchange="showOtherInput(this)" />
                                         Other
@@ -324,6 +339,7 @@ $menu_item_page = "personal_homecare";
                                         placeholder="Other description"
                                         name="other_completeness"
                                         id="other-text"
+                                        value="{{ $personalhomecare->checklistOut['condition']['other']}}"
                                         form="add-phc" />
                                 </div>
                             </div>
@@ -340,6 +356,9 @@ $menu_item_page = "personal_homecare";
                                             name="machine_condition"
                                             id="machine-condition-normal"
                                             value="normal"
+                                            {{ $personalhomecare->checklistOut
+                                            ['condition']['machine'] == "normal" ? 
+                                            "checked" : "" }}
                                             form="add-phc"
                                             required />
                                         Normal
@@ -353,6 +372,9 @@ $menu_item_page = "personal_homecare";
                                             name="machine_condition"
                                             id="machine-condition-need-repair"
                                             value="need_repair"
+                                            {{ $personalhomecare->checklistOut
+                                            ['condition']['machine'] == "need_repair" ? 
+                                            "checked" : "" }}
                                             form="add-phc"
                                             required />
                                         Need Repair
@@ -372,6 +394,9 @@ $menu_item_page = "personal_homecare";
                                             name="physical_condition"
                                             id="physical-condition-new"
                                             value="new"
+                                            {{ $personalhomecare->checklistOut
+                                            ['condition']['physical'] == "new" ? 
+                                            "checked" : "" }}
                                             form="add-phc"
                                             required />
                                         New
@@ -385,6 +410,9 @@ $menu_item_page = "personal_homecare";
                                             name="physical_condition"
                                             id="physical-condition-moderate"
                                             value="moderate"
+                                            {{ $personalhomecare->checklistOut
+                                            ['condition']['physical'] == "moderate" ? 
+                                            "checked" : "" }}
                                             form="add-phc"
                                             required />
                                         Moderate
@@ -398,6 +426,9 @@ $menu_item_page = "personal_homecare";
                                             name="physical_condition"
                                             id="physical-condition-need-repair"
                                             value="need_repair"
+                                            {{ $personalhomecare->checklistOut
+                                            ['condition']['physical'] == "need_repair" ? 
+                                            "checked" : "" }}
                                             form="add-phc"
                                             required />
                                         Need Repair
