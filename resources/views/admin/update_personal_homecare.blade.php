@@ -76,6 +76,70 @@ $menu_item_page = "personal_homecare";
                 </ol>
             </nav>
         </div>
+
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Agent Data</h2>
+
+                        <div class="form-group">
+                            <label for="branch_id">Branch</label>
+                            <select class="form-control"
+                                id="branch_id"
+                                name="branch_id"
+                                form="add-phc"
+                                required>
+                                <option disabled>
+                                    Select Branch
+                                </option>
+                                @foreach ($branches as $branch)
+                                    @if ($personalhomecare->branch_id == $branch->id)
+                                        <option value="{{ $branch->id }}"
+                                            selected="true">
+                                            {{ $branch->code }} - {{ $branch->name }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $branch->id }}">
+                                            {{ $branch->code }} - {{ $branch->name }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <input type="hidden"
+                            id="cso-id-hidden"
+                            form="add-phc" />
+
+                        <div class="form-group">
+                            <label for="cso_id">CSO</label>
+                            <select  class="form-control"
+                                name="cso_id"
+                                id="cso_id"
+                                form="add-phc">
+                                <option disabled>
+                                    Select CSO
+                                </option>
+                                @foreach ($csos as $cso)
+                                    @if ($personalhomecare->cso_id == $cso->id)
+                                        <option value="{{ $cso->id }}"
+                                            selected="true">
+                                            {{ $cso->code }} - {{ $cso->name }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $cso->id }}">
+                                            {{ $cso->code }} - {{ $cso->name }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
@@ -87,6 +151,9 @@ $menu_item_page = "personal_homecare";
                             enctype="multipart/form-data"
                             action="{{ route("store_personal_homecare") }}">
                             @csrf
+                            <input type="hidden"
+                                name="id"
+                                value="{{ $personalhomecare["id"] }}" />
                             <div class="form-group">
                                 <label for="schedule">Schedule Date</label>
                                 <input type="date"
@@ -95,6 +162,30 @@ $menu_item_page = "personal_homecare";
                                     id="schedule"
                                     value="{{ date('Y-m-d', strtotime($personalhomecare['schedule'])) }}"
                                     required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ph_product_id">Product</label>
+                                <select class="form-control"
+                                    name="ph_product_id"
+                                    id="ph_product_id"
+                                    required>
+                                    <option disabled>
+                                        Select Product (Please select branch first)
+                                    </option>
+                                    @foreach ($phcProducts as $phcProduct)
+                                        @if ($personalhomecare->ph_product_id == $phcProduct->id)
+                                            <option value="{{ $phcProduct->id }}"
+                                                selected>
+                                                {{ $phcProduct->code }} - {{ $phcProduct->name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $phcProduct->id }}">
+                                                {{ $phcProduct->code }} - {{ $phcProduct->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -128,9 +219,7 @@ $menu_item_page = "personal_homecare";
                                     id="address"
                                     placeholder="Address"
                                     rows="3"
-                                    required>
-                                    {{ $personalhomecare['address'] }}
-                                </textarea>
+                                    required>{{ $personalhomecare['address'] }}</textarea>
                             </div>
 
                             <div class="form-group">
@@ -140,11 +229,11 @@ $menu_item_page = "personal_homecare";
                                     id="province_id"
                                     onchange="setCity(this)"
                                     required>
-                                    <option disabled selected>
+                                    <option disabled>
                                         Select Province
                                     </option>
                                     @foreach ($provinces as $province)
-                                        @if ($personalhomecare->province_id == $province->id)
+                                        @if ($personalhomecare->province_id === $province->id)
                                             <option value="{{ $province->id }}"
                                                 selected="true">
                                                 {{ $province->name }}
@@ -165,10 +254,20 @@ $menu_item_page = "personal_homecare";
                                     id="city_id"
                                     onchange="setSubdistrict(this)"
                                     required>
-                                    <option disabled selected 
-                                        value="">
+                                    <option disabled>
                                         Select City
                                     </option>
+                                    @foreach ($cities as $city)
+                                        @if ($personalhomecare->city_id === $city->id)
+                                            <option value="{{ $city->id }}" selected>
+                                                {{ $city->name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $city->id }}">
+                                                {{ $city->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -178,76 +277,23 @@ $menu_item_page = "personal_homecare";
                                     name="subdistrict_id"
                                     id="subdistrict_id"
                                     required>
-                                    <option disabled selected
-                                         value="">
-                                         Select Subdistrict
+                                    <option disabled>
+                                        Select Subdistrict
                                     </option>
+                                    @foreach ($subdistricts as $subdistrict)
+                                        @if ($personalhomecare->subdistrict_id === $subdistrict->id)
+                                            <option value="{{ $subdistrict->id }}" selected>
+                                                {{ $subdistrict->name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $subdistrict->id }}">
+                                                {{ $subdistrict->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
                                 </select>
                             </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h2>Agent Data</h2>
-
-                        <div class="form-group">
-                            <label for="branch_id">Branch</label>
-                            <select class="form-control"
-                                id="branch_id"
-                                name="branch_id"
-                                form="add-phc"
-                                required>
-                                <option disabled selected>
-                                    Select Branch
-                                </option>
-                                @foreach ($branches as $branch)
-                                    @if ($personalhomecare->branch_id == $branch->id)
-                                        <option value="{{ $branch->id }}"
-                                            selected="true">
-                                            {{ $branch->code }} - {{ $branch->name }}
-                                        </option>
-                                    @else
-                                        <option value="{{ $branch->id }}">
-                                            {{ $branch->code }} - {{ $branch->name }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <input type="hidden"
-                            id="cso-id-hidden"
-                            form="add-phc" />
-
-                        <div class="form-group">
-                            <label for="cso_id">CSO</label>
-                            <select  class="form-control"
-                                name="cso_id"
-                                id="cso_id"
-                                form="add-phc">
-                                <option disabled selected>
-                                    Select CSO
-                                </option>
-                                @foreach ($csos as $cso)
-                                    @if ($personalhomecare->cso_id == $cso->id)
-                                        <option value="{{ $cso->id }}"
-                                            selected="true">
-                                            {{ $cso->code }} - {{ $cso->name }}
-                                        </option>
-                                    @else
-                                        <option value="{{ $cso->id }}">
-                                            {{ $cso->code }} - {{ $cso->name }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -270,7 +316,7 @@ $menu_item_page = "personal_homecare";
                                             id="completeness-machine"
                                             value="machine"
                                             {{ in_array("machine", $personalhomecare->
-                                            checklistOut['condition']['completeness'][0]) ? 
+                                            checklistOut['condition']['completeness'][0]) ?
                                             "checked" : "" }}
                                             form="add-phc" />
                                         Machine
@@ -284,7 +330,7 @@ $menu_item_page = "personal_homecare";
                                             id="completeness-filter"
                                             value="filter"
                                             {{ in_array("filter", $personalhomecare->
-                                            checklistOut['condition']['completeness'][0]) ? 
+                                            checklistOut['condition']['completeness'][0]) ?
                                             "checked" : "" }}
                                             form="add-phc" />
                                         Filter
@@ -298,7 +344,7 @@ $menu_item_page = "personal_homecare";
                                             id="completeness-accessories"
                                             value="accessories"
                                             {{ in_array("accessories", $personalhomecare->
-                                            checklistOut['condition']['completeness'][0]) ? 
+                                            checklistOut['condition']['completeness'][0]) ?
                                             "checked" : "" }}
                                             form="add-phc" />
                                         Accessories
@@ -312,7 +358,7 @@ $menu_item_page = "personal_homecare";
                                             id="completeness-cable"
                                             value="cable"
                                             {{ in_array("cable", $personalhomecare->
-                                            checklistOut['condition']['completeness'][0]) ? 
+                                            checklistOut['condition']['completeness'][0]) ?
                                             "checked" : "" }}
                                             form="add-phc" />
                                         Cable
@@ -326,7 +372,7 @@ $menu_item_page = "personal_homecare";
                                             id="completeness-other"
                                             value="other"
                                             {{ in_array("other", $personalhomecare->
-                                            checklistOut['condition']['completeness'][0]) ? 
+                                            checklistOut['condition']['completeness'][0]) ?
                                             "checked" : "" }}
                                             form="add-phc"
                                             onchange="showOtherInput(this)" />
@@ -339,7 +385,7 @@ $menu_item_page = "personal_homecare";
                                         placeholder="Other description"
                                         name="other_completeness"
                                         id="other-text"
-                                        value="{{ $personalhomecare->checklistOut['condition']['other']}}"
+                                        value="{{ $personalhomecare->checklistOut['condition']['other'] }}"
                                         form="add-phc" />
                                 </div>
                             </div>
@@ -357,7 +403,7 @@ $menu_item_page = "personal_homecare";
                                             id="machine-condition-normal"
                                             value="normal"
                                             {{ $personalhomecare->checklistOut
-                                            ['condition']['machine'] == "normal" ? 
+                                            ['condition']['machine'] == "normal" ?
                                             "checked" : "" }}
                                             form="add-phc"
                                             required />
@@ -373,7 +419,7 @@ $menu_item_page = "personal_homecare";
                                             id="machine-condition-need-repair"
                                             value="need_repair"
                                             {{ $personalhomecare->checklistOut
-                                            ['condition']['machine'] == "need_repair" ? 
+                                            ['condition']['machine'] == "need_repair" ?
                                             "checked" : "" }}
                                             form="add-phc"
                                             required />
@@ -395,7 +441,7 @@ $menu_item_page = "personal_homecare";
                                             id="physical-condition-new"
                                             value="new"
                                             {{ $personalhomecare->checklistOut
-                                            ['condition']['physical'] == "new" ? 
+                                            ['condition']['physical'] == "new" ?
                                             "checked" : "" }}
                                             form="add-phc"
                                             required />
@@ -411,7 +457,7 @@ $menu_item_page = "personal_homecare";
                                             id="physical-condition-moderate"
                                             value="moderate"
                                             {{ $personalhomecare->checklistOut
-                                            ['condition']['physical'] == "moderate" ? 
+                                            ['condition']['physical'] == "moderate" ?
                                             "checked" : "" }}
                                             form="add-phc"
                                             required />
@@ -427,7 +473,7 @@ $menu_item_page = "personal_homecare";
                                             id="physical-condition-need-repair"
                                             value="need_repair"
                                             {{ $personalhomecare->checklistOut
-                                            ['condition']['physical'] == "need_repair" ? 
+                                            ['condition']['physical'] == "need_repair" ?
                                             "checked" : "" }}
                                             form="add-phc"
                                             required />
@@ -442,7 +488,7 @@ $menu_item_page = "personal_homecare";
                             <input type="file"
                                 class="form-control"
                                 accept="image/jpeg, image/png"
-                                name="image[]"
+                                name="product_photo_1"
                                 id="product-photo-1"
                                 form="add-phc"
                                 required />
@@ -455,7 +501,7 @@ $menu_item_page = "personal_homecare";
                             <input type="file"
                                 class="form-control"
                                 accept="image/jpeg, image/png"
-                                name="image[]"
+                                name="product_photo_2"
                                 id="product-photo-2"
                                 form="add-phc"
                                 required />
@@ -490,12 +536,51 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("cso-id-hidden").setAttribute("name", "cso_id");
     }
 
+    $("#ph_product_id").select2();
     $("#province_id").select2();
     $("#city_id").select2();
     $("#subdistrict_id").select2();
     $("#branch_id").select2();
     $("#cso_id").select2();
 });
+
+function setProduct(e) {
+    fetch(
+        '{{ route("get_phc_product") }}?branch_id=' + e.value,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        $("#ph_product_id").select2("destroy");
+
+        const data = response.data;
+
+        data.forEach(function (value) {
+            const options = document.createElement("option");
+            options.value = value.id;
+            options.innerHTML = `${value.code} - ${value.name}`;
+
+            document.getElementById("ph_product_id").append(options);
+        });
+
+        document.getElementById("ph_product_id").removeAttribute("disabled");
+
+        $("#ph_product_id").select2();
+    }).catch(function(error) {
+        console.error(error);
+    });
+}
 
 function setCity(e) {
     const URL = '{{ route("fetchCity", ["province" => ""]) }}/' + e.value;
@@ -507,6 +592,8 @@ function setCity(e) {
             headers: {
                 "Accept": "application/json",
             },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
         }
     ).then(function (response) {
         if (!response.ok) {
@@ -555,6 +642,8 @@ function setSubdistrict(e) {
             headers: {
                 "Accept": "application/json",
             },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
         }
     ).then(function (response) {
         if (!response.ok) {
