@@ -114,17 +114,17 @@ class PersonalHomecareController extends Controller
                 "ph_product_id",
             ));
 
-            $timestamp = (string) time();
             if ($request->hasFile("id_card_image")) {
-                $request->file("id_card_image")->move(
-                    "sources/phc",
-                    $timestamp
+                $timestamp = (string) time();
+                $fileName = $timestamp
                     . "."
-                        . $request->file("id_card_image")->getClientOriginalExtension()
-                );
+                    . $request->file("id_card_image")->getClientOriginalExtension();
+
+                $request->file("id_card_image")->move("sources/phc", $fileName);
+
+                $personalHomecare->id_card = $fileName;
             }
 
-            $personalHomecare->id_card = $timestamp;
             $personalHomecare->checklist_out = $phcChecklist->id;
             $personalHomecare->save();
 
