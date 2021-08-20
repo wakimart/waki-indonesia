@@ -636,37 +636,63 @@ if (
                     </table>
                 </div>
 
-                <form id="formUpdateStatus" method="POST" action="{{ route('update_reference_mgm') }}">
-                    @csrf
-                    <div class="form-group">
-                        <label>Other Detail</label>
-                        <table id="table-detail-other" style="margin: 1em 0em;">
-                            <thead>
-                                <td>Item</td>
-                                <td>Name</td>
-                                <td>Status</td>
-                                <td>Status Delivery</td>
-                            </thead>
-                            <tbody id="append_tbody_other">
+                @if(!isset($_GET['id_ref']))
+                    <form id="formUpdateStatus" method="POST" action="{{ route('update_reference_mgm') }}">
+                        @csrf
+                        <div class="form-group">
+                            <label>Other Detail</label>
+                            <table id="table-detail-other" style="margin: 1em 0em;">
+                                <thead>
+                                    <td>Item</td>
+                                    <td>Name</td>
+                                    <td>Status</td>
+                                    <td>Status Delivery</td>
+                                </thead>
+                                <tbody id="append_tbody_other">
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
 
-                        <input id="ref_id" type="hidden" name="id" />
-                        <input id="ref_name" type="hidden" name="name" />
-                        <input id="ref_phone" type="hidden" name="phone" />
-                        <input id="ref_age" type="hidden" name="age" />
-                        <input id="ref_province" type="hidden" name="province" />
-                        <input id="ref_city" type="hidden" name="city" />
-                        <input id="refs_order" type="hidden" name="order_id" />
+                            <input id="ref_id" type="hidden" name="id" />
+                            <input id="ref_name" type="hidden" name="name" />
+                            <input id="ref_phone" type="hidden" name="phone" />
+                            <input id="ref_age" type="hidden" name="age" />
+                            <input id="ref_province" type="hidden" name="province" />
+                            <input id="ref_city" type="hidden" name="city" />
+                            <input id="refs_order" type="hidden" name="order_id" />
 
-                        <button class="btn btn-primary"
-                            type="submit"
-                            id="btn-confirmUpdate">
-                            Save
-                        </button>
-                    </div>
-                </form>
+                            <button class="btn btn-primary"
+                                type="submit"
+                                id="btn-confirmUpdate">
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                @else
+                    <form id="formUpdateStatusAcc" method="POST" action="{{ route('update_reference_mgm') }}">
+                        @csrf
+                        <div class="form-group">
+
+                            <input id="ref_id" type="hidden" name="id" />
+                            <input id="ref_name" type="hidden" name="name" />
+                            <input id="ref_phone" type="hidden" name="phone" />
+                            <input id="ref_age" type="hidden" name="age" />
+                            <input id="ref_province" type="hidden" name="province" />
+                            <input id="ref_city" type="hidden" name="city" />
+                            <input id="refs_order" type="hidden" name="order_id" />
+                            <input id="select_edit-prize_0" type="hidden" name="prize_id" />
+                            <input id="select_edit-status-prize_0" type="hidden" name="status_prize" />
+                            <input type="hidden" name="delivery_status_prize" value="delivered by CSO" />
+
+                            <div style="text-align: center;">
+                                <h5>Are you sure want to deliver by CSO for this reference ?</h5>
+                                <button type="submit" class="btn btn-gradient-primary">Yes</button>
+                                <button class="btn btn-gradient-danger" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                @endif
+
             </div>
         </div>
     </div>
@@ -1240,6 +1266,25 @@ $(document).ready(function () {
 
     function errorHandler(event){
         document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";
+    }
+
+    $("#formUpdateStatusAcc").on("submit", function (e) {
+        e.preventDefault();
+        frmAdd = _("formUpdateStatusAcc");
+        frmAdd = new FormData(document.getElementById("formUpdateStatusAcc"));
+        frmAdd.enctype = "multipart/form-data";
+        var URLNya = $("#formUpdateStatusAcc").attr('action');
+
+        var ajax = new XMLHttpRequest();
+        ajax.addEventListener("load", completeHandler_2, false);
+        ajax.open("POST", URLNya);
+        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+        ajax.send(frmAdd);
+    });
+
+    function completeHandler_2(event){
+        alert("Input Success !!!");
+        window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
     }
 
     @if(isset($_GET['id_ref']))

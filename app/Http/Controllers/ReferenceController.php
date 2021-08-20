@@ -311,7 +311,7 @@ class ReferenceController extends Controller
             DB::rollBack();
 
             return response()->json([
-                "error" => $e,
+                "errors" => $e,
                 "error message" => $e->getMessage(),
             ], 500);
         }
