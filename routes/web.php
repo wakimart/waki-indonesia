@@ -27,6 +27,9 @@ Route::get('/product_category/{id}', 'CategoryProductController@index')->name('p
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
 Route::get('/firebase','FirebaseController@index');
 
+//Personal Homecare
+Route::get('/personal-homecare/{id}', 'PersonalHomecareController@phForm')->name('personal_homecare');
+
 //Service Product
 Route::get('/service', 'ServiceController@indexUser')->name('service');
 Route::get('/trackservice/{id}', 'ServiceController@trackService')->name('track_service');

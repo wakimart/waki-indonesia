@@ -109,12 +109,8 @@ $menu_item_page = "personal_homecare";
 
     /*-- mobile --*/
     @media (max-width: 768px) {
-        #desktop {
-            display: none;
-        }
-
-        #mobile {
-            display: block;
+        .card-body h2{
+            font-size: 1.3em;
         }
 
         .btn {
@@ -130,14 +126,6 @@ $menu_item_page = "personal_homecare";
     }
 
     @media (min-width: 768px) {
-        #desktop {
-            display: block;
-        }
-
-        #mobile {
-            display: none;
-        }
-
         .table-responsive::-webkit-scrollbar {
             display: none;
         }
@@ -148,7 +136,7 @@ $menu_item_page = "personal_homecare";
 @section('content')
 <div class="main-panel">
     <div class="content-wrapper">
-        <div id="desktop">
+        <div id="header">
             <div class="page-header">
                 <h3 class="page-title">Detail Personal Homecare</h3>
                 <nav aria-label="breadcrumb">
@@ -162,7 +150,7 @@ $menu_item_page = "personal_homecare";
                             </a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Detail Personal Homecare
+                            Detail
                         </li>
                     </ol>
                 </nav>
@@ -198,11 +186,10 @@ $menu_item_page = "personal_homecare";
                                         <td>Customer Address</td>
                                         <td>:</td>
                                         <td>
-                                            {{ $personalhomecare['address'] }}
-                                            <br>
-                                            {{ $personalhomecare->provinces['province_name'] }}, 
-                                            {{ $personalhomecare->cityObj['city_name'] }}, 
-                                            {{ $personalhomecare->districObj['subdistrict_name'] }}
+                                            {{ $personalhomecare['address'] }},
+                                            {{ $personalhomecare->getProvinceName() }}, 
+                                            {{ $personalhomecare->getCityFullName() }}, 
+                                            {{ $personalhomecare->getDistrictName() }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -256,7 +243,9 @@ $menu_item_page = "personal_homecare";
                                     <tr>
                                         <td rowspan="5">Completeness</td>
                                         <td>
-                                            <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
+                                            <i class="mdi {{ in_array("machine", 
+                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ? 
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
                                                 style="font-size: 24px; color: #fed713;">
                                             </i> 
                                             Machine
@@ -264,7 +253,9 @@ $menu_item_page = "personal_homecare";
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
+                                            <i class="mdi {{ in_array("filter", 
+                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ? 
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
                                                 style="font-size: 24px; color: #fed713;">
                                             </i> 
                                             Filter
@@ -272,15 +263,19 @@ $menu_item_page = "personal_homecare";
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
+                                            <i class="mdi {{ in_array("accessories", 
+                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ? 
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
                                                 style="font-size: 24px; color: #fed713;">
-                                            </i> 
+                                            </i>  
                                             Accessories
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
+                                            <i class="mdi {{ in_array("cable", 
+                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ? 
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>  
                                             Cable
@@ -292,29 +287,30 @@ $menu_item_page = "personal_homecare";
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>  
                                             Other : 
-                                            {{ isset($personalhomecare['arr_condition']['completeness']['other']) ? 
-                                                    $personalhomecare['arr_condition']['completeness']['other'][0] : "-" }}
+                                            {{ isset($personalhomecare->checklistOut['condition']['other']) ? 
+                                                $personalhomecare->checklistOut['condition']['other'][0] : "-" }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Machine Condition</td>
                                         <td>
-                                            {{ ucwords($personalhomecare['arr_condition']['machine_condition']) }}
+                                            {{ ucwords($personalhomecare->checklistOut['condition']['machine']) }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Physical Condition</td>
                                         <td>
-                                            {{ ucwords($personalhomecare['arr_condition']['physical_condition']) }}
+                                            {{ ucwords($personalhomecare->checklistOut['condition']['physical']) }}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Product Photo</td>
                                         <td>
-                                            @foreach ((array)$personalhomecare['image'] as $img)
-                                                <img src="{{asset('sources/personal-homecare/') . '/' . $img}}"
-                                                    height="300px"
-                                                    alt="Personal Homecare Image" />
+                                            @foreach ($personalhomecare->checklistOut['image'] as $img)
+                                                <img src="{{asset('sources/phc-checklist') . '/' . $img}}"
+                                                    height="300px" 
+                                                    style="margin-bottom: 15px;"
+                                                    alt="Product Personal Homecare" />
                                             @endforeach
                                         </td>
                                     </tr>
@@ -356,7 +352,9 @@ $menu_item_page = "personal_homecare";
                                         <tr>
                                             <td rowspan="5">Completeness</td>
                                             <td>
-                                                <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
+                                                <i class="mdi {{ in_array("machine", 
+                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ? 
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i> 
                                                 Machine
@@ -364,7 +362,9 @@ $menu_item_page = "personal_homecare";
                                         </tr>
                                         <tr>
                                             <td>
-                                                <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
+                                                <i class="mdi {{ in_array("filter", 
+                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ? 
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i> 
                                                 Filter
@@ -372,17 +372,21 @@ $menu_item_page = "personal_homecare";
                                         </tr>
                                         <tr>
                                             <td>
-                                                <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
+                                                <i class="mdi {{ in_array("accessories", 
+                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ? 
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
                                                     style="font-size: 24px; color: #fed713;">
-                                                </i> 
+                                                </i>  
                                                 Accessories
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
+                                                <i class="mdi {{ in_array("cable", 
+                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ? 
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
                                                     style="font-size: 24px; color: #fed713;">
-                                                </i> 
+                                                </i>  
                                                 Cable
                                             </td>
                                         </tr>
@@ -390,26 +394,33 @@ $menu_item_page = "personal_homecare";
                                             <td>
                                                 <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
                                                     style="font-size: 24px; color: #fed713;">
-                                                </i> 
+                                                </i>  
                                                 Other : 
+                                                {{ isset($personalhomecare->checklistIn['condition']['other']) ? 
+                                                    $personalhomecare->checklistIn['condition']['other'][0] : "-" }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Machine Condition</td>
                                             <td>
-                                                
+                                                {{ ucwords($personalhomecare->checklistIn['condition']['machine']) }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Physical Condition</td>
                                             <td>
-                                                
+                                                {{ ucwords($personalhomecare->checklistIn['condition']['physical']) }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Product Photo</td>
                                             <td>
-                                                
+                                                @foreach ($personalhomecare->checklistIn['image'] as $img)
+                                                    <img src="{{asset('sources/phc-checklist') . '/' . $img}}"
+                                                        height="300px" 
+                                                        style="margin-bottom: 15px;"
+                                                        alt="Product Personal Homecare" />
+                                                @endforeach
                                             </td>
                                         </tr>
                                     </table>

@@ -25,6 +25,12 @@ class PersonalHomecareController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
+    public function phForm($id){
+        $personalhomecare = PersonalHomecare::find($id);
+        
+        return view('personal_homecare', compact('personalhomecare'));
+    }
+
     public function create()
     {
         $branches = Branch::select("id", "code", "name")

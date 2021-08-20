@@ -48,4 +48,21 @@ class PersonalHomecare extends Model
     {
         return $this->belongsTo("App\PersonalHomecareChecklist", "checklist_in");
     }
+
+    public function getProvinceName()
+    {
+        return RajaOngkir_Province::where("province_id", $this->province_id)->first()->province;
+    }
+
+    public function getCityFullName()
+    {
+        $queryCity = RajaOngkir_City::where("city_id", $this->city_id)->first();
+
+        return $queryCity->type . " " . $queryCity->city_name;
+    }
+
+    public function getDistrictName()
+    {
+        return RajaOngkir_Subdistrict::where("subdistrict_id", $this->subdistrict_id)->first()->subdistrict_name;
+    }
 }
