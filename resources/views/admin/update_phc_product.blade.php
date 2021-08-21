@@ -1,6 +1,5 @@
 <?php
 $menu_item_page = "personal_homecare";
-$menu_item_second = "add_phc_product";
 ?>
 @extends('admin.layouts.template')
 
@@ -77,7 +76,7 @@ $menu_item_second = "add_phc_product";
                     <div class="card-body">
                         <form id="add-phc-product"
                             method="POST"
-                            action="">
+                            action="{{ route("update_phc_product") }}">
                             @csrf
                             <input type="hidden"
                                 id="branch-code"
@@ -103,8 +102,8 @@ $menu_item_second = "add_phc_product";
                                     @foreach ($branches as $branch)
                                         @if ($phcproducts->branch_id == $branch->id)
                                             <option value="{{ $branch->id }}"
-                                                selected="true"
-                                                data-code="{{ $branch->code }}">
+                                                data-code="{{ $branch->code }}"
+                                                selected>
                                                 {{ $branch->code }} - {{ $branch->name }}
                                             </option>
                                         @else
@@ -128,8 +127,8 @@ $menu_item_second = "add_phc_product";
                                     @foreach ($products as $product)
                                         @if ($phcproducts->product_id == $product->id)
                                             <option value="{{ $product->id }}"
-                                                selected="true"
-                                                data-code="{{ $product->code }}">
+                                                data-code="{{ $product->code }}"
+                                                selected>
                                                 {{ $product->code }} - {{ $product->name }}
                                             </option>
                                         @else
@@ -221,34 +220,7 @@ function setCodeSuffix() {
 
     if (productCode && branchCode) {
         document.getElementById("code-increment").removeAttribute("disabled");
-        getIncrementSuggestion(`${productCode}${branchCode}`);
     }
-}
-
-function getIncrementSuggestion(code) {
-    fetch(
-        `{{ route("get_phc_product_increment") }}/?code=${code}`,
-        {
-            method: "GET",
-            headers: {
-                "Accept": "application/json",
-            },
-            mode: "same-origin",
-            referrerPolicy: "no-referrer",
-        }
-    ).then(function (response) {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        return response.json();
-    }).then(function (response) {
-        const data = response.data.toString();
-        document.getElementById("code-increment").value = data.padStart(3, "0");
-        setCode();
-    }).catch(function (error) {
-        console.error(error);
-    });
 }
 
 function setCode() {
