@@ -95,8 +95,7 @@ $menu_item_page = "personal_homecare";
                                 </option>
                                 @foreach ($branches as $branch)
                                     @if ($personalhomecare->branch_id == $branch->id)
-                                        <option value="{{ $branch->id }}"
-                                            selected="true">
+                                        <option value="{{ $branch->id }}" selected>
                                             {{ $branch->code }} - {{ $branch->name }}
                                         </option>
                                     @else
@@ -123,8 +122,7 @@ $menu_item_page = "personal_homecare";
                                 </option>
                                 @foreach ($csos as $cso)
                                     @if ($personalhomecare->cso_id == $cso->id)
-                                        <option value="{{ $cso->id }}"
-                                            selected="true">
+                                        <option value="{{ $cso->id }}" selected>
                                             {{ $cso->code }} - {{ $cso->name }}
                                         </option>
                                     @else
@@ -149,7 +147,7 @@ $menu_item_page = "personal_homecare";
                         <form id="add-phc"
                             method="POST"
                             enctype="multipart/form-data"
-                            action="{{ route("store_personal_homecare") }}">
+                            action="{{ route("update_personal_homecare") }}">
                             @csrf
                             <input type="hidden"
                                 name="id"
@@ -234,8 +232,7 @@ $menu_item_page = "personal_homecare";
                                     </option>
                                     @foreach ($provinces as $province)
                                         @if ($personalhomecare->province_id === $province->id)
-                                            <option value="{{ $province->id }}"
-                                                selected="true">
+                                            <option value="{{ $province->id }}" selected>
                                                 {{ $province->name }}
                                             </option>
                                         @else
