@@ -106,6 +106,48 @@ class PersonalHomecareProductController extends Controller
         ));
     }
 
+    public function update(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $phcProduct = PersonalHomecareProduct::where("id", $request->id)->first();
+            $phcProduct->fill($request->only(
+                "code",
+                "branch_id",
+                "product_id",
+                "status",
+            ));
+            $phcProduct->save();
+
+            $userId = Auth::user()["id"];
+            HistoryUpdate::create([
+                "type_menu" => "Personal Homecare Product",
+                "method" => "update",
+                "meta" => json_encode(
+                    [
+                        "user" => $userId,
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $phcProduct->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                ),
+                "user_id" => $userId,
+                "menu_id" => $request->id,
+            ]);
+
+            DB::commit();
+
+            return redirect()
+                ->route("list_phc_product")
+                ->with("success", "Successfully update Personal Homecare Product.");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
+    }
+
     public function destroy(Request $request)
     {
         DB::beginTransaction();
