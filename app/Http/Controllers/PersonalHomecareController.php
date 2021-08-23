@@ -221,7 +221,7 @@ class PersonalHomecareController extends Controller
             )
             ->where("personal_homecare_products.branch_id", $personalhomecare->branch_id)
             ->where("personal_homecare_products.active", true)
-            ->get(  );
+            ->get();
 
         return view("admin.update_personal_homecare", compact(
             "personalhomecare",

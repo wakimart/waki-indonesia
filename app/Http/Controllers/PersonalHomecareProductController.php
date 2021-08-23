@@ -13,13 +13,34 @@ use Illuminate\Support\Facades\DB;
 
 class PersonalHomecareProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $phcproducts = PersonalHomecareProduct::where('active', true)
-            ->orderBy('code', 'asc')
-            ->paginate(10);
+        $branches = Branch::select("id", "code", "name")
+            ->where("active", true)
+            ->get();
 
-        return view("admin.list_homecareproduct", compact("phcproducts"))
+        $products = Product::select("id", "code", "name")
+            ->where("active", true)
+            ->get();
+
+        $phcproducts = PersonalHomecareProduct::where('active', true)
+            ->orderBy('code', 'asc');
+
+        if ($request->has("branch_id")) {
+            $phcproducts = $phcproducts->where('branch_id', $request->input("branch_id"));
+        }
+
+        if ($request->has("product_id")) {
+            $phcproducts = $phcproducts->where('product_id', $request->input("product_id"));
+        }
+
+        $phcproducts = $phcproducts->paginate(10);
+
+        return view("admin.list_homecareproduct", compact(
+                "branches",
+                "products",
+                "phcproducts",
+            ))
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
