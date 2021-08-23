@@ -54,6 +54,10 @@ $menu_item_page = "personal_homecare";
         padding: 10px;
         border-radius: 3px;
     }
+
+    .img-h500 {
+        max-height: 500px;
+    }
 </style>
 @endsection
 
@@ -290,6 +294,23 @@ $menu_item_page = "personal_homecare";
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="form-group">
+                                <img src="{{ asset("sources/phc/" . $personalhomecare->id_card) }}"
+                                    class="img-thumbnail img-h500"
+                                    alt="customer id card" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="id_card_image">
+                                    Customer ID Card
+                                </label>
+                                <input type="file"
+                                    class="form-control"
+                                    accept="image/jpeg, image/png"
+                                    name="id_card_image"
+                                    id="id_card_image" />
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -480,6 +501,14 @@ $menu_item_page = "personal_homecare";
                             </div>
                         </div>
 
+                        @if (isset($personalhomecare->checklistOut["image"][0]))
+                            <div class="form-group">
+                                <img src="{{ asset("sources/phc-checklist/" . $personalhomecare->checklistOut["image"][0]) }}"
+                                    class="img-thumbnail img-h500"
+                                    alt="product photo" />
+                            </div>
+                        @endif
+
                         <div class="form-group">
                             <label for="product-photo-1">Product Photo</label>
                             <input type="file"
@@ -490,6 +519,14 @@ $menu_item_page = "personal_homecare";
                                 form="add-phc"
                                 required />
                         </div>
+
+                        @if (isset($personalhomecare->checklistOut["image"][1]))
+                            <div class="form-group">
+                                <img src="{{ asset("sources/phc-checklist/" . $personalhomecare->checklistOut["image"][1]) }}"
+                                    class="img-thumbnail img-h500"
+                                    alt="product photo with CSO and Customer" />
+                            </div>
+                        @endif
 
                         <div class="form-group">
                             <label for="product-photo-2">
