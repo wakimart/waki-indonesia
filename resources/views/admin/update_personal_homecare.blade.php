@@ -516,8 +516,7 @@ $menu_item_page = "personal_homecare";
                                 accept="image/jpeg, image/png"
                                 name="product_photo_1"
                                 id="product-photo-1"
-                                form="add-phc"
-                                required />
+                                form="add-phc" />
                         </div>
 
                         @if (isset($personalhomecare->checklistOut["image"][1]))
@@ -537,8 +536,7 @@ $menu_item_page = "personal_homecare";
                                 accept="image/jpeg, image/png"
                                 name="product_photo_2"
                                 id="product-photo-2"
-                                form="add-phc"
-                                required />
+                                form="add-phc" />
                         </div>
                     </div>
                 </div>
