@@ -17,10 +17,12 @@ class PersonalHomecareProductController extends Controller
     {
         $branches = Branch::select("id", "code", "name")
             ->where("active", true)
+            ->orderBy("code")
             ->get();
 
         $products = Product::select("id", "code", "name")
             ->where("active", true)
+            ->orderBy("code")
             ->get();
 
         $phcproducts = PersonalHomecareProduct::where('active', true)
@@ -34,7 +36,7 @@ class PersonalHomecareProductController extends Controller
             $phcproducts = $phcproducts->where('product_id', $request->input("product_id"));
         }
 
-        $phcproducts = $phcproducts->paginate(10);
+        $phcproducts = $phcproducts->with(["branch", "product"])->paginate(10);
 
         return view("admin.list_homecareproduct", compact(
                 "branches",
