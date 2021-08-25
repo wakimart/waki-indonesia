@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class PersonalHomecareController extends Controller
 {
@@ -319,6 +320,26 @@ class PersonalHomecareController extends Controller
             DB::rollBack();
 
             return response()->json(["error" => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateStatus(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            PersonalHomecareProduct::where("id", $request->id)
+                ->update(["status" => $request->status]);
+
+            DB::commit();
+
+            return redirect()
+                ->route("detail_personal_homecare", ["id" => $request->id])
+                ->with("success", "Status has been successfully updated.");
+        } catch (Throwable $th) {
+            DB::rollBack();
+
+            return response()->json(["error" => $th->getMessage()], 500);
         }
     }
 
