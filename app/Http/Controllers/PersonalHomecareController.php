@@ -67,7 +67,7 @@ class PersonalHomecareController extends Controller
             // STORE PERSONAL HOMECARE CHECKLIST
             $phcChecklist = new PersonalHomecareChecklist();
 
-            $condition["completeness"][] = $request->input("completeness");
+            $condition["completeness"] = $request->input("completeness");
             if ($request->has("other_completeness")) {
                 $condition["other"] = $request->input("other_completeness");
             }
@@ -275,7 +275,7 @@ class PersonalHomecareController extends Controller
                 )
                 ->first();
 
-            $condition["completeness"][] = $request->input("completeness");
+            $condition["completeness"] = $request->input("completeness");
             if ($request->has("other_completeness")) {
                 $condition["other"] = $request->input("other_completeness");
             }
@@ -351,7 +351,7 @@ class PersonalHomecareController extends Controller
             // STORE PERSONAL HOMECARE CHECKLIST IN
             $phcChecklist = new PersonalHomecareChecklist();
 
-            $condition["completeness"][] = $request->input("completeness");
+            $condition["completeness"] = $request->input("completeness");
             if ($request->has("other_completeness")) {
                 $condition["other"] = $request->input("other_completeness");
             }
@@ -409,8 +409,15 @@ class PersonalHomecareController extends Controller
     public function detail(Request $request)
     {
         $personalhomecare = PersonalHomecare::where("id", $request->id)
-            ->with(["branch", "cso", "checklistOut"])
+            ->with([
+                "branch",
+                "cso",
+                "personalHomecareProduct",
+                "checklistOut",
+                "checklistIn",
+            ])
             ->first();
+
         $histories = HistoryUpdate::select(
                 "history_updates.method AS method",
                 "history_updates.created_at AS created_at",

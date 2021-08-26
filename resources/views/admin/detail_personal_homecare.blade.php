@@ -236,7 +236,7 @@ $menu_item_page = "personal_homecare";
                                         <td rowspan="5">Completeness</td>
                                         <td>
                                             <i class="mdi {{ in_array("machine",
-                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ?
+                                                $personalhomecare->checklistOut['condition']['completeness']) ?
                                                 "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
@@ -246,7 +246,7 @@ $menu_item_page = "personal_homecare";
                                     <tr>
                                         <td>
                                             <i class="mdi {{ in_array("filter",
-                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ?
+                                                $personalhomecare->checklistOut['condition']['completeness']) ?
                                                 "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
@@ -256,7 +256,7 @@ $menu_item_page = "personal_homecare";
                                     <tr>
                                         <td>
                                             <i class="mdi {{ in_array("accessories",
-                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ?
+                                                $personalhomecare->checklistOut['condition']['completeness']) ?
                                                 "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
@@ -266,7 +266,7 @@ $menu_item_page = "personal_homecare";
                                     <tr>
                                         <td>
                                             <i class="mdi {{ in_array("cable",
-                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ?
+                                                $personalhomecare->checklistOut['condition']['completeness']) ?
                                                 "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
@@ -326,8 +326,12 @@ $menu_item_page = "personal_homecare";
                                 <div class="table-responsive">
                                     <table class="col-md-12">
                                         <thead style="visibility: hidden;">
-                                            <th style="width: 30%;">Checklist</th>
-                                            <th style="width: 70%;">Content</th>
+                                            <th style="width: 30%;">
+                                                Checklist
+                                            </th>
+                                            <th style="width: 70%;">
+                                                Content
+                                            </th>
                                         </thead>
                                         <tr>
                                             <td>Product</td>
@@ -345,7 +349,7 @@ $menu_item_page = "personal_homecare";
                                             <td rowspan="5">Completeness</td>
                                             <td>
                                                 <i class="mdi {{ in_array("machine",
-                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ?
+                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
                                                     "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
@@ -355,7 +359,7 @@ $menu_item_page = "personal_homecare";
                                         <tr>
                                             <td>
                                                 <i class="mdi {{ in_array("filter",
-                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ?
+                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
                                                     "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
@@ -365,7 +369,7 @@ $menu_item_page = "personal_homecare";
                                         <tr>
                                             <td>
                                                 <i class="mdi {{ in_array("accessories",
-                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ?
+                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
                                                     "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
@@ -375,7 +379,7 @@ $menu_item_page = "personal_homecare";
                                         <tr>
                                             <td>
                                                 <i class="mdi {{ in_array("cable",
-                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ?
+                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
                                                     "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
@@ -389,7 +393,7 @@ $menu_item_page = "personal_homecare";
                                                 </i>
                                                 Other :
                                                 {{ isset($personalhomecare->checklistIn['condition']['other']) ?
-                                                    $personalhomecare->checklistIn['condition']['other'][0] : "-" }}
+                                                    $personalhomecare->checklistIn['condition']['other'] : "-" }}
                                             </td>
                                         </tr>
                                         <tr>
