@@ -153,7 +153,7 @@ if (
                 <div class="table-responsive">
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="13">Reference</td>
+                            <td colspan="14">Reference</td>
                         </thead>
                         <thead style="background-color: #80808012 !important;">
                             <tr>
@@ -166,6 +166,7 @@ if (
                                 <td>Prize</td>
                                 <td>Status</td>
                                 <td>Deliv. Status</td>
+                                <td>Final Status</td>
                                 @if ($specialPermission)
                                     <td class="text-center">View</td>
                                 @endif
@@ -246,6 +247,12 @@ if (
                                         data-deliveryprize="{{ $reference->delivery_status_prize }}"
                                         data-permission="{{ $specialPermission }}">
                                         {{ $reference->delivery_status_prize }}
+                                    </td>
+                                    <td class="text-center"
+                                        id="delivery_status_prize_{{ $key }}"
+                                        data-deliveryprize="{{ $reference->reference_souvenir['final_status'] }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->reference_souvenir['final_status'] }}
                                     </td>
                                     {{-- <td class="center"
                                         id="image_{{ $key }}"
@@ -636,39 +643,23 @@ if (
                     </table>
                 </div>
 
-                @if(!isset($_GET['id_ref']))
-                    <form id="formUpdateStatus" method="POST" action="{{ route('update_reference_mgm') }}">
-                        @csrf
-                        <div class="form-group">
-                            <label>Other Detail</label>
-                            <table id="table-detail-other" style="margin: 1em 0em;">
-                                <thead>
-                                    <td>Item</td>
-                                    <td>Name</td>
-                                    <td>Status</td>
-                                    <td>Status Delivery</td>
-                                </thead>
-                                <tbody id="append_tbody_other">
+                @if(isset($_GET['id_ref']) && Auth::user()->id == 1)
+                    <div class="form-group">
+                        <label>Other Detail</label>
+                        <table id="table-detail-other" style="margin: 1em 0em;">
+                            <thead>
+                                <td>Item</td>
+                                <td>Name</td>
+                                <td>Status</td>
+                                <td>Status Delivery</td>
+                                <td>Status Final</td>
+                            </thead>
+                            <tbody id="append_tbody_other">
 
-                                </tbody>
-                            </table>
+                            </tbody>
+                        </table>
+                    </div>
 
-                            <input id="ref_id" type="hidden" name="id" />
-                            <input id="ref_name" type="hidden" name="name" />
-                            <input id="ref_phone" type="hidden" name="phone" />
-                            <input id="ref_age" type="hidden" name="age" />
-                            <input id="ref_province" type="hidden" name="province" />
-                            <input id="ref_city" type="hidden" name="city" />
-                            <input id="refs_order" type="hidden" name="order_id" />
-
-                            <button class="btn btn-primary"
-                                type="submit"
-                                id="btn-confirmUpdate">
-                                Save
-                            </button>
-                        </div>
-                    </form>
-                @else
                     <form id="formUpdateStatusAcc" method="POST" action="{{ route('update_reference_mgm') }}">
                         @csrf
                         <div class="form-group">
@@ -689,6 +680,39 @@ if (
                                 <button type="submit" class="btn btn-gradient-primary">Yes</button>
                                 <button class="btn btn-gradient-danger" data-dismiss="modal">No</button>
                             </div>
+                        </div>
+                    </form>
+                @else
+                    <form id="formUpdateStatus" method="POST" action="{{ route('update_reference_mgm') }}">
+                        @csrf
+                        <div class="form-group">
+                            <label>Other Detail</label>
+                            <table id="table-detail-other" style="margin: 1em 0em;">
+                                <thead>
+                                    <td>Item</td>
+                                    <td>Name</td>
+                                    <td>Status</td>
+                                    <td>Status Delivery</td>
+                                    <td>Status Final</td>
+                                </thead>
+                                <tbody id="append_tbody_other">
+
+                                </tbody>
+                            </table>
+
+                            <input id="ref_id" type="hidden" name="id" />
+                            <input id="ref_name" type="hidden" name="name" />
+                            <input id="ref_phone" type="hidden" name="phone" />
+                            <input id="ref_age" type="hidden" name="age" />
+                            <input id="ref_province" type="hidden" name="province" />
+                            <input id="ref_city" type="hidden" name="city" />
+                            <input id="refs_order" type="hidden" name="order_id" />
+
+                            <button class="btn btn-primary"
+                                type="submit"
+                                id="btn-confirmUpdate">
+                                Save
+                            </button>
                         </div>
                     </form>
                 @endif
@@ -1027,25 +1051,29 @@ function loadDataPerRef(ref_id) {
                         <tr id="tr_detail_souvenir">\
                             <td>PRIZE</td>\
                             <td>\
-                                <select {{ Auth::user()->id == 1 ? "disabled" : "" }} id="select_edit-prize_'+p+'" class="form-control" name="prize_id">'
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-prize_'+p+'" class="form-control" name="prize_id">'
                                 + prizeOptionAll +
                                 '</select>\
                             </td>\
                             <td>\
-                                <select {{ Auth::user()->id == 1 ? "disabled" : "" }} id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
                                     <option value="">Choose Status</option>\
                                     <option value="pending">pending</option>\
                                     <option value="success">success</option>\
                                 </select>\
                             </td>\
                             <td>\
-                                <select id="select_edit-delivery-status-prize_'+p+'" class="form-control" name="delivery_status_prize">\
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-delivery-status-prize_'+p+'" class="form-control" name="delivery_status_prize">\
                                     <option value="">Choose Status Delivery</option>\
                                     <option value="undelivered">undelivered</option>\
-                                    @if(Auth::user()->id == 1)
                                         <option value="delivered by CSO">delivered by CSO</option>\
-                                    @endif
                                     <option value="delivered by Courier">delivered by Courier</option>\
+                                </select>\
+                            </td>\
+                            <td>\
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-status-final-status_'+p+'" class="form-control" name="final_status">\
+                                    <option value="">Choose Status</option>\
+                                    <option value="pending">pending</option>\
                                     <option value="success">success</option>\
                                 </select>\
                             </td>\
@@ -1055,6 +1083,7 @@ function loadDataPerRef(ref_id) {
                     $('#select_edit-prize_'+p).val(data_refs[p]['prize_id']);
                     $('#select_edit-status-prize_'+p).val(data_refs[p]['status_prize']);
                     $('#select_edit-delivery-status-prize_'+p).val(data_refs[p]['delivery_status_prize']);
+                    $('#select_edit-status-final-status_'+p).val(data_refs[p]['final_status']);
                 }
             }
 
@@ -1258,7 +1287,7 @@ $(document).ready(function () {
         }
         else{
             alert("Input Success !!!");
-            window.location.reload()
+            window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
         }
 
         document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";

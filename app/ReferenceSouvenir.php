@@ -17,6 +17,7 @@ class ReferenceSouvenir extends Model
         "prize_id",
         "status_prize",
         "delivery_status_prize",
+        "final_status",
     ];
 
     public function reference()

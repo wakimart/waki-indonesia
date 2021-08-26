@@ -295,6 +295,7 @@ class ReferenceController extends Controller
                 "prize_id",
                 "status_prize",
                 "delivery_status_prize",
+                "final_status",
             ));
 
             $referenceSouvenir->save();
@@ -304,6 +305,10 @@ class ReferenceController extends Controller
             $this->historyReferenceSouvenir($referenceSouvenir, "update", $userId);
 
             DB::commit();
+
+            return response()->json([
+                "success" => $referenceSouvenir,
+            ], 200);
 
             return redirect($request->url)
                 ->with("success", "Data referensi berhasil dimasukkan.");
