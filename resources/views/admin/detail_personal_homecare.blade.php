@@ -415,10 +415,9 @@ $menu_item_page = "personal_homecare";
                                 method="POST"
                                 action="{{ route("update_personal_homecare_status") }}">
                                 @csrf
-                                <input type="text"
+                                <input type="hidden"
                                     name="id"
-                                    value="{{ $personalhomecare['id'] }}"
-                                    hidden />
+                                    value="{{ $personalhomecare['id'] }}" />
                                 <div class="form-group row justify-content-center">
                                     <button type="submit"
                                         class="btn btn-gradient-primary mr-2 btn-lg"
@@ -530,6 +529,9 @@ $menu_item_page = "personal_homecare";
                 <form method="POST"
                     enctype="multipart/form-data"
                     action="{{ route("update_personal_homecare_checklist_in") }}">
+                    <input type="hidden"
+                        name="id"
+                        value="{{ $personalhomecare['id'] }}" />
                     <div class="form-group">
                         <span style="display: block;">Completeness</span>
                         <div class="div-CheckboxGroup">
