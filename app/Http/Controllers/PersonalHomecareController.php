@@ -389,12 +389,15 @@ class PersonalHomecareController extends Controller
 
             // UPDATE PERSONAL HOMECARE CHECKLIST IN
             $phc = PersonalHomecare::where("id", $request->id)->first();
+            $phc->status = "waiting_in";
             $phc->checklist_out = $phcChecklist->id;
             $phc->save();
 
             DB::commit();
 
-            // TODO: ADD RETURN
+            return redirect()
+                ->route("detail_personal_homecare", ["id" => $request->id])
+                ->with("success", "Status in Personal Homecare has been successfully updated.");
         } catch (\Throwable $th) {
             DB::rollBack();
 
@@ -405,10 +408,28 @@ class PersonalHomecareController extends Controller
 
     public function detail(Request $request)
     {
-        $personalhomecare = PersonalHomecare::where("id", $request->id)->first();
+        $personalhomecare = PersonalHomecare::where("id", $request->id)
+            ->with(["branch", "cso", "checklistOut"])
+            ->first();
+        $histories = HistoryUpdate::select(
+                "history_updates.method AS method",
+                "history_updates.created_at AS created_at",
+                "history_updates.meta AS meta",
+                "users.name AS name"
+            )
+            ->leftJoin(
+                "users",
+                "users.id",
+                "=",
+                "history_updates.user_id"
+            )
+            ->where("history_updates.type_menu", "Personal Homecare")
+            ->where("history_updates.menu_id", $request->id)
+            ->get();
 
         return view('admin.detail_personal_homecare', compact(
             'personalhomecare',
+            "histories",
         ));
     }
 
