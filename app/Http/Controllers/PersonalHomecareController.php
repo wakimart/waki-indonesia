@@ -343,7 +343,68 @@ class PersonalHomecareController extends Controller
         }
     }
 
-    public function detail(Request $request){
+    public function updateChecklistIn(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            // STORE PERSONAL HOMECARE CHECKLIST IN
+            $phcChecklist = new PersonalHomecareChecklist();
+
+            $condition["completeness"][] = $request->input("completeness");
+            if ($request->has("other_completeness")) {
+                $condition["other"] = $request->input("other_completeness");
+            }
+            $condition["machine"] = $request->input("machine_condition");
+            $condition["physical"] = $request->input("physical_condition");
+            $phcChecklist->condition = $condition;
+
+            $imageArray = [];
+            $userId = Auth::user()["id"];
+            $path = "sources/phc-checklist";
+            if ($request->hasFile("product_photo_1")) {
+                $fileName = time()
+                    . "_"
+                    . $userId
+                    . "_"
+                    . "1."
+                    . $request->file("product_photo_1")->getClientOriginalExtension();
+                $request->file("product_photo_1")->move($path, $fileName);
+                $imageArray[] = $fileName;
+            }
+
+            if ($request->hasFile("product_photo_2")) {
+                $fileName = time()
+                    . "_"
+                    . $userId
+                    . "_"
+                    . "2."
+                    . $request->file("product_photo_2")->getClientOriginalExtension();
+                $request->file("product_photo_2")->move($path, $fileName);
+                $imageArray[] = $fileName;
+            }
+
+            $phcChecklist->image = $imageArray;
+            $phcChecklist->save();
+
+            // UPDATE PERSONAL HOMECARE CHECKLIST IN
+            $phc = PersonalHomecare::where("id", $request->id)->first();
+            $phc->checklist_out = $phcChecklist->id;
+            $phc->save();
+
+            DB::commit();
+
+            // TODO: ADD RETURN
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json(["error" => $th->getMessage()], 500);
+        }
+
+    }
+
+    public function detail(Request $request)
+    {
         $personalhomecare = PersonalHomecare::where("id", $request->id)->first();
 
         return view('admin.detail_personal_homecare', compact(
