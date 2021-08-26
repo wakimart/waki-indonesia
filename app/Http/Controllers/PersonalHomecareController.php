@@ -397,7 +397,7 @@ class PersonalHomecareController extends Controller
 
             return redirect()
                 ->route("detail_personal_homecare", ["id" => $request->id])
-                ->with("success", "Status in Personal Homecare has been successfully updated.");
+                ->with("success", "Personal Homecare has been successfully updated.");
         } catch (\Throwable $th) {
             DB::rollBack();
 

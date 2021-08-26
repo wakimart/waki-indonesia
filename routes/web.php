@@ -919,6 +919,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("update_personal_homecare");
         Route::post("update/status", "PersonalHomecareController@updateStatus")
             ->name("update_personal_homecare_status");
+        Route::post("update/checklist-in", "PersonalHomecareController@updateChecklistIn")
+            ->name("update_personal_homecare_checklist_in");
         Route::get("detail/{id}", "PersonalHomecareController@detail")
             ->name("detail_personal_homecare");
     });

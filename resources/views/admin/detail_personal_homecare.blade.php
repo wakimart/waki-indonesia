@@ -43,39 +43,6 @@ $menu_item_page = "personal_homecare";
         background-color: #ffdddd;
     }
 
-    /* Hide all steps by default: */
-    .tab {
-        display: none;
-    }
-
-    /* Make circles that indicate the steps of the form: */
-    .step {
-        height: 15px;
-        width: 15px;
-        margin: 0 2px;
-        background-color: #bbbbbb;
-        border: none;
-        border-radius: 50%;
-        display: inline-block;
-        opacity: 0.5;
-    }
-
-    /* Mark the active step: */
-    .step.active {
-        opacity: 1;
-    }
-
-    /* Mark the steps that are finished and valid: */
-    .step.finish {
-        background-color: #4CAF50;
-    }
-
-   .div-CheckboxGroup {
-        border:solid 1px rgba(128, 128, 128, 0.32941);
-        padding:0px 10px ;
-        border-radius:3px;
-    }
-
     input[type='checkbox'], input[type='radio'] {
         margin-left: 0px !important;
     }
@@ -97,6 +64,13 @@ $menu_item_page = "personal_homecare";
 
     .justify-content-center {
         padding: 0em 1em;
+    }
+
+    .div-CheckboxGroup {
+        border: solid 1px rgba(128, 128, 128, 0.32941);
+        padding: 10px;
+        border-radius: 3px;
+        background-color: white;
     }
 
     /*-- mobile --*/
@@ -538,6 +512,203 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
         <!-- end if-->
+    </div>
+</div>
+<div class="modal" id="modal-checklist-in" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Checklist Out</h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST"
+                    enctype="multipart/form-data"
+                    action="{{ route("update_personal_homecare_checklist_in") }}">
+                    <div class="form-group">
+                        <span style="display: block;">Completeness</span>
+                        <div class="div-CheckboxGroup">
+                            <div class="form-check">
+                                <label for="completeness-machine"
+                                    class="form-check-label">
+                                    <input type="checkbox"
+                                        name="completeness[]"
+                                        id="completeness-machine"
+                                        value="machine"
+                                        form="add-phc" />
+                                    Machine
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="completeness-filter"
+                                    class="form-check-label">
+                                    <input type="checkbox"
+                                        name="completeness[]"
+                                        id="completeness-filter"
+                                        value="filter"
+                                        form="add-phc" />
+                                    Filter
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="completeness-accessories"
+                                    class="form-check-label">
+                                    <input type="checkbox"
+                                        name="completeness[]"
+                                        id="completeness-accessories"
+                                        value="accessories"
+                                        form="add-phc" />
+                                    Accessories
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="completeness-cable"
+                                    class="form-check-label">
+                                    <input type="checkbox"
+                                        name="completeness[]"
+                                        id="completeness-cable"
+                                        value="cable"
+                                        form="add-phc" />
+                                    Cable
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="completeness-other"
+                                    class="form-check-label">
+                                    <input type="checkbox"
+                                        name="completeness[]"
+                                        id="completeness-other"
+                                        value="other"
+                                        form="add-phc"
+                                        onchange="showOtherInput(this)" />
+                                    Other
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <input type="text"
+                                    class="form-control d-none"
+                                    placeholder="Other description"
+                                    name="other_completeness"
+                                    id="other-text"
+                                    form="add-phc" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <span style="display: block;">Machine Condition</span>
+                        <div class="div-CheckboxGroup">
+                            <div class="form-check">
+                                <label for="machine-condition-normal"
+                                    class="form-check-label">
+                                    <input type="radio"
+                                        class="form-check-input"
+                                        name="machine_condition"
+                                        id="machine-condition-normal"
+                                        value="normal"
+                                        form="add-phc"
+                                        required />
+                                    Normal
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="machine-condition-need-repair"
+                                    class="form-check-label">
+                                    <input type="radio"
+                                        class="form-check-input"
+                                        name="machine_condition"
+                                        id="machine-condition-need-repair"
+                                        value="need_repair"
+                                        form="add-phc"
+                                        required />
+                                    Need Repair
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <span style="display: block;">Physical Condition</span>
+                        <div class="div-CheckboxGroup">
+                            <div class="form-check">
+                                <label for="physical-condition-new"
+                                    class="form-check-label">
+                                    <input type="radio"
+                                        class="form-check-input"
+                                        name="physical_condition"
+                                        id="physical-condition-new"
+                                        value="new"
+                                        form="add-phc"
+                                        required />
+                                    New
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="physical-condition-moderate"
+                                    class="form-check-label">
+                                    <input type="radio"
+                                        class="form-check-input"
+                                        name="physical_condition"
+                                        id="physical-condition-moderate"
+                                        value="moderate"
+                                        form="add-phc"
+                                        required />
+                                    Moderate
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="physical-condition-need-repair"
+                                    class="form-check-label">
+                                    <input type="radio"
+                                        class="form-check-input"
+                                        name="physical_condition"
+                                        id="physical-condition-need-repair"
+                                        value="need_repair"
+                                        form="add-phc"
+                                        required />
+                                    Need Repair
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-photo-1">Product Photo 1</label>
+                        <input type="file"
+                            class="form-control"
+                            accept="image/jpeg, image/png"
+                            name="product_photo_1"
+                            id="product-photo-1"
+                            form="add-phc"
+                            required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-photo-2">Product Photo 2</label>
+                        <input type="file"
+                            class="form-control"
+                            accept="image/jpeg, image/png"
+                            name="product_photo_2"
+                            id="product-photo-2"
+                            form="add-phc"
+                            required />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
