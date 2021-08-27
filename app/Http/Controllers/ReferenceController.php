@@ -298,6 +298,10 @@ class ReferenceController extends Controller
                 "final_status",
             ));
 
+            if (empty($request->input("status_prize"))) {
+                $referenceSouvenir->status_prize = "pending";
+            }
+
             $referenceSouvenir->save();
 
             $userId = Auth::user()["id"];
@@ -309,9 +313,6 @@ class ReferenceController extends Controller
             return response()->json([
                 "success" => $referenceSouvenir,
             ], 200);
-
-            return redirect($request->url)
-                ->with("success", "Data referensi berhasil dimasukkan.");
         } catch (Exception $e) {
             DB::rollBack();
 

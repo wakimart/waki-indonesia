@@ -1057,7 +1057,7 @@ function loadDataPerRef(ref_id) {
                             </td>\
                             <td>\
                                 <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
-                                    <option value="">Choose Status</option>\
+                                    <option value="" disabled>Choose Status</option>\
                                     <option value="pending">pending</option>\
                                     <option value="success">success</option>\
                                 </select>\
@@ -1072,7 +1072,7 @@ function loadDataPerRef(ref_id) {
                             </td>\
                             <td>\
                                 <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-status-final-status_'+p+'" class="form-control" name="final_status">\
-                                    <option value="">Choose Status</option>\
+                                    <option value="" disabled>Choose Status</option>\
                                     <option value="pending">pending</option>\
                                     <option value="success">success</option>\
                                 </select>\
