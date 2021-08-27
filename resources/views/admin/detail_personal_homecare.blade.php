@@ -316,7 +316,7 @@ $menu_item_page = "personal_homecare";
                                         <tr>
                                             <td>Schedule Date</td>
                                             <td>
-
+                                                {{ $personalhomecare->checklistIn["created_at"] }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -513,6 +513,7 @@ $menu_item_page = "personal_homecare";
         <!-- end if-->
     </div>
 </div>
+
 <div class="modal" id="modal-checklist-in" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
