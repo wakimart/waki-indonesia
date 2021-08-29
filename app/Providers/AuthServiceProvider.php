@@ -365,13 +365,13 @@ class AuthServiceProvider extends ServiceProvider
 
         //-- PERSONAL HOMECARE --//
         // Approve status
-        Gate::define("change-status-approval-personalhomecare", function ($user) {
-            return $user->hasAccess(["change-status-approval-personalhomecare"]);
+        Gate::define("change-status-checkin-personalhomecare", function ($user) {
+            return $user->hasAccess(["change-status-checkin-personalhomecare"]);
         });
         //-- REFERENCE --//
         // Reject status
-        Gate::define("change-status-reject-personalhomecare", function ($user) {
-            return $user->hasAccess(["change-status-reject-personalhomecare"]);
+        Gate::define("change-status-checkout-personalhomecare", function ($user) {
+            return $user->hasAccess(["change-status-checkout-personalhomecare"]);
         });
     }
 }

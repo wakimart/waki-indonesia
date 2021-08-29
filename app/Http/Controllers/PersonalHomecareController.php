@@ -265,8 +265,27 @@ class PersonalHomecareController extends Controller
 
                 $personalHomecare->id_card = $fileName;
             }
+            if ($request->hasFile("product_photo_2")){
+                $personalHomecare->id_card = "process";
+            }
 
             $personalHomecare->save();
+
+            //for history
+            $userId = Auth::user()["id"];
+            $historyPH["type_menu"] = "Personal Homecare";
+            $historyPH["method"] = "Change Status";
+            $historyPH["meta"] = json_encode(
+                [
+                    "user" => $userId,
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "dataChange" => $personalHomecare->getChanges(),
+                ],
+                JSON_THROW_ON_ERROR
+            );
+            $historyPH["user_id"] = $userId;
+            $historyPH["menu_id"] = $request->id;
+            HistoryUpdate::create($historyPH);
 
             // UPDATE PERSONAL HOMECARE CHECKLIST OUT
             $phcChecklistOut = PersonalHomecareChecklist::where(
@@ -329,17 +348,30 @@ class PersonalHomecareController extends Controller
         DB::beginTransaction();
 
         try {
-            PersonalHomecareProduct::where("id", $request->id_product)
-                ->update(["status" => 0]);
 
-            $phc = PersonalHomecare::where("id", $request->id)->first();
-            $phc->status = $request->status;
-            $phc->save();
+            if($request->status == "approve_out"){
+                PersonalHomecareProduct::where("id", $request->id_product)
+                    ->update(["status" => 0]);
+
+                $phc = PersonalHomecare::where("id", $request->id)->first();
+                $phc->status = $request->status;
+                $phc->save();
+            }
+
+
+            else if($request->status == "done"){
+                PersonalHomecareProduct::where("id", $request->id_product)
+                    ->update(["status" => 1]);
+
+                $phc = PersonalHomecare::where("id", $request->id)->first();
+                $phc->status = $request->status;
+                $phc->save();
+            }
 
             $userId = Auth::user()["id"];
-            $historyDeletePhc["type_menu"] = "Personal Homecare";
-            $historyDeletePhc["method"] = "Change Status";
-            $historyDeletePhc["meta"] = json_encode(
+            $historyPH["type_menu"] = "Personal Homecare";
+            $historyPH["method"] = "Change Status";
+            $historyPH["meta"] = json_encode(
                 [
                     "user" => $userId,
                     "createdAt" => date("Y-m-d H:i:s"),
@@ -347,9 +379,9 @@ class PersonalHomecareController extends Controller
                 ],
                 JSON_THROW_ON_ERROR
             );
-            $historyDeletePhc["user_id"] = $userId;
-            $historyDeletePhc["menu_id"] = $request->id;
-            HistoryUpdate::create($historyDeletePhc);
+            $historyPH["user_id"] = $userId;
+            $historyPH["menu_id"] = $request->id;
+            HistoryUpdate::create($historyPH);
 
             DB::commit();
 
@@ -410,7 +442,7 @@ class PersonalHomecareController extends Controller
             // UPDATE PERSONAL HOMECARE CHECKLIST IN
             $phc = PersonalHomecare::where("id", $request->id)->first();
             $phc->status = "waiting_in";
-            $phc->checklist_out = $phcChecklist->id;
+            $phc->checklist_in = $phcChecklist->id;
             $phc->save();
 
             DB::commit();

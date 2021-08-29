@@ -138,8 +138,8 @@ class RolesSeeder extends Seeder
                 "edit-reference-status" => true,
 
                 //personal homecare
-                "change-status-approval-personalhomecare" => true,
-                "change-status-reject-personalhomecare" => true,
+                "change-status-checkin-personalhomecare" => true,
+                "change-status-checkout-personalhomecare" => true,
         	]),
         ]);
 

@@ -310,7 +310,7 @@ $menu_item_page = "personal_homecare";
                                         <tr>
                                             <td>Product</td>
                                             <td>
-                                                {{ $personalhomecare->ph_product['code'] }} - {{ $personalhomecare->ph_product['name'] }}
+                                                {{ $personalhomecare->personalHomecareProduct->code }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -402,13 +402,13 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
 
-        @if (strtolower($personalhomecare['status']) == "new" && Gate::check('change-status-approval-personalhomecare') && Gate::check('change-status-reject-personalhomecare'))
+        @if (strtolower($personalhomecare['status']) == "new" && Gate::check('change-status-checkin-personalhomecare'))
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
                             <div class="row justify-content-center">
-                                <h2>Status Personal Homecare</h2>
+                                <h2>Status Personal Homecare (Check Out)</h2>
                             </div>
                             <form id="actionAdd"
                                 class="forms-sample"
@@ -426,6 +426,44 @@ $menu_item_page = "personal_homecare";
                                         class="btn btn-gradient-primary mr-2 btn-lg"
                                         name="status"
                                         value="approve_out">
+                                        Approved
+                                    </button>
+                                    <button type="submit"
+                                        class="btn btn-gradient-danger mr-2 btn-lg"
+                                        name="status"
+                                        value="rejected">
+                                        Reject
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @elseif (strtolower($personalhomecare['status']) == "waiting_in" && Gate::check('change-status-checkout-personalhomecare'))
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Status Personal Homecare (Check In)</h2>
+                            </div>
+                            <form id="actionAdd"
+                                class="forms-sample"
+                                method="POST"
+                                action="{{ route("update_personal_homecare_status") }}">
+                                @csrf
+                                <input type="hidden"
+                                    name="id"
+                                    value="{{ $personalhomecare['id'] }}" />
+                                <input type="hidden"
+                                    name="id_product"
+                                    value="{{ $personalhomecare->personalHomecareProduct['id'] }}" />
+                                <div class="form-group row justify-content-center">
+                                    <button type="submit"
+                                        class="btn btn-gradient-primary mr-2 btn-lg"
+                                        name="status"
+                                        value="done">
                                         Approved
                                     </button>
                                     <button type="submit"
@@ -467,6 +505,7 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
 
+        @if (strtolower($personalhomecare['status']) == "process")
         <div class="row">
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
@@ -486,6 +525,7 @@ $menu_item_page = "personal_homecare";
                 </div>
             </div>
         </div>
+        @endif
 
         <!-- Jika bisa melihat history log-->
         @if ($histories->isNotEmpty())
@@ -548,8 +588,9 @@ $menu_item_page = "personal_homecare";
                     aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-            </div>            
-            <form method="POST"
+            </div>
+            <form id="add-phc"
+                method="POST"
                 enctype="multipart/form-data"
                 action="{{ route("update_personal_homecare_checklist_in") }}">
                 @csrf
@@ -732,10 +773,20 @@ $menu_item_page = "personal_homecare";
                         data-dismiss="modal">
                         Close
                     </button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="btn-checkin">Submit</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+@endsection
+
+@section("script")
+<script type="application/javascript">
+    // $(document).ready(function(){
+    //     $("#btn-checkin").click(function(e){
+    //         $("#add-phc").submit();
+    //     });
+    // });
+</script>
 @endsection
