@@ -276,6 +276,10 @@ class ReferenceController extends Controller
 
     public function updateReferenceMGM(Request $request)
     {
+        // return response()->json([
+        //         "errors" => $request->all(),
+        //     ], 500);
+
         DB::beginTransaction();
 
         try {
@@ -297,10 +301,6 @@ class ReferenceController extends Controller
                 "delivery_status_prize",
                 "final_status",
             ));
-
-            if (empty($request->input("status_prize"))) {
-                $referenceSouvenir->status_prize = "pending";
-            }
 
             $referenceSouvenir->save();
 

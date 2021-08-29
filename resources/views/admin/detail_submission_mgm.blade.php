@@ -665,14 +665,6 @@ if (
                         <div class="form-group">
 
                             <input id="ref_id" type="hidden" name="id" />
-                            <input id="ref_name" type="hidden" name="name" />
-                            <input id="ref_phone" type="hidden" name="phone" />
-                            <input id="ref_age" type="hidden" name="age" />
-                            <input id="ref_province" type="hidden" name="province" />
-                            <input id="ref_city" type="hidden" name="city" />
-                            <input id="refs_order" type="hidden" name="order_id" />
-                            <input id="select_edit-prize_0" type="hidden" name="prize_id" />
-                            <input id="select_edit-status-prize_0" type="hidden" name="status_prize" />
                             <input type="hidden" name="delivery_status_prize" value="delivered by CSO" />
 
                             <div style="text-align: center;">
@@ -965,6 +957,7 @@ function loadDataPerRef(ref_id) {
             var data_order = data['data_order'];
             var data_prize = data['data_prize'];
             var detail_product = data['detail_product'];
+            console.log(data_prize);
 
             // Detail HS
             if (data_hs != null) {
@@ -1066,7 +1059,9 @@ function loadDataPerRef(ref_id) {
                                 <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-delivery-status-prize_'+p+'" class="form-control" name="delivery_status_prize">\
                                     <option value="">Choose Status Delivery</option>\
                                     <option value="undelivered">undelivered</option>\
+                                    @if(Auth::user()->id == 1)
                                         <option value="delivered by CSO">delivered by CSO</option>\
+                                    @endif
                                     <option value="delivered by Courier">delivered by Courier</option>\
                                 </select>\
                             </td>\
