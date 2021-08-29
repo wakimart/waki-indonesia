@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class PersonalHomecareController extends Controller
 {
@@ -66,7 +67,7 @@ class PersonalHomecareController extends Controller
             // STORE PERSONAL HOMECARE CHECKLIST
             $phcChecklist = new PersonalHomecareChecklist();
 
-            $condition["completeness"][] = $request->input("completeness");
+            $condition["completeness"] = $request->input("completeness");
             if ($request->has("other_completeness")) {
                 $condition["other"] = $request->input("other_completeness");
             }
@@ -221,7 +222,7 @@ class PersonalHomecareController extends Controller
             )
             ->where("personal_homecare_products.branch_id", $personalhomecare->branch_id)
             ->where("personal_homecare_products.active", true)
-            ->get(  );
+            ->get();
 
         return view("admin.update_personal_homecare", compact(
             "personalhomecare",
@@ -274,7 +275,7 @@ class PersonalHomecareController extends Controller
                 )
                 ->first();
 
-            $condition["completeness"][] = $request->input("completeness");
+            $condition["completeness"] = $request->input("completeness");
             if ($request->has("other_completeness")) {
                 $condition["other"] = $request->input("other_completeness");
             }
@@ -322,11 +323,120 @@ class PersonalHomecareController extends Controller
         }
     }
 
-    public function detail(Request $request){
-        $personalhomecare = PersonalHomecare::where("id", $request->id)->first();
+    public function updateStatus(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            PersonalHomecareProduct::where("id", $request->id)
+                ->update(["status" => $request->status]);
+
+            DB::commit();
+
+            return redirect()
+                ->route("detail_personal_homecare", ["id" => $request->id])
+                ->with("success", "Status has been successfully updated.");
+        } catch (Throwable $th) {
+            DB::rollBack();
+
+            return response()->json(["error" => $th->getMessage()], 500);
+        }
+    }
+
+    public function updateChecklistIn(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            // STORE PERSONAL HOMECARE CHECKLIST IN
+            $phcChecklist = new PersonalHomecareChecklist();
+
+            $condition["completeness"] = $request->input("completeness");
+            if ($request->has("other_completeness")) {
+                $condition["other"] = $request->input("other_completeness");
+            }
+            $condition["machine"] = $request->input("machine_condition");
+            $condition["physical"] = $request->input("physical_condition");
+            $phcChecklist->condition = $condition;
+
+            $imageArray = [];
+            $userId = Auth::user()["id"];
+            $path = "sources/phc-checklist";
+            if ($request->hasFile("product_photo_1")) {
+                $fileName = time()
+                    . "_"
+                    . $userId
+                    . "_"
+                    . "1."
+                    . $request->file("product_photo_1")->getClientOriginalExtension();
+                $request->file("product_photo_1")->move($path, $fileName);
+                $imageArray[] = $fileName;
+            }
+
+            if ($request->hasFile("product_photo_2")) {
+                $fileName = time()
+                    . "_"
+                    . $userId
+                    . "_"
+                    . "2."
+                    . $request->file("product_photo_2")->getClientOriginalExtension();
+                $request->file("product_photo_2")->move($path, $fileName);
+                $imageArray[] = $fileName;
+            }
+
+            $phcChecklist->image = $imageArray;
+            $phcChecklist->save();
+
+            // UPDATE PERSONAL HOMECARE CHECKLIST IN
+            $phc = PersonalHomecare::where("id", $request->id)->first();
+            $phc->status = "waiting_in";
+            $phc->checklist_out = $phcChecklist->id;
+            $phc->save();
+
+            DB::commit();
+
+            return redirect()
+                ->route("detail_personal_homecare", ["id" => $request->id])
+                ->with("success", "Personal Homecare has been successfully updated.");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return response()->json(["error" => $th->getMessage()], 500);
+        }
+
+    }
+
+    public function detail(Request $request)
+    {
+        $personalhomecare = PersonalHomecare::where("id", $request->id)
+            ->with([
+                "branch",
+                "cso",
+                "personalHomecareProduct",
+                "checklistOut",
+                "checklistIn",
+            ])
+            ->first();
+
+        $histories = HistoryUpdate::select(
+                "history_updates.method AS method",
+                "history_updates.created_at AS created_at",
+                "history_updates.meta AS meta",
+                "users.name AS name"
+            )
+            ->leftJoin(
+                "users",
+                "users.id",
+                "=",
+                "history_updates.user_id"
+            )
+            ->where("history_updates.type_menu", "Personal Homecare")
+            ->where("history_updates.menu_id", $request->id)
+            ->get();
 
         return view('admin.detail_personal_homecare', compact(
             'personalhomecare',
+            "histories",
         ));
     }
 
