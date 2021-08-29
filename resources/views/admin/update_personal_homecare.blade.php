@@ -334,7 +334,7 @@ $menu_item_page = "personal_homecare";
                                             id="completeness-machine"
                                             value="machine"
                                             {{ in_array("machine", $personalhomecare->
-                                            checklistOut['condition']['completeness'][0]) ?
+                                            checklistOut['condition']['completeness']) ?
                                             "checked" : "" }}
                                             form="add-phc" />
                                         Machine
@@ -348,7 +348,7 @@ $menu_item_page = "personal_homecare";
                                             id="completeness-filter"
                                             value="filter"
                                             {{ in_array("filter", $personalhomecare->
-                                            checklistOut['condition']['completeness'][0]) ?
+                                            checklistOut['condition']['completeness']) ?
                                             "checked" : "" }}
                                             form="add-phc" />
                                         Filter
@@ -362,7 +362,7 @@ $menu_item_page = "personal_homecare";
                                             id="completeness-accessories"
                                             value="accessories"
                                             {{ in_array("accessories", $personalhomecare->
-                                            checklistOut['condition']['completeness'][0]) ?
+                                            checklistOut['condition']['completeness']) ?
                                             "checked" : "" }}
                                             form="add-phc" />
                                         Accessories
@@ -376,7 +376,7 @@ $menu_item_page = "personal_homecare";
                                             id="completeness-cable"
                                             value="cable"
                                             {{ in_array("cable", $personalhomecare->
-                                            checklistOut['condition']['completeness'][0]) ?
+                                            checklistOut['condition']['completeness']) ?
                                             "checked" : "" }}
                                             form="add-phc" />
                                         Cable
@@ -390,7 +390,7 @@ $menu_item_page = "personal_homecare";
                                             id="completeness-other"
                                             value="other"
                                             {{ in_array("other", $personalhomecare->
-                                            checklistOut['condition']['completeness'][0]) ?
+                                            checklistOut['condition']['completeness']) ?
                                             "checked" : "" }}
                                             form="add-phc"
                                             onchange="showOtherInput(this)" />

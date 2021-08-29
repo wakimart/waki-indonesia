@@ -136,6 +136,10 @@ class RolesSeeder extends Seeder
 
                 // Reference (Head Admin)
                 "edit-reference-status" => true,
+
+                //personal homecare
+                "change-status-approval-personalhomecare" => true,
+                "change-status-reject-personalhomecare" => true,
         	]),
         ]);
 

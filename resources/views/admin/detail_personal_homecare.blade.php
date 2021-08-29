@@ -418,6 +418,9 @@ $menu_item_page = "personal_homecare";
                                 <input type="hidden"
                                     name="id"
                                     value="{{ $personalhomecare['id'] }}" />
+                                <input type="hidden"
+                                    name="id_product"
+                                    value="{{ $personalhomecare->personalHomecareProduct['id'] }}" />
                                 <div class="form-group row justify-content-center">
                                     <button type="submit"
                                         class="btn btn-gradient-primary mr-2 btn-lg"
@@ -463,6 +466,26 @@ $menu_item_page = "personal_homecare";
                 </div>
             </div>
         @endif
+
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                      <div class="card-body">
+                        <div class="row justify-content-center">
+                            <h2>Check In Product</h2>
+                        </div>
+                        <div class="form-group row justify-content-center">
+                            <button type="button" 
+                                class="btn btn-gradient-primary mr-2 btn-lg"
+                                data-toggle="modal"
+                                data-target="#modal-checklist-in">
+                                Check In Form
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Jika bisa melihat history log-->
         @if ($histories->isNotEmpty())
@@ -525,11 +548,12 @@ $menu_item_page = "personal_homecare";
                     aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-            </div>
-            <div class="modal-body">
-                <form method="POST"
-                    enctype="multipart/form-data"
-                    action="{{ route("update_personal_homecare_checklist_in") }}">
+            </div>            
+            <form method="POST"
+                enctype="multipart/form-data"
+                action="{{ route("update_personal_homecare_checklist_in") }}">
+                @csrf
+                <div class="modal-body">
                     <input type="hidden"
                         name="id"
                         value="{{ $personalhomecare['id'] }}" />
@@ -701,16 +725,16 @@ $menu_item_page = "personal_homecare";
                             form="add-phc"
                             required />
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button"
-                    class="btn btn-secondary"
-                    data-dismiss="modal">
-                    Close
-                </button>
-                <button type="button" class="btn btn-primary">Submit</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

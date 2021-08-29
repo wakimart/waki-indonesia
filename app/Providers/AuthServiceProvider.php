@@ -361,5 +361,17 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define("edit-reference-status", function ($user) {
             return $user->hasAccess(["edit-reference-status"]);
         });
+
+
+        //-- PERSONAL HOMECARE --//
+        // Approve status
+        Gate::define("change-status-approval-personalhomecare", function ($user) {
+            return $user->hasAccess(["change-status-approval-personalhomecare"]);
+        });
+        //-- REFERENCE --//
+        // Reject status
+        Gate::define("change-status-reject-personalhomecare", function ($user) {
+            return $user->hasAccess(["change-status-reject-personalhomecare"]);
+        });
     }
 }

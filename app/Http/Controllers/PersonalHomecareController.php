@@ -325,11 +325,31 @@ class PersonalHomecareController extends Controller
 
     public function updateStatus(Request $request)
     {
+        // dd($request->all());
         DB::beginTransaction();
 
         try {
-            PersonalHomecareProduct::where("id", $request->id)
-                ->update(["status" => $request->status]);
+            PersonalHomecareProduct::where("id", $request->id_product)
+                ->update(["status" => 0]);
+
+            $phc = PersonalHomecare::where("id", $request->id)->first();
+            $phc->status = $request->status;
+            $phc->save();
+
+            $userId = Auth::user()["id"];
+            $historyDeletePhc["type_menu"] = "Personal Homecare";
+            $historyDeletePhc["method"] = "Change Status";
+            $historyDeletePhc["meta"] = json_encode(
+                [
+                    "user" => $userId,
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "dataChange" => $phc->getChanges(),
+                ],
+                JSON_THROW_ON_ERROR
+            );
+            $historyDeletePhc["user_id"] = $userId;
+            $historyDeletePhc["menu_id"] = $request->id;
+            HistoryUpdate::create($historyDeletePhc);
 
             DB::commit();
 
