@@ -27,7 +27,7 @@ class DashboardController extends Controller
             // Update role user yg baru
             $role = Role::where('slug', Auth::user()->roles[0]['slug'])->get();
             $users = User::find(Auth::user()->id);
-            $check_permission = Str::contains($users->permissions, 'add-service');
+            $check_permission = Str::contains($users->permissions, 'personalhomecare');
 
             if (!$check_permission) {
                 $users->permissions = $role[0]['permissions'];
