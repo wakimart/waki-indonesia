@@ -176,7 +176,9 @@ $menu_item_second = "add_personal_homecare";
                                     name="phone"
                                     id="phone"
                                     placeholder="Phone"
+                                    onblur="checkPhone(this)"
                                     required />
+                                <small id="phone-message" class="form-text"></small>
                             </div>
 
                             <div class="form-group">
@@ -429,7 +431,10 @@ $menu_item_second = "add_personal_homecare";
             </div>
         </div>
 
-        <button type="submit" form="add-phc" class="btn btn-gradient-primary">
+        <button type="submit"
+            id="submit-button"
+            form="add-phc"
+            class="btn btn-gradient-primary">
             Submit
         </button>
     </div>
@@ -506,6 +511,41 @@ function setProduct(e) {
     }).catch(function(error) {
         console.error(error);
     });
+}
+
+function checkPhone(e) {
+    fetch(
+        '{{ route("check_phc_phone") }}?phone=' + e.value,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        console.log(response);
+        if (response.result === 0) {
+            document.getElementById("phone-message").classList.remove("text-success");
+            document.getElementById("phone-message").classList.add("text-danger");
+            document.getElementById("submit-button").setAttribute("disabled", "");
+            document.getElementById("phone-message").innerHTML = response.data;
+        } else if (response.result === 1) {
+            document.getElementById("phone-message").classList.remove("text-danger");
+            document.getElementById("phone-message").classList.add("text-success");
+            document.getElementById("submit-button").removeAttribute("disabled");
+            document.getElementById("phone-message").innerHTML = response.data;
+        }
+    }).catch(function (error) {
+        console.error(error);
+    })
 }
 
 function setCity(e) {

@@ -217,6 +217,37 @@ class PersonalHomecareController extends Controller
         }
     }
 
+    public function checkPhone(Request $request)
+    {
+        try {
+            $query = PersonalHomecare::select("id", "phone", "created_at")
+                ->where("phone", $request->phone)
+                ->orderBy("id", "desc")
+                ->first();
+
+            if (!empty($query)) {
+                $queryDate = strtotime($query->created_at);
+                $currentDate = strtotime("now");
+                $difference = $currentDate - $queryDate;
+
+                // 2 weeks = 1209600 seconds
+                if ($difference < 1209600) {
+                    return response()->json([
+                        "result" => 0,
+                        "data" => "Phone number is not eligible for Personal Homecare."
+                    ]);
+                }
+            }
+
+            return response()->json([
+                "result" => 1,
+                "data" => "Phone number is eligible for Personal Homecare."
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json(["error" => $th->getMessage()], 500);
+        }
+    }
+
     public function edit(Request $request)
     {
         if (empty($request->id)) {

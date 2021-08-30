@@ -911,6 +911,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("store_personal_homecare");
         Route::get("get-product", "PersonalHomecareController@getPhcProduct")
             ->name("get_phc_product");
+        Route::get("check-phone", "PersonalHomecareController@checkPhone")
+            ->name("check_phc_phone");
         Route::get("list-all", 'PersonalHomecareController@index')
             ->name("list_all_phc");
         Route::get("edit/{id}", "PersonalHomecareController@edit")
