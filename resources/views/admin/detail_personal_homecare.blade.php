@@ -128,6 +128,21 @@ $menu_item_page = "personal_homecare";
                 <div class="card">
                     <div class="card-body">
                         <div class="row justify-content-center">
+                            <h2>Status Personal Homecare</h2>
+                        </div>
+                        <div class="row justify-content-center">
+                            <h3>{{ ucwords($personalhomecare['status']) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
                             <h2>Customer Data</h2>
                         </div>
                         <div class="row justify-content-center">
@@ -170,6 +185,13 @@ $menu_item_page = "personal_homecare";
                                         <td>:</td>
                                         <td>
                                             {{ $personalhomecare->cso->code }} - {{ $personalhomecare->cso->name }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Id Card Image</td>
+                                        <td>:</td>
+                                        <td style="text-align: center;">
+                                            <img style="height: 300px" src="{{ asset('sources/phc') . '/' . $personalhomecare['id_card'] }}">
                                         </td>
                                     </tr>
                                 </table>
@@ -249,10 +271,11 @@ $menu_item_page = "personal_homecare";
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline"
+                                            <i class="mdi {{ isset($personalhomecare->checklistOut['condition']['other']) ? 
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
-                                            Other:
+                                            Other :
                                             {{ isset($personalhomecare->checklistOut['condition']['other']) ?
                                                 $personalhomecare->checklistOut['condition']['other'] : "-" }}
                                         </td>
@@ -310,7 +333,7 @@ $menu_item_page = "personal_homecare";
                                         <tr>
                                             <td>Product</td>
                                             <td>
-                                                {{ $personalhomecare->ph_product['code'] }} - {{ $personalhomecare->ph_product['name'] }}
+                                                {{ $personalhomecare->personalHomecareProduct->code }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -362,7 +385,8 @@ $menu_item_page = "personal_homecare";
                                         </tr>
                                         <tr>
                                             <td>
-                                                <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline"
+                                                <i class="mdi {{ isset($personalhomecare->checklistIn['condition']['other']) ? 
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
                                                 Other :
@@ -402,13 +426,13 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
 
-        @if (strtolower($personalhomecare['status']) == "new" && Gate::check('change-status-approval-personalhomecare') && Gate::check('change-status-reject-personalhomecare'))
+        @if (strtolower($personalhomecare['status']) == "new" && Gate::check('change-status-checkin-personalhomecare'))
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
                             <div class="row justify-content-center">
-                                <h2>Status Personal Homecare</h2>
+                                <h2>Status Personal Homecare (Check Out)</h2>
                             </div>
                             <form id="actionAdd"
                                 class="forms-sample"
@@ -418,6 +442,9 @@ $menu_item_page = "personal_homecare";
                                 <input type="hidden"
                                     name="id"
                                     value="{{ $personalhomecare['id'] }}" />
+                                <input type="hidden"
+                                    name="id_product"
+                                    value="{{ $personalhomecare->personalHomecareProduct['id'] }}" />
                                 <div class="form-group row justify-content-center">
                                     <button type="submit"
                                         class="btn btn-gradient-primary mr-2 btn-lg"
@@ -437,24 +464,37 @@ $menu_item_page = "personal_homecare";
                     </div>
                 </div>
             </div>
-        @else
+        @elseif (strtolower($personalhomecare['status']) == "waiting_in" && Gate::check('change-status-checkout-personalhomecare'))
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
-                          <div class="card-body">
+                        <div class="card-body">
                             <div class="row justify-content-center">
-                                <h2>Share Personal Homecare</h2>
+                                <h2>Status Personal Homecare (Check In)</h2>
                             </div>
-                            <form class="forms-sample"
-                                method="GET"
-                                action="https://wa.me/">
+                            <form id="actionAdd"
+                                class="forms-sample"
+                                method="POST"
+                                action="{{ route("update_personal_homecare_status") }}">
+                                @csrf
+                                <input type="hidden"
+                                    name="id"
+                                    value="{{ $personalhomecare['id'] }}" />
+                                <input type="hidden"
+                                    name="id_product"
+                                    value="{{ $personalhomecare->personalHomecareProduct['id'] }}" />
                                 <div class="form-group row justify-content-center">
-                                    <button id="upgradeProcess"
-                                        type="submit"
+                                    <button type="submit"
                                         class="btn btn-gradient-primary mr-2 btn-lg"
-                                        name="text"
-                                        value="">
-                                        Share Whatsapp
+                                        name="status"
+                                        value="done">
+                                        Approved
+                                    </button>
+                                    <button type="submit"
+                                        class="btn btn-gradient-danger mr-2 btn-lg"
+                                        name="status"
+                                        value="rejected">
+                                        Reject
                                     </button>
                                 </div>
                             </form>
@@ -462,6 +502,54 @@ $menu_item_page = "personal_homecare";
                     </div>
                 </div>
             </div>
+        @endif
+
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                      <div class="card-body">
+                        <div class="row justify-content-center">
+                            <h2>{{ strtolower($personalhomecare['status']) == "done" ? "Share Thank You Letter" : "Share Personal Homecare Status" }}</h2>
+                        </div>
+                        <form class="forms-sample"
+                            method="GET"
+                            action="https://wa.me/"
+                            target="_blank">
+                            <div class="form-group row justify-content-center">
+                                <button id="upgradeProcess"
+                                    type="submit"
+                                    class="btn btn-gradient-primary mr-2 btn-lg"
+                                    name="text"
+                                    value="Terima Kasih telah mengikuti *Program Pinjamin Produk 5 Hari*. Berikut adalah tautan bukti formulir ( {{ route('personal_homecare', ['id' => $personalhomecare->id]) }} )">
+                                    Share Whatsapp
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (strtolower($personalhomecare['status']) == "process")
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                      <div class="card-body">
+                        <div class="row justify-content-center">
+                            <h2>Check In Product</h2>
+                        </div>
+                        <div class="form-group row justify-content-center">
+                            <button type="button" 
+                                class="btn btn-gradient-primary mr-2 btn-lg"
+                                data-toggle="modal"
+                                data-target="#modal-checklist-in">
+                                Check In Form
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         @endif
 
         <!-- Jika bisa melihat history log-->
@@ -526,10 +614,12 @@ $menu_item_page = "personal_homecare";
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <form method="POST"
-                    enctype="multipart/form-data"
-                    action="{{ route("update_personal_homecare_checklist_in") }}">
+            <form id="add-phc"
+                method="POST"
+                enctype="multipart/form-data"
+                action="{{ route("update_personal_homecare_checklist_in") }}">
+                @csrf
+                <div class="modal-body">
                     <input type="hidden"
                         name="id"
                         value="{{ $personalhomecare['id'] }}" />
@@ -701,17 +791,33 @@ $menu_item_page = "personal_homecare";
                             form="add-phc"
                             required />
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button"
-                    class="btn btn-secondary"
-                    data-dismiss="modal">
-                    Close
-                </button>
-                <button type="button" class="btn btn-primary">Submit</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="btn-checkin">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+@endsection
+
+@section("script")
+<script type="application/javascript">
+    
+function showOtherInput(e) {
+    if (e.checked) {
+        document.getElementById("other-text").classList.remove("d-none");
+        document.getElementById("other-text").setAttribute("required", "");
+    } else {
+        document.getElementById("other-text").removeAttribute("required");
+        document.getElementById("other-text").classList.add("d-none");
+    }
+}
+
+</script>
 @endsection

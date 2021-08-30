@@ -106,22 +106,19 @@ $menu_item_second = "add_personal_homecare";
                         <input type="hidden"
                             id="cso-id-hidden"
                             form="add-phc" />
-
                         <div class="form-group">
-                            <label for="cso_id">CSO</label>
-                            <select  class="form-control"
+                            <label for="cso_id">CSO Code</label>
+                                <input type="text"
+                                class="form-control"
                                 name="cso_id"
                                 id="cso_id"
-                                form="add-phc">
-                                <option disabled selected>
-                                    Select CSO
-                                </option>
-                                @foreach ($csos as $cso)
-                                    <option value="{{ $cso->id }}">
-                                        {{ $cso->code }} - {{ $cso->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                                placeholder="CSO Code"
+                                required data-msg="Mohon Isi Kode CSO"
+                                style="text-transform:uppercase"
+                                form="add-phc"
+                                {{ Auth::user()->roles[0]['slug'] == 'cso' ? 'value=' . Auth::user()->cso['code'] : "" }}
+                                {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly" : "" }} />
+                            <div class="validation" id="validation_cso"></div>
                         </div>
                     </div>
                 </div>
@@ -179,7 +176,9 @@ $menu_item_second = "add_personal_homecare";
                                     name="phone"
                                     id="phone"
                                     placeholder="Phone"
+                                    onblur="checkPhone(this)"
                                     required />
+                                <small id="phone-message" class="form-text"></small>
                             </div>
 
                             <div class="form-group">
@@ -418,22 +417,24 @@ $menu_item_second = "add_personal_homecare";
 
                         <div class="form-group">
                             <label for="product-photo-2">
-                                Product Photo with CSO and Customer
+                                Product Photo with CSO and Customer (Optional)
                             </label>
                             <input type="file"
                                 class="form-control"
                                 accept="image/jpeg, image/png"
                                 name="product_photo_2"
                                 id="product-photo-2"
-                                form="add-phc"
-                                required />
+                                form="add-phc" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <button type="submit" form="add-phc" class="btn btn-gradient-primary">
+        <button type="submit"
+            id="submit-button"
+            form="add-phc"
+            class="btn btn-gradient-primary">
             Submit
         </button>
     </div>
@@ -448,14 +449,23 @@ $menu_item_second = "add_personal_homecare";
     defer></script>
 <script type="application/javascript">
 document.addEventListener("DOMContentLoaded", function() {
-    const csoId = '{{ Auth::user()->roles[0]["slug"] === "cso" ? Auth::user()->cso['id'] : "" }}';
+    $("#cso_id").on("input", function () {
+        check_cso($("#cso_id").val());
+    });
 
-    if (csoId !== "") {
-        document.getElementById("cso_id").value = csoId;
-        document.getElementById("cso_id").disabled = true;
-        document.getElementById("cso_id").removeAttribute("name");
-        document.getElementById("cso-id-hidden").value = csoId;
-        document.getElementById("cso-id-hidden").setAttribute("name", "cso_id");
+    function check_cso(code) {
+        $.get('{{ route("fetchCso") }}', { cso_code: code })
+        .done(function (result) {
+            if (result['result'] == "true" && result['data'].length > 0) {
+                $('#validation_cso').html('Kode CSO Benar');
+                $('#validation_cso').css('color', 'green');
+                $('#submit').removeAttr('disabled');
+            } else {
+                $('#validation_cso').html('Kode CSO Salah');
+                $('#validation_cso').css('color', 'red');
+                $('#submit').attr('disabled',"");
+            }
+        });
     }
 
     $("#ph_product_id").select2();
@@ -463,7 +473,6 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#city_id").select2();
     $("#subdistrict_id").select2();
     $("#branch_id").select2();
-    $("#cso_id").select2();
 });
 
 function setProduct(e) {
@@ -502,6 +511,41 @@ function setProduct(e) {
     }).catch(function(error) {
         console.error(error);
     });
+}
+
+function checkPhone(e) {
+    fetch(
+        '{{ route("check_phc_phone") }}?phone=' + e.value,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        console.log(response);
+        if (response.result === 0) {
+            document.getElementById("phone-message").classList.remove("text-success");
+            document.getElementById("phone-message").classList.add("text-danger");
+            document.getElementById("submit-button").setAttribute("disabled", "");
+            document.getElementById("phone-message").innerHTML = response.data;
+        } else if (response.result === 1) {
+            document.getElementById("phone-message").classList.remove("text-danger");
+            document.getElementById("phone-message").classList.add("text-success");
+            document.getElementById("submit-button").removeAttribute("disabled");
+            document.getElementById("phone-message").innerHTML = response.data;
+        }
+    }).catch(function (error) {
+        console.error(error);
+    })
 }
 
 function setCity(e) {

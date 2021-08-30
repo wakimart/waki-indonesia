@@ -361,5 +361,53 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define("edit-reference-status", function ($user) {
             return $user->hasAccess(["edit-reference-status"]);
         });
+
+        //-- PERSONAL HOMECARE PRODUCT --//
+        // Add
+        Gate::define("add-phc-product", function ($user) {
+            return $user->hasAccess(["add-phc-product"]);
+        });
+        // Browse
+        Gate::define("browse-phc-product", function ($user) {
+            return $user->hasAccess(["browse-phc-product"]);
+        });
+        // Edit
+        Gate::define("edit-phc-product", function ($user) {
+            return $user->hasAccess(["edit-phc-product"]);
+        });
+        // Delete
+        Gate::define("delete-phc-product", function ($user) {
+            return $user->hasAccess(["delete-phc-product"]);
+        });
+
+        //-- PERSONAL HOMECARE --//
+        // Add
+        Gate::define("add-personal-homecare", function ($user) {
+            return $user->hasAccess(["add-personal-homecare"]);
+        });
+        // Browse
+        Gate::define("browse-personal-homecare", function ($user) {
+            return $user->hasAccess(["browse-personal-homecare"]);
+        });
+        // View
+        Gate::define("detail-personal-homecare", function ($user) {
+            return $user->hasAccess(["detail-personal-homecare"]);
+        });
+        // Edit
+        Gate::define("edit-personal-homecare", function ($user) {
+            return $user->hasAccess(["edit-personal-homecare"]);
+        });
+        // Delete
+        Gate::define("delete-personal-homecare", function ($user) {
+            return $user->hasAccess(["delete-personal-homecare"]);
+        });
+        // Approve status
+        Gate::define("change-status-checkin-personalhomecare", function ($user) {
+            return $user->hasAccess(["change-status-checkin-personalhomecare"]);
+        });
+        // Reject status
+        Gate::define("change-status-checkout-personalhomecare", function ($user) {
+            return $user->hasAccess(["change-status-checkout-personalhomecare"]);
+        });
     }
 }
