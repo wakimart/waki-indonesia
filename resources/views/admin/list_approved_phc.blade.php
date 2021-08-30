@@ -1,6 +1,6 @@
 <?php
 $menu_item_page = "personal_homecare";
-$menu_item_second = "list_all";
+$menu_item_second = "list_approved";
 ?>
 @extends('admin.layouts.template')
 
@@ -208,8 +208,11 @@ $menu_item_second = "list_all";
         dayMaxEventRows: true, 
         views: {
             timeGrid: {
-            dayMaxEventRows: 3
+                dayMaxEventRows: 3
             }
+        },
+        eventReceive: function(event) {
+            var end = moment(event.start).add(6, "days").format('M/DD/YYYY');
         },
         events: [
             @foreach($personalhomecares as $personalhomecare)
@@ -217,6 +220,7 @@ $menu_item_second = "list_all";
             title : '{{ $personalhomecare->personalHomecareProduct->code }}', 
             description : '{{ $personalhomecare['name'] }}',
             start : '{{ $personalhomecare['schedule'] }}',
+            end : end,
             img : '{{ asset('sources/phc.png')}}',
             url : '{{ route('edit_personal_homecare', ['id' => $personalhomecare['id']]) }}'
             },
@@ -238,7 +242,7 @@ $menu_item_second = "list_all";
                         + moment(info.event.start).format('M/DD/YYYY')
                         + "</p>"
                         + "<p>End Date : "
-                        + end_date
+                        + info.event.end
                         + "</p>",
             });
         },

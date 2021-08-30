@@ -1,5 +1,5 @@
 <?php
-$menu_item_page = "personal_homecare_product";
+$menu_item_page = "personal_homecare";
 $menu_item_second = "list_product";
 ?>
 @extends('admin.layouts.template')

@@ -40,10 +40,6 @@ class PersonalHomecareController extends Controller
         $personalhomecares = PersonalHomecare::where(
             'active', true)
             ->get();
-
-        $startdate = PersonalHomecare::select(
-            'schedule')
-            ->get();
         
         //filter
         if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
@@ -54,7 +50,6 @@ class PersonalHomecareController extends Controller
             'personalhomecares',
             'branches',
             'url',
-            'startdate',
         ));
     }
 
