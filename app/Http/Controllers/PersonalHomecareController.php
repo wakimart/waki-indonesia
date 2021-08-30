@@ -19,12 +19,52 @@ use Throwable;
 
 class PersonalHomecareController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $personalhomecares = PersonalHomecare::where('active', true)
-            ->paginate(10);
 
-        return view("admin.list_all_personalhomecare", compact("personalhomecares"))
+        $personalhomecares = PersonalHomecare::where('active', true);
+
+        if($request->has("filter_name_phone")){
+            $filterNamePhone = $request->filter_name_phone;
+            $personalhomecares = $personalhomecares->where(function ($q) use ($filterNamePhone){
+                $q->where('name', "like", "%" . $filterNamePhone . "%")
+                    ->orWhere('phone', "like", "%" . $filterNamePhone . "%");
+            });
+        }
+        if($request->has("filter_status")){
+            $personalhomecares = $personalhomecares->where('status', $request->filter_status);
+        }
+        if($request->has("filter_branch")){
+            $personalhomecares = $personalhomecares->where('branch_id', $request->filter_branch);
+        }
+        if($request->has("filter_cso")){
+            $personalhomecares = $personalhomecares->where('cso_id', $request->filter_cso);
+        }
+        if ($request->has('filter_product_code')) {
+            $id_productNya = PersonalHomecareProduct::where('code', "like", "%" . $request->filter_product_code . "%")->first();
+            if($id_productNya != null){
+                $personalhomecares = $personalhomecares->where("ph_product_id", $id_productNya['id']);
+            }
+            else{
+                $personalhomecares = $personalhomecares->where("ph_product_id", $id_productNya);
+            }
+        }
+        if($request->has("filter_schedule")){
+            $personalhomecares = $personalhomecares->where('schedule', $request->filter_schedule);
+        }
+
+        $personalhomecares = $personalhomecares->orderBy('schedule', "desc")->paginate(10);
+
+        $csos = Cso::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code", 'asc')
+            ->get();
+        $branches = Branch::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code", 'asc')
+            ->get();
+
+        return view("admin.list_all_personalhomecare", compact("personalhomecares", "csos", "branches"))
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
@@ -114,9 +154,13 @@ class PersonalHomecareController extends Controller
                 "city_id",
                 "subdistrict_id",
                 "branch_id",
-                "cso_id",
                 "ph_product_id",
             ));
+
+            $cso_id = Cso::where('code', $request->cso_id)->first();
+            if($cso_id != null){
+                $personalHomecare->cso_id = $cso_id['id'];
+            }
 
             if ($request->hasFile("id_card_image")) {
                 $timestamp = (string) time();
@@ -266,7 +310,7 @@ class PersonalHomecareController extends Controller
                 $personalHomecare->id_card = $fileName;
             }
             if ($request->hasFile("product_photo_2")){
-                $personalHomecare->id_card = "process";
+                $personalHomecare->status = "process";
             }
 
             $personalHomecare->save();

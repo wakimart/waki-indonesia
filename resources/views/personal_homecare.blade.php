@@ -83,7 +83,19 @@
 <section id="intro" class="clearfix">
     <div class="container">
         <div class="row justify-content-center">
-            <h4>Personal Homecare</h4>
+            <h2 style="margin-bottom: 0.2em">Program Pinjamin Produk 5 Hari</h2>
+        </div>
+        <div class="row justify-content-center">
+            <h4>Coba Produk di Rumah Sendiri</h4>
+        </div>
+        <br>
+        <div class="row">
+            <p style="margin-bottom: 0.1em; font-weight: bold;">APA ITU PROGRAM PINJAMIN PRODUK 5 HARI?</p>
+            <p>&emsp;Bapak & Ibu bisa mencoba produk WAKi (Electro/Hepa/HPT) di rumah sendiri selama 5 hari, dimana petugas kami akan mendemokan produk tersebut sebelumnya.</p>
+        </div>
+        <div class="row">
+            <p style="margin-bottom: 0.1em; font-weight: bold;">TUJUAN :</p>
+            <p>&emsp;Visi WAKi adalah Sehat Bersama WAKi menuju kehidupan yang lebih baik.Dengan kondisi seperti ini, program ini dibuat khusus untuk meminimalisirkan adanya kontak fisik secara langsung. </p>
         </div>
         <div class="row justify-content-center">
             <div class="col-md-10">
@@ -184,14 +196,16 @@
                 <table class="table">
                     <thead class="thead-light">
                         <tr>
-                            <th scope="col">Tanggal Pengiriman</th>
+                            <th scope="col">Jadwal</th>
+                            <th scope="col">Nama Produk</th>
                             <th scope="col">Kode Produk</th>
                             <th scope="col">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ date("d/m/Y", strtotime($personalhomecare['schedule'])) }}</td>
+                            <td>{{ date("d/m/Y", strtotime($personalhomecare->schedule)) }} - {{ date("d/m/Y", strtotime($personalhomecare->schedule . "+5 days")) }}</td>
+                            <td>{{ $personalhomecare->personalHomecareProduct->product['code'] }} - {{ $personalhomecare->personalHomecareProduct->product['name'] }}</td>
                             <td>{{ $personalhomecare->personalHomecareProduct->code }}</td>
                             <td>{{ $personalhomecare['status'] }}</td>
                         </tr>

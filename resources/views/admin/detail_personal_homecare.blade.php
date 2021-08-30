@@ -128,6 +128,21 @@ $menu_item_page = "personal_homecare";
                 <div class="card">
                     <div class="card-body">
                         <div class="row justify-content-center">
+                            <h2>Status Personal Homecare</h2>
+                        </div>
+                        <div class="row justify-content-center">
+                            <h3>{{ ucwords($personalhomecare['status']) }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
                             <h2>Customer Data</h2>
                         </div>
                         <div class="row justify-content-center">
@@ -170,6 +185,13 @@ $menu_item_page = "personal_homecare";
                                         <td>:</td>
                                         <td>
                                             {{ $personalhomecare->cso->code }} - {{ $personalhomecare->cso->name }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Id Card Image</td>
+                                        <td>:</td>
+                                        <td style="text-align: center;">
+                                            <img style="height: 300px" src="{{ asset('sources/phc') . '/' . $personalhomecare['id_card'] }}">
                                         </td>
                                     </tr>
                                 </table>
@@ -249,10 +271,11 @@ $menu_item_page = "personal_homecare";
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline"
+                                            <i class="mdi {{ isset($personalhomecare->checklistOut['condition']['other']) ? 
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
-                                            Other:
+                                            Other :
                                             {{ isset($personalhomecare->checklistOut['condition']['other']) ?
                                                 $personalhomecare->checklistOut['condition']['other'] : "-" }}
                                         </td>
@@ -362,7 +385,8 @@ $menu_item_page = "personal_homecare";
                                         </tr>
                                         <tr>
                                             <td>
-                                                <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline"
+                                                <i class="mdi {{ isset($personalhomecare->checklistIn['condition']['other']) ? 
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
                                                 Other :
@@ -478,32 +502,33 @@ $menu_item_page = "personal_homecare";
                     </div>
                 </div>
             </div>
-        @else
-            <div class="row">
-                <div class="col-12 grid-margin stretch-card">
-                    <div class="card">
-                          <div class="card-body">
-                            <div class="row justify-content-center">
-                                <h2>Share Personal Homecare</h2>
-                            </div>
-                            <form class="forms-sample"
-                                method="GET"
-                                action="https://wa.me/">
-                                <div class="form-group row justify-content-center">
-                                    <button id="upgradeProcess"
-                                        type="submit"
-                                        class="btn btn-gradient-primary mr-2 btn-lg"
-                                        name="text"
-                                        value="">
-                                        Share Whatsapp
-                                    </button>
-                                </div>
-                            </form>
+        @endif
+
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                      <div class="card-body">
+                        <div class="row justify-content-center">
+                            <h2>{{ strtolower($personalhomecare['status']) == "done" ? "Share Thank You Letter" : "Share Personal Homecare Status" }}</h2>
                         </div>
+                        <form class="forms-sample"
+                            method="GET"
+                            action="https://wa.me/"
+                            target="_blank">
+                            <div class="form-group row justify-content-center">
+                                <button id="upgradeProcess"
+                                    type="submit"
+                                    class="btn btn-gradient-primary mr-2 btn-lg"
+                                    name="text"
+                                    value="Terima Kasih telah mengikuti *Program Pinjamin Produk 5 Hari*. Berikut adalah tautan bukti formulir ( {{ route('personal_homecare', ['id' => $personalhomecare->id]) }} )">
+                                    Share Whatsapp
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-        @endif
+        </div>
 
         @if (strtolower($personalhomecare['status']) == "process")
         <div class="row">
@@ -783,10 +808,16 @@ $menu_item_page = "personal_homecare";
 
 @section("script")
 <script type="application/javascript">
-    // $(document).ready(function(){
-    //     $("#btn-checkin").click(function(e){
-    //         $("#add-phc").submit();
-    //     });
-    // });
+    
+function showOtherInput(e) {
+    if (e.checked) {
+        document.getElementById("other-text").classList.remove("d-none");
+        document.getElementById("other-text").setAttribute("required", "");
+    } else {
+        document.getElementById("other-text").removeAttribute("required");
+        document.getElementById("other-text").classList.add("d-none");
+    }
+}
+
 </script>
 @endsection
