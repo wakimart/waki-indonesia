@@ -73,6 +73,9 @@ class DashboardController extends Controller
                     ->select('reference_souvenirs.*')
                     ->get();
 
+        //khusus untuk reference souvenir need to acc
+        $refSouvenirs = ReferenceSouvenir::where('is_acc', true)->get();
+
         return view(
             "admin.dashboard",
             compact(
@@ -80,6 +83,7 @@ class DashboardController extends Controller
                 "order",
                 "registration",
                 "references",
+                "refSouvenirs"
             )
         );
     }

@@ -296,6 +296,7 @@ class ReferenceController extends Controller
                 "status_prize",
                 "delivery_status_prize",
             ));
+            $referenceSouvenir->is_acc = false;
 
             $referenceSouvenir->save();
 
@@ -445,6 +446,12 @@ class ReferenceController extends Controller
                 "submission" => $referenceNya->submission,
                 "reference" => $referenceNya,
             ]];
+
+        //update is_acc di reference souvenir
+        $referenceSouvenirs = ReferenceSouvenir::where('reference_id', '=', $request->id)->first();
+        $referenceSouvenirs->is_acc = true;
+        $referenceSouvenirs->save();
+        //end update is_acc
 
         if(sizeof($fcm_tokenNya) > 0)
         {

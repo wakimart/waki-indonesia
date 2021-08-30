@@ -1,3 +1,6 @@
+<?php 
+    use App\Order;
+?>
 @extends('admin.layouts.template')
 
 @section('content')
@@ -63,6 +66,68 @@
                 </div>
             </div>
         </div>
+        @if(Auth::id() == 1)
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix">
+                            <h4 class="card-title float-left">
+                                Reference Souvenir to Acc (total : {{ sizeof($refSouvenirs) }})
+                            </h4>
+                        </div>
+                        {{-- <canvas id="homeservice-chart" class="mt-4"></canvas> --}}
+                        <div class="table-responsive" style="border: 1px solid #ebedf2;">
+                            <table class="table table-bordered">
+                                <thead style="text-align: center; background-color: aliceblue;">
+                                    <tr>
+                                        <td rowspan="2">Submission Code</td>
+                                        <td colspan="4">Reference Souvenir Data</td>
+                                        <td rowspan="2">View</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Name - Phone</td>
+                                        <td>Branch - CSO</td>
+                                        <td>Order</td>
+                                        <td>Status Prize</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($refSouvenirs as $refSouvenir)
+                                        <tr>
+                                            <td>{{ $refSouvenir->reference->submission['code'] }}</td>
+                                            <td>{{ $refSouvenir->reference['name'] }} - {{ $refSouvenir->reference['phone'] }}</td>
+                                            <td>{{ $refSouvenir->reference->submission->branch['code'] }} - {{ $refSouvenir->reference->submission->cso['name'] }}</td>
+                                            <td>
+                                                <?php
+                                                if (!empty($refSouvenir['order_id'])) {
+                                                    $order = Order::select("id", "code")
+                                                        ->where("id", $refSouvenir['order_id'])
+                                                        ->first();
+                                                    echo '<a href="'
+                                                        . route("detail_order", ["code" => $order->code])
+                                                        . '">'
+                                                        . $order->code
+                                                        . '</a>';
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>{{ $refSouvenir['status_prize'] }}</td>
+                                            <td style="text-align: center;">
+                                                <a href="{{ route("detail_submission_form", ['id'=>$refSouvenir->reference->submission['id'], 'type'=>"mgm", "id_ref"=>$refSouvenir->reference['id']]) }}">
+                                                    <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
