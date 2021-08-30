@@ -156,13 +156,9 @@ class PersonalHomecareController extends Controller
                 "city_id",
                 "subdistrict_id",
                 "branch_id",
+                "cso_id",
                 "ph_product_id",
             ));
-
-            $cso_id = Cso::where('code', $request->cso_id)->first();
-            if($cso_id != null){
-                $personalHomecare->cso_id = $cso_id['id'];
-            }
 
             if ($request->hasFile("id_card_image")) {
                 $timestamp = (string) time();

@@ -106,19 +106,28 @@ $menu_item_second = "add_personal_homecare";
                         <input type="hidden"
                             id="cso-id-hidden"
                             form="add-phc" />
+
                         <div class="form-group">
-                            <label for="cso_id">CSO Code</label>
-                                <input type="text"
-                                class="form-control"
+                            <label for="cso_id">CSO</label>
+                            <select  class="form-control"
                                 name="cso_id"
                                 id="cso_id"
-                                placeholder="CSO Code"
-                                required data-msg="Mohon Isi Kode CSO"
-                                style="text-transform:uppercase"
-                                form="add-phc"
-                                {{ Auth::user()->roles[0]['slug'] == 'cso' ? 'value=' . Auth::user()->cso['code'] : "" }}
-                                {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly" : "" }} />
-                            <div class="validation" id="validation_cso"></div>
+                                form="add-phc">
+                                <option disabled>
+                                    Select CSO
+                                </option>
+                                @foreach ($csos as $cso)
+                                    @if ($personalhomecare->cso_id == $cso->id)
+                                        <option value="{{ $cso->id }}" selected>
+                                            {{ $cso->code }} - {{ $cso->name }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $cso->id }}">
+                                            {{ $cso->code }} - {{ $cso->name }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
