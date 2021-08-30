@@ -276,6 +276,10 @@ class ReferenceController extends Controller
 
     public function updateReferenceMGM(Request $request)
     {
+        // return response()->json([
+        //         "errors" => $request->all(),
+        //     ], 500);
+
         DB::beginTransaction();
 
         try {
@@ -295,6 +299,7 @@ class ReferenceController extends Controller
                 "prize_id",
                 "status_prize",
                 "delivery_status_prize",
+                "final_status",
             ));
             $referenceSouvenir->is_acc = false;
 
@@ -306,8 +311,9 @@ class ReferenceController extends Controller
 
             DB::commit();
 
-            return redirect($request->url)
-                ->with("success", "Data referensi berhasil dimasukkan.");
+            return response()->json([
+                "success" => $referenceSouvenir,
+            ], 200);
         } catch (Exception $e) {
             DB::rollBack();
 
