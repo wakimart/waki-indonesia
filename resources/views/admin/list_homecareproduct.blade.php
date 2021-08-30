@@ -1,23 +1,29 @@
 <?php
-$menu_item_page = "product";
+$menu_item_page = "personal_homecare_product";
 $menu_item_second = "list_product";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+    integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
 <style type="text/css">
-    .center {
-        text-align: center;
+    .select2-selection__rendered {
+        line-height: 45px !important;
     }
 
-    .right {
-        text-align: right;
+    .select2-container .select2-selection--single {
+        height: 45px !important;
     }
 
-    .table th img, .table td img {
-        border-radius: 0% !important;
+    .select2-container--default
+    .select2-selection--single
+    .select2-selection__arrow {
+        top: 10px;
     }
-
 </style>
 @endsection
 
@@ -43,60 +49,106 @@ $menu_item_second = "list_product";
             </nav>
         </div>
 
-        <div class="row">
+        <form class="d-none"
+            id="form-search"
+            method="GET"
+            action="{{ route('list_phc_product') }}">
+        </form>
 
+        <div class="row">
             <div class="col-12" style="margin-bottom: 0;">
-                    <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
-                        <div class="form-group">
-                            <label for="">Search By Code</label>
-                            <input class="form-control" id="search" name="search" placeholder="Search By Code">
-                            <div class="validation"></div>
-                        </div>
+                <div class="col-xs-6 col-sm-4"
+                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    <div class="form-group">
+                        <label for="branch_id">Search By Branch</label>
+                        <select class="form-control"
+                            id="branch_id"
+                            name="branch_id"
+                            form="form-search">
+                            <option disabled selected>
+                                Select Branch
+                            </option>
+                            @foreach ($branches as $branch)
+                                <option value="{{ $branch->id }}">
+                                    {{ $branch->code }} - {{ $branch->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="col-xs-6 col-sm-6" style="padding: 0; display: inline-block">
-                        <label for=""></label>
-                        <div class="form-group">
-                            <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-                        </div>
+                </div>
+                <div class="col-xs-6 col-sm-4"
+                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    <div class="form-group">
+                        <label for="product_id">Search By Product</label>
+                        <select class="form-control"
+                            id="product_id"
+                            name="product_id"
+                            form="form-search">
+                            <option disabled selected>
+                                Select Product
+                            </option>
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}">
+                                    {{ $product->code }} - {{ $product->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
+                </div>
+                <div class="col-xs-6 col-sm-6"
+                    style="padding: 0; display: inline-block">
+                    <div class="form-group">
+                        <button type="submit"
+                            class="btn btn-gradient-primary"
+                            form="form-search">
+                            <span class="mdi mdi-filter"></span> Apply Filter
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
                         <h5 style="margin-bottom: 0.5em;">
-                            Total : 
+                            Total: {{ $phcproducts->total() }}
                         </h5>
                         <div class="table-responsive"
                             style="border: 1px solid #ebedf2;">
-                            <table class="table table-bordered" id="myTable">
+                            <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th class="center">No.</th>
+                                        <th class="text-center">No.</th>
                                         <th>Code</th>
                                         <th>Product Name</th>
-                                        <th class="center">Branch</th>
+                                        <th class="text-center">Branch</th>
                                         <th>Status</th>
-                                        <th class="center">Edit</th>
-                                        <th class="center">Delete</th>
+                                        <th class="text-center">Edit</th>
+                                        <th class="text-center">Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($phcproducts as $key => $phcproduct)
+                                    @foreach ($phcproducts as $key => $phcproduct)
                                         <tr>
-                                            <td class="right">
-                                            {{ ++$i }}
+                                            <td class="text-right">
+                                                {{ ++$i }}
                                             </td>
                                             <td>{{ $phcproduct->code }}</td>
-                                            <td>{{ $phcproduct->product->name }}</td>
-                                            <td>{{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}</td>
-                                            <td>{{ $phcproduct->status }}</td>
-                                            <td class="center">
+                                            <td>
+                                                {{ $phcproduct->product->name }}
+                                            </td>
+                                            <td>
+                                                {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
+                                            </td>
+                                            <td>
+                                                {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
+                                            </td>
+                                            <td class="text-center">
                                                 <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
                                                 </a>
                                             </td>
-                                            <td class="center">
+                                            <td class="text-center">
                                                 <a class="btn-delete"
                                                     data-toggle="modal"
                                                     href="#deleteDoModal"
@@ -135,7 +187,7 @@ $menu_item_second = "list_product";
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h5 style="text-align:center;">
+                    <h5 class="text-center">
                         Are you sure to delete this product?
                     </h5>
                 </div>
@@ -160,28 +212,19 @@ $menu_item_second = "list_product";
 @endsection
 
 @section("script")
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+    integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+    defer></script>
 <script type="application/javascript">
+document.addEventListener("DOMContentLoaded", function () {
+    $("#branch_id").select2();
+    $("#product_id").select2();
+});
+
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
- 
-$(document).ready(function (e) {
-    $("#btn-filter").click(function (e) {
-        var urlParamArray = new Array();
-        var urlParamStr = "";
-        if($('#search').val() != ""){
-            urlParamArray.push("search=" + $('#search').val());
-        }
-        for (var i = 0; i < urlParamArray.length; i++) {
-            if (i === 0) {
-                urlParamStr += "?" + urlParamArray[i]
-            } else {
-                urlParamStr += "&" + urlParamArray[i]
-            }
-        }
-        window.location.href = "{{route('list_phc_product')}}" + urlParamStr;
-    });
-}); 
-
 </script>
 @endsection

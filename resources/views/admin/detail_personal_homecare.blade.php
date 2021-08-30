@@ -43,39 +43,6 @@ $menu_item_page = "personal_homecare";
         background-color: #ffdddd;
     }
 
-    /* Hide all steps by default: */
-    .tab {
-        display: none;
-    }
-
-    /* Make circles that indicate the steps of the form: */
-    .step {
-        height: 15px;
-        width: 15px;
-        margin: 0 2px;
-        background-color: #bbbbbb;
-        border: none;
-        border-radius: 50%;
-        display: inline-block;
-        opacity: 0.5;
-    }
-
-    /* Mark the active step: */
-    .step.active {
-        opacity: 1;
-    }
-
-    /* Mark the steps that are finished and valid: */
-    .step.finish {
-        background-color: #4CAF50;
-    }
-
-   .div-CheckboxGroup {
-        border:solid 1px rgba(128, 128, 128, 0.32941);
-        padding:0px 10px ;
-        border-radius:3px;
-    }
-
     input[type='checkbox'], input[type='radio'] {
         margin-left: 0px !important;
     }
@@ -95,21 +62,20 @@ $menu_item_page = "personal_homecare";
         padding: 0.5em;
     }
 
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
     .justify-content-center {
         padding: 0em 1em;
     }
 
+    .div-CheckboxGroup {
+        border: solid 1px rgba(128, 128, 128, 0.32941);
+        padding: 10px;
+        border-radius: 3px;
+        background-color: white;
+    }
+
     /*-- mobile --*/
     @media (max-width: 768px) {
-        .card-body h2{
+        .card-body h2 {
             font-size: 1.3em;
         }
 
@@ -168,9 +134,9 @@ $menu_item_page = "personal_homecare";
                             <div class="table-responsive">
                                 <table class="col-md-12 table-borderless">
                                     <thead style="visibility: hidden;">
-                                        <th style="width: 30%">Data</th>
-                                        <th style="width: 5%">:</th>
-                                        <th style="width: 65%">Custpmer</th>
+                                        <th style="width: 30%;">Data</th>
+                                        <th style="width: 5%;">:</th>
+                                        <th style="width: 65%;">Customer</th>
                                     </thead>
                                     <tr>
                                         <td>Customer Name</td>
@@ -187,8 +153,8 @@ $menu_item_page = "personal_homecare";
                                         <td>:</td>
                                         <td>
                                             {{ $personalhomecare['address'] }},
-                                            {{ $personalhomecare->getProvinceName() }}, 
-                                            {{ $personalhomecare->getCityFullName() }}, 
+                                            {{ $personalhomecare->getProvinceName() }},
+                                            {{ $personalhomecare->getCityFullName() }},
                                             {{ $personalhomecare->getDistrictName() }}
                                         </td>
                                     </tr>
@@ -225,8 +191,8 @@ $menu_item_page = "personal_homecare";
                             <div class="table-responsive">
                                 <table class="col-md-12">
                                     <thead style="visibility: hidden;">
-                                        <th style="width: 30%">Checklist</th>
-                                        <th style="width: 70%">Content</th>
+                                        <th style="width: 30%;">Checklist</th>
+                                        <th style="width: 70%;">Content</th>
                                     </thead>
                                     <tr>
                                         <td>Product</td>
@@ -243,52 +209,52 @@ $menu_item_page = "personal_homecare";
                                     <tr>
                                         <td rowspan="5">Completeness</td>
                                         <td>
-                                            <i class="mdi {{ in_array("machine", 
-                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ? 
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
+                                            <i class="mdi {{ in_array("machine",
+                                                $personalhomecare->checklistOut['condition']['completeness']) ?
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
-                                            </i> 
+                                            </i>
                                             Machine
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi {{ in_array("filter", 
-                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ? 
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
+                                            <i class="mdi {{ in_array("filter",
+                                                $personalhomecare->checklistOut['condition']['completeness']) ?
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
-                                            </i> 
+                                            </i>
                                             Filter
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi {{ in_array("accessories", 
-                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ? 
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
+                                            <i class="mdi {{ in_array("accessories",
+                                                $personalhomecare->checklistOut['condition']['completeness']) ?
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
-                                            </i>  
+                                            </i>
                                             Accessories
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi {{ in_array("cable", 
-                                                $personalhomecare->checklistOut['condition']['completeness'][0]) ? 
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
+                                            <i class="mdi {{ in_array("cable",
+                                                $personalhomecare->checklistOut['condition']['completeness']) ?
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
-                                            </i>  
+                                            </i>
                                             Cable
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
+                                            <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline"
                                                 style="font-size: 24px; color: #fed713;">
-                                            </i>  
-                                            Other : 
-                                            {{ isset($personalhomecare->checklistOut['condition']['other']) ? 
-                                                $personalhomecare->checklistOut['condition']['other'][0] : "-" }}
+                                            </i>
+                                            Other:
+                                            {{ isset($personalhomecare->checklistOut['condition']['other']) ?
+                                                $personalhomecare->checklistOut['condition']['other'] : "-" }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -308,7 +274,7 @@ $menu_item_page = "personal_homecare";
                                         <td>
                                             @foreach ($personalhomecare->checklistOut['image'] as $img)
                                                 <img src="{{asset('sources/phc-checklist') . '/' . $img}}"
-                                                    height="300px" 
+                                                    height="300px"
                                                     style="margin-bottom: 15px;"
                                                     alt="Product Personal Homecare" />
                                             @endforeach
@@ -334,8 +300,12 @@ $menu_item_page = "personal_homecare";
                                 <div class="table-responsive">
                                     <table class="col-md-12">
                                         <thead style="visibility: hidden;">
-                                            <th style="width: 30%">Checklist</th>
-                                            <th style="width: 70%">Content</th>
+                                            <th style="width: 30%;">
+                                                Checklist
+                                            </th>
+                                            <th style="width: 70%;">
+                                                Content
+                                            </th>
                                         </thead>
                                         <tr>
                                             <td>Product</td>
@@ -346,58 +316,58 @@ $menu_item_page = "personal_homecare";
                                         <tr>
                                             <td>Schedule Date</td>
                                             <td>
-                                                
+                                                {{ $personalhomecare->checklistIn["created_at"] }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td rowspan="5">Completeness</td>
                                             <td>
-                                                <i class="mdi {{ in_array("machine", 
-                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ? 
-                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
+                                                <i class="mdi {{ in_array("machine",
+                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
-                                                </i> 
+                                                </i>
                                                 Machine
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <i class="mdi {{ in_array("filter", 
-                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ? 
-                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
+                                                <i class="mdi {{ in_array("filter",
+                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
-                                                </i> 
+                                                </i>
                                                 Filter
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <i class="mdi {{ in_array("accessories", 
-                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ? 
-                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
+                                                <i class="mdi {{ in_array("accessories",
+                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
-                                                </i>  
+                                                </i>
                                                 Accessories
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <i class="mdi {{ in_array("cable", 
-                                                    $personalhomecare->checklistIn['condition']['completeness'][0]) ? 
-                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" 
+                                                <i class="mdi {{ in_array("cable",
+                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
-                                                </i>  
+                                                </i>
                                                 Cable
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline" 
+                                                <i class="mdi mdi-check-box-outline mdi-checkbox-blank-outline"
                                                     style="font-size: 24px; color: #fed713;">
-                                                </i>  
-                                                Other : 
-                                                {{ isset($personalhomecare->checklistIn['condition']['other']) ? 
-                                                    $personalhomecare->checklistIn['condition']['other'][0] : "-" }}
+                                                </i>
+                                                Other :
+                                                {{ isset($personalhomecare->checklistIn['condition']['other']) ?
+                                                    $personalhomecare->checklistIn['condition']['other'] : "-" }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -417,7 +387,7 @@ $menu_item_page = "personal_homecare";
                                             <td>
                                                 @foreach ($personalhomecare->checklistIn['image'] as $img)
                                                     <img src="{{asset('sources/phc-checklist') . '/' . $img}}"
-                                                        height="300px" 
+                                                        height="300px"
                                                         style="margin-bottom: 15px;"
                                                         alt="Product Personal Homecare" />
                                                 @endforeach
@@ -443,22 +413,19 @@ $menu_item_page = "personal_homecare";
                             <form id="actionAdd"
                                 class="forms-sample"
                                 method="POST"
-                                action="">
-                                {{ csrf_field() }}
-                                <input type="text"
+                                action="{{ route("update_personal_homecare_status") }}">
+                                @csrf
+                                <input type="hidden"
                                     name="id"
-                                    value="{{ $personalhomecare['id'] }}"
-                                    hidden />
+                                    value="{{ $personalhomecare['id'] }}" />
                                 <div class="form-group row justify-content-center">
-                                    <button id="upgradeProcess"
-                                        type="submit"
+                                    <button type="submit"
                                         class="btn btn-gradient-primary mr-2 btn-lg"
                                         name="status"
-                                        value="approved">
+                                        value="approve_out">
                                         Approved
                                     </button>
-                                    <button id="upgradeProcess"
-                                        type="submit"
+                                    <button type="submit"
                                         class="btn btn-gradient-danger mr-2 btn-lg"
                                         name="status"
                                         value="rejected">
@@ -498,6 +465,7 @@ $menu_item_page = "personal_homecare";
         @endif
 
         <!-- Jika bisa melihat history log-->
+        @if ($histories->isNotEmpty())
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -509,19 +477,31 @@ $menu_item_page = "personal_homecare";
                                 <div class="table-responsive">
                                     <table class="col-md-12">
                                         <thead>
-                                            <td>No.</td>
+                                            <td class="text-center">No.</td>
                                             <td>Action</td>
                                             <td>User</td>
                                             <td>Change</td>
-                                            <td>Time</td>
+                                            <td class="text-center">Time</td>
                                         </thead>
+                                        @foreach ($histories as $key => $history)
+                                            <?php $dataChange = json_decode($history->meta, true); ?>
                                             <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td class="text-right">
+                                                    {{ $key + 1 }}
+                                                </td>
+                                                <td>{{ $history->method }}</td>
+                                                <td>{{ $history->name }}</td>
+                                                <td>
+                                                    @foreach ($dataChange["dataChange"] as $dataKey => $value)
+                                                        <b>{{ $dataKey }}</b>: {{ var_export($value, true) }}
+                                                        <br>
+                                                    @endforeach
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ date("d/m/Y H:i:s", strtotime($history->created_at)) }}
+                                                </td>
                                             </tr>
+                                        @endforeach
                                     </table>
                                 </div>
                             </div>
@@ -529,7 +509,209 @@ $menu_item_page = "personal_homecare";
                     </div>
                 </div>
             </div>
+        @endif
         <!-- end if-->
+    </div>
+</div>
+
+<div class="modal" id="modal-checklist-in" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Checklist Out</h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST"
+                    enctype="multipart/form-data"
+                    action="{{ route("update_personal_homecare_checklist_in") }}">
+                    <input type="hidden"
+                        name="id"
+                        value="{{ $personalhomecare['id'] }}" />
+                    <div class="form-group">
+                        <span style="display: block;">Completeness</span>
+                        <div class="div-CheckboxGroup">
+                            <div class="form-check">
+                                <label for="completeness-machine"
+                                    class="form-check-label">
+                                    <input type="checkbox"
+                                        name="completeness[]"
+                                        id="completeness-machine"
+                                        value="machine"
+                                        form="add-phc" />
+                                    Machine
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="completeness-filter"
+                                    class="form-check-label">
+                                    <input type="checkbox"
+                                        name="completeness[]"
+                                        id="completeness-filter"
+                                        value="filter"
+                                        form="add-phc" />
+                                    Filter
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="completeness-accessories"
+                                    class="form-check-label">
+                                    <input type="checkbox"
+                                        name="completeness[]"
+                                        id="completeness-accessories"
+                                        value="accessories"
+                                        form="add-phc" />
+                                    Accessories
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="completeness-cable"
+                                    class="form-check-label">
+                                    <input type="checkbox"
+                                        name="completeness[]"
+                                        id="completeness-cable"
+                                        value="cable"
+                                        form="add-phc" />
+                                    Cable
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="completeness-other"
+                                    class="form-check-label">
+                                    <input type="checkbox"
+                                        name="completeness[]"
+                                        id="completeness-other"
+                                        value="other"
+                                        form="add-phc"
+                                        onchange="showOtherInput(this)" />
+                                    Other
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <input type="text"
+                                    class="form-control d-none"
+                                    placeholder="Other description"
+                                    name="other_completeness"
+                                    id="other-text"
+                                    form="add-phc" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <span style="display: block;">Machine Condition</span>
+                        <div class="div-CheckboxGroup">
+                            <div class="form-check">
+                                <label for="machine-condition-normal"
+                                    class="form-check-label">
+                                    <input type="radio"
+                                        class="form-check-input"
+                                        name="machine_condition"
+                                        id="machine-condition-normal"
+                                        value="normal"
+                                        form="add-phc"
+                                        required />
+                                    Normal
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="machine-condition-need-repair"
+                                    class="form-check-label">
+                                    <input type="radio"
+                                        class="form-check-input"
+                                        name="machine_condition"
+                                        id="machine-condition-need-repair"
+                                        value="need_repair"
+                                        form="add-phc"
+                                        required />
+                                    Need Repair
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <span style="display: block;">Physical Condition</span>
+                        <div class="div-CheckboxGroup">
+                            <div class="form-check">
+                                <label for="physical-condition-new"
+                                    class="form-check-label">
+                                    <input type="radio"
+                                        class="form-check-input"
+                                        name="physical_condition"
+                                        id="physical-condition-new"
+                                        value="new"
+                                        form="add-phc"
+                                        required />
+                                    New
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="physical-condition-moderate"
+                                    class="form-check-label">
+                                    <input type="radio"
+                                        class="form-check-input"
+                                        name="physical_condition"
+                                        id="physical-condition-moderate"
+                                        value="moderate"
+                                        form="add-phc"
+                                        required />
+                                    Moderate
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label for="physical-condition-need-repair"
+                                    class="form-check-label">
+                                    <input type="radio"
+                                        class="form-check-input"
+                                        name="physical_condition"
+                                        id="physical-condition-need-repair"
+                                        value="need_repair"
+                                        form="add-phc"
+                                        required />
+                                    Need Repair
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-photo-1">Product Photo 1</label>
+                        <input type="file"
+                            class="form-control"
+                            accept="image/jpeg, image/png"
+                            name="product_photo_1"
+                            id="product-photo-1"
+                            form="add-phc"
+                            required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-photo-2">Product Photo 2</label>
+                        <input type="file"
+                            class="form-control"
+                            accept="image/jpeg, image/png"
+                            name="product_photo_2"
+                            id="product-photo-2"
+                            form="add-phc"
+                            required />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

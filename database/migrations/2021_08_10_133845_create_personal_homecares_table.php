@@ -23,6 +23,7 @@ class CreatePersonalHomecaresTable extends Migration
                         "process",
                         "waiting_in",
                         "done",
+                        "rejected",
                     ]
                 )
                 ->default("new");

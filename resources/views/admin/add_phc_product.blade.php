@@ -109,7 +109,7 @@ $menu_item_second = "add_phc_product";
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="branch_id">Product</label>
+                                <label for="product_id">Product</label>
                                 <select class="form-control"
                                     id="product_id"
                                     name="product_id"
