@@ -1,0 +1,283 @@
+<?php
+$menu_item_page = "personal_homecare";
+$menu_item_second = "list_all";
+?>
+@extends('admin.layouts.template')
+
+@section('style')
+<style type="text/css">
+    .center {
+        text-align: center;
+    }
+
+    .right {
+        text-align: right;
+    }
+
+    .table th img, .table td img {
+        border-radius: 0% !important;
+    }
+
+	#calendar {
+/* 		float: right; */
+        margin: 0 auto;
+		background-color: #FFFFFF;
+		border-radius: 6px;
+	}
+
+    @media (min-width: 768px){
+        #calendar .fc-scroller {
+            overflow-y: hidden !important;
+        }
+    }
+
+    @media (max-width: 767.98px) {
+    .fc .fc-toolbar.fc-header-toolbar {
+        display: block;
+        text-align: center;
+        float: none !important;
+    }
+
+    .fc-header-toolbar .fc-toolbar-chunk {
+        display: block;
+        float: none !important;
+    }
+}
+
+</style>
+@endsection
+
+@section('content')
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">List Personal Homecare</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a data-toggle="collapse"
+                            href="#order-dd"
+                            aria-expanded="false"
+                            aria-controls="order-dd">
+                            Personal Homecare
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        List Approved
+                    </li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="row">
+
+            <div class="col-12" style="margin-bottom: 0;">
+                <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
+					<div class="form-group">
+						<label for="">Filter By Team</label>
+						<select class="form-control" id="filter_branch" name="filter_branch">
+							<option value="" selected="">All Branch</option>
+							@foreach($branches as $branch)
+							@php
+								$selected = "";
+								if(isset($_GET['filter_branch'])){
+								if($_GET['filter_branch'] == $branch['id']){
+									$selected = "selected=\"\"";
+								}
+								}
+							@endphp
+
+							<option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+							@endforeach
+						</select>
+						<div class="validation"></div>
+					</div>
+				</div>
+                @if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
+                <div class="col-xs-6 col-sm-6" style="padding: 0; display: inline-block">
+                    <label for=""></label>
+                    <div class="form-group">
+                        <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+                    </div>
+                </div>
+                @endif
+            </div>
+
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div id='calendar'></div>
+
+                        <div style='clear:both'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- partial -->
+    <!-- Modal Event Click -->
+    <div class="modal fade"
+        id="dialog"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="eventClick" method="post" action="">
+                        @csrf
+                        <div class="form-group">
+                            <label>Kode Produk</label>
+                            <input type="text" id="title" class="form-control" name="title" placeholder="Kode Produk">
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Customer</label>
+                            <input type="text" id="description" class="form-control" name="title" placeholder="Nama Customer">
+                        </div>
+                        <div class="form-group">
+                            <label>Start Date/Time</label>
+                            <input type="text" id="start" class="form-control" name="start" placeholder="Start date & time">
+                        </div>
+                        <div class="form-group">
+                            <label>Background Color</label>
+                            <input type="color" id="color" class="form-control" name="color">
+                        </div>
+                        <div class="form-group">
+                            <label>Text Color</label>
+                            <input type="color" id="textcolor" class="form-control" name="textColor">
+                        </div>
+                        <input type="hidden" id="eventId" name="event_id">
+                        <div class="form-group">
+                            <button type="submit" id="textcolor" class="btn btn-success">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section("script")
+
+<script type="application/javascript">
+    function submitDelete(e) {
+        document.getElementById("id-delete").value = e.dataset.id;
+    }
+    
+    $(document).ready(function (e) {
+        $("#btn-filter").click(function (e) {
+            var urlParamArray = new Array();
+            var urlParamStr = "";
+            if($('#search').val() != ""){
+                urlParamArray.push("search=" + $('#search').val());
+            }
+            for (var i = 0; i < urlParamArray.length; i++) {
+                if (i === 0) {
+                    urlParamStr += "?" + urlParamArray[i]
+                } else {
+                    urlParamStr += "&" + urlParamArray[i]
+                }
+            }
+            window.location.href = "{{route('list_all_phc')}}" + urlParamStr;
+        });
+    }); 
+
+    $(document).ready(function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        initialDate: new Date(),
+        navLinks: true, 
+        businessHours: true, 
+        editable: false,
+        selectable: true,
+        dayMaxEventRows: true, 
+        views: {
+            timeGrid: {
+            dayMaxEventRows: 3
+            }
+        },
+        events: [
+            @foreach($personalhomecares as $personalhomecare)
+            {
+            title : '{{ $personalhomecare->personalHomecareProduct->code }}', 
+            description : '{{ $personalhomecare['name'] }}',
+            start : '{{ $personalhomecare['schedule'] }}',
+            img : '{{ asset('sources/phc.png')}}',
+            url : '{{ route('edit_personal_homecare', ['id' => $personalhomecare['id']]) }}'
+            },
+            @endforeach
+        ],
+        eventDidMount: function(info, view, el) {
+            const end_date = moment(info.event.start).add(6, 'days').format('M/DD/YYYY');
+
+            $(info.el).tooltip({
+                placement: "right",
+                html: true,
+                title: "<p>Kode Produk : " 
+                        + info.event.title 
+                        + "</p>" 
+                        + "<p>Nama Customer : " 
+                        + info.event.extendedProps.description 
+                        + "</p>"
+                        + "<p>Schedule Date : "
+                        + moment(info.event.start).format('M/DD/YYYY')
+                        + "</p>"
+                        + "<p>End Date : "
+                        + end_date
+                        + "</p>",
+            });
+        },
+        eventContent: function(info) {
+            const img = info.event._def.extendedProps.img;
+            const text = "<div class='d-flex' style='align-items: center; padding-left: 10px;'>"
+                    + "<img style='margin-right: 10px;' src='" 
+                    + img 
+                    + "' width='18' height='18'> "
+                    + "<span style='line-height: 20px;'>" 
+                    + info.event._def.title 
+                    + "<br>" 
+                    + info.event.extendedProps.description
+                    + "</span>"
+                    + "</div>";
+
+            return {
+                html: text
+            };
+        },
+        eventClick: function(event) {
+            $('#title').val(event.title);
+            $('#start').val(event.start);
+            $('#color').val(event.color);
+            $('#textColor').val(event.textColor);
+            $('#eventId').val(event.id);
+            $('#dialog').dialog({
+                autoOpen: false,
+                title:'Edit',
+                width: 600,
+                height: 600,
+                modal: true,
+                show:{effect: 'clip', duration:350},
+                hide:{effect: 'clip', duration:250}
+            })
+        } 
+        });
+
+        calendar.render();
+  });
+</script>
+@endsection
