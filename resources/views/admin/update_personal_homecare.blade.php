@@ -574,6 +574,11 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#subdistrict_id").select2();
     $("#branch_id").select2();
     $("#cso_id").select2();
+
+    @if(in_array("other", $personalhomecare->checklistOut['condition']['completeness']))
+        document.getElementById("other-text").classList.remove("d-none");
+        document.getElementById("other-text").setAttribute("required", "");
+    @endif
 });
 
 function setProduct(e) {

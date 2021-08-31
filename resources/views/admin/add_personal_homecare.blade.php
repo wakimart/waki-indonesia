@@ -84,6 +84,10 @@ $menu_item_second = "add_personal_homecare";
                     <div class="card-body">
                         <h2>Agent Data</h2>
 
+                        <input type="hidden"
+                            id="branch-id-hidden"
+                            form="add-phc" />
+
                         <div class="form-group">
                             <label for="branch_id">Branch</label>
                             <select class="form-control"
@@ -117,15 +121,9 @@ $menu_item_second = "add_personal_homecare";
                                     Select CSO
                                 </option>
                                 @foreach ($csos as $cso)
-                                    @if ($personalhomecare->cso_id == $cso->id)
-                                        <option value="{{ $cso->id }}" selected>
-                                            {{ $cso->code }} - {{ $cso->name }}
-                                        </option>
-                                    @else
-                                        <option value="{{ $cso->id }}">
-                                            {{ $cso->code }} - {{ $cso->name }}
-                                        </option>
-                                    @endif
+                                    <option value="{{ $cso->id }}">
+                                        {{ $cso->code }} - {{ $cso->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -458,23 +456,24 @@ $menu_item_second = "add_personal_homecare";
     defer></script>
 <script type="application/javascript">
 document.addEventListener("DOMContentLoaded", function() {
-    $("#cso_id").on("input", function () {
-        check_cso($("#cso_id").val());
-    });
+    const csoId = '{{ Auth::user()->roles[0]["slug"] === "cso" ? Auth::user()->cso['id'] : "" }}';
+    if (csoId !== "") {
+        document.getElementById("cso_id").value = csoId;
+        document.getElementById("cso_id").disabled = true;
+        document.getElementById("cso_id").removeAttribute("name");
+        document.getElementById("cso-id-hidden").value = csoId;
+        document.getElementById("cso-id-hidden").setAttribute("name", "cso_id");
+    }
 
-    function check_cso(code) {
-        $.get('{{ route("fetchCso") }}', { cso_code: code })
-        .done(function (result) {
-            if (result['result'] == "true" && result['data'].length > 0) {
-                $('#validation_cso').html('Kode CSO Benar');
-                $('#validation_cso').css('color', 'green');
-                $('#submit').removeAttr('disabled');
-            } else {
-                $('#validation_cso').html('Kode CSO Salah');
-                $('#validation_cso').css('color', 'red');
-                $('#submit').attr('disabled',"");
-            }
-        });
+    const branchId = '{{ Auth::user()->roles[0]["slug"] === "branch" ? Auth::user()->listBranches()[0]['id'] : "" }}';
+    if (branchId !== "") {
+        document.getElementById("branch_id").value = branchId;
+        document.getElementById("branch_id").disabled = true;
+        document.getElementById("branch_id").removeAttribute("name");
+        document.getElementById("branch-id-hidden").value = branchId;
+        document.getElementById("branch-id-hidden").setAttribute("name", "branch_id");
+
+        setProduct({value: branchId});
     }
 
     $("#ph_product_id").select2();
@@ -482,6 +481,7 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#city_id").select2();
     $("#subdistrict_id").select2();
     $("#branch_id").select2();
+    $("#cso_id").select2();
 });
 
 function setProduct(e) {

@@ -56,6 +56,17 @@ class PersonalHomecareController extends Controller
             $personalhomecares = $personalhomecares->where('schedule', $request->filter_schedule);
         }
 
+        if (Auth::user()->roles[0]->slug === "cso") {
+            $personalhomecares = $personalhomecares->where("cso_id", Auth::user()->cso["id"]);
+        }
+        else if (Auth::user()->roles[0]->slug === "branch" || Auth::user()->roles[0]->slug === "area-manager") {
+            $arrBranches = [];
+            foreach (Auth::user()->listBranches() as $value) {
+                $arrBranches[] = $value['id'];
+            }
+            $personalhomecares = $personalhomecares->whereIn('branch_id', $arrBranches);
+        }
+
         $personalhomecares = $personalhomecares->orderBy('schedule', "desc")->paginate(10);
 
         $csos = Cso::select("id", "code", "name")
@@ -170,6 +181,10 @@ class PersonalHomecareController extends Controller
             $phcChecklist->image = $imageArray;
             $phcChecklist->save();
 
+            //reserve the product
+            PersonalHomecareProduct::where("id", $request->ph_product_id)
+                ->update(["status" => 0]);
+
             // STORE PERSONAL HOMECARE
             $personalHomecare = new PersonalHomecare();
             $personalHomecare->fill($request->only(
@@ -201,7 +216,7 @@ class PersonalHomecareController extends Controller
 
             DB::commit();
 
-            $this->accNotif($personalHomecare, "new");
+            $this->accNotif($personalHomecare, "acc_ask");
 
             return redirect()
                 ->route("add_personal_homecare")
@@ -242,6 +257,7 @@ class PersonalHomecareController extends Controller
     {
         try {
             $query = PersonalHomecare::select("id", "phone", "created_at")
+                ->where("active", true)
                 ->where("phone", $request->phone)
                 ->orderBy("id", "desc")
                 ->first();
@@ -452,21 +468,15 @@ class PersonalHomecareController extends Controller
             if($request->status == "approve_out"){
                 PersonalHomecareProduct::where("id", $request->id_product)
                     ->update(["status" => 0]);
-
-                $phc = PersonalHomecare::where("id", $request->id)->first();
-                $phc->status = $request->status;
-                $phc->save();
             }
-
-
-            else if($request->status == "done"){
+            else if($request->status == "done" || $request->status == "rejected"){
                 PersonalHomecareProduct::where("id", $request->id_product)
                     ->update(["status" => 1]);
-
-                $phc = PersonalHomecare::where("id", $request->id)->first();
-                $phc->status = $request->status;
-                $phc->save();
             }
+
+            $phc = PersonalHomecare::where("id", $request->id)->first();
+            $phc->status = $request->status;
+            $phc->save();
 
             $userId = Auth::user()["id"];
             $historyPH["type_menu"] = "Personal Homecare";
@@ -484,6 +494,8 @@ class PersonalHomecareController extends Controller
             HistoryUpdate::create($historyPH);
 
             DB::commit();
+
+            $this->accNotif($phc, "acc_done");
 
             return redirect()
                 ->route("detail_personal_homecare", ["id" => $request->id])
@@ -544,6 +556,8 @@ class PersonalHomecareController extends Controller
             $phc->status = "waiting_in";
             $phc->checklist_in = $phcChecklist->id;
             $phc->save();
+
+            $this->accNotif($phc, "acc_ask");
 
             DB::commit();
 
@@ -652,36 +666,71 @@ class PersonalHomecareController extends Controller
         // return $result;
     }
 
-    public function accNotif($personalhomecare_obj, $acc_type)
+    public function accNotif($personalhomecare_obj, $notif_type)
     {
         $fcm_tokenNya = [];
-        $userNya = User::where('users.fmc_token', '!=', null)
-                    ->whereIn('role_users.role_id', [1,2,7])
-                    ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
-                    ->get();
-        foreach ($userNya as $value) {
-            if($value['fmc_token'] != null){
-                foreach ($value['fmc_token'] as $fcmSatuan) {
-                    if($fcmSatuan != null){
-                        array_push($fcm_tokenNya, $fcmSatuan);
+        $messageNya = "";
+        if($notif_type == "acc_ask"){
+            $userNya = User::where('users.fmc_token', '!=', null)
+                        ->whereIn('role_users.role_id', [1,2,7])
+                        ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                        ->get();
+            foreach ($userNya as $value) {
+                if($value['fmc_token'] != null){
+                    foreach ($value['fmc_token'] as $fcmSatuan) {
+                        if($fcmSatuan != null){
+                            array_push($fcm_tokenNya, $fcmSatuan);
+                        }
                     }
                 }
             }
+
+            $messageNya = "By ".$personalhomecare_obj->branch['code']."-".$personalhomecare_obj->cso['name']." for ".$personalhomecare_obj->name." [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] ";
         }
+        else if($notif_type == "acc_done"){
+            $userNya = $personalhomecare_obj->cso->user;
+            if($userNya != null){
+                if($userNya['fmc_token'] != null){
+                    foreach ($userNya['fmc_token'] as $fcmSatuan) {
+                        if($fcmSatuan != null){
+                            array_push($fcm_tokenNya, $fcmSatuan);
+                        }
+                    }
+                }
+            }
+
+            $messageNya = $personalhomecare_obj->name." [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] . Don't Forget to Upload Picture with Customer !";
+        }
+        
 
         $body = ['registration_ids'=>$fcm_tokenNya,
             'collapse_key'=>"type_a",
             "content_available" => true,
             "priority" => "high",
             "notification" => [
-                "body" => "Acc ".$acc_type." Personal Homecare for ".$personalhomecare_obj->name." for product ".$personalhomecare_obj->personalHomecareProduct['code'].". By ".$personalhomecare_obj->branch['code']."-".$personalhomecare_obj->cso['name'],
-                "title" => "ACC ".$acc_type." [Personal Homecare]",
+                "body" => $messageNya,
+                "title" => "ACC ".$personalhomecare_obj->status." [Personal Homecare]",
                 "icon" => "ic_launcher"
             ],
             "data" => [
                 "url" => URL::to(route('detail_personal_homecare', ['id'=>$personalhomecare_obj['id']])),
                 "branch_cso" => $personalhomecare_obj->branch['code']."-".$personalhomecare_obj->cso['name'],
             ]];
+
+        //khusus untuk reminder
+        // $body = ['registration_ids'=>$fcm_tokenNya,
+        //     'collapse_key'=>"type_a",
+        //     "content_available" => true,
+        //     "priority" => "high",
+        //     "notification" => [
+        //         "body" => "Need to pickup for ".$personalhomecare_obj->name." tomorrow (". date("d/m/Y", strtotime($personalhomecare_obj->schedule . "+5 days")) .") [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] ",
+        //         "title" => "Remminder Pickup [Personal Homecare]",
+        //         "icon" => "ic_launcher"
+        //     ],
+        //     "data" => [
+        //         "url" => URL::to(route('detail_personal_homecare', ['id'=>$personalhomecare_obj['id']])),
+        //         "branch_cso" => $personalhomecare_obj->branch['code']."-".$personalhomecare_obj->cso['name'],
+        //     ]];
 
         if(sizeof($fcm_tokenNya) > 0)
         {

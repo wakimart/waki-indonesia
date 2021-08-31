@@ -188,18 +188,22 @@ $menu_item_second = "list_all";
                                                 </a>
                                             </td>
                                             <td class="center">
+                                                @if($personalhomecare->status != "rejected" && $personalhomecare->status != "done")
                                                     <a href="{{ route('edit_personal_homecare', ['id' => $personalhomecare['id']]) }}">
                                                         <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                     </a>
+                                                @endif
                                             </td>
                                             <td class="center">
+                                                @if($personalhomecare->status == "rejected" || $personalhomecare->status == "new")
                                                     <a class="btn-delete disabled"
                                                         data-toggle="modal"
                                                         href="#deleteDoModal"
                                                         onclick="submitDelete(this)"
-                                                        data-id="">
+                                                        data-id="{{ $personalhomecare->id }}">
                                                         <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                     </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -238,7 +242,7 @@ $menu_item_second = "list_all";
                 <div class="modal-footer">
                     <form id="frmDelete"
                         method="post"
-                        action="">
+                        action="{{ route('delete_personal_homecare') }}">
                         @csrf
                         <input type="hidden" name="id" id="id-delete" />
                         <button type="submit"
