@@ -12,6 +12,7 @@ use App\PersonalHomecareProduct;
 use App\RajaOngkir_City;
 use App\RajaOngkir_Province;
 use App\RajaOngkir_Subdistrict;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -68,6 +69,30 @@ class PersonalHomecareController extends Controller
 
         return view("admin.list_all_personalhomecare", compact("personalhomecares", "csos", "branches"))
             ->with('i', (request()->input('page', 1) - 1) * 10);
+    }
+
+    public function listApproved(Request $request){
+        $url = $request->all();
+
+        $branches = Branch::where(
+            'active', true)
+            ->orderBy('code', 'asc')
+            ->get();
+
+        $personalhomecares = PersonalHomecare::where(
+            'active', true)
+            ->get();
+        
+        //filter
+        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+            $personalhomecares = $personalhomecares->where('branch_id', $request->filter_branch);
+        }
+
+        return view('admin.list_approved_phc', compact(
+            'personalhomecares',
+            'branches',
+            'url',
+        ));
     }
 
     public function phForm($id)
