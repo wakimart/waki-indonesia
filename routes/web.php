@@ -893,20 +893,23 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
     Route::group(["prefix" => "personal-homecare", "middleware" => "auth"], function () {
         Route::get("add-product", "PersonalHomecareProductController@create")
-            ->name("add_phc_product");
+            ->name("add_phc_product")
+            ->middleware('can:add-phc-product');
         Route::post("store-product", "PersonalHomecareProductController@store")
             ->name("store_phc_product");
         Route::get("get-product-increment", "PersonalHomecareProductController@getProductIncrement")
             ->name("get_phc_product_increment");
         Route::get("list-product", 'PersonalHomecareProductController@index')
-            ->name("list_phc_product");
+            ->name("list_phc_product")
+            ->middleware('can:browse-phc-product');
         Route::get("edit-product/{id}", "PersonalHomecareProductController@edit")
             ->name("edit_phc_product");
         Route::post("update-product", "PersonalHomecareProductController@update")
             ->name("update_phc_product");
 
         Route::get("add", "PersonalHomecareController@create")
-            ->name("add_personal_homecare");
+            ->name("add_personal_homecare")
+            ->middleware('can:add-personal-homecare');
         Route::post("store", "PersonalHomecareController@store")
             ->name("store_personal_homecare");
         Route::get("get-product", "PersonalHomecareController@getPhcProduct")
@@ -914,7 +917,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("check-phone", "PersonalHomecareController@checkPhone")
             ->name("check_phc_phone");
         Route::get("list-all", 'PersonalHomecareController@index')
-            ->name("list_all_phc");
+            ->name("list_all_phc")
+            ->middleware('can:browse-personal-homecare');
         Route::get("list-approved", 'PersonalHomecareController@listApproved')
             ->name("list_approved_phc");
         Route::get("edit/{id}", "PersonalHomecareController@edit")

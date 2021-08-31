@@ -59,7 +59,7 @@
 </li>
 @endif
 
-@if(Gate::check('add-phc-product') || Gate::check('browse-phc-product')) || Gate::check('add-personal-homecare')) || Gate::check('browse-personal-homecare')) || Gate::check('browse-approved-personal-homecare'))
+@if(Gate::check('add-phc-product') || Gate::check('browse-phc-product')) || Gate::check('add-personal-homecare')) || Gate::check('browse-personal-homecare'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#personalhomecare-dd" aria-expanded="false" aria-controls="personalhomecare-dd">
     <span class="menu-title">Personal Homecare</span>
@@ -97,14 +97,6 @@
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_all'? 'active': '' }}" 
           href="{{  route('list_all_phc') }}">
           List All Personal Homecare
-        </a>
-      </li>
-      @endif
-      @if(Gate::check('browse-approved-personal-homecare'))
-      <li class="nav-item"> 
-        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_approved'? 'active': '' }}" 
-          href="{{  route('list_approved_phc') }}">
-          List Approved Personal Homecare
         </a>
       </li>
       @endif

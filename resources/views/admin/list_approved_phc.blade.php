@@ -25,6 +25,10 @@ $menu_item_second = "list_approved";
 		border-radius: 6px;
 	}
 
+    #myTable{
+        display: none;
+    }
+
     @media (min-width: 768px){
         #calendar .fc-scroller {
             overflow-y: hidden !important;
@@ -107,6 +111,69 @@ $menu_item_second = "list_approved";
                 <div class="card">
                     <div class="card-body">
                         <div id='calendar'></div>
+                        
+                        
+                        <div class="card"
+                            id="myTable">
+                            <div class="card-body">
+                                <div class="table-responsive"
+                                    style="border: 1px solid #ebedf2;">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="10" 
+                                                    id="theader" 
+                                                    class="text-center" 
+                                                    style="background-color: #61e2a0; color: #fff;">
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>Schedule Start</th>
+                                                <th>Schedule End</th>
+                                                <th>Customer Name</th>
+                                                <th>Product Code</th>
+                                                <th>Branch</th>
+                                                <th class="text-center">CSO</th>
+                                                <th>Status</th>
+                                                <th colspan="3" class="center">View/Edit/Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td id="start"></td>
+                                                <td id="end"></td>
+                                                <td id="name"></td>
+                                                <td id="product"></td>
+                                                <td id="branch"></td>
+                                                <td id="cso"></td>
+                                                <td id="status"></td>
+                                                <td class="center" id="#view">
+                                                    <a>
+                                                        <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                    </a>
+                                                </td>
+                                                <td class="center">
+                                                    <a id="#edit">
+                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                    </a>
+                                                </td>
+                                                <td class="center">
+                                                    <a class="btn-delete disabled"
+                                                        data-toggle="modal"
+                                                        href="#deleteDoModal"
+                                                        onclick="submitDelete(this)"
+                                                        data-id="">
+                                                        <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+
 
                         <div style='clear:both'></div>
                     </div>
@@ -205,24 +272,27 @@ $menu_item_second = "list_approved";
         businessHours: true, 
         editable: false,
         selectable: true,
+        allDay: true,
+        nextDayThreshold: '00:00:01',
         dayMaxEventRows: true, 
         views: {
             timeGrid: {
                 dayMaxEventRows: 3
             }
         },
-        eventReceive: function(event) {
-            var end = moment(event.start).add(6, "days").format('M/DD/YYYY');
-        },
         events: [
             @foreach($personalhomecares as $personalhomecare)
             {
-            title : '{{ $personalhomecare->personalHomecareProduct->code }}', 
-            description : '{{ $personalhomecare['name'] }}',
-            start : '{{ $personalhomecare['schedule'] }}',
-            end : end,
-            img : '{{ asset('sources/phc.png')}}',
-            url : '{{ route('edit_personal_homecare', ['id' => $personalhomecare['id']]) }}'
+                title : '{{ $personalhomecare->personalHomecareProduct->code }}', 
+                description : '{{ $personalhomecare['name'] }}',
+                branch : '{{ $personalhomecare->branch->code }}',
+                cso : '{{ $personalhomecare->cso->code }}',
+                status : '{{ strtoupper($personalhomecare->status) }}',
+                start : '{{ $personalhomecare['schedule'] }}',
+                end : '{{ date("Y-m-d", strtotime($personalhomecare->schedule . "T23.59.00" . "+5 days")) }}',
+                img : '{{ asset('sources/phc.png')}}',
+                view : '{{ route('detail_personal_homecare', ['id' => $personalhomecare['id']]) }}',
+                edit : '{{ route('edit_personal_homecare', ['id' => $personalhomecare['id']]) }}'
             },
             @endforeach
         ],
@@ -242,7 +312,7 @@ $menu_item_second = "list_approved";
                         + moment(info.event.start).format('M/DD/YYYY')
                         + "</p>"
                         + "<p>End Date : "
-                        + info.event.end
+                        + moment(info.event.end).format('M/DD/YYYY')
                         + "</p>",
             });
         },
@@ -263,21 +333,17 @@ $menu_item_second = "list_approved";
                 html: text
             };
         },
-        eventClick: function(event) {
-            $('#title').val(event.title);
-            $('#start').val(event.start);
-            $('#color').val(event.color);
-            $('#textColor').val(event.textColor);
-            $('#eventId').val(event.id);
-            $('#dialog').dialog({
-                autoOpen: false,
-                title:'Edit',
-                width: 600,
-                height: 600,
-                modal: true,
-                show:{effect: 'clip', duration:350},
-                hide:{effect: 'clip', duration:250}
-            })
+        eventClick: function(info) {
+            $("#myTable").show(500);
+            $('#theader').html(moment(info.event.start).format('MMMM Do YYYY'));
+            $('#start').html(moment(info.event.start).format('M/DD/YYYY'));
+            $('#end').html(moment(info.event.end).format('M/DD/YYYY'));
+            $('#product').html(info.event.title);
+            $('#name').html(info.event.extendedProps.description);
+            $('#branch').html(info.event.extendedProps.branch);
+            $('#cso').html(info.event.extendedProps.cso);
+            $('#status').html(info.event.extendedProps.status);
+            $('#edit').setAttribute("href", info.event.extendedProps.edit);
         } 
         });
 
