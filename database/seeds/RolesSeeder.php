@@ -971,7 +971,7 @@ class RolesSeeder extends Seeder
                 "edit-phc-product" => true,
                 "delete-phc-product" => true,
 
-                // Personal Homecare (CSO)
+                // Personal Homecare (Admin Management)
                 "add-personal-homecare" => false,
                 "browse-personal-homecare" => true,
                 "edit-personal-homecare" => true,

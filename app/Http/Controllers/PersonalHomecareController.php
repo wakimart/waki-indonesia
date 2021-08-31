@@ -12,7 +12,6 @@ use App\PersonalHomecareProduct;
 use App\RajaOngkir_City;
 use App\RajaOngkir_Province;
 use App\RajaOngkir_Subdistrict;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,35 +23,37 @@ class PersonalHomecareController extends Controller
 {
     public function index(Request $request)
     {
-
         $personalhomecares = PersonalHomecare::where('active', true);
 
-        if($request->has("filter_name_phone")){
+        if ($request->has("filter_name_phone")) {
             $filterNamePhone = $request->filter_name_phone;
-            $personalhomecares = $personalhomecares->where(function ($q) use ($filterNamePhone){
+            $personalhomecares = $personalhomecares->where(function ($q) use ($filterNamePhone) {
                 $q->where('name', "like", "%" . $filterNamePhone . "%")
                     ->orWhere('phone', "like", "%" . $filterNamePhone . "%");
             });
         }
-        if($request->has("filter_status")){
+
+        if ($request->has("filter_status")) {
             $personalhomecares = $personalhomecares->where('status', $request->filter_status);
         }
-        if($request->has("filter_branch")){
+
+        if ($request->has("filter_branch")) {
             $personalhomecares = $personalhomecares->where('branch_id', $request->filter_branch);
         }
-        if($request->has("filter_cso")){
+        if ($request->has("filter_cso")) {
             $personalhomecares = $personalhomecares->where('cso_id', $request->filter_cso);
         }
+
         if ($request->has('filter_product_code')) {
             $id_productNya = PersonalHomecareProduct::where('code', "like", "%" . $request->filter_product_code . "%")->first();
-            if($id_productNya != null){
+            if ($id_productNya != null) {
                 $personalhomecares = $personalhomecares->where("ph_product_id", $id_productNya['id']);
-            }
-            else{
+            } else {
                 $personalhomecares = $personalhomecares->where("ph_product_id", $id_productNya);
             }
         }
-        if($request->has("filter_schedule")){
+
+        if ($request->has("filter_schedule")) {
             $personalhomecares = $personalhomecares->where('schedule', $request->filter_schedule);
         }
 
@@ -82,20 +83,18 @@ class PersonalHomecareController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
-    public function listApproved(Request $request){
+    public function listApproved(Request $request)
+    {
         $url = $request->all();
 
-        $branches = Branch::where(
-            'active', true)
+        $branches = Branch::where('active', true)
             ->orderBy('code', 'asc')
             ->get();
 
-        $personalhomecares = PersonalHomecare::where(
-            'active', true)
-            ->get();
-        
-        //filter
-        if($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch'){
+        $personalhomecares = PersonalHomecare::where('active', true)->get();
+
+        // Filter
+        if ($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch') {
             $personalhomecares = $personalhomecares->where('branch_id', $request->filter_branch);
         }
 
@@ -280,7 +279,7 @@ class PersonalHomecareController extends Controller
                 "result" => 1,
                 "data" => "Phone number is eligible for Personal Homecare."
             ]);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json(["error" => $th->getMessage()], 500);
         }
     }
@@ -387,7 +386,7 @@ class PersonalHomecareController extends Controller
 
             $personalHomecare->save();
 
-            //for history
+            // FOR HISTORY
             $userId = Auth::user()["id"];
             $historyPH["type_menu"] = "Personal Homecare";
             $historyPH["method"] = "Change Status";
@@ -460,12 +459,10 @@ class PersonalHomecareController extends Controller
 
     public function updateStatus(Request $request)
     {
-        // dd($request->all());
         DB::beginTransaction();
 
         try {
-
-            if($request->status == "approve_out"){
+            if ($request->status == "approve_out") {
                 PersonalHomecareProduct::where("id", $request->id_product)
                     ->update(["status" => 0]);
             }
@@ -564,7 +561,7 @@ class PersonalHomecareController extends Controller
             return redirect()
                 ->route("detail_personal_homecare", ["id" => $request->id])
                 ->with("success", "Personal Homecare has been successfully updated.");
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
 
             return response()->json(["error" => $th->getMessage()], 500);
@@ -643,8 +640,8 @@ class PersonalHomecareController extends Controller
     }
 
     //================ Khusus Notifikasi ================//
-    function sendFCM($body){
-
+    function sendFCM($body)
+    {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
         curl_setopt($curl, CURLOPT_POST, true);
@@ -703,8 +700,8 @@ class PersonalHomecareController extends Controller
         }
         
 
-        $body = ['registration_ids'=>$fcm_tokenNya,
-            'collapse_key'=>"type_a",
+        $body = ['registration_ids' => $fcm_tokenNya,
+            'collapse_key' => "type_a",
             "content_available" => true,
             "priority" => "high",
             "notification" => [
