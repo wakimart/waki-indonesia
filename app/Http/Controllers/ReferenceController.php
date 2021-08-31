@@ -276,6 +276,10 @@ class ReferenceController extends Controller
 
     public function updateReferenceMGM(Request $request)
     {
+        // return response()->json([
+        //         "errors" => $request->all(),
+        //     ], 500);
+
         DB::beginTransaction();
 
         try {
@@ -295,7 +299,9 @@ class ReferenceController extends Controller
                 "prize_id",
                 "status_prize",
                 "delivery_status_prize",
+                "final_status",
             ));
+            $referenceSouvenir->is_acc = false;
 
             $referenceSouvenir->save();
 
@@ -305,13 +311,14 @@ class ReferenceController extends Controller
 
             DB::commit();
 
-            return redirect($request->url)
-                ->with("success", "Data referensi berhasil dimasukkan.");
+            return response()->json([
+                "success" => $referenceSouvenir,
+            ], 200);
         } catch (Exception $e) {
             DB::rollBack();
 
             return response()->json([
-                "error" => $e,
+                "errors" => $e,
                 "error message" => $e->getMessage(),
             ], 500);
         }
@@ -445,6 +452,12 @@ class ReferenceController extends Controller
                 "submission" => $referenceNya->submission,
                 "reference" => $referenceNya,
             ]];
+
+        //update is_acc di reference souvenir
+        $referenceSouvenirs = ReferenceSouvenir::where('reference_id', '=', $request->id)->first();
+        $referenceSouvenirs->is_acc = true;
+        $referenceSouvenirs->save();
+        //end update is_acc
 
         if(sizeof($fcm_tokenNya) > 0)
         {

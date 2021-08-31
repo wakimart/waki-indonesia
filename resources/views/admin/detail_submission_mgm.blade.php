@@ -153,7 +153,7 @@ if (
                 <div class="table-responsive">
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="13">Reference</td>
+                            <td colspan="14">Reference</td>
                         </thead>
                         <thead style="background-color: #80808012 !important;">
                             <tr>
@@ -166,6 +166,7 @@ if (
                                 <td>Prize</td>
                                 <td>Status</td>
                                 <td>Deliv. Status</td>
+                                <td>Final Status</td>
                                 @if ($specialPermission)
                                     <td class="text-center">View</td>
                                 @endif
@@ -246,6 +247,12 @@ if (
                                         data-deliveryprize="{{ $reference->delivery_status_prize }}"
                                         data-permission="{{ $specialPermission }}">
                                         {{ $reference->delivery_status_prize }}
+                                    </td>
+                                    <td class="text-center"
+                                        id="delivery_status_prize_{{ $key }}"
+                                        data-deliveryprize="{{ $reference->reference_souvenir['final_status'] }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->reference_souvenir['final_status'] }}
                                     </td>
                                     {{-- <td class="center"
                                         id="image_{{ $key }}"
@@ -636,8 +643,7 @@ if (
                     </table>
                 </div>
 
-                <form id="formUpdateStatus" method="POST" action="{{ route('update_reference_mgm') }}">
-                    @csrf
+                @if(isset($_GET['id_ref']) && Auth::user()->id == 1)
                     <div class="form-group">
                         <label>Other Detail</label>
                         <table id="table-detail-other" style="margin: 1em 0em;">
@@ -646,27 +652,63 @@ if (
                                 <td>Name</td>
                                 <td>Status</td>
                                 <td>Status Delivery</td>
+                                <td>Status Final</td>
                             </thead>
                             <tbody id="append_tbody_other">
 
                             </tbody>
                         </table>
-
-                        <input id="ref_id" type="hidden" name="id" />
-                        <input id="ref_name" type="hidden" name="name" />
-                        <input id="ref_phone" type="hidden" name="phone" />
-                        <input id="ref_age" type="hidden" name="age" />
-                        <input id="ref_province" type="hidden" name="province" />
-                        <input id="ref_city" type="hidden" name="city" />
-                        <input id="refs_order" type="hidden" name="order_id" />
-
-                        <button class="btn btn-primary"
-                            type="submit"
-                            id="btn-confirmUpdate">
-                            Save
-                        </button>
                     </div>
-                </form>
+
+                    <form id="formUpdateStatusAcc" method="POST" action="{{ route('update_reference_mgm') }}">
+                        @csrf
+                        <div class="form-group">
+
+                            <input id="ref_id" type="hidden" name="id" />
+                            <input type="hidden" name="delivery_status_prize" value="delivered by CSO" />
+
+                            <div style="text-align: center;">
+                                <h5>Are you sure want to deliver by CSO for this reference ?</h5>
+                                <button type="submit" class="btn btn-gradient-primary">Yes</button>
+                                <button class="btn btn-gradient-danger" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                @else
+                    <form id="formUpdateStatus" method="POST" action="{{ route('update_reference_mgm') }}">
+                        @csrf
+                        <div class="form-group">
+                            <label>Other Detail</label>
+                            <table id="table-detail-other" style="margin: 1em 0em;">
+                                <thead>
+                                    <td>Item</td>
+                                    <td>Name</td>
+                                    <td>Status</td>
+                                    <td>Status Delivery</td>
+                                    <td>Status Final</td>
+                                </thead>
+                                <tbody id="append_tbody_other">
+
+                                </tbody>
+                            </table>
+
+                            <input id="ref_id" type="hidden" name="id" />
+                            <input id="ref_name" type="hidden" name="name" />
+                            <input id="ref_phone" type="hidden" name="phone" />
+                            <input id="ref_age" type="hidden" name="age" />
+                            <input id="ref_province" type="hidden" name="province" />
+                            <input id="ref_city" type="hidden" name="city" />
+                            <input id="refs_order" type="hidden" name="order_id" />
+
+                            <button class="btn btn-primary"
+                                type="submit"
+                                id="btn-confirmUpdate">
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                @endif
+
             </div>
         </div>
     </div>
@@ -915,6 +957,7 @@ function loadDataPerRef(ref_id) {
             var data_order = data['data_order'];
             var data_prize = data['data_prize'];
             var detail_product = data['detail_product'];
+            console.log(data_prize);
 
             // Detail HS
             if (data_hs != null) {
@@ -1001,25 +1044,31 @@ function loadDataPerRef(ref_id) {
                         <tr id="tr_detail_souvenir">\
                             <td>PRIZE</td>\
                             <td>\
-                                <select {{ Auth::user()->id == 1 ? "disabled" : "" }} id="select_edit-prize_'+p+'" class="form-control" name="prize_id">'
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-prize_'+p+'" class="form-control" name="prize_id">'
                                 + prizeOptionAll +
                                 '</select>\
                             </td>\
                             <td>\
-                                <select {{ Auth::user()->id == 1 ? "disabled" : "" }} id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
-                                    <option value="">Choose Status</option>\
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
+                                    <option value="" disabled>Choose Status</option>\
                                     <option value="pending">pending</option>\
                                     <option value="success">success</option>\
                                 </select>\
                             </td>\
                             <td>\
-                                <select id="select_edit-delivery-status-prize_'+p+'" class="form-control" name="delivery_status_prize">\
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-delivery-status-prize_'+p+'" class="form-control" name="delivery_status_prize">\
                                     <option value="">Choose Status Delivery</option>\
                                     <option value="undelivered">undelivered</option>\
                                     @if(Auth::user()->id == 1)
                                         <option value="delivered by CSO">delivered by CSO</option>\
                                     @endif
                                     <option value="delivered by Courier">delivered by Courier</option>\
+                                </select>\
+                            </td>\
+                            <td>\
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-status-final-status_'+p+'" class="form-control" name="final_status">\
+                                    <option value="" disabled>Choose Status</option>\
+                                    <option value="pending">pending</option>\
                                     <option value="success">success</option>\
                                 </select>\
                             </td>\
@@ -1029,6 +1078,7 @@ function loadDataPerRef(ref_id) {
                     $('#select_edit-prize_'+p).val(data_refs[p]['prize_id']);
                     $('#select_edit-status-prize_'+p).val(data_refs[p]['status_prize']);
                     $('#select_edit-delivery-status-prize_'+p).val(data_refs[p]['delivery_status_prize']);
+                    $('#select_edit-status-final-status_'+p).val(data_refs[p]['final_status']);
                 }
             }
 
@@ -1232,7 +1282,7 @@ $(document).ready(function () {
         }
         else{
             alert("Input Success !!!");
-            window.location.reload()
+            window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
         }
 
         document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";
@@ -1240,6 +1290,25 @@ $(document).ready(function () {
 
     function errorHandler(event){
         document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";
+    }
+
+    $("#formUpdateStatusAcc").on("submit", function (e) {
+        e.preventDefault();
+        frmAdd = _("formUpdateStatusAcc");
+        frmAdd = new FormData(document.getElementById("formUpdateStatusAcc"));
+        frmAdd.enctype = "multipart/form-data";
+        var URLNya = $("#formUpdateStatusAcc").attr('action');
+
+        var ajax = new XMLHttpRequest();
+        ajax.addEventListener("load", completeHandler_2, false);
+        ajax.open("POST", URLNya);
+        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+        ajax.send(frmAdd);
+    });
+
+    function completeHandler_2(event){
+        alert("Input Success !!!");
+        window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
     }
 
     @if(isset($_GET['id_ref']))
