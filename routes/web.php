@@ -896,22 +896,26 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("add_phc_product")
             ->middleware('can:add-phc-product');
         Route::post("store-product", "PersonalHomecareProductController@store")
-            ->name("store_phc_product");
+            ->name("store_phc_product")
+            ->middleware("can:add-phc-product");
         Route::get("get-product-increment", "PersonalHomecareProductController@getProductIncrement")
             ->name("get_phc_product_increment");
         Route::get("list-product", 'PersonalHomecareProductController@index')
             ->name("list_phc_product")
             ->middleware('can:browse-phc-product');
         Route::get("edit-product/{id}", "PersonalHomecareProductController@edit")
-            ->name("edit_phc_product");
+            ->name("edit_phc_product")
+            ->middleware("can:edit-phc-product");
         Route::post("update-product", "PersonalHomecareProductController@update")
-            ->name("update_phc_product");
+            ->name("update_phc_product")
+            ->middleware("can:edit-phc-product");
 
         Route::get("add", "PersonalHomecareController@create")
             ->name("add_personal_homecare")
             ->middleware('can:add-personal-homecare');
         Route::post("store", "PersonalHomecareController@store")
-            ->name("store_personal_homecare");
+            ->name("store_personal_homecare")
+            ->middleware("can:add-personal-homecare");
         Route::get("get-product", "PersonalHomecareController@getPhcProduct")
             ->name("get_phc_product");
         Route::get("check-phone", "PersonalHomecareController@checkPhone")
@@ -920,17 +924,21 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("list_all_phc")
             ->middleware('can:browse-personal-homecare');
         Route::get("list-approved", 'PersonalHomecareController@listApproved')
-            ->name("list_approved_phc");
+            ->name("list_approved_phc")
+            ->middleware("can:browse-personal-homecare");
         Route::get("edit/{id}", "PersonalHomecareController@edit")
-            ->name("edit_personal_homecare");
+            ->name("edit_personal_homecare")
+            ->middleware("can:edit-personal-homecare");
         Route::post("update", "PersonalHomecareController@update")
-            ->name("update_personal_homecare");
+            ->name("update_personal_homecare")
+            ->middleware("can:edit-personal-homecare");
         Route::post("update/status", "PersonalHomecareController@updateStatus")
             ->name("update_personal_homecare_status");
         Route::post("update/checklist-in", "PersonalHomecareController@updateChecklistIn")
             ->name("update_personal_homecare_checklist_in");
         Route::get("detail/{id}", "PersonalHomecareController@detail")
-            ->name("detail_personal_homecare");
+            ->name("detail_personal_homecare")
+            ->middleware("can:detail-personal-homecare");
     });
 });
 
