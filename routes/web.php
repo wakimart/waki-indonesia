@@ -917,8 +917,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("check-phone", "PersonalHomecareController@checkPhone")
             ->name("check_phc_phone");
         Route::get("list-all", 'PersonalHomecareController@index')
-            ->name("list_all_phc")
-            ->middleware('can:browse-personal-homecare');
+            ->name("list_all_phc");
         Route::get("list-approved", 'PersonalHomecareController@listApproved')
             ->name("list_approved_phc");
         Route::get("edit/{id}", "PersonalHomecareController@edit")
