@@ -29,6 +29,7 @@ Route::get('/firebase','FirebaseController@index');
 
 //Personal Homecare
 Route::get('/personal-homecare/{id}', 'PersonalHomecareController@phForm')->name('personal_homecare');
+Route::get('/thankyou-personal-homecare', 'PersonalHomecareController@thankyouForm')->name('thankyou_ph');
 
 //Service Product
 Route::get('/service', 'ServiceController@indexUser')->name('service');
