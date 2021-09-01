@@ -81,29 +81,29 @@
                             <table class="table table-bordered">
                                 <thead style="text-align: center; background-color: aliceblue;">
                                     <tr>
-                                        <td colspan="4">Personal Homecare Data</td>
                                         <td rowspan="2">View</td>
+                                        <td colspan="4">Personal Homecare Data</td>
                                     </tr>
                                     <tr>
+                                        <td>Status</td>
                                         <td>Name - Phone</td>
                                         <td>Branch - CSO</td>
                                         <td>Product</td>
-                                        <td>Status</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($personalHomecares as $personalHomecare)
                                         <tr>
-                                            <td>{{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}</td>
-                                            <td>{{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['name'] }}</td>
-                                            <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['name'] }}</td>
-                                            <td>{{ $personalHomecare['status'] }}</td>
-
                                             <td style="text-align: center;">
                                                 <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                                 </a>
                                             </td>
+                                            
+                                            <td>{{ $personalHomecare['status'] }}</td>
+                                            <td>{{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}</td>
+                                            <td>{{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['name'] }}</td>
+                                            <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['name'] }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
