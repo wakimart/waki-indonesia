@@ -7,6 +7,7 @@ use App\Order;
 use App\RegistrationPromotion;
 use App\Role;
 use App\User;
+use App\PersonalHomecare;
 use App\ReferenceSouvenir;
 use Exception;
 use Illuminate\Http\Request;
@@ -76,6 +77,9 @@ class DashboardController extends Controller
         //khusus untuk reference souvenir need to acc
         $refSouvenirs = ReferenceSouvenir::where('is_acc', true)->get();
 
+        //khusus untuk personal homecare to acc
+        $personalHomecares = PersonalHomecare::where('active', true)->whereIn('status', ['new', 'waiting_in'])->get();
+
         return view(
             "admin.dashboard",
             compact(
@@ -83,7 +87,8 @@ class DashboardController extends Controller
                 "order",
                 "registration",
                 "references",
-                "refSouvenirs"
+                "refSouvenirs",
+                "personalHomecares"
             )
         );
     }
