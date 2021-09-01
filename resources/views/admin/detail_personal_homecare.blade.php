@@ -271,7 +271,7 @@ $menu_item_page = "personal_homecare";
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi {{ isset($personalhomecare->checklistOut['condition']['other']) ? 
+                                            <i class="mdi {{ isset($personalhomecare->checklistOut['condition']['other']) ?
                                                 "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
@@ -385,7 +385,7 @@ $menu_item_page = "personal_homecare";
                                         </tr>
                                         <tr>
                                             <td>
-                                                <i class="mdi {{ isset($personalhomecare->checklistIn['condition']['other']) ? 
+                                                <i class="mdi {{ isset($personalhomecare->checklistIn['condition']['other']) ?
                                                     "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
@@ -523,8 +523,145 @@ $menu_item_page = "personal_homecare";
                                     value="Terima Kasih telah mengikuti *Program Pinjamin Produk 5 Hari*. Berikut adalah tautan bukti formulir ( {{ route('personal_homecare', ['id' => $personalhomecare->id]) }} )">
                                     Share Whatsapp
                                 </button>
+                                 <button id="btn-print"  class="btn btn-gradient-primary mr-2 btn-lg">Create Pdf</button>
                             </div>
                         </form>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div id="element-to-print" class="col-12 grid-margin stretch-card showPrinted">
+                <div class="card">
+                    <div class="card-body">
+                        <div style="background-color:#008349;height:15px;"></div>
+                        <div style="width:200px;margin:auto;">
+                          <img style="width:100%;" src="{{asset('sources/logosince.svg')}}" alt="logo" />
+                        </div>
+                        <div>
+                          <div style="width:80%;margin:auto;text-align:center">
+                            <h1 style="font-weight:700;">SURAT TANDA TERIMA BARANG</h1>
+                            <h5>PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI<h5>
+                          </div>
+                          <br>
+                          <div style="width:90%;margin:auto;text-align:justify">
+                            <p>Saya yang bertanda tangan, menyatakan telah menerima barang dalam keadaan baik dan berfungsi normal sesuai data di bawah ini. Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
+                          </div>
+                          <br>
+                          <div>
+                            <div style="width:300px;background-color:#b4d9c4;">
+                              <h4 style="padding-left:15%;">DATA CUSTOMER</H4>
+                            </div>
+                          </div>
+                        </div>
+                        <div style="width:90%;margin:auto;">
+                          <div style="width:48%;margin-right:3%;margin-bottom:5px;float:left;border-bottom:1px solid black">
+                            <h5>NAMA:</h5>
+                          </div>
+                          <div style="width:48%;margin-bottom:5px;float:left;border-bottom:1px solid black">
+                            <h5>CABANG:</h5>
+                          </div>
+                          <div style="width:48%;margin-right:3%;margin-bottom:5px;float:left;border-bottom:1px solid black">
+                            <h5>NO.TELP:</h5>
+                          </div>
+                          <div style="width:48%;margin-bottom:5px;float:left;border-bottom:1px solid black">
+                            <h5>TGL PENGIRIMAN:</h5>
+                          </div>
+                          <div style="width:48%;margin-right:3%;margin-bottom:5px;float:left;border-bottom:1px solid black">
+                            <h5>NO.MEMBER:</h5>
+                          </div>
+                          <div style="width:48%;margin-bottom:5px;float:left;border-bottom:1px solid black">
+                            <h5>TGL PENGAMBILAN:</h5>
+                          </div>
+                        </div>
+                        <div style="width:100%" class="row justify-content-center">
+                            <div class="table-responsive">
+                                <table class="col-md-12">
+                                    <thead>
+                                        <td class="text-center">Jumlah (QTY)</td>
+                                        <td class="text-center">Kode Produk</td>
+                                        <td class="text-center">Nama Produk</td>
+                                        <td class="text-center">Kelengkapan</td>
+                                        <td class="text-center">Kondisi</td>
+                                        <td class="text-center">Keterangan</td>
+                                    </thead>
+                                        <tr>
+                                            <td class="text-center">1</td>
+                                            <td class="text-center">ASD</td>
+                                            <td class="text-center">ASD</td>
+                                            <td>ASD</td>
+                                            <td>ASD</td>
+                                            <td class="text-center">ASD</td>
+                                        </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div style="width:90%;margin:auto;text-align:justify">
+                          <p>Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
+                          <h5>SYARAT & KETENTUAN :</h5>
+                          <div style="width:90%;margin:auto;">
+                            <ol type = "1">
+                               <li>Program pinjaman produk 5 hari tidak dipungut biaya apapun</li>
+                               <li>Sudah menjadi member Wakimart</li>
+                               <li>Minimal berusia 35 tahun</li>
+                               <li>Biaya akan dikenakan kepada konsumen jika ada sparepart ataupun kerusakan di luar persetujuan</li>
+                               <li>Syarat dan Ketentuan dapat berubah tanpa pemberitahuan sebelumnya</li>
+                               <li>Kenyamanan dan keamanan konsumen kami adalah prioritas pertama</li>
+                            </ol>
+                            <p>Apabila ada sesuatu atau ada pertanyaan, bisa menghubungi kami melalui facebook page WAKi Indonesia ataau customer care kami : 0815-5467-3357</p>
+                          </div>
+                        </div>
+                        <br><br><br><br><br>
+                        <div style="width:80%;margin:auto;text-align:justify">
+                          <div style="width:48%;float:left;">
+                            <div style="width:70%;margin:auto;border-top:4px solid black;text-align:center;">
+                              <p>Tandatangan Penerima</p>
+                            </div>
+                          </div>
+                          <div style="width:48%;float:left;">
+                            <div style="width:70%;margin:auto;border-top:4px solid black;text-align:center;">
+                              <p>Tandatangan Pengirim</p>
+                            </div>
+                          </div>
+                        </div>
+                        <br><br>
+                        <div class="clearfix"></div>
+                        <div style="width:100%;border-bottom:dotted;"></div>
+                        <div class="clearfix"></div>
+                        <br><br>
+                        <div>
+                          <div style="width:80%;margin:auto;text-align:center">
+                            <h1 style="font-weight:700;">SURAT PENGAMBILAN BARANG</h1>
+                            <h5>PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI<h5>
+                          </div>
+                          <br>
+                        </div>
+                        <div style="width:100%" class="row justify-content-center">
+                            <div class="table-responsive">
+                                <table class="col-md-12">
+                                    <thead>
+                                        <td class="text-center">Jumlah (QTY)</td>
+                                        <td class="text-center">Kode Produk</td>
+                                        <td class="text-center">Nama Produk</td>
+                                        <td class="text-center">Kelengkapan</td>
+                                        <td class="text-center">Kondisi</td>
+                                        <td class="text-center">Keterangan</td>
+                                    </thead>
+                                        <tr>
+                                            <td class="text-center">1</td>
+                                            <td class="text-center">ASD</td>
+                                            <td class="text-center">ASD</td>
+                                            <td>ASD</td>
+                                            <td>ASD</td>
+                                            <td class="text-center">ASD</td>
+                                        </tr>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -539,7 +676,7 @@ $menu_item_page = "personal_homecare";
                             <h2>Check In Product</h2>
                         </div>
                         <div class="form-group row justify-content-center">
-                            <button type="button" 
+                            <button type="button"
                                 class="btn btn-gradient-primary mr-2 btn-lg"
                                 data-toggle="modal"
                                 data-target="#modal-checklist-in">
@@ -804,11 +941,12 @@ $menu_item_page = "personal_homecare";
         </div>
     </div>
 </div>
+
 @endsection
 
 @section("script")
 <script type="application/javascript">
-    
+
 function showOtherInput(e) {
     if (e.checked) {
         document.getElementById("other-text").classList.remove("d-none");
@@ -818,6 +956,38 @@ function showOtherInput(e) {
         document.getElementById("other-text").classList.add("d-none");
     }
 }
+
+$( document ).ready(function() {
+    $(".showPrinted").hide();
+    $("#btn-print").click(function(){
+        $(".showPrinted").show();
+        $(".hide-print").hide();
+
+        var printContents = document.getElementById("element-to-print").innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+
+        return true;
+    });
+    $("#success-alert").hide();
+});
+
+//
+// $( document ).ready(function() {
+//     $("#btn-pdf").click(function(){
+//         $(".showPrinted").show();
+//         $(".hide-print").hide();
+//
+//         var pdfContent = document.getElementById("element-to-print").innerHTML;
+//         html2pdf(pdfContent);
+//     });
+//     $("#success-alert").hide();
+// });
 
 </script>
 @endsection

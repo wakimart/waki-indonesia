@@ -1,0 +1,83 @@
+body {
+   /* background: rgb(204,204,204); */
+
+
+}
+.page {
+    background: white;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    position:relative;
+    top:0;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+}
+
+.content{
+    padding-left:80px;
+    padding-right:70px;
+}
+.a4 {
+    width: 21cm;
+    height: 100%;
+}
+
+@media print {
+    body, page {
+        margin: 0;
+        box-shadow: 0;
+        padding-bottom: 0;
+        background-color: red;
+    }
+}
+.header {
+    display:inline-block;
+    height: auto;
+    width:100%;
+    height:100px;
+    top: 0;
+    border: 0px;
+    padding-right:80px;
+    padding-left:80px;
+    position:relative;
+}
+
+.footer {
+    display:inline-block;
+    position:absolute;
+    width:100%;
+    height:120px;
+    bottom:0;
+    padding-right:80px;
+    padding-left:80px;
+    border: 0px;
+}
+
+
+.title {
+    font-weight: bold;
+    font-size: 16px;
+
+}
+
+.subtitle {
+    font-weight: bold;
+    font-size: 12px;
+}
+.normal {
+    font-size: 11px;
+    text-align: justify;
+
+}
+.normal2 {
+    font-size: 13px;
+    text-align: justify;
+
+
+}
+.pagenumber {
+    position: absolute;
+    bottom: 25px;
+    right: 80px;
+    display: table-footer-group;
+}
