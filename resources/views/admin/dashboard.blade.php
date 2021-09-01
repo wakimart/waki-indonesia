@@ -66,6 +66,54 @@
                 </div>
             </div>
         </div>
+        @if(Gate::check('change-status-checkin-personalhomecare') == true || Gate::check('change-status-checkout-personalhomecare') == true)
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="clearfix">
+                            <h4 class="card-title float-left">
+                                Personal Homecare to Acc (total : {{ sizeof($personalHomecares) }})
+                            </h4>
+                        </div>
+                        {{-- <canvas id="homeservice-chart" class="mt-4"></canvas> --}}
+                        <div class="table-responsive" style="border: 1px solid #ebedf2;">
+                            <table class="table table-bordered">
+                                <thead style="text-align: center; background-color: aliceblue;">
+                                    <tr>
+                                        <td colspan="4">Personal Homecare Data</td>
+                                        <td rowspan="2">View</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Name - Phone</td>
+                                        <td>Branch - CSO</td>
+                                        <td>Product</td>
+                                        <td>Status</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($personalHomecares as $personalHomecare)
+                                        <tr>
+                                            <td>{{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}</td>
+                                            <td>{{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['name'] }}</td>
+                                            <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['name'] }}</td>
+                                            <td>{{ $personalHomecare['status'] }}</td>
+
+                                            <td style="text-align: center;">
+                                                <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
+                                                    <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
         @if(Auth::id() == 1)
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
