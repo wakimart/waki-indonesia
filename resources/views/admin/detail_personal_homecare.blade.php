@@ -526,6 +526,7 @@ $menu_item_page = "personal_homecare";
                                     Share WhatsApp
                                 </button>
                                 <button id="btn-print"
+                                    type="button"
                                     class="btn btn-gradient-primary mr-2 btn-lg">
                                     Create PDF
                                 </button>
@@ -635,7 +636,6 @@ $menu_item_page = "personal_homecare";
                                                     {{ ucwords($personalhomecare->checklistOut['condition']['machine']) }}
                                                 </li>
                                             </ul>
-                                            <br>
                                             <b>FISIK</b>
                                             <ul>
                                                 <li>
@@ -728,7 +728,6 @@ $menu_item_page = "personal_homecare";
                                                 <li>Normal</li>
                                                 <li>Need Repair</li>
                                             </ul>
-                                            <br>
                                             <b>FISIK</b>
                                             <ul style="list-style-type: circle;">
                                                 <li>New</li>
