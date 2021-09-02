@@ -665,7 +665,7 @@ $menu_item_page = "personal_homecare";
                                 <p>Apabila ada sesuatu atau ada pertanyaan, bisa menghubungi kami melalui facebook page WAKi Indonesia ataau customer care kami : 0815-5467-3357</p>
                             </div>
                         </div>
-                        <br><br><br><br><br>
+                        <br><br><br><br><br><br><br>
                         <div style="width: 80%; margin: auto; text-align: justify;">
                             <div style="width: 48%; float: left;">
                                 <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
@@ -680,9 +680,9 @@ $menu_item_page = "personal_homecare";
                         </div>
                         <br><br>
                         <div class="clearfix"></div>
-                        <div style="width: 100%; border-bottom: dotted;"></div>
                         <div class="clearfix"></div>
-                        <br><br>
+                        <p style="page-break-after: always;">&nbsp;</p>
+                        <p style="page-break-before: always;">&nbsp;</p>
                         <div>
                             <div style="width: 80%; margin: auto; text-align: center;">
                                 <h1 style="font-weight: 700;">
@@ -740,7 +740,7 @@ $menu_item_page = "personal_homecare";
                                 </table>
                             </div>
                         </div>
-                         <br><br><br><br><br>
+                         <br><br><br><br><br><br><br>
                         <div style="width: 80%; margin: auto; text-align: justify;">
                             <div style="width: 48%; float: left;">
                                 <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
