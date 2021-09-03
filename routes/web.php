@@ -29,6 +29,7 @@ Route::get('/firebase','FirebaseController@index');
 
 //Personal Homecare
 Route::get('/personal-homecare/{id}', 'PersonalHomecareController@phForm')->name('personal_homecare');
+Route::get('/thankyou-personal-homecare', 'PersonalHomecareController@thankyouForm')->name('thankyou_ph');
 
 //Service Product
 Route::get('/service', 'ServiceController@indexUser')->name('service');
@@ -921,8 +922,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("check-phone", "PersonalHomecareController@checkPhone")
             ->name("check_phc_phone");
         Route::get("list-all", 'PersonalHomecareController@index')
-            ->name("list_all_phc")
-            ->middleware('can:browse-personal-homecare');
+            ->name("list_all_phc");
         Route::get("list-approved", 'PersonalHomecareController@listApproved')
             ->name("list_approved_phc")
             ->middleware("can:browse-personal-homecare");

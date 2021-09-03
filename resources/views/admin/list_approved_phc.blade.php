@@ -135,7 +135,10 @@ $menu_item_second = "list_approved";
                                                 <th>Branch</th>
                                                 <th class="text-center">CSO</th>
                                                 <th>Status</th>
-                                                <th colspan="3" class="center">View/Edit/Delete</th>
+                                                <th colspan="3" 
+                                                    class="center">
+                                                    View/Edit/Delete
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -147,14 +150,22 @@ $menu_item_second = "list_approved";
                                                 <td id="branch"></td>
                                                 <td id="cso"></td>
                                                 <td id="status"></td>
-                                                <td class="center" id="#view">
-                                                    <a>
-                                                        <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                <td class="center view">
+                                                    <a href="#"
+                                                        target="_blank">
+                                                        <i class="mdi mdi-eye" 
+                                                            style="font-size: 24px; 
+                                                                color: rgb(76 172 245);">
+                                                        </i>
                                                     </a>
                                                 </td>
-                                                <td class="center">
-                                                    <a id="#edit">
-                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                <td class="center edit">
+                                                    <a href="#"
+                                                        target="_blank">
+                                                        <i class="mdi mdi-border-color" 
+                                                            style="font-size: 24px; 
+                                                                color: #fed713;">
+                                                        </i>
                                                     </a>
                                                 </td>
                                                 <td class="center">
@@ -163,7 +174,10 @@ $menu_item_second = "list_approved";
                                                         href="#deleteDoModal"
                                                         onclick="submitDelete(this)"
                                                         data-id="">
-                                                        <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                        <i class="mdi mdi-delete" 
+                                                            style="font-size: 24px; 
+                                                            color: #fe7c96;">
+                                                        </i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -174,17 +188,16 @@ $menu_item_second = "list_approved";
                             </div>
                         </div>
 
-
                         <div style='clear:both'></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- partial -->
-    <!-- Modal Event Click -->
+
+    <!-- Modal Delete -->
     <div class="modal fade"
-        id="dialog"
+        id="deleteDoModal"
         tabindex="-1"
         role="dialog"
         aria-hidden="true">
@@ -199,37 +212,28 @@ $menu_item_second = "list_approved";
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="eventClick" method="post" action="">
+                    <h5 style="text-align:center;">
+                        Are you sure to delete this product?
+                    </h5>
+                </div>
+                <div class="modal-footer">
+                    <form id="frmDelete"
+                        method="post"
+                        action="">
                         @csrf
-                        <div class="form-group">
-                            <label>Kode Produk</label>
-                            <input type="text" id="title" class="form-control" name="title" placeholder="Kode Produk">
-                        </div>
-                        <div class="form-group">
-                            <label>Nama Customer</label>
-                            <input type="text" id="description" class="form-control" name="title" placeholder="Nama Customer">
-                        </div>
-                        <div class="form-group">
-                            <label>Start Date/Time</label>
-                            <input type="text" id="start" class="form-control" name="start" placeholder="Start date & time">
-                        </div>
-                        <div class="form-group">
-                            <label>Background Color</label>
-                            <input type="color" id="color" class="form-control" name="color">
-                        </div>
-                        <div class="form-group">
-                            <label>Text Color</label>
-                            <input type="color" id="textcolor" class="form-control" name="textColor">
-                        </div>
-                        <input type="hidden" id="eventId" name="event_id">
-                        <div class="form-group">
-                            <button type="submit" id="textcolor" class="btn btn-success">Update</button>
-                        </div>
+                        <input type="hidden" name="id" id="id-delete" />
+                        <button type="submit"
+                            class="btn btn-gradient-danger mr-2">
+                            Yes
+                        </button>
                     </form>
+                    <button class="btn btn-light">No</button>
                 </div>
             </div>
         </div>
     </div>
+    <!-- End Modal Delete -->
+
 </div>
 @endsection
 
@@ -274,7 +278,7 @@ $menu_item_second = "list_approved";
         selectable: true,
         allDay: true,
         nextDayThreshold: '00:00:01',
-        dayMaxEventRows: true, 
+        dayMaxEventRows: 2, 
         views: {
             timeGrid: {
                 dayMaxEventRows: 3
@@ -292,7 +296,7 @@ $menu_item_second = "list_approved";
                 end : '{{ date("Y-m-d", strtotime($personalhomecare->schedule . "T23.59.00" . "+5 days")) }}',
                 img : '{{ asset('sources/phc.png')}}',
                 view : '{{ route('detail_personal_homecare', ['id' => $personalhomecare['id']]) }}',
-                edit : '{{ route('edit_personal_homecare', ['id' => $personalhomecare['id']]) }}'
+                edit : '{{ route('edit_personal_homecare', ['id' => $personalhomecare['id']]) }}',
             },
             @endforeach
         ],
@@ -343,8 +347,9 @@ $menu_item_second = "list_approved";
             $('#branch').html(info.event.extendedProps.branch);
             $('#cso').html(info.event.extendedProps.cso);
             $('#status').html(info.event.extendedProps.status);
-            $('#edit').setAttribute("href", info.event.extendedProps.edit);
-        } 
+            $(".view a[href='#']").prop('href', info.event.extendedProps.view);
+            $(".edit a[href='#']").prop('href', info.event.extendedProps.edit);
+        }
         });
 
         calendar.render();
