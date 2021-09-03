@@ -513,6 +513,12 @@ $menu_item_page = "personal_homecare";
                                 {{ strtolower($personalhomecare['status']) == "done" ? "Share Thank You Letter" : "Share Personal Homecare Status" }}
                             </h2>
                         </div>
+                        @php
+                            $urlShareWa = route('personal_homecare', ['id' => $personalhomecare->id]);
+                            if(strtolower($personalhomecare['status']) == "done"){
+                                $urlShareWa = route('thankyou_ph');
+                            }
+                        @endphp
                         <form class="forms-sample"
                             method="GET"
                             action="https://wa.me/"
@@ -522,7 +528,7 @@ $menu_item_page = "personal_homecare";
                                     type="submit"
                                     class="btn btn-gradient-primary mr-2 btn-lg"
                                     name="text"
-                                    value="Terima Kasih telah mengikuti *Program Pinjamin Produk 5 Hari*. Berikut adalah tautan bukti formulir ( {{ route('personal_homecare', ['id' => $personalhomecare->id]) }} )">
+                                    value="Terima Kasih telah mengikuti *Program Pinjamin Produk 5 Hari*. Berikut adalah tautan bukti formulir ( {{ $urlShareWa }} )">
                                     Share WhatsApp
                                 </button>
                                 <button id="btn-print"
@@ -715,27 +721,33 @@ $menu_item_page = "personal_homecare";
                                             {{ $personalhomecare->personalHomecareProduct->product->name }}
                                         </td>
                                         <td>
-                                            <ul style="list-style-type: circle;">
-                                                <li>Mesin</li>
-                                                <li>Filter</li>
-                                                <li>Aksesoris</li>
-                                                <li>Kabel</li>
+                                            <ul>
+                                                @foreach ($personalhomecare->checklistOut['condition']['completeness'] as $completeness)
+                                                    @if ($completeness !== "other")
+                                                        <li>
+                                                            {{ ucwords($completeness) }}
+                                                        </li>
+                                                    @endif
+                                                @endforeach
                                             </ul>
                                         </td>
                                         <td>
                                             <b>MESIN</b>
-                                            <ul style="list-style-type: circle;">
-                                                <li>Normal</li>
-                                                <li>Need Repair</li>
+                                            <ul>
+                                                <li>
+                                                    {{ ucwords($personalhomecare->checklistOut['condition']['machine']) }}
+                                                </li>
                                             </ul>
                                             <b>FISIK</b>
-                                            <ul style="list-style-type: circle;">
-                                                <li>New</li>
-                                                <li>Moderate</li>
-                                                <li>Need Repair</li>
+                                            <ul>
+                                                <li>
+                                                    {{ ucwords($personalhomecare->checklistOut['condition']['physical']) }}
+                                                </li>
                                             </ul>
                                         </td>
-                                        <td class="text-center"></td>
+                                        <td class="text-center">
+                                            {{ $personalhomecare->checklistOut['condition']['other'] }}
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -1061,6 +1073,7 @@ $(document).ready(function() {
 
         document.body.innerHTML = originalContents;
 
+        $(".showPrinted").hide();
         return true;
     });
     $("#success-alert").hide();
