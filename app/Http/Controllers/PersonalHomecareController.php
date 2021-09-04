@@ -688,6 +688,16 @@ class PersonalHomecareController extends Controller
                 }
             }
 
+            //khusus pak supri
+            $value = User::find(4);
+            if($value['fmc_token'] != null){
+                foreach ($value['fmc_token'] as $fcmSatuan) {
+                    if($fcmSatuan != null){
+                        array_push($fcm_tokenNya, $fcmSatuan);
+                    }
+                }
+            }
+
             $messageNya = "By ".$personalhomecare_obj->branch['code']."-".$personalhomecare_obj->cso['name']." for ".$personalhomecare_obj->name." [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] ";
         }
         else if($notif_type == "acc_done"){

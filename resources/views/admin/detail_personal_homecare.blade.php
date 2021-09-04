@@ -504,44 +504,46 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
 
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                      <div class="card-body">
-                        <div class="row justify-content-center">
-                            <h2>
-                                {{ strtolower($personalhomecare['status']) == "done" ? "Share Thank You Letter" : "Share Personal Homecare Status" }}
-                            </h2>
-                        </div>
-                        @php
-                            $urlShareWa = route('personal_homecare', ['id' => $personalhomecare->id]);
-                            if(strtolower($personalhomecare['status']) == "done"){
-                                $urlShareWa = route('thankyou_ph');
-                            }
-                        @endphp
-                        <form class="forms-sample"
-                            method="GET"
-                            action="https://wa.me/"
-                            target="_blank">
-                            <div class="form-group row justify-content-center">
-                                <button id="upgradeProcess"
-                                    type="submit"
-                                    class="btn btn-gradient-primary mr-2 btn-lg"
-                                    name="text"
-                                    value="Terima Kasih telah mengikuti *Program Pinjamin Produk 5 Hari*. Berikut adalah tautan bukti formulir ( {{ $urlShareWa }} )">
-                                    Share WhatsApp
-                                </button>
-                                <button id="btn-print"
-                                    type="button"
-                                    class="btn btn-gradient-primary mr-2 btn-lg">
-                                    Create PDF
-                                </button>
+        @if (strtolower($personalhomecare['status']) != "new" && strtolower($personalhomecare['status']) != "rejected" )
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                          <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>
+                                    {{ strtolower($personalhomecare['status']) == "done" ? "Share Thank You Letter" : "Share Personal Homecare Status" }}
+                                </h2>
                             </div>
-                        </form>
+                            @php
+                                $urlShareWa = route('personal_homecare', ['id' => $personalhomecare->id]);
+                                if(strtolower($personalhomecare['status']) == "done"){
+                                    $urlShareWa = route('thankyou_ph');
+                                }
+                            @endphp
+                            <form class="forms-sample"
+                                method="GET"
+                                action="https://wa.me/"
+                                target="_blank">
+                                <div class="form-group row justify-content-center">
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-primary mr-2 btn-lg"
+                                        name="text"
+                                        value="Terima Kasih telah mengikuti *Program Pinjamin Produk 5 Hari*. Berikut adalah tautan bukti formulir ( {{ $urlShareWa }} )">
+                                        Share WhatsApp
+                                    </button>
+                                    <button id="btn-print"
+                                        type="button"
+                                        class="btn btn-gradient-primary mr-2 btn-lg">
+                                        Create PDF
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
 
         <div class="row">
             <div id="element-to-print"
