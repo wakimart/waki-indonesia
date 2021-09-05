@@ -252,13 +252,24 @@ $menu_item_second = "add_personal_homecare";
                                     id="id_card_image"
                                     required />
                             </div>
+                            <div class="form-group">
+                                <label for="member_wakimart_image">
+                                    Customer Wakimart Member
+                                </label>
+                                <input type="file"
+                                    class="form-control"
+                                    accept="image/jpeg, image/png"
+                                    name="member_wakimart_image"
+                                    id="member_wakimart_image"
+                                    required />
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" hidden="">
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
@@ -345,8 +356,7 @@ $menu_item_second = "add_personal_homecare";
                                             name="machine_condition"
                                             id="machine-condition-normal"
                                             value="normal"
-                                            form="add-phc"
-                                            required />
+                                            form="add-phc" />
                                         Normal
                                     </label>
                                 </div>
@@ -358,8 +368,7 @@ $menu_item_second = "add_personal_homecare";
                                             name="machine_condition"
                                             id="machine-condition-need-repair"
                                             value="need_repair"
-                                            form="add-phc"
-                                            required />
+                                            form="add-phc" />
                                         Need Repair
                                     </label>
                                 </div>
@@ -377,8 +386,7 @@ $menu_item_second = "add_personal_homecare";
                                             name="physical_condition"
                                             id="physical-condition-new"
                                             value="new"
-                                            form="add-phc"
-                                            required />
+                                            form="add-phc" />
                                         New
                                     </label>
                                 </div>
@@ -390,8 +398,7 @@ $menu_item_second = "add_personal_homecare";
                                             name="physical_condition"
                                             id="physical-condition-moderate"
                                             value="moderate"
-                                            form="add-phc"
-                                            required />
+                                            form="add-phc" />
                                         Moderate
                                     </label>
                                 </div>
@@ -403,8 +410,7 @@ $menu_item_second = "add_personal_homecare";
                                             name="physical_condition"
                                             id="physical-condition-need-repair"
                                             value="need_repair"
-                                            form="add-phc"
-                                            required />
+                                            form="add-phc" />
                                         Need Repair
                                     </label>
                                 </div>
@@ -418,8 +424,7 @@ $menu_item_second = "add_personal_homecare";
                                 accept="image/jpeg, image/png"
                                 name="product_photo_1"
                                 id="product-photo-1"
-                                form="add-phc"
-                                required />
+                                form="add-phc" />
                         </div>
 
                         <div class="form-group">

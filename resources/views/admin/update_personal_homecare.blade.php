@@ -93,7 +93,7 @@ $menu_item_page = "personal_homecare";
                                 id="branch_id"
                                 name="branch_id"
                                 form="add-phc"
-                                required>
+                                {{ $personalhomecare['status'] == "new" ? 'required' : 'disabled' }}>
                                 <option disabled>
                                     Select Branch
                                 </option>
@@ -120,6 +120,7 @@ $menu_item_page = "personal_homecare";
                             <select  class="form-control"
                                 name="cso_id"
                                 id="cso_id"
+                                {{ $personalhomecare['status'] == "new" ? 'required' : 'disabled' }}
                                 form="add-phc">
                                 <option disabled>
                                     Select CSO
@@ -163,7 +164,7 @@ $menu_item_page = "personal_homecare";
                                     name="schedule"
                                     id="schedule"
                                     value="{{ date('Y-m-d', strtotime($personalhomecare['schedule'])) }}"
-                                    required />
+                                    {{ $personalhomecare['status'] == "new" ? 'required' : 'disabled' }} />
                             </div>
 
                             <div class="form-group">
@@ -171,7 +172,7 @@ $menu_item_page = "personal_homecare";
                                 <select class="form-control"
                                     name="ph_product_id"
                                     id="ph_product_id"
-                                    required>
+                                    {{ $personalhomecare['status'] == "new" ? 'required' : 'disabled' }} >
                                     <option disabled>
                                         Select Product (Please select branch first)
                                     </option>
@@ -311,13 +312,30 @@ $menu_item_page = "personal_homecare";
                                     name="id_card_image"
                                     id="id_card_image" />
                             </div>
+
+                            <div class="form-group">
+                                <img src="{{ asset("sources/phc/" . $personalhomecare->member_wakimart) }}"
+                                    class="img-thumbnail img-h500"
+                                    alt="customer member wakimart" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="member_wakimart_image">
+                                    Customer Wakimart Member
+                                </label>
+                                <input type="file"
+                                    class="form-control"
+                                    accept="image/jpeg, image/png"
+                                    name="member_wakimart_image"
+                                    id="member_wakimart_image" />
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" {{ $personalhomecare['status'] == "new" ? 'hidden' : '' }}>
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
@@ -326,62 +344,29 @@ $menu_item_page = "personal_homecare";
                         <div class="form-group">
                             <span style="display: block;">Completeness</span>
                             <div class="div-CheckboxGroup">
-                                <div class="form-check">
-                                    <label for="completeness-machine"
-                                        class="form-check-label">
-                                        <input type="checkbox"
-                                            name="completeness[]"
-                                            id="completeness-machine"
-                                            value="machine"
-                                            {{ in_array("machine", $personalhomecare->
-                                            checklistOut['condition']['completeness']) ?
-                                            "checked" : "" }}
-                                            form="add-phc" />
-                                        Machine
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label for="completeness-filter"
-                                        class="form-check-label">
-                                        <input type="checkbox"
-                                            name="completeness[]"
-                                            id="completeness-filter"
-                                            value="filter"
-                                            {{ in_array("filter", $personalhomecare->
-                                            checklistOut['condition']['completeness']) ?
-                                            "checked" : "" }}
-                                            form="add-phc" />
-                                        Filter
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label for="completeness-accessories"
-                                        class="form-check-label">
-                                        <input type="checkbox"
-                                            name="completeness[]"
-                                            id="completeness-accessories"
-                                            value="accessories"
-                                            {{ in_array("accessories", $personalhomecare->
-                                            checklistOut['condition']['completeness']) ?
-                                            "checked" : "" }}
-                                            form="add-phc" />
-                                        Accessories
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label for="completeness-cable"
-                                        class="form-check-label">
-                                        <input type="checkbox"
-                                            name="completeness[]"
-                                            id="completeness-cable"
-                                            value="cable"
-                                            {{ in_array("cable", $personalhomecare->
-                                            checklistOut['condition']['completeness']) ?
-                                            "checked" : "" }}
-                                            form="add-phc" />
-                                        Cable
-                                    </label>
-                                </div>
+
+                                @php
+                                    $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
+                                    $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                @endphp
+
+                                @foreach($arr_completness as $checklistInput)
+                                    <div class="form-check">
+                                        <label for="completeness-{{$checklistInput}}"
+                                            class="form-check-label">
+                                            <input type="checkbox"
+                                                name="completeness[]"
+                                                id="completeness-{{$checklistInput}}"
+                                                value="{{$checklistInput}}"
+                                                {{ in_array($checklistInput, $personalhomecare->
+                                                checklistOut['condition']['completeness']) ?
+                                                "checked" : "" }}
+                                                form="add-phc" />
+                                            {{$checklistInput}}
+                                        </label>
+                                    </div>
+                                @endforeach
+
                                 <div class="form-check">
                                     <label for="completeness-other"
                                         class="form-check-label">
@@ -424,7 +409,7 @@ $menu_item_page = "personal_homecare";
                                             ['condition']['machine'] == "normal" ?
                                             "checked" : "" }}
                                             form="add-phc"
-                                            required />
+                                            {{ $personalhomecare['status'] == "new" ? '' : 'required' }} />
                                         Normal
                                     </label>
                                 </div>
@@ -440,7 +425,7 @@ $menu_item_page = "personal_homecare";
                                             ['condition']['machine'] == "need_repair" ?
                                             "checked" : "" }}
                                             form="add-phc"
-                                            required />
+                                            {{ $personalhomecare['status'] == "new" ? '' : 'required' }} />
                                         Need Repair
                                     </label>
                                 </div>
@@ -462,7 +447,7 @@ $menu_item_page = "personal_homecare";
                                             ['condition']['physical'] == "new" ?
                                             "checked" : "" }}
                                             form="add-phc"
-                                            required />
+                                            {{ $personalhomecare['status'] == "new" ? '' : 'required' }} />
                                         New
                                     </label>
                                 </div>
@@ -478,7 +463,7 @@ $menu_item_page = "personal_homecare";
                                             ['condition']['physical'] == "moderate" ?
                                             "checked" : "" }}
                                             form="add-phc"
-                                            required />
+                                            {{ $personalhomecare['status'] == "new" ? '' : 'required' }} />
                                         Moderate
                                     </label>
                                 </div>
@@ -494,7 +479,7 @@ $menu_item_page = "personal_homecare";
                                             ['condition']['physical'] == "need_repair" ?
                                             "checked" : "" }}
                                             form="add-phc"
-                                            required />
+                                            {{ $personalhomecare['status'] == "new" ? '' : 'required' }} />
                                         Need Repair
                                     </label>
                                 </div>

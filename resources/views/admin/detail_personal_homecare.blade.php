@@ -194,6 +194,13 @@ $menu_item_page = "personal_homecare";
                                             <img style="height: 300px" src="{{ asset('sources/phc') . '/' . $personalhomecare['id_card'] }}">
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td>Wakimart Member Image</td>
+                                        <td>:</td>
+                                        <td style="text-align: center;">
+                                            <img style="height: 300px" src="{{ asset('sources/phc') . '/' . $personalhomecare['member_wakimart'] }}">
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -219,7 +226,7 @@ $menu_item_page = "personal_homecare";
                                     <tr>
                                         <td>Product</td>
                                         <td>
-                                            {{ $personalhomecare->personalHomecareProduct->code }}
+                                            {{ $personalhomecare->personalHomecareProduct->code }} ({{ $personalhomecare->personalHomecareProduct->product['code'] }} - {{ $personalhomecare->personalHomecareProduct->product['name'] }})
                                         </td>
                                     </tr>
                                     <tr>
@@ -228,47 +235,37 @@ $menu_item_page = "personal_homecare";
                                             {{ date("d/m/Y", strtotime($personalhomecare['schedule'])) }}
                                         </td>
                                     </tr>
+
+                                    @php
+                                        $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
+                                        $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                    @endphp
+
                                     <tr>
-                                        <td rowspan="5">Completeness</td>
+                                        <td rowspan="{{ sizeof($arr_completness)+1 }}">Completeness</td>
                                         <td>
-                                            <i class="mdi {{ in_array("machine",
+                                            <i class="mdi {{ in_array($arr_completness[0],
                                                 $personalhomecare->checklistOut['condition']['completeness']) ?
                                                 "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
-                                            Machine
+                                            {{$arr_completness[0]}}
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="mdi {{ in_array("filter",
-                                                $personalhomecare->checklistOut['condition']['completeness']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                style="font-size: 24px; color: #fed713;">
-                                            </i>
-                                            Filter
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="mdi {{ in_array("accessories",
-                                                $personalhomecare->checklistOut['condition']['completeness']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                style="font-size: 24px; color: #fed713;">
-                                            </i>
-                                            Accessories
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <i class="mdi {{ in_array("cable",
-                                                $personalhomecare->checklistOut['condition']['completeness']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                style="font-size: 24px; color: #fed713;">
-                                            </i>
-                                            Cable
-                                        </td>
-                                    </tr>
+
+                                    @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
+                                        <tr>
+                                            <td>
+                                                <i class="mdi {{ in_array($arr_completness[$idx_i],
+                                                    $personalhomecare->checklistOut['condition']['completeness']) ?
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                    style="font-size: 24px; color: #fed713;">
+                                                </i>
+                                                {{$arr_completness[$idx_i]}}
+                                            </td>
+                                        </tr>
+                                    @endfor
+
                                     <tr>
                                         <td>
                                             <i class="mdi {{ isset($personalhomecare->checklistOut['condition']['other']) ?
@@ -333,7 +330,7 @@ $menu_item_page = "personal_homecare";
                                         <tr>
                                             <td>Product</td>
                                             <td>
-                                                {{ $personalhomecare->personalHomecareProduct->code }}
+                                                {{ $personalhomecare->personalHomecareProduct->code }} ({{ $personalhomecare->personalHomecareProduct->product['code'] }} - {{ $personalhomecare->personalHomecareProduct->product['name'] }})
                                             </td>
                                         </tr>
                                         <tr>
@@ -342,47 +339,37 @@ $menu_item_page = "personal_homecare";
                                                 {{ $personalhomecare->checklistIn["created_at"] }}
                                             </td>
                                         </tr>
+
+                                        @php
+                                            $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
+                                            $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                        @endphp
+
                                         <tr>
-                                            <td rowspan="5">Completeness</td>
+                                            <td rowspan="{{ sizeof($arr_completness)+1 }}">Completeness</td>
                                             <td>
-                                                <i class="mdi {{ in_array("machine",
+                                                <i class="mdi {{ in_array($arr_completness[0],
                                                     $personalhomecare->checklistIn['condition']['completeness']) ?
                                                     "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
-                                                Machine
+                                                {{$arr_completness[0]}}
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <i class="mdi {{ in_array("filter",
-                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
-                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                    style="font-size: 24px; color: #fed713;">
-                                                </i>
-                                                Filter
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <i class="mdi {{ in_array("accessories",
-                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
-                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                    style="font-size: 24px; color: #fed713;">
-                                                </i>
-                                                Accessories
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <i class="mdi {{ in_array("cable",
-                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
-                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                    style="font-size: 24px; color: #fed713;">
-                                                </i>
-                                                Cable
-                                            </td>
-                                        </tr>
+
+                                        @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
+                                            <tr>
+                                                <td>
+                                                    <i class="mdi {{ in_array($arr_completness[$idx_i],
+                                                        $personalhomecare->checklistIn['condition']['completeness']) ?
+                                                        "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                        style="font-size: 24px; color: #fed713;">
+                                                    </i>
+                                                    {{$arr_completness[$idx_i]}}
+                                                </td>
+                                            </tr>
+                                        @endfor
+
                                         <tr>
                                             <td>
                                                 <i class="mdi {{ isset($personalhomecare->checklistIn['condition']['other']) ?
@@ -868,50 +855,21 @@ $menu_item_page = "personal_homecare";
                     <div class="form-group">
                         <span style="display: block;">Completeness</span>
                         <div class="div-CheckboxGroup">
-                            <div class="form-check">
-                                <label for="completeness-machine"
-                                    class="form-check-label">
-                                    <input type="checkbox"
-                                        name="completeness[]"
-                                        id="completeness-machine"
-                                        value="machine"
-                                        form="add-phc" />
-                                    Machine
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <label for="completeness-filter"
-                                    class="form-check-label">
-                                    <input type="checkbox"
-                                        name="completeness[]"
-                                        id="completeness-filter"
-                                        value="filter"
-                                        form="add-phc" />
-                                    Filter
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <label for="completeness-accessories"
-                                    class="form-check-label">
-                                    <input type="checkbox"
-                                        name="completeness[]"
-                                        id="completeness-accessories"
-                                        value="accessories"
-                                        form="add-phc" />
-                                    Accessories
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <label for="completeness-cable"
-                                    class="form-check-label">
-                                    <input type="checkbox"
-                                        name="completeness[]"
-                                        id="completeness-cable"
-                                        value="cable"
-                                        form="add-phc" />
-                                    Cable
-                                </label>
-                            </div>
+
+                            @foreach($arr_completness as $checklistInput)
+                                <div class="form-check">
+                                    <label for="completeness-{{$checklistInput}}"
+                                        class="form-check-label">
+                                        <input type="checkbox"
+                                            name="completeness[]"
+                                            id="completeness-{{$checklistInput}}"
+                                            value="{{$checklistInput}}"
+                                            form="add-phc" />
+                                        {{$checklistInput}}
+                                    </label>
+                                </div>
+                            @endforeach
+                            
                             <div class="form-check">
                                 <label for="completeness-other"
                                     class="form-check-label">

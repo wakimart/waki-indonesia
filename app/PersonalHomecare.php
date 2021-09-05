@@ -18,6 +18,7 @@ class PersonalHomecare extends Model
         "branch_id",
         "cso_id",
         "id_card",
+        "member_wakimart",
         "ph_product_id",
         "checklist_out",
         "checklist_in",

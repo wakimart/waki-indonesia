@@ -154,6 +154,9 @@ class PersonalHomecareController extends Controller
             if ($request->has("other_completeness")) {
                 $condition["other"] = $request->input("other_completeness");
             }
+            if($condition["completeness"] == null){
+                $condition["completeness"] = [];
+            } 
             $condition["machine"] = $request->input("machine_condition");
             $condition["physical"] = $request->input("physical_condition");
             $phcChecklist->condition = $condition;
@@ -214,6 +217,18 @@ class PersonalHomecareController extends Controller
                 $request->file("id_card_image")->move("sources/phc", $fileName);
 
                 $personalHomecare->id_card = $fileName;
+            }
+
+            if ($request->hasFile("member_wakimart_image")) {
+                $timestamp = (string) time();
+                $fileName = $timestamp
+                    . "_member_wakimart"
+                    . "."
+                    . $request->file("member_wakimart_image")->getClientOriginalExtension();
+
+                $request->file("member_wakimart_image")->move("sources/phc", $fileName);
+
+                $personalHomecare->member_wakimart = $fileName;
             }
 
             $personalHomecare->checklist_out = $phcChecklist->id;
@@ -363,18 +378,31 @@ class PersonalHomecareController extends Controller
         try {
             // UPDATE PERSONAL HOMECARE
             $personalHomecare = PersonalHomecare::where("id", $request->id)->first();
-            $personalHomecare->fill($request->only(
-                "schedule",
-                "name",
-                "phone",
-                "address",
-                "province_id",
-                "city_id",
-                "subdistrict_id",
-                "branch_id",
-                "cso_id",
-                "ph_product_id",
-            ));
+            if($personalHomecare['status'] == "new"){
+                $personalHomecare->fill($request->only(
+                    "schedule",
+                    "name",
+                    "phone",
+                    "address",
+                    "province_id",
+                    "city_id",
+                    "subdistrict_id",
+                    "branch_id",
+                    "cso_id",
+                    "ph_product_id",
+                ));
+            }
+            else{
+                $personalHomecare->fill($request->only(
+                    "name",
+                    "phone",
+                    "address",
+                    "province_id",
+                    "city_id",
+                    "subdistrict_id",
+                ));
+            }
+            
 
             if ($request->hasFile("id_card_image")) {
                 $timestamp = (string) time();
@@ -386,6 +414,19 @@ class PersonalHomecareController extends Controller
 
                 $personalHomecare->id_card = $fileName;
             }
+
+            if ($request->hasFile("member_wakimart_image")) {
+                $timestamp = (string) time();
+                $fileName = $timestamp
+                    . "_member_wakimart"
+                    . "."
+                    . $request->file("member_wakimart_image")->getClientOriginalExtension();
+
+                $request->file("member_wakimart_image")->move("sources/phc", $fileName);
+
+                $personalHomecare->member_wakimart = $fileName;
+            }
+            
             if ($request->hasFile("product_photo_2")){
                 $personalHomecare->status = "process";
             }
@@ -395,7 +436,7 @@ class PersonalHomecareController extends Controller
             // FOR HISTORY
             $userId = Auth::user()["id"];
             $historyPH["type_menu"] = "Personal Homecare";
-            $historyPH["method"] = "Change Status";
+            $historyPH["method"] = "Change Data";
             $historyPH["meta"] = json_encode(
                 [
                     "user" => $userId,
@@ -419,6 +460,9 @@ class PersonalHomecareController extends Controller
             if ($request->has("other_completeness")) {
                 $condition["other"] = $request->input("other_completeness");
             }
+            if($condition["completeness"] == null){
+                $condition["completeness"] = [];
+            } 
             $condition["machine"] = $request->input("machine_condition");
             $condition["physical"] = $request->input("physical_condition");
             $phcChecklistOut->condition = $condition;
@@ -450,6 +494,23 @@ class PersonalHomecareController extends Controller
 
             $phcChecklistOut->image = $imageArray;
             $phcChecklistOut->save();
+
+            // FOR HISTORY Checkout
+            $userId = Auth::user()["id"];
+            $historyPH["type_menu"] = "Personal Homecare Checkout";
+            $historyPH["method"] = "Change Data";
+            $historyPH["meta"] = json_encode(
+                [
+                    "user" => $userId,
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "dataBefore" => $phcChecklistOut->getOriginal(),
+                    "dataChange" => $phcChecklistOut->getChanges(),
+                ],
+                JSON_THROW_ON_ERROR
+            );
+            $historyPH["user_id"] = $userId;
+            $historyPH["menu_id"] = $request->id;
+            HistoryUpdate::create($historyPH);
 
             DB::commit();
 
@@ -599,7 +660,7 @@ class PersonalHomecareController extends Controller
                 "=",
                 "history_updates.user_id"
             )
-            ->where("history_updates.type_menu", "Personal Homecare")
+            ->where("history_updates.type_menu", "like", "%Personal Homecare%")
             ->where("history_updates.menu_id", $request->id)
             ->get();
 
