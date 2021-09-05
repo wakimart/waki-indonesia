@@ -503,7 +503,6 @@ class PersonalHomecareController extends Controller
                 [
                     "user" => $userId,
                     "createdAt" => date("Y-m-d H:i:s"),
-                    "dataBefore" => $phcChecklistOut->getOriginal(),
                     "dataChange" => $phcChecklistOut->getChanges(),
                 ],
                 JSON_THROW_ON_ERROR
