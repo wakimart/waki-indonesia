@@ -210,7 +210,7 @@ $menu_item_second = "list_all";
                                 </tbody>
                             </table>
                             <br>
-                            {{ $personalhomecares->links() }}
+                            {{ $personalhomecares->appends($data)->links() }}
                         </div>
                     </div>
                 </div>
