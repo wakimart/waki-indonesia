@@ -536,8 +536,8 @@ $menu_item_page = "personal_homecare";
             <div id="element-to-print"
                 class="col-12 grid-margin stretch-card showPrinted">
                 <div class="card">
-                    <div class="card-body">
-                        <div style="background-color: #008349; height: 15px;"></div>
+                    <div class="card-body" style="padding-top: 0px;">
+                        {{-- <div style="background-color: #008349; height: 15px;"></div> --}}
                         <div style="width: 200px; margin: auto;">
                             <img style="width: 100%;"
                                 src="{{ asset('sources/logosince.svg') }}"
@@ -615,31 +615,34 @@ $menu_item_page = "personal_homecare";
                                         </td>
                                         <td>
                                             <ul>
-                                                @foreach ($personalhomecare->checklistOut['condition']['completeness'] as $completeness)
+                                                @php
+                                                    $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
+                                                    $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                                @endphp
+                                                @foreach ($arr_completness as $completeness)
                                                     @if ($completeness !== "other")
-                                                        <li>
+                                                        <li style="line-height: 1.3;">
                                                             {{ ucwords($completeness) }}
                                                         </li>
                                                     @endif
                                                 @endforeach
+                                                <li style="line-height: 1.3;">Other</li>
                                             </ul>
                                         </td>
                                         <td>
                                             <b>MESIN</b>
                                             <ul>
-                                                <li>
-                                                    {{ ucwords($personalhomecare->checklistOut['condition']['machine']) }}
-                                                </li>
+                                                <li style="line-height: 1.3;">Normal</li>
+                                                <li style="line-height: 1.3;">Need Repair</li>
                                             </ul>
                                             <b>FISIK</b>
                                             <ul>
-                                                <li>
-                                                    {{ ucwords($personalhomecare->checklistOut['condition']['physical']) }}
-                                                </li>
+                                                <li style="line-height: 1.3;">New</li>
+                                                <li style="line-height: 1.3;">Moderate</li>
+                                                <li style="line-height: 1.3;">Need Repair</li>
                                             </ul>
                                         </td>
                                         <td class="text-center">
-                                            {{ $personalhomecare->checklistOut['condition']['other'] }}
                                         </td>
                                     </tr>
                                 </table>
@@ -650,12 +653,12 @@ $menu_item_page = "personal_homecare";
                             <h5>SYARAT & KETENTUAN:</h5>
                             <div style="width: 90%; margin: auto;">
                                 <ol type="1">
-                                    <li>Program pinjaman produk 5 hari tidak dipungut biaya apapun</li>
-                                    <li>Sudah menjadi member Wakimart</li>
-                                    <li>Minimal berusia 35 tahun</li>
-                                    <li>Biaya akan dikenakan kepada konsumen jika ada sparepart ataupun kerusakan di luar persetujuan</li>
-                                    <li>Syarat dan Ketentuan dapat berubah tanpa pemberitahuan sebelumnya</li>
-                                    <li>Kenyamanan dan keamanan konsumen kami adalah prioritas pertama</li>
+                                    <li style="line-height: 1.3;">Program pinjaman produk 5 hari tidak dipungut biaya apapun</li>
+                                    <li style="line-height: 1.3;">Sudah menjadi member Wakimart</li>
+                                    <li style="line-height: 1.3;">Minimal berusia 35 tahun</li>
+                                    <li style="line-height: 1.3;">Biaya akan dikenakan kepada konsumen jika ada sparepart ataupun kerusakan di luar persetujuan</li>
+                                    <li style="line-height: 1.3;">Syarat dan Ketentuan dapat berubah tanpa pemberitahuan sebelumnya</li>
+                                    <li style="line-height: 1.3;">Kenyamanan dan keamanan konsumen kami adalah prioritas pertama</li>
                                 </ol>
                                 <p>Apabila ada sesuatu atau ada pertanyaan, bisa menghubungi kami melalui facebook page WAKi Indonesia ataau customer care kami : 0815-5467-3357</p>
                             </div>
@@ -676,9 +679,7 @@ $menu_item_page = "personal_homecare";
                         <br><br>
                         <div class="clearfix"></div>
                         <div class="clearfix"></div>
-                        <p style="page-break-after: always;">&nbsp;</p>
-                        <p style="page-break-before: always;">&nbsp;</p>
-                        <div>
+                        <div style="border-top: black 1px dashed;">
                             <div style="width: 80%; margin: auto; text-align: center;">
                                 <h1 style="font-weight: 700;">
                                     SURAT PENGAMBILAN BARANG
@@ -709,33 +710,36 @@ $menu_item_page = "personal_homecare";
                                         <td class="text-center">
                                             {{ $personalhomecare->personalHomecareProduct->product->name }}
                                         </td>
-                                        <td>
+                                       <td>
                                             <ul>
-                                                @foreach ($personalhomecare->checklistOut['condition']['completeness'] as $completeness)
+                                                @php
+                                                    $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
+                                                    $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                                @endphp
+                                                @foreach ($arr_completness as $completeness)
                                                     @if ($completeness !== "other")
-                                                        <li>
+                                                        <li style="line-height: 1.3;">
                                                             {{ ucwords($completeness) }}
                                                         </li>
                                                     @endif
                                                 @endforeach
+                                                <li style="line-height: 1.3;">Other</li>
                                             </ul>
                                         </td>
                                         <td>
                                             <b>MESIN</b>
                                             <ul>
-                                                <li>
-                                                    {{ ucwords($personalhomecare->checklistOut['condition']['machine']) }}
-                                                </li>
+                                                <li style="line-height: 1.3;">Normal</li>
+                                                <li style="line-height: 1.3;">Need Repair</li>
                                             </ul>
                                             <b>FISIK</b>
                                             <ul>
-                                                <li>
-                                                    {{ ucwords($personalhomecare->checklistOut['condition']['physical']) }}
-                                                </li>
+                                                <li style="line-height: 1.3;">New</li>
+                                                <li style="line-height: 1.3;">Moderate</li>
+                                                <li style="line-height: 1.3;">Need Repair</li>
                                             </ul>
                                         </td>
                                         <td class="text-center">
-                                            {{ $personalhomecare->checklistOut['condition']['other'] }}
                                         </td>
                                     </tr>
                                 </table>
