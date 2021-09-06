@@ -135,6 +135,37 @@ class WarehouseController extends Controller
 
     public function destroy(Request $request)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $warehouse = Warehouse::where($request->id)->first();
+            $warehouse->active = false;
+            $warehouse->save();
+
+            $userId = Auth::user()["id"];
+            $history["type_menu"] = "Warehouse";
+            $history["method"] = "Delete";
+            $history["meta"] = json_encode(
+                [
+                    "user" => $userId,
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "dataChange" => $warehouse->getChanges(),
+                ],
+                JSON_THROW_ON_ERROR
+            );
+            $history["user_id"] = $userId;
+            $history["menu_id"] = $request->id;
+            HistoryUpdate::create($history);
+
+            DB::commit();
+
+            return redirect()
+                ->route("list_warehouse")
+                ->with("success", "Warehouse successfully deleted.");
+        } catch (Throwable $th) {
+            DB::rollBack();
+
+            return response()->json(["error" => $th->getMessage()], 500);
+        }
     }
 }
