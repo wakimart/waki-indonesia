@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\HistoryStock;
+use App\Stock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class HistoryStockController extends Controller
 {
@@ -12,9 +16,25 @@ class HistoryStockController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $historystocks = HistoryStock::orderBy('date')->paginate(10);
+
+        if ($request->has("filter_code")) {
+            $filterCode = $request->filter_code;
+            $historystocks = $historystocks->where(function ($q) use ($filterCode) {
+                $q->where('code', "like", "%" . $filterCode . "%");
+            });
+        }
+        if ($request->has("filter_type")) {
+            $historystocks = $historystocks->where('type', $request->historystocks);
+        }
+        if ($request->has("filter_date")) {
+            $historystocks = $historystocks->where('date', $request->historystocks);
+        }
+
+        return view("admin.list_history_stock", compact("historystocks"))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**
@@ -24,7 +44,11 @@ class HistoryStockController extends Controller
      */
     public function create()
     {
-        //
+        $stocks = Stock::with('product')->where('active', true)->get();
+
+        return view("admin.add_history_stock", compact(
+            "stocks",
+        ));
     }
 
     /**
@@ -55,9 +79,13 @@ class HistoryStockController extends Controller
      * @param  \App\HistoryStock  $historyStock
      * @return \Illuminate\Http\Response
      */
-    public function edit(HistoryStock $historyStock)
+    public function edit(Request $request)
     {
-        //
+        $historystock = HistoryStock::where($request->id)->first();
+
+        $stocks = Stock::with('product')->where('active', true)->get();
+
+        return view("admin.update_history_stock", compact("historystock", "stocks"));
     }
 
     /**

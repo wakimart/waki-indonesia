@@ -955,6 +955,17 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("delete", "WarehouseController@destroy")
             ->name("delete_warehouse");
     });
+
+    Route::group(["prefix" => "history-stock", "middleware" => "auth"], function () {
+        Route::get("add", "HistoryStockController@create")->name("add_history_stock");
+        Route::get("list", "HistoryStockController@index")->name("list_history_stock");
+        Route::post("store", "HistoryStockController@store")
+            ->name("store_history_stock");
+        Route::get("edit/{id}", "HistoryStockController@edit")
+            ->name("edit_history_stock");
+        Route::post("update", "HistoryStockController@update")
+            ->name("update_history_stock");
+    });
 });
 
 Auth::routes();
