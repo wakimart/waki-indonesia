@@ -16,7 +16,26 @@ class WarehouseController extends Controller
 {
     public function index(Request $request)
     {
-        //
+        $warehouses = Warehouse::where('active', true);
+
+        if ($request->has("filter_name")) {
+            $filterName = $request->filter_name;
+            $warehouses = $warehouses->where(function ($q) use ($filterName) {
+                $q->where('name', "like", "%" . $filterName . "%");
+            });
+        }
+
+        if ($request->has("filter_warehouse_code")) {
+            $filterCode = $request->filter_warehouse_code;
+            $warehouses = $warehouses->where(function ($q) use ($filterCode) {
+                $q->where('code', "like", "%" . $filterCode . "%");
+            });
+        }
+
+        $warehouses = $warehouses->orderBy('code')->paginate(10);
+
+        return view("admin.list_warehouse", compact("warehouses"))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     public function create()

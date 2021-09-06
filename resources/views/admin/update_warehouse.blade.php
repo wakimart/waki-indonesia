@@ -32,6 +32,10 @@ $menu_item_second = "add_warehouse";
         font-size: 14px !important;
     }
 
+    .input-group-text {
+        color: black !important;
+    }
+
     .select2-selection__rendered {
         line-height: 45px !important;
     }
@@ -52,7 +56,7 @@ $menu_item_second = "add_warehouse";
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Add Warehouse</h3>
+            <h3 class="page-title">Update Warehouse</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -62,7 +66,7 @@ $menu_item_second = "add_warehouse";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Add
+                        Update
                     </li>
                 </ol>
             </nav>

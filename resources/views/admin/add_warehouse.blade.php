@@ -32,6 +32,11 @@ $menu_item_second = "add_warehouse";
         font-size: 14px !important;
     }
 
+
+    .input-group-text {
+        color: black !important;
+    }
+
     .select2-selection__rendered {
         line-height: 45px !important;
     }
@@ -44,6 +49,12 @@ $menu_item_second = "add_warehouse";
     .select2-selection--single
     .select2-selection__arrow {
         top: 10px;
+    }
+
+    .div-CheckboxGroup {
+        border: solid 1px rgba(128, 128, 128, 0.32941);
+        padding: 10px;
+        border-radius: 3px;
     }
 </style>
 @endsection
