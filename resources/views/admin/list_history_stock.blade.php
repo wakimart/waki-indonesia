@@ -164,7 +164,7 @@ $menu_item_second = "list_history_stock";
                                                 </a>
                                             </td>
                                             <td class="center">
-                                                <a href="">
+                                                <a href="{{ route('edit_history_stock', ['id' => $historystock['id']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>
@@ -173,7 +173,7 @@ $menu_item_second = "list_history_stock";
                                                     data-toggle="modal"
                                                     href="#deleteDoModal"
                                                     onclick="submitDelete(this)"
-                                                    data-id="">
+                                                    data-id="{{ $historystock->id }}">
                                                     <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                 </a>
                                             </td>

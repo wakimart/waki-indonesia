@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\HistoryStock;
+use App\Stock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class HistoryStockController extends Controller
 {
@@ -40,7 +44,11 @@ class HistoryStockController extends Controller
      */
     public function create()
     {
-        //
+        $stocks = Stock::with('product')->where('active', true)->get();
+
+        return view("admin.add_history_stock", compact(
+            "stocks",
+        ));
     }
 
     /**
@@ -71,9 +79,13 @@ class HistoryStockController extends Controller
      * @param  \App\HistoryStock  $historyStock
      * @return \Illuminate\Http\Response
      */
-    public function edit(HistoryStock $historyStock)
+    public function edit(Request $request)
     {
-        //
+        $historystock = HistoryStock::where($request->id)->first();
+
+        $stocks = Stock::with('product')->where('active', true)->get();
+
+        return view("admin.update_history_stock", compact("historystock", "stocks"));
     }
 
     /**
