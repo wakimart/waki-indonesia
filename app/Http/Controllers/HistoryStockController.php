@@ -12,9 +12,25 @@ class HistoryStockController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $historystocks = HistoryStock::orderBy('date')->paginate(10);
+
+        if ($request->has("filter_code")) {
+            $filterCode = $request->filter_code;
+            $historystocks = $historystocks->where(function ($q) use ($filterCode) {
+                $q->where('code', "like", "%" . $filterCode . "%");
+            });
+        }
+        if ($request->has("filter_type")) {
+            $historystocks = $historystocks->where('type', $request->historystocks);
+        }
+        if ($request->has("filter_date")) {
+            $historystocks = $historystocks->where('date', $request->historystocks);
+        }
+
+        return view("admin.list_history_stock", compact("historystocks"))
+            ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
     /**

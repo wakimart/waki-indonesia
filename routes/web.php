@@ -955,6 +955,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("delete", "WarehouseController@destroy")
             ->name("delete_warehouse");
     });
+
+    Route::group(["prefix" => "history-stock", "middleware" => "auth"], function () {
+        Route::get("list", "HistoryStockController@index")->name("list_history_stock");
+    });
 });
 
 Auth::routes();
