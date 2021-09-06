@@ -1,23 +1,14 @@
 <?php
-$menu_item_page = "stock_warehouse";
+$menu_item_page = "warehouse";
 $menu_item_second = "list_warehouse";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
 <style type="text/css">
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
     .table th img, .table td img {
         border-radius: 0% !important;
     }
-
 </style>
 @endsection
 
@@ -43,43 +34,49 @@ $menu_item_second = "list_warehouse";
             </nav>
         </div>
 
+        <form id="form-search" method="GET" action="{{ route("list_warehouse") }}"></form>
+
         <div class="row">
             <div class="col-12" style="margin-bottom: 0;">
-                <div class="col-xs-6 col-sm-4" 
-                    style="margin-bottom: 0; padding: 0; display: inline-block">
+                <div class="col-xs-6 col-sm-4"
+                    style="margin-bottom: 0; padding: 0; display: inline-block;">
                     <div class="form-group">
                         <label for="">Search By Name</label>
-                        <input class="form-control" 
-                            id="filter_name" 
-                            name="filter_name" 
-                            placeholder="Search By Name" 
-                            value="{{ isset($_GET['filter_name']) ? $_GET['filter_name'] : '' }}">
-                        <div class="validation"></div>
+                        <input class="form-control"
+                            id="filter_name"
+                            name="filter_name"
+                            placeholder="Search By Name"
+                            form="form-search"
+                            value="{{ $_GET['filter_name'] ?? "" }}" />
                     </div>
                 </div>
 
-                <div class="col-xs-6 col-sm-4" 
-                    style="margin-bottom: 0; padding: 0; display: inline-block">
+                <div class="col-xs-6 col-sm-4"
+                    style="margin-bottom: 0; padding: 0; display: inline-block;">
                     <div class="form-group">
                         <label for="">Search By Warehouse Code</label>
-                        <input class="form-control" 
-                            id="filter_warehouse_code" 
-                            name="filter_warehouse_code" 
-                            placeholder="Search By Warehouse Code" 
-                            value="{{ isset($_GET['filter_warehouse_code']) ? $_GET['filter_warehouse_code'] : '' }}">
-                        <div class="validation"></div>
+                        <input class="form-control"
+                            id="filter_warehouse_code"
+                            name="filter_warehouse_code"
+                            placeholder="Search By Warehouse Code"
+                            form="form-search"
+                            value="{{ $_GET['filter_warehouse_code'] ?? "" }}" />
                     </div>
                 </div>
 
-                <div class="col-xs-6 col-sm-6" 
-                    style="padding: 0; display: inline-block">
+                <div class="col-xs-6 col-sm-6"
+                    style="padding: 0; display: inline-block;">
                     <div class="form-group">
-                        <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-">
-                            <span class="mdi mdi-filter"></span> 
+                        <button class="btn btn-gradient-primary m-1"
+                            type="submit"
+                            form="form-search">
+                            <span class="mdi mdi-filter"></span>
                             Apply Filter
                         </button>
-                        <button id="btn-filter_reset" type="button" class="btn btn-gradient-danger m-1" name="filter_reset" value="-">
-                            <span class="mdi mdi-refresh"></span> 
+                        <button id="btn-filter_reset"
+                            type="button"
+                            class="btn btn-gradient-danger m-1">
+                            <span class="mdi mdi-refresh"></span>
                             Reset Filter
                         </button>
                     </div>
@@ -90,20 +87,22 @@ $menu_item_second = "list_warehouse";
                 <div class="card">
                     <div class="card-body">
                         <h5 style="margin-bottom: 0.5em;">
-                            Total : {{ sizeof($warehouses) }}
+                            Total: {{ $warehouses->total() }}
                         </h5>
                         <div class="table-responsive"
                             style="border: 1px solid #ebedf2;">
-                            <table class="table table-bordered" id="myTable">
+                            <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
+                                        <th class="text-center">No.</th>
                                         <th>Parent Warehouse</th>
                                         <th>Code</th>
                                         <th>Name</th>
                                         <th>Address</th>
                                         <th>Description</th>
-                                        <th colspan="2" class="center">Edit/Delete</th>
+                                        <th colspan="2" class="text-center">
+                                            Edit/Delete
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -112,19 +111,23 @@ $menu_item_second = "list_warehouse";
                                             <td class="text-right">
                                                 {{ ++$i }}
                                             </td>
-                                            @if (!empty($warehouse->parent_warehouse_id)) 
-                                                <td>{{ $warehouse->parent_warehouse_id }}</td>
+                                            @if ($warehouse->parent_warehouse_id)
+                                                <td>
+                                                    {{ $warehouse->parentWarehouse->name }}
+                                                </td>
                                             @endif
                                             <td>{{ $warehouse->code }}</td>
                                             <td>{{ $warehouse->name }}</td>
                                             <td>{{ $warehouse->address }}</td>
-                                            <td>{{ $warehouse->description }}</td>
-                                            <td class="center">
+                                            <td>
+                                                {{ $warehouse->description }}
+                                            </td>
+                                            <td class="text-center">
                                                 <a href="{{ route('edit_warehouse', ['id' => $warehouse['id']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>
-                                            <td class="center">
+                                            <td class="text-center">
                                                 <a class="btn-delete disabled"
                                                     data-toggle="modal"
                                                     href="#deleteDoModal"
@@ -145,46 +148,45 @@ $menu_item_second = "list_warehouse";
             </div>
         </div>
     </div>
-    <!-- partial -->
-    <!-- Modal Delete -->
-    <div class="modal fade"
-        id="deleteDoModal"
-        tabindex="-1"
-        role="dialog"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade"
+    id="deleteDoModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 style="text-align:center;">
+                    Are you sure to delete this warehouse?
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <form method="post"
+                    action="{{ route('delete_personal_homecare') }}">
+                    @csrf
+                    <input type="hidden" name="id" id="id-delete" />
+                    <button type="submit"
+                        class="btn btn-gradient-danger mr-2">
+                        Yes
                     </button>
-                </div>
-                <div class="modal-body">
-                    <h5 style="text-align:center;">
-                        Are you sure to delete this product?
-                    </h5>
-                </div>
-                <div class="modal-footer">
-                    <form id="frmDelete"
-                        method="post"
-                        action="{{ route('delete_personal_homecare') }}">
-                        @csrf
-                        <input type="hidden" name="id" id="id-delete" />
-                        <button type="submit"
-                            class="btn btn-gradient-danger mr-2">
-                            Yes
-                        </button>
-                    </form>
-                    <button class="btn btn-light">No</button>
-                </div>
+                </form>
+                <button class="btn btn-light">No</button>
             </div>
         </div>
     </div>
-    <!-- End Modal Delete -->
 </div>
+<!-- End Modal Delete -->
 @endsection
 
 @section("script")
@@ -192,32 +194,12 @@ $menu_item_second = "list_warehouse";
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
- 
+
 $(document).ready(function (e) {
-    $("#btn-filter").click(function (e) {
-        var urlParamArray = new Array();
-        var urlParamStr = "";
-        if($('#filter_name').val() != ""){
-            urlParamArray.push("filter_name=" + $('#filter_name').val());
-        }
-        if($('#filter_warehouse_code').val() != ""){
-            urlParamArray.push("filter_warehouse_code=" + $('#filter_warehouse_code').val());
-        }
-
-        for (var i = 0; i < urlParamArray.length; i++) {
-            if (i === 0) {
-                urlParamStr += "?" + urlParamArray[i]
-            } else {
-                urlParamStr += "&" + urlParamArray[i]
-            }
-        }
-        window.location.href = "{{route('list_warehouse')}}" + urlParamStr;
-    });
-
     $("#btn-filter_reset").click(function (e) {
-         window.location.href = "{{route('list_warehouse')}}";
+         window.location.href = "{{ route('list_warehouse') }}";
     });
-}); 
+});
 
 </script>
 @endsection
