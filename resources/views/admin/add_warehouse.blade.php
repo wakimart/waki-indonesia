@@ -83,8 +83,7 @@ $menu_item_second = "add_warehouse";
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <form class="forms-sample"
-                            method="POST"
+                        <form method="POST"
                             action="{{ route("store_warehouse") }}">
                             @csrf
                             <div class="form-group">
