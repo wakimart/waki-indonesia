@@ -1,10 +1,10 @@
 <?php
-$menu_item_page = "stock_warehouse";
+$menu_item_page = "warehouse";
 $menu_item_second = "add_warehouse";
 ?>
-@extends('admin.layouts.template')
+@extends("admin.layouts.template")
 
-@section('style')
+@section("style")
 <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
     integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
@@ -31,6 +31,7 @@ $menu_item_second = "add_warehouse";
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
+
 
     .input-group-text {
         color: black !important;
@@ -68,11 +69,11 @@ $menu_item_second = "add_warehouse";
                     <li class="breadcrumb-item">
                         <a data-toggle="collapse"
                             aria-expanded="false">
-                            Stock Warehouse
+                            Warehouse
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Update Warehouse
+                        Update
                     </li>
                 </ol>
             </nav>
@@ -82,22 +83,25 @@ $menu_item_second = "add_warehouse";
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <form id="add-warehouse"
+                        <form class="forms-sample"
                             method="POST"
-                            enctype="multipart/form-data"
-                            action="">
+                            action="{{ route("update_warehouse") }}">
                             @csrf
-
                             <div class="form-group">
-                                <label for="parent">Parent Warehouse</label>
+                                <label for="parent_warehouse_id">
+                                    Parent Warehouse
+                                </label>
                                 <select class="form-control"
-                                    name=""
-                                    id="parent"
-                                    required>
-                                    <option disabled selected>
-                                        Select Parent Warehouse (Jika Ada)
+                                    name="parent_warehouse_id"
+                                    id="parent_warehouse_id">
+                                    <option selected value="">
+                                        Select Parent Warehouse
                                     </option>
-                                    <option></option>
+                                    @foreach ($parentWarehouses as $parentWarehouse)
+                                        <option value="{{ $parentWarehouse->id }}">
+                                            {{ $parentWarehouse->code }} - {{ $parentWarehouse->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -105,9 +109,10 @@ $menu_item_second = "add_warehouse";
                                 <label for="code">Code</label>
                                 <input type="text"
                                     class="form-control"
-                                    name=""
+                                    name="code"
                                     id="code"
                                     placeholder="Code"
+                                    maxlength="191"
                                     required />
                             </div>
 
@@ -115,21 +120,21 @@ $menu_item_second = "add_warehouse";
                                 <label for="name">Name</label>
                                 <input type="text"
                                     class="form-control"
-                                    maxlength="191"
-                                    name="name"
                                     id="name"
+                                    name="name"
                                     placeholder="Name"
+                                    maxlength="200"
                                     required />
                             </div>
 
                             <div class="form-group">
                                 <label for="address">Address</label>
-                                <textarea class="form-control"
-                                    name="address"
+                                <textarea name="address"
+                                    class="form-control"
                                     id="address"
+                                    rows="2"
                                     placeholder="Address"
-                                    rows="3"
-                                    required></textarea>
+                                    maxlength="300"></textarea>
                             </div>
 
                             <div class="form-group">
@@ -177,25 +182,25 @@ $menu_item_second = "add_warehouse";
 
                             <div class="form-group">
                                 <label for="description">Description</label>
-                                <textarea class="form-control"
-                                    name="description"
+                                <textarea name="description"
+                                    class="form-control"
                                     id="description"
-                                    placeholder="Descruption"
-                                    rows="3"
-                                    required></textarea>
+                                    rows="2"
+                                    placeholder="Description"
+                                    maxlength="191"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit"
+                                    class="btn btn-gradient-primary">
+                                    Update
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <button type="submit"
-            id="submit-button"
-            form="add-phc"
-            class="btn btn-gradient-primary">
-            Update
-        </button>
     </div>
 </div>
 @endsection
@@ -207,6 +212,12 @@ $menu_item_second = "add_warehouse";
     referrerpolicy="no-referrer"
     defer></script>
 <script type="application/javascript">
+document.addEventListener("DOMContentLoaded", function () {
+    $("#parent_warehouse_id").select2();
+    $("#province_id").select2();
+    $("#city_id").select2();
+    $("#subdistrict_id").select2();
+});
 
 function setCity(e) {
     const URL = '{{ route("fetchCity", ["province" => ""]) }}/' + e.value;
@@ -253,7 +264,7 @@ function setCity(e) {
 
             $("#city_id").select2();
         }
-    }).catch(function(error) {
+    }).catch(function (error) {
         console.error(error);
     });
 }
@@ -286,9 +297,7 @@ function setSubdistrict(e) {
             $("#subdistrict_id").select2("destroy");
 
             result.forEach(function (currentValue) {
-                optionsDistrict += '<option value="'
-                    + currentValue["subdistrict_id"]
-                    + '">'
+                optionsDistrict += `<option value="${currentValue["subdistrict_id"]}">`
                     + currentValue['subdistrict_name']
                     + '</option>';
             });
@@ -300,16 +309,6 @@ function setSubdistrict(e) {
     }).catch(function (error) {
         console.error(error);
     })
-}
-
-function showOtherInput(e) {
-    if (e.checked) {
-        document.getElementById("other-text").classList.remove("d-none");
-        document.getElementById("other-text").setAttribute("required", "");
-    } else {
-        document.getElementById("other-text").removeAttribute("required");
-        document.getElementById("other-text").classList.add("d-none");
-    }
 }
 </script>
 @endsection

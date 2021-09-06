@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        'code', 'quick_desc', 'description', 'image', 'video', 'category_id', 'name', 'price', 'active'
+        'code',
+        'quick_desc',
+        'description',
+        'image',
+        'video',
+        'category_id',
+        'name',
+        'price',
+        'active',
     ];
 
     public function category()
@@ -18,5 +26,10 @@ class Product extends Model
     public function personalHomecareProduct()
     {
         return $this->hasMany('App\PersonalHomecareProduct');
+    }
+
+    public function stock()
+    {
+        return $this->hasMany("App\Stock");
     }
 }

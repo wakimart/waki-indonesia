@@ -942,6 +942,19 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("delete", "PersonalHomecareController@destroy")
             ->name("delete_personal_homecare");
     });
+
+    Route::group(["prefix" => "warehouse", "middleware" => "auth"], function () {
+        Route::get("add", "WarehouseController@create")->name("add_warehouse");
+        Route::post("store", "WarehouseController@store")
+            ->name("store_warehouse");
+        Route::get("list", "WarehouseController@index")->name("list_warehouse");
+        Route::get("edit/{id}", "WarehouseController@edit")
+            ->name("edit_warehouse");
+        Route::post("update", "WarehouseController@update")
+            ->name("update_warehouse");
+        Route::post("delete", "WarehouseController@destroy")
+            ->name("delete_warehouse");
+    });
 });
 
 Auth::routes();
