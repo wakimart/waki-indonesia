@@ -32,7 +32,6 @@ $menu_item_second = "add_warehouse";
         font-size: 14px !important;
     }
 
-
     .input-group-text {
         color: black !important;
     }
@@ -49,12 +48,6 @@ $menu_item_second = "add_warehouse";
     .select2-selection--single
     .select2-selection__arrow {
         top: 10px;
-    }
-
-    .div-CheckboxGroup {
-        border: solid 1px rgba(128, 128, 128, 0.32941);
-        padding: 10px;
-        border-radius: 3px;
     }
 </style>
 @endsection
@@ -87,6 +80,11 @@ $menu_item_second = "add_warehouse";
                             method="POST"
                             action="{{ route("update_warehouse") }}">
                             @csrf
+                            <input type="hidden"
+                                name="id"
+                                value="{{ $warehouse->id }}"
+                                required />
+
                             <div class="form-group">
                                 <label for="parent_warehouse_id">
                                     Parent Warehouse
@@ -98,9 +96,15 @@ $menu_item_second = "add_warehouse";
                                         Select Parent Warehouse
                                     </option>
                                     @foreach ($parentWarehouses as $parentWarehouse)
-                                        <option value="{{ $parentWarehouse->id }}">
-                                            {{ $parentWarehouse->code }} - {{ $parentWarehouse->name }}
-                                        </option>
+                                        @if ($warehouse->parent_warehouse_id === $parentWarehouse->id)
+                                            <option value="{{ $parentWarehouse->id }}" selected>
+                                                {{ $parentWarehouse->code }} - {{ $parentWarehouse->name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $parentWarehouse->id }}">
+                                                {{ $parentWarehouse->code }} - {{ $parentWarehouse->name }}
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -113,6 +117,7 @@ $menu_item_second = "add_warehouse";
                                     id="code"
                                     placeholder="Code"
                                     maxlength="191"
+                                    value="{{ $warehouse->code }}"
                                     required />
                             </div>
 
@@ -124,6 +129,7 @@ $menu_item_second = "add_warehouse";
                                     name="name"
                                     placeholder="Name"
                                     maxlength="200"
+                                    value="{{ $warehouse->name }}"
                                     required />
                             </div>
 
@@ -134,7 +140,7 @@ $menu_item_second = "add_warehouse";
                                     id="address"
                                     rows="2"
                                     placeholder="Address"
-                                    maxlength="300"></textarea>
+                                    maxlength="300">{{ $warehouse->address }}</textarea>
                             </div>
 
                             <div class="form-group">
@@ -148,9 +154,15 @@ $menu_item_second = "add_warehouse";
                                         Select Province
                                     </option>
                                     @foreach ($provinces as $province)
-                                        <option value="{{ $province->id }}">
-                                            {{ $province->name }}
-                                        </option>
+                                        @if ($personalhomecare->province_id === $province->id)
+                                            <option value="{{ $province->id }}" selected>
+                                                {{ $province->name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $province->id }}">
+                                                {{ $province->name }}
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -162,9 +174,20 @@ $menu_item_second = "add_warehouse";
                                     id="city_id"
                                     onchange="setSubdistrict(this)"
                                     required>
-                                    <option disabled selected>
+                                    <option disabled>
                                         Select City
                                     </option>
+                                    @foreach ($cities as $city)
+                                        @if ($personalhomecare->city_id === $city->id)
+                                            <option value="{{ $city->id }}" selected>
+                                                {{ $city->name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $city->id }}">
+                                                {{ $city->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -177,6 +200,17 @@ $menu_item_second = "add_warehouse";
                                     <option disabled selected>
                                         Select Subdistrict
                                     </option>
+                                    @foreach ($subdistricts as $subdistrict)
+                                        @if ($personalhomecare->subdistrict_id === $subdistrict->id)
+                                            <option value="{{ $subdistrict->id }}" selected>
+                                                {{ $subdistrict->name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $subdistrict->id }}">
+                                                {{ $subdistrict->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -187,7 +221,7 @@ $menu_item_second = "add_warehouse";
                                     id="description"
                                     rows="2"
                                     placeholder="Description"
-                                    maxlength="191"></textarea>
+                                    maxlength="191">{{ $warehouse->description }}</textarea>
                             </div>
 
                             <div class="form-group">
