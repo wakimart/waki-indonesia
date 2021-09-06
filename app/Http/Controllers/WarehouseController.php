@@ -122,6 +122,10 @@ class WarehouseController extends Controller
             HistoryUpdate::create($history);
 
             DB::commit();
+
+            return redirect()
+                ->route("list_warehouse")
+                ->with("success", "Warehouse successfully updated.");
         } catch (Throwable $th) {
             DB::rollBack();
 
