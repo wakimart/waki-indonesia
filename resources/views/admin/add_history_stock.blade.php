@@ -124,30 +124,54 @@ $menu_item_second = "add_history_stock";
                                 </select>
                             </div>
 
-                            <div class="form-group">
-                                <label for="product_id">Product</label>
-                                <select class="form-control"
-                                    name="product_id"
-                                    id="product_id"
-                                    required>
-                                    <option disabled selected>
-                                        Select Product
-                                    </option>
-                                    @foreach ($products as $product)
-                                        <option value="{{ $product->id }}">
-                                            {{ $product->code }} - {{ $product->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <div id="product-container">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="text-center" 
+                                            style="display: block;
+                                                background: #4caf3ab3;
+                                                float: right;
+                                                margin-bottom: 20px;">
+                                            <button class="btn btn-gradient-primary" 
+                                                id="tambah_product" 
+                                                type="button">
+                                                Add Product
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="quantity">Quantity</label>
-                                <input id="quantity"
-                                    type="number"
-                                    class="form-control"
-                                    placeholder="Quantity"
-                                    required />
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="product_id">Product</label>
+                                            <select class="form-control"
+                                                name="product_id"
+                                                id="product_id"
+                                                required>
+                                                <option disabled selected>
+                                                    Select Product
+                                                </option>
+                                                @foreach ($products as $product)
+                                                    <option value="{{ $product->id }}">
+                                                        {{ $product->code }} - {{ $product->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="quantity">Quantity</label>
+                                            <input id="quantity"
+                                                type="number"
+                                                class="form-control"
+                                                placeholder="Quantity"
+                                                required />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tambahan_product"></div>
                             </div>
 
                             <div class="form-group">
@@ -187,5 +211,42 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#product_id").select2();
     $("#type").select2();
 });
+
+$(document).ready(function(){
+
+		$("#tambah_product").click(function(e){
+	        e.preventDefault();
+	        strIsi = "<div class='row'>"
+                + "<div class='col-md-12'>"
+                + "<div class='text-center'"
+                + "style='display: block; background: #4caf3ab3; float: right; margin-bottom: 20px;'\>"
+                + "<button class='btn btn-gradient-danger hapus_product' type='button'>"
+                + "Remove Product"
+                + "</button>"
+                + "</div>"
+                + "</div>"
+                + "</div>"
+
+                + "<div id='row_' class='row'><div class='col-md-8'><div class='form-group'>"
+                + "<label for='product_'>Product</label>"
+                + "<select class='form-control' name='product_id' id='product_' required>"
+                + "<option disabled selected> Select Product </option>"
+                + "@foreach ($products as $product)"
+                + "<option value='{{ $product->id }}'> {{ $product->code }} - {{ $product->name }} </option>"
+                + "@endforeach"
+                + "</select></div></div> "
+                + "<div class='col-md-4'><div class='form-group'>"
+                + "<label for='quantity_'>Quantity</label>"
+                + "<input id='quantity_' type='number' class='form-control' placeholder='Quantity' required />"
+                + "</div></div></div>";
+            $('#tambahan_product').html($('#tambahan_product').html()+strIsi);
+	    });
+	    $(document).on("click",".hapus_product", function(e){
+	        e.preventDefault();
+	        $('#row_'+$(this).val()).remove();
+	        $(this).remove();
+	    });
+	});
+
 </script>
 @endsection
