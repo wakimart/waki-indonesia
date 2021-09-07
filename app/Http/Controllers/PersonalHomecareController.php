@@ -68,7 +68,7 @@ class PersonalHomecareController extends Controller
             $personalhomecares = $personalhomecares->whereIn('branch_id', $arrBranches);
         }
 
-        $personalhomecares = $personalhomecares->orderBy('schedule', "desc")->paginate(10);
+        $personalhomecares = $personalhomecares->orderBy('created_at', "desc")->paginate(10);
 
         $csos = Cso::select("id", "code", "name")
             ->where("active", true)
@@ -79,7 +79,9 @@ class PersonalHomecareController extends Controller
             ->orderBy("code", 'asc')
             ->get();
 
-        return view("admin.list_all_personalhomecare", compact("personalhomecares", "csos", "branches"))
+        $url = $request->all();
+
+        return view("admin.list_all_personalhomecare", compact("personalhomecares", "csos", "branches", "url"))
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 

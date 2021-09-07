@@ -166,6 +166,7 @@ $menu_item_second = "list_all";
                             <table class="table table-bordered" id="myTable">
                                 <thead>
                                     <tr>
+                                        <th>Created Date</th>
                                         <th>Schedule Date</th>
                                         <th>Customer Name</th>
                                         <th>Product Code</th>
@@ -177,6 +178,7 @@ $menu_item_second = "list_all";
                                 <tbody>
                                     @foreach($personalhomecares as $personalhomecare)
                                         <tr>
+                                            <td>{{ date("d/m/Y H:m:i", strtotime($personalhomecare->created_at)) }}</td>
                                             <td>{{ date("d/m/Y", strtotime($personalhomecare->schedule)) }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ date("d/m/Y", strtotime($personalhomecare->schedule . "+5 days")) }}</td>
                                             <td>{{ $personalhomecare->name }}</td>
                                             <td>{{ $personalhomecare->personalHomecareProduct->code }}</td>
@@ -210,7 +212,7 @@ $menu_item_second = "list_all";
                                 </tbody>
                             </table>
                             <br>
-                            {{ $personalhomecares->appends($data)->links() }}
+                            {{ $personalhomecares->appends($url)->links() }}
                         </div>
                     </div>
                 </div>

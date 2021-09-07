@@ -519,9 +519,10 @@ $menu_item_page = "personal_homecare";
                                         value="Terima Kasih telah mengikuti *Program Pinjamin Produk 5 Hari*. Berikut adalah tautan bukti formulir ( {{ $urlShareWa }} )">
                                         Share WhatsApp
                                     </button>
-                                    <button id="btn-print"
-                                        type="button"
-                                        class="btn btn-gradient-primary mr-2 btn-lg">
+                                    <button type="button"
+                                        class="btn btn-gradient-primary mr-2 btn-lg"
+                                        data-toggle="modal"
+                                        data-target="#modal-pre-print">
                                         Create PDF
                                     </button>
                                 </div>
@@ -571,7 +572,7 @@ $menu_item_page = "personal_homecare";
                             </div>
                             <div style="width: 48%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
                                 <h5>
-                                    CABANG: {{ $personalhomecare->branch->code }}
+                                    CABANG: {{ $personalhomecare->branch->code }} - {{ $personalhomecare->cso->name }}
                                 </h5>
                             </div>
                             <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
@@ -585,7 +586,7 @@ $menu_item_page = "personal_homecare";
                                 </h5>
                             </div>
                             <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>NO.MEMBER:</h5>
+                                <h5>NO.MEMBER: <span id="member_code"></span></h5>
                             </div>
                             <div style="width: 48%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
                                 <h5>
@@ -1008,6 +1009,42 @@ $menu_item_page = "personal_homecare";
         </div>
     </div>
 </div>
+
+<div class="modal" id="modal-pre-print" tabindex="-2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Member Code for Print</h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="pre-print-pdf">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="product-photo-2">Member Code</label>
+                        <input type="text"
+                            class="form-control"
+                            id="wakimart-member-code"
+                            placeholder="Member Code" 
+                            required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btn-print">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section("script")
@@ -1025,6 +1062,9 @@ function showOtherInput(e) {
 $(document).ready(function() {
     $(".showPrinted").hide();
     $("#btn-print").click(function(){
+        let mbr_code = $("#wakimart-member-code").val();
+        $("#member_code").html(mbr_code);
+
         $(".showPrinted").show();
         $(".hide-print").hide();
 
@@ -1034,6 +1074,9 @@ $(document).ready(function() {
         document.body.innerHTML = printContents;
 
         window.print();
+
+        window.location = "{{ route('detail_personal_homecare', ['id' => $personalhomecare['id']]) }}";
+        // setTimeout(function () { window.close(); }, 100);
 
         document.body.innerHTML = originalContents;
 
