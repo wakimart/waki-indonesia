@@ -85,18 +85,6 @@ $menu_item_second = "update_history_stock";
                                 required />
 
                             <div class="form-group">
-                                <label for="code">Code</label>
-                                <input type="text"
-                                    class="form-control"
-                                    name="code"
-                                    id="code"
-                                    placeholder="Code"
-                                    maxlength="191"
-                                    value="{{ $historystock->code }}"
-                                    required />
-                            </div>
-
-                            <div class="form-group">
                                 <label for="stock_id">
                                     Stock
                                 </label>

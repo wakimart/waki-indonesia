@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\HistoryStock;
 use App\HistoryUpdate;
+use App\Product;
 use App\Stock;
+use App\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -50,10 +52,19 @@ class HistoryStockController extends Controller
      */
     public function create()
     {
-        $stocks = Stock::with('product')->where('active', true)->get();
+        $products = Product::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
+
+        $warehouses = Warehouse::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
 
         return view("admin.add_history_stock", compact(
-            "stocks",
+            "products",
+            "warehouses",
         ));
     }
 
@@ -199,7 +210,7 @@ class HistoryStockController extends Controller
             return redirect()
                 ->route("list_history_stock")
                 ->with("success", "History Stock successfully deleted.");
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             DB::rollBack();
 
             return response()->json(["error" => $th->getMessage()], 500);

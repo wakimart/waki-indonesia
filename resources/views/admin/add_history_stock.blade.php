@@ -80,31 +80,31 @@ $menu_item_second = "add_history_stock";
                             action="{{ route("store_history_stock") }}">
                             @csrf
 
+                            <input type="hidden" name="stock_id" required />
+
                             <div class="form-group">
-                                <label for="code">Code</label>
-                                <input type="text"
+                                <label for="date">Date</label>
+                                <input type="date"
                                     class="form-control"
-                                    name="code"
-                                    id="code"
-                                    placeholder="Code"
-                                    maxlength="191"
+                                    name="date"
+                                    id="date"
+                                    value="{{ date("Y-m-d") }}"
                                     required />
                             </div>
 
                             <div class="form-group">
-                                <label for="stock_id">
-                                    Stock
-                                </label>
+                                <label for="warehouse_id">Warehouse</label>
                                 <select class="form-control"
-                                    name="stock_id"
-                                    id="stock_id"
+                                    name="warehouse_id"
+                                    id="warehouse_id"
+                                    onchange=""
                                     required>
                                     <option disabled selected>
-                                        Select Stock
+                                        Select Warehouse
                                     </option>
-                                    @foreach ($stocks as $stock)
-                                        <option value="{{ $stock->product_id }}">
-                                            {{ $stock->product['name'] }}
+                                    @foreach ($warehouses as $warehouse)
+                                        <option value="{{ $warehouse->id }}">
+                                            {{ $warehouse->code }} - {{ $warehouse->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -121,6 +121,23 @@ $menu_item_second = "add_history_stock";
                                     </option>
                                     <option value="in">In</option>
                                     <option value="out">Out</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="product_id">Product</label>
+                                <select class="form-control"
+                                    name="product_id"
+                                    id="product_id"
+                                    required>
+                                    <option disabled selected>
+                                        Select Product
+                                    </option>
+                                    @foreach ($products as $product)
+                                        <option value="{{ $product->id }}">
+                                            {{ $product->code }} - {{ $product->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -165,7 +182,10 @@ $menu_item_second = "add_history_stock";
     referrerpolicy="no-referrer"
     defer></script>
 <script type="application/javascript">
-    $("#stock_id").select2();
+document.addEventListener("DOMContentLoaded", function() {
+    $("#warehouse_id").select2();
+    $("#product_id").select2();
     $("#type").select2();
+});
 </script>
 @endsection
