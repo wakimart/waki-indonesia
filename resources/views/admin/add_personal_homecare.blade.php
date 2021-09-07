@@ -94,7 +94,7 @@ $menu_item_second = "add_personal_homecare";
                                 id="branch_id"
                                 name="branch_id"
                                 form="add-phc"
-                                onchange="setProduct(this)"
+                                onchange="setProduct()"
                                 required>
                                 <option disabled selected>
                                     Select Branch
@@ -149,6 +149,7 @@ $menu_item_second = "add_personal_homecare";
                                     class="form-control"
                                     name="schedule"
                                     id="schedule"
+                                    onchange="setProduct()"
                                     required />
                             </div>
 
@@ -159,7 +160,7 @@ $menu_item_second = "add_personal_homecare";
                                     id="ph_product_id"
                                     required>
                                     <option disabled selected>
-                                        Select Product (Please select branch first)
+                                        Select Product (Please select branch & schedule first)
                                     </option>
                                 </select>
                             </div>
@@ -478,7 +479,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("branch-id-hidden").value = branchId;
         document.getElementById("branch-id-hidden").setAttribute("name", "branch_id");
 
-        setProduct({value: branchId});
+        setProduct();
     }
 
     $("#ph_product_id").select2();
@@ -489,9 +490,11 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#cso_id").select2();
 });
 
-function setProduct(e) {
+function setProduct() {
+    let date = $("#schedule").val();
+    let branch_id = $("#branch_id").val();
     fetch(
-        '{{ route("get_phc_product") }}?branch_id=' + e.value,
+        '{{ route("get_phc_product") }}?branch_id=' + branch_id + '&date=' + date,
         {
             method: "GET",
             headers: {
@@ -510,6 +513,7 @@ function setProduct(e) {
         $("#ph_product_id").select2("destroy");
 
         const data = response.data;
+        document.getElementById("ph_product_id").innerHTML = "<option disabled selected>Select Product (Please select branch & schedule first)</option>";
 
         data.forEach(function (value) {
             const options = document.createElement("option");

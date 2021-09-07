@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Carbon\Carbon;
 use Throwable;
 
 class PersonalHomecareController extends Controller
@@ -265,11 +266,23 @@ class PersonalHomecareController extends Controller
                     "products.id"
                 )
                 ->where("personal_homecare_products.branch_id", $request->branch_id)
-                ->where("personal_homecare_products.status", true)
                 ->where("personal_homecare_products.active", true)
                 ->get();
 
-            return response()->json(["data" => $phcProducts]);
+            $finalPhcProd = [];
+            $firstDate = (new Carbon($request->date))->subDays(6);
+            $lastDate =  (new Carbon($request->date))->addDays(6);
+
+            foreach ($phcProducts as $perProd) {
+                $phcNya = PersonalHomecare::where('ph_product_id', $perProd['id'])
+                        ->whereBetween('schedule', [$firstDate, $lastDate])
+                        ->get();
+                if(sizeof($phcNya) == 0){
+                    array_push($finalPhcProd, $perProd);
+                }
+            }
+
+            return response()->json(["data" => $finalPhcProd]);
         } catch (Exception $e) {
             return response()->json(["error" => $e->getMessage()], 500);
         }
