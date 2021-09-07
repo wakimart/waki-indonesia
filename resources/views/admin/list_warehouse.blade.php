@@ -197,9 +197,8 @@ function submitDelete(e) {
 
 $(document).ready(function (e) {
     $("#btn-filter_reset").click(function (e) {
-         window.location.href = "{{ route('list_warehouse') }}";
+        window.location.href = "{{ route('list_warehouse') }}";
     });
 });
-
 </script>
 @endsection

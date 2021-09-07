@@ -32,7 +32,6 @@ $menu_item_second = "update_history_stock";
         font-size: 14px !important;
     }
 
-
     .input-group-text {
         color: black !important;
     }
@@ -49,12 +48,6 @@ $menu_item_second = "update_history_stock";
     .select2-selection--single
     .select2-selection__arrow {
         top: 10px;
-    }
-
-    .div-CheckboxGroup {
-        border: solid 1px rgba(128, 128, 128, 0.32941);
-        padding: 10px;
-        border-radius: 3px;
     }
 </style>
 @endsection
@@ -86,6 +79,10 @@ $menu_item_second = "update_history_stock";
                         <form method="POST"
                             action="{{ route("update_history_stock") }}">
                             @csrf
+                            <input type="hidden"
+                                name="id"
+                                value="{{ $historystock->id }}"
+                                required />
 
                             <div class="form-group">
                                 <label for="code">Code</label>
@@ -105,8 +102,9 @@ $menu_item_second = "update_history_stock";
                                 </label>
                                 <select class="form-control"
                                     name="stock_id"
-                                    id="stock_id">
-                                    <option selected value="">
+                                    id="stock_id"
+                                    required>
+                                    <option disabled selected>
                                         Select Stock
                                     </option>
                                     @foreach ($stocks as $stock)
@@ -127,8 +125,9 @@ $menu_item_second = "update_history_stock";
                                 <label for="type">Type</label>
                                 <select class="form-control"
                                     id="type"
-                                    name="type">
-                                    <option selected value="">
+                                    name="type"
+                                    required>
+                                    <option disabled selected>
                                         Select Type
                                     </option>
                                     <option value="in">In</option>
@@ -137,14 +136,13 @@ $menu_item_second = "update_history_stock";
                             </div>
 
                             <div class="form-group">
-                                <label for="qty">Quantity</label>
-                                <input id="qty" 
-                                    type="number" 
-                                    class="form-control" 
+                                <label for="quantity">Quantity</label>
+                                <input id="quantity"
+                                    type="number"
+                                    class="form-control"
                                     placeholder="Quantity"
                                     value="{{ $historystock->quantity }}"
                                     required />
-                                <div class="validation"></div>
                             </div>
 
                             <div class="form-group">
@@ -154,7 +152,7 @@ $menu_item_second = "update_history_stock";
                                     id="description"
                                     rows="2"
                                     placeholder="Description"
-                                    maxlength="191"
+                                    maxlength="300"
                                     value="{{ $historystock->quantity }}">
                                 </textarea>
                             </div>
@@ -181,6 +179,7 @@ $menu_item_second = "update_history_stock";
     referrerpolicy="no-referrer"
     defer></script>
 <script type="application/javascript">
-
+    $("#stock_id").select2();
+    $("#type").select2();
 </script>
 @endsection
