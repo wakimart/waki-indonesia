@@ -22,7 +22,7 @@ class HistoryStockController extends Controller
      */
     public function index(Request $request)
     {
-        $historystocks = HistoryStock::orderBy('date');
+        $historystocks = HistoryStock::groupBy('code');
 
         if ($request->has("filter_code")) {
             $filterCode = $request->filter_code;

@@ -968,6 +968,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("update", "HistoryStockController@update")
             ->name("update_history_stock");
     });
+
+    Route::group(["prefix" => "stock-warehouse", "middleware" => "auth"], function () {
+        Route::get("list", "StockController@stock")
+            ->name("list_stock_warehouse");
+    });
 });
 
 Auth::routes();

@@ -1,6 +1,6 @@
 <?php
-$menu_item_page = "warehouse";
-$menu_item_second = "list_warehouse";
+$menu_item_page = "stock";
+$menu_item_second = "list_stock_warehouse";
 ?>
 @extends('admin.layouts.template')
 
@@ -16,7 +16,7 @@ $menu_item_second = "list_warehouse";
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">List Warehouse</h3>
+            <h3 class="page-title">List Stock</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -28,7 +28,7 @@ $menu_item_second = "list_warehouse";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        List Warehouse
+                        List Stock
                     </li>
                 </ol>
             </nav>
@@ -54,13 +54,13 @@ $menu_item_second = "list_warehouse";
                 <div class="col-xs-6 col-sm-4"
                     style="margin-bottom: 0; padding: 0; display: inline-block;">
                     <div class="form-group">
-                        <label for="">Search By Warehouse Code</label>
+                        <label for="">Search By Code</label>
                         <input class="form-control"
-                            id="filter_warehouse_code"
-                            name="filter_warehouse_code"
-                            placeholder="Search By Warehouse Code"
+                            id="filter_code"
+                            name="filter_code"
+                            placeholder="Search By Code"
                             form="form-search"
-                            value="{{ $_GET['filter_warehouse_code'] ?? "" }}" />
+                            value="{{ $_GET['filter_code'] ?? "" }}" />
                     </div>
                 </div>
 
@@ -87,7 +87,7 @@ $menu_item_second = "list_warehouse";
                 <div class="card">
                     <div class="card-body">
                         <h5 style="margin-bottom: 0.5em;">
-                            Total: {{ $warehouses->total() }}
+                            Total: {{ $stocks->total() }}
                         </h5>
                         <div class="table-responsive"
                             style="border: 1px solid #ebedf2;">
@@ -95,39 +95,25 @@ $menu_item_second = "list_warehouse";
                                 <thead>
                                     <tr>
                                         <th class="text-center">No.</th>
-                                        <th>Parent Warehouse</th>
                                         <th>Code</th>
                                         <th>Name</th>
-                                        <th>Address</th>
-                                        <th>Description</th>
+                                        <th>Total Stock</th>
                                         <th colspan="2" class="text-center">
                                             Edit/Delete
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($warehouses as $warehouse)
+                                    @foreach($stocks as $stock)
                                         <tr>
                                             <td class="text-right">
                                                 {{ ++$i }}
                                             </td>
-                                            @if ($warehouse->parent_warehouse_id)
-                                                <td>
-                                                    {{ $warehouse->parentWarehouse->name }}
-                                                </td>
-                                            @else
-                                                <td>
-                                                    -
-                                                </td>
-                                            @endif
-                                            <td>{{ $warehouse->code }}</td>
-                                            <td>{{ $warehouse->name }}</td>
-                                            <td>{{ $warehouse->address }}</td>
-                                            <td>
-                                                {{ $warehouse->description }}
-                                            </td>
+                                            <td>{{ $stock->product['code'] }}</td>
+                                            <td>{{ $stock->product['name'] }}</td>
+                                            <td></td>
                                             <td class="text-center">
-                                                <a href="{{ route('edit_warehouse', ['id' => $warehouse['id']]) }}">
+                                                <a href="">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>
@@ -136,7 +122,7 @@ $menu_item_second = "list_warehouse";
                                                     data-toggle="modal"
                                                     href="#deleteDoModal"
                                                     onclick="submitDelete(this)"
-                                                    data-id="{{ $warehouse->id }}">
+                                                    data-id="{{ $stock->id }}">
                                                     <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                 </a>
                                             </td>
@@ -145,7 +131,7 @@ $menu_item_second = "list_warehouse";
                                 </tbody>
                             </table>
                             <br>
-                            {{ $warehouses->links() }}
+                            {{ $stocks->links() }}
                         </div>
                     </div>
                 </div>
@@ -177,7 +163,7 @@ $menu_item_second = "list_warehouse";
             </div>
             <div class="modal-footer">
                 <form method="post"
-                    action="{{ route('delete_personal_homecare') }}">
+                    action="">
                     @csrf
                     <input type="hidden" name="id" id="id-delete" />
                     <button type="submit"
@@ -201,7 +187,7 @@ function submitDelete(e) {
 
 $(document).ready(function (e) {
     $("#btn-filter_reset").click(function (e) {
-        window.location.href = "{{ route('list_warehouse') }}";
+        window.location.href = "{{ route('list_stock_warehouse') }}";
     });
 });
 </script>
