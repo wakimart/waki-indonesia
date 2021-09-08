@@ -52,15 +52,8 @@ class HistoryStockController extends Controller
      */
     public function create()
     {
-        $products = Stock::select(
-                "stocks.id AS id",
-                "products.code AS code",
-                "products.name AS name",
-                "stocks.type_warehouse AS type_warehouse",
-            )
-            ->leftJoin("products", "products.id", "=", "stocks.product_id")
-            ->where("stocks.active", true)
-            ->orderBy("products.code")
+        $products = Product::select("id", "code", "name")
+            ->where("active", true)
             ->get();
 
         $warehouses = Warehouse::select("id", "code", "name")
@@ -100,7 +93,19 @@ class HistoryStockController extends Controller
                 $historyStock->quantity = $request->quantity[$i];
                 $historyStock->save();
 
-                $stock = Stock::where("id", $products[$i])->first();
+                $stock = Stock::where("warehouse_id", $request->warehouse_id)
+                    ->where("product_id", $products[$i])
+                    ->where("type_warehouse", null)
+                    ->first();
+
+                if (empty($stock)) {
+                    $stock = new Stock();
+                    $stock->warehouse_id = $request->warehouse_id;
+                    $stock->product_id = $products[$i];
+                    $stock->quantity = 0;
+                    $stock->save();
+                }
+
                 if ($request->type === "in") {
                     $stock->quantity += $request->quantity[$i];
                 } elseif ($request->type === "out") {
@@ -124,15 +129,8 @@ class HistoryStockController extends Controller
     public function getProduct()
     {
         try {
-            $products = Stock::select(
-                    "stocks.id AS id",
-                    "products.code AS code",
-                    "products.name AS name",
-                    "stocks.type_warehouse AS type_warehouse",
-                )
-                ->leftJoin("products", "products.id", "=", "stocks.product_id")
-                ->where("stocks.active", true)
-                ->orderBy("products.code")
+            $products = Product::select("id", "code", "name")
+                ->where("active", true)
                 ->get();
 
             return response()->json(["data" => $products]);

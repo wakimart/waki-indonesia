@@ -165,7 +165,7 @@ $menu_item_second = "add_history_stock";
                                                 </option>
                                                 @foreach ($products as $product)
                                                     <option value="{{ $product->id }}">
-                                                        {{ $product->code }} - {{ $product->name }} ({{ $product->type_warehouse }})
+                                                        {{ $product->code }} - {{ $product->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -179,6 +179,7 @@ $menu_item_second = "add_history_stock";
                                                 type="number"
                                                 name="quantity[]"
                                                 placeholder="Quantity"
+                                                min="0"
                                                 required />
                                         </div>
                                     </div>
@@ -246,7 +247,7 @@ function getProduct() {
         return response.json();
     }).then(function (response) {
         response.data.forEach(function (value) {
-            productOptions += `<option value="${value.id}">${value.code} - ${value.name} (${value.type_warehouse})</option>`;
+            productOptions += `<option value="${value.id}">${value.code} - ${value.name}</option>`;
         });
     }).catch(function (error) {
         console.error(error);
@@ -324,6 +325,7 @@ function addProduct() {
     inputQuantity.id = `quantity_${counter}`;
     inputQuantity.placeholder = "Quantity";
     inputQuantity.required = true;
+    inputQuantity.min = 0;
 
     formGroupDivQuantity.appendChild(labelQuantity);
     formGroupDivQuantity.appendChild(inputQuantity);
