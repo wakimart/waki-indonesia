@@ -959,6 +959,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::group(["prefix" => "history-stock", "middleware" => "auth"], function () {
         Route::get("add", "HistoryStockController@create")
             ->name("add_history_stock");
+        Route::get("get-product", "HistoryStockController@getProduct")
+            ->name("history_stock_get_product");
         Route::get("list", "HistoryStockController@index")
             ->name("list_history_stock");
         Route::post("store", "HistoryStockController@store")

@@ -52,9 +52,15 @@ class HistoryStockController extends Controller
      */
     public function create()
     {
-        $products = Product::select("id", "code", "name")
-            ->where("active", true)
-            ->orderBy("code")
+        $products = Stock::select(
+                "stocks.id AS id",
+                "products.code AS code",
+                "products.name AS name",
+                "stocks.type_warehouse AS type_warehouse",
+            )
+            ->leftJoin("products", "products.id", "=", "stocks.product_id")
+            ->where("stocks.active", true)
+            ->orderBy("products.code")
             ->get();
 
         $warehouses = Warehouse::select("id", "code", "name")
@@ -79,14 +85,29 @@ class HistoryStockController extends Controller
         DB::beginTransaction();
 
         try {
-            HistoryStock::create($request->only(
-                "stock_id",
-                "code",
-                "date",
-                "type",
-                "quantity",
-                "description",
-            ));
+            $products = $request->product;
+            $countProduct = count($products);
+
+            for ($i = 0; $i < $countProduct; $i++) {
+                $historyStock = new HistoryStock();
+                $historyStock->fill($request->only(
+                    "code",
+                    "date",
+                    "type",
+                    "description",
+                ));
+                $historyStock->stock_id = $products[$i];
+                $historyStock->quantity = $request->quantity[$i];
+                $historyStock->save();
+
+                $stock = Stock::where("id", $products[$i])->first();
+                if ($request->type === "in") {
+                    $stock->quantity += $request->quantity[$i];
+                } elseif ($request->type === "out") {
+                    $stock->quantity -= $request->quantity[$i];
+                }
+                $stock->save();
+            }
 
             DB::commit();
 
@@ -96,6 +117,26 @@ class HistoryStockController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
 
+            return response()->json(["error" => $th->getMessage()], 500);
+        }
+    }
+
+    public function getProduct()
+    {
+        try {
+            $products = Stock::select(
+                    "stocks.id AS id",
+                    "products.code AS code",
+                    "products.name AS name",
+                    "stocks.type_warehouse AS type_warehouse",
+                )
+                ->leftJoin("products", "products.id", "=", "stocks.product_id")
+                ->where("stocks.active", true)
+                ->orderBy("products.code")
+                ->get();
+
+            return response()->json(["data" => $products]);
+        } catch (Throwable $th) {
             return response()->json(["error" => $th->getMessage()], 500);
         }
     }
