@@ -80,7 +80,14 @@ $menu_item_second = "add_history_stock";
                             action="{{ route("store_history_stock") }}">
                             @csrf
 
-                            <input type="hidden" name="stock_id" required />
+                            <div class="form-group">
+                                <label for="code">Code</label>
+                                <input type="text"
+                                    class="form-control"
+                                    name="code"
+                                    id="code"
+                                    required />
+                            </div>
 
                             <div class="form-group">
                                 <label for="date">Date</label>
@@ -97,7 +104,6 @@ $menu_item_second = "add_history_stock";
                                 <select class="form-control"
                                     name="warehouse_id"
                                     id="warehouse_id"
-                                    onchange=""
                                     required>
                                     <option disabled selected>
                                         Select Warehouse
@@ -127,13 +133,14 @@ $menu_item_second = "add_history_stock";
                             <div id="product-container">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="text-center" 
+                                        <div class="text-center"
                                             style="display: block;
                                                 background: #4caf3ab3;
                                                 float: right;
                                                 margin-bottom: 20px;">
-                                            <button class="btn btn-gradient-primary" 
-                                                id="tambah_product" 
+                                            <button class="btn btn-gradient-primary"
+                                                id="tambah_product"
+                                                onclick="addProduct()"
                                                 type="button">
                                                 Add Product
                                             </button>
@@ -141,13 +148,17 @@ $menu_item_second = "add_history_stock";
                                     </div>
                                 </div>
 
+                                <input type="hidden"
+                                    id="product-counter"
+                                    value="0" />
+
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="form-group">
-                                            <label for="product_id">Product</label>
+                                            <label for="stock">Product</label>
                                             <select class="form-control"
-                                                name="product_id"
-                                                id="product_id"
+                                                name="product[]"
+                                                id="product_0"
                                                 required>
                                                 <option disabled selected>
                                                     Select Product
@@ -163,10 +174,12 @@ $menu_item_second = "add_history_stock";
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="quantity">Quantity</label>
-                                            <input id="quantity"
-                                                type="number"
+                                            <input id="quantity_0"
                                                 class="form-control"
+                                                type="number"
+                                                name="quantity[]"
                                                 placeholder="Quantity"
+                                                min="0"
                                                 required />
                                         </div>
                                     </div>
@@ -206,47 +219,127 @@ $menu_item_second = "add_history_stock";
     referrerpolicy="no-referrer"
     defer></script>
 <script type="application/javascript">
+let productOptions = "<option disabled selected>Select Product</option>";
+
 document.addEventListener("DOMContentLoaded", function() {
+    getProduct();
     $("#warehouse_id").select2();
-    $("#product_id").select2();
+    $("#product_0").select2();
     $("#type").select2();
 });
 
-$(document).ready(function(){
+function getProduct() {
+    fetch(
+        '{{ route("history_stock_get_product") }}',
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-		$("#tambah_product").click(function(e){
-	        e.preventDefault();
-	        strIsi = "<div class='row'>"
-                + "<div class='col-md-12'>"
-                + "<div class='text-center'"
-                + "style='display: block; background: #4caf3ab3; float: right; margin-bottom: 20px;'\>"
-                + "<button class='btn btn-gradient-danger hapus_product' type='button'>"
-                + "Remove Product"
-                + "</button>"
-                + "</div>"
-                + "</div>"
-                + "</div>"
+        return response.json();
+    }).then(function (response) {
+        response.data.forEach(function (value) {
+            productOptions += `<option value="${value.id}">${value.code} - ${value.name}</option>`;
+        });
+    }).catch(function (error) {
+        console.error(error);
+    })
+}
 
-                + "<div id='row_' class='row'><div class='col-md-8'><div class='form-group'>"
-                + "<label for='product_'>Product</label>"
-                + "<select class='form-control' name='product_id' id='product_' required>"
-                + "<option disabled selected> Select Product </option>"
-                + "@foreach ($products as $product)"
-                + "<option value='{{ $product->id }}'> {{ $product->code }} - {{ $product->name }} </option>"
-                + "@endforeach"
-                + "</select></div></div> "
-                + "<div class='col-md-4'><div class='form-group'>"
-                + "<label for='quantity_'>Quantity</label>"
-                + "<input id='quantity_' type='number' class='form-control' placeholder='Quantity' required />"
-                + "</div></div></div>";
-            $('#tambahan_product').html($('#tambahan_product').html()+strIsi);
-	    });
-	    $(document).on("click",".hapus_product", function(e){
-	        e.preventDefault();
-	        $('#row_'+$(this).val()).remove();
-	        $(this).remove();
-	    });
-	});
+function addProduct() {
+    const counter = parseInt(document.getElementById("product-counter").value) + 1;
 
+    // Remove Button
+    const rowDivRemove = document.createElement("div");
+    rowDivRemove.className = "row";
+    rowDivRemove.id = `row-remove-${counter}`;
+
+    const colMd12DivRemove = document.createElement("div");
+    colMd12DivRemove.className = "col-md-12";
+
+    const textCenterDivRemove = document.createElement("div");
+    textCenterDivRemove.className = "text-center";
+    textCenterDivRemove.style = "display: block; background: #4caf3ab3; float: right; margin-bottom: 20px;";
+
+    const buttonRemove = document.createElement("button");
+    buttonRemove.className = "btn btn-gradient-danger";
+    buttonRemove.type = "button";
+    buttonRemove.innerHTML = "Remove Product";
+    buttonRemove.setAttribute("onclick", `removeProduct(${counter})`);
+
+    textCenterDivRemove.appendChild(buttonRemove);
+    colMd12DivRemove.appendChild(textCenterDivRemove);
+    rowDivRemove.appendChild(colMd12DivRemove);
+    document.getElementById("tambahan_product").appendChild(rowDivRemove);
+
+    // Product Dropdown
+    const rowDivProduct = document.createElement("div");
+    rowDivProduct.className = "row";
+    rowDivProduct.id = `row-product-${counter}`;
+
+    const colMd8DivProduct = document.createElement("div");
+    colMd8DivProduct.className = "col-md-8";
+
+    const formGroupDivProduct = document.createElement("div");
+    formGroupDivProduct.className = "form-group";
+
+    const labelProduct = document.createElement("label");
+    labelProduct.innerHTML = "Product";
+    labelProduct.setAttribute("for", `product_${counter}`);
+
+    const selectProduct = document.createElement("select");
+    selectProduct.className = "form-control";
+    selectProduct.name = "product[]";
+    selectProduct.id = `product_${counter}`;
+    selectProduct.required = true;
+    selectProduct.innerHTML += productOptions;
+
+    formGroupDivProduct.appendChild(labelProduct);
+    formGroupDivProduct.appendChild(selectProduct);
+    colMd8DivProduct.appendChild(formGroupDivProduct);
+    rowDivProduct.appendChild(colMd8DivProduct);
+
+    // Quantity Input
+    const colMd4DivQuantity = document.createElement("div");
+    colMd4DivQuantity.className = "col-md-4";
+
+    const formGroupDivQuantity = document.createElement("div");
+    formGroupDivQuantity.className = "form-group";
+
+    const labelQuantity = document.createElement("label");
+    labelQuantity.innerHTML = "Quantity";
+    labelQuantity.setAttribute("for", `quantity_${counter}`);
+
+    const inputQuantity = document.createElement("input");
+    inputQuantity.className = "form-control";
+    inputQuantity.type = "number";
+    inputQuantity.name = "quantity[]";
+    inputQuantity.id = `quantity_${counter}`;
+    inputQuantity.placeholder = "Quantity";
+    inputQuantity.required = true;
+    inputQuantity.min = 0;
+
+    formGroupDivQuantity.appendChild(labelQuantity);
+    formGroupDivQuantity.appendChild(inputQuantity);
+    colMd4DivQuantity.appendChild(formGroupDivQuantity);
+    rowDivProduct.appendChild(colMd4DivQuantity);
+
+    document.getElementById("tambahan_product").appendChild(rowDivProduct);
+    document.getElementById("product-counter").value = counter;
+    $("#product_" + counter).select2();
+}
+
+function removeProduct(counter) {
+    document.getElementById(`row-remove-${counter}`).remove();
+    document.getElementById(`row-product-${counter}`).remove();
+}
 </script>
 @endsection
