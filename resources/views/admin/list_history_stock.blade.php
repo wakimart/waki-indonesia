@@ -176,11 +176,11 @@ $menu_item_second = "list_history_stock";
                                             </td>
                                             <td class="center">
                                             @if($historystock->type == "in")
-                                                <a href="{{ route('edit_history_in', ['id' => $historystock['id']]) }}">
+                                                <a href="{{ route('edit_history_in', ['code' => $historystock['code']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             @else
-                                                <a href="{{ route('edit_history_out', ['id' => $historystock['id']]) }}">
+                                                <a href="{{ route('edit_history_out', ['code' => $historystock['code']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             @endif
