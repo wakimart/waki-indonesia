@@ -99,14 +99,41 @@ class HistoryStockController extends Controller
         DB::beginTransaction();
 
         try {
-            HistoryStock::create($request->only(
-                "stock_id",
-                "code",
-                "date",
-                "type",
-                "quantity",
-                "description",
-            ));
+            $products = $request->product;
+            $countProduct = count($products);
+
+            for ($i = 0; $i < $countProduct; $i++) {
+                $stock = Stock::where("warehouse_id", $request->warehouse_id)
+                    ->where("product_id", $products[$i])
+                    ->where("type_warehouse", null)
+                    ->first();
+
+                if (empty($stock)) {
+                    $stock = new Stock();
+                    $stock->warehouse_id = $request->warehouse_id;
+                    $stock->product_id = $products[$i];
+                    $stock->quantity = 0;
+                    $stock->save();
+                }
+
+                if ($request->type === "in") {
+                    $stock->quantity += $request->quantity[$i];
+                } elseif ($request->type === "out") {
+                    $stock->quantity -= $request->quantity[$i];
+                }
+                $stock->save();
+
+                $historyStock = new HistoryStock();
+                $historyStock->fill($request->only(
+                    "code",
+                    "date",
+                    "type",
+                    "description",
+                ));
+                $historyStock->stock_id = $stock->id;
+                $historyStock->quantity = $request->quantity[$i];
+                $historyStock->save();
+            }
 
             DB::commit();
 
@@ -116,6 +143,19 @@ class HistoryStockController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
 
+            return response()->json(["error" => $th->getMessage()], 500);
+        }
+    }
+
+    public function getProduct()
+    {
+        try {
+            $products = Product::select("id", "code", "name")
+            ->where("active", true)
+                ->get();
+
+            return response()->json(["data" => $products]);
+        } catch (Throwable $th) {
             return response()->json(["error" => $th->getMessage()], 500);
         }
     }
@@ -137,31 +177,52 @@ class HistoryStockController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
-    {
-        $historystock = HistoryStock::where($request->id)->first();
-
-        $stocks = Stock::with('product')->where('active', true)->get();
-
-        return view("admin.update_history_stock", compact("historystock", "stocks"));
-    }
-
     public function editIn(Request $request)
     {
-        $historystock = HistoryStock::where($request->id)->first();
+        $historyStocks = HistoryStock::where("code", $request->code)->get();
 
-        $stocks = Stock::with('product')->where('active', true)->get();
+        $products = Product::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
 
-        return view("admin.update_history_in", compact("historystock", "stocks"));
+        $warehouses = Warehouse::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
+
+        return view("admin.update_history_in", compact(
+            "historyStocks",
+            "products",
+            "warehouses",
+        ));
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function editOut(Request $request)
     {
-        $historystock = HistoryStock::where($request->id)->first();
+        $historyStocks = HistoryStock::where("code", $request->code)->get();
 
-        $stocks = Stock::with('product')->where('active', true)->get();
+        $products = Product::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
 
-        return view("admin.update_history_out", compact("historystock", "stocks"));
+        $warehouses = Warehouse::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
+
+        return view("admin.update_history_out", compact(
+            "historyStocks",
+            "products",
+            "warehouses",
+        ));
     }
 
     /**
@@ -175,31 +236,93 @@ class HistoryStockController extends Controller
         DB::beginTransaction();
 
         try {
-            $historyStock = HistoryStock::where($request->id)->first();
-            $historyStock->fill($request->only(
-                "stock_id",
-                "code",
-                "date",
-                "type",
-                "quantity",
-                "description",
-            ));
-            $historyStock->save();
+            $historyStocks = HistoryStock::where("code", $request->old_code)
+                ->where("active", true)
+                ->get();
 
             $userId = Auth::user()["id"];
-            $history["type_menu"] = "History Stock";
-            $history["method"] = "Update";
-            $history["meta"] = json_encode(
-                [
-                    "user" => $userId,
-                    "createdAt" => date("Y-m-d H:i:s"),
-                    "dataChange" => $historyStock->getChanges(),
-                ],
-                JSON_THROW_ON_ERROR
-            );
-            $history["user_id"] = $userId;
-            $history["menu_id"] = $request->id;
-            HistoryUpdate::create($history);
+
+            // Deactivate History Stock based on code
+            foreach ($historyStocks as $historyStock) {
+                // Change quantity in stock
+                $stock = Stock::where("id", $historyStock->stock_id)->first();
+                if ($historyStock->type === "in") {
+                    $stock->quantity -= $historyStock->quantity;
+                } elseif ($historyStock->type === "out") {
+                    $stock->quantity += $historyStock->quantity;
+                }
+                $stock->save();
+
+                $historyStock->active = false;
+                $historyStock->save();
+
+                // History (History Stock)
+                $history["type_menu"] = "History Stock";
+                $history["method"] = "Update";
+                $history["meta"] = json_encode(
+                    [
+                        "user" => $userId,
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $historyStock->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $history["user_id"] = $userId;
+                $history["menu_id"] = $historyStock->id;
+                HistoryUpdate::create($history);
+            }
+
+            // Re-entry History Stock
+            $products = $request->product;
+            $countProduct = count($products);
+
+            for ($i = 0; $i < $countProduct; $i++) {
+                $stock = Stock::where("warehouse_id", $request->warehouse_id)
+                    ->where("product_id", $products[$i])
+                    ->where("type_warehouse", null)
+                    ->first();
+
+                if (empty($stock)) {
+                    $stock = new Stock();
+                    $stock->warehouse_id = $request->warehouse_id;
+                    $stock->product_id = $products[$i];
+                    $stock->quantity = 0;
+                    $stock->save();
+                }
+
+                if ($request->type === "in") {
+                    $stock->quantity += $request->quantity[$i];
+                } elseif ($request->type === "out") {
+                    $stock->quantity -= $request->quantity[$i];
+                }
+                $stock->save();
+
+                $historyStock = new HistoryStock();
+                $historyStock->fill($request->only(
+                    "code",
+                    "date",
+                    "type",
+                    "description",
+                ));
+                $historyStock->stock_id = $stock->id;
+                $historyStock->quantity = $request->quantity[$i];
+                $historyStock->save();
+
+                // History (Stock)
+                $history["type_menu"] = "Stock";
+                $history["method"] = "Update";
+                $history["meta"] = json_encode(
+                    [
+                        "user" => $userId,
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $stock->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $history["user_id"] = $userId;
+                $history["menu_id"] = $stock->id;
+                HistoryUpdate::create($history);
+            }
 
             DB::commit();
 

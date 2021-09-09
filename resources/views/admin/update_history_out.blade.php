@@ -77,19 +77,23 @@ $menu_item_second = "update_history_out";
                 <div class="card">
                     <div class="card-body">
                         <form method="POST"
-                            action="{{ route("store_history_stock") }}">
+                            action="{{ route("update_history_stock") }}">
                             @csrf
 
                             <div class="form-group">
                                 <label>Type</label>
-                                <input type="hidden" 
-                                    name="type" 
+                                <input type="hidden"
+                                    name="type"
                                     value="out" />
-                                <input class="form-control" 
-                                    type="text" 
-                                    readonly disabled 
+                                <input class="form-control"
+                                    type="text"
+                                    readonly disabled
                                     value="OUT" />
                             </div>
+
+                            <input type="hidden"
+                                name="old_code"
+                                value="{{ $historyStocks[0]->code }}" />
 
                             <div class="form-group">
                                 <label for="code">Code</label>
@@ -97,7 +101,7 @@ $menu_item_second = "update_history_out";
                                     class="form-control"
                                     name="code"
                                     id="code"
-                                    value="{{ $historystock->code }}"
+                                    value="{{ $historyStocks[0]->code }}"
                                     required />
                             </div>
 
@@ -107,7 +111,7 @@ $menu_item_second = "update_history_out";
                                     class="form-control"
                                     name="date"
                                     id="date"
-                                    value="{{ date('Y-m-d', strtotime($historystock->date)) }}"
+                                    value="{{ date('Y-m-d', strtotime($historyStocks[0]->date)) }}"
                                     required />
                             </div>
 
@@ -117,11 +121,11 @@ $menu_item_second = "update_history_out";
                                     name="warehouse_id"
                                     id="warehouse_id"
                                     required>
-                                    <option disabled selected>
+                                    <option disabled>
                                         Select Warehouse
                                     </option>
                                     @foreach ($warehouses as $warehouse)
-                                        @if ($historystock->warehouse_id === $warehouse->id)
+                                        @if ($historyStocks[0]->warehouse_id === $warehouse->id)
                                             <option value="{{ $warehouse->id }}" selected>
                                                 {{ $warehouse->code }} - {{ $warehouse->name }}
                                             </option>
@@ -152,49 +156,59 @@ $menu_item_second = "update_history_out";
                                     </div>
                                 </div>
 
+                                <?php
+                                $countHistoryStock = count($historyStocks);
+                                ?>
+
                                 <input type="hidden"
                                     id="product-counter"
-                                    value="0" />
+                                    value="{{ $countHistoryStock - 1 }}" />
 
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label for="stock">Product</label>
-                                            <select class="form-control"
-                                                name="product[]"
-                                                id="product_0"
-                                                required>
-                                                <option disabled selected>
-                                                    Select Product
-                                                </option>
-                                                @foreach ($products as $product)
-                                                    @if ($historystock->product_id === $product->id)
-                                                        <option value="{{ $product->id }}" selected>
-                                                            {{ $product->code }} - {{ $product->name }}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{ $product->id }}">
-                                                            {{ $product->code }} - {{ $product->name }}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
+                                @for ($i = 0; $i < $countHistoryStock; $i++)
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label for="product_{{ $i }}">
+                                                    Product
+                                                </label>
+                                                <select class="form-control"
+                                                    name="product[]"
+                                                    id="product_{{ $i }}"
+                                                    required>
+                                                    <option disabled>
+                                                        Select Product
+                                                    </option>
+                                                    @foreach ($products as $product)
+                                                        @if ($historyStocks[$i]->stock->product_id == $product->id)
+                                                            <option value="{{ $product->id }}" selected>
+                                                                {{ $product->code }} - {{ $product->name }}
+                                                            </option>
+                                                        @else
+                                                            <option value="{{ $product->id }}">
+                                                                {{ $product->code }} - {{ $product->name }}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="quantity_{{ $i }}">
+                                                    Quantity
+                                                </label>
+                                                <input id="quantity_{{ $i }}"
+                                                    class="form-control"
+                                                    type="number"
+                                                    name="quantity[]"
+                                                    placeholder="Quantity"
+                                                    min="0"
+                                                    value="{{ $historyStocks[$i]->quantity }}"
+                                                    required />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="quantity">Quantity</label>
-                                            <input id="quantity_0"
-                                                class="form-control"
-                                                type="number"
-                                                name="quantity[]"
-                                                placeholder="Quantity"
-                                                min="0"
-                                                value="{{ $historystock->quantity }}"
-                                                required />
-                                        </div>
-                                    </div>
-                                </div>
+                                @endfor
                                 <div id="tambahan_product"></div>
                             </div>
 
@@ -206,7 +220,7 @@ $menu_item_second = "update_history_out";
                                     rows="2"
                                     placeholder="Description"
                                     maxlength="300"
-                                    value="{{ $historystock->description }}">
+                                    value="{{ $historyStocks[0]->description }}">
                                 </textarea>
                             </div>
 
@@ -237,7 +251,9 @@ let productOptions = "<option disabled selected>Select Product</option>";
 document.addEventListener("DOMContentLoaded", function() {
     getProduct();
     $("#warehouse_id").select2();
-    $("#product_0").select2();
+    for (let i = 0; i <= document.getElementById("product-counter").value; i++) {
+        $(`#product_${i}`).select2();
+    }
     $("#type").select2();
 });
 

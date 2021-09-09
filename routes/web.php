@@ -969,9 +969,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("list_history_stock");
         Route::post("store", "HistoryStockController@store")
             ->name("store_history_stock");
-        Route::get("edit/in/{id}", "HistoryStockController@editIn")
+        Route::get("edit/in", "HistoryStockController@editIn")
             ->name("edit_history_in");
-        Route::get("edit/out/{id}", "HistoryStockController@editOut")
+        Route::get("edit/out", "HistoryStockController@editOut")
             ->name("edit_history_out");
         Route::post("update", "HistoryStockController@update")
             ->name("update_history_stock");
