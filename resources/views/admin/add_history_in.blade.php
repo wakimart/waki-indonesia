@@ -82,12 +82,13 @@ $menu_item_second = "add_history_in";
 
                             <div class="form-group">
                                 <label>Type</label>
-                                <input type="hidden" 
-                                    name="type" 
+                                <input type="hidden"
+                                    name="type"
                                     value="in" />
-                                <input class="form-control" 
-                                    type="text" 
-                                    readonly disabled 
+                                <input class="form-control"
+                                    type="text"
+                                    readonly
+                                    disabled
                                     value="IN" />
                             </div>
 
@@ -152,7 +153,9 @@ $menu_item_second = "add_history_in";
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="form-group">
-                                            <label for="stock">Product</label>
+                                            <label for="product_0">
+                                                Product
+                                            </label>
                                             <select class="form-control"
                                                 name="product[]"
                                                 id="product_0"
@@ -170,7 +173,9 @@ $menu_item_second = "add_history_in";
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="quantity">Quantity</label>
+                                            <label for="quantity_0">
+                                                Quantity
+                                            </label>
                                             <input id="quantity_0"
                                                 class="form-control"
                                                 type="number"
