@@ -959,14 +959,20 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::group(["prefix" => "history-stock", "middleware" => "auth"], function () {
         Route::get("add", "HistoryStockController@create")
             ->name("add_history_stock");
+        Route::get("add/in", "HistoryStockController@createIn")
+            ->name("add_history_in");
+        Route::get("add/out", "HistoryStockController@createOut")
+            ->name("add_history_out");
         Route::get("get-product", "HistoryStockController@getProduct")
             ->name("history_stock_get_product");
         Route::get("list", "HistoryStockController@index")
             ->name("list_history_stock");
         Route::post("store", "HistoryStockController@store")
             ->name("store_history_stock");
-        Route::get("edit/{id}", "HistoryStockController@edit")
-            ->name("edit_history_stock");
+        Route::get("edit/in/{id}", "HistoryStockController@editIn")
+            ->name("edit_history_in");
+        Route::get("edit/out/{id}", "HistoryStockController@editOut")
+            ->name("edit_history_out");
         Route::post("update", "HistoryStockController@update")
             ->name("update_history_stock");
     });

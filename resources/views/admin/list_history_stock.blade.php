@@ -138,11 +138,9 @@ $menu_item_second = "list_history_stock";
                                         <th>No.</th>
                                         <th>Date</th>
                                         <th>Code</th>
-                                        <th>Name Stock</th>
+                                        <th>Warehouse</th>
                                         <th>Type</th>
-                                        <th>Quantity</th>
-                                        <th>Remaining Stock</th>
-                                        <th>Description</th>
+                                        <th>Product</th>
                                         <th colspan="3" class="center">
                                             View/Edit/Delete
                                         </th>
@@ -161,16 +159,14 @@ $menu_item_second = "list_history_stock";
                                                 {{ $historystock->code }}
                                             </td>
                                             <td>
-                                                {{ $historystock->stock->product['name'] }}
+                                                {{ $historystock->stock->warehouse['name'] }}
                                             </td>
                                             <td>
                                                 {{ ucfirst($historystock->type) }}
                                             </td>
                                             <td>
-                                                {{ $historystock->quantity }}
+                                                {{ $historystock->stock->product['name'] }}
                                             </td>
-                                            <td></td>
-                                            <td>{{ $historystock->description }}</td>
                                             <td class="text-center">
                                                 <a href="">
                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>

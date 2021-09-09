@@ -97,7 +97,7 @@ $menu_item_second = "list_stock_warehouse";
                                         <th class="text-center">No.</th>
                                         <th>Code</th>
                                         <th>Name</th>
-                                        <th>Total Stock</th>
+                                        <th>Remaining Stock</th>
                                         <th colspan="2" class="text-center">
                                             Edit/Delete
                                         </th>
