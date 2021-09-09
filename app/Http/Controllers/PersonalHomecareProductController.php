@@ -136,9 +136,7 @@ class PersonalHomecareProductController extends Controller
         try {
             $phcProduct = PersonalHomecareProduct::where("id", $request->id)->first();
             $phcProduct->fill($request->only(
-                "code",
                 "branch_id",
-                "product_id",
                 "status",
             ));
             $phcProduct->save();

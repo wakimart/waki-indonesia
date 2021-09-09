@@ -80,6 +80,11 @@ $menu_item_second = "update_product";
                             action="{{ route("update_phc_product") }}">
                             @csrf
                             <input type="hidden"
+                                id="id"
+                                name="id"
+                                value="{{ $phcproducts->id }}" 
+                                required />
+                            <input type="hidden"
                                 id="branch-code"
                                 name="branch_code"
                                 required />
@@ -91,6 +96,29 @@ $menu_item_second = "update_product";
                                 name="code"
                                 id="code"
                                 required />
+                            <div class="form-group">
+                                <label for="warehouse_id">Warehouse</label>
+                                <select class="form-control"
+                                    id="warehouse_id"
+                                    name="warehouse_id"
+                                    onchange="selectWarehouse(this)" required="">
+                                    <option disabled selected>
+                                        Select Warehouse
+                                    </option>
+                                    <option disabled {{ substr($phcproducts->code, 1, 1) == "1" ? 'selected' : '' }} value="1"
+                                        data-code="1">
+                                        Surabaya
+                                    </option>
+                                    <option disabled {{ substr($phcproducts->code, 1, 1) == "2" ? 'selected' : '' }} value="2"
+                                        data-code="2">
+                                        Semarang
+                                    </option>
+                                    <option disabled {{ substr($phcproducts->code, 1, 1) == "3" ? 'selected' : '' }} value="3"
+                                        data-code="3">
+                                        Jakarta
+                                    </option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="branch_id">Branch</label>
                                 <select class="form-control"
@@ -129,12 +157,12 @@ $menu_item_second = "update_product";
                                         @if ($phcproducts->product_id == $product->id)
                                             <option value="{{ $product->id }}"
                                                 data-code="{{ $product->code }}"
-                                                selected>
+                                                selected disabled>
                                                 {{ $product->code }} - {{ $product->name }}
                                             </option>
                                         @else
                                             <option value="{{ $product->id }}"
-                                                data-code="{{ $product->code }}">
+                                                data-code="{{ $product->code }}" disabled>
                                                 {{ $product->code }} - {{ $product->name }}
                                             </option>
                                         @endif
@@ -147,7 +175,7 @@ $menu_item_second = "update_product";
                                 </label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="code-suffix"></span>
+                                        <span class="input-group-text" id="code-suffix">{{ substr($phcproducts->code, 0, 3) }}</span>
                                     </div>
                                     <input type="text"
                                         class="form-control"
@@ -157,6 +185,7 @@ $menu_item_second = "update_product";
                                         inputmode="numeric"
                                         placeholder="Number"
                                         oninput="setCode()"
+                                        value="{{ substr($phcproducts->code, 3, 3) }}" 
                                         disabled
                                         required />
                                 </div>
@@ -166,8 +195,8 @@ $menu_item_second = "update_product";
                                 <select class="form-control"
                                     id="status"
                                     name="status">
-                                    <option value="0">Not Available</option>
-                                    <option value="1" selected>
+                                    <option value="0" {{ $phcproducts->status ? 'selected' : '' }}>Not Available</option>
+                                    <option value="1" {{ $phcproducts->status ? 'selected' : '' }}>
                                         Available
                                     </option>
                                 </select>
@@ -203,9 +232,12 @@ function getSelectedCode(e) {
     return e.options[e.selectedIndex].dataset.code;
 }
 
+function selectWarehouse(e) {
+    setCodeSuffix();
+}
+
 function selectBranch(e) {
     document.getElementById("branch-code").value = getSelectedCode(e);
-    setCodeSuffix();
 }
 
 function selectProduct(e) {
@@ -214,22 +246,95 @@ function selectProduct(e) {
 }
 
 function setCodeSuffix() {
-    const productCode = document.getElementById("product-code").value;
-    const branchCode = document.getElementById("branch-code").value;
+    let productCode = document.getElementById("product-code").value;
+    const warehouse_id = document.getElementById("warehouse_id").value;
+    // const branchCode = document.getElementById("branch-code").value;
 
-    document.getElementById("code-suffix").innerHTML = `${productCode}${branchCode}`;
+    if(productCode == "WK2079"){
+        productCode = "A";
+    }
+    else if(productCode == "WK2076H"){
+        productCode = "B";
+    }
+    else if(productCode == "WK2076i"){
+        productCode = "C";
+    }
+    else if(productCode == "WKT2080"){
+        productCode = "D";
+    }
+    else if(productCode == "WKA2023"){
+        productCode = "E";
+    }
+    else if(productCode == "WKA2024"){
+        productCode = "F";
+    }
+    else{
+        productCode = "-";
+    }
 
-    if (productCode && branchCode) {
+    document.getElementById("code-suffix").innerHTML = `${productCode}${warehouse_id}_`;
+
+    if (productCode && warehouse_id) {
         document.getElementById("code-increment").removeAttribute("disabled");
+        getIncrementSuggestion(`${productCode}${warehouse_id}_`);
     }
 }
 
+function getIncrementSuggestion(code) {
+    console.log(code);
+    fetch(
+        `{{ route("get_phc_product_increment") }}/?code=${code}`,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const data = response.data.toString();
+        document.getElementById("code-increment").value = data.padStart(3, "0");
+        setCode();
+    }).catch(function (error) {
+        console.error(error);
+    });
+}
+
 function setCode() {
-    const productCode = document.getElementById("product-code").value;
-    const branchCode = document.getElementById("branch-code").value;
+    // const productCode = document.getElementById("product-code").value;
+    // const branchCode = document.getElementById("branch-code").value;
+
+    let productCode = document.getElementById("product-code").value;
+    const warehouse_id = document.getElementById("warehouse_id").value;
     const increment = document.getElementById("code-increment").value;
 
-    document.getElementById("code").value = `${productCode}${branchCode}${increment}`;
+    if(productCode == "WK2079"){
+        productCode = "A";
+    }
+    else if(productCode == "WK2076H"){
+        productCode = "B";
+    }
+    else if(productCode == "WK2076i"){
+        productCode = "C";
+    }
+    else if(productCode == "WKT2080"){
+        productCode = "D";
+    }
+    else if(productCode == "WKA2023"){
+        productCode = "E";
+    }
+    else if(productCode == "WKA2024"){
+        productCode = "F";
+    }
+
+    document.getElementById("code").value = `${productCode}${warehouse_id}_${increment}`;
 }
 </script>
 @endsection

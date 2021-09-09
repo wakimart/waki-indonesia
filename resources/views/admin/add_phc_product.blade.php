@@ -92,6 +92,29 @@ $menu_item_second = "add_phc_product";
                                 id="code"
                                 required />
                             <div class="form-group">
+                                <label for="warehouse_id">Warehouse</label>
+                                <select class="form-control"
+                                    id="warehouse_id"
+                                    name="warehouse_id"
+                                    onchange="selectWarehouse(this)" required="">
+                                    <option disabled selected>
+                                        Select Warehouse
+                                    </option>
+                                    <option value="1"
+                                        data-code="1">
+                                        Surabaya
+                                    </option>
+                                    <option value="2"
+                                        data-code="2">
+                                        Semarang
+                                    </option>
+                                    <option value="3"
+                                        data-code="3">
+                                        Jakarta
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="branch_id">Branch</label>
                                 <select class="form-control"
                                     id="branch_id"
@@ -127,7 +150,7 @@ $menu_item_second = "add_phc_product";
                             </div>
                             <div class="form-group">
                                 <label for="code-increment">
-                                    Code (please select the branch & product first)
+                                    Code (please select the warehouse & product first)
                                 </label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -189,6 +212,10 @@ function getSelectedCode(e) {
 
 function selectBranch(e) {
     document.getElementById("branch-code").value = getSelectedCode(e);
+    // setCodeSuffix();
+}
+
+function selectWarehouse(e) {
     setCodeSuffix();
 }
 
@@ -198,18 +225,42 @@ function selectProduct(e) {
 }
 
 function setCodeSuffix() {
-    const productCode = document.getElementById("product-code").value;
-    const branchCode = document.getElementById("branch-code").value;
+    let productCode = document.getElementById("product-code").value;
+    const warehouse_id = document.getElementById("warehouse_id").value;
+    // const branchCode = document.getElementById("branch-code").value;
 
-    document.getElementById("code-suffix").innerHTML = `${productCode}${branchCode}`;
+    if(productCode == "WK2079"){
+        productCode = "A";
+    }
+    else if(productCode == "WK2076H"){
+        productCode = "B";
+    }
+    else if(productCode == "WK2076i"){
+        productCode = "C";
+    }
+    else if(productCode == "WKT2080"){
+        productCode = "D";
+    }
+    else if(productCode == "WKA2023"){
+        productCode = "E";
+    }
+    else if(productCode == "WKA2024"){
+        productCode = "F";
+    }
+    else{
+        productCode = "-";
+    }
 
-    if (productCode && branchCode) {
+    document.getElementById("code-suffix").innerHTML = `${productCode}${warehouse_id}_`;
+
+    if (productCode && warehouse_id) {
         document.getElementById("code-increment").removeAttribute("disabled");
-        getIncrementSuggestion(`${productCode}${branchCode}`);
+        getIncrementSuggestion(`${productCode}${warehouse_id}_`);
     }
 }
 
 function getIncrementSuggestion(code) {
+    console.log(code);
     fetch(
         `{{ route("get_phc_product_increment") }}/?code=${code}`,
         {
@@ -236,11 +287,33 @@ function getIncrementSuggestion(code) {
 }
 
 function setCode() {
-    const productCode = document.getElementById("product-code").value;
-    const branchCode = document.getElementById("branch-code").value;
+    // const productCode = document.getElementById("product-code").value;
+    // const branchCode = document.getElementById("branch-code").value;
+
+    let productCode = document.getElementById("product-code").value;
+    const warehouse_id = document.getElementById("warehouse_id").value;
     const increment = document.getElementById("code-increment").value;
 
-    document.getElementById("code").value = `${productCode}${branchCode}${increment}`;
+    if(productCode == "WK2079"){
+        productCode = "A";
+    }
+    else if(productCode == "WK2076H"){
+        productCode = "B";
+    }
+    else if(productCode == "WK2076i"){
+        productCode = "C";
+    }
+    else if(productCode == "WKT2080"){
+        productCode = "D";
+    }
+    else if(productCode == "WKA2023"){
+        productCode = "E";
+    }
+    else if(productCode == "WKA2024"){
+        productCode = "F";
+    }
+
+    document.getElementById("code").value = `${productCode}${warehouse_id}_${increment}`;
 }
 </script>
 @endsection
