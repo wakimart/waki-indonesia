@@ -97,7 +97,7 @@ $menu_item_second = "update_history_out";
                                     class="form-control"
                                     name="code"
                                     id="code"
-                                    value="{{ $historystock->code }}"
+                                    value=""
                                     required />
                             </div>
 
@@ -107,7 +107,7 @@ $menu_item_second = "update_history_out";
                                     class="form-control"
                                     name="date"
                                     id="date"
-                                    value="{{ date('Y-m-d', strtotime($historystock->date)) }}"
+                                    value=""
                                     required />
                             </div>
 
@@ -121,15 +121,9 @@ $menu_item_second = "update_history_out";
                                         Select Warehouse
                                     </option>
                                     @foreach ($warehouses as $warehouse)
-                                        @if ($historystock->warehouse_id === $warehouse->id)
-                                            <option value="{{ $warehouse->id }}" selected>
-                                                {{ $warehouse->code }} - {{ $warehouse->name }}
-                                            </option>
-                                        @else
-                                            <option value="{{ $warehouse->id }}">
-                                                {{ $warehouse->code }} - {{ $warehouse->name }}
-                                            </option>
-                                        @endif
+                                        <option value="{{ $warehouse->id }}">
+                                            {{ $warehouse->code }} - {{ $warehouse->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -168,15 +162,9 @@ $menu_item_second = "update_history_out";
                                                     Select Product
                                                 </option>
                                                 @foreach ($products as $product)
-                                                    @if ($historystock->product_id === $product->id)
-                                                        <option value="{{ $product->id }}" selected>
-                                                            {{ $product->code }} - {{ $product->name }}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{ $product->id }}">
-                                                            {{ $product->code }} - {{ $product->name }}
-                                                        </option>
-                                                    @endif
+                                                    <option value="{{ $product->id }}">
+                                                        {{ $product->code }} - {{ $product->name }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -190,7 +178,7 @@ $menu_item_second = "update_history_out";
                                                 name="quantity[]"
                                                 placeholder="Quantity"
                                                 min="0"
-                                                value="{{ $historystock->quantity }}"
+                                                value=""
                                                 required />
                                         </div>
                                     </div>
@@ -206,7 +194,7 @@ $menu_item_second = "update_history_out";
                                     rows="2"
                                     placeholder="Description"
                                     maxlength="300"
-                                    value="{{ $historystock->description }}">
+                                    value="">
                                 </textarea>
                             </div>
 

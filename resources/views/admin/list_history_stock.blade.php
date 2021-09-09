@@ -136,8 +136,8 @@ $menu_item_second = "list_history_stock";
                                 <thead>
                                     <tr>
                                         <th>No.</th>
-                                        <th>Date</th>
                                         <th>Code</th>
+                                        <th>Date</th>
                                         <th>Warehouse</th>
                                         <th>Type</th>
                                         <th>Product</th>
@@ -147,35 +147,43 @@ $menu_item_second = "list_history_stock";
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($historystocks as $historystock)
+                                    @foreach($historystocks as $code => $historycode)
                                         <tr>
                                             <td class="text-right">
                                                 {{ ++$i }}
                                             </td>
                                             <td>
-                                                {{ date("d-m-Y", strtotime($historystock->date)) }}
+                                                {{ $code }}
                                             </td>
-                                            <td>
-                                                {{ $historystock->code }}
-                                            </td>
-                                            <td>
-                                                {{ $historystock->stock->warehouse['name'] }}
-                                            </td>
-                                            <td>
-                                                {{ ucfirst($historystock->type) }}
-                                            </td>
-                                            <td>
-                                                {{ $historystock->stock->product['name'] }}
-                                            </td>
+                                            @foreach($historycode as $historystock)
+                                                <td>
+                                                    {{ date("d-m-Y", strtotime($historystock->date)) }}
+                                                </td>
+                                                <td>
+                                                    {{ $historystock->stock->warehouse['name'] }}
+                                                </td>
+                                                <td>
+                                                    {{ ucfirst($historystock->type) }}
+                                                </td>
+                                                <td>
+                                                    {{ $historystock->stock->product['name'] }}
+                                                </td>
+                                            @endforeach
                                             <td class="text-center">
                                                 <a href="{{ route('detail_history_stock', ['id' => $historystock['id']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
                                             <td class="center">
-                                                <a href="">
+                                            @if($historystock->type == "in")
+                                                <a href="{{ route('edit_history_in', ['id' => $historystock['id']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
+                                            @else
+                                                <a href="{{ route('edit_history_out', ['id' => $historystock['id']]) }}">
+                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                </a>
+                                            @endif
                                             </td>
                                             <td class="center">
                                                 <a class="btn-delete disabled"
@@ -191,7 +199,7 @@ $menu_item_second = "list_history_stock";
                                 </tbody>
                             </table>
                             <br>
-                            {{ $historystocks->links() }}
+                            
                         </div>
                     </div>
                 </div>

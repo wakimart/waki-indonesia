@@ -41,7 +41,7 @@ class HistoryStockController extends Controller
 
         $historystocks = $historystocks->paginate(10)->groupBy("code");
 
-        dd($historystocks);
+        // dd($historystocks);
 
         return view("admin.list_history_stock", compact("historystocks"))
             ->with('i', (request()->input('page', 1) - 1) * 10);
@@ -161,20 +161,44 @@ class HistoryStockController extends Controller
 
     public function editIn(Request $request)
     {
-        $historystock = HistoryStock::where($request->id)->first();
+        $historystock = HistoryStock::where($request->id);
 
-        $stocks = Stock::with('product')->where('active', true)->get();
+        $products = Product::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
 
-        return view("admin.update_history_in", compact("historystock", "stocks"));
+        $warehouses = Warehouse::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
+
+        return view("admin.update_history_in", compact(
+            "historystock", 
+            "products", 
+            "warehouses"
+        ));
     }
 
     public function editOut(Request $request)
     {
-        $historystock = HistoryStock::where($request->id)->first();
+        $historystock = HistoryStock::where($request->id)->get();
 
-        $stocks = Stock::with('product')->where('active', true)->get();
+        $products = Product::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
 
-        return view("admin.update_history_out", compact("historystock", "stocks"));
+        $warehouses = Warehouse::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
+
+        return view("admin.update_history_out", compact(
+            "historystock", 
+            "products", 
+            "warehouses"
+        ));
     }
 
     /**
