@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Stock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
@@ -18,6 +20,14 @@ class StockController extends Controller
         $stocks = $stocks->groupBy('product_id');
         // dd($stocks->toArray());
         return view('admin.list_stock', compact('stocks'));
+    }
+
+    public function stock()
+    {
+        $stocks = Stock::with('product')->where('active', true)->get()->paginate(10);
+
+        return view('admin.list_stock_warehouse', compact('stocks'))
+            ->with('i', (request()->input('page', 1) - 1) * 10);;
     }
 
     /**

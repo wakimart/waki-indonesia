@@ -22,7 +22,7 @@ class HistoryStockController extends Controller
      */
     public function index(Request $request)
     {
-        $historystocks = HistoryStock::orderBy('date');
+        $historystocks = HistoryStock::all();
 
         if ($request->has("filter_code")) {
             $filterCode = $request->filter_code;
@@ -50,10 +50,11 @@ class HistoryStockController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function createIn()
     {
         $products = Product::select("id", "code", "name")
             ->where("active", true)
+            ->orderBy("code")
             ->get();
 
         $warehouses = Warehouse::select("id", "code", "name")
@@ -61,7 +62,25 @@ class HistoryStockController extends Controller
             ->orderBy("code")
             ->get();
 
-        return view("admin.add_history_stock", compact(
+        return view("admin.add_history_in", compact(
+            "products",
+            "warehouses",
+        ));
+    }
+
+    public function createOut()
+    {
+        $products = Product::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
+
+        $warehouses = Warehouse::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
+
+        return view("admin.add_history_out", compact(
             "products",
             "warehouses",
         ));
@@ -78,41 +97,14 @@ class HistoryStockController extends Controller
         DB::beginTransaction();
 
         try {
-            $products = $request->product;
-            $countProduct = count($products);
-
-            for ($i = 0; $i < $countProduct; $i++) {
-                $historyStock = new HistoryStock();
-                $historyStock->fill($request->only(
-                    "code",
-                    "date",
-                    "type",
-                    "description",
-                ));
-                $historyStock->stock_id = $products[$i];
-                $historyStock->quantity = $request->quantity[$i];
-                $historyStock->save();
-
-                $stock = Stock::where("warehouse_id", $request->warehouse_id)
-                    ->where("product_id", $products[$i])
-                    ->where("type_warehouse", null)
-                    ->first();
-
-                if (empty($stock)) {
-                    $stock = new Stock();
-                    $stock->warehouse_id = $request->warehouse_id;
-                    $stock->product_id = $products[$i];
-                    $stock->quantity = 0;
-                    $stock->save();
-                }
-
-                if ($request->type === "in") {
-                    $stock->quantity += $request->quantity[$i];
-                } elseif ($request->type === "out") {
-                    $stock->quantity -= $request->quantity[$i];
-                }
-                $stock->save();
-            }
+            HistoryStock::create($request->only(
+                "stock_id",
+                "code",
+                "date",
+                "type",
+                "quantity",
+                "description",
+            ));
 
             DB::commit();
 
@@ -122,19 +114,6 @@ class HistoryStockController extends Controller
         } catch (Throwable $th) {
             DB::rollBack();
 
-            return response()->json(["error" => $th->getMessage()], 500);
-        }
-    }
-
-    public function getProduct()
-    {
-        try {
-            $products = Product::select("id", "code", "name")
-                ->where("active", true)
-                ->get();
-
-            return response()->json(["data" => $products]);
-        } catch (Throwable $th) {
             return response()->json(["error" => $th->getMessage()], 500);
         }
     }
@@ -163,6 +142,24 @@ class HistoryStockController extends Controller
         $stocks = Stock::with('product')->where('active', true)->get();
 
         return view("admin.update_history_stock", compact("historystock", "stocks"));
+    }
+
+    public function editIn(Request $request)
+    {
+        $historystock = HistoryStock::where($request->id)->first();
+
+        $stocks = Stock::with('product')->where('active', true)->get();
+
+        return view("admin.update_history_in", compact("historystock", "stocks"));
+    }
+
+    public function editOut(Request $request)
+    {
+        $historystock = HistoryStock::where($request->id)->first();
+
+        $stocks = Stock::with('product')->where('active', true)->get();
+
+        return view("admin.update_history_out", compact("historystock", "stocks"));
     }
 
     /**
