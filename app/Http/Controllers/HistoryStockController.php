@@ -22,7 +22,7 @@ class HistoryStockController extends Controller
      */
     public function index(Request $request)
     {
-        $historystocks = HistoryStock::all();
+        $historystocks = HistoryStock::orderBy("code", "desc");
 
         if ($request->has("filter_code")) {
             $filterCode = $request->filter_code;
@@ -39,7 +39,9 @@ class HistoryStockController extends Controller
             $historystocks = $historystocks->where('date', $request->historystocks);
         }
 
-        $historystocks = $historystocks->paginate(10);
+        $historystocks = $historystocks->paginate(10)->groupBy("code");
+
+        dd($historystocks);
 
         return view("admin.list_history_stock", compact("historystocks"))
             ->with('i', (request()->input('page', 1) - 1) * 10);
