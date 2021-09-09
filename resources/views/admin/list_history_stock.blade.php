@@ -168,12 +168,12 @@ $menu_item_second = "list_history_stock";
                                                 {{ $historystock->stock->product['name'] }}
                                             </td>
                                             <td class="text-center">
-                                                <a href="">
+                                                <a href="{{ route('detail_history_stock', ['id' => $historystock['id']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
                                             <td class="center">
-                                                <a href="{{ route('edit_history_stock', ['id' => $historystock['id']]) }}">
+                                                <a href="">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             </td>

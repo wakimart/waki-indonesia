@@ -965,10 +965,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("add_history_out");
         Route::get("get-product", "HistoryStockController@getProduct")
             ->name("history_stock_get_product");
-        Route::get("list", "HistoryStockController@index")
-            ->name("list_history_stock");
         Route::post("store", "HistoryStockController@store")
             ->name("store_history_stock");
+        Route::get("list", "HistoryStockController@index")
+            ->name("list_history_stock");
+        Route::get("detail/{id}", "HistoryStockController@show")
+            ->name("detail_history_stock");
         Route::get("edit/in/{id}", "HistoryStockController@editIn")
             ->name("edit_history_in");
         Route::get("edit/out/{id}", "HistoryStockController@editOut")

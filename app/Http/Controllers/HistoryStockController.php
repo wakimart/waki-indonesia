@@ -124,9 +124,22 @@ class HistoryStockController extends Controller
      * @param  \App\HistoryStock  $historyStock
      * @return \Illuminate\Http\Response
      */
-    public function show(HistoryStock $historyStock)
+    public function show(Request $request)
     {
-        //
+        $historystocks = HistoryStock::first();
+        $historyIn = HistoryStock::where("id", $request->id)
+            ->where("type", "in")
+            ->get();
+
+        $historyOut = HistoryStock::where("id", $request->id)
+            ->where("type", "out")
+            ->get();
+
+        return view('admin.detail_history_stock', compact(
+            'historystocks',
+            'historyIn',
+            'historyOut',
+        ));
     }
 
     /**
