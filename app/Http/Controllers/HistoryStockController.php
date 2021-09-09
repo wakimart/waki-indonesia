@@ -103,17 +103,6 @@ class HistoryStockController extends Controller
             $countProduct = count($products);
 
             for ($i = 0; $i < $countProduct; $i++) {
-                $historyStock = new HistoryStock();
-                $historyStock->fill($request->only(
-                    "code",
-                    "date",
-                    "type",
-                    "description",
-                ));
-                $historyStock->stock_id = $products[$i];
-                $historyStock->quantity = $request->quantity[$i];
-                $historyStock->save();
-
                 $stock = Stock::where("warehouse_id", $request->warehouse_id)
                     ->where("product_id", $products[$i])
                     ->where("type_warehouse", null)
@@ -133,6 +122,17 @@ class HistoryStockController extends Controller
                     $stock->quantity -= $request->quantity[$i];
                 }
                 $stock->save();
+
+                $historyStock = new HistoryStock();
+                $historyStock->fill($request->only(
+                    "code",
+                    "date",
+                    "type",
+                    "description",
+                ));
+                $historyStock->stock_id = $stock->id;
+                $historyStock->quantity = $request->quantity[$i];
+                $historyStock->save();
             }
 
             DB::commit();
@@ -194,7 +194,7 @@ class HistoryStockController extends Controller
         return view("admin.update_history_in", compact(
             "historyStocks",
             "products",
-            "warehouses"
+            "warehouses",
         ));
     }
 
@@ -218,10 +218,10 @@ class HistoryStockController extends Controller
             ->orderBy("code")
             ->get();
 
-        return view("admin.update_history_in", compact(
+        return view("admin.update_history_out", compact(
             "historyStocks",
             "products",
-            "warehouses"
+            "warehouses",
         ));
     }
 
@@ -277,17 +277,6 @@ class HistoryStockController extends Controller
             $countProduct = count($products);
 
             for ($i = 0; $i < $countProduct; $i++) {
-                $historyStock = new HistoryStock();
-                $historyStock->fill($request->only(
-                    "code",
-                    "date",
-                    "type",
-                    "description",
-                ));
-                $historyStock->stock_id = $products[$i];
-                $historyStock->quantity = $request->quantity[$i];
-                $historyStock->save();
-
                 $stock = Stock::where("warehouse_id", $request->warehouse_id)
                     ->where("product_id", $products[$i])
                     ->where("type_warehouse", null)
@@ -307,6 +296,17 @@ class HistoryStockController extends Controller
                     $stock->quantity -= $request->quantity[$i];
                 }
                 $stock->save();
+
+                $historyStock = new HistoryStock();
+                $historyStock->fill($request->only(
+                    "code",
+                    "date",
+                    "type",
+                    "description",
+                ));
+                $historyStock->stock_id = $stock->id;
+                $historyStock->quantity = $request->quantity[$i];
+                $historyStock->save();
 
                 // History (Stock)
                 $history["type_menu"] = "Stock";

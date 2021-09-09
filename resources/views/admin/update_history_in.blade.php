@@ -77,7 +77,7 @@ $menu_item_second = "update_history_in";
                 <div class="card">
                     <div class="card-body">
                         <form method="POST"
-                            action="{{ route("store_history_stock") }}">
+                            action="{{ route("update_history_stock") }}">
                             @csrf
 
                             <div class="form-group">
