@@ -276,6 +276,7 @@ class PersonalHomecareController extends Controller
             foreach ($phcProducts as $perProd) {
                 $phcNya = PersonalHomecare::where('ph_product_id', $perProd['id'])
                         ->whereBetween('schedule', [$firstDate, $lastDate])
+                        ->where("active", true)
                         ->get();
                 if(sizeof($phcNya) == 0){
                     array_push($finalPhcProd, $perProd);
