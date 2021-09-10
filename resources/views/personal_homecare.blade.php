@@ -167,7 +167,7 @@
         </div>
         <div class="row justify-content-center mt-5">
             <h3 class="text-center" style="font-family: 'Poppins', sans-serif; font-weight: 500; color: #63a4ff;">
-                Selamat anda telah tergabung dalam program pinjamin produk 5 hari
+                Selamat kepada Bpk/Ibu {{ $personalhomecare['name'] }} telah tergabung dalam program pinjamin produk 5 hari
                 <span><img class="img-fluid" style="margin-right: 15px; width: 30px; vertical-align: text-top;" src="{{asset('sources/congrats.png')}}"></span>
             </h3>
              
@@ -330,23 +330,23 @@
                     <tbody class="sk">
                         <tr>
                             <td>1.</td>
-                            <td>Program pinjamin produk 5 hari tidak dipungut biaya apapun</td>
+                            <td>Program pinjamin produk 5 hari (PP5H) tidak dipungut biaya apapun.</td>
                         </tr>
                         <tr>
                             <td>2.</td>
-                            <td>Sudah menjadi member WAKimart</td>
+                            <td>Sudah menjadi member WAKimart dan minimal berusia 35 tahun.</td>
                         </tr>
                         <tr>
                             <td>3.</td>
-                            <td>Minimal berusia 35 tahun</td>
+                            <td>Apabila ada kekurangan, kehilangan ataupun kerusakan pada produk saat pengembalian, berarti membeli barang dengan harga normal sesuai ketentuan yang ada.</td>
                         </tr>
                         <tr>
                             <td>4.</td>
-                            <td>Biaya akan dikenakan kepada konsumen jika ada sparepart ataupun kerusakan di luar persetujuan</td>
+                            <td>Kekurangan aksesoris produk harap dikembalikan paling lambat 7 hari setelah program PP5H berakhir.</td>
                         </tr>
                         <tr>
                             <td>5.</td>
-                            <td>Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya</td>
+                            <td>Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya.</td>
                         </tr>
                         <tr>
                             <td>6.</td>

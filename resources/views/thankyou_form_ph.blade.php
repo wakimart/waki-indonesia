@@ -200,23 +200,23 @@
                     <tbody class="sk">
                         <tr>
                             <td>1.</td>
-                            <td>Program pinjamin produk 5 hari tidak dipungut biaya apapun</td>
+                            <td>Program pinjamin produk 5 hari (PP5H) tidak dipungut biaya apapun.</td>
                         </tr>
                         <tr>
                             <td>2.</td>
-                            <td>Sudah menjadi member WAKimart</td>
+                            <td>Sudah menjadi member WAKimart dan minimal berusia 35 tahun.</td>
                         </tr>
                         <tr>
                             <td>3.</td>
-                            <td>Minimal berusia 35 tahun</td>
+                            <td>Apabila ada kekurangan, kehilangan ataupun kerusakan pada produk saat pengembalian, berarti membeli barang dengan harga normal sesuai ketentuan yang ada.</td>
                         </tr>
                         <tr>
                             <td>4.</td>
-                            <td>Biaya akan dikenakan kepada konsumen jika ada sparepart ataupun kerusakan di luar persetujuan</td>
+                            <td>Kekurangan aksesoris produk harap dikembalikan paling lambat 7 hari setelah program PP5H berakhir.</td>
                         </tr>
                         <tr>
                             <td>5.</td>
-                            <td>Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya</td>
+                            <td>Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya.</td>
                         </tr>
                         <tr>
                             <td>6.</td>

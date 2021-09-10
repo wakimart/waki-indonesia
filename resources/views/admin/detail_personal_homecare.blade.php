@@ -654,12 +654,12 @@ $menu_item_page = "personal_homecare";
                             <h5>SYARAT & KETENTUAN:</h5>
                             <div style="width: 90%; margin: auto;">
                                 <ol type="1">
-                                    <li style="line-height: 1.3;">Program pinjaman produk 5 hari tidak dipungut biaya apapun</li>
-                                    <li style="line-height: 1.3;">Sudah menjadi member Wakimart</li>
-                                    <li style="line-height: 1.3;">Minimal berusia 35 tahun</li>
-                                    <li style="line-height: 1.3;">Biaya akan dikenakan kepada konsumen jika ada sparepart ataupun kerusakan di luar persetujuan</li>
-                                    <li style="line-height: 1.3;">Syarat dan Ketentuan dapat berubah tanpa pemberitahuan sebelumnya</li>
-                                    <li style="line-height: 1.3;">Kenyamanan dan keamanan konsumen kami adalah prioritas pertama</li>
+                                    <li style="line-height: 1.3;">Program pinjamin produk 5 hari (PP5H) tidak dipungut biaya apapun.</li>
+                                    <li style="line-height: 1.3;">Sudah menjadi member WAKimart dan minimal berusia 35 tahun</li>
+                                    <li style="line-height: 1.3;">Apabila ada kekurangan, kehilangan ataupun kerusakan pada produk saat pengembalian, berarti membeli barang dengan harga normal sesuai ketentuan yang ada.</li>
+                                    <li style="line-height: 1.3;">Kekurangan aksesoris produk harap dikembalikan paling lambat 7 hari setelah program PP5H berakhir.</li>
+                                    <li style="line-height: 1.3;">Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya.</li>
+                                    <li style="line-height: 1.3;">Kenyamanan dan keamanan konsumen kami adalah prioritas pertama.</li>
                                 </ol>
                                 <p>Apabila ada sesuatu atau ada pertanyaan, bisa menghubungi kami melalui facebook page WAKi Indonesia ataau customer care kami : 0815-5467-3357</p>
                             </div>
