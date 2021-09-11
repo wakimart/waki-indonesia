@@ -166,55 +166,68 @@ $menu_item_second = "list_history_stock";
                                 <tbody>
                                     @foreach($historystocks as $code => $historycode)
                                         <tr>
-                                            <td class="text-right">
+                                            <td class="text-right" rowspan="{{ sizeof($historycode) }}">
                                                 {{ ++$i }}
                                             </td>
-                                            <td>
+                                            <td rowspan="{{ sizeof($historycode) }}">
                                                 {{ $code }}
                                             </td>
-                                            @foreach($historycode as $historystock)
-                                                <td>
-                                                    {{ date("d-m-Y", strtotime($historystock->date)) }}
-                                                </td>
-                                                <td>
-                                                    {{ $historystock->stock->warehouse['code'] }}
-                                                </td>
-                                                <td>
-                                                    {{ ucfirst($historystock->type) }}
-                                                </td>
-                                                <td>
-                                                    {{ $historystock->stock->product['name'] }}
-                                                </td>
-                                                <td>
-                                                    {{ $historystock->quantity }}
-                                                </td>
-                                            @endforeach
-                                            <td class="text-center">
-                                                <a href="{{ route('detail_history_stock', ['id' => $historystock['id']]) }}">
+                                            <td rowspan="{{ sizeof($historycode) }}">
+                                                {{ date("d-m-Y", strtotime($historycode[0]->date)) }}
+                                            </td>
+                                            <td class="text-center" rowspan="{{ sizeof($historycode) }}">
+                                                <b>{{ $historycode[0]->stock->warehouse['code'] }}</b>
+                                                <br>
+                                                ({{ $historycode[0]->stock->warehouse['name'] }})
+                                            </td>
+                                            <td rowspan="{{ sizeof($historycode) }}">
+                                                {{ ucfirst($historycode[0]->type) }}
+                                            </td>
+                                            <td>
+                                                {{ $historycode[0]->stock->product['code'] }}
+                                            </td>
+                                            <td>
+                                                {{ $historycode[0]->stock->quantity }}
+                                            </td>
+                                            <td class="text-center" rowspan="{{ sizeof($historycode) }}">
+                                                <a href="{{ route('detail_history_stock', ['id' => $historycode[0]['id']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
-                                            <td class="center">
-                                            @if($historystock->type == "in")
-                                                <a href="{{ route('edit_history_in', ['code' => $historystock['code']]) }}">
+                                            <td class="center" rowspan="{{ sizeof($historycode) }}">
+                                            @if($historycode[0]->type == "in")
+                                                <a href="{{ route('edit_history_in', ['code' => $historycode[0]['code']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             @else
-                                                <a href="{{ route('edit_history_out', ['code' => $historystock['code']]) }}">
+                                                <a href="{{ route('edit_history_out', ['code' => $historycode[0]['code']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
                                             @endif
                                             </td>
-                                            <td class="center">
+                                            <td class="center" rowspan="{{ sizeof($historycode) }}">
                                                 <a class="btn-delete disabled"
                                                     data-toggle="modal"
                                                     href="#deleteDoModal"
                                                     onclick="submitDelete(this)"
-                                                    data-id="{{ $historystock->id }}">
+                                                    data-id="{{ $historycode[0]->id }}">
                                                     <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                 </a>
                                             </td>
                                         </tr>
+
+                                        @if(sizeof($historycode) > 1)
+                                            <tr>
+                                                @for($i = 1; $i < sizeof($historycode); $i++)
+                                                    <td>
+                                                        {{ $historycode[$i]->stock->product['code'] }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $historycode[$i]->stock->quantity }}
+                                                    </td>
+                                                @endfor
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>

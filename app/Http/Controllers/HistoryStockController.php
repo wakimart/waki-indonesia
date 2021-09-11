@@ -24,7 +24,7 @@ class HistoryStockController extends Controller
      */
     public function index(Request $request)
     {
-        $historystocks = HistoryStock::with('stock')->orderBy("code", "desc");
+        $historystocks = HistoryStock::orderBy("code", "desc")->whereNotNull('code');
 
         if ($request->has("filter_code")) {
             $filterCode = $request->filter_code;
@@ -67,6 +67,7 @@ class HistoryStockController extends Controller
             ->get();
 
         $warehouses = Warehouse::select("id", "code", "name")
+            ->whereNotNull('parent_warehouse_id')
             ->where("active", true)
             ->orderBy("code")
             ->get();
@@ -85,6 +86,7 @@ class HistoryStockController extends Controller
             ->get();
 
         $warehouses = Warehouse::select("id", "code", "name")
+            ->whereNotNull('parent_warehouse_id')
             ->where("active", true)
             ->orderBy("code")
             ->get();
@@ -144,9 +146,16 @@ class HistoryStockController extends Controller
 
             DB::commit();
 
-            return redirect()
-                ->route("add_history_stock")
-                ->with("success", "History Stock successfully added.");
+            if($request->type == "in"){
+                return redirect()
+                    ->route("add_history_in")
+                    ->with("success", "History Stock successfully added.");
+            }
+            else{    
+                return redirect()
+                    ->route("add_history_out")
+                    ->with("success", "History Stock successfully added.");
+            }
         } catch (Throwable $th) {
             DB::rollBack();
 
@@ -158,7 +167,7 @@ class HistoryStockController extends Controller
     {
         try {
             $products = Product::select("id", "code", "name")
-            ->where("active", true)
+                ->where("active", true)
                 ->get();
 
             return response()->json(["data" => $products]);
@@ -381,24 +390,57 @@ class HistoryStockController extends Controller
         DB::beginTransaction();
 
         try {
-            $historyStock = HistoryStock::where($request->id)->first();
-            $historyStock->active = false;
-            $historyStock->save();
+            $historyStocks = HistoryStock::where("code", $request->old_code)
+                ->where("active", true)
+                ->get();
 
             $userId = Auth::user()["id"];
-            $history["type_menu"] = "History Stock";
-            $history["method"] = "Delete";
-            $history["meta"] = json_encode(
-                [
-                    "user" => $userId,
-                    "createdAt" => date("Y-m-d H:i:s"),
-                    "dataChange" => $historyStock->getChanges(),
-                ],
-                JSON_THROW_ON_ERROR
-            );
-            $history["user_id"] = $userId;
-            $history["menu_id"] = $request->id;
-            HistoryUpdate::create($history);
+
+            // Deactivate History Stock based on code
+            foreach ($historyStocks as $historyStock) {
+                // Change quantity in stock
+                $stock = Stock::where("id", $historyStock->stock_id)->first();
+                if ($historyStock->type === "in") {
+                    $stock->quantity -= $historyStock->quantity;
+                } elseif ($historyStock->type === "out") {
+                    $stock->quantity += $historyStock->quantity;
+                }
+                $stock->save();
+
+                // History (Stock)
+                $history["type_menu"] = "Stock (History Stock)";
+                $history["method"] = "Delete";
+                $history["meta"] = json_encode(
+                    [
+                        "user" => $userId,
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $historyStock->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $history["user_id"] = $userId;
+                $history["menu_id"] = $historyStock->id;
+                HistoryUpdate::create($history);
+
+                // Save History Stock
+                $historyStock->active = false;
+                $historyStock->save();
+
+                // History (History Stock)
+                $history["type_menu"] = "History Stock";
+                $history["method"] = "Update";
+                $history["meta"] = json_encode(
+                    [
+                        "user" => $userId,
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $historyStock->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $history["user_id"] = $userId;
+                $history["menu_id"] = $historyStock->id;
+                HistoryUpdate::create($history);
+            }
 
             DB::commit();
 

@@ -14,8 +14,8 @@ class AlterHistoryStocksTable extends Migration
     public function up()
     {
         Schema::table("history_stocks", function (Blueprint $table) {
-            $table->dropForeign(["upgrade_id "]);
-            $table->dropColumn(["type_warehouse", "upgrade_id"]);
+            // $table->dropForeign(["upgrade_id "]);
+            // $table->dropColumn(["type_warehouse", "upgrade_id"]);
             $table->enum("type", ["in", "out"])->nullable()->after("stock_id");
             $table->date("date")->useCurrent()->nullable()->after("stock_id");
             $table->string("code")->nullable()->after("stock_id");
@@ -32,9 +32,9 @@ class AlterHistoryStocksTable extends Migration
     {
         Schema::table("history_stocks", function (Blueprint $table) {
             $table->dropColumn(["code", "date", "type", "description"]);
-            $table->enum("type_warehouse", ["Display", "Ready"])->after("stock_id");
-            $table->unsignedInteger("upgrade_id")->after("stock_id");
-            $table->foreign("upgrade_id")->references("id")->on("upgrades");
+            // $table->enum("type_warehouse", ["Display", "Ready"])->after("stock_id");
+            // $table->unsignedInteger("upgrade_id")->after("stock_id");
+            // $table->foreign("upgrade_id")->references("id")->on("upgrades");
         });
     }
 }
