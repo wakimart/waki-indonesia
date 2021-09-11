@@ -532,6 +532,14 @@ function setProduct() {
 }
 
 function checkPhone(e) {
+    if (!e.value) {
+        document.getElementById("phone-message").classList.remove("text-success");
+        document.getElementById("phone-message").classList.add("text-danger");
+        document.getElementById("submit-button").setAttribute("disabled", "");
+        document.getElementById("phone-message").innerHTML = "Please input phone number.";
+        return;
+    }
+
     fetch(
         '{{ route("check_phc_phone") }}?phone=' + e.value,
         {
