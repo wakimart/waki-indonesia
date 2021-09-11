@@ -977,6 +977,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("edit_history_out");
         Route::post("update", "HistoryStockController@update")
             ->name("update_history_stock");
+        //Export to XLS By Warehouse
+        Route::get('/export-to-xls-by-warehouse', 'HistoryStockController@export_to_xls_byWarehouse')
+        ->name('historystock_export-to-xls-by-warehouse');
     });
 
     Route::group(["prefix" => "stock-warehouse", "middleware" => "auth"], function () {

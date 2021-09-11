@@ -7,9 +7,11 @@ use App\HistoryUpdate;
 use App\Product;
 use App\Stock;
 use App\Warehouse;
+use App\Exports\HistoryStockExportByWarehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use Throwable;
 
 class HistoryStockController extends Controller
@@ -43,7 +45,12 @@ class HistoryStockController extends Controller
 
         // dd($historystocks);
 
-        return view("admin.list_history_stock", compact("historystocks"))
+        $warehouses = Warehouse::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
+
+        return view("admin.list_history_stock", compact("historystocks", "warehouses"))
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
@@ -191,6 +198,20 @@ class HistoryStockController extends Controller
             'historyIn',
             'historyOut',
         ));
+    }
+
+    public function export_to_xls_byWarehouse(Request $request)
+    {
+        $inputWarehouse = null;
+
+        if($request->has('inputWarehouse')){
+            $inputWarehouse = $request->inputWarehouse;
+        }
+
+        return Excel::download(
+            new HistoryStockExportByWarehouse($inputWarehouse), 
+            'History Stock By Warehouse.xlsx'
+        );
     }
 
     /**
