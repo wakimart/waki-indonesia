@@ -122,6 +122,22 @@ $menu_item_second = "list_history_stock";
                         </button>
                     </div>
                 </div>
+
+                <div class="col-xs-6 col-sm-6"
+                    style="padding: 0; display: inline-block;">
+                    <div class="form-group">
+                        <button id="btn-exportByWarehouse"
+                            type="button"
+                            class="btn btn-gradient-info m-1"
+                            name="export"
+                            data-toggle="modal"
+                            data-target="#exportByWarehouse"
+                            value="-">
+                            <span class="mdi mdi-file-document"></span>
+                            Export XLS by Warehouse
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="col-12 grid-margin stretch-card">
@@ -141,6 +157,7 @@ $menu_item_second = "list_history_stock";
                                         <th>Warehouse</th>
                                         <th>Type</th>
                                         <th>Product</th>
+                                        <th>Quantity</th>
                                         <th colspan="3" class="center">
                                             View/Edit/Delete
                                         </th>
@@ -160,13 +177,16 @@ $menu_item_second = "list_history_stock";
                                                     {{ date("d-m-Y", strtotime($historystock->date)) }}
                                                 </td>
                                                 <td>
-                                                    {{ $historystock->stock->warehouse['name'] }}
+                                                    {{ $historystock->stock->warehouse['code'] }}
                                                 </td>
                                                 <td>
                                                     {{ ucfirst($historystock->type) }}
                                                 </td>
                                                 <td>
                                                     {{ $historystock->stock->product['name'] }}
+                                                </td>
+                                                <td>
+                                                    {{ $historystock->quantity }}
                                                 </td>
                                             @endforeach
                                             <td class="text-center">
@@ -245,12 +265,74 @@ $menu_item_second = "list_history_stock";
     </div>
 </div>
 <!-- End Modal Delete -->
+
+<!-- Modal export By Input Warehouse -->
+    <div class="modal fade"
+        id="exportByWarehouse"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label for="">Pick Warehouse</label>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>List Warehouse</label>
+                        <select class="form-control"
+                            name="warehouse_id"
+                            id="filter_inputByWarehouse"
+                            required>
+                            <option disabled selected>
+                                Select Warehouse
+                            </option>
+                            @foreach ($warehouses as $warehouse)
+                                <option value="{{ $warehouse->id }}">
+                                    {{ $warehouse->code }} - {{ $warehouse->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    {{csrf_field()}}
+                    <input type="hidden"
+                        id="hiddenInput"
+                        name="cancel"
+                        value="1" />
+                    <button type="submit"
+                        data-dismiss="modal"
+                        id="btn-exportByWarehouse"
+                        class="btn btn-gradient-danger mr-2"
+                        name="id"
+                        onclick="submitExportXLSByInputWarehouse()"
+                        value="-">
+                        Export
+                    </button>
+                    <button type="button"
+                        data-dismiss="modal"
+                        class="btn btn-light">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Date Picker export By Input Xls -->
 @endsection
 
 @section("script")
 <script type="application/javascript">
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
+}
+
+// Export XLS By Input Warehouse
+function submitExportXLSByInputWarehouse() {
+    const inputWarehouse = document.getElementById("filter_inputByWarehouse").value;
+
+    window.location.href = "<?php echo route('historystock_export-to-xls-by-warehouse'); ?>" + "?inputWarehouse=" + inputWarehouse;
 }
 
 $(document).ready(function (e) {
