@@ -113,7 +113,7 @@ $menu_item_second = "list_warehouse";
                                             </td>
                                             @if ($warehouse->parent_warehouse_id)
                                                 <td>
-                                                    {{ $warehouse->parentWarehouse->name }}
+                                                    {{ $warehouse->parentWarehouse->code }} - {{ $warehouse->parentWarehouse->name }}
                                                 </td>
                                             @else
                                                 <td>

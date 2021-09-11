@@ -111,7 +111,7 @@ $menu_item_second = "list_stock_warehouse";
                                             </td>
                                             <td>{{ $stock->product['code'] }}</td>
                                             <td>{{ $stock->product['name'] }}</td>
-                                            <td></td>
+                                            <td>{{ $stock['quantity'] }}</td>
                                             <td class="text-center">
                                                 <a href="">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>

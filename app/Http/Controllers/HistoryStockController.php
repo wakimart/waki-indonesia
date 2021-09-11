@@ -22,7 +22,7 @@ class HistoryStockController extends Controller
      */
     public function index(Request $request)
     {
-        $historystocks = HistoryStock::orderBy("code", "desc");
+        $historystocks = HistoryStock::orderBy("code", "desc")->whereNotNull('code');
 
         if ($request->has("filter_code")) {
             $filterCode = $request->filter_code;
@@ -60,6 +60,7 @@ class HistoryStockController extends Controller
             ->get();
 
         $warehouses = Warehouse::select("id", "code", "name")
+            ->whereNotNull('parent_warehouse_id')
             ->where("active", true)
             ->orderBy("code")
             ->get();
@@ -78,6 +79,7 @@ class HistoryStockController extends Controller
             ->get();
 
         $warehouses = Warehouse::select("id", "code", "name")
+            ->whereNotNull('parent_warehouse_id')
             ->where("active", true)
             ->orderBy("code")
             ->get();
@@ -137,9 +139,16 @@ class HistoryStockController extends Controller
 
             DB::commit();
 
-            return redirect()
-                ->route("add_history_stock")
-                ->with("success", "History Stock successfully added.");
+            if($request->type == "in"){
+                return redirect()
+                    ->route("add_history_in")
+                    ->with("success", "History Stock successfully added.");
+            }
+            else{    
+                return redirect()
+                    ->route("add_history_out")
+                    ->with("success", "History Stock successfully added.");
+            }
         } catch (Throwable $th) {
             DB::rollBack();
 

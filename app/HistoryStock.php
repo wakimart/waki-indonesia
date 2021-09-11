@@ -13,6 +13,8 @@ class HistoryStock extends Model
         'type',
         'quantity',
         "description",
+        'upgrade_id',
+        'type_warehouse',
     ];
 
     public function stock()

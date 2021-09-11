@@ -16,7 +16,7 @@ class StockController extends Controller
      */
     public function index()
     {
-        $stocks = Stock::with('product')->where('active', true)->get();
+        $stocks = Stock::with('product')->where('active', true)->whereNotNull('type_warehouse')->get();
         $stocks = $stocks->groupBy('product_id');
         // dd($stocks->toArray());
         return view('admin.list_stock', compact('stocks'));
@@ -24,7 +24,7 @@ class StockController extends Controller
 
     public function stock()
     {
-        $stocks = Stock::with('product')->where('active', true)->get()->paginate(10);
+        $stocks = Stock::with('product')->whereNull('type_warehouse')->where('active', true)->get()->paginate(10);
 
         return view('admin.list_stock_warehouse', compact('stocks'))
             ->with('i', (request()->input('page', 1) - 1) * 10);;
