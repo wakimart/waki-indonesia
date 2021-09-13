@@ -41,9 +41,7 @@ class HistoryStockController extends Controller
             $historystocks = $historystocks->where('date', $request->historystocks);
         }
 
-        $historystocks = $historystocks->paginate(10)->groupBy("code");
-
-        // dd($historystocks);
+        $historystocks = $historystocks->paginate(10);
 
         $warehouses = Warehouse::select("id", "code", "name")
             ->where("active", true)
@@ -151,7 +149,7 @@ class HistoryStockController extends Controller
                     ->route("add_history_in")
                     ->with("success", "History Stock successfully added.");
             }
-            else{    
+            else{
                 return redirect()
                     ->route("add_history_out")
                     ->with("success", "History Stock successfully added.");
@@ -209,7 +207,7 @@ class HistoryStockController extends Controller
         }
 
         return Excel::download(
-            new HistoryStockExportByWarehouse($inputWarehouse), 
+            new HistoryStockExportByWarehouse($inputWarehouse),
             'History Stock By Warehouse.xlsx'
         );
     }
@@ -414,12 +412,12 @@ class HistoryStockController extends Controller
                     [
                         "user" => $userId,
                         "createdAt" => date("Y-m-d H:i:s"),
-                        "dataChange" => $historyStock->getChanges(),
+                        "dataChange" => $stock->getChanges(),
                     ],
                     JSON_THROW_ON_ERROR
                 );
                 $history["user_id"] = $userId;
-                $history["menu_id"] = $historyStock->id;
+                $history["menu_id"] = $stock->id;
                 HistoryUpdate::create($history);
 
                 // Save History Stock
@@ -428,7 +426,7 @@ class HistoryStockController extends Controller
 
                 // History (History Stock)
                 $history["type_menu"] = "History Stock";
-                $history["method"] = "Update";
+                $history["method"] = "Delete";
                 $history["meta"] = json_encode(
                     [
                         "user" => $userId,

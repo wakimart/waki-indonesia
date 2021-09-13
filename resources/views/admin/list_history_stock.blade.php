@@ -39,7 +39,7 @@ $menu_item_second = "list_history_stock";
                 <div class="col-xs-6 col-sm-4"
                     style="margin-bottom: 0; padding: 0; display: inline-block;">
                     <div class="form-group">
-                        <label for="">Filter By Type</label>
+                        <label for="filter_type">Filter By Type</label>
                         <select id="filter_type"
                             class="form-control"
                             name="filter_type">
@@ -59,13 +59,12 @@ $menu_item_second = "list_history_stock";
                                 Out
                             </option>
                         </select>
-                        <div class="validation"></div>
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-4"
                     style="margin-bottom: 0; padding: 0; display: inline-block;">
                     <div class="form-group">
-                        <label for="date">Filter By Date</label>
+                        <label for="filter_date">Filter By Date</label>
                         <input class="form-control"
                             type="date"
                             id="filter_date"
@@ -73,31 +72,30 @@ $menu_item_second = "list_history_stock";
                             placeholder="Filter By Date"
                             value="{{ isset($_GET['filter_date']) ? $_GET['filter_date'] : '' }}"
                             required />
-                        <div class="validation"></div>
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block">
+                    style="margin-bottom: 0; padding: 0; display: inline-block;">
                     <div class="form-group">
-                        <label for="">Filter By Code</label>
+                        <label for="filter_code">Filter By Code</label>
                         <input class="form-control"
                             id="filter_code"
                             name="filter_code"
                             placeholder="Filter By Code"
                             value="{{ isset($_GET['filter_code']) ? $_GET['filter_code'] : '' }}">
-                        <div class="validation"></div>
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block">
+                    style="margin-bottom: 0; padding: 0; display: inline-block;">
                     <div class="form-group">
-                        <label for="">Filter By Stock Name</label>
+                        <label for="filter_stock_name">
+                            Filter By Stock Name
+                        </label>
                         <input class="form-control"
                             id="filter_stock_name"
                             name="filter_stock_name"
                             placeholder="Filter By Stock Name"
                             value="{{ isset($_GET['filter_stock_name']) ? $_GET['filter_stock_name'] : '' }}">
-                        <div class="validation"></div>
                     </div>
                 </div>
 
@@ -143,8 +141,12 @@ $menu_item_second = "list_history_stock";
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
+                        <?php
+                        $pagination = $historystocks;
+                        $historystocks = $historystocks->groupBy("code");
+                        ?>
                         <h5 style="margin-bottom: 0.5em;">
-                            Total : {{ sizeof($historystocks) }}
+                            Total: {{ $historystocks->count() }} data
                         </h5>
                         <div class="table-responsive"
                             style="border: 1px solid #ebedf2;">
@@ -164,7 +166,7 @@ $menu_item_second = "list_history_stock";
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($historystocks as $code => $historycode)
+                                    @foreach ($historystocks as $code => $historycode)
                                         <tr>
                                             <td class="text-right" rowspan="{{ sizeof($historycode) }}">
                                                 {{ ++$i }}
@@ -195,7 +197,7 @@ $menu_item_second = "list_history_stock";
                                                 </a>
                                             </td>
                                             <td class="center" rowspan="{{ sizeof($historycode) }}">
-                                            @if($historycode[0]->type == "in")
+                                            @if ($historycode[0]->type == "in")
                                                 <a href="{{ route('edit_history_in', ['code' => $historycode[0]['code']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
@@ -216,9 +218,9 @@ $menu_item_second = "list_history_stock";
                                             </td>
                                         </tr>
 
-                                        @if(sizeof($historycode) > 1)
+                                        @if (sizeof($historycode) > 1)
                                             <tr>
-                                                @for($i = 1; $i < sizeof($historycode); $i++)
+                                                @for ($i = 1; $i < sizeof($historycode); $i++)
                                                     <td>
                                                         {{ $historycode[$i]->stock->product['code'] }}
                                                     </td>
@@ -232,7 +234,7 @@ $menu_item_second = "list_history_stock";
                                 </tbody>
                             </table>
                             <br>
-                            
+                            {{ $pagination->links() }}
                         </div>
                     </div>
                 </div>
@@ -280,59 +282,59 @@ $menu_item_second = "list_history_stock";
 <!-- End Modal Delete -->
 
 <!-- Modal export By Input Warehouse -->
-    <div class="modal fade"
-        id="exportByWarehouse"
-        tabindex="-1"
-        role="dialog"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <label for="">Pick Warehouse</label>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>List Warehouse</label>
-                        <select class="form-control"
-                            name="warehouse_id"
-                            id="filter_inputByWarehouse"
-                            required>
-                            <option disabled selected>
-                                Select Warehouse
+<div class="modal fade"
+    id="exportByWarehouse"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label>Pick Warehouse</label>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="filter_inputByWarehouse">List Warehouse</label>
+                    <select class="form-control"
+                        name="warehouse_id"
+                        id="filter_inputByWarehouse"
+                        required>
+                        <option disabled selected>
+                            Select Warehouse
+                        </option>
+                        @foreach ($warehouses as $warehouse)
+                            <option value="{{ $warehouse->id }}">
+                                {{ $warehouse->code }} - {{ $warehouse->name }}
                             </option>
-                            @foreach ($warehouses as $warehouse)
-                                <option value="{{ $warehouse->id }}">
-                                    {{ $warehouse->code }} - {{ $warehouse->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="modal-footer">
-                    {{csrf_field()}}
-                    <input type="hidden"
-                        id="hiddenInput"
-                        name="cancel"
-                        value="1" />
-                    <button type="submit"
-                        data-dismiss="modal"
-                        id="btn-exportByWarehouse"
-                        class="btn btn-gradient-danger mr-2"
-                        name="id"
-                        onclick="submitExportXLSByInputWarehouse()"
-                        value="-">
-                        Export
-                    </button>
-                    <button type="button"
-                        data-dismiss="modal"
-                        class="btn btn-light">
-                        No
-                    </button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                @csrf
+                <input type="hidden"
+                    id="hiddenInput"
+                    name="cancel"
+                    value="1" />
+                <button type="submit"
+                    data-dismiss="modal"
+                    id="btn-exportByWarehouse"
+                    class="btn btn-gradient-danger mr-2"
+                    name="id"
+                    onclick="submitExportXLSByInputWarehouse()"
+                    value="-">
+                    Export
+                </button>
+                <button type="button"
+                    data-dismiss="modal"
+                    class="btn btn-light">
+                    No
+                </button>
             </div>
         </div>
     </div>
-    <!-- End Modal Date Picker export By Input Xls -->
+</div>
+<!-- End Modal Date Picker export By Input Xls -->
 @endsection
 
 @section("script")
@@ -345,7 +347,7 @@ function submitDelete(e) {
 function submitExportXLSByInputWarehouse() {
     const inputWarehouse = document.getElementById("filter_inputByWarehouse").value;
 
-    window.location.href = "<?php echo route('historystock_export-to-xls-by-warehouse'); ?>" + "?inputWarehouse=" + inputWarehouse;
+    window.location.href = "{{ route('historystock_export-to-xls-by-warehouse') }}" + "?inputWarehouse=" + inputWarehouse;
 }
 
 $(document).ready(function (e) {
