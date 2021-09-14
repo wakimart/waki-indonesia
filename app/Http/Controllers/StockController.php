@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Product;
 use App\Stock;
+use App\Warehouse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
