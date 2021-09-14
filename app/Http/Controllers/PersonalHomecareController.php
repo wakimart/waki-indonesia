@@ -192,10 +192,6 @@ class PersonalHomecareController extends Controller
             $phcChecklist->image = $imageArray;
             $phcChecklist->save();
 
-            //reserve the product
-            PersonalHomecareProduct::where("id", $request->ph_product_id)
-                ->update(["status" => 0]);
-
             // STORE PERSONAL HOMECARE
             $personalHomecare = new PersonalHomecare();
             $personalHomecare->fill($request->only(
@@ -267,6 +263,7 @@ class PersonalHomecareController extends Controller
                 )
                 ->where("personal_homecare_products.branch_id", $request->branch_id)
                 ->where("personal_homecare_products.active", true)
+                ->where("personal_homecare_products.status", "!=", "pending")
                 ->get();
 
             $finalPhcProd = [];
@@ -546,11 +543,11 @@ class PersonalHomecareController extends Controller
         try {
             if ($request->status == "approve_out") {
                 PersonalHomecareProduct::where("id", $request->id_product)
-                    ->update(["status" => 0]);
+                    ->update(["status" => "unavailable"]);
             }
             else if($request->status == "done" || $request->status == "rejected"){
                 PersonalHomecareProduct::where("id", $request->id_product)
-                    ->update(["status" => 1]);
+                    ->update(["status" => "available"]);
             }
 
             $phc = PersonalHomecare::where("id", $request->id)->first();

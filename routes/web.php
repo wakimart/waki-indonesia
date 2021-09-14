@@ -904,6 +904,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("list-product", 'PersonalHomecareProductController@index')
             ->name("list_phc_product")
             ->middleware('can:browse-phc-product');
+        Route::get("detail-product/{id}", 'PersonalHomecareProductController@show')
+            ->name("detail_phc_product")
+            ->middleware('can:browse-phc-product');
         Route::get("edit-product/{id}", "PersonalHomecareProductController@edit")
             ->name("edit_phc_product")
             ->middleware("can:edit-phc-product");
