@@ -73,6 +73,10 @@ $menu_item_page = "personal_homecare";
         background-color: white;
     }
 
+    .btn:hover{
+        color: #fff !important;
+    }
+
     /*-- mobile --*/
     @media (max-width: 768px) {
         .card-body h2 {
@@ -305,6 +309,18 @@ $menu_item_page = "personal_homecare";
                                     </table>
                                 </div>
                             </div>
+                            @if(strtolower($personalhomecare['status']) == "process")
+                                <div class="row justify-content-center mt-5">
+                                    <div class="form-group row justify-content-center">
+                                        <button type="button"
+                                            class="btn btn-gradient-primary mr-2 btn-lg"
+                                            data-toggle="modal"
+                                            data-target="#modal-checklist-in">
+                                            Check In Product
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -559,7 +575,7 @@ $menu_item_page = "personal_homecare";
                           <div class="card-body">
                             <div class="row justify-content-center">
                                 <h2>
-                                    {{ strtolower($personalhomecare['status']) == "done" ? "Share Thank You Letter" : "Share Personal Homecare Status" }}
+                                    Personal Homecare Option
                                 </h2>
                             </div>
                             @php
@@ -572,16 +588,48 @@ $menu_item_page = "personal_homecare";
                                 method="GET"
                                 action="https://wa.me/"
                                 target="_blank">
-                                <div class="form-group row justify-content-center">
+                                <div class="form-group row justify-content-center mt-3">
                                     <button id="upgradeProcess"
                                         type="submit"
-                                        class="btn btn-gradient-primary mr-2 btn-lg"
+                                        class="btn btn-gradient-primary m-1"
                                         name="text"
                                         value="Terima Kasih telah mengikuti *Program Pinjamin Produk 5 Hari*. Berikut adalah tautan bukti formulir ( {{ $urlShareWa }} )">
                                         Share WhatsApp
+                                        <span><i class="mdi mdi-whatsapp menu-icon" style="margin-left: 5px; font-size: 24px; vertical-align: middle;"></i></span>
                                     </button>
                                     <button type="button"
-                                        class="btn btn-gradient-primary mr-2 btn-lg"
+                                        class="btn btn-gradient-info m-1"
+                                        style="margin-left: 1em !important;"
+                                        data-toggle="modal"
+                                        data-target="#modal-extend">
+                                        Extend
+                                        <span><i class="mdi mdi-calendar-text menu-icon" style="margin-left: 5px; font-size: 24px; vertical-align: middle;"></i></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if (strtolower($personalhomecare['status']) != "new" && strtolower($personalhomecare['status']) != "rejected" )
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                          <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>
+                                    Create To PDF
+                                </h2>
+                            </div>
+                            <form class="forms-sample"
+                                method="GET"
+                                action=""
+                                target="_blank">
+                                <div class="form-group row justify-content-center mt-3">
+                                    <button type="button"
+                                        class="btn btn-gradient-info mr-2 btn-lg"
                                         data-toggle="modal"
                                         data-target="#modal-pre-print">
                                         Create PDF
@@ -824,40 +872,6 @@ $menu_item_page = "personal_homecare";
                 </div>
             </div>
         </div>
-
-        @if(strtolower($personalhomecare['status']) == "process")
-            <div class="row">
-                <div class="col-12 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row justify-content-center">
-                                <h2>Check In Product</h2>
-                            </div>
-                            <div class="form-group row justify-content-center">
-                                <button type="button"
-                                    class="btn btn-gradient-primary mr-2 btn-lg"
-                                    data-toggle="modal"
-                                    data-target="#modal-checklist-in">
-                                    Check In Form
-                                </button>
-                                <button type="button"
-                                    class="btn btn-gradient-primary mr-2 btn-lg"
-                                    data-toggle="modal"
-                                    data-target="#modal-checklist-in">
-                                    Reschedule
-                                </button>
-                                <button type="button"
-                                    class="btn btn-gradient-primary mr-2 btn-lg"
-                                    data-toggle="modal"
-                                    data-target="#modal-checklist-in">
-                                    Extend
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
 
         <!-- Jika bisa melihat history log-->
         @if ($histories->isNotEmpty())

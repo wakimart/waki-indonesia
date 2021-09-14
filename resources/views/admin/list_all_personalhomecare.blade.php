@@ -172,7 +172,7 @@ $menu_item_second = "list_all";
                                         <th>Product Code</th>
                                         <th>Branch - CSO</th>
                                         <th>Status</th>
-                                        <th colspan="3" class="center">View/Edit/Delete</th>
+                                        <th colspan="4" class="center">View/Edit/Reschedule/Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -195,6 +195,11 @@ $menu_item_second = "list_all";
                                                         <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                     </a>
                                                 @endif
+                                            </td>
+                                            <td class="center">
+                                                <a href="#modal-reschedule" data-toggle="modal" data-target="#modal-reschedule">
+                                                    <i class="mdi mdi-calendar-text menu-icon" style="font-size: 24px; color: #34cd7d;"></i>
+                                                </a>
                                             </td>
                                             <td class="center">
                                                 @if($personalhomecare->status == "rejected" || $personalhomecare->status == "new")
