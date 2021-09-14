@@ -225,6 +225,7 @@ $menu_item_second = "list_all";
         </div>
     </div>
     <!-- partial -->
+
     <!-- Modal Delete -->
     <div class="modal fade"
         id="deleteDoModal"
@@ -263,6 +264,45 @@ $menu_item_second = "list_all";
         </div>
     </div>
     <!-- End Modal Delete -->
+
+    <!-- Modal Reschedule -->
+    <div class="modal fade"
+        id="modal-reschedule"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 style="text-align:center;">
+                        Are you sure to delete this product?
+                    </h5>
+                </div>
+                <div class="modal-footer">
+                    <form id="frmDelete"
+                        method="post"
+                        action="{{ route('delete_personal_homecare') }}">
+                        @csrf
+                        <input type="hidden" name="id" id="id-delete" />
+                        <button type="submit"
+                            class="btn btn-gradient-danger mr-2">
+                            Yes
+                        </button>
+                    </form>
+                    <button class="btn btn-light">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Reschedule -->
 </div>
 @endsection
 
