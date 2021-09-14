@@ -5,9 +5,28 @@ $menu_item_second = "list_stock_warehouse";
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+    integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
 <style type="text/css">
     .table th img, .table td img {
         border-radius: 0% !important;
+    }
+
+    .select2-selection__rendered {
+        line-height: 45px !important;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 45px !important;
+    }
+
+    .select2-container--default
+    .select2-selection--single
+    .select2-selection__arrow {
+        top: 10px;
     }
 </style>
 @endsection
@@ -20,10 +39,7 @@ $menu_item_second = "list_stock_warehouse";
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a data-toggle="collapse"
-                            href="#order-dd"
-                            aria-expanded="false"
-                            aria-controls="order-dd">
+                        <a data-toggle="collapse" aria-expanded="false">
                             Stock Warehouse
                         </a>
                     </li>
@@ -34,14 +50,16 @@ $menu_item_second = "list_stock_warehouse";
             </nav>
         </div>
 
-        <form id="form-search" method="GET" action="{{ route("list_warehouse") }}"></form>
+        <form id="form-search"
+            method="GET"
+            action="{{ route("list_stock_warehouse") }}"></form>
 
         <div class="row">
             <div class="col-12" style="margin-bottom: 0;">
                 <div class="col-xs-6 col-sm-4"
                     style="margin-bottom: 0; padding: 0; display: inline-block;">
                     <div class="form-group">
-                        <label for="">Search By Name</label>
+                        <label for="filter_name">Search By Name</label>
                         <input class="form-control"
                             id="filter_name"
                             name="filter_name"
@@ -54,13 +72,75 @@ $menu_item_second = "list_stock_warehouse";
                 <div class="col-xs-6 col-sm-4"
                     style="margin-bottom: 0; padding: 0; display: inline-block;">
                     <div class="form-group">
-                        <label for="">Search By Code</label>
+                        <label for="filter_code">Search By Code</label>
                         <input class="form-control"
                             id="filter_code"
                             name="filter_code"
                             placeholder="Search By Code"
                             form="form-search"
                             value="{{ $_GET['filter_code'] ?? "" }}" />
+                    </div>
+                </div>
+
+                <div class="col-xs-6 col-sm-4"
+                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    <div class="form-group">
+                        <label for="filter_product">Filter by Product</label>
+                        <select class="form-control"
+                            name="filter_product"
+                            id="filter_product"
+                            form="form-search">
+                            @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]))
+                                <option disabled>Select Product</option>
+                            @else
+                                <option disabled selected>
+                                    Select Product
+                                </option>
+                            @endif
+                            @foreach ($products as $product)
+                                @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]) && $_GET["filter_product"] == $product->id)
+                                    <option value="{{ $product->id }}" selected>
+                                        {{ $product->code }} - {{ $product->name }}
+                                    </option>
+                                @else
+                                    <option value="{{ $product->id }}">
+                                        {{ $product->code }} - {{ $product->name }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-xs-6 col-sm-4"
+                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    <div class="form-group">
+                        <label for="filter_warehouse">
+                            Filter by Warehouse
+                        </label>
+                        <select class="form-control"
+                            name="filter_warehouse"
+                            id="filter_warehouse"
+                            form="form-search">
+                            @if (isset($_GET["filter_warehouse"]) && !empty($_GET["filter_warehouse"]))
+                                <option disabled>Select Warehouse</option>
+                            @else
+                                <option disabled selected>
+                                    Select Warehouse
+                                </option>
+                            @endif
+                            @foreach ($warehouses as $warehouse)
+                                @if (isset($_GET["filter_warehouse"]) && !empty($_GET["filter_warehouse"]) && $_GET["filter_warehouse"] == $warehouse->id)
+                                    <option value="{{ $warehouse->id }}" selected>
+                                        {{ $warehouse->code }} - {{ $warehouse->name }}
+                                    </option>
+                                @else
+                                    <option value="{{ $warehouse->id }}">
+                                        {{ $warehouse->code }} - {{ $warehouse->name }}
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
@@ -95,6 +175,9 @@ $menu_item_second = "list_stock_warehouse";
                                 <thead>
                                     <tr>
                                         <th class="text-center">No.</th>
+                                        @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]) && empty($_GET["filter_warehouse"]))
+                                            <th>Warehouse</th>
+                                        @endif
                                         <th>Code</th>
                                         <th>Name</th>
                                         <th>Remaining Stock</th>
@@ -104,14 +187,19 @@ $menu_item_second = "list_stock_warehouse";
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($stocks as $stock)
+                                    @foreach ($stocks as $stock)
                                         <tr>
                                             <td class="text-right">
                                                 {{ ++$i }}
                                             </td>
-                                            <td>{{ $stock->product['code'] }}</td>
-                                            <td>{{ $stock->product['name'] }}</td>
-                                            <td>{{ $stock['quantity'] }}</td>
+                                            @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]) && empty($_GET["filter_warehouse"]))
+                                                <td>
+                                                    {{ $stock->warehouse_code }} - {{ $stock->warehouse_name }}
+                                                </td>
+                                            @endif
+                                            <td>{{ $stock->product_code }}</td>
+                                            <td>{{ $stock->product_name }}</td>
+                                            <td>{{ $stock->quantity }}</td>
                                             <td class="text-center">
                                                 <a href="">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
@@ -180,12 +268,20 @@ $menu_item_second = "list_stock_warehouse";
 @endsection
 
 @section("script")
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+    integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+    defer></script>
 <script type="application/javascript">
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
 
-$(document).ready(function (e) {
+document.addEventListener("DOMContentLoaded", function() {
+    $("#filter_product").select2();
+    $("#filter_warehouse").select2();
+
     $("#btn-filter_reset").click(function (e) {
         window.location.href = "{{ route('list_stock_warehouse') }}";
     });
