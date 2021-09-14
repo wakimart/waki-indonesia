@@ -24,6 +24,55 @@ $menu_item_second = "list_product";
     .select2-selection__arrow {
         top: 10px;
     }
+
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link {
+    color: #737373; 
+    }
+
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #28a745;
+    }
+
+    /* Tabs Card */
+
+    .tab-card {
+        border:1px solid #eee;
+    }
+
+    .tab-card-header {
+        background:none;
+    }
+    .tab-content .tab-pane{
+        background: none;
+    }
+    /* Default mode */
+    .tab-card-header > .nav-tabs {
+        border: none;
+        margin: 0px;
+    }
+    .tab-card-header > .nav-tabs > li {
+        margin-right: 2px;
+    }
+    .tab-card-header > .nav-tabs > li > a {
+        border: 0;
+        border-bottom:2px solid transparent;
+        margin-right: 0;
+        color: #545454; 
+        font-weight: 600;
+        padding: 2px 10px;
+    }
+
+    .tab-card-header > .nav-tabs > li > a.show {
+        border-bottom:2px solid #048b32;
+        color: #048b32;
+    }
+    .tab-card-header > .nav-tabs > li > a:hover {
+        color: #048b32;
+    }
+
+    .tab-card-header > .tab-content {
+    padding-bottom: 0;
+    }
 </style>
 @endsection
 
@@ -109,66 +158,146 @@ $menu_item_second = "list_product";
 
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
+                    <div class="card-header" style="background: none;">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" 
+                                    style="font-weight: 600; font-size: 1em;" 
+                                    id="one-tab" 
+                                    data-toggle="tab" 
+                                    href="#one" 
+                                    role="tab" 
+                                    aria-controls="One" 
+                                    aria-selected="true">
+                                    WK2079
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" 
+                                    style="font-weight: 600; font-size: 1em;" 
+                                    id="two-tab" 
+                                    data-toggle="tab" 
+                                    href="#two" 
+                                    role="tab" 
+                                    aria-controls="Two" 
+                                    aria-selected="true">
+                                    WKT2076H
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" 
+                                    style="font-weight: 600; font-size: 1em;" 
+                                    id="three-tab" 
+                                    data-toggle="tab" 
+                                    href="#three" 
+                                    role="tab" 
+                                    aria-controls="Three" 
+                                    aria-selected="true">
+                                    WKT2076i
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" 
+                                    style="font-weight: 600; font-size: 1em;" 
+                                    id="four-tab" 
+                                    data-toggle="tab" 
+                                    href="#four" 
+                                    role="tab" 
+                                    aria-controls="Four" 
+                                    aria-selected="true">
+                                    WKA2023
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" 
+                                    style="font-weight: 600; font-size: 1em;" 
+                                    id="five-tab" 
+                                    data-toggle="tab" 
+                                    href="#five" 
+                                    role="tab" 
+                                    aria-controls="Five" 
+                                    aria-selected="true">
+                                    WKA2024
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" 
+                                    style="font-weight: 600; font-size: 1em;" 
+                                    id="six-tab" 
+                                    data-toggle="tab" 
+                                    href="#six" 
+                                    role="tab" 
+                                    aria-controls="Six" 
+                                    aria-selected="true">
+                                    WKT2080
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="card-body">
-                        <h5 style="margin-bottom: 0.5em;">
-                            Total: {{ $phcproducts->total() }}
-                        </h5>
-                        <div class="table-responsive"
-                            style="border: 1px solid #ebedf2;">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">No.</th>
-                                        <th>Code</th>
-                                        <th>Product Name</th>
-                                        <th class="text-center">Branch</th>
-                                        <th>Status</th>
-                                        <th class="text-center">View</th>
-                                        <th class="text-center">Edit</th>
-                                        <th class="text-center">Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($phcproducts as $key => $phcproduct)
-                                        <tr>
-                                            <td class="text-right">
-                                                {{ ++$i }}
-                                            </td>
-                                            <td>{{ $phcproduct->code }}</td>
-                                            <td>
-                                                {{ $phcproduct->product->name }}
-                                            </td>
-                                            <td>
-                                                {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
-                                            </td>
-                                            <td>
-                                                {{ ucwords($phcproduct->status) }}
-                                            </td>
-                                            <td class="center">
-                                                <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
-                                                    <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
-                                                </a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
-                                                </a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a class="btn-delete"
-                                                    data-toggle="modal"
-                                                    href="#deleteDoModal"
-                                                    onclick="submitDelete(this)"
-                                                    data-id="{{ $phcproduct["id"] }}">
-                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <br>
-                            {{ $phcproducts->appends($url)->links() }}
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+                                <h5 style="margin-bottom: 0.5em;">
+                                    Total: {{ $phcproducts->total() }}
+                                </h5>
+                                <div class="table-responsive"
+                                    style="border: 1px solid #ebedf2;">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">No.</th>
+                                                <th>Code</th>
+                                                <th>Product Name</th>
+                                                <th class="text-center">Branch</th>
+                                                <th>Status</th>
+                                                <th class="text-center">Edit</th>
+                                                <th class="text-center">Edit</th>
+                                                <th class="text-center">Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($phcproducts as $key => $phcproduct)
+                                                <tr>
+                                                    <td class="text-right">
+                                                        {{ ++$i }}
+                                                    </td>
+                                                    <td>{{ $phcproduct->code }}</td>
+                                                    <td>
+                                                        {{ $phcproduct->product->name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ ucwords($phcproduct->status) }}
+                                                    </td>
+                                                    <td class="center">
+                                                        <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
+                                                            <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a class="btn-delete"
+                                                            data-toggle="modal"
+                                                            href="#deleteDoModal"
+                                                            onclick="submitDelete(this)"
+                                                            data-id="{{ $phcproduct["id"] }}">
+                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    {{ $phcproducts->appends($url)->links() }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

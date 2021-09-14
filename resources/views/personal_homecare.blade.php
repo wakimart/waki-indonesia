@@ -10,13 +10,14 @@
     }
 
     .card-shadow {
-        box-shadow: 0 0 10px 0 rgba(100, 100, 100, 0.26);
+        box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
+        border-style: none;
         padding:1em; 
     }
 
     #table-mob .table thead{
         background-color: #9eabe4;
-        background-image: linear-gradient(315deg, #9eabe4 0%, #77eed8 74%);
+        background-image: linear-gradient(315deg, #bbdbbe 0%, #deebdd 74%);
         color: #1c1c1c;
         font-size: 1em;
         font-weight: 600; 
@@ -31,7 +32,7 @@
     }
 
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
-        color: #63a4ff;
+        color: #f0bc5e;
     }
 
     /* Tabs Card */
@@ -91,7 +92,7 @@
 
     .responsive-table .table-header {
         background-color: #9eabe4;
-        background-image: linear-gradient(315deg, #9eabe4 0%, #77eed8 74%);
+        background-image: linear-gradient(315deg, #bbdbbe 0%, #deebdd 74%);
         color: #1c1c1c;
         font-size: 16px;
         font-weight: 700;
@@ -104,6 +105,119 @@
         box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
     }
 
+    /* .timeline {
+        width: 98%;
+        height: 15px;
+        text-align: justify;
+        position: relative;
+        left: 49%;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(218, 222, 228) 51%, rgba(255,255,255,0) 57%, rgba(255,255,255,0) 100%);
+        background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(45%, rgba(255,255,255,0)), color-stop(51%, rgba(218, 222, 228)), color-stop(57%, rgba(255,255,255,0)), color-stop(100%, rgba(255,255,255,0)));
+        background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(218, 222, 228) 51%, rgba(255,255,255,0) 57%, rgba(255,255,255,0) 100%);
+        background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(218, 222, 228) 51%, rgba(255,255,255,0) 57%, rgba(255,255,255,0) 100%);
+        background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(218, 222, 228) 51%, rgba(255,255,255,0) 57%, rgba(255,255,255,0) 100%);
+        background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(218, 222, 228) 51%, rgba(255,255,255,0) 57%, rgba(255,255,255,0) 100%);
+    }
+
+    .timeline:after {
+        display: inline-block; 
+        content: ""; 
+        width: 100%;
+    }
+
+    .timeline li {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        background: #bbdbbe;
+        text-align: center;
+        line-height: 1.5;
+        position: sticky;
+        border-radius: 50%;
+    }
+
+    .timeline li p {
+        display: inline-block;
+        font-size: 14px;
+        margin-top: 20px;
+        position: absolute;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        -moz-transform: translateX(-50%);
+        -ms-transform: translateX(-50%);
+        -o-transform: translateX(-50%);
+        transform: translateX(-50%);
+    } */
+
+
+    .timeline .timeline-item {
+        display: inline-block;
+        position: relative;
+        padding-right: 3em;
+    }
+
+    .timeline .timeline-item::before {
+        background: #dadee4;
+        content: "";
+        height: 1px;
+        margin-left: 60px;
+        position: absolute;
+        top: 34px;
+        width: 100%;
+    }
+
+    .timeline .timeline-item .timeline-icon{
+        margin-top: 24px;
+        width: 20px;
+        height: 20px;
+        background: #bbdbbe;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        z-index: 1;
+        margin-left: 40px;
+    }
+
+    .timeline .timeline-item .timeline-content {
+        -ms-flex: 1; 
+        flex: 1;
+        padding: 0 0 0 1rem;
+    }
+
+    .timeline .timeline-item-last {
+        display: inline-block;
+        position: relative;
+        padding-right: 5em;
+    }
+
+    .timeline .timeline-item-last::before {
+        background: #dadee4;
+        content: "";
+        height: 1px;
+        margin-left: 60px;
+        position: absolute;
+        top: 34px;
+        width: 1px;
+    }
+
+    .timeline .timeline-icon-last{
+        margin-top: 24px;
+        width: 20px;
+        height: 20px;
+        background: #737373;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        z-index: 1;
+        margin-left: 40px;
+    }
+
     #table-mob{
           display : none;
     }
@@ -112,7 +226,7 @@
           display : block;
     }
   
-  @media (max-width: 767px) {
+    @media (max-width: 767px) {
       #table-mob{
           display : block;
       }
@@ -131,6 +245,75 @@
             margin: 1em;
         }
     }
+
+    @media (min-width: 992px) and (max-width: 1200px) {
+        .timeline .timeline-item {
+            padding-right: 0;
+        }
+    }
+
+    @media (max-width: 991px){
+        .timeline .timeline-item {
+            display: flex;
+            position: relative;
+        }
+
+        .timeline .timeline-item::before {
+            background: #dadee4;
+            content: "";
+            height: 100%;
+            margin-left: 19px;
+            position: absolute;
+            margin-top: 24px;
+            width: 1px;
+        }
+
+        .timeline .timeline-item .timeline-icon{
+            margin-top: 24px;
+            width: 20px;
+            height: 20px;
+            background: #bbdbbe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            z-index: 1;
+            margin-left: 9px;
+        }
+
+        .timeline .timeline-item .timeline-content {
+            -ms-flex: 1; /* IE 10 */
+            flex: 1;
+            padding: 0 0 0 1rem;
+        }
+
+        .timeline .timeline-item-last {
+            display: flex;
+            position: relative;
+        }
+
+        .timeline .timeline-item-last::before {
+            background: #fff;
+            content: "";
+            height: 100%;
+            left: 19px;
+            position: absolute;
+            top: 20px;
+            width: 1px;
+            z-index: -1;
+        }
+
+        .timeline .timeline-icon-last{
+            margin-top: 40px;
+            width: 20px;
+            height: 20px;
+            background: #737373;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            z-index: 1;
+            margin-left: 9px;
+        }
+    }
 </style>
 
 <section id="intro" class="clearfix">
@@ -142,7 +325,18 @@
             <h4 class="text-center" style="font-weight: 400;">Coba Produk di Rumah Sendiri</h4>
         </div>
         <br>
-        <div class="row mb-5">
+        <div class="row justify-content-center mt-5">
+            <h4 class="text-center" style="font-size: 50px; font-family: 'Poppins', sans-serif; font-weight: 500; color: #f0bc5e;">
+                Selamat Bpk/Ibu {{ $personalhomecare['name'] }}
+            </h4>
+        </div>
+        <div class="row justify-content-center">
+            <p class="text-center" style="font-size: 18px; color: #000; font-weight: 500;">
+                telah tergabung dalam program
+                <span style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #002853;"> Pinjamin Produk 5 Hari</span> 
+            </p> 
+        </div>
+        <div class="row my-5">
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-6">
                 <div class="d-flex" style="align-items: center;">
                     <img style="margin-right: 15px; width: 120px;" src="{{asset('sources/ph-desc.png')}}"> 
@@ -165,28 +359,22 @@
         <div class="row">
             
         </div>
-        <div class="row justify-content-center mt-5">
-            <h3 class="text-center" style="font-family: 'Poppins', sans-serif; font-weight: 500; color: #63a4ff;">
-                Selamat kepada Bpk/Ibu {{ $personalhomecare['name'] }} telah tergabung dalam program pinjamin produk 5 hari
-                <span><img class="img-fluid" style="margin-right: 15px; width: 30px; vertical-align: text-top;" src="{{asset('sources/congrats.png')}}"></span>
-            </h3>
-             
-        </div>
         <div class="row justify-content-center mt-4">
             <div class="col-md-12">
-                <div class="card card-shadow mt-3 ">
+                <div class="card card-shadow mt-3">
                     <div class="card-header" style="background: none;">
                         <ul class="nav nav-tabs card-header-tabs">
                             <li class="nav-item">
                                 <a class="nav-link active" 
-                                style="font-weight: 600; font-size: 1em;" 
-                                id="one-tab" 
-                                data-toggle="tab" 
-                                href="#one" 
-                                role="tab" 
-                                aria-controls="One" 
-                                aria-selected="true">
-                                Data Customer</a>
+                                    style="font-weight: 600; font-size: 1em;" 
+                                    id="one-tab" 
+                                    data-toggle="tab" 
+                                    href="#one" 
+                                    role="tab" 
+                                    aria-controls="One" 
+                                    aria-selected="true">
+                                    Data Customer
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -266,27 +454,23 @@
             </div>
         </div><br>
 
-        <div class="row mt-5">
+        <div class="row mt-5 mb-5">
             <div id="table-desk" class="col-md-12 col-sm-12 col-xs-12">
                 <ul class="responsive-table">
                     <li class="table-header aqua-gradient color-block">
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Jadwal</div>
-                        <div class="col-lg-5 col-md-3 col-sm-3 col-xs-3">Nama Produk</div>
+                        <div class="col-lg-4 col-md-3 col-sm-3 col-xs-3">Nama Produk</div>
                         <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3">Kode Produk</div>
-                        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3">Status</div>
                     </li>
                     <li class="table-row">
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" data-label="Jadwal">
                             {{ date("d/m/Y", strtotime($personalhomecare->schedule)) }} - {{ date("d/m/Y", strtotime($personalhomecare->schedule . "+5 days")) }}
                         </div>
-                        <div class="col-lg-5 col-md-3 col-sm-3 col-xs-3" data-label="Nama Produk">
+                        <div class="col-lg-4 col-md-3 col-sm-3 col-xs-3" data-label="Nama Produk">
                             {{ $personalhomecare->personalHomecareProduct->product['code'] }} - {{ $personalhomecare->personalHomecareProduct->product['name'] }}
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3" data-label="Kode Produk">
                             {{ $personalhomecare->personalHomecareProduct->code }}
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3" data-label="Status">
-                            {{ $personalhomecare['status'] }}
                         </div>
                     </li>
                 </ul>
@@ -298,7 +482,6 @@
                             <th>Jadwal</th>
                             <th>Nama Produk</th>
                             <th>Kode Produk</th>
-                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -312,16 +495,109 @@
                             <td>
                                 {{ $personalhomecare->personalHomecareProduct->code }}
                             </td>
-                            <td>
-                                {{ $personalhomecare['status'] }}
-                            </td>
                         </tr>
                     </tbody>    
                 </table>
             </div>
         </div>
 
-        <div class="row mt-5">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-12">
+                <div class="card card-shadow">
+                    <div class="card-header" style="background-color: #fff; padding-bottom: 0; padding-top: 20px;">
+                        <h6 style="font-weight: 600;">Status</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline clearfix">
+                            @foreach ($histories as $history)
+                                <?php $dataChange = json_decode($history->meta, true); ?>
+                                @foreach ($dataChange["dataChange"] as $value)
+                                <div class="timeline-item">
+                                    <div class="timeline-icon"></div>
+                                    <div class="timeline-content">
+                                        <div class="card-body">
+                                            <p style="font-weight: 600; margin-bottom: 10px;">{{ var_export($value, true) }}</p>
+                                            <p style="font-weight: 500;">
+                                                {{ date("d/m/Y H:i:s", strtotime($history->created_at)) }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            @endforeach
+
+                            <!-- dummy -->
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="card-body">
+                                        <p style="font-weight: 600; margin-bottom: 10px;">New</p>
+                                        <p style="font-weight: 500;">date</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="card-body">
+                                        <p style="font-weight: 600; margin-bottom: 10px;">Approved_out</p>
+                                        <p style="font-weight: 500;">date</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="card-body">
+                                        <p style="font-weight: 600; margin-bottom: 10px;">Process</p>
+                                        <p style="font-weight: 500;">date</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="card-body">
+                                        <p style="font-weight: 600; margin-bottom: 10px;">Waiting_in</p>
+                                        <p style="font-weight: 500;">date</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="card-body">
+                                        <p style="font-weight: 600; margin-bottom: 10px;">Done</p>
+                                        <p style="font-weight: 500;">date</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end dummy -->
+
+
+                            <div class="timeline-item-last">
+                                <div class="timeline-icon-last">
+                                </div>
+                                <div class="timeline-content" style="visibility: hidden;">
+                                    <div class="card-body">
+                                        <p style="font-weight: 600; margin-bottom: 10px;"></p>
+                                        <p style="font-weight: 500;"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div class="row mt-4">
             <div class="table-responsive">
                 <table class="table table-borderless sk">
                     <thead>

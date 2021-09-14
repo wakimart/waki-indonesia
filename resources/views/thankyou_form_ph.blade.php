@@ -144,9 +144,9 @@
         <hr>
         
         <div class="row justify-content-center mt-5">
-            <h3 class="text-center" style="font-size: 78px; font-family: 'Poppins', sans-serif; font-weight: 500; color: #63a4ff;">
-                Terima Kasih!
-            </h3>
+            <h4 class="text-center" style="font-size: 48px; font-family: 'Poppins', sans-serif; font-weight: 500; color: #f0bc5e;">
+                Terima Kasih Bpk/Ibu {{ $personalhomecare['name'] }}
+            </h4>
         </div>
         <div class="row justify-content-center">
             <p class="text-center" style="font-size: 18px; color: #000; font-weight: 500;">
