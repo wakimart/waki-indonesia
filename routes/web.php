@@ -944,6 +944,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->middleware("can:detail-personal-homecare");
         Route::post("delete", "PersonalHomecareController@destroy")
             ->name("delete_personal_homecare");
+
+        Route::post("extendPersonalHomecare/{id}", "PersonalHomecareController@extendPersonalHomecare")
+            ->name("extend_personal_homecare");
+        Route::post("reschedulePersonalHomecare", "PersonalHomecareController@reschedulePersonalHomecare")
+            ->name("reschedule_personal_homecare");
     });
 });
 
