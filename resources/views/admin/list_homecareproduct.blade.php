@@ -197,6 +197,7 @@ $menu_item_second = "list_product";
                                                 <th class="text-center">Branch</th>
                                                 <th>Status</th>
                                                 <th class="text-center">Edit</th>
+                                                <th class="text-center">Edit</th>
                                                 <th class="text-center">Delete</th>
                                             </tr>
                                         </thead>
@@ -505,7 +506,12 @@ $menu_item_second = "list_product";
                                                         {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
                                                     </td>
                                                     <td>
-                                                        {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
+                                                        {{ ucwords($phcproduct->status) }}
+                                                    </td>
+                                                    <td class="center">
+                                                        <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                        </a>
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
@@ -527,7 +533,7 @@ $menu_item_second = "list_product";
                                         </tbody>
                                     </table>
                                     <br>
-                                    {{ $phcproducts->links() }}
+                                    {{ $phcproducts->appends($url)->links() }}
                                 </div>
                             </div>
                         </div>

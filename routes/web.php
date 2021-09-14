@@ -904,6 +904,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("list-product", 'PersonalHomecareProductController@index')
             ->name("list_phc_product")
             ->middleware('can:browse-phc-product');
+        Route::get("detail-product/{id}", 'PersonalHomecareProductController@show')
+            ->name("detail_phc_product")
+            ->middleware('can:browse-phc-product');
         Route::get("edit-product/{id}", "PersonalHomecareProductController@edit")
             ->name("edit_phc_product")
             ->middleware("can:edit-phc-product");
@@ -941,6 +944,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->middleware("can:detail-personal-homecare");
         Route::post("delete", "PersonalHomecareController@destroy")
             ->name("delete_personal_homecare");
+
+        Route::post("extendPersonalHomecare/{id}", "PersonalHomecareController@extendPersonalHomecare")
+            ->name("extend_personal_homecare");
+        Route::post("reschedulePersonalHomecare", "PersonalHomecareController@reschedulePersonalHomecare")
+            ->name("reschedule_personal_homecare");
     });
 });
 

@@ -493,42 +493,45 @@ document.addEventListener("DOMContentLoaded", function() {
 function setProduct() {
     let date = $("#schedule").val();
     let branch_id = $("#branch_id").val();
-    fetch(
-        '{{ route("get_phc_product") }}?branch_id=' + branch_id + '&date=' + date,
-        {
-            method: "GET",
-            headers: {
-                "Accept": "application/json",
-            },
-            mode: "same-origin",
-            referrerPolicy: "no-referrer",
-        }
-    ).then(function (response) {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+    console.log({date, branch_id});
+    if(date != "" && branch_id != ""){
+        fetch(
+            '{{ route("get_phc_product") }}?branch_id=' + branch_id + '&date=' + date,
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+                mode: "same-origin",
+                referrerPolicy: "no-referrer",
+            }
+        ).then(function (response) {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-        return response.json();
-    }).then(function (response) {
-        $("#ph_product_id").select2("destroy");
+            return response.json();
+        }).then(function (response) {
+            $("#ph_product_id").select2("destroy");
 
-        const data = response.data;
-        document.getElementById("ph_product_id").innerHTML = "<option disabled selected>Select Product (Please select branch & schedule first)</option>";
+            const data = response.data;
+            document.getElementById("ph_product_id").innerHTML = "<option disabled selected>Select Product (Please select branch & schedule first)</option>";
 
-        data.forEach(function (value) {
-            const options = document.createElement("option");
-            options.value = value.id;
-            options.innerHTML = `${value.code} - ${value.name}`;
+            data.forEach(function (value) {
+                const options = document.createElement("option");
+                options.value = value.id;
+                options.innerHTML = `${value.code} - ${value.name}`;
 
-            document.getElementById("ph_product_id").append(options);
+                document.getElementById("ph_product_id").append(options);
+            });
+
+            document.getElementById("ph_product_id").removeAttribute("disabled");
+
+            $("#ph_product_id").select2();
+        }).catch(function(error) {
+            console.error(error);
         });
-
-        document.getElementById("ph_product_id").removeAttribute("disabled");
-
-        $("#ph_product_id").select2();
-    }).catch(function(error) {
-        console.error(error);
-    });
+    }
 }
 
 function checkPhone(e) {

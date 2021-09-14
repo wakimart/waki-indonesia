@@ -209,104 +209,107 @@ $menu_item_page = "personal_homecare";
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row justify-content-center">
-                            <h2>Product Out Checklist</h2>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="table-responsive">
-                                <table class="col-md-12">
-                                    <thead style="visibility: hidden;">
-                                        <th style="width: 30%;">Checklist</th>
-                                        <th style="width: 70%;">Content</th>
-                                    </thead>
-                                    <tr>
-                                        <td>Product</td>
-                                        <td>
-                                            {{ $personalhomecare->personalHomecareProduct->code }} ({{ $personalhomecare->personalHomecareProduct->product['code'] }} - {{ $personalhomecare->personalHomecareProduct->product['name'] }})
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Schedule Date</td>
-                                        <td>
-                                            {{ date("d/m/Y", strtotime($personalhomecare['schedule'])) }}
-                                        </td>
-                                    </tr>
 
-                                    @php
-                                        $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
-                                        $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
-                                    @endphp
-
-                                    <tr>
-                                        <td rowspan="{{ sizeof($arr_completness)+1 }}">Completeness</td>
-                                        <td>
-                                            <i class="mdi {{ in_array($arr_completness[0],
-                                                $personalhomecare->checklistOut['condition']['completeness']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                style="font-size: 24px; color: #fed713;">
-                                            </i>
-                                            {{$arr_completness[0]}}
-                                        </td>
-                                    </tr>
-
-                                    @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
+        @if (!empty($personalhomecare['checklist_out']))
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Product Out Checklist</h2>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="table-responsive">
+                                    <table class="col-md-12">
+                                        <thead style="visibility: hidden;">
+                                            <th style="width: 30%;">Checklist</th>
+                                            <th style="width: 70%;">Content</th>
+                                        </thead>
                                         <tr>
+                                            <td>Product</td>
                                             <td>
-                                                <i class="mdi {{ in_array($arr_completness[$idx_i],
+                                                {{ $personalhomecare->personalHomecareProduct->code }} ({{ $personalhomecare->personalHomecareProduct->product['code'] }} - {{ $personalhomecare->personalHomecareProduct->product['name'] }})
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Schedule Date</td>
+                                            <td>
+                                                {{ date("d/m/Y", strtotime($personalhomecare['schedule'])) }}
+                                            </td>
+                                        </tr>
+
+                                        @php
+                                            $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
+                                            $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                        @endphp
+
+                                        <tr>
+                                            <td rowspan="{{ sizeof($arr_completness)+1 }}">Completeness</td>
+                                            <td>
+                                                <i class="mdi {{ in_array($arr_completness[0],
                                                     $personalhomecare->checklistOut['condition']['completeness']) ?
                                                     "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
-                                                {{$arr_completness[$idx_i]}}
+                                                {{$arr_completness[0]}}
                                             </td>
                                         </tr>
-                                    @endfor
 
-                                    <tr>
-                                        <td>
-                                            <i class="mdi {{ isset($personalhomecare->checklistOut['condition']['other']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                style="font-size: 24px; color: #fed713;">
-                                            </i>
-                                            Other :
-                                            {{ isset($personalhomecare->checklistOut['condition']['other']) ?
-                                                $personalhomecare->checklistOut['condition']['other'] : "-" }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Machine Condition</td>
-                                        <td>
-                                            {{ ucwords($personalhomecare->checklistOut['condition']['machine']) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Physical Condition</td>
-                                        <td>
-                                            {{ ucwords($personalhomecare->checklistOut['condition']['physical']) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Product Photo</td>
-                                        <td>
-                                            @foreach ($personalhomecare->checklistOut['image'] as $img)
-                                                <img src="{{asset('sources/phc-checklist') . '/' . $img}}"
-                                                    height="300px"
-                                                    style="margin-bottom: 15px;"
-                                                    alt="Product Personal Homecare" />
-                                            @endforeach
-                                        </td>
-                                    </tr>
-                                </table>
+                                        @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
+                                            <tr>
+                                                <td>
+                                                    <i class="mdi {{ in_array($arr_completness[$idx_i],
+                                                        $personalhomecare->checklistOut['condition']['completeness']) ?
+                                                        "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                        style="font-size: 24px; color: #fed713;">
+                                                    </i>
+                                                    {{$arr_completness[$idx_i]}}
+                                                </td>
+                                            </tr>
+                                        @endfor
+
+                                        <tr>
+                                            <td>
+                                                <i class="mdi {{ isset($personalhomecare->checklistOut['condition']['other']) ?
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                    style="font-size: 24px; color: #fed713;">
+                                                </i>
+                                                Other :
+                                                {{ isset($personalhomecare->checklistOut['condition']['other']) ?
+                                                    $personalhomecare->checklistOut['condition']['other'] : "-" }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Machine Condition</td>
+                                            <td>
+                                                {{ ucwords($personalhomecare->checklistOut['condition']['machine']) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Physical Condition</td>
+                                            <td>
+                                                {{ ucwords($personalhomecare->checklistOut['condition']['physical']) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Product Photo</td>
+                                            <td>
+                                                @foreach ($personalhomecare->checklistOut['image'] as $img)
+                                                    <img src="{{asset('sources/phc-checklist') . '/' . $img}}"
+                                                        height="300px"
+                                                        style="margin-bottom: 15px;"
+                                                        alt="Product Personal Homecare" />
+                                                @endforeach
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
 
         @if (!empty($personalhomecare['checklist_in']))
             <div class="row">
@@ -413,13 +416,51 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
 
-        @if (strtolower($personalhomecare['status']) == "new" && Gate::check('change-status-checkin-personalhomecare'))
+        @if (strtolower($personalhomecare['status']) == "new") {{-- && Gate::check('change-status-verified-personalhomecare')) --}}
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
                             <div class="row justify-content-center">
-                                <h2>Status Personal Homecare (Check Out)</h2>
+                                <h2>Status Personal Homecare (Is Verified ?)</h2>
+                            </div>
+                            <form id="actionAdd"
+                                class="forms-sample"
+                                method="POST"
+                                action="{{ route("update_personal_homecare_status") }}">
+                                @csrf
+                                <input type="hidden"
+                                    name="id"
+                                    value="{{ $personalhomecare['id'] }}" />
+                                <input type="hidden"
+                                    name="id_product"
+                                    value="{{ $personalhomecare->personalHomecareProduct['id'] }}" />
+                                <div class="form-group row justify-content-center">
+                                    <button type="submit"
+                                        class="btn btn-gradient-primary mr-2 btn-lg"
+                                        name="status"
+                                        value="verified">
+                                        Approved
+                                    </button>
+                                    <button type="submit"
+                                        class="btn btn-gradient-danger mr-2 btn-lg"
+                                        name="status"
+                                        value="rejected">
+                                        Reject
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @elseif (strtolower($personalhomecare['status']) == "verified" && Gate::check('change-status-checkout-personalhomecare'))
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Status Personal Homecare (Can Checkout ?)</h2>
                             </div>
                             <form id="actionAdd"
                                 class="forms-sample"
@@ -451,7 +492,27 @@ $menu_item_page = "personal_homecare";
                     </div>
                 </div>
             </div>
-        @elseif (strtolower($personalhomecare['status']) == "waiting_in" && Gate::check('change-status-checkout-personalhomecare'))
+        @elseif (strtolower($personalhomecare['status']) == "approve_out")
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Upload Receipt Photo with Customer</h2>
+                            </div>
+                            <div class="form-group row justify-content-center">
+                                <button type="button"
+                                        data-toggle="modal"
+                                        data-target="#modal-upload-receipt-photo" 
+                                        class="btn btn-gradient-primary mr-2 btn-lg">
+                                    Upload Photo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @elseif (strtolower($personalhomecare['status']) == "waiting_in" && Gate::check('change-status-checkin-personalhomecare'))
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -764,7 +825,7 @@ $menu_item_page = "personal_homecare";
             </div>
         </div>
 
-        @if (strtolower($personalhomecare['status']) == "process")
+        @if(strtolower($personalhomecare['status']) == "process")
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -778,6 +839,18 @@ $menu_item_page = "personal_homecare";
                                     data-toggle="modal"
                                     data-target="#modal-checklist-in">
                                     Check In Form
+                                </button>
+                                <button type="button"
+                                    class="btn btn-gradient-primary mr-2 btn-lg"
+                                    data-toggle="modal"
+                                    data-target="#modal-checklist-in">
+                                    Reschedule
+                                </button>
+                                <button type="button"
+                                    class="btn btn-gradient-primary mr-2 btn-lg"
+                                    data-toggle="modal"
+                                    data-target="#modal-checklist-in">
+                                    Extend
                                 </button>
                             </div>
                         </div>
@@ -833,6 +906,67 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
         <!-- end if-->
+    </div>
+</div>
+
+<div class="modal" id="modal-upload-receipt-photo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Receipt Photo with Customer</h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="upload-receipt-photo"
+                method="POST"
+                enctype="multipart/form-data"
+                action="{{ route("update_personal_homecare_status") }}">
+                @csrf
+                <div class="modal-body">
+                    <input type="hidden"
+                        name="id"
+                        value="{{ $personalhomecare['id'] }}" />
+                    <input type="hidden"
+                        name="id_product"
+                        value="{{ $personalhomecare->personalHomecareProduct['id'] }}" />
+                    <input type="hidden"
+                        name="status"
+                        value="process" />
+
+                    <div class="form-group">
+                        <label for="product-photo-1">Product Photo</label>
+                        <input type="file"
+                            class="form-control"
+                            accept="image/jpeg, image/png"
+                            name="product_photo_1"
+                            id="product-photo-1"
+                            required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-photo-2">Product Photo with CSO and Customer</label>
+                        <input type="file"
+                            class="form-control"
+                            accept="image/jpeg, image/png"
+                            name="product_photo_2"
+                            id="product-photo-2"
+                            required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        class="btn btn-secondary"
+                        data-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-primary" id="btn-checkin">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

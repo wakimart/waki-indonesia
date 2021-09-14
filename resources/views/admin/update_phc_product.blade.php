@@ -49,6 +49,12 @@ $menu_item_second = "update_product";
     .select2-selection__arrow {
         top: 10px;
     }
+
+    .div-CheckboxGroup {
+        border: solid 1px rgba(128, 128, 128, 0.32941);
+        padding: 10px;
+        border-radius: 3px;
+    }
 </style>
 @endsection
 
@@ -71,14 +77,15 @@ $menu_item_second = "update_product";
                 </ol>
             </nav>
         </div>
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <form id="add-phc-product"
-                            method="POST"
-                            action="{{ route("update_phc_product") }}">
-                            @csrf
+        <form id="add-phc-product"
+            method="POST"
+            action="{{ route("update_phc_product") }}">
+            @csrf
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            
                             <input type="hidden"
                                 id="id"
                                 name="id"
@@ -190,28 +197,161 @@ $menu_item_second = "update_product";
                                         required />
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Product Checklist</h2>
+
                             <div class="form-group">
-                                <label for="status">Status</label>
-                                <select class="form-control"
-                                    id="status"
-                                    name="status">
-                                    <option value="0" {{ $phcproducts->status ? 'selected' : '' }}>Not Available</option>
-                                    <option value="1" {{ $phcproducts->status ? 'selected' : '' }}>
-                                        Available
-                                    </option>
-                                </select>
+                                <span style="display: block;">Completeness</span>
+                                <div class="div-CheckboxGroup">
+
+                                    @php
+                                        $prd_firstLetter = substr($phcproducts['code'], 0, 1);
+                                        $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                    @endphp
+
+                                    @foreach($arr_completness as $checklistInput)
+                                        <div class="form-check">
+                                            <label for="completeness-{{$checklistInput}}"
+                                                class="form-check-label">
+                                                <input type="checkbox"
+                                                    name="completeness[]"
+                                                    id="completeness-{{$checklistInput}}"
+                                                    value="{{$checklistInput}}"
+                                                    {{ in_array($checklistInput, $phcproducts->
+                                                    currentChecklist['condition']['completeness']) ?
+                                                    "checked" : "" }}/>
+                                                {{$checklistInput}}
+                                            </label>
+                                        </div>
+                                    @endforeach
+
+                                    <div class="form-check">
+                                        <label for="completeness-other"
+                                            class="form-check-label">
+                                            <input type="checkbox"
+                                                name="completeness[]"
+                                                id="completeness-other"
+                                                value="other"
+                                                {{ in_array("other", $phcproducts->
+                                                currentChecklist['condition']['completeness']) ?
+                                                "checked" : "" }}
+                                                onchange="showOtherInput(this)" />
+                                            Other
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text"
+                                            class="form-control d-none"
+                                            placeholder="Other description"
+                                            name="other_completeness"
+                                            id="other-text"
+                                            value="{{ $phcproducts->currentChecklist['condition']['other'] }}" />
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="form-group">
+                                <span style="display: block;">Machine Condition</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check">
+                                        <label for="machine-condition-normal"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="machine_condition"
+                                                id="machine-condition-normal"
+                                                value="normal"
+                                                {{ $phcproducts->currentChecklist
+                                                ['condition']['machine'] == "normal" ?
+                                                "checked" : "" }}/>
+                                            Normal
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label for="machine-condition-need-repair"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="machine_condition"
+                                                id="machine-condition-need-repair"
+                                                value="need_repair"
+                                                {{ $phcproducts->currentChecklist
+                                                ['condition']['machine'] == "need_repair" ?
+                                                "checked" : "" }}/>
+                                            Need Repair
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <span style="display: block;">Physical Condition</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check">
+                                        <label for="physical-condition-new"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="physical_condition"
+                                                id="physical-condition-new"
+                                                value="new"
+                                                {{ $phcproducts->currentChecklist
+                                                ['condition']['physical'] == "new" ?
+                                                "checked" : "" }}/>
+                                            New
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label for="physical-condition-moderate"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="physical_condition"
+                                                id="physical-condition-moderate"
+                                                value="moderate"
+                                                {{ $phcproducts->currentChecklist
+                                                ['condition']['physical'] == "moderate" ?
+                                                "checked" : "" }}/>
+                                            Moderate
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label for="physical-condition-need-repair"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="physical_condition"
+                                                id="physical-condition-need-repair"
+                                                value="need_repair"
+                                                {{ $phcproducts->currentChecklist
+                                                ['condition']['physical'] == "need_repair" ?
+                                                "checked" : "" }}/>
+                                            Need Repair
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <button type="submit"
                                     class="btn btn-gradient-primary">
                                     Update
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
+
     </div>
 </div>
 @endsection
