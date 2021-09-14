@@ -112,13 +112,30 @@ class PersonalHomecareController extends Controller
     {
         $personalhomecare = PersonalHomecare::find($id);
 
-        return view('personal_homecare', compact('personalhomecare'));
+        $histories = HistoryUpdate::select(
+            "history_updates.method AS method",
+            "history_updates.created_at AS created_at",
+            "history_updates.meta AS meta",
+            "users.name AS name"
+        )
+        ->leftJoin(
+            "users",
+            "users.id",
+            "=",
+            "history_updates.user_id"
+        )
+        ->where("history_updates.type_menu", "like", "%Personal Homecare%")
+        ->where("history_updates.menu_id", $id)
+        ->get();
+
+        return view('personal_homecare', compact('personalhomecare', 'histories'));
     }
 
-    public function thankyouForm()
+    public function thankyouForm($id)
     {
+        $personalhomecare = PersonalHomecare::find($id);
 
-        return view('thankyou_form_ph');
+        return view('thankyou_form_ph', compact('personalhomecare'));
     }
 
     public function create()
