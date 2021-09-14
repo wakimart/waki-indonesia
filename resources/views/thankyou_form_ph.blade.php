@@ -145,7 +145,9 @@
         
         <div class="row justify-content-center mt-5">
             <h4 class="text-center" style="font-size: 48px; font-family: 'Poppins', sans-serif; font-weight: 500; color: #f0bc5e;">
+            <span><img class="img-fluid" style="margin-right: 15px; width: 60px; vertical-align: text-center;" src="{{asset('sources/confetti.png')}}"></span>
                 Terima Kasih Bpk/Ibu {{ $personalhomecare['name'] }}
+                <span><img class="img-fluid" style="margin-right: 15px; width: 60px; vertical-align: text-center;" src="{{asset('sources/confetti.png')}}"></span>
             </h4>
         </div>
         <div class="row justify-content-center">
