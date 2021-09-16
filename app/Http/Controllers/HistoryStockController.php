@@ -34,11 +34,11 @@ class HistoryStockController extends Controller
         }
 
         if ($request->has("filter_type")) {
-            $historystocks = $historystocks->where('type', $request->historystocks);
+            $historystocks = $historystocks->where('type', $request->filter_type);
         }
 
         if ($request->has("filter_date")) {
-            $historystocks = $historystocks->where('date', $request->historystocks);
+            $historystocks = $historystocks->where('date', $request->filter_date);
         }
 
         $historystocks = $historystocks->paginate(10);
