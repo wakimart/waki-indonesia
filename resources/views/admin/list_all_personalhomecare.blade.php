@@ -197,9 +197,11 @@ $menu_item_second = "list_all";
                                                 @endif
                                             </td>
                                             <td class="center">
-                                                <a href="#modal-reschedule" data-toggle="modal" data-target="#modal-reschedule">
-                                                    <i class="mdi mdi-calendar-text menu-icon" style="font-size: 24px; color: #34cd7d;"></i>
-                                                </a>
+                                                @if($personalhomecare->status != "new")
+                                                    <a href="#modal-reschedule" data-toggle="modal" data-target="#modal-reschedule" onclick="submitReschedule(this)" data-id="{{ $personalhomecare->id }}" data-schedule="{{ $personalhomecare->schedule }}">
+                                                        <i class="mdi mdi-calendar-text menu-icon" style="font-size: 24px; color: #34cd7d;"></i>
+                                                    </a>
+                                                @endif
                                             </td>
                                             <td class="center">
                                                 @if($personalhomecare->status == "rejected" || $personalhomecare->status == "new")
@@ -271,9 +273,12 @@ $menu_item_second = "list_all";
         tabindex="-1"
         role="dialog"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h5 class="modal-title">
+                        When you want to reschedule ? Ask for ACC
+                    </h5>
                     <button type="button"
                         class="close"
                         data-dismiss="modal"
@@ -281,24 +286,34 @@ $menu_item_second = "list_all";
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <h5 style="text-align:center;">
-                        Are you sure to delete this product?
-                    </h5>
-                </div>
-                <div class="modal-footer">
-                    <form id="frmDelete"
-                        method="post"
-                        action="{{ route('delete_personal_homecare') }}">
-                        @csrf
-                        <input type="hidden" name="id" id="id-delete" />
+                <form id="frmReschedule"
+                    method="post"
+                    action="{{ route('reschedule_personal_homecare') }}">
+                    @csrf
+                    <input type="hidden" name="id" id="id-reschedule" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="date">Reschedule Date</label>
+                            <input type="date"
+                                class="form-control"
+                                id="reschedule_date"
+                                name="reschedule_date" 
+                                value="" 
+                                required />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
                         <button type="submit"
-                            class="btn btn-gradient-danger mr-2">
+                            class="btn btn-gradient-primary mr-2">
                             Yes
                         </button>
-                    </form>
-                    <button class="btn btn-light">No</button>
-                </div>
+                        <button type="button"
+                            class="btn btn-gradient-danger"
+                            data-dismiss="modal">
+                            No
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -310,6 +325,11 @@ $menu_item_second = "list_all";
 <script type="application/javascript">
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
+}
+
+function submitReschedule(e) {
+    document.getElementById("id-reschedule").value = e.dataset.id;
+    document.getElementById("reschedule_date").value = e.dataset.schedule;
 }
  
 $(document).ready(function (e) {

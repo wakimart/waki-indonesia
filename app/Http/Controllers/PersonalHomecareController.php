@@ -519,9 +519,12 @@ class PersonalHomecareController extends Controller
 
             $phc = PersonalHomecare::where("id", $request->id)->first();
 
-            if ($request->status == "approve_out") {
+            if ($request->status == "verified") {
+                $phc->status = $request->status;
+                $phc->save();
+            }
+            else if ($request->status == "approve_out") {
                 $phc->checklist_out = PersonalHomecareProduct::find($request->id_product)->current_checklist_id;
-
                 $phc->status = $request->status;
                 $phc->save();
             }
@@ -571,6 +574,15 @@ class PersonalHomecareController extends Controller
                 $phc->status = $request->status;
                 $phc->save();
             }
+            else if($request->status == "process_extend"){
+                $phc->status = $request->status;
+                $phc->is_extend = false;
+                $phc->save();
+            }
+            else if($request->status == "process_extend_reject"){
+                $phc->is_extend = false;
+                $phc->save();
+            }
 
 
             $userId = Auth::user()["id"];
@@ -590,7 +602,12 @@ class PersonalHomecareController extends Controller
 
             DB::commit();
 
-            $this->accNotif($phc, "acc_done");
+            if($request->status == "process_extend" || $request->status == "process_extend_reject"){
+                $this->accNotif($phc, $request->status);
+            }
+            else{
+                $this->accNotif($phc, "acc_done");
+            }
 
             return redirect()
                 ->route("detail_personal_homecare", ["id" => $request->id])
@@ -747,6 +764,8 @@ class PersonalHomecareController extends Controller
 
             DB::commit();
 
+            $this->accNotif($phcNya, "acc_extend");
+
             return redirect()
                 ->route("detail_personal_homecare", ["id" => $id])
                 ->with("success", "Acc for Extend Personal Homecare Success !");
@@ -761,15 +780,39 @@ class PersonalHomecareController extends Controller
         DB::beginTransaction();
 
         try {
-            $phcNya = PersonalHomecare::find($request->id);
-            $phcNya->reschedule_date = $request->reschedule_date;
-            $phcNya->save();
+            if(!isset($request['status'])){
+                $phcNya = PersonalHomecare::find($request->id);
+                $phcNya->reschedule_date = $request->reschedule_date;
+                $phcNya->save();
 
-            DB::commit();
+                DB::commit();
 
-            return redirect()
-                ->route("detail_personal_homecare", ["id" => $id])
-                ->with("success", "Acc for Reschedule Personal Homecare Success !");
+                $this->accNotif($phcNya, "acc_reschedule");
+
+                return redirect()
+                    ->route("detail_personal_homecare", ["id" => $request->id])
+                    ->with("success", "Acc for Reschedule Personal Homecare Success !");
+            }
+            else{
+                if($request->status == "acceptance"){
+                    $phcNya = PersonalHomecare::find($request->id);
+                    $phcNya->schedule = $phcNya->reschedule_date;
+                    $phcNya->save();
+                }
+
+                $phcNya = PersonalHomecare::find($request->id);
+                $phcNya->reschedule_date = null;
+                $phcNya->save();
+
+                DB::commit();
+
+                $this->accNotif($phcNya, "acc_reschedule_".$request->status);
+
+                return redirect()
+                    ->route("detail_personal_homecare", ["id" => $request->id])
+                    ->with("success", "Acc for Reschedule Personal Homecare Success !");
+            }
+            
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -805,6 +848,7 @@ class PersonalHomecareController extends Controller
     {
         $fcm_tokenNya = [];
         $messageNya = "";
+        $titleNya = "ACC ".$personalhomecare_obj->status." [Personal Homecare]";
         if($notif_type == "acc_ask"){
             $userNya = User::where('users.fmc_token', '!=', null)
                         ->whereIn('role_users.role_id', [1,2,7])
@@ -846,6 +890,63 @@ class PersonalHomecareController extends Controller
 
             $messageNya = $personalhomecare_obj->name." [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] . Don't Forget to Upload Picture with Customer !";
         }
+        else if($notif_type ==  "acc_reschedule" || $notif_type ==  "acc_extend"){
+            $userNya = User::where('users.fmc_token', '!=', null)
+                        ->whereIn('role_users.role_id', [1,2,7])
+                        ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                        ->get();
+            foreach ($userNya as $value) {
+                if($value['fmc_token'] != null){
+                    foreach ($value['fmc_token'] as $fcmSatuan) {
+                        if($fcmSatuan != null){
+                            array_push($fcm_tokenNya, $fcmSatuan);
+                        }
+                    }
+                }
+            }
+
+            //khusus pak supri
+            $value = User::find(4);
+            if($value['fmc_token'] != null){
+                foreach ($value['fmc_token'] as $fcmSatuan) {
+                    if($fcmSatuan != null){
+                        array_push($fcm_tokenNya, $fcmSatuan);
+                    }
+                }
+            }
+
+            $titleNya = "ACC Reschedule [Personal Homecare]";
+            if($notif_type ==  "acc_extend"){
+                $titleNya = "ACC Extend [Personal Homecare]";
+            }
+            $messageNya = "By ".$personalhomecare_obj->branch['code']."-".$personalhomecare_obj->cso['name']." for ".$personalhomecare_obj->name." [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] ";
+        }
+        else if($notif_type == "acc_reschedule_acceptance" || $notif_type == "acc_reschedule_rejected" || $notif_type == "process_extend" || $notif_type == "process_extend_reject"){
+            $userNya = $personalhomecare_obj->cso->user;
+            if($userNya != null){
+                if($userNya['fmc_token'] != null){
+                    foreach ($userNya['fmc_token'] as $fcmSatuan) {
+                        if($fcmSatuan != null){
+                            array_push($fcm_tokenNya, $fcmSatuan);
+                        }
+                    }
+                }
+            }
+            if($notif_type == "acc_reschedule_acceptance"){
+                $titleNya = "ACC Reschedule Approved [Personal Homecare]";
+            }
+            else if($notif_type == "acc_reschedule_rejected"){
+                $titleNya = "ACC Reschedule Rejected [Personal Homecare]";
+            }
+            else if($notif_type == "process_extend"){
+                $titleNya = "ACC Extend Approved [Personal Homecare]";
+            }
+            else if($notif_type == "process_extend_reject"){
+                $titleNya = "ACC Extend Rejected [Personal Homecare]";
+            }
+
+            $messageNya = $personalhomecare_obj->name." [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] . Don't Forget to Upload Picture with Customer !";
+        }
         
 
         $body = ['registration_ids' => $fcm_tokenNya,
@@ -854,7 +955,7 @@ class PersonalHomecareController extends Controller
             "priority" => "high",
             "notification" => [
                 "body" => $messageNya,
-                "title" => "ACC ".$personalhomecare_obj->status." [Personal Homecare]",
+                "title" => $titleNya,
                 "icon" => "ic_launcher"
             ],
             "data" => [

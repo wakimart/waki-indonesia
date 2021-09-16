@@ -568,6 +568,80 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
 
+        @if ($personalhomecare['reschedule_date'] != null)  {{-- && Gate::check('acc-reschedule-personalhomecare')) --}}
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Reschedule from {{ date("d/m/Y", strtotime($personalhomecare['schedule'])) }} to {{ date("d/m/Y", strtotime($personalhomecare['reschedule_date'])) }}</h2>
+                            </div>
+                            <form id="actionAdd"
+                                class="forms-sample"
+                                method="POST"
+                                action="{{ route("reschedule_personal_homecare") }}">
+                                @csrf
+                                <input type="hidden"
+                                    name="id"
+                                    value="{{ $personalhomecare['id'] }}" />
+                                <div class="form-group row justify-content-center">
+                                    <button type="submit"
+                                        class="btn btn-gradient-primary mr-2 btn-lg"
+                                        name="status"
+                                        value="acceptance">
+                                        Approved
+                                    </button>
+                                    <button type="submit"
+                                        class="btn btn-gradient-danger mr-2 btn-lg"
+                                        name="status"
+                                        value="rejected">
+                                        Reject
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if ($personalhomecare['is_extend'])  {{-- && Gate::check('acc-extend-personalhomecare')) --}}
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Extended from {{ date("Y-m-d", strtotime($personalhomecare['schedule'] .  " + 5 days")) }} to {{ date("Y-m-d", strtotime($personalhomecare['schedule'] .  " + 8 days")) }}</h2>
+                            </div>
+                            <form id="actionAdd"
+                                class="forms-sample"
+                                method="POST"
+                                action="{{ route("update_personal_homecare_status") }}">
+                                @csrf
+                                <input type="hidden"
+                                    name="id"
+                                    value="{{ $personalhomecare['id'] }}" />
+                                <div class="form-group row justify-content-center">
+                                    <button type="submit"
+                                        class="btn btn-gradient-primary mr-2 btn-lg"
+                                        name="status"
+                                        value="process_extend">
+                                        Approved
+                                    </button>
+                                    <button type="submit"
+                                        class="btn btn-gradient-danger mr-2 btn-lg"
+                                        name="status"
+                                        value="">
+                                        Reject
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @if (strtolower($personalhomecare['status']) != "new" && strtolower($personalhomecare['status']) != "rejected" )
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
@@ -1193,6 +1267,43 @@ $menu_item_page = "personal_homecare";
         </div>
     </div>
 </div>
+
+<div class="modal fade"
+        id="modal-extend"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 style="text-align:center;">
+                        Are you sure to extend personal homecare? (+3 Days)
+                    </h5>
+                </div>
+                <div class="modal-footer">
+                    <form id="frmExtend"
+                        method="post"
+                        action="{{ route('extend_personal_homecare', ["id" => $personalhomecare['id']]) }}">
+                        @csrf
+                        <input type="hidden" name="id" id="id-delete" />
+                        <button type="submit"
+                            class="btn btn-gradient-danger mr-2">
+                            Yes
+                        </button>
+                    </form>
+                    <button class="btn btn-light">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section("script")
