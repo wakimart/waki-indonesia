@@ -90,6 +90,10 @@ $menu_item_second = "list_product";
                         </select>
                     </div>
                 </div>
+                <input type="hidden"
+                    name="product_id"
+                    form="form-search"
+                    value="{{ $url['product_id'] }}" />
                 <div class="col-xs-6 col-sm-6"
                     style="padding: 0; display: inline-block">
                     <div class="form-group">
@@ -107,72 +111,60 @@ $menu_item_second = "list_product";
                     <div class="card-header" style="background: none;">
                         <ul class="nav nav-tabs card-header-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active" 
+                                <a class="nav-link {{ $url['product_id'] == 4 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="one-tab" 
-                                    data-toggle="tab" 
-                                    href="#one" 
-                                    role="tab" 
+                                    href="{{ route('list_phc_product') }}?product_id=4" 
                                     aria-controls="One" 
                                     aria-selected="true">
                                     WK2079
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" 
+                                <a class="nav-link {{ $url['product_id'] == 3 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="two-tab" 
-                                    data-toggle="tab" 
-                                    href="#two" 
-                                    role="tab" 
+                                    href="{{ route('list_phc_product') }}?product_id=3"
                                     aria-controls="Two" 
                                     aria-selected="true">
                                     WKT2076H
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" 
+                                <a class="nav-link {{ $url['product_id'] == 2 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="three-tab" 
-                                    data-toggle="tab" 
-                                    href="#three" 
-                                    role="tab" 
+                                    href="{{ route('list_phc_product') }}?product_id=2"
                                     aria-controls="Three" 
                                     aria-selected="true">
                                     WKT2076i
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" 
+                                <a class="nav-link {{ $url['product_id'] == 7 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="four-tab" 
-                                    data-toggle="tab" 
-                                    href="#four" 
-                                    role="tab" 
+                                    href="{{ route('list_phc_product') }}?product_id=7"
                                     aria-controls="Four" 
                                     aria-selected="true">
                                     WKA2023
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" 
+                                <a class="nav-link {{ $url['product_id'] == 6 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="five-tab" 
-                                    data-toggle="tab" 
-                                    href="#five" 
-                                    role="tab" 
+                                    href="{{ route('list_phc_product') }}?product_id=6"
                                     aria-controls="Five" 
                                     aria-selected="true">
                                     WKA2024
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" 
+                                <a class="nav-link {{ $url['product_id'] == 1 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="six-tab" 
-                                    data-toggle="tab" 
-                                    href="#six" 
-                                    role="tab" 
+                                    href="{{ route('list_phc_product') }}?product_id=1"
                                     aria-controls="Six" 
                                     aria-selected="true">
                                     WKT2080
@@ -182,7 +174,7 @@ $menu_item_second = "list_product";
                     </div>
                     <div class="card-body">
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+                            <div class="tab-pane fade show {{ $url['product_id'] == 4 ? 'active' : ''}} p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
                                 <h5 style="margin-bottom: 0.5em;">
                                     Total: {{ $phcproducts->total() }}
                                 </h5>
@@ -243,10 +235,10 @@ $menu_item_second = "list_product";
                                         </tbody>
                                     </table>
                                     <br>
-                                    {{ $phcproducts->links() }}
+                                    {{ $phcproducts->appends($url)->links() }}
                                 </div>
                             </div>
-                            <div class="tab-pane fade show p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
+                            <div class="tab-pane fade show {{ $url['product_id'] == 3 ? 'active' : ''}} p-3" id="two" role="tabpanel" aria-labelledby="two-tab">
                                 <h5 style="margin-bottom: 0.5em;">
                                     Total: {{ $phcproducts->total() }}
                                 </h5>
@@ -301,10 +293,10 @@ $menu_item_second = "list_product";
                                         </tbody>
                                     </table>
                                     <br>
-                                    {{ $phcproducts->links() }}
+                                    {{ $phcproducts->appends($url)->links() }}
                                 </div>
                             </div>
-                            <div class="tab-pane fade show p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
+                            <div class="tab-pane fade show {{ $url['product_id'] == 2 ? 'active' : ''}} p-3" id="three" role="tabpanel" aria-labelledby="three-tab">
                                 <h5 style="margin-bottom: 0.5em;">
                                     Total: {{ $phcproducts->total() }}
                                 </h5>
@@ -359,10 +351,10 @@ $menu_item_second = "list_product";
                                         </tbody>
                                     </table>
                                     <br>
-                                    {{ $phcproducts->links() }}
+                                    {{ $phcproducts->appends($url)->links() }}
                                 </div>
                             </div>
-                            <div class="tab-pane fade show p-3" id="four" role="tabpanel" aria-labelledby="four-tab">
+                            <div class="tab-pane fade show {{ $url['product_id'] == 7 ? 'active' : ''}} p-3" id="four" role="tabpanel" aria-labelledby="four-tab">
                                 <h5 style="margin-bottom: 0.5em;">
                                     Total: {{ $phcproducts->total() }}
                                 </h5>
@@ -417,10 +409,10 @@ $menu_item_second = "list_product";
                                         </tbody>
                                     </table>
                                     <br>
-                                    {{ $phcproducts->links() }}
+                                    {{ $phcproducts->appends($url)->links() }}
                                 </div>
                             </div>
-                            <div class="tab-pane fade show p-3" id="five" role="tabpanel" aria-labelledby="five-tab">
+                            <div class="tab-pane fade show {{ $url['product_id'] == 6 ? 'active' : ''}} p-3" id="five" role="tabpanel" aria-labelledby="five-tab">
                                 <h5 style="margin-bottom: 0.5em;">
                                     Total: {{ $phcproducts->total() }}
                                 </h5>
@@ -475,10 +467,10 @@ $menu_item_second = "list_product";
                                         </tbody>
                                     </table>
                                     <br>
-                                    {{ $phcproducts->links() }}
+                                    {{ $phcproducts->appends($url)->links() }}
                                 </div>
                             </div>
-                            <div class="tab-pane fade show p-3" id="six" role="tabpanel" aria-labelledby="six-tab">
+                            <div class="tab-pane fade show {{ $url['product_id'] == 1 ? 'active' : ''}} p-3" id="six" role="tabpanel" aria-labelledby="six-tab">
                                 <h5 style="margin-bottom: 0.5em;">
                                     Total: {{ $phcproducts->total() }}
                                 </h5>
@@ -603,5 +595,6 @@ document.addEventListener("DOMContentLoaded", function () {
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
+
 </script>
 @endsection

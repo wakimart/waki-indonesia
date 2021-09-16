@@ -36,6 +36,10 @@ class PersonalHomecareProductController extends Controller
         if ($request->has("product_id")) {
             $phcproducts = $phcproducts->where('product_id', $request->input("product_id"));
         }
+        else{
+            $request['product_id'] = 4;
+            $phcproducts = $phcproducts->where('product_id', $request->input("product_id"));
+        }
 
         $phcproducts = $phcproducts->with(["branch", "product"])->paginate(10);
 
