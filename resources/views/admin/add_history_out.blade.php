@@ -182,7 +182,10 @@ $menu_item_second = "add_history_out";
                                                 name="quantity[]"
                                                 placeholder="Quantity"
                                                 min="0"
+                                                onblur="checkStock(this)"
                                                 required />
+                                            <small id="alert-quantity_0"
+                                                class="form-text text-danger"></small>
                                         </div>
                                     </div>
                                 </div>
@@ -201,7 +204,8 @@ $menu_item_second = "add_history_out";
 
                             <div class="form-group">
                                 <button type="submit"
-                                    class="btn btn-gradient-primary">
+                                    class="btn btn-gradient-primary"
+                                    id="button-submit">
                                     Save
                                 </button>
                             </div>
@@ -326,11 +330,17 @@ function addProduct() {
     inputQuantity.name = "quantity[]";
     inputQuantity.id = `quantity_${counter}`;
     inputQuantity.placeholder = "Quantity";
-    inputQuantity.required = true;
     inputQuantity.min = 0;
+    inputQuantity.required = true;
+    inputQuantity.setAttribute("onblur", `checkStock(this)`);
+
+    const smallAlertQuantity = document.createElement("small");
+    smallAlertQuantity.id = `alert-quantity_${counter}`;
+    smallAlertQuantity.className = "form-text text-danger";
 
     formGroupDivQuantity.appendChild(labelQuantity);
     formGroupDivQuantity.appendChild(inputQuantity);
+    formGroupDivQuantity.appendChild(smallAlertQuantity);
     colMd4DivQuantity.appendChild(formGroupDivQuantity);
     rowDivProduct.appendChild(colMd4DivQuantity);
 
@@ -342,6 +352,49 @@ function addProduct() {
 function removeProduct(counter) {
     document.getElementById(`row-remove-${counter}`).remove();
     document.getElementById(`row-product-${counter}`).remove();
+}
+
+function checkStock(e) {
+    const sequence = e.id.split("_")[1];
+    const warehouse = document.getElementById("warehouse_id").value;
+    const product = document.getElementById(`product_${sequence}`).value;
+    const quantity = document.getElementById(`quantity_${sequence}`).value;
+
+    fetch(
+        `{{ route("history_stock_get_stock") }}?warehouse_id=${warehouse}&product_id=${product}`,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        // If query return null
+        if (response.quantity === undefined && response.quantity === null) {
+            document.getElementById("button-submit").setAttribute("disabled", "");
+            document.getElementById(`alert-quantity_${sequence}`).innerHTML = "Stock is not enough";
+            return;
+        }
+
+        // If query have result
+        if ((response.quantity - quantity) < 0) {
+            document.getElementById("button-submit").setAttribute("disabled", "");
+            document.getElementById(`alert-quantity_${sequence}`).innerHTML = "Stock is not enough";
+        } else if ((response.quantity - quantity) >= 0) {
+            document.getElementById("button-submit").removeAttribute("disabled");
+            document.getElementById(`alert-quantity_${sequence}`).innerHTML = "";
+        }
+    }).catch(function (error) {
+        console.error(error);
+    })
 }
 </script>
 @endsection

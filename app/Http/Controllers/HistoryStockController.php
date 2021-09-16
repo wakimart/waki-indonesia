@@ -95,6 +95,25 @@ class HistoryStockController extends Controller
         ));
     }
 
+    public function getStock(Request $request)
+    {
+        try {
+            $stock = Stock::select(
+                    "id",
+                    "product_id",
+                    "warehouse_id",
+                    "quantity",
+                )
+                ->where("product_id", $request->product_id)
+                ->where("warehouse_id", $request->warehouse_id)
+                ->first();
+
+            return response()->json($stock);
+        } catch (\Throwable $th) {
+            return response()->json(["error" => $th->getMessage()], 500);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      *
