@@ -179,7 +179,7 @@ $menu_item_second = "list_all";
                                     @foreach($personalhomecares as $personalhomecare)
                                         <tr>
                                             <td>{{ date("d/m/Y H:m:i", strtotime($personalhomecare->created_at)) }}</td>
-                                            <td>{{ date("d/m/Y", strtotime($personalhomecare->schedule)) }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ date("d/m/Y", strtotime($personalhomecare->schedule . "+5 days")) }}</td>
+                                            <td>{{ date("d/m/Y", strtotime($personalhomecare->schedule)) }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ $personalhomecare->status == "process_extend" ? date("d/m/Y", strtotime($personalhomecare->schedule . "+8 days")) : date("d/m/Y", strtotime($personalhomecare->schedule . "+5 days")) }}</td>
                                             <td>{{ $personalhomecare->name }}</td>
                                             <td>{{ $personalhomecare->personalHomecareProduct->code }}</td>
                                             <td>{{ $personalhomecare->branch->code }} - {{ $personalhomecare->cso->code }} ({{ $personalhomecare->cso->name }})</td>
@@ -197,7 +197,7 @@ $menu_item_second = "list_all";
                                                 @endif
                                             </td>
                                             <td class="center">
-                                                @if($personalhomecare->status != "new")
+                                                @if($personalhomecare->status == "verified" || $personalhomecare->status == "approve_out")
                                                     <a href="#modal-reschedule" data-toggle="modal" data-target="#modal-reschedule" onclick="submitReschedule(this)" data-id="{{ $personalhomecare->id }}" data-schedule="{{ $personalhomecare->schedule }}">
                                                         <i class="mdi mdi-calendar-text menu-icon" style="font-size: 24px; color: #34cd7d;"></i>
                                                     </a>

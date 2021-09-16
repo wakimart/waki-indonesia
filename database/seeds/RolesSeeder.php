@@ -151,7 +151,11 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => false,
                 "change-status-checkin-personalhomecare" => true,
                 "change-status-checkout-personalhomecare" => true,
-        	]),
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => true,
+            ]),
         ]);
 
         $admin = Role::create([
@@ -293,6 +297,10 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => false,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => false,
+                "acc-reschedule-personalhomecare" => false,
+                "acc-extend-personalhomecare" => false,
+                "change-status-product-personalhomecare" => false,
         	]),
         ]);
 
@@ -429,6 +437,10 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => true,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => false,
+                "acc-reschedule-personalhomecare" => false,
+                "acc-extend-personalhomecare" => false,
+                "change-status-product-personalhomecare" => false,
             ]),
         ]);
 
@@ -565,6 +577,10 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => true,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => false,
+                "acc-reschedule-personalhomecare" => false,
+                "acc-extend-personalhomecare" => false,
+                "change-status-product-personalhomecare" => false,
             ]),
         ]);
 
@@ -701,6 +717,10 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => false,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => false,
             ]),
         ]);
 
@@ -837,6 +857,10 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => false,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => false,
             ]),
         ]);
 
@@ -979,6 +1003,10 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => true,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => false,
             ]),
         ]);
     }

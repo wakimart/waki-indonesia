@@ -348,6 +348,52 @@ class PersonalHomecareController extends Controller
             ->where("personal_homecare_products.active", true)
             ->get();
 
+        $phcProducts = PersonalHomecareProduct::select(
+                "personal_homecare_products.id AS id",
+                "personal_homecare_products.code AS code",
+                "products.name AS name",
+            )
+            ->leftJoin(
+                "products",
+                "personal_homecare_products.product_id",
+                "=",
+                "products.id"
+            )
+            ->where("personal_homecare_products.branch_id", $personalhomecare->branch_id)
+            ->where("personal_homecare_products.active", true)
+            ->where("personal_homecare_products.status", "!=", "pending")
+            ->get();
+
+        $ownProd = PersonalHomecareProduct::select(
+                "personal_homecare_products.id AS id",
+                "personal_homecare_products.code AS code",
+                "products.name AS name",
+            )
+            ->leftJoin(
+                "products",
+                "personal_homecare_products.product_id",
+                "=",
+                "products.id"
+            )
+            ->where("personal_homecare_products.id", $personalhomecare->personalHomecareProduct['id'])
+            ->first();
+
+        $finalPhcProd = [$ownProd];
+        $firstDate = (new Carbon($personalhomecare->schedule))->subDays(6);
+        $lastDate =  (new Carbon($personalhomecare->schedule))->addDays(6);
+
+        foreach ($phcProducts as $perProd) {
+            $phcNya = PersonalHomecare::where('ph_product_id', $perProd['id'])
+                    ->whereBetween('schedule', [$firstDate, $lastDate])
+                    ->where("active", true)
+                    ->get();
+            if(sizeof($phcNya) == 0){
+                array_push($finalPhcProd, $perProd);
+            }
+        }
+
+        $phcProducts = $finalPhcProd;
+
         return view("admin.update_personal_homecare", compact(
             "personalhomecare",
             "branches",
@@ -524,9 +570,17 @@ class PersonalHomecareController extends Controller
                 $phc->save();
             }
             else if ($request->status == "approve_out") {
-                $phc->checklist_out = PersonalHomecareProduct::find($request->id_product)->current_checklist_id;
+                $tempChecklist = PersonalHomecareProduct::find($request->id_product)->currentChecklist;
+                $tempChecklist = $tempChecklist->replicate();
+                $tempChecklist->image = [];
+                $tempChecklist->save();
+
+                $phc->checklist_out = $tempChecklist->id;
                 $phc->status = $request->status;
                 $phc->save();
+
+                PersonalHomecareProduct::where("id", $request->id_product)
+                    ->update(["current_checklist_id" => $tempChecklist->id]);
             }
             else if($request->status == "process"){
                 PersonalHomecareProduct::where("id", $request->id_product)
@@ -573,6 +627,12 @@ class PersonalHomecareController extends Controller
 
                 $phc->status = $request->status;
                 $phc->save();
+            }else if($request->status == "pending_product"){
+                $this->accNotif($phc, "waiting_in_rejected");
+
+                return redirect()
+                    ->route("detail_personal_homecare", ["id" => $request->id])
+                    ->with("success", "Status has been successfully updated.");
             }
             else if($request->status == "process_extend"){
                 $phc->status = $request->status;
@@ -626,6 +686,9 @@ class PersonalHomecareController extends Controller
         try {
             // STORE PERSONAL HOMECARE CHECKLIST IN
             $phcChecklist = new PersonalHomecareChecklist();
+            if(isset($request['id_checklist'])){
+                $phcChecklist = PersonalHomecareChecklist::find($request['id_checklist']);
+            }
 
             $condition["completeness"] = $request->input("completeness");
             if ($request->has("other_completeness")) {
@@ -636,6 +699,10 @@ class PersonalHomecareController extends Controller
             $phcChecklist->condition = $condition;
 
             $imageArray = [];
+            if(isset($request['id_checklist'])){
+                $imageArray = $phcChecklist->image;
+            }
+
             $userId = Auth::user()["id"];
             $path = "sources/phc-checklist";
             if ($request->hasFile("product_photo_1")) {
@@ -663,11 +730,19 @@ class PersonalHomecareController extends Controller
             $phcChecklist->image = $imageArray;
             $phcChecklist->save();
 
+
             // UPDATE PERSONAL HOMECARE CHECKLIST IN
             $phc = PersonalHomecare::where("id", $request->id)->first();
             $phc->status = "waiting_in";
             $phc->checklist_in = $phcChecklist->id;
             $phc->save();
+
+
+            // Store to product personal homecare checklist current 
+            $productPhc = $phc->personalHomecareProduct;
+            $productPhc->current_checklist_id = $phcChecklist->id;
+            $productPhc->status = "pending";
+            $productPhc->save();
 
             $this->accNotif($phc, "acc_ask");
 
@@ -681,7 +756,6 @@ class PersonalHomecareController extends Controller
 
             return response()->json(["error" => $th->getMessage()], 500);
         }
-
     }
 
     public function detail(Request $request)
@@ -921,7 +995,7 @@ class PersonalHomecareController extends Controller
             }
             $messageNya = "By ".$personalhomecare_obj->branch['code']."-".$personalhomecare_obj->cso['name']." for ".$personalhomecare_obj->name." [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] ";
         }
-        else if($notif_type == "acc_reschedule_acceptance" || $notif_type == "acc_reschedule_rejected" || $notif_type == "process_extend" || $notif_type == "process_extend_reject"){
+        else if($notif_type == "acc_reschedule_acceptance" || $notif_type == "acc_reschedule_rejected" || $notif_type == "process_extend" || $notif_type == "process_extend_reject" || $notif_type == "waiting_in_rejected"){
             $userNya = $personalhomecare_obj->cso->user;
             if($userNya != null){
                 if($userNya['fmc_token'] != null){
@@ -932,6 +1006,9 @@ class PersonalHomecareController extends Controller
                     }
                 }
             }
+
+            $messageNya = $personalhomecare_obj->name." [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] . Don't Forget to Upload Picture with Customer !";
+
             if($notif_type == "acc_reschedule_acceptance"){
                 $titleNya = "ACC Reschedule Approved [Personal Homecare]";
             }
@@ -944,8 +1021,11 @@ class PersonalHomecareController extends Controller
             else if($notif_type == "process_extend_reject"){
                 $titleNya = "ACC Extend Rejected [Personal Homecare]";
             }
+            else if($notif_type == "waiting_in_rejected"){
+                $titleNya = "ACC Waiting In Rejected [Personal Homecare]";
+                $messageNya = $personalhomecare_obj->name." [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] . Please Complete the Product Completeness !";
+            }
 
-            $messageNya = $personalhomecare_obj->name." [".$personalhomecare_obj->personalHomecareProduct['code']." - ".$personalhomecare_obj->personalHomecareProduct->product['name']."] . Don't Forget to Upload Picture with Customer !";
         }
         
 

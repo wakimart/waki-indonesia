@@ -409,5 +409,21 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define("change-status-checkout-personalhomecare", function ($user) {
             return $user->hasAccess(["change-status-checkout-personalhomecare"]);
         });
+        // Verified status
+        Gate::define("change-status-verified-personalhomecare", function ($user) {
+            return $user->hasAccess(["change-status-verified-personalhomecare"]);
+        });
+        // Reschedule status
+        Gate::define("acc-reschedule-personalhomecare", function ($user) {
+            return $user->hasAccess(["acc-reschedule-personalhomecare"]);
+        });
+        // Extend status
+        Gate::define("acc-extend-personalhomecare", function ($user) {
+            return $user->hasAccess(["acc-extend-personalhomecare"]);
+        });
+        // Product status
+        Gate::define("change-status-product-personalhomecare", function ($user) {
+            return $user->hasAccess(["change-status-product-personalhomecare"]);
+        });
     }
 }

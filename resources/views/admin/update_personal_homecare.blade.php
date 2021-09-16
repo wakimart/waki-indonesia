@@ -172,7 +172,7 @@ $menu_item_page = "personal_homecare";
                                 <select class="form-control"
                                     name="ph_product_id"
                                     id="ph_product_id"
-                                    {{ $personalhomecare['status'] == "new" ? 'required' : 'disabled' }} >
+                                    {{ $personalhomecare['status'] == "new" || Gate::check('change-status-product-personalhomecare') ? 'required' : 'disabled' }} >
                                     <option disabled>
                                         Select Product (Please select branch first)
                                     </option>

@@ -464,7 +464,7 @@
                     </li>
                     <li class="table-row">
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" data-label="Jadwal">
-                            {{ date("d/m/Y", strtotime($personalhomecare->schedule)) }} - {{ date("d/m/Y", strtotime($personalhomecare->schedule . "+5 days")) }}
+                            {{ date("d/m/Y", strtotime($personalhomecare->schedule)) }} - {{ $personalhomecare->status == "process_extend" ? date("d/m/Y", strtotime($personalhomecare->schedule . "+8 days")) : date("d/m/Y", strtotime($personalhomecare->schedule . "+5 days")) }}
                         </div>
                         <div class="col-lg-4 col-md-3 col-sm-3 col-xs-3" data-label="Nama Produk">
                             {{ $personalhomecare->personalHomecareProduct->product['code'] }} - {{ $personalhomecare->personalHomecareProduct->product['name'] }}
@@ -487,7 +487,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                {{ date("d/m/Y", strtotime($personalhomecare->schedule)) }} - {{ date("d/m/Y", strtotime($personalhomecare->schedule . "+5 days")) }}
+                                {{ date("d/m/Y", strtotime($personalhomecare->schedule)) }} - {{ $personalhomecare->status == "process_extend" ? date("d/m/Y", strtotime($personalhomecare->schedule . "+8 days")) : date("d/m/Y", strtotime($personalhomecare->schedule . "+5 days")) }}
                             </td>
                             <td>
                                 {{ $personalhomecare->personalHomecareProduct->product['code'] }} - {{ $personalhomecare->personalHomecareProduct->product['name'] }}

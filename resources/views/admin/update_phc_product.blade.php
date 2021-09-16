@@ -225,9 +225,14 @@ $menu_item_second = "update_product";
                                                     name="completeness[]"
                                                     id="completeness-{{$checklistInput}}"
                                                     value="{{$checklistInput}}"
-                                                    {{ in_array($checklistInput, $phcproducts->
-                                                    currentChecklist['condition']['completeness']) ?
-                                                    "checked" : "" }}/>
+
+                                                    @if($phcproducts->currentChecklist != null)
+                                                        {{ in_array($checklistInput, $phcproducts->
+                                                        currentChecklist['condition']['completeness']) ?
+                                                        "checked" : "" }}
+                                                    @endif
+
+                                                    />
                                                 {{$checklistInput}}
                                             </label>
                                         </div>
@@ -240,9 +245,11 @@ $menu_item_second = "update_product";
                                                 name="completeness[]"
                                                 id="completeness-other"
                                                 value="other"
-                                                {{ in_array("other", $phcproducts->
-                                                currentChecklist['condition']['completeness']) ?
-                                                "checked" : "" }}
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ in_array("other", $phcproducts->
+                                                    currentChecklist['condition']['completeness']) ?
+                                                    "checked" : "" }}
+                                                @endif
                                                 onchange="showOtherInput(this)" />
                                             Other
                                         </label>
@@ -253,7 +260,7 @@ $menu_item_second = "update_product";
                                             placeholder="Other description"
                                             name="other_completeness"
                                             id="other-text"
-                                            value="{{ $phcproducts->currentChecklist['condition']['other'] }}" />
+                                            value="{{ $phcproducts->currentChecklist != null ? $phcproducts->currentChecklist['condition']['other'] : "" }}" />
                                     </div>
                                 </div>
                             </div>
@@ -269,9 +276,12 @@ $menu_item_second = "update_product";
                                                 name="machine_condition"
                                                 id="machine-condition-normal"
                                                 value="normal"
-                                                {{ $phcproducts->currentChecklist
-                                                ['condition']['machine'] == "normal" ?
-                                                "checked" : "" }}/>
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ $phcproducts->currentChecklist
+                                                    ['condition']['machine'] == "normal" ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                    />
                                             Normal
                                         </label>
                                     </div>
@@ -283,9 +293,12 @@ $menu_item_second = "update_product";
                                                 name="machine_condition"
                                                 id="machine-condition-need-repair"
                                                 value="need_repair"
-                                                {{ $phcproducts->currentChecklist
-                                                ['condition']['machine'] == "need_repair" ?
-                                                "checked" : "" }}/>
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ $phcproducts->currentChecklist
+                                                    ['condition']['machine'] == "need_repair" ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                />
                                             Need Repair
                                         </label>
                                     </div>
@@ -303,9 +316,12 @@ $menu_item_second = "update_product";
                                                 name="physical_condition"
                                                 id="physical-condition-new"
                                                 value="new"
-                                                {{ $phcproducts->currentChecklist
-                                                ['condition']['physical'] == "new" ?
-                                                "checked" : "" }}/>
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ $phcproducts->currentChecklist
+                                                    ['condition']['physical'] == "new" ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                />
                                             New
                                         </label>
                                     </div>
@@ -317,9 +333,12 @@ $menu_item_second = "update_product";
                                                 name="physical_condition"
                                                 id="physical-condition-moderate"
                                                 value="moderate"
-                                                {{ $phcproducts->currentChecklist
-                                                ['condition']['physical'] == "moderate" ?
-                                                "checked" : "" }}/>
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ $phcproducts->currentChecklist
+                                                    ['condition']['physical'] == "moderate" ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                />
                                             Moderate
                                         </label>
                                     </div>
@@ -331,9 +350,12 @@ $menu_item_second = "update_product";
                                                 name="physical_condition"
                                                 id="physical-condition-need-repair"
                                                 value="need_repair"
-                                                {{ $phcproducts->currentChecklist
-                                                ['condition']['physical'] == "need_repair" ?
-                                                "checked" : "" }}/>
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ $phcproducts->currentChecklist
+                                                    ['condition']['physical'] == "need_repair" ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                />
                                             Need Repair
                                         </label>
                                     </div>

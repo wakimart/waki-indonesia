@@ -309,7 +309,7 @@ $menu_item_page = "personal_homecare";
                                     </table>
                                 </div>
                             </div>
-                            @if(strtolower($personalhomecare['status']) == "process")
+                            @if(strtolower($personalhomecare['status']) == "process" || strtolower($personalhomecare['status']) == "process_extend")
                                 <div class="row justify-content-center mt-5">
                                     <div class="form-group row justify-content-center">
                                         <button type="button"
@@ -426,13 +426,25 @@ $menu_item_page = "personal_homecare";
                                     </table>
                                 </div>
                             </div>
+                            @if(strtolower($personalhomecare['status']) == "waiting_in" && Gate::check('change-status-checkin-personalhomecare'))
+                                <div class="row justify-content-center mt-5">
+                                    <div class="form-group row justify-content-center">
+                                        <button type="button"
+                                            class="btn btn-gradient-primary mr-2 btn-lg"
+                                            data-toggle="modal"
+                                            data-target="#modal-checklist-in">
+                                            Update Product Check In
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
         @endif
 
-        @if (strtolower($personalhomecare['status']) == "new") {{-- && Gate::check('change-status-verified-personalhomecare')) --}}
+        @if (strtolower($personalhomecare['status']) == "new" && Gate::check('change-status-verified-personalhomecare'))
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -557,7 +569,7 @@ $menu_item_page = "personal_homecare";
                                     <button type="submit"
                                         class="btn btn-gradient-danger mr-2 btn-lg"
                                         name="status"
-                                        value="rejected">
+                                        value="pending_product">
                                         Reject
                                     </button>
                                 </div>
@@ -568,7 +580,7 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
 
-        @if ($personalhomecare['reschedule_date'] != null)  {{-- && Gate::check('acc-reschedule-personalhomecare')) --}}
+        @if ($personalhomecare['reschedule_date'] != null && Gate::check('acc-reschedule-personalhomecare'))
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -605,7 +617,7 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
 
-        @if ($personalhomecare['is_extend'])  {{-- && Gate::check('acc-extend-personalhomecare')) --}}
+        @if ($personalhomecare['is_extend'] && Gate::check('acc-extend-personalhomecare'))
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -655,7 +667,7 @@ $menu_item_page = "personal_homecare";
                             @php
                                 $urlShareWa = route('personal_homecare', ['id' => $personalhomecare->id]);
                                 if(strtolower($personalhomecare['status']) == "done"){
-                                    $urlShareWa = route('thankyou_ph');
+                                    $urlShareWa = route('thankyou_ph', ["id" => $personalhomecare->id]);
                                 }
                             @endphp
                             <form class="forms-sample"
@@ -1075,6 +1087,18 @@ $menu_item_page = "personal_homecare";
                 enctype="multipart/form-data"
                 action="{{ route("update_personal_homecare_checklist_in") }}">
                 @csrf
+
+                @if($personalhomecare['status'] == "waiting_in" && $personalhomecare->personalHomecareProduct['status'] == "pending")
+                    <input type="hidden"
+                        name="id_checklist"
+                        value="{{ $personalhomecare->checklistIn['id'] }}" />
+                @endif
+
+                @php
+                    $isWaitingInChecklist = ($personalhomecare['status'] == "waiting_in" && $personalhomecare->personalHomecareProduct['status'] == "pending");
+                    $phcproducts = $personalhomecare->personalHomecareProduct;
+                @endphp
+                
                 <div class="modal-body">
                     <input type="hidden"
                         name="id"
@@ -1091,7 +1115,13 @@ $menu_item_page = "personal_homecare";
                                             name="completeness[]"
                                             id="completeness-{{$checklistInput}}"
                                             value="{{$checklistInput}}"
-                                            form="add-phc" />
+                                            form="add-phc" 
+                                            @if($phcproducts->currentChecklist != null)
+                                                {{ in_array($checklistInput, $phcproducts->
+                                                currentChecklist['condition']['completeness']) && $isWaitingInChecklist ?
+                                                "checked" : "" }}
+                                            @endif
+                                            />
                                         {{$checklistInput}}
                                     </label>
                                 </div>
@@ -1105,7 +1135,13 @@ $menu_item_page = "personal_homecare";
                                         id="completeness-other"
                                         value="other"
                                         form="add-phc"
-                                        onchange="showOtherInput(this)" />
+                                        onchange="showOtherInput(this)" 
+                                        @if($phcproducts->currentChecklist != null)
+                                            {{ in_array("other", $phcproducts->
+                                            currentChecklist['condition']['completeness']) && $isWaitingInChecklist ?
+                                            "checked" : "" }}
+                                        @endif
+                                        />
                                     Other
                                 </label>
                             </div>
@@ -1115,7 +1151,8 @@ $menu_item_page = "personal_homecare";
                                     placeholder="Other description"
                                     name="other_completeness"
                                     id="other-text"
-                                    form="add-phc" />
+                                    form="add-phc" 
+                                    value="{{ $isWaitingInChecklist ? $phcproducts->currentChecklist['condition']['other'] : "" }}"/>
                             </div>
                         </div>
                     </div>
@@ -1132,7 +1169,10 @@ $menu_item_page = "personal_homecare";
                                         id="machine-condition-normal"
                                         value="normal"
                                         form="add-phc"
-                                        required />
+                                        required 
+                                        {{ $phcproducts->currentChecklist
+                                        ['condition']['machine'] == "normal" && $isWaitingInChecklist ?
+                                        "checked" : "" }}/>
                                     Normal
                                 </label>
                             </div>
@@ -1145,7 +1185,10 @@ $menu_item_page = "personal_homecare";
                                         id="machine-condition-need-repair"
                                         value="need_repair"
                                         form="add-phc"
-                                        required />
+                                        required 
+                                        {{ $phcproducts->currentChecklist
+                                        ['condition']['machine'] == "need_repair" && $isWaitingInChecklist ?
+                                        "checked" : "" }}/>
                                     Need Repair
                                 </label>
                             </div>
@@ -1164,7 +1207,10 @@ $menu_item_page = "personal_homecare";
                                         id="physical-condition-new"
                                         value="new"
                                         form="add-phc"
-                                        required />
+                                        required 
+                                        {{ $phcproducts->currentChecklist
+                                        ['condition']['physical'] == "new" && $isWaitingInChecklist ?
+                                        "checked" : "" }}/>
                                     New
                                 </label>
                             </div>
@@ -1177,7 +1223,10 @@ $menu_item_page = "personal_homecare";
                                         id="physical-condition-moderate"
                                         value="moderate"
                                         form="add-phc"
-                                        required />
+                                        required 
+                                        {{ $phcproducts->currentChecklist
+                                        ['condition']['physical'] == "moderate" && $isWaitingInChecklist ?
+                                        "checked" : "" }}/>
                                     Moderate
                                 </label>
                             </div>
@@ -1190,34 +1239,39 @@ $menu_item_page = "personal_homecare";
                                         id="physical-condition-need-repair"
                                         value="need_repair"
                                         form="add-phc"
-                                        required />
+                                        required 
+                                        {{ $phcproducts->currentChecklist
+                                        ['condition']['physical'] == "need_repair" && $isWaitingInChecklist ?
+                                        "checked" : "" }}/>
                                     Need Repair
                                 </label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="product-photo-1">Product Photo 1</label>
-                        <input type="file"
-                            class="form-control"
-                            accept="image/jpeg, image/png"
-                            name="product_photo_1"
-                            id="product-photo-1"
-                            form="add-phc"
-                            required />
-                    </div>
+                    @if(!$isWaitingInChecklist)
+                        <div class="form-group">
+                            <label for="product-photo-1">Product Photo 1</label>
+                            <input type="file"
+                                class="form-control"
+                                accept="image/jpeg, image/png"
+                                name="product_photo_1"
+                                id="product-photo-1"
+                                form="add-phc"
+                                required />
+                        </div>
 
-                    <div class="form-group">
-                        <label for="product-photo-2">Product Photo 2</label>
-                        <input type="file"
-                            class="form-control"
-                            accept="image/jpeg, image/png"
-                            name="product_photo_2"
-                            id="product-photo-2"
-                            form="add-phc"
-                            required />
-                    </div>
+                        <div class="form-group">
+                            <label for="product-photo-2">Product Photo 2</label>
+                            <input type="file"
+                                class="form-control"
+                                accept="image/jpeg, image/png"
+                                name="product_photo_2"
+                                id="product-photo-2"
+                                form="add-phc"
+                                required />
+                        </div>
+                    @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button"

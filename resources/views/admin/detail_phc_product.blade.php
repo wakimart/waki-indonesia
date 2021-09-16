@@ -165,135 +165,139 @@ $menu_item_page = "personal_homecare";
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row justify-content-center">
-                            <h2>Product Current Checklist</h2>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="table-responsive">
-                                <table class="col-md-12">
+        @if($phcproducts->currentChecklist != null)
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Product Current Checklist</h2>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="table-responsive">
+                                    <table class="col-md-12">
 
-                                    @php
-                                        $prd_firstLetter = substr($phcproducts['code'], 0, 1);
-                                        $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
-                                    @endphp
+                                        @php
+                                            $prd_firstLetter = substr($phcproducts['code'], 0, 1);
+                                            $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                        @endphp
 
-                                    <tr>
-                                        <td rowspan="{{ sizeof($arr_completness)+1 }}">Completeness</td>
-                                        <td>
-                                            <i class="mdi {{ in_array($arr_completness[0],
-                                                $phcproducts->currentChecklist['condition']['completeness']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                style="font-size: 24px; color: #fed713;">
-                                            </i>
-                                            {{$arr_completness[0]}}
-                                        </td>
-                                    </tr>
-
-                                    @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
                                         <tr>
+                                            <td rowspan="{{ sizeof($arr_completness)+1 }}">Completeness</td>
                                             <td>
-                                                <i class="mdi {{ in_array($arr_completness[$idx_i],
+                                                <i class="mdi {{ in_array($arr_completness[0],
                                                     $phcproducts->currentChecklist['condition']['completeness']) ?
                                                     "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
-                                                {{$arr_completness[$idx_i]}}
+                                                {{$arr_completness[0]}}
                                             </td>
                                         </tr>
-                                    @endfor
 
-                                    <tr>
-                                        <td>
-                                            <i class="mdi {{ isset($phcproducts->currentChecklist['condition']['other']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                style="font-size: 24px; color: #fed713;">
-                                            </i>
-                                            Other :
-                                            {{ isset($phcproducts->currentChecklist['condition']['other']) ?
-                                                $phcproducts->currentChecklist['condition']['other'] : "-" }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Machine Condition</td>
-                                        <td>
-                                            {{ ucwords($phcproducts->currentChecklist['condition']['machine']) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Physical Condition</td>
-                                        <td>
-                                            {{ ucwords($phcproducts->currentChecklist['condition']['physical']) }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Product Photo</td>
-                                        <td>
-                                            @foreach ($phcproducts->currentChecklist['image'] as $img)
-                                                <img src="{{asset('sources/phc-checklist') . '/' . $img}}"
-                                                    height="300px"
-                                                    style="margin-bottom: 15px;"
-                                                    alt="Product Personal Homecare" />
-                                            @endforeach
-                                        </td>
-                                    </tr>
-                                </table>
+                                        @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
+                                            <tr>
+                                                <td>
+                                                    <i class="mdi {{ in_array($arr_completness[$idx_i],
+                                                        $phcproducts->currentChecklist['condition']['completeness']) ?
+                                                        "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                        style="font-size: 24px; color: #fed713;">
+                                                    </i>
+                                                    {{$arr_completness[$idx_i]}}
+                                                </td>
+                                            </tr>
+                                        @endfor
+
+                                        <tr>
+                                            <td>
+                                                <i class="mdi {{ isset($phcproducts->currentChecklist['condition']['other']) ?
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                    style="font-size: 24px; color: #fed713;">
+                                                </i>
+                                                Other :
+                                                {{ isset($phcproducts->currentChecklist['condition']['other']) ?
+                                                    $phcproducts->currentChecklist['condition']['other'] : "-" }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Machine Condition</td>
+                                            <td>
+                                                {{ ucwords($phcproducts->currentChecklist['condition']['machine']) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Physical Condition</td>
+                                            <td>
+                                                {{ ucwords($phcproducts->currentChecklist['condition']['physical']) }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Product Photo</td>
+                                            <td>
+                                                @foreach ($phcproducts->currentChecklist['image'] as $img)
+                                                    <img src="{{asset('sources/phc-checklist') . '/' . $img}}"
+                                                        height="300px"
+                                                        style="margin-bottom: 15px;"
+                                                        alt="Product Personal Homecare" />
+                                                @endforeach
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
 
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row justify-content-center">
-                            <h2>Status Product Homecare ({{ ucwords($phcproducts->status) }})</h2>
-                        </div>
-                        <form id="actionAdd"
-                            class="forms-sample"
-                            method="POST"
-                            action="{{ route("update_phc_product") }}">
-                            @csrf
-                            <input type="hidden"
-                                name="id"
-                                value="{{ $phcproducts['id'] }}" />
-                            <div class="form-group row justify-content-center">
-                                @if($phcproducts['status'] != "available")
-                                    <button type="submit"
-                                        class="btn btn-gradient-primary mr-2 btn-lg"
-                                        name="status"
-                                        value="available">
-                                        Available
-                                    </button>
-                                @endif
-                                @if($phcproducts['status'] != "unavailable")
-                                    <button type="submit"
-                                        class="btn btn-gradient-danger mr-2 btn-lg"
-                                        name="status"
-                                        value="unavailable">
-                                        Unavailable
-                                    </button>
-                                @endif
-                                @if($phcproducts['status'] != "pending")
-                                    <button type="submit"
-                                        class="btn btn-gradient-warning mr-2 btn-lg"
-                                        name="status"
-                                        value="pending">
-                                        Pending
-                                    </button>
-                                @endif
+        @if(Gate::check('change-status-product-personalhomecare'))
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Status Product Homecare ({{ ucwords($phcproducts->status) }})</h2>
                             </div>
-                        </form>
+                            <form id="actionAdd"
+                                class="forms-sample"
+                                method="POST"
+                                action="{{ route("update_phc_product") }}">
+                                @csrf
+                                <input type="hidden"
+                                    name="id"
+                                    value="{{ $phcproducts['id'] }}" />
+                                <div class="form-group row justify-content-center">
+                                    @if($phcproducts['status'] != "available")
+                                        <button type="submit"
+                                            class="btn btn-gradient-primary mr-2 btn-lg"
+                                            name="status"
+                                            value="available">
+                                            Available
+                                        </button>
+                                    @endif
+                                    @if($phcproducts['status'] != "unavailable")
+                                        <button type="submit"
+                                            class="btn btn-gradient-danger mr-2 btn-lg"
+                                            name="status"
+                                            value="unavailable">
+                                            Unavailable
+                                        </button>
+                                    @endif
+                                    @if($phcproducts['status'] != "pending")
+                                        <button type="submit"
+                                            class="btn btn-gradient-warning mr-2 btn-lg"
+                                            name="status"
+                                            value="pending">
+                                            Pending
+                                        </button>
+                                    @endif
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
 
         @if ($histories->isNotEmpty())
             <div class="row">

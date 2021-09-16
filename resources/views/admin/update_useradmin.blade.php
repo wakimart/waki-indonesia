@@ -1209,6 +1209,46 @@ $menu_item_page = "user";
                                             Change Status Check-in Personal Homecare
                                         </label>
                                     </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-verified-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-verified-personalhomecare"
+                                                value="change-status-verified-personalhomecare" />
+                                            Change Status Verified Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="acc-reschedule-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="acc-reschedule-personalhomecare"
+                                                value="acc-reschedule-personalhomecare" />
+                                            Acc Reschedule Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="acc-extend-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="acc-extend-personalhomecare"
+                                                value="acc-extend-personalhomecare" />
+                                            Acc Extend Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-product-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-product-personalhomecare"
+                                                value="change-status-product-personalhomecare" />
+                                            Change Status Product Personal Homecare
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 
