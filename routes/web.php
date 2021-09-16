@@ -967,14 +967,19 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("history_stock_get_product");
         Route::post("store", "HistoryStockController@store")
             ->name("store_history_stock");
+        Route::get("get-stock", "HistoryStockController@getStock")
+            ->name("history_stock_get_stock");
+
         Route::get("list", "HistoryStockController@index")
             ->name("list_history_stock");
         Route::get("detail/{id}", "HistoryStockController@show")
             ->name("detail_history_stock");
+
         Route::get("edit/in", "HistoryStockController@editIn")
             ->name("edit_history_in");
         Route::get("edit/out", "HistoryStockController@editOut")
             ->name("edit_history_out");
+
         Route::post("update", "HistoryStockController@update")
             ->name("update_history_stock");
         //Export to XLS By Warehouse

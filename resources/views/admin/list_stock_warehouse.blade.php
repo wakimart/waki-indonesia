@@ -166,6 +166,9 @@ $menu_item_second = "list_stock_warehouse";
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
+                        <?php
+                        $stocksGrouped = $stocks->groupBy("product_id");
+                        ?>
                         <h5 style="margin-bottom: 0.5em;">
                             Total: {{ $stocks->total() }}
                         </h5>
@@ -187,19 +190,23 @@ $menu_item_second = "list_stock_warehouse";
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($stocks as $stock)
+                                    @foreach ($stocksGrouped as $stock)
                                         <tr>
                                             <td class="text-right">
                                                 {{ ++$i }}
                                             </td>
                                             @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]) && empty($_GET["filter_warehouse"]))
                                                 <td>
-                                                    {{ $stock->warehouse_code }} - {{ $stock->warehouse_name }}
+                                                    {{ $stock[0]->warehouse_code }} - {{ $stock[0]->warehouse_name }}
                                                 </td>
                                             @endif
-                                            <td>{{ $stock->product_code }}</td>
-                                            <td>{{ $stock->product_name }}</td>
-                                            <td>{{ $stock->quantity }}</td>
+                                            <td>
+                                                {{ $stock[0]->product_code }}
+                                            </td>
+                                            <td>
+                                                {{ $stock[0]->product_name }}
+                                            </td>
+                                            <td>{{ $stock[0]->quantity }}</td>
                                             <td class="text-center">
                                                 <a href="">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
@@ -210,7 +217,7 @@ $menu_item_second = "list_stock_warehouse";
                                                     data-toggle="modal"
                                                     href="#deleteDoModal"
                                                     onclick="submitDelete(this)"
-                                                    data-id="{{ $stock->id }}">
+                                                    data-id="{{ $stock[0]->id }}">
                                                     <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                 </a>
                                             </td>
@@ -245,8 +252,8 @@ $menu_item_second = "list_stock_warehouse";
                 </button>
             </div>
             <div class="modal-body">
-                <h5 style="text-align:center;">
-                    Are you sure to delete this warehouse?
+                <h5 style="text-align: center;">
+                    Are you sure to delete this stock?
                 </h5>
             </div>
             <div class="modal-footer">
