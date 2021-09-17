@@ -969,7 +969,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("store_history_stock");
         Route::get("list", "HistoryStockController@index")
             ->name("list_history_stock");
-        Route::get("detail/{id}", "HistoryStockController@show")
+        Route::get("detail/{code}", "HistoryStockController@show")
             ->name("detail_history_stock");
         Route::get("edit/in", "HistoryStockController@editIn")
             ->name("edit_history_in");

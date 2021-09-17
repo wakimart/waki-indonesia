@@ -10,17 +10,24 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class HistoryStockExportByWarehouse implements FromView, ShouldAutoSize
 {
-	public function __construct($inputWarehouse)
+	public function __construct($inputWarehouse, $dateRange)
     {
         $this->inputWarehouse = $inputWarehouse;
+        $this->dateRange = $dateRange;
     }
 
     public function view(): View
     {
-        $historyStockNya = HistoryStock::with('stock')->orderBy("code", "desc");
+        $historyStockNya = HistoryStock::orderBy("date", "desc")
+            ->whereNotNull('code')
+            ->leftJoin('stocks', 'stocks.warehouse_id', '=', 'warehouse_id');
 
         if($this->inputWarehouse != null){
-            $historyStockNya = $historyStockNya->where('stock_id', $this->inputWarehouse);
+            $historyStockNya = $historyStockNya->where('warehouse_id', $this->inputWarehouse);
+        }
+
+        if($this->dateRange[0] != null && $this->dateRange[1] != null){
+            $historyStockNya = $historyStockNya->whereBetween('date', $this->dateRange);
         }
 
         return view('admin.exports.historystock_bywarehouse', [

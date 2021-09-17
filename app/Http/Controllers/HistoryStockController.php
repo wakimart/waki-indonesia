@@ -24,7 +24,7 @@ class HistoryStockController extends Controller
      */
     public function index(Request $request)
     {
-        $historystocks = HistoryStock::orderBy("code", "desc")->whereNotNull('code');
+        $historystocks = HistoryStock::orderBy("date", "desc")->whereNotNull('code');
 
         if ($request->has("filter_code")) {
             $filterCode = $request->filter_code;
@@ -180,34 +180,35 @@ class HistoryStockController extends Controller
      * @param  \App\HistoryStock  $historyStock
      * @return \Illuminate\Http\Response
      */
+
     public function show(Request $request)
     {
-        $historystocks = HistoryStock::first();
-        $historyIn = HistoryStock::where("id", $request->id)
-            ->where("type", "in")
-            ->get();
-
-        $historyOut = HistoryStock::where("id", $request->id)
-            ->where("type", "out")
-            ->get();
+        $historystock = HistoryStock::where("code", $request->code)->get();
 
         return view('admin.detail_history_stock', compact(
-            'historystocks',
-            'historyIn',
-            'historyOut',
+            'historystock',
         ));
     }
 
     public function export_to_xls_byWarehouse(Request $request)
     {
         $inputWarehouse = null;
+        $startDate = null;
+        $endDate = null;
+
+        if($request->has('filter_startDate')&&$request->has('filter_endDate')){
+            $startDate = $request->filter_startDate;
+            $endDate = $request->filter_endDate;
+            $endDate = new \DateTime($endDate);
+            $endDate = $endDate->modify('+1 day')->format('Y-m-d');
+        }
 
         if($request->has('inputWarehouse')){
             $inputWarehouse = $request->inputWarehouse;
         }
 
         return Excel::download(
-            new HistoryStockExportByWarehouse($inputWarehouse),
+            new HistoryStockExportByWarehouse($inputWarehouse, array($startDate, $endDate)),
             'History Stock By Warehouse.xlsx'
         );
     }

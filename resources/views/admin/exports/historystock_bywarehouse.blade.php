@@ -7,21 +7,24 @@
 
 
 <table>
+    <?php
+    $historystocks = $HistoryStocks->groupBy("code");
+    ?>
     <thead>
         <tr>
             <td colspan="6" style="font-weight: 900; text-align: center;">Laporan History Stock Per Cabang</td>
         </tr>
         <tr>
-            <td colspan="6">Cabang : </td>
+            <td colspan="6">Cabang : {{ $HistoryStocks[0]->stock->warehouse['name'] }}</td>
         </tr>
         <tr><td></td></tr>
         <tr>
-            <td>No</td>
-            <td>Code</td>
-            <td>Date</td>
-            <td>Type</td>
-            <td>Product Name</td>
-            <td>Quantity</td>
+            <th><b>No</b></th>
+            <th><b>Code</b></th>
+            <th><b>Date</b></th>
+            <th><b>Type</b></th>
+            <th><b>Product</b></th>
+            <th><b>Quantity</b></th>
         </tr>
     </thead>
     <tbody>
@@ -29,17 +32,39 @@
             $i = 0;
         @endphp
 
-        @if (count($HistoryStocks)!=0)
-            @foreach ($HistoryStocks as $historyStock )
+        @foreach ($historystocks as $code => $historycode)
             <tr>
-                <td>{{ ++$i }}</td>
-                <td>{{ $historyStock->code }}</td>
-                <td>{{ date("d-m-Y", strtotime($historyStock->date)) }}</td>
-                <td>{{ ucfirst($historyStock->type) }}</td>
-                <td>{{ $historyStock->stock->product['name'] }}</td>
-                <td>{{ $historyStock->quantity }}</td>
+                <td class="text-right" rowspan="{{ sizeof($historycode) }}">
+                    {{ ++$i }}
+                </td>
+                <td rowspan="{{ sizeof($historycode) }}">
+                    {{ $code }}
+                </td>
+                <td rowspan="{{ sizeof($historycode) }}">
+                    {{ date("d-m-Y", strtotime($historycode[0]->date)) }}
+                </td>
+                <td rowspan="{{ sizeof($historycode) }}">
+                    {{ ucfirst($historycode[0]->type) }}
+                </td>
+                <td>
+                    {{ $historycode[0]->stock->product['code'] }}
+                </td>
+                <td>
+                    {{ $historycode[0]->quantity }}
+                </td>
             </tr>
-            @endforeach
-        @endif
+            @if (sizeof($historycode) > 1)
+                @for ($i = 1; $i < sizeof($historycode); $i++)
+                <tr>
+                    <td>
+                        {{ $historycode[$i]->stock->product['code'] }}
+                    </td>
+                    <td>
+                        {{ $historycode[$i]->quantity }}
+                    </td>
+                </tr>
+                @endfor
+            @endif
+        @endforeach
     </tbody>
 </table>
