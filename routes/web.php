@@ -892,7 +892,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("delete_prize");
     });
 
-    Route::group(["prefix" => "personal-homecare", "middleware" => "auth"], function () {
+    Route::group(["prefix" => "personal-homecare", "middleware" => ["auth", "can:add-user"]], function () {
         Route::get("add-product", "PersonalHomecareProductController@create")
             ->name("add_phc_product")
             ->middleware('can:add-phc-product');
