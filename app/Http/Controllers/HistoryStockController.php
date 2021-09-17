@@ -8,6 +8,7 @@ use App\Product;
 use App\Stock;
 use App\Warehouse;
 use App\Exports\HistoryStockExportByWarehouse;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -109,7 +110,7 @@ class HistoryStockController extends Controller
                 ->first();
 
             return response()->json($stock);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json(["error" => $th->getMessage()], 500);
         }
     }
@@ -145,7 +146,11 @@ class HistoryStockController extends Controller
                 if ($request->type === "in") {
                     $stock->quantity += $request->quantity[$i];
                 } elseif ($request->type === "out") {
-                    $stock->quantity -= $request->quantity[$i];
+                    if (($stock->quantity - $request->quantity[$i]) >= 0) {
+                        $stock->quantity -= $request->quantity[$i];
+                    } else {
+                        throw new Exception("Stock is not enough");
+                    }
                 }
                 $stock->save();
 
@@ -163,12 +168,11 @@ class HistoryStockController extends Controller
 
             DB::commit();
 
-            if($request->type == "in"){
+            if ($request->type === "in") {
                 return redirect()
                     ->route("add_history_in")
                     ->with("success", "History Stock successfully added.");
-            }
-            else{
+            } elseif ($request->type === "out") {
                 return redirect()
                     ->route("add_history_out")
                     ->with("success", "History Stock successfully added.");

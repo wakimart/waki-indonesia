@@ -82,7 +82,7 @@ $menu_item_second = "list_history_stock";
                             id="filter_code"
                             name="filter_code"
                             placeholder="Filter By Code"
-                            value="{{ isset($_GET['filter_code']) ? $_GET['filter_code'] : '' }}">
+                            value="{{ isset($_GET['filter_code']) ? $_GET['filter_code'] : '' }}" />
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-4"
@@ -95,7 +95,7 @@ $menu_item_second = "list_history_stock";
                             id="filter_stock_name"
                             name="filter_stock_name"
                             placeholder="Filter By Stock Name"
-                            value="{{ isset($_GET['filter_stock_name']) ? $_GET['filter_stock_name'] : '' }}">
+                            value="{{ isset($_GET['filter_stock_name']) ? $_GET['filter_stock_name'] : '' }}" />
                     </div>
                 </div>
 
