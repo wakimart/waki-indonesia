@@ -570,12 +570,6 @@ class PersonalHomecareController extends Controller
                 $phc->save();
             }
             else if ($request->status == "approve_out") {
-                $tempChecklist = PersonalHomecareProduct::find($request->id_product)->currentChecklist;
-                $tempChecklist = $tempChecklist->replicate();
-                $tempChecklist->image = [];
-                $tempChecklist->save();
-
-                $phc->checklist_out = $tempChecklist->id;
                 $phc->status = $request->status;
                 $phc->save();
 
@@ -583,16 +577,10 @@ class PersonalHomecareController extends Controller
                     ->update(["current_checklist_id" => $tempChecklist->id]);
             }
             else if($request->status == "process"){
-                PersonalHomecareProduct::where("id", $request->id_product)
-                    ->update(["status" => "unavailable"]);
+                $tempChecklist = PersonalHomecareProduct::find($request->id_product)->currentChecklist;
+                $phcChecklistOut = $tempChecklist->replicate();
 
-
-                $phc->status = $request->status;
-                $phc->save();
-
-                $phcChecklistOut = $phc->checklistOut;
-
-                $imageArray = $phcChecklistOut->image;
+                $imageArray = [];
                 $userId = Auth::user()["id"];
                 $path = "sources/phc-checklist";
                 if ($request->hasFile("product_photo_1")) {
@@ -619,6 +607,13 @@ class PersonalHomecareController extends Controller
 
                 $phcChecklistOut->image = $imageArray;
                 $phcChecklistOut->save();
+
+                PersonalHomecareProduct::where("id", $request->id_product)
+                    ->update([["status" => "unavailable"], ["current_checklist_id" => $phcChecklistOut->id]]);
+
+                $phc->checklist_out = $phcChecklistOut->id;
+                $phc->status = $request->status;
+                $phc->save();
 
             }
             else if($request->status == "done"){
