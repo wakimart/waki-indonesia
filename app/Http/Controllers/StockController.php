@@ -60,7 +60,10 @@ class StockController extends Controller
             );
         }
 
-        if (!empty($request->get("filter_product")) && empty($request->get("filter_warehouse"))) {
+        if (
+            !empty($request->get("filter_product"))
+            && empty($request->get("filter_warehouse"))
+        ) {
             $stocks = $stocks->addSelect(
                     "warehouses.code AS warehouse_code",
                     "warehouses.name AS warehouse_name",
@@ -72,11 +75,32 @@ class StockController extends Controller
                     'stocks.warehouse_id'
                 )
                 ->where("stocks.product_id", $request->get("filter_product"));
-        } elseif (empty($request->get("filter_product")) && !empty($request->get("filter_warehouse"))) {
-            $stocks = $stocks->where("stocks.warehouse_id", $request->get("filter_warehouse"));
-        } elseif (!empty($request->get("filter_product")) && !empty($request->get("filter_warehouse"))) {
-            $stocks = $stocks->where("stocks.product_id", $request->get("filter_product"))
-                ->where("stocks.warehouse_id", $request->get("filter_warehouse"));
+        } elseif (
+            empty($request->get("filter_product"))
+            && !empty($request->get("filter_warehouse"))
+        ) {
+            $stocks = $stocks->where(function ($query) use ($request) {
+                $query->where(
+                        "stocks.warehouse_id",
+                        $request->get("filter_warehouse")
+                    )
+                    ->orWhere(
+                        "warehouses.parent_warehouse_id",
+                        $request->get("filter_warehouse")
+                    );
+            });
+        } elseif (
+            !empty($request->get("filter_product"))
+            && !empty($request->get("filter_warehouse"))
+        ) {
+            $stocks = $stocks->where(
+                    "stocks.product_id",
+                    $request->get("filter_product")
+                )
+                ->where(
+                    "stocks.warehouse_id",
+                    $request->get("filter_warehouse")
+                );
         }
 
         $stocks = $stocks->paginate(20);

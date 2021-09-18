@@ -170,7 +170,7 @@ $menu_item_second = "list_stock_warehouse";
                         $stocksGrouped = $stocks->groupBy("product_id");
                         ?>
                         <h5 style="margin-bottom: 0.5em;">
-                            Total: {{ $stocks->total() }}
+                            Total: {{ $stocks->total() }} data
                         </h5>
                         <div class="table-responsive"
                             style="border: 1px solid #ebedf2;">
@@ -178,7 +178,7 @@ $menu_item_second = "list_stock_warehouse";
                                 <thead>
                                     <tr>
                                         <th class="text-center">No.</th>
-                                        @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]) && empty($_GET["filter_warehouse"]))
+                                        @if ((isset($_GET["filter_product"]) && !empty($_GET["filter_product"])) || (empty($_GET["filter_warehouse"]) &&!empty($_GET["filter_warehouse"])))
                                             <th>Warehouse</th>
                                         @endif
                                         <th>Code</th>
@@ -195,7 +195,7 @@ $menu_item_second = "list_stock_warehouse";
                                             <td class="text-right">
                                                 {{ ++$i }}
                                             </td>
-                                            @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]) && empty($_GET["filter_warehouse"]))
+                                            @if ((isset($_GET["filter_product"]) && !empty($_GET["filter_product"])) || (empty($_GET["filter_warehouse"]) &&!empty($_GET["filter_warehouse"])))
                                                 <td>
                                                     {{ $stock[0]->warehouse_code }} - {{ $stock[0]->warehouse_name }}
                                                 </td>
