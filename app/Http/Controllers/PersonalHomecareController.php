@@ -568,6 +568,8 @@ class PersonalHomecareController extends Controller
             if ($request->status == "verified") {
                 $phc->status = $request->status;
                 $phc->save();
+
+                $this->accNotif($phc, "acc_ask");
             }
             else if ($request->status == "approve_out") {
                 $phc->status = $request->status;
@@ -577,7 +579,8 @@ class PersonalHomecareController extends Controller
                     ->update(["current_checklist_id" => $tempChecklist->id]);
             }
             else if($request->status == "process"){
-                $tempChecklist = PersonalHomecareProduct::find($request->id_product)->currentChecklist;
+                $phcProductNya = PersonalHomecareProduct::find($request->id_product);
+                $tempChecklist = $phcProductNya->currentChecklist;
                 $phcChecklistOut = $tempChecklist->replicate();
 
                 $imageArray = [];
@@ -608,8 +611,9 @@ class PersonalHomecareController extends Controller
                 $phcChecklistOut->image = $imageArray;
                 $phcChecklistOut->save();
 
-                PersonalHomecareProduct::where("id", $request->id_product)
-                    ->update([["status" => "unavailable"], ["current_checklist_id" => $phcChecklistOut->id]]);
+                $phcProductNya->status = "unavailable";
+                $phcProductNya->current_checklist_id = $phcChecklistOut->id;
+                $phcProductNya->save();
 
                 $phc->checklist_out = $phcChecklistOut->id;
                 $phc->status = $request->status;

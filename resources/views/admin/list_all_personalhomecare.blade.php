@@ -62,6 +62,10 @@ $menu_item_second = "list_all";
                                 {!! $filter_status && $_GET["filter_status"] === "new" ? "selected" : "" !!}>
                                 New
                             </option>
+                            <option value="verified"
+                                {!! $filter_status && $_GET["filter_status"] === "verified" ? "selected" : "" !!}>
+                                Verified
+                            </option>
                             <option value="approve_out"
                                 {!! $filter_status && $_GET["filter_status"] === "approve_out" ? "selected" : "" !!}>
                                 Approve Out
@@ -69,6 +73,10 @@ $menu_item_second = "list_all";
                             <option value="process"
                                 {!! $filter_status && $_GET["filter_status"] === "process" ? "selected" : "" !!}>
                                 On Process
+                            </option>
+                            <option value="process_extend"
+                                {!! $filter_status && $_GET["filter_status"] === "process_extend" ? "selected" : "" !!}>
+                                On Process Extend
                             </option>
                             <option value="waiting_in"
                                 {!! $filter_status && $_GET["filter_status"] === "waiting_in" ? "selected" : "" !!}>
@@ -204,7 +212,7 @@ $menu_item_second = "list_all";
                                                 @endif
                                             </td>
                                             <td class="center">
-                                                @if($personalhomecare->status == "rejected" || $personalhomecare->status == "new")
+                                                @if($personalhomecare->status == "rejected" || $personalhomecare->status == "new" || $personalhomecare->status == "verified")
                                                     <a class="btn-delete disabled"
                                                         data-toggle="modal"
                                                         href="#deleteDoModal"
