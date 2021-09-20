@@ -7,7 +7,7 @@ use App\HistoryUpdate;
 use App\Product;
 use App\Stock;
 use App\Warehouse;
-use App\Exports\HistoryStockExportByWarehouse;
+use App\Exports\HistoryStockExport;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,7 +49,12 @@ class HistoryStockController extends Controller
             ->orderBy("code")
             ->get();
 
-        return view("admin.list_history_stock", compact("historystocks", "warehouses"))
+        $stocks = Product::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code")
+            ->get();
+
+        return view("admin.list_history_stock", compact("historystocks", "warehouses", "stocks"))
             ->with('i', (request()->input('page', 1) - 1) * 10);
     }
 
@@ -213,26 +218,29 @@ class HistoryStockController extends Controller
         ));
     }
 
-    public function export_to_xls_byWarehouse(Request $request)
+    public function export_to_xls(Request $request)
     {
         $inputWarehouse = null;
+        $inputStock = null;
         $startDate = null;
         $endDate = null;
 
-        if($request->has('filter_startDate')&&$request->has('filter_endDate')){
-            $startDate = $request->filter_startDate;
-            $endDate = $request->filter_endDate;
-            $endDate = new \DateTime($endDate);
-            $endDate = $endDate->modify('+1 day')->format('Y-m-d');
+        if($request->has('filter_startDate') || $request->has('filter_endDate')){
+            $startDate = isset($request->filter_startDate) ? date($request->filter_startDate) : '';
+            $endDate = isset($request->filter_endDate) ? date($request->filter_endDate) : date('Y-m-d');
         }
 
-        if($request->has('inputWarehouse')){
-            $inputWarehouse = $request->inputWarehouse;
+        if($request->has('filter_inputByWarehouse') && is_numeric($request->filter_inputByWarehouse)){
+            $inputWarehouse = $request->filter_inputByWarehouse;
+        }
+
+        if($request->has('filter_inputByStock') && is_numeric($request->filter_inputByStock)){
+            $inputStock = $request->filter_inputByStock;
         }
 
         return Excel::download(
-            new HistoryStockExportByWarehouse($inputWarehouse, array($startDate, $endDate)),
-            'History Stock By Warehouse.xlsx'
+            new HistoryStockExport($inputWarehouse, $inputStock, array($startDate, $endDate)),
+            'History Stock.xlsx'
         );
     }
 

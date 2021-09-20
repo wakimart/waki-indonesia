@@ -12,16 +12,17 @@
     ?>
     <thead>
         <tr>
-            <td colspan="6" style="font-weight: 900; text-align: center;">Laporan History Stock Per Cabang</td>
+            <td colspan="6" style="font-weight: 900; text-align: center;">Laporan History Stock</td>
         </tr>
         <tr>
-            <td colspan="6">Cabang : {{ $HistoryStocks[0]->stock->warehouse['name'] }}</td>
+            <td colspan="6">Date Range : {{date('d-m-Y', strtotime($dateRange[0]))}} - {{date('d-m-Y', strtotime($dateRange[1]))}}</td>
         </tr>
         <tr><td></td></tr>
         <tr>
             <th><b>No</b></th>
             <th><b>Code</b></th>
             <th><b>Date</b></th>
+            <th><b>Warehouse</b></th>
             <th><b>Type</b></th>
             <th><b>Product</b></th>
             <th><b>Quantity</b></th>
@@ -34,7 +35,7 @@
 
         @foreach ($historystocks as $code => $historycode)
             <tr>
-                <td class="text-right" rowspan="{{ sizeof($historycode) }}">
+                <td class="text-center" rowspan="{{ sizeof($historycode) }}">
                     {{ ++$i }}
                 </td>
                 <td rowspan="{{ sizeof($historycode) }}">
@@ -44,12 +45,15 @@
                     {{ date("d-m-Y", strtotime($historycode[0]->date)) }}
                 </td>
                 <td rowspan="{{ sizeof($historycode) }}">
+                    {{$historycode[0]->stock->warehouse['name'] }}
+                </td>
+                <td class="text-center" rowspan="{{ sizeof($historycode) }}">
                     {{ ucfirst($historycode[0]->type) }}
                 </td>
                 <td>
                     {{ $historycode[0]->stock->product['code'] }}
                 </td>
-                <td>
+                <td class="text-center">
                     {{ $historycode[0]->quantity }}
                 </td>
             </tr>
@@ -59,7 +63,7 @@
                     <td>
                         {{ $historycode[$i]->stock->product['code'] }}
                     </td>
-                    <td>
+                    <td class="text-center">
                         {{ $historycode[$i]->quantity }}
                     </td>
                 </tr>

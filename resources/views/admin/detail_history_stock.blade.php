@@ -15,6 +15,12 @@ $menu_item_second = "detail_history_stock";
         background-color: #fff !important;
     }
 
+    input[readonly]:focus, textarea[readonly]:focus{
+        outline: none !important;
+        border:1px solid #ebedf2;
+
+    }
+
 </style>
 @endsection
 
@@ -94,8 +100,7 @@ $menu_item_second = "detail_history_stock";
                                     <textarea class="form-control"
                                         id="description"
                                         rows="2"
-                                        value="{{ $historystock[0]->description }}"
-                                        readonly>
+                                        readonly>{{ $historystock[0]->description }}
                                     </textarea>
                                 </div>
                             </div>
@@ -216,7 +221,7 @@ $menu_item_second = "detail_history_stock";
                                             </div>
                                         </div>
                                         <div style="margin-left: 1em; text-align:justify">
-                                            <p>Keterangan : </p>
+                                            <p>Keterangan : {{$historystock[0]->description}}</p>
                                         </div>
                                     </div>
                                     <div class="card-footer" style="bottom: 3em; background: none; border: none;">
