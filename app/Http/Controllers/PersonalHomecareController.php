@@ -568,14 +568,10 @@ class PersonalHomecareController extends Controller
             if ($request->status == "verified") {
                 $phc->status = $request->status;
                 $phc->save();
+
+                $this->accNotif($phc, "acc_ask");
             }
             else if ($request->status == "approve_out") {
-                $tempChecklist = PersonalHomecareProduct::find($request->id_product)->currentChecklist;
-                $tempChecklist = $tempChecklist->replicate();
-                $tempChecklist->image = [];
-                $tempChecklist->save();
-
-                $phc->checklist_out = $tempChecklist->id;
                 $phc->status = $request->status;
                 $phc->save();
 
@@ -583,16 +579,11 @@ class PersonalHomecareController extends Controller
                     ->update(["current_checklist_id" => $tempChecklist->id]);
             }
             else if($request->status == "process"){
-                PersonalHomecareProduct::where("id", $request->id_product)
-                    ->update(["status" => "unavailable"]);
+                $phcProductNya = PersonalHomecareProduct::find($request->id_product);
+                $tempChecklist = $phcProductNya->currentChecklist;
+                $phcChecklistOut = $tempChecklist->replicate();
 
-
-                $phc->status = $request->status;
-                $phc->save();
-
-                $phcChecklistOut = $phc->checklistOut;
-
-                $imageArray = $phcChecklistOut->image;
+                $imageArray = [];
                 $userId = Auth::user()["id"];
                 $path = "sources/phc-checklist";
                 if ($request->hasFile("product_photo_1")) {
@@ -619,6 +610,14 @@ class PersonalHomecareController extends Controller
 
                 $phcChecklistOut->image = $imageArray;
                 $phcChecklistOut->save();
+
+                $phcProductNya->status = "unavailable";
+                $phcProductNya->current_checklist_id = $phcChecklistOut->id;
+                $phcProductNya->save();
+
+                $phc->checklist_out = $phcChecklistOut->id;
+                $phc->status = $request->status;
+                $phc->save();
 
             }
             else if($request->status == "done"){

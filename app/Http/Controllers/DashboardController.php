@@ -78,7 +78,11 @@ class DashboardController extends Controller
         $refSouvenirs = ReferenceSouvenir::where('is_acc', true)->get();
 
         //khusus untuk personal homecare to acc
-        $personalHomecares = PersonalHomecare::where('active', true)->whereIn('status', ['new', 'waiting_in'])->get();
+        $personalHomecares = PersonalHomecare::where('active', true)
+                        ->whereIn('status', ['new', 'waiting_in', 'verified'])
+                        ->orWhereNotNull('reschedule_date')
+                        ->orWhere('is_extend', true)
+                        ->get();
 
         return view(
             "admin.dashboard",

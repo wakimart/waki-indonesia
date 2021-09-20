@@ -66,7 +66,7 @@
                 </div>
             </div>
         </div>
-        @if(Gate::check('change-status-checkin-personalhomecare') == true || Gate::check('change-status-checkout-personalhomecare') == true)
+        @if(Gate::check('change-status-checkin-personalhomecare') == true || Gate::check('change-status-checkout-personalhomecare') == true || Gate::check('change-status-verified-personalhomecare') == true || Gate::check('cc-reschedule-personalhomecare') == true || Gate::check('acc-extend-personalhomecare') == true)
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
@@ -100,7 +100,15 @@
                                                 </a>
                                             </td>
                                             
-                                            <td>{{ $personalHomecare['status'] }}</td>
+                                            <td>
+                                                @if($personalHomecare->is_extend)
+                                                    Extend Acc
+                                                @elseif($personalHomecare->reschedule_date != null)
+                                                    Reschedule Acc
+                                                @else
+                                                    {{ $personalHomecare['status'] }}
+                                                @endif
+                                            </td>
                                             <td>{{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}</td>
                                             <td>{{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['name'] }}</td>
                                             <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['name'] }}</td>

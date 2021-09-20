@@ -562,6 +562,7 @@ class HomeServiceController extends Controller
             "b.code AS branch_code",
             "b.name AS branch_name",
             "c.name AS cso_name",
+            "r.slug AS role_slug",
             "h.created_at AS created_at",
             "h.updated_at AS updated_at"
         )
@@ -577,6 +578,24 @@ class HomeServiceController extends Controller
             "c.id",
             "=",
             "h.cso_id"
+        )
+        ->leftJoin(
+            "users AS u",
+            "u.cso_id",
+            "=",
+            "c.id"
+        )
+        ->leftJoin(
+            "role_users AS ru",
+            "ru.user_id",
+            "=",
+            "u.id"
+        )
+        ->leftJoin(
+            "roles AS r",
+            "r.id",
+            "=",
+            "ru.role_id"
         )
         ->where("h.active", true);
 

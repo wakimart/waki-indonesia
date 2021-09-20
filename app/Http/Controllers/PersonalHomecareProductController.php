@@ -236,7 +236,9 @@ class PersonalHomecareProductController extends Controller
                 $condition["machine"] = $request->input("machine_condition");
                 $condition["physical"] = $request->input("physical_condition");
                 $phcChecklist->condition = $condition;
-                $phcChecklist->image = [];
+                if(sizeof($phcChecklist->image) < 1){
+                    $phcChecklist->image = [];
+                }
                 $phcChecklist->save();
 
                 $userId = Auth::user()["id"];
