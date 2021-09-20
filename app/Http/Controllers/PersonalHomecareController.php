@@ -574,9 +574,6 @@ class PersonalHomecareController extends Controller
             else if ($request->status == "approve_out") {
                 $phc->status = $request->status;
                 $phc->save();
-
-                PersonalHomecareProduct::where("id", $request->id_product)
-                    ->update(["current_checklist_id" => $tempChecklist->id]);
             }
             else if($request->status == "process"){
                 $phcProductNya = PersonalHomecareProduct::find($request->id_product);
