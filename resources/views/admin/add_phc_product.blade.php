@@ -382,10 +382,10 @@ function setCodeSuffix() {
     if(productCode == "WK2079"){
         productCode = "A";
     }
-    else if(productCode == "WK2076H"){
+    else if(productCode == "WKT2076H"){
         productCode = "B";
     }
-    else if(productCode == "WK2076i"){
+    else if(productCode == "WKT2076i"){
         productCode = "C";
     }
     else if(productCode == "WKT2080"){
@@ -447,10 +447,10 @@ function setCode() {
     if(productCode == "WK2079"){
         productCode = "A";
     }
-    else if(productCode == "WK2076H"){
+    else if(productCode == "WKT2076H"){
         productCode = "B";
     }
-    else if(productCode == "WK2076i"){
+    else if(productCode == "WKT2076i"){
         productCode = "C";
     }
     else if(productCode == "WKT2080"){
