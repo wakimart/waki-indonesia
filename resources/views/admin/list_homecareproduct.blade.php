@@ -83,10 +83,30 @@ $menu_item_second = "list_product";
                                 Select Branch
                             </option>
                             @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}">
+                                <option value="{{ $branch->id }}" {{ isset($url['branch_id']) ? ($url['branch_id'] == $branch['id'] ? 'selected' : '') : '' }}>
                                     {{ $branch->code }} - {{ $branch->name }}
                                 </option>
                             @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Search By Status</label>
+                        <select class="form-control"
+                            id="status"
+                            name="status"
+                            form="form-search">
+                            <option disabled {{ isset($url['status']) ? '' : 'selected' }}>
+                                Select Status
+                            </option>
+                            <option value="pending" {{ isset($url['status']) ? ($url['status'] == 'pending' ? 'selected' : '') : '' }}>
+                                Pending
+                            </option>
+                            <option value="unavailable" {{ isset($url['status']) ? ($url['status'] == 'unavailable' ? 'selected' : '') : '' }}>
+                                Unavailable
+                            </option>
+                            <option value="available" {{ isset($url['status']) ? ($url['status'] == 'available' ? 'selected' : '') : '' }}>
+                                Available
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -114,7 +134,7 @@ $menu_item_second = "list_product";
                                 <a class="nav-link {{ $url['product_id'] == 4 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="one-tab" 
-                                    href="{{ route('list_phc_product') }}?product_id=4" 
+                                    href="{{ route('list_phc_product') }}?product_id=4{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}" 
                                     aria-controls="One" 
                                     aria-selected="true">
                                     WK2079
@@ -124,7 +144,7 @@ $menu_item_second = "list_product";
                                 <a class="nav-link {{ $url['product_id'] == 3 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="two-tab" 
-                                    href="{{ route('list_phc_product') }}?product_id=3"
+                                    href="{{ route('list_phc_product') }}?product_id=3{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
                                     aria-controls="Two" 
                                     aria-selected="true">
                                     WKT2076H
@@ -134,7 +154,7 @@ $menu_item_second = "list_product";
                                 <a class="nav-link {{ $url['product_id'] == 2 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="three-tab" 
-                                    href="{{ route('list_phc_product') }}?product_id=2"
+                                    href="{{ route('list_phc_product') }}?product_id=2{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
                                     aria-controls="Three" 
                                     aria-selected="true">
                                     WKT2076i
@@ -144,7 +164,7 @@ $menu_item_second = "list_product";
                                 <a class="nav-link {{ $url['product_id'] == 7 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="four-tab" 
-                                    href="{{ route('list_phc_product') }}?product_id=7"
+                                    href="{{ route('list_phc_product') }}?product_id=7{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
                                     aria-controls="Four" 
                                     aria-selected="true">
                                     WKA2023
@@ -154,7 +174,7 @@ $menu_item_second = "list_product";
                                 <a class="nav-link {{ $url['product_id'] == 6 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="five-tab" 
-                                    href="{{ route('list_phc_product') }}?product_id=6"
+                                    href="{{ route('list_phc_product') }}?product_id=6{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
                                     aria-controls="Five" 
                                     aria-selected="true">
                                     WKA2024
@@ -164,7 +184,7 @@ $menu_item_second = "list_product";
                                 <a class="nav-link {{ $url['product_id'] == 1 ? 'active' : ''}}" 
                                     style="font-weight: 500; font-size: 1em;" 
                                     id="six-tab" 
-                                    href="{{ route('list_phc_product') }}?product_id=1"
+                                    href="{{ route('list_phc_product') }}?product_id=1{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
                                     aria-controls="Six" 
                                     aria-selected="true">
                                     WKT2080
@@ -208,7 +228,7 @@ $menu_item_second = "list_product";
                                                         {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
                                                     </td>
                                                     <td>
-                                                        {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
+                                                        {{ ucwords($phcproduct->status)}}
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
