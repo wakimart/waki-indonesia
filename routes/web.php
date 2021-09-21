@@ -950,6 +950,55 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("reschedulePersonalHomecare", "PersonalHomecareController@reschedulePersonalHomecare")
             ->name("reschedule_personal_homecare");
     });
+
+    Route::group(["prefix" => "warehouse", "middleware" => "auth"], function () {
+        Route::get("add", "WarehouseController@create")->name("add_warehouse");
+        Route::post("store", "WarehouseController@store")
+            ->name("store_warehouse");
+        Route::get("list", "WarehouseController@index")->name("list_warehouse");
+        Route::get("edit/{id}", "WarehouseController@edit")
+            ->name("edit_warehouse");
+        Route::post("update", "WarehouseController@update")
+            ->name("update_warehouse");
+        Route::post("delete", "WarehouseController@destroy")
+            ->name("delete_warehouse");
+    });
+
+    Route::group(["prefix" => "history-stock", "middleware" => "auth"], function () {
+        Route::get("add", "HistoryStockController@create")
+            ->name("add_history_stock");
+        Route::get("add/in", "HistoryStockController@createIn")
+            ->name("add_history_in");
+        Route::get("add/out", "HistoryStockController@createOut")
+            ->name("add_history_out");
+        Route::get("get-product", "HistoryStockController@getProduct")
+            ->name("history_stock_get_product");
+        Route::post("store", "HistoryStockController@store")
+            ->name("store_history_stock");
+        Route::get("get-stock", "HistoryStockController@getStock")
+            ->name("history_stock_get_stock");
+
+        Route::get("list", "HistoryStockController@index")
+            ->name("list_history_stock");
+        Route::get("detail/{code}", "HistoryStockController@show")
+            ->name("detail_history_stock");
+
+        Route::get("edit/in", "HistoryStockController@editIn")
+            ->name("edit_history_in");
+        Route::get("edit/out", "HistoryStockController@editOut")
+            ->name("edit_history_out");
+
+        Route::post("update", "HistoryStockController@update")
+            ->name("update_history_stock");
+        //Export to XLS HistoryStock
+        Route::get('/export-to-xls', 'HistoryStockController@export_to_xls')
+        ->name('historystock_export-to-xls');
+    });
+
+    Route::group(["prefix" => "stock-warehouse", "middleware" => "auth"], function () {
+        Route::get("list", "StockController@stock")
+            ->name("list_stock_warehouse");
+    });
 });
 
 Auth::routes();
