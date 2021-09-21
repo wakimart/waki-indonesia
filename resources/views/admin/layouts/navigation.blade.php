@@ -59,7 +59,7 @@
 </li>
 @endif
 
-@if(Gate::check('add-history-stock') || Gate::check('browse-history-stock'))
+{{-- @if(Gate::check('add-history-stock') || Gate::check('browse-history-stock')) --}}
 <li class="{{isset($menu_item_page) && $menu_item_page == 'history_stock'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#historystock-dd" aria-expanded="false" aria-controls="historystock-dd">
     <span class="menu-title">History Stock</span>
@@ -68,36 +68,36 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'history_stock'? 'show': '' }}" id="historystock-dd">
     <ul class="nav flex-column sub-menu">
-      @if(Gate::check('add-history-stock'))
+      {{-- @if(Gate::check('add-history-stock')) --}}
       <li class="nav-item"> 
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_history_in'? 'active': '' }}" 
           href="{{ route('add_history_in')}}">
           Add In History Stock
         </a>
       </li>
-      @endif
-      @if(Gate::check('add-history-stock'))
+      {{-- @endif --}}
+      {{-- @if(Gate::check('add-history-stock')) --}}
       <li class="nav-item"> 
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_history_out'? 'active': '' }}" 
           href="{{ route('add_history_out')}}">
           Add Out History Stock
         </a>
       </li>
-      @endif
-      @if(Gate::check('browse-history-stock'))
+      {{-- @endif --}}
+      {{-- @if(Gate::check('browse-history-stock')) --}}
       <li class="nav-item"> 
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_history_stock'? 'active': '' }}" 
           href="{{  route('list_history_stock') }}">
           List Product
         </a>
       </li>
-      @endif
+      {{-- @endif --}}
     </ul>
   </div>
 </li>
-@endif
+{{-- @endif --}}
 
-@if(Gate::check('add-warehouse') || Gate::check('browse-warehouse'))
+{{-- @if(Gate::check('add-warehouse') || Gate::check('browse-warehouse')) --}}
 <li class="{{isset($menu_item_page) && $menu_item_page == 'stock_warehouse'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#stockwarehouse-dd" aria-expanded="false" aria-controls="stockwarehouse-dd">
     <span class="menu-title">Stock Warehouse</span>
@@ -106,34 +106,34 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'stock_warehouse'? 'show': '' }}" id="stockwarehouse-dd">
     <ul class="nav flex-column sub-menu">
-      @if(Gate::check('add-warehouse'))
+      {{-- @if(Gate::check('add-warehouse')) --}}
       <li class="nav-item"> 
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_warehouse'? 'active': '' }}" 
           href="{{ route('add_warehouse')}}">
           Add Warehouse
         </a>
       </li>
-      @endif
-      @if(Gate::check('browse-warehouse'))
+      {{-- @endif --}}
+      {{-- @if(Gate::check('browse-warehouse')) --}}
       <li class="nav-item"> 
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_warehouse'? 'active': '' }}" 
           href="{{ route('list_warehouse')}}">
           List Warehouse
         </a>
       </li>
-      @endif
-      @if(Gate::check('browse-stock'))
+      {{-- @endif --}}
+      {{-- @if(Gate::check('browse-stock')) --}}
       <li class="nav-item"> 
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_stock_warehouse'? 'active': '' }}" 
           href="{{  route('list_stock_warehouse') }}">
           List Stock
         </a>
       </li>
-      @endif
+      {{-- @endif --}}
     </ul>
   </div>
 </li>
-@endif
+{{-- @endif --}}
 
 @if(Gate::check('add-phc-product') || Gate::check('browse-phc-product') || Gate::check('add-personal-homecare') || Gate::check('browse-personal-homecare'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'active': '' }} nav-item">

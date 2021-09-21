@@ -355,6 +355,7 @@ function removeProduct(counter) {
 }
 
 function checkStock(e) {
+    console.log("test");
     const sequence = e.id.split("_")[1];
     const warehouse = document.getElementById("warehouse_id").value;
     const product = document.getElementById(`product_${sequence}`).value;

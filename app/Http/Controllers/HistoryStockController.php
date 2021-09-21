@@ -25,7 +25,7 @@ class HistoryStockController extends Controller
      */
     public function index(Request $request)
     {
-        $historystocks = HistoryStock::orderBy("date", "desc")->whereNotNull('code');
+        $historystocks = HistoryStock::orderBy("id", "desc")->whereNotNull('code');
 
         if ($request->has("filter_code")) {
             $filterCode = $request->filter_code;

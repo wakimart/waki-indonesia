@@ -88,7 +88,13 @@ class StockController extends Controller
                         "warehouses.parent_warehouse_id",
                         $request->get("filter_warehouse")
                     );
-            });
+            })
+            ->leftJoin(
+                'warehouses',
+                'warehouses.id',
+                '=',
+                'stocks.warehouse_id'
+            );
         } elseif (
             !empty($request->get("filter_product"))
             && !empty($request->get("filter_warehouse"))
