@@ -972,7 +972,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::get("list", "HistoryStockController@index")
             ->name("list_history_stock");
-        Route::get("detail/{id}", "HistoryStockController@show")
+        Route::get("detail/{code}", "HistoryStockController@show")
             ->name("detail_history_stock");
 
         Route::get("edit/in", "HistoryStockController@editIn")
@@ -982,9 +982,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::post("update", "HistoryStockController@update")
             ->name("update_history_stock");
-        //Export to XLS By Warehouse
-        Route::get('/export-to-xls-by-warehouse', 'HistoryStockController@export_to_xls_byWarehouse')
-        ->name('historystock_export-to-xls-by-warehouse');
+        //Export to XLS HistoryStock
+        Route::get('/export-to-xls', 'HistoryStockController@export_to_xls')
+        ->name('historystock_export-to-xls');
     });
 
     Route::group(["prefix" => "stock-warehouse", "middleware" => "auth"], function () {

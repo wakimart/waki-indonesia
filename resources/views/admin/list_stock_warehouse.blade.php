@@ -1,5 +1,5 @@
 <?php
-$menu_item_page = "stock";
+$menu_item_page = "stock_warehouse";
 $menu_item_second = "list_stock_warehouse";
 ?>
 @extends('admin.layouts.template')

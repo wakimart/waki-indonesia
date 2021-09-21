@@ -121,18 +121,18 @@ $menu_item_second = "list_history_stock";
                     </div>
                 </div>
 
-                <div class="col-xs-6 col-sm-6"
+                <div class="col-xs-6 col-sm-6 mt-5"
                     style="padding: 0; display: inline-block;">
                     <div class="form-group">
-                        <button id="btn-exportByWarehouse"
+                        <button id="btn-exportHistoryStock"
                             type="button"
                             class="btn btn-gradient-info m-1"
                             name="export"
                             data-toggle="modal"
-                            data-target="#exportByWarehouse"
+                            data-target="#exportHistoryStock"
                             value="-">
                             <span class="mdi mdi-file-document"></span>
-                            Export XLS by Warehouse
+                            Export XLS History Stock
                         </button>
                     </div>
                 </div>
@@ -168,7 +168,7 @@ $menu_item_second = "list_history_stock";
                                 <tbody>
                                     @foreach ($historystocks as $code => $historycode)
                                         <tr>
-                                            <td class="text-right" rowspan="{{ sizeof($historycode) }}">
+                                            <td class="text-center" rowspan="{{ sizeof($historycode) }}">
                                                 {{ ++$i }}
                                             </td>
                                             <td rowspan="{{ sizeof($historycode) }}">
@@ -182,32 +182,32 @@ $menu_item_second = "list_history_stock";
                                                 <br>
                                                 ({{ $historycode[0]->stock->warehouse['name'] }})
                                             </td>
-                                            <td rowspan="{{ sizeof($historycode) }}">
+                                            <td class="text-center" rowspan="{{ sizeof($historycode) }}">
                                                 {{ ucfirst($historycode[0]->type) }}
                                             </td>
                                             <td>
                                                 {{ $historycode[0]->stock->product['code'] }}
                                             </td>
-                                            <td>
-                                                {{ $historycode[0]->stock->quantity }}
+                                            <td class="text-right">
+                                                {{ $historycode[0]->quantity }}
                                             </td>
                                             <td class="text-center" rowspan="{{ sizeof($historycode) }}">
-                                                <a href="{{ route('detail_history_stock', ['id' => $historycode[0]['id']]) }}">
+                                                <a href="{{ route('detail_history_stock', ['code' => $historycode[0]['code']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
-                                            <td class="center" rowspan="{{ sizeof($historycode) }}">
-                                            @if ($historycode[0]->type == "in")
-                                                <a href="{{ route('edit_history_in', ['code' => $historycode[0]['code']]) }}">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                </a>
-                                            @else
-                                                <a href="{{ route('edit_history_out', ['code' => $historycode[0]['code']]) }}">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                </a>
-                                            @endif
+                                            <td class="text-center" rowspan="{{ sizeof($historycode) }}">
+                                                @if ($historycode[0]->type == "in")
+                                                    <a href="{{ route('edit_history_in', ['code' => $historycode[0]['code']]) }}">
+                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('edit_history_out', ['code' => $historycode[0]['code']]) }}">
+                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                    </a>
+                                                @endif
                                             </td>
-                                            <td class="center" rowspan="{{ sizeof($historycode) }}">
+                                            <td class="text-center" rowspan="{{ sizeof($historycode) }}">
                                                 <a class="btn-delete disabled"
                                                     data-toggle="modal"
                                                     href="#deleteDoModal"
@@ -219,16 +219,16 @@ $menu_item_second = "list_history_stock";
                                         </tr>
 
                                         @if (sizeof($historycode) > 1)
-                                            <tr>
-                                                @for ($i = 1; $i < sizeof($historycode); $i++)
+                                            @for ($i = 1; $i < sizeof($historycode); $i++)
+                                                <tr>
                                                     <td>
                                                         {{ $historycode[$i]->stock->product['code'] }}
                                                     </td>
-                                                    <td>
-                                                        {{ $historycode[$i]->stock->quantity }}
+                                                    <td class="text-right">
+                                                        {{ $historycode[$i]->quantity }}
                                                     </td>
-                                                @endfor
-                                            </tr>
+                                                </tr>
+                                            @endfor
                                         @endif
                                     @endforeach
                                 </tbody>
@@ -283,18 +283,42 @@ $menu_item_second = "list_history_stock";
 
 <!-- Modal export By Input Warehouse -->
 <div class="modal fade"
-    id="exportByWarehouse"
+    id="exportHistoryStock"
     tabindex="-1"
     role="dialog"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <label>Pick Warehouse</label>
+                <label>Export History Stock</label>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="filter_inputByWarehouse">List Warehouse</label>
+                    <label>Tanggal Awal</label>
+                    <input type="date"
+                        class="form-control"
+                        name="date"
+                        id="filter_startDate"
+                        placeholder="Awal Tanggal"
+                        required
+                        data-msg="Mohon Isi Tanggal"
+                        onload="getDate()" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Akhir</label>
+                    <input type="date"
+                        class="form-control"
+                        name="date"
+                        id="filter_endDate"
+                        placeholder="Akhir Tanggal"
+                        required
+                        data-msg="Mohon Isi Tanggal"
+                        onload="getDate()" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <label for="filter_inputByWarehouse">Filter By Warehouse</label>
                     <select class="form-control"
                         name="warehouse_id"
                         id="filter_inputByWarehouse"
@@ -309,6 +333,22 @@ $menu_item_second = "list_history_stock";
                         @endforeach
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="filter_inputByStock">Filter By Stock</label>
+                    <select class="form-control"
+                        name="stock_id"
+                        id="filter_inputByStock"
+                        required>
+                        <option disabled selected>
+                            Select Stock
+                        </option>
+                        @foreach ($stocks as $stock)
+                            <option value="{{ $stock->id }}">
+                                {{ $stock->code }} - {{ $stock->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 @csrf
@@ -318,10 +358,10 @@ $menu_item_second = "list_history_stock";
                     value="1" />
                 <button type="submit"
                     data-dismiss="modal"
-                    id="btn-exportByWarehouse"
+                    id="btn-exportHistoryStock"
                     class="btn btn-gradient-danger mr-2"
                     name="id"
-                    onclick="submitExportXLSByInputWarehouse()"
+                    onclick="submitExportXLS()"
                     value="-">
                     Export
                 </button>
@@ -334,7 +374,7 @@ $menu_item_second = "list_history_stock";
         </div>
     </div>
 </div>
-<!-- End Modal Date Picker export By Input Xls -->
+<!-- End Modal export By Warehouse -->
 @endsection
 
 @section("script")
@@ -343,11 +383,21 @@ function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
 
-// Export XLS By Input Warehouse
-function submitExportXLSByInputWarehouse() {
-    const inputWarehouse = document.getElementById("filter_inputByWarehouse").value;
+// Export XLS
+function submitExportXLS() {
+    let urlParamStr = "";
 
-    window.location.href = "{{ route('historystock_export-to-xls-by-warehouse') }}" + "?inputWarehouse=" + inputWarehouse;
+    let startDate = document.getElementById("filter_startDate").value;
+    let endDate = document.getElementById("filter_endDate").value;
+    let inputWarehouse = document.getElementById("filter_inputByWarehouse").value;
+    let inputStock = document.getElementById("filter_inputByStock").value;
+
+    urlParamStr += "filter_startDate=" + startDate + "&";
+    urlParamStr += "filter_endDate=" + endDate + "&";
+    urlParamStr += "filter_inputByWarehouse=" + inputWarehouse + "&";
+    urlParamStr += "filter_inputByStock=" + inputStock;
+
+    window.location.href = "{{ route('historystock_export-to-xls') }}" + "?" + urlParamStr;
 }
 
 $(document).ready(function (e) {
