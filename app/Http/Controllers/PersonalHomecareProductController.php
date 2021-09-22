@@ -137,10 +137,10 @@ class PersonalHomecareProductController extends Controller
     public function show($id){
         $phcproducts = PersonalHomecareProduct::where("id", $id)->first();
 
-        if(substr($phcproducts, 1, 1) == "1"){
+        if(substr($phcproducts['code'], 1, 1) == "1"){
             $phcproducts['warehouse'] = "Surabaya";
         }
-        else if(substr($phcproducts, 1, 1) == "2"){
+        elseif(substr($phcproducts['code'], 1, 1) == "2"){
             $phcproducts['warehouse'] = "Semarang";
         }
         else{
