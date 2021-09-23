@@ -166,9 +166,6 @@ $menu_item_second = "list_stock_warehouse";
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <?php
-                        $stocksGrouped = $stocks->groupBy("product_id");
-                        ?>
                         <h5 style="margin-bottom: 0.5em;">
                             Total: {{ $stocks->total() }} data
                         </h5>
@@ -190,42 +187,40 @@ $menu_item_second = "list_stock_warehouse";
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($stocksGrouped as $stock)
-                                        @for ($j = 0; $j < count($stock); $j++)
-                                            <tr>
-                                                <td class="text-right">
-                                                    {{ ++$i }}
-                                                </td>
-                                                @if ((isset($_GET["filter_product"]) && !empty($_GET["filter_product"])) || (empty($_GET["filter_warehouse"]) &&!empty($_GET["filter_warehouse"])))
-                                                    <td>
-                                                        {{ $stock[$j]->warehouse_code }} - {{ $stock[$j]->warehouse_name }}
-                                                    </td>
-                                                @endif
+                                    @foreach ($stocks as $stock)
+                                        <tr>
+                                            <td class="text-right">
+                                                {{ ++$i }}
+                                            </td>
+                                            @if ((isset($_GET["filter_product"]) && !empty($_GET["filter_product"])) || (empty($_GET["filter_warehouse"]) &&!empty($_GET["filter_warehouse"])))
                                                 <td>
-                                                    {{ $stock[$j]->product_code }}
+                                                    {{ $stock->warehouse_code }} - {{ $stock->warehouse_name }}
                                                 </td>
-                                                <td>
-                                                    {{ $stock[$j]->product_name }}
-                                                </td>
-                                                <td>
-                                                    {{ $stock[$j]->quantity }}
-                                                </td>
-                                                <td class="text-center">
-                                                    <a href="">
-                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                    </a>
-                                                </td>
-                                                <td class="text-center">
-                                                    <a class="btn-delete disabled"
-                                                        data-toggle="modal"
-                                                        href="#deleteDoModal"
-                                                        onclick="submitDelete(this)"
-                                                        data-id="{{ $stock[$j]->id }}">
-                                                        <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        @endfor
+                                            @endif
+                                            <td>
+                                                {{ $stock->product_code }}
+                                            </td>
+                                            <td>
+                                                {{ $stock->product_name }}
+                                            </td>
+                                            <td>
+                                                {{ $stock->quantity }}
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="">
+                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a class="btn-delete disabled"
+                                                    data-toggle="modal"
+                                                    href="#deleteDoModal"
+                                                    onclick="submitDelete(this)"
+                                                    data-id="{{ $stock->id }}">
+                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
