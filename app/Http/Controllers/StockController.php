@@ -6,6 +6,7 @@ use App\Product;
 use App\Stock;
 use App\Warehouse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
@@ -31,7 +32,7 @@ class StockController extends Controller
 
         $stocks = Stock::select(
                 "stocks.id AS id",
-                "stocks.quantity AS quantity",
+                DB::raw("SUM(stocks.quantity) AS quantity"),
                 "products.code AS product_code",
                 "products.name AS product_name",
             )
