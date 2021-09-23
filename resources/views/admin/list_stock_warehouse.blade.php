@@ -191,37 +191,41 @@ $menu_item_second = "list_stock_warehouse";
                                 </thead>
                                 <tbody>
                                     @foreach ($stocksGrouped as $stock)
-                                        <tr>
-                                            <td class="text-right">
-                                                {{ ++$i }}
-                                            </td>
-                                            @if ((isset($_GET["filter_product"]) && !empty($_GET["filter_product"])) || (empty($_GET["filter_warehouse"]) &&!empty($_GET["filter_warehouse"])))
-                                                <td>
-                                                    {{ $stock[0]->warehouse_code }} - {{ $stock[0]->warehouse_name }}
+                                        @for ($j = 0; $j < count($stock); $j++)
+                                            <tr>
+                                                <td class="text-right">
+                                                    {{ ++$i }}
                                                 </td>
-                                            @endif
-                                            <td>
-                                                {{ $stock[0]->product_code }}
-                                            </td>
-                                            <td>
-                                                {{ $stock[0]->product_name }}
-                                            </td>
-                                            <td>{{ $stock[0]->quantity }}</td>
-                                            <td class="text-center">
-                                                <a href="">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                </a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a class="btn-delete disabled"
-                                                    data-toggle="modal"
-                                                    href="#deleteDoModal"
-                                                    onclick="submitDelete(this)"
-                                                    data-id="{{ $stock[0]->id }}">
-                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
+                                                @if ((isset($_GET["filter_product"]) && !empty($_GET["filter_product"])) || (empty($_GET["filter_warehouse"]) &&!empty($_GET["filter_warehouse"])))
+                                                    <td>
+                                                        {{ $stock[$j]->warehouse_code }} - {{ $stock[$j]->warehouse_name }}
+                                                    </td>
+                                                @endif
+                                                <td>
+                                                    {{ $stock[$j]->product_code }}
+                                                </td>
+                                                <td>
+                                                    {{ $stock[$j]->product_name }}
+                                                </td>
+                                                <td>
+                                                    {{ $stock[$j]->quantity }}
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="">
+                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                    </a>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a class="btn-delete disabled"
+                                                        data-toggle="modal"
+                                                        href="#deleteDoModal"
+                                                        onclick="submitDelete(this)"
+                                                        data-id="{{ $stock[$j]->id }}">
+                                                        <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endfor
                                     @endforeach
                                 </tbody>
                             </table>

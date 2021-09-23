@@ -225,16 +225,16 @@ class HistoryStockController extends Controller
         $startDate = null;
         $endDate = null;
 
-        if($request->has('filter_startDate') || $request->has('filter_endDate')){
+        if ($request->has('filter_startDate') || $request->has('filter_endDate')) {
             $startDate = isset($request->filter_startDate) ? date($request->filter_startDate) : '';
             $endDate = isset($request->filter_endDate) ? date($request->filter_endDate) : date('Y-m-d');
         }
 
-        if($request->has('filter_inputByWarehouse') && is_numeric($request->filter_inputByWarehouse)){
+        if ($request->has('filter_inputByWarehouse') && is_numeric($request->filter_inputByWarehouse)) {
             $inputWarehouse = $request->filter_inputByWarehouse;
         }
 
-        if($request->has('filter_inputByStock') && is_numeric($request->filter_inputByStock)){
+        if ($request->has('filter_inputByStock') && is_numeric($request->filter_inputByStock)) {
             $inputStock = $request->filter_inputByStock;
         }
 
