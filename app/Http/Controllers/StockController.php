@@ -103,7 +103,7 @@ class StockController extends Controller
                 );
         }
 
-        $stocks = $stocks->paginate(20);
+        $stocks = $stocks->groupBy("product_id")->paginate(10);
 
         return view('admin.list_stock_warehouse', compact(
                 'stocks',
