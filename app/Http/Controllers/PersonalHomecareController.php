@@ -112,6 +112,12 @@ class PersonalHomecareController extends Controller
         return view('personal_homecare', compact('personalhomecare'));
     }
 
+    public function thankyouForm()
+    {
+
+        return view('thankyou_form_ph');
+    }
+
     public function create()
     {
         $branches = Branch::select("id", "code", "name")
