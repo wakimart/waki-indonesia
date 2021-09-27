@@ -740,174 +740,6 @@ $menu_item_page = "personal_homecare";
         @endif
 
         <div class="row">
-            <div id="element-to-print"
-                class="col-12 grid-margin stretch-card showPrinted">
-                <div class="card">
-                    <div class="card-body" style="padding-top: 0px;">
-                        {{-- <div style="background-color: #008349; height: 15px;"></div> --}}
-                        <div style="width: 200px; margin: auto;">
-                            <img style="width: 100%;"
-                                src="{{ asset('sources/logosince.svg') }}"
-                                alt="logo" />
-                        </div>
-                        <div>
-                            <div style="width: 80%; margin: auto; text-align: center;">
-                                <h1 style="font-weight: 700;">
-                                    SURAT TANDA TERIMA BARANG
-                                </h1>
-                                <h5>
-                                    PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
-                                <h5>
-                            </div>
-                            <br>
-                            <div style="width: 90%; margin: auto; text-align: justify;">
-                                <p>Saya yang bertanda tangan, menyatakan telah menerima barang dalam keadaan baik dan berfungsi normal sesuai data di bawah ini. Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
-                            </div>
-                            <br>
-                            <div>
-                                <div style="width: 300px; background-color: #b4d9c4;">
-                                    <h4 style="padding-left: 15%;">
-                                        DATA CUSTOMER
-                                    </H4>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="width: 90%; margin: auto;">
-                            <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>NAMA: {{ $personalhomecare['name'] }}</h5>
-                            </div>
-                            <div style="width: 48%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>
-                                    CABANG: {{ $personalhomecare->branch->code }} - {{ $personalhomecare->cso->name }}
-                                </h5>
-                            </div>
-                            <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>
-                                    NO.TELP: {{ $personalhomecare['phone'] }}
-                                </h5>
-                            </div>
-                            <div style="width: 48%; margin-bottom:5px; float: left; border-bottom:1px solid black;">
-                                <h5>
-                                    TGL PENGIRIMAN: {{ $personalhomecare['schedule'] }}
-                                </h5>
-                            </div>
-                            <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>NO.MEMBER: <span id="member_code"></span></h5>
-                            </div>
-                            <div style="width: 48%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>
-                                    TGL PENGAMBILAN: {{ date("Y-m-d", strtotime($personalhomecare['schedule'] .  " + 5 days")) }}
-                                </h5>
-                            </div>
-                        </div>
-                        <div style="width:100%"
-                            class="row justify-content-center">
-                            <div class="table-responsive">
-                                <table class="col-md-12">
-                                    <thead>
-                                        <td class="text-center">Jumlah (Qty)</td>
-                                        <td class="text-center">Kode Produk</td>
-                                        <td class="text-center">Nama Produk</td>
-                                        <td class="text-center">Kelengkapan</td>
-                                        <td class="text-center">Kondisi</td>
-                                        <td class="text-center">Keterangan</td>
-                                    </thead>
-                                    <tr>
-                                        <td class="text-center">1</td>
-                                        <td class="text-center">
-                                            {{ $personalhomecare->personalHomecareProduct->code }}
-                                        </td>
-                                        <td class="text-center">
-                                            {{ $personalhomecare->personalHomecareProduct->product->name }}
-                                        </td>
-                                        <td>
-                                            <ul>
-                                                @php
-                                                    $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
-                                                    $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
-                                                @endphp
-                                                @foreach ($arr_completness as $completeness)
-                                                    @if ($completeness !== "other")
-                                                        <li style="line-height: 1.3;">
-                                                            {{ ucwords($completeness) }}
-                                                        </li>
-                                                    @endif
-                                                @endforeach
-                                                <li style="line-height: 1.3;">Other</li>
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <b>MESIN</b>
-                                            <ul>
-                                                <li style="line-height: 1.3;">Normal</li>
-                                                <li style="line-height: 1.3;">Need Repair</li>
-                                            </ul>
-                                            <b>FISIK</b>
-                                            <ul>
-                                                <li style="line-height: 1.3;">New</li>
-                                                <li style="line-height: 1.3;">Moderate</li>
-                                                <li style="line-height: 1.3;">Need Repair</li>
-                                            </ul>
-                                        </td>
-                                        <td class="text-center">
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                        <div style="width:90%;margin:auto;text-align:justify">
-                            <p>Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
-                            <h5>SYARAT & KETENTUAN:</h5>
-                            <div style="width: 90%; margin: auto;">
-                                <ol type="1">
-                                    <li style="line-height: 1.3;">Program pinjamin produk 5 hari (PP5H) tidak dipungut biaya apapun.</li>
-                                    <li style="line-height: 1.3;">Sudah menjadi member WAKimart dan minimal berusia 35 tahun</li>
-                                    <li style="line-height: 1.3;">Apabila ada kekurangan, kehilangan ataupun kerusakan pada produk saat pengembalian, berarti membeli barang dengan harga normal sesuai ketentuan yang ada.</li>
-                                    <li style="line-height: 1.3;">Kekurangan aksesoris produk harap dikembalikan paling lambat 7 hari setelah program PP5H berakhir.</li>
-                                    <li style="line-height: 1.3;">Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya.</li>
-                                    <li style="line-height: 1.3;">Kenyamanan dan keamanan konsumen kami adalah prioritas pertama.</li>
-                                </ol>
-                                <p>Apabila ada sesuatu atau ada pertanyaan, bisa menghubungi kami melalui facebook page WAKi Indonesia ataau customer care kami : 0815-5467-3357</p>
-                            </div>
-                        </div>
-                        <br><br><br><br><br><br><br>
-                        <div style="width: 80%; margin: auto; text-align: justify;">
-                            <div style="width: 48%; float: left;">
-                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
-                                    <p>Tanda Tangan Penerima</p>
-                                </div>
-                            </div>
-                            <div style="width: 48%; float: left;">
-                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
-                                    <p>Tanda Tangan Pengirim</p>
-                                </div>
-                            </div>
-                        </div>
-                        <br><br>
-                        <div class="clearfix"></div>
-                        <div class="clearfix"></div>
-                        <div style="border-top: black 1px dashed;">
-                            <div style="width: 80%; margin: auto; text-align: center;">
-                                <h1 style="font-weight: 700;">
-                                    SURAT PENGAMBILAN BARANG
-                                </h1>
-                                <h5>
-                                    PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
-                                <h5>
-                            </div>
-                        </div>
-                        <br>
-                        <div style="width: 100%;"
-                            class="row justify-content-center">
-                            <div class="table-responsive">
-                                <table class="col-md-12">
-                                    <thead>
-                                        <td class="text-center">Jumlah (QTY)</td>
-                                        <td class="text-center">Kode Produk</td>
-                                        <td class="text-center">Nama Produk</td>
-                                        <td class="text-center">Kelengkapan</td>
-                                        <td class="text-center">Kondisi</td>
-                    <div class="row">
             <div id="element-to-print" class="col-12 grid-margin stretch-card showPrinted">
                 <div class="card">
                     <div class="card-body">
@@ -988,9 +820,13 @@ $menu_item_page = "personal_homecare";
                                         </td>
                                         <td style="border: 1px solid black;">
                                             <ul>
-                                                @foreach ($personalhomecare->checklistOut['condition']['completeness'] as $completeness)
+                                                @php
+                                                    $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
+                                                    $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                                @endphp
+                                                @foreach ($arr_completness as $completeness)
                                                     @if ($completeness !== "other")
-                                                        <li>
+                                                        <li style="line-height: 1.3;">
                                                             {{ ucwords($completeness) }}
                                                         </li>
                                                     @endif
@@ -1000,15 +836,14 @@ $menu_item_page = "personal_homecare";
                                         <td style="border: 1px solid black;">
                                             <b>MESIN</b>
                                             <ul>
-                                                <li>
-                                                    {{ ucwords($personalhomecare->checklistOut['condition']['machine']) }}
-                                                </li>
+                                                <li>Normal</li>
+                                                <li>Need Repair</li>
                                             </ul>
                                             <b>FISIK</b>
                                             <ul>
-                                                <li>
-                                                    {{ ucwords($personalhomecare->checklistOut['condition']['physical']) }}
-                                                </li>
+                                                <li>New</li>
+                                                <li>Moderate</li>
+                                                <li>Need Repair</li>
                                             </ul>
                                         </td>
                                         <td class="text-center" style="border: 1px solid black;">
@@ -1023,12 +858,12 @@ $menu_item_page = "personal_homecare";
                             <h5>SYARAT & KETENTUAN:</h5>
                             <div style="width: 90%; margin: auto;">
                                 <ol type="1" style="font-size:1.1em">
-                                    <li>Program pinjaman produk 5 hari tidak dipungut biaya apapun</li>
-                                    <li>Sudah menjadi member Wakimart</li>
-                                    <li>Minimal berusia 35 tahun</li>
-                                    <li>Biaya akan dikenakan kepada konsumen jika ada sparepart ataupun kerusakan di luar persetujuan</li>
-                                    <li>Syarat dan Ketentuan dapat berubah tanpa pemberitahuan sebelumnya</li>
-                                    <li>Kenyamanan dan keamanan konsumen kami adalah prioritas pertama</li>
+                                    <li>Program pinjamin produk 5 hari (PP5H) tidak dipungut biaya apapun.</li>
+                                    <li>Sudah menjadi member WAKimart dan minimal berusia 35 tahun</li>
+                                    <li>Apabila ada kekurangan, kehilangan ataupun kerusakan pada produk saat pengembalian, berarti membeli barang dengan harga normal sesuai ketentuan yang ada.</li>
+                                    <li>Kekurangan aksesoris produk harap dikembalikan paling lambat 7 hari setelah program PP5H berakhir.</li>
+                                    <li>Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya.</li>
+                                    <li>Kenyamanan dan keamanan konsumen kami adalah prioritas pertama.</li>
                                 </ol>
                                 <p style="font-size:1.1em">Apabila ada sesuatu atau ada pertanyaan, bisa menghubungi kami melalui facebook page WAKi Indonesia ataau customer care kami : 0815-5467-3357</p>
                             </div>
