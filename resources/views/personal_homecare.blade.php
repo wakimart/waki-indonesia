@@ -159,7 +159,7 @@
     .timeline .timeline-item {
         display: inline-block;
         position: relative;
-        padding-right: 3em;
+        /* padding-right: 3em; */
     }
 
     .timeline .timeline-item::before {
@@ -509,25 +509,36 @@
                     </div>
                     <div class="card-body">
                         <div class="timeline clearfix">
-                            @foreach ($histories as $history)
-                                <?php $dataChange = json_decode($history->meta, true); ?>
-                                @foreach ($dataChange["dataChange"] as $value)
-                                <div class="timeline-item">
-                                    <div class="timeline-icon"></div>
-                                    <div class="timeline-content">
-                                        <div class="card-body">
-                                            <p style="font-weight: 600; margin-bottom: 10px;">{{ var_export($value, true) }}</p>
-                                            <p style="font-weight: 500;">
-                                                {{ date("d/m/Y H:i:s", strtotime($history->created_at)) }}
-                                            </p>
-                                        </div>
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                </div>
+                                <div class="timeline-content">
+                                    <div class="card-body">
+                                        <p style="font-weight: 600; margin-bottom: 10px;">New</p>
+                                        <p style="font-weight: 500;">{{ date("d/m/Y H:m:i", strtotime($personalhomecare->created_at)) }}</p>
                                     </div>
                                 </div>
-                                @endforeach
+                            </div>
+                            @foreach ($histories as $history)
+                                <?php $meta = json_decode($history->meta);?>
+                                @if(isset($meta->dataChange->status))
+                                    <?php $dataChange = $meta->dataChange; ?>
+                                    <div class="timeline-item">
+                                        <div class="timeline-icon"></div>
+                                        <div class="timeline-content">
+                                            <div class="card-body">
+                                                <p style="font-weight: 600; margin-bottom: 10px;">{{ ucfirst($dataChange->status)}}</p>
+                                                <p style="font-weight: 500;">
+                                                    {{ date("d/m/Y H:m:i", strtotime($dataChange->updated_at)) }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                             @endforeach
 
                             <!-- dummy -->
-                            <div class="timeline-item">
+                            <!-- <div class="timeline-item">
                                 <div class="timeline-icon">
                                 </div>
                                 <div class="timeline-content">
@@ -576,7 +587,7 @@
                                         <p style="font-weight: 500;">date</p>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- end dummy -->
 
 
