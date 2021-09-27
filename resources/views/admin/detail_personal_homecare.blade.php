@@ -48,12 +48,11 @@ $menu_item_page = "personal_homecare";
     }
 
     table {
-        margin: 1em;
         font-size: 14px;
     }
 
     table thead {
-        background-color: #8080801a;
+        background-color: #00000030;
         text-align: center;
     }
 
@@ -99,6 +98,9 @@ $menu_item_page = "personal_homecare";
         .table-responsive::-webkit-scrollbar {
             display: none;
         }
+    }
+    #element-to-print p{
+      font-size: 1.1em;
     }
 </style>
 @endsection
@@ -708,7 +710,7 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
 
-        @if (strtolower($personalhomecare['status']) != "new" && strtolower($personalhomecare['status']) != "rejected" )
+        @if (strtolower($personalhomecare['status']) != "new" && strtolower($personalhomecare['status']) != "rejected" && strtolower($personalhomecare['status']) != "verified" )
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
@@ -905,52 +907,207 @@ $menu_item_page = "personal_homecare";
                                         <td class="text-center">Nama Produk</td>
                                         <td class="text-center">Kelengkapan</td>
                                         <td class="text-center">Kondisi</td>
-                                        <td class="text-center">Keterangan</td>
+                    <div class="row">
+            <div id="element-to-print" class="col-12 grid-margin stretch-card showPrinted">
+                <div class="card">
+                    <div class="card-body">
+                        <div style="background-color: #008349; height: 15px;"></div>
+                        <div style="width: 200px; margin: auto;">
+                            <img style="width: 100%;"
+                                src="{{ asset('sources/logosince.svg') }}"
+                                alt="logo" />
+                        </div>
+                        <div>
+                            <div style="width: 80%; margin: auto; text-align: center;">
+                                <h1 style="font-weight: 700;">
+                                    SURAT TANDA TERIMA BARANG
+                                </h1>
+                                <h4>
+                                    PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
+                                <h4>
+                            </div>
+                            <br>
+                            <div style="width: 90%; margin: auto; text-align: justify;">
+                                <p style="font-size:1.1em">Saya yang bertanda tangan, menyatakan telah menerima barang dalam keadaan baik dan berfungsi normal sesuai data di bawah ini. Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
+                            </div>
+                            <br>
+                            <div>
+                                <div style="width: 300px; background-color: #b4d9c4;">
+                                    <h4 style="padding-left: 15%;">
+                                        DATA CUSTOMER
+                                    </H4>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width: 90%; margin: auto; display: table; margin-bottom: 1.5em;">
+                            <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                <h5>NAMA: {{ $personalhomecare['name'] }}</h5>
+                            </div>
+                            <div style="width: 48%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                <h5>
+                                    CABANG: {{ $personalhomecare->branch->code }}
+                                </h5>
+                            </div>
+                            <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                <h5>
+                                    NO.TELP: {{ $personalhomecare['phone'] }}
+                                </h5>
+                            </div>
+                            <div style="width: 48%; margin-bottom:5px; float: left; border-bottom:1px solid black;">
+                                <h5>
+                                    TGL PENGIRIMAN: {{ $personalhomecare['schedule'] }}
+                                </h5>
+                            </div>
+                            <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                <h5>NO.MEMBER:</h5>
+                            </div>
+                            <div style="width: 48%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                <h5>
+                                    TGL PENGAMBILAN: {{ date("Y-m-d", strtotime($personalhomecare['schedule'] .  " + 5 days")) }}
+                                </h5>
+                            </div>
+                        </div>
+                        <div style="margin:auto;">
+                            <div>
+                                <table class="col-md-12" style="border: 1px solid black; width: 100%;">
+                                    <thead>
+                                        <td class="text-center" style="border: 1px solid black;">Jumlah (Qty)</td>
+                                        <td class="text-center" style="border: 1px solid black;">Kode Produk</td>
+                                        <td class="text-center" style="border: 1px solid black;">Nama Produk</td>
+                                        <td class="text-center" style="border: 1px solid black;">Kelengkapan</td>
+                                        <td class="text-center" style="border: 1px solid black;">Kondisi</td>
+                                        <td class="text-center" style="border: 1px solid black;">Keterangan</td>
                                     </thead>
                                     <tr>
-                                        <td class="text-center">1</td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="border: 1px solid black;">1</td>
+                                        <td class="text-center" style="border: 1px solid black;">
                                             {{ $personalhomecare->personalHomecareProduct->code }}
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="border: 1px solid black;">
                                             {{ $personalhomecare->personalHomecareProduct->product->name }}
                                         </td>
-                                       <td>
+                                        <td style="border: 1px solid black;">
                                             <ul>
-                                                @php
-                                                    $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
-                                                    $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
-                                                @endphp
-                                                @foreach ($arr_completness as $completeness)
+                                                @foreach ($personalhomecare->checklistOut['condition']['completeness'] as $completeness)
                                                     @if ($completeness !== "other")
-                                                        <li style="line-height: 1.3;">
+                                                        <li>
                                                             {{ ucwords($completeness) }}
                                                         </li>
                                                     @endif
                                                 @endforeach
-                                                <li style="line-height: 1.3;">Other</li>
                                             </ul>
                                         </td>
-                                        <td>
+                                        <td style="border: 1px solid black;">
                                             <b>MESIN</b>
                                             <ul>
-                                                <li style="line-height: 1.3;">Normal</li>
-                                                <li style="line-height: 1.3;">Need Repair</li>
+                                                <li>
+                                                    {{ ucwords($personalhomecare->checklistOut['condition']['machine']) }}
+                                                </li>
                                             </ul>
                                             <b>FISIK</b>
                                             <ul>
-                                                <li style="line-height: 1.3;">New</li>
-                                                <li style="line-height: 1.3;">Moderate</li>
-                                                <li style="line-height: 1.3;">Need Repair</li>
+                                                <li>
+                                                    {{ ucwords($personalhomecare->checklistOut['condition']['physical']) }}
+                                                </li>
                                             </ul>
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center" style="border: 1px solid black;">
+                                            {{ $personalhomecare->checklistOut['condition']['other'] }}
                                         </td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
-                         <br><br><br><br><br><br><br>
+                        <div style="width:90%;margin:1.5em auto 0;text-align:justify">
+                            <p style="font-size:1.1em">Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
+                            <h5>SYARAT & KETENTUAN:</h5>
+                            <div style="width: 90%; margin: auto;">
+                                <ol type="1" style="font-size:1.1em">
+                                    <li>Program pinjaman produk 5 hari tidak dipungut biaya apapun</li>
+                                    <li>Sudah menjadi member Wakimart</li>
+                                    <li>Minimal berusia 35 tahun</li>
+                                    <li>Biaya akan dikenakan kepada konsumen jika ada sparepart ataupun kerusakan di luar persetujuan</li>
+                                    <li>Syarat dan Ketentuan dapat berubah tanpa pemberitahuan sebelumnya</li>
+                                    <li>Kenyamanan dan keamanan konsumen kami adalah prioritas pertama</li>
+                                </ol>
+                                <p style="font-size:1.1em">Apabila ada sesuatu atau ada pertanyaan, bisa menghubungi kami melalui facebook page WAKi Indonesia ataau customer care kami : 0815-5467-3357</p>
+                            </div>
+                        </div>
+                        <br><br><br><br><br><br><br>
+                        <div style="width: 80%; margin: auto; text-align: justify;">
+                            <div style="width: 48%; float: left;">
+                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
+                                    <p>Tanda Tangan Penerima</p>
+                                </div>
+                            </div>
+                            <div style="width: 48%; float: left;">
+                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
+                                    <p>Tanda Tangan Pengirim</p>
+                                </div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+                        <p style="page-break-after: always;">&nbsp;</p>
+                        <p style="page-break-before: always;">&nbsp;</p>
+                        <div>
+                            <div style="width: 80%; margin: auto; text-align: center;">
+                                <h1 style="font-weight: 700;">
+                                    SURAT PENGAMBILAN BARANG
+                                </h1>
+                                <h4>
+                                    PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
+                                <h4>
+                            </div>
+                        </div>
+                        <br>
+                        <div style="margin:auto">
+                            <div>
+                                <table class="col-md-12" style="border: 1px solid black;width: 100%;">
+                                    <thead>
+                                        <td class="text-center" style="border: 1px solid black;">Jumlah (QTY)</td>
+                                        <td class="text-center" style="border: 1px solid black;">Kode Produk</td>
+                                        <td class="text-center" style="border: 1px solid black;">Nama Produk</td>
+                                        <td class="text-center" style="border: 1px solid black;">Kelengkapan</td>
+                                        <td class="text-center" style="border: 1px solid black;">Kondisi</td>
+                                        <td class="text-center" style="border: 1px solid black;">Keterangan</td>
+                                    </thead>
+                                    <tr>
+                                        <td class="text-center" style="border: 1px solid black;">1</td>
+                                        <td class="text-center" style="border: 1px solid black;">
+                                            {{ $personalhomecare->personalHomecareProduct->code }}
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black;">
+                                            {{ $personalhomecare->personalHomecareProduct->product->name }}
+                                        </td>
+                                        <td style="border: 1px solid black;">
+                                            <ul style="list-style-type: circle;">
+                                                <li>Mesin</li>
+                                                <li>Filter</li>
+                                                <li>Aksesoris</li>
+                                                <li>Kabel</li>
+                                            </ul>
+                                        </td>
+                                        <td style="border: 1px solid black;">
+                                            <b>MESIN</b>
+                                            <ul style="list-style-type: circle;">
+                                                <li>Normal</li>
+                                                <li>Need Repair</li>
+                                            </ul>
+                                            <b>FISIK</b>
+                                            <ul style="list-style-type: circle;">
+                                                <li>New</li>
+                                                <li>Moderate</li>
+                                                <li>Need Repair</li>
+                                            </ul>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black;"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                         <br><br><br><br><br><br><br><br>
                         <div style="width: 80%; margin: auto; text-align: justify;">
                             <div style="width: 48%; float: left;">
                                 <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">

@@ -571,11 +571,15 @@ class PersonalHomecareController extends Controller
 
                 $this->accNotif($phc, "acc_ask");
             }
-            else if ($request->status == "approve_out") {
+            elseif ($request->status == "approve_out") {
                 $phc->status = $request->status;
                 $phc->save();
             }
-            else if($request->status == "process"){
+            elseif ($request->status == "rejected") {
+                $phc->status = $request->status;
+                $phc->save();
+            }
+            elseif($request->status == "process"){
                 $phcProductNya = PersonalHomecareProduct::find($request->id_product);
                 $tempChecklist = $phcProductNya->currentChecklist;
                 $phcChecklistOut = $tempChecklist->replicate();
@@ -617,25 +621,25 @@ class PersonalHomecareController extends Controller
                 $phc->save();
 
             }
-            else if($request->status == "done"){
+            elseif($request->status == "done"){
                 PersonalHomecareProduct::where("id", $request->id_product)
                     ->update(["status" => "available"]);
 
                 $phc->status = $request->status;
                 $phc->save();
-            }else if($request->status == "pending_product"){
+            }elseif($request->status == "pending_product"){
                 $this->accNotif($phc, "waiting_in_rejected");
 
                 return redirect()
                     ->route("detail_personal_homecare", ["id" => $request->id])
                     ->with("success", "Status has been successfully updated.");
             }
-            else if($request->status == "process_extend"){
+            elseif($request->status == "process_extend"){
                 $phc->status = $request->status;
                 $phc->is_extend = false;
                 $phc->save();
             }
-            else if($request->status == "process_extend_reject"){
+            elseif($request->status == "process_extend_reject"){
                 $phc->is_extend = false;
                 $phc->save();
             }
@@ -921,7 +925,7 @@ class PersonalHomecareController extends Controller
         $titleNya = "ACC ".$personalhomecare_obj->status." [Personal Homecare]";
         if($notif_type == "acc_ask"){
             $userNya = User::where('users.fmc_token', '!=', null)
-                        ->whereIn('role_users.role_id', [1,2,7])
+                        ->whereIn('role_users.role_id', [1,2,5,6,7])
                         ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
                         ->get();
             foreach ($userNya as $value) {
@@ -930,16 +934,6 @@ class PersonalHomecareController extends Controller
                         if($fcmSatuan != null){
                             array_push($fcm_tokenNya, $fcmSatuan);
                         }
-                    }
-                }
-            }
-
-            //khusus pak supri
-            $value = User::find(4);
-            if($value['fmc_token'] != null){
-                foreach ($value['fmc_token'] as $fcmSatuan) {
-                    if($fcmSatuan != null){
-                        array_push($fcm_tokenNya, $fcmSatuan);
                     }
                 }
             }
@@ -962,7 +956,7 @@ class PersonalHomecareController extends Controller
         }
         else if($notif_type ==  "acc_reschedule" || $notif_type ==  "acc_extend"){
             $userNya = User::where('users.fmc_token', '!=', null)
-                        ->whereIn('role_users.role_id', [1,2,7])
+                        ->whereIn('role_users.role_id', [1,2,5,6,7])
                         ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
                         ->get();
             foreach ($userNya as $value) {
@@ -971,16 +965,6 @@ class PersonalHomecareController extends Controller
                         if($fcmSatuan != null){
                             array_push($fcm_tokenNya, $fcmSatuan);
                         }
-                    }
-                }
-            }
-
-            //khusus pak supri
-            $value = User::find(4);
-            if($value['fmc_token'] != null){
-                foreach ($value['fmc_token'] as $fcmSatuan) {
-                    if($fcmSatuan != null){
-                        array_push($fcm_tokenNya, $fcmSatuan);
                     }
                 }
             }
