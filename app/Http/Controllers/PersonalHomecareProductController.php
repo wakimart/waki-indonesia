@@ -39,8 +39,7 @@ class PersonalHomecareProductController extends Controller
 
         if ($request->has("product_id")) {
             $phcproducts = $phcproducts->where('product_id', $request->input("product_id"));
-        }
-        else{
+        } else {
             $request['product_id'] = 4;
             $phcproducts = $phcproducts->where('product_id', $request->input("product_id"));
         }
@@ -262,7 +261,7 @@ class PersonalHomecareProductController extends Controller
                         "menu_id" => $request->id,
                     ]);
                 }
-                
+
 
                 if(sizeof($phcChecklist->getChanges()) > 0){
                     HistoryUpdate::create([
@@ -280,7 +279,7 @@ class PersonalHomecareProductController extends Controller
                         "menu_id" => $request->id,
                     ]);
                 }
-            }            
+            }
 
             DB::commit();
 
