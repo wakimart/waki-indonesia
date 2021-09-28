@@ -228,7 +228,7 @@ $menu_item_second = "list_product";
                                                         {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
                                                     </td>
                                                     <td>
-                                                        {{ ucwords($phcproduct->status)}}
+                                                        {{ ucwords($phcproduct->status) }}
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
@@ -292,7 +292,7 @@ $menu_item_second = "list_product";
                                                         {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
                                                     </td>
                                                     <td>
-                                                        {{ $phcproduct->status }}
+                                                        {{ ucwords($phcproduct->status) }}
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
@@ -356,7 +356,7 @@ $menu_item_second = "list_product";
                                                         {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
                                                     </td>
                                                     <td>
-                                                        {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
+                                                        {{ ucwords($phcproduct->status) }}
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
@@ -420,7 +420,7 @@ $menu_item_second = "list_product";
                                                         {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
                                                     </td>
                                                     <td>
-                                                        {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
+                                                        {{ ucwords($phcproduct->status) }}
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
@@ -484,7 +484,7 @@ $menu_item_second = "list_product";
                                                         {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
                                                     </td>
                                                     <td>
-                                                        {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
+                                                        {{ ucwords($phcproduct->status) }}
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
