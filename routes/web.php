@@ -913,6 +913,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("update-product", "PersonalHomecareProductController@update")
             ->name("update_phc_product")
             ->middleware("can:edit-phc-product");
+        Route::post("delete", "PersonalHomecareProductController@destroy")
+            ->name("delete_phc_product");
 
         Route::get("add", "PersonalHomecareController@create")
             ->name("add_personal_homecare")

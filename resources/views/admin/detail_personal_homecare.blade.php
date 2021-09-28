@@ -846,9 +846,7 @@ $menu_item_page = "personal_homecare";
                                                 <li>Need Repair</li>
                                             </ul>
                                         </td>
-                                        <td class="text-center" style="border: 1px solid black;">
-                                            {{ $personalhomecare->checklistOut['condition']['other'] }}
-                                        </td>
+                                        <td class="text-center" style="border: 1px solid black;"></td>
                                     </tr>
                                 </table>
                             </div>
@@ -918,10 +916,17 @@ $menu_item_page = "personal_homecare";
                                         </td>
                                         <td style="border: 1px solid black;">
                                             <ul style="list-style-type: circle;">
-                                                <li>Mesin</li>
-                                                <li>Filter</li>
-                                                <li>Aksesoris</li>
-                                                <li>Kabel</li>
+                                                @php
+                                                    $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
+                                                    $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                                @endphp
+                                                @foreach ($arr_completness as $completeness)
+                                                    @if ($completeness !== "other")
+                                                        <li style="line-height: 1.3;">
+                                                            {{ ucwords($completeness) }}
+                                                        </li>
+                                                    @endif
+                                                @endforeach
                                             </ul>
                                         </td>
                                         <td style="border: 1px solid black;">
