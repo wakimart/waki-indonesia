@@ -81,8 +81,8 @@
                             <table class="table table-bordered">
                                 <thead style="text-align: center; background-color: aliceblue;">
                                     <tr>
-                                        <td rowspan="2">View</td>
                                         <td colspan="4">Personal Homecare Data</td>
+                                        <td rowspan="2">View</td>
                                     </tr>
                                     <tr>
                                         <td>Status</td>
@@ -94,12 +94,6 @@
                                 <tbody>
                                     @foreach($personalHomecares as $personalHomecare)
                                         <tr>
-                                            <td style="text-align: center;">
-                                                <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
-                                                    <i class="mdi mdi-eye" style="font-size: 24px;"></i>
-                                                </a>
-                                            </td>
-                                            
                                             <td>
                                                 @if($personalHomecare->is_extend)
                                                     Extend Acc
@@ -112,6 +106,11 @@
                                             <td>{{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}</td>
                                             <td>{{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['name'] }}</td>
                                             <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['name'] }}</td>
+                                            <td style="text-align: center;">
+                                                <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
+                                                    <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                </a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
