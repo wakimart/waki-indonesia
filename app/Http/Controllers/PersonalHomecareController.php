@@ -24,13 +24,23 @@ class PersonalHomecareController extends Controller
 {
     public function index(Request $request)
     {
+        
         $personalhomecares = PersonalHomecare::where('active', true);
 
-        if ($request->has("filter_name_phone")) {
-            $filterNamePhone = $request->filter_name_phone;
-            $personalhomecares = $personalhomecares->where(function ($q) use ($filterNamePhone) {
-                $q->where('name', "like", "%" . $filterNamePhone . "%")
-                    ->orWhere('phone', "like", "%" . $filterNamePhone . "%");
+        $csos = Cso::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code", 'asc')
+            ->get();
+
+        $branches = Branch::select("id", "code", "name")
+            ->where("active", true)
+            ->orderBy("code", 'asc')
+            ->get();
+
+        if ($request->has("filter_name")) {
+            $filterName = $request->filter_name;
+            $personalhomecares = $personalhomecares->where(function ($q) use ($filterName) {
+                $q->where('name', "like", "%" . $filterName . "%");
             });
         }
 
@@ -71,19 +81,15 @@ class PersonalHomecareController extends Controller
 
         $personalhomecares = $personalhomecares->orderBy('created_at', "desc")->paginate(10);
 
-        $csos = Cso::select("id", "code", "name")
-            ->where("active", true)
-            ->orderBy("code", 'asc')
-            ->get();
-        $branches = Branch::select("id", "code", "name")
-            ->where("active", true)
-            ->orderBy("code", 'asc')
-            ->get();
-
         $url = $request->all();
 
-        return view("admin.list_all_personalhomecare", compact("personalhomecares", "csos", "branches", "url"))
-            ->with('i', (request()->input('page', 1) - 1) * 10);
+        return view("admin.list_all_personalhomecare", compact(
+            "personalhomecares", 
+            "csos", 
+            "branches", 
+            "url"))
+            ->with('i', (request()->input('page', 1) - 1) * 10
+        );
     }
 
     public function listApproved(Request $request)

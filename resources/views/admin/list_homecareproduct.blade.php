@@ -208,7 +208,7 @@ $menu_item_second = "list_product";
                                                 <th>Product Name</th>
                                                 <th class="text-center">Branch</th>
                                                 <th>Status</th>
-                                                <th class="text-center">Edit</th>
+                                                <th class="text-center">View</th>
                                                 <th class="text-center">Edit</th>
                                                 <th class="text-center">Delete</th>
                                             </tr>
@@ -272,6 +272,7 @@ $menu_item_second = "list_product";
                                                 <th>Product Name</th>
                                                 <th class="text-center">Branch</th>
                                                 <th>Status</th>
+                                                <th class="text-center">View</th>
                                                 <th class="text-center">Edit</th>
                                                 <th class="text-center">Delete</th>
                                             </tr>
@@ -292,6 +293,11 @@ $menu_item_second = "list_product";
                                                     </td>
                                                     <td>
                                                         {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                        </a>
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
@@ -330,6 +336,7 @@ $menu_item_second = "list_product";
                                                 <th>Product Name</th>
                                                 <th class="text-center">Branch</th>
                                                 <th>Status</th>
+                                                <th class="text-center">View</th>
                                                 <th class="text-center">Edit</th>
                                                 <th class="text-center">Delete</th>
                                             </tr>
@@ -350,6 +357,11 @@ $menu_item_second = "list_product";
                                                     </td>
                                                     <td>
                                                         {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                        </a>
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
@@ -388,6 +400,7 @@ $menu_item_second = "list_product";
                                                 <th>Product Name</th>
                                                 <th class="text-center">Branch</th>
                                                 <th>Status</th>
+                                                <th class="text-center">View</th>
                                                 <th class="text-center">Edit</th>
                                                 <th class="text-center">Delete</th>
                                             </tr>
@@ -408,6 +421,11 @@ $menu_item_second = "list_product";
                                                     </td>
                                                     <td>
                                                         {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                        </a>
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
@@ -446,6 +464,7 @@ $menu_item_second = "list_product";
                                                 <th>Product Name</th>
                                                 <th class="text-center">Branch</th>
                                                 <th>Status</th>
+                                                <th class="text-center">View</th>
                                                 <th class="text-center">Edit</th>
                                                 <th class="text-center">Delete</th>
                                             </tr>
@@ -466,6 +485,11 @@ $menu_item_second = "list_product";
                                                     </td>
                                                     <td>
                                                         {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                        </a>
                                                     </td>
                                                     <td class="text-center">
                                                         <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
@@ -504,6 +528,7 @@ $menu_item_second = "list_product";
                                                 <th>Product Name</th>
                                                 <th class="text-center">Branch</th>
                                                 <th>Status</th>
+                                                <th class="text-center">View</th>
                                                 <th class="text-center">Edit</th>
                                                 <th class="text-center">Delete</th>
                                             </tr>
