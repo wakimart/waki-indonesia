@@ -26,7 +26,7 @@ $menu_item_second = "list_product";
     }
 
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link {
-        color: #111 !important; 
+        color: #111 !important;
     }
 
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
@@ -35,7 +35,7 @@ $menu_item_second = "list_product";
 
     .nav-tabs .nav-link {
         padding-left: 1.75em;
-        padding-right: 1.75em; 
+        padding-right: 1.75em;
     }
 
 </style>
@@ -131,61 +131,61 @@ $menu_item_second = "list_product";
                     <div class="card-header" style="background: none;">
                         <ul class="nav nav-tabs card-header-tabs">
                             <li class="nav-item">
-                                <a class="nav-link {{ $url['product_id'] == 4 ? 'active' : ''}}" 
-                                    style="font-weight: 500; font-size: 1em;" 
-                                    id="one-tab" 
-                                    href="{{ route('list_phc_product') }}?product_id=4{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}" 
-                                    aria-controls="One" 
+                                <a class="nav-link {{ $url['product_id'] == 4 ? 'active' : ''}}"
+                                    style="font-weight: 500; font-size: 1em;"
+                                    id="one-tab"
+                                    href="{{ route('list_phc_product') }}?product_id=4{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
+                                    aria-controls="One"
                                     aria-selected="true">
                                     WK2079
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ $url['product_id'] == 3 ? 'active' : ''}}" 
-                                    style="font-weight: 500; font-size: 1em;" 
-                                    id="two-tab" 
+                                <a class="nav-link {{ $url['product_id'] == 3 ? 'active' : ''}}"
+                                    style="font-weight: 500; font-size: 1em;"
+                                    id="two-tab"
                                     href="{{ route('list_phc_product') }}?product_id=3{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
-                                    aria-controls="Two" 
+                                    aria-controls="Two"
                                     aria-selected="true">
                                     WKT2076H
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ $url['product_id'] == 2 ? 'active' : ''}}" 
-                                    style="font-weight: 500; font-size: 1em;" 
-                                    id="three-tab" 
+                                <a class="nav-link {{ $url['product_id'] == 2 ? 'active' : ''}}"
+                                    style="font-weight: 500; font-size: 1em;"
+                                    id="three-tab"
                                     href="{{ route('list_phc_product') }}?product_id=2{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
-                                    aria-controls="Three" 
+                                    aria-controls="Three"
                                     aria-selected="true">
                                     WKT2076i
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ $url['product_id'] == 7 ? 'active' : ''}}" 
-                                    style="font-weight: 500; font-size: 1em;" 
-                                    id="four-tab" 
+                                <a class="nav-link {{ $url['product_id'] == 7 ? 'active' : ''}}"
+                                    style="font-weight: 500; font-size: 1em;"
+                                    id="four-tab"
                                     href="{{ route('list_phc_product') }}?product_id=7{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
-                                    aria-controls="Four" 
+                                    aria-controls="Four"
                                     aria-selected="true">
                                     WKA2023
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ $url['product_id'] == 6 ? 'active' : ''}}" 
-                                    style="font-weight: 500; font-size: 1em;" 
-                                    id="five-tab" 
+                                <a class="nav-link {{ $url['product_id'] == 6 ? 'active' : ''}}"
+                                    style="font-weight: 500; font-size: 1em;"
+                                    id="five-tab"
                                     href="{{ route('list_phc_product') }}?product_id=6{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
-                                    aria-controls="Five" 
+                                    aria-controls="Five"
                                     aria-selected="true">
                                     WKA2024
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ $url['product_id'] == 1 ? 'active' : ''}}" 
-                                    style="font-weight: 500; font-size: 1em;" 
-                                    id="six-tab" 
+                                <a class="nav-link {{ $url['product_id'] == 1 ? 'active' : ''}}"
+                                    style="font-weight: 500; font-size: 1em;"
+                                    id="six-tab"
                                     href="{{ route('list_phc_product') }}?product_id=1{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
-                                    aria-controls="Six" 
+                                    aria-controls="Six"
                                     aria-selected="true">
                                     WKT2080
                                 </a>
