@@ -609,7 +609,7 @@ $menu_item_second = "list_product";
                 <div class="modal-footer">
                     <form id="frmDelete"
                         method="post"
-                        action="">
+                        action="{{ route('delete_phc_product') }}">
                         @csrf
                         <input type="hidden" name="id" id="id-delete" />
                         <button type="submit"
