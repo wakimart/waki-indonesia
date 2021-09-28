@@ -182,7 +182,7 @@ $menu_item_second = "add_history_out";
                                                 name="quantity[]"
                                                 placeholder="Quantity"
                                                 min="0"
-                                                onblur="checkStock(this)"
+                                                oninput="checkStock(this)"
                                                 required />
                                             <small id="alert-quantity_0"
                                                 class="form-text text-danger"></small>
@@ -332,7 +332,7 @@ function addProduct() {
     inputQuantity.placeholder = "Quantity";
     inputQuantity.min = 0;
     inputQuantity.required = true;
-    inputQuantity.setAttribute("onblur", `checkStock(this)`);
+    inputQuantity.setAttribute("oninput", `checkStock(this)`);
 
     const smallAlertQuantity = document.createElement("small");
     smallAlertQuantity.id = `alert-quantity_${counter}`;
@@ -380,14 +380,14 @@ function checkStock(e) {
         // If query return null
         if (response.quantity === undefined && response.quantity === null) {
             document.getElementById("button-submit").setAttribute("disabled", "");
-            document.getElementById(`alert-quantity_${sequence}`).innerHTML = "Stock is not enough";
+            document.getElementById(`alert-quantity_${sequence}`).innerHTML = "Stock is not enough (Current stock: 0)";
             return;
         }
 
         // If query have result
         if ((response.quantity - quantity) < 0) {
             document.getElementById("button-submit").setAttribute("disabled", "");
-            document.getElementById(`alert-quantity_${sequence}`).innerHTML = "Stock is not enough";
+            document.getElementById(`alert-quantity_${sequence}`).innerHTML = `Stock is not enough (Current stock: ${response.quantity})`;
         } else if ((response.quantity - quantity) >= 0) {
             document.getElementById("button-submit").removeAttribute("disabled");
             document.getElementById(`alert-quantity_${sequence}`).innerHTML = "";
