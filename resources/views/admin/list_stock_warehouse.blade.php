@@ -144,6 +144,20 @@ $menu_item_second = "list_stock_warehouse";
                     </div>
                 </div>
 
+                <div class="col-xs-6 col-sm-4"
+                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    <div class="form-group">
+                        <label for="filter_month">Filter by Month</label>
+                        <input type="date"
+                            class="form-control"
+                            name="filter_month"
+                            id="filter_month"
+                            min="{{ date("Y-m-d", strtotime("-2 months")) }}"
+                            value="{{ $_GET["filter_month"] ?? '' }}"
+                            form="form-search" />
+                    </div>
+                </div>
+
                 <div class="col-xs-6 col-sm-6"
                     style="padding: 0; display: inline-block;">
                     <div class="form-group">
@@ -204,7 +218,11 @@ $menu_item_second = "list_stock_warehouse";
                                                 {{ $stock->product_name }}
                                             </td>
                                             <td>
-                                                {{ $stock->quantity }}
+                                                @if (isset($_GET["filter_month"]) && !empty($_GET["filter_month"]))
+                                                    {{ $stock->month_quantity }}
+                                                @else
+                                                    {{ $stock->quantity }}
+                                                @endif
                                             </td>
                                             <td class="text-center">
                                                 <a href="">
