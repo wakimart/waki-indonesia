@@ -439,7 +439,6 @@ class PersonalHomecareController extends Controller
                     "province_id",
                     "city_id",
                     "subdistrict_id",
-                    "ph_product_id",
                 ));
             }
 
