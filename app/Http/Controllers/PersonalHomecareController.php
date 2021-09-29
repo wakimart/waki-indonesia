@@ -24,7 +24,7 @@ class PersonalHomecareController extends Controller
 {
     public function index(Request $request)
     {
-        
+
         $personalhomecares = PersonalHomecare::where('active', true);
 
         $csos = Cso::select("id", "code", "name")
@@ -84,9 +84,9 @@ class PersonalHomecareController extends Controller
         $url = $request->all();
 
         return view("admin.list_all_personalhomecare", compact(
-            "personalhomecares", 
-            "csos", 
-            "branches", 
+            "personalhomecares",
+            "csos",
+            "branches",
             "url"))
             ->with('i', (request()->input('page', 1) - 1) * 10
         );
@@ -431,8 +431,7 @@ class PersonalHomecareController extends Controller
                     "cso_id",
                     "ph_product_id",
                 ));
-            }
-            else{
+            } else {
                 $personalHomecare->fill($request->only(
                     "name",
                     "phone",
@@ -440,9 +439,10 @@ class PersonalHomecareController extends Controller
                     "province_id",
                     "city_id",
                     "subdistrict_id",
+                    "ph_product_id",
                 ));
             }
-            
+
 
             if ($request->hasFile("id_card_image")) {
                 $timestamp = (string) time();
@@ -466,7 +466,7 @@ class PersonalHomecareController extends Controller
 
                 $personalHomecare->member_wakimart = $fileName;
             }
-            
+
             if ($request->hasFile("product_photo_2")){
                 $personalHomecare->status = "process";
             }
@@ -502,7 +502,7 @@ class PersonalHomecareController extends Controller
             }
             if($condition["completeness"] == null){
                 $condition["completeness"] = [];
-            } 
+            }
             $condition["machine"] = $request->input("machine_condition");
             $condition["physical"] = $request->input("physical_condition");
             $phcChecklistOut->condition = $condition;
@@ -744,7 +744,7 @@ class PersonalHomecareController extends Controller
             $phc->save();
 
 
-            // Store to product personal homecare checklist current 
+            // Store to product personal homecare checklist current
             $productPhc = $phc->personalHomecareProduct;
             $productPhc->current_checklist_id = $phcChecklist->id;
             $productPhc->status = "pending";
@@ -892,7 +892,7 @@ class PersonalHomecareController extends Controller
                     ->route("detail_personal_homecare", ["id" => $request->id])
                     ->with("success", "Acc for Reschedule Personal Homecare Success !");
             }
-            
+
 
         } catch (Exception $e) {
             DB::rollBack();
@@ -1013,7 +1013,7 @@ class PersonalHomecareController extends Controller
             }
 
         }
-        
+
 
         $body = ['registration_ids' => $fcm_tokenNya,
             'collapse_key' => "type_a",
