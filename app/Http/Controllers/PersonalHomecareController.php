@@ -833,12 +833,14 @@ class PersonalHomecareController extends Controller
         }
     }
 
-    public function extendPersonalHomecare($id){
+    public function extendPersonalHomecare(Request $request)
+    {
         DB::beginTransaction();
 
         try {
-            $phcNya = PersonalHomecare::find($id);
+            $phcNya = PersonalHomecare::find($request->id);
             $phcNya->is_extend = true;
+            $phcNya->extend_reason = $request->extend_reason;
             $phcNya->save();
 
             DB::commit();
@@ -846,7 +848,7 @@ class PersonalHomecareController extends Controller
             $this->accNotif($phcNya, "acc_extend");
 
             return redirect()
-                ->route("detail_personal_homecare", ["id" => $id])
+                ->route("detail_personal_homecare", ["id" => $request->id])
                 ->with("success", "Acc for Extend Personal Homecare Success !");
 
         } catch (Exception $e) {
