@@ -1344,11 +1344,9 @@ $menu_item_page = "personal_homecare";
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h5 style="text-align:center;">
+                    <h5 style="text-align: center;">
                         Are you sure to extend personal homecare? (+3 Days)
                     </h5>
-                </div>
-                <div class="modal-footer">
                     <form id="frmExtend"
                         method="post"
                         action="{{ route('extend_personal_homecare') }}">
@@ -1356,16 +1354,22 @@ $menu_item_page = "personal_homecare";
                         <input type="hidden"
                             name="id"
                             value="{{ $personalhomecare['id'] }}" />
-                        <textarea class="form-control"
-                            name="extend_reason"
-                            id="extend_reason"
-                            maxlength="200"
-                            required></textarea>
-                        <button type="submit"
-                            class="btn btn-gradient-danger mr-2">
-                            Yes
-                        </button>
+                        <div class="form-group">
+                            <textarea class="form-control"
+                                name="extend_reason"
+                                id="extend_reason"
+                                maxlength="200"
+                                placeholder="Extend Reason"
+                                required></textarea>
+                        </div>
                     </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit"
+                        class="btn btn-gradient-danger mr-2"
+                        form="frmExtend">
+                        Yes
+                    </button>
                     <button class="btn btn-light">No</button>
                 </div>
             </div>
