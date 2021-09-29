@@ -633,9 +633,9 @@ $menu_item_page = "personal_homecare";
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row justify-content-center">
+                            <div class="text-center">
                                 <h2>Extended from {{ date("Y-m-d", strtotime($personalhomecare['schedule'] .  " + 5 days")) }} to {{ date("Y-m-d", strtotime($personalhomecare['schedule'] .  " + 8 days")) }}</h2>
-                                {{ $personalhomecare["extend_reason"] }}
+                                <p>{{ $personalhomecare["extend_reason"] }}</p>
                             </div>
                             <form id="actionAdd"
                                 class="forms-sample"
