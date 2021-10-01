@@ -23,6 +23,9 @@ class PersonalHomecare extends Model
         "checklist_out",
         "checklist_in",
         "active",
+        "is_extend",
+        "reschedule_date",
+        "extend_reason",
     ];
 
     public function branch()

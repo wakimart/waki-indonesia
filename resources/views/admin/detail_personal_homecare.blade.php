@@ -314,7 +314,7 @@ $menu_item_page = "personal_homecare";
                                     <tr>
                                         <td rowspan="{{ sizeof($arr_completness)+1 }}">Completeness</td>
                                         <td>
-                                            <i class="mdi 
+                                            <i class="mdi
                                                 @if(isset($personalhomecare->checklistOut['condition']['completeness']))
                                                     {{ in_array($arr_completness[0],
                                                     $personalhomecare->checklistOut['condition']['completeness']) ?
@@ -331,7 +331,7 @@ $menu_item_page = "personal_homecare";
                                     @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
                                         <tr>
                                             <td>
-                                                <i class="mdi 
+                                                <i class="mdi
                                                     @if(isset($personalhomecare->checklistOut['condition']['completeness']))
                                                         {{ in_array($arr_completness[$idx_i],
                                                         $personalhomecare->checklistOut['condition']['completeness']) ?
@@ -604,7 +604,7 @@ $menu_item_page = "personal_homecare";
                             <div class="form-group row justify-content-center">
                                 <button type="button"
                                         data-toggle="modal"
-                                        data-target="#modal-upload-receipt-photo" 
+                                        data-target="#modal-upload-receipt-photo"
                                         class="btn btn-gradient-primary mr-2 btn-lg">
                                     Upload Photo
                                 </button>
@@ -695,8 +695,9 @@ $menu_item_page = "personal_homecare";
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row justify-content-center">
+                            <div class="text-center">
                                 <h2>Extended from {{ date("Y-m-d", strtotime($personalhomecare['schedule'] .  " + 5 days")) }} to {{ date("Y-m-d", strtotime($personalhomecare['schedule'] .  " + 8 days")) }}</h2>
+                                <p>{{ $personalhomecare["extend_reason"] }}</p>
                             </div>
                             <form id="actionAdd"
                                 class="forms-sample"
@@ -803,6 +804,7 @@ $menu_item_page = "personal_homecare";
 
         <div class="row">
             <div id="element-to-print" class="col-12 grid-margin stretch-card showPrinted">
+            <!-- <div class="col-12 grid-margin stretch-card"> -->
                 <div class="card">
                     <div class="card-body">
                         <div style="background-color: #008349; height: 15px;"></div>
@@ -811,113 +813,328 @@ $menu_item_page = "personal_homecare";
                                 src="{{ asset('sources/logosince.svg') }}"
                                 alt="logo" />
                         </div>
-                        <div>
-                            <div style="width: 80%; margin: auto; text-align: center;">
-                                <h1 style="font-weight: 700;">
-                                    SURAT TANDA TERIMA BARANG
-                                </h1>
-                                <h4>
-                                    PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
-                                <h4>
-                            </div>
-                            <br>
-                            <div style="width: 90%; margin: auto; text-align: justify;">
-                                <p style="font-size:1.1em">Saya yang bertanda tangan, menyatakan telah menerima barang dalam keadaan baik dan berfungsi normal sesuai data di bawah ini. Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
-                            </div>
-                            <br>
-                            <div>
-                                <div style="width: 300px; background-color: #b4d9c4;">
-                                    <h4 style="padding-left: 15%;">
-                                        DATA CUSTOMER
-                                    </H4>
-                                </div>
-                            </div>
+                        <div style="width: 100%; display: flex; flex-wrap: wrap;">
+                          <div style="width: 50%; border-right: 0.5px solid #2b2b2b;">
+                              <div style="width: 95%; margin: auto; text-align: center;">
+                                  <h2 style="font-weight: 700;">
+                                      SURAT TANDA TERIMA BARANG
+                                  </h2>
+                                  <h5>
+                                      PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
+                                  <h5>
+                              </div>
+                              <br>
+                              <div style="width: 95%; margin: auto; text-align: justify;">
+                                  <p>Saya yang bertanda tangan, menyatakan telah menerima barang dalam keadaan baik dan berfungsi normal sesuai data di bawah ini. Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
+                              </div>
+                              <br>
+                              <div>
+                                  <div style="width: 100%; background-color: #b4d9c4; padding: 0.25em; margin-bottom: 0.5em;">
+                                      <h4 style="padding-left: 5%;margin: 0;">
+                                          DATA CUSTOMER
+                                      </H4>
+                                  </div>
+                              </div>
+                              <div style="width: 95%; margin: auto; display: table; margin-bottom: 1.5em;">
+                                  <div style="width: 98%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                      <h5>NAMA: {{ $personalhomecare['name'] }}</h5>
+                                  </div>
+                                  <div style="width: 98%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                      <h5>
+                                          NO.TELP: {{ $personalhomecare['phone'] }}
+                                      </h5>
+                                  </div>
+                                  <div style="width: 98%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                      <h5>
+                                          NO.MEMBER:
+                                      </h5>
+                                  </div>
+                                  <div style="width: 98%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                      <h5>
+                                          CABANG: {{ $personalhomecare->branch->code }}
+                                      </h5>
+                                  </div>
+                              </div>
+                          </div>
+                          <div style="width: 50%; border-left: 0.5px solid #2b2b2b;">
+                              <div style="width: 95%; margin: auto; text-align: center;">
+                                  <h2 style="font-weight: 700;">
+                                      SURAT PENGAMBILAN BARANG
+                                  </h2>
+                                  <h5>
+                                      PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
+                                  <h5>
+                              </div>
+                              <br>
+                              <div style="width: 95%; margin: auto; text-align: justify;">
+                                  <p>Saya yang bertanda tangan, menyatakan telah menerima barang dalam keadaan baik dan berfungsi normal sesuai data di bawah ini. Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
+                              </div>
+                              <br>
+                              <div>
+                                  <div style="width: 100%; background-color: #b4d9c4; padding: 0.25em; margin-bottom: 0.5em;">
+                                    <h4 style="padding-left: 5%;margin: 0;">
+                                          DATA PRODUK
+                                      </H4>
+                                  </div>
+                              </div>
+                              <div style="width: 95%; margin: auto; display: table; margin-bottom: 1.5em;">
+                                  <div style="width: 98%; margin-bottom:5px; float: left; border-bottom:1px solid black;">
+                                      <h5>
+                                          TGL PENGIRIMAN: {{ $personalhomecare['schedule'] }}
+                                      </h5>
+                                  </div>
+                                  <div style="width: 98%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                      <h5>
+                                          TGL PENGAMBILAN: {{ date("Y-m-d", strtotime($personalhomecare['schedule'] .  " + 5 days")) }}
+                                      </h5>
+                                  </div>
+                                  <div style="width: 98%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                      <h5>
+                                          NAMA PRODUK:
+                                      </h5>
+                                  </div>
+                                  <div style="width: 98%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
+                                      <h5>
+                                          KODE PRODUK:
+                                      </h5>
+                                  </div>
+                              </div>
+                          </div>
                         </div>
-                        <div style="width: 90%; margin: auto; display: table; margin-bottom: 1.5em;">
-                            <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>NAMA: {{ $personalhomecare['name'] }}</h5>
-                            </div>
-                            <div style="width: 48%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>
-                                    CABANG: {{ $personalhomecare->branch->code }}
-                                </h5>
-                            </div>
-                            <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>
-                                    NO.TELP: {{ $personalhomecare['phone'] }}
-                                </h5>
-                            </div>
-                            <div style="width: 48%; margin-bottom:5px; float: left; border-bottom:1px solid black;">
-                                <h5>
-                                    TGL PENGIRIMAN: {{ $personalhomecare['schedule'] }}
-                                </h5>
-                            </div>
-                            <div style="width: 48%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>NO.MEMBER:</h5>
-                            </div>
-                            <div style="width: 48%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                <h5>
-                                    TGL PENGAMBILAN: {{ date("Y-m-d", strtotime($personalhomecare['schedule'] .  " + 5 days")) }}
-                                </h5>
-                            </div>
-                        </div>
+
                         <div style="margin:auto;">
-                            <div>
+                            <div style="margin-top: 1em;">
                                 <table class="col-md-12" style="border: 1px solid black; width: 100%;">
                                     <thead>
-                                        <td class="text-center" style="border: 1px solid black;">Jumlah (Qty)</td>
-                                        <td class="text-center" style="border: 1px solid black;">Kode Produk</td>
-                                        <td class="text-center" style="border: 1px solid black;">Nama Produk</td>
-                                        <td class="text-center" style="border: 1px solid black;">Kelengkapan</td>
-                                        <td class="text-center" style="border: 1px solid black;">Kondisi</td>
-                                        <td class="text-center" style="border: 1px solid black;">Keterangan</td>
+                                        <td class="text-center" style="border: 1px solid black;"><h4>KELENGKAPAN</h4></td>
+                                        <td class="text-center" style="border: 1px solid black;"><h4>OUT</h4></td>
+                                        <td class="text-center" style="border: 1px solid black;"><h4>IN</h4></td>
+                                        <td class="text-center" style="border: 1px solid black;"><h4>CATATAN</h4></td>
                                     </thead>
                                     <tr>
-                                        <td class="text-center" style="border: 1px solid black;">1</td>
-                                        <td class="text-center" style="border: 1px solid black;">
-                                            {{ $personalhomecare->personalHomecareProduct->code }}
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Pulse Pegangan
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td rowspan="17" style="border: 1px solid black; max-width: 150px;">
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Buku Manual
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Bantalan Pantat
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Pad Bantalan
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Botol Plastik
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Bandage
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                        Sabuk Pinggang
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Kabel
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          <h4>MESIN</h4>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Normal
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Need Repair
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          <h4>FISIK</h4>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Baru
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Moderate
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; border-width: 0 1px;">
+                                          Need Repair
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
+                                          <input type="checkbox"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-right" style="border: 1px solid black;">
+                                          <h4>TOTAL CHECK:</h4>
                                         </td>
                                         <td class="text-center" style="border: 1px solid black;">
-                                            {{ $personalhomecare->personalHomecareProduct->product->name }}
                                         </td>
-                                        <td style="border: 1px solid black;">
-                                            <ul>
-                                                @php
-                                                    $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
-                                                    $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
-                                                @endphp
-                                                @foreach ($arr_completness as $completeness)
-                                                    @if ($completeness !== "other")
-                                                        <li style="line-height: 1.3;">
-                                                            {{ ucwords($completeness) }}
-                                                        </li>
-                                                    @endif
-                                                @endforeach
-                                            </ul>
+                                        <td class="text-center" style="border: 1px solid black;">
                                         </td>
-                                        <td style="border: 1px solid black;">
-                                            <b>MESIN</b>
-                                            <ul>
-                                                <li>Normal</li>
-                                                <li>Need Repair</li>
-                                            </ul>
-                                            <b>FISIK</b>
-                                            <ul>
-                                                <li>New</li>
-                                                <li>Moderate</li>
-                                                <li>Need Repair</li>
-                                            </ul>
+                                        <td class="text-center" style="border: 1px solid black;">
                                         </td>
-                                        <td class="text-center" style="border: 1px solid black;"></td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
+                        <br><br><br><br><br><br><br>
+                        <div style="width: 100%; margin: auto; text-align: justify;">
+                            <div style="width: 24%; float: left;">
+                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
+                                    <p>Tanda Tangan Customer Penerima</p>
+                                </div>
+                            </div>
+                            <div style="width: 24%; float: left;">
+                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
+                                    <p>Tanda Tangan Pengirim</p>
+                                </div>
+                            </div>
+                            <div style="width: 24%; float: left;">
+                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
+                                    <p>Tanda Tangan Customer Kembali</p>
+                                </div>
+                            </div>
+                            <div style="width: 24%; float: left;">
+                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
+                                    <p>Tanda Tangan Pengambil</p>
+                                </div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="clearfix"></div>
                         <div style="width:90%;margin:1.5em auto 0;text-align:justify">
-                            <p style="font-size:1.1em">Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
+                            <p>Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
                             <h5>SYARAT & KETENTUAN:</h5>
                             <div style="width: 90%; margin: auto;">
-                                <ol type="1" style="font-size:1.1em">
+                                <ol type="1">
                                     <li>Program pinjamin produk 5 hari (PP5H) tidak dipungut biaya apapun.</li>
                                     <li>Sudah menjadi member WAKimart dan minimal berusia 35 tahun</li>
                                     <li>Apabila ada kekurangan, kehilangan ataupun kerusakan pada produk saat pengembalian, berarti membeli barang dengan harga normal sesuai ketentuan yang ada.</li>
@@ -925,103 +1142,15 @@ $menu_item_page = "personal_homecare";
                                     <li>Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya.</li>
                                     <li>Kenyamanan dan keamanan konsumen kami adalah prioritas pertama.</li>
                                 </ol>
-                                <p style="font-size:1.1em">Apabila ada sesuatu atau ada pertanyaan, bisa menghubungi kami melalui facebook page WAKi Indonesia ataau customer care kami : 0815-5467-3357</p>
                             </div>
+                            <p>Apabila ada sesuatu atau ada pertanyaan, bisa menghubungi kami melalui facebook page WAKi Indonesia atau customer care kami : 0815-5467-3357</p>
                         </div>
-                        <br><br><br><br><br><br><br>
-                        <div style="width: 80%; margin: auto; text-align: justify;">
-                            <div style="width: 48%; float: left;">
-                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
-                                    <p>Tanda Tangan Penerima</p>
-                                </div>
-                            </div>
-                            <div style="width: 48%; float: left;">
-                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
-                                    <p>Tanda Tangan Pengirim</p>
-                                </div>
-                            </div>
-                        </div>
-                        <br><br>
+
                         <div class="clearfix"></div>
                         <div class="clearfix"></div>
-                        <p style="page-break-after: always;">&nbsp;</p>
-                        <p style="page-break-before: always;">&nbsp;</p>
-                        <div>
-                            <div style="width: 80%; margin: auto; text-align: center;">
-                                <h1 style="font-weight: 700;">
-                                    SURAT PENGAMBILAN BARANG
-                                </h1>
-                                <h4>
-                                    PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
-                                <h4>
-                            </div>
-                        </div>
-                        <br>
-                        <div style="margin:auto">
-                            <div>
-                                <table class="col-md-12" style="border: 1px solid black;width: 100%;">
-                                    <thead>
-                                        <td class="text-center" style="border: 1px solid black;">Jumlah (QTY)</td>
-                                        <td class="text-center" style="border: 1px solid black;">Kode Produk</td>
-                                        <td class="text-center" style="border: 1px solid black;">Nama Produk</td>
-                                        <td class="text-center" style="border: 1px solid black;">Kelengkapan</td>
-                                        <td class="text-center" style="border: 1px solid black;">Kondisi</td>
-                                        <td class="text-center" style="border: 1px solid black;">Keterangan</td>
-                                    </thead>
-                                    <tr>
-                                        <td class="text-center" style="border: 1px solid black;">1</td>
-                                        <td class="text-center" style="border: 1px solid black;">
-                                            {{ $personalhomecare->personalHomecareProduct->code }}
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black;">
-                                            {{ $personalhomecare->personalHomecareProduct->product->name }}
-                                        </td>
-                                        <td style="border: 1px solid black;">
-                                            <ul style="list-style-type: circle;">
-                                                @php
-                                                    $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
-                                                    $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
-                                                @endphp
-                                                @foreach ($arr_completness as $completeness)
-                                                    @if ($completeness !== "other")
-                                                        <li style="line-height: 1.3;">
-                                                            {{ ucwords($completeness) }}
-                                                        </li>
-                                                    @endif
-                                                @endforeach
-                                            </ul>
-                                        </td>
-                                        <td style="border: 1px solid black;">
-                                            <b>MESIN</b>
-                                            <ul style="list-style-type: circle;">
-                                                <li>Normal</li>
-                                                <li>Need Repair</li>
-                                            </ul>
-                                            <b>FISIK</b>
-                                            <ul style="list-style-type: circle;">
-                                                <li>New</li>
-                                                <li>Moderate</li>
-                                                <li>Need Repair</li>
-                                            </ul>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black;"></td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                         <br><br><br><br><br><br><br><br>
-                        <div style="width: 80%; margin: auto; text-align: justify;">
-                            <div style="width: 48%; float: left;">
-                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
-                                    <p>Tanda Tangan Customer</p>
-                                </div>
-                            </div>
-                            <div style="width: 48%; float: left;">
-                                <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
-                                    <p>Tanda Tangan Pengambil</p>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- <p style="page-break-after: always;">&nbsp;</p>
+                        <p style="page-break-before: always;">&nbsp;</p> -->
+
                     </div>
                 </div>
             </div>
@@ -1166,7 +1295,7 @@ $menu_item_page = "personal_homecare";
                     $isWaitingInChecklist = ($personalhomecare['status'] == "waiting_in" && $personalhomecare->personalHomecareProduct['status'] == "pending");
                     $phcproducts = $personalhomecare->personalHomecareProduct;
                 @endphp
-                
+
                 <div class="modal-body">
                     <input type="hidden"
                         name="id"
@@ -1183,7 +1312,7 @@ $menu_item_page = "personal_homecare";
                                             name="completeness[]"
                                             id="completeness-{{$checklistInput}}"
                                             value="{{$checklistInput}}"
-                                            form="add-phc" 
+                                            form="add-phc"
                                             @if($phcproducts->currentChecklist != null)
                                                 {{ in_array($checklistInput, $phcproducts->
                                                 currentChecklist['condition']['completeness']) && $isWaitingInChecklist ?
@@ -1194,7 +1323,7 @@ $menu_item_page = "personal_homecare";
                                     </label>
                                 </div>
                             @endforeach
-                            
+
                             <div class="form-check">
                                 <label for="completeness-other"
                                     class="form-check-label">
@@ -1203,7 +1332,7 @@ $menu_item_page = "personal_homecare";
                                         id="completeness-other"
                                         value="other"
                                         form="add-phc"
-                                        onchange="showOtherInput(this)" 
+                                        onchange="showOtherInput(this)"
                                         @if($phcproducts->currentChecklist != null)
                                             {{ in_array("other", $phcproducts->
                                             currentChecklist['condition']['completeness']) && $isWaitingInChecklist ?
@@ -1219,7 +1348,7 @@ $menu_item_page = "personal_homecare";
                                     placeholder="Other description"
                                     name="other_completeness"
                                     id="other-text"
-                                    form="add-phc" 
+                                    form="add-phc"
                                     value="{{ $isWaitingInChecklist ? $phcproducts->currentChecklist['condition']['other'] : "" }}"/>
                             </div>
                         </div>
@@ -1237,7 +1366,7 @@ $menu_item_page = "personal_homecare";
                                         id="machine-condition-normal"
                                         value="normal"
                                         form="add-phc"
-                                        required 
+                                        required
                                         {{ $phcproducts->currentChecklist
                                         ['condition']['machine'] == "normal" && $isWaitingInChecklist ?
                                         "checked" : "" }}/>
@@ -1253,7 +1382,7 @@ $menu_item_page = "personal_homecare";
                                         id="machine-condition-need-repair"
                                         value="need_repair"
                                         form="add-phc"
-                                        required 
+                                        required
                                         {{ $phcproducts->currentChecklist
                                         ['condition']['machine'] == "need_repair" && $isWaitingInChecklist ?
                                         "checked" : "" }}/>
@@ -1275,7 +1404,7 @@ $menu_item_page = "personal_homecare";
                                         id="physical-condition-new"
                                         value="new"
                                         form="add-phc"
-                                        required 
+                                        required
                                         {{ $phcproducts->currentChecklist
                                         ['condition']['physical'] == "new" && $isWaitingInChecklist ?
                                         "checked" : "" }}/>
@@ -1291,7 +1420,7 @@ $menu_item_page = "personal_homecare";
                                         id="physical-condition-moderate"
                                         value="moderate"
                                         form="add-phc"
-                                        required 
+                                        required
                                         {{ $phcproducts->currentChecklist
                                         ['condition']['physical'] == "moderate" && $isWaitingInChecklist ?
                                         "checked" : "" }}/>
@@ -1307,7 +1436,7 @@ $menu_item_page = "personal_homecare";
                                         id="physical-condition-need-repair"
                                         value="need_repair"
                                         form="add-phc"
-                                        required 
+                                        required
                                         {{ $phcproducts->currentChecklist
                                         ['condition']['physical'] == "need_repair" && $isWaitingInChecklist ?
                                         "checked" : "" }}/>
@@ -1373,7 +1502,7 @@ $menu_item_page = "personal_homecare";
                         <input type="text"
                             class="form-control"
                             id="wakimart-member-code"
-                            placeholder="Member Code" 
+                            placeholder="Member Code"
                             required />
                     </div>
                 </div>
@@ -1406,21 +1535,32 @@ $menu_item_page = "personal_homecare";
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h5 style="text-align:center;">
+                    <h5 style="text-align: center;">
                         Are you sure to extend personal homecare? (+3 Days)
                     </h5>
-                </div>
-                <div class="modal-footer">
                     <form id="frmExtend"
                         method="post"
-                        action="{{ route('extend_personal_homecare', ["id" => $personalhomecare['id']]) }}">
+                        action="{{ route('extend_personal_homecare') }}">
                         @csrf
-                        <input type="hidden" name="id" id="id-delete" />
-                        <button type="submit"
-                            class="btn btn-gradient-danger mr-2">
-                            Yes
-                        </button>
+                        <input type="hidden"
+                            name="id"
+                            value="{{ $personalhomecare['id'] }}" />
+                        <div class="form-group">
+                            <textarea class="form-control"
+                                name="extend_reason"
+                                id="extend_reason"
+                                maxlength="200"
+                                placeholder="Extend Reason"
+                                required></textarea>
+                        </div>
                     </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit"
+                        class="btn btn-gradient-danger mr-2"
+                        form="frmExtend">
+                        Yes
+                    </button>
                     <button class="btn btn-light">No</button>
                 </div>
             </div>
@@ -1457,7 +1597,6 @@ $(document).ready(function() {
         window.print();
 
         window.location = "{{ route('detail_personal_homecare', ['id' => $personalhomecare['id']]) }}";
-        // setTimeout(function () { window.close(); }, 100);
 
         document.body.innerHTML = originalContents;
 
@@ -1466,16 +1605,5 @@ $(document).ready(function() {
     });
     $("#success-alert").hide();
 });
-
-// $( document ).ready(function() {
-//     $("#btn-pdf").click(function(){
-//         $(".showPrinted").show();
-//         $(".hide-print").hide();
-//
-//         var pdfContent = document.getElementById("element-to-print").innerHTML;
-//         html2pdf(pdfContent);
-//     });
-//     $("#success-alert").hide();
-// });
 </script>
 @endsection
