@@ -298,10 +298,10 @@ $menu_item_page = "personal_homecare";
                                     </tr>
                                     <tr>
                                         <td colspan="2">Schedule</td>
-                                        <td>
+                                        <td class="text-center">
                                             {{ date("d/m/Y", strtotime($personalhomecare['schedule'])) }}
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             {{ $personalhomecare->status == "process_extend" ? date("d/m/Y", 
                                                 strtotime($personalhomecare->schedule . "+8 days")) : date("d/m/Y", 
                                                 strtotime($personalhomecare->schedule . "+5 days")) }}
@@ -315,7 +315,7 @@ $menu_item_page = "personal_homecare";
                                     <tr>
                                         <td rowspan="{{ sizeof($arr_completness)}}">Completeness</td>
                                         <td>{{$arr_completness[0]}}</td>
-                                        <td class="text-right">
+                                        <td class="text-center">
                                             <i class="mdi
                                                 @if(isset($personalhomecare->checklistOut['condition']['completeness']))
                                                     {{ in_array($arr_completness[0],
@@ -327,10 +327,15 @@ $menu_item_page = "personal_homecare";
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
                                         </td>
-                                        <td class="text-right">
-                                            <i class="mdi {{ isset($arr_completness[0],
-                                                $personalhomecare->checklistIn['condition']['completeness']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                        <td class="text-center">
+                                            <i class="mdi 
+                                                @if(isset($personalhomecare->checklistIn['condition']['completeness']))
+                                                    {{ in_array($arr_completness[0],
+                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                @else
+                                                    mdi-checkbox-blank-outline"
+                                                @endif
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
                                         </td>
@@ -340,7 +345,7 @@ $menu_item_page = "personal_homecare";
                                             <td>
                                                 {{ $arr_completness[$idx_i] }}
                                             </td>
-                                            <td class="text-right">
+                                            <td class="text-center">
                                                 <i class="mdi
                                                     @if(isset($personalhomecare->checklistOut['condition']['completeness']))
                                                         {{ in_array($arr_completness[$idx_i],
@@ -352,10 +357,15 @@ $menu_item_page = "personal_homecare";
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
                                             </td>
-                                            <td class="text-right">
-                                                <i class="mdi {{ isset($arr_completness[$idx_i],
-                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
-                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                            <td class="text-center">
+                                                <i class="mdi 
+                                                    @if(isset($personalhomecare->checklistIn['condition']['completeness']))
+                                                        {{ in_array($arr_completness[$idx_i],
+                                                        $personalhomecare->checklistIn['condition']['completeness']) ?
+                                                        "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                    @else
+                                                        mdi-checkbox-blank-outline"
+                                                    @endif
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
                                             </td>
@@ -363,10 +373,10 @@ $menu_item_page = "personal_homecare";
                                     @endfor
                                     <tr>
                                         <td colspan="2">Total Completeness Checklist</td>
-                                        <td class="text-right">
+                                        <td class="text-center">
                                             {{sizeof($personalhomecare->checklistOut['condition']['completeness'])}}
                                         </td>
-                                        <td class="text-right">
+                                        <td class="text-center">
                                             {{ isset($personalhomecare->checklistIn['condition']['completeness']) ? 
                                                 sizeof($personalhomecare->checklistIn['condition']['completeness']) : "0" }}
                                             
