@@ -84,6 +84,7 @@ $menu_item_page = "personal_homecare";
     table thead {
         background-color: #00000030;
         text-align: center;
+        height: 30px;
     }
 
     table td {
@@ -278,42 +279,43 @@ $menu_item_page = "personal_homecare";
             <div class="col-12 grid-margin stretch-card">
                 <div class="card" style="padding: 1em;">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h2 class="text-center">Product Out Checklist</h2>
-                            </div>
-                            <div class="col-md-6 checkin">
-                                <h2 class="text-center">Product In Checklist</h2>
-                            </div>
+                        <div class="row justify-content-center">
+                            <h2 class="text-center">Product Checklist</h2>
                         </div>
-                        <div class="wrap mt-3">
-                            <div class="cell-wrap left">
-                                <table class="table-bordered">
-                                    <thead style="display: none;">
-                                        <th style="width: 30%;">Checklist</th>
-                                        <th style="width: 70%;">Content</th>
+                        <div class="row justify-content-center mt-3">
+                            <div class="table-responsive">
+                                <table class="table-bordered col-md-12">
+                                    <thead style="background: none;">
+                                        <th colspan="2" style="width: 30%;">Checklist</th>
+                                        <th style="width: 35%;">Out</th>
+                                        <th style="width: 35%;">In</th>
                                     </thead>
                                     <tr>
-                                        <td>Product</td>
-                                        <td>
+                                        <td colspan="2">Product</td>
+                                        <td colspan="2">
                                             {{ $personalhomecare->personalHomecareProduct->code }} ({{ $personalhomecare->personalHomecareProduct->product['code'] }} - {{ $personalhomecare->personalHomecareProduct->product['name'] }})
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Schedule Date</td>
+                                        <td colspan="2">Schedule</td>
                                         <td>
                                             {{ date("d/m/Y", strtotime($personalhomecare['schedule'])) }}
                                         </td>
+                                        <td>
+                                            {{ $personalhomecare->status == "process_extend" ? date("d/m/Y", 
+                                                strtotime($personalhomecare->schedule . "+8 days")) : date("d/m/Y", 
+                                                strtotime($personalhomecare->schedule . "+5 days")) }}
+                                        </td>
                                     </tr>
-
                                     @php
                                         $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
                                         $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                        $total = 0;
                                     @endphp
-
                                     <tr>
-                                        <td rowspan="{{ sizeof($arr_completness)+1 }}">Completeness</td>
-                                        <td>
+                                        <td rowspan="{{ sizeof($arr_completness)}}">Completeness</td>
+                                        <td>{{$arr_completness[0]}}</td>
+                                        <td class="text-right">
                                             <i class="mdi
                                                 @if(isset($personalhomecare->checklistOut['condition']['completeness']))
                                                     {{ in_array($arr_completness[0],
@@ -324,13 +326,21 @@ $menu_item_page = "personal_homecare";
                                                 @endif
                                                 style="font-size: 24px; color: #fed713;">
                                             </i>
-                                            {{$arr_completness[0]}}
+                                        </td>
+                                        <td class="text-right">
+                                            <i class="mdi {{ isset($arr_completness[0],
+                                                $personalhomecare->checklistIn['condition']['completeness']) ?
+                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                style="font-size: 24px; color: #fed713;">
+                                            </i>
                                         </td>
                                     </tr>
-
                                     @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
                                         <tr>
                                             <td>
+                                                {{ $arr_completness[$idx_i] }}
+                                            </td>
+                                            <td class="text-right">
                                                 <i class="mdi
                                                     @if(isset($personalhomecare->checklistOut['condition']['completeness']))
                                                         {{ in_array($arr_completness[$idx_i],
@@ -341,36 +351,47 @@ $menu_item_page = "personal_homecare";
                                                     @endif
                                                     style="font-size: 24px; color: #fed713;">
                                                 </i>
-                                                {{$arr_completness[$idx_i]}}
+                                            </td>
+                                            <td class="text-right">
+                                                <i class="mdi {{ isset($arr_completness[$idx_i],
+                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
+                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                    style="font-size: 24px; color: #fed713;">
+                                                </i>
                                             </td>
                                         </tr>
                                     @endfor
-
                                     <tr>
-                                        <td>
-                                            <i class="mdi {{ isset($personalhomecare->checklistOut['condition']['other']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                style="font-size: 24px; color: #fed713;">
-                                            </i>
-                                            Other :
-                                            {{ isset($personalhomecare->checklistOut['condition']['other']) ?
-                                                $personalhomecare->checklistOut['condition']['other'] : "-" }}
+                                        <td colspan="2">Total Completeness Checklist</td>
+                                        <td class="text-right">
+                                            {{sizeof($personalhomecare->checklistOut['condition']['completeness'])}}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ isset($personalhomecare->checklistIn['condition']['completeness']) ? 
+                                                sizeof($personalhomecare->checklistIn['condition']['completeness']) : "0" }}
+                                            
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Machine Condition</td>
+                                        <td colspan="2">Machine Condition</td>
                                         <td>
                                             {{ ucwords($personalhomecare->checklistOut['condition']['machine']) }}
                                         </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Physical Condition</td>
                                         <td>
-                                            {{ ucwords($personalhomecare->checklistOut['condition']['physical']) }}
+                                            {{ isset($personalhomecare->checklistIn['condition']['machine']) ? ucwords($personalhomecare->checklistIn['condition']['machine']) : "-" }}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Product Photo</td>
+                                        <td colspan="2">Physical Condition</td>
+                                        <td>
+                                            {{ ucwords($personalhomecare->checklistOut['condition']['physical']) }}
+                                        </td>
+                                        <td>
+                                            {{ isset($personalhomecare->checklistIn['condition']['physical']) ? ucwords($personalhomecare->checklistIn['condition']['physical']) : "-" }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Product Photo</td>
                                         <td>
                                             @if(isset($personalhomecare->checklistOut['image']))
                                                 @foreach ($personalhomecare->checklistOut['image'] as $img)
@@ -381,97 +402,9 @@ $menu_item_page = "personal_homecare";
                                                 @endforeach
                                             @endif
                                         </td>
-                                    </tr>
-                                </table>                          
-                            </div>
-                            <div class="cell-wrap right">
-                                <div class="row justify-content-center">
-                                    <h2 class="text-center checkin-mob">Product In Checklist</h2>
-                                </div>
-                                <table class="table-bordered">
-                                    <thead style="display: none;">
-                                        <th style="width: 30%;">
-                                            Checklist
-                                        </th>
-                                        <th style="width: 70%;">
-                                            Content
-                                        </th>
-                                    </thead>
-                                    <tr>
-                                        <td>Product</td>
                                         <td>
-                                            {{ $personalhomecare->personalHomecareProduct->code }} ({{ $personalhomecare->personalHomecareProduct->product['code'] }} - {{ $personalhomecare->personalHomecareProduct->product['name'] }})
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Schedule Date</td>
-                                        <td>
-                                            {{ isset($personalhomecare->checklistIn["created_at"]) ? $personalhomecare->checklistIn["created_at"] : "-" }}
-                                        </td>
-                                    </tr>
-
-                                    @php
-                                        $prd_firstLetter = substr($personalhomecare->personalHomecareProduct['code'], 0, 1);
-                                        $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
-                                    @endphp
-
-                                    <tr>
-                                        <td rowspan="{{ sizeof($arr_completness)+1 }}">Completeness</td>
-                                        <td>
-                                            <i class="mdi {{ isset($arr_completness[0],
-                                                $personalhomecare->checklistIn['condition']['completeness']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                style="font-size: 24px; color: #fed713;">
-                                            </i>
-                                            {{ $arr_completness[0] }}
-                                        </td>
-                                    </tr>
-
-                                    @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
-                                        <tr>
-                                            <td>
-                                                <i class="mdi {{ isset($arr_completness[$idx_i],
-                                                    $personalhomecare->checklistIn['condition']['completeness']) ?
-                                                    "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                    style="font-size: 24px; color: #fed713;">
-                                                </i>
-                                                {{ $arr_completness[$idx_i] }}
-                                            </td>
-                                        </tr>
-                                    @endfor
-
-                                    <tr>
-                                        <td>
-                                            <i class="mdi {{ isset($personalhomecare->checklistIn['condition']['other']) ?
-                                                "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
-                                                style="font-size: 24px; color: #fed713;">
-                                            </i>
-                                            Other :
-                                            {{ isset($personalhomecare->checklistIn['condition']['other']) ?
-                                                $personalhomecare->checklistIn['condition']['other'] : "-" }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Machine Condition</td>
-                                        <td>
-                                            {{ isset($personalhomecare->checklistIn['condition']['machine']) ? ucwords($personalhomecare->checklistIn['condition']['machine']) : "-" }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Physical Condition</td>
-                                        <td>
-                                            {{ isset($personalhomecare->checklistIn['condition']['physical']) ? ucwords($personalhomecare->checklistIn['condition']['physical']) : "-" }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Product Photo</td>
-                                        <td>
-                                            @php
-                                                $image = $personalhomecare->checklistIn['image'];
-                                            @endphp
-
-                                            @if(isset($image))
-                                                @foreach ($image as $img)
+                                            @if(isset($personalhomecare->checklistIn['image']))
+                                                @foreach ($personalhomecare->checklistIn['image'] as $img)
                                                     <img src="{{asset('sources/phc-checklist') . '/' . $img}}"
                                                         height="300px"
                                                         style="margin-bottom: 15px;"
@@ -486,7 +419,7 @@ $menu_item_page = "personal_homecare";
                         <div class="clearfix"></div>
 
                         @if(strtolower($personalhomecare['status']) == "process" || strtolower($personalhomecare['status']) == "process_extend")
-                            <div class="row justify-content-center row-btn">
+                            <div class="row justify-content-center mt-4">
                                 <div class="form-group"
                                     style="margin-bottom: 0;">
                                     <button type="button"
@@ -500,7 +433,7 @@ $menu_item_page = "personal_homecare";
                         @endif
 
                         @if(strtolower($personalhomecare['status']) == "waiting_in" && Gate::check('change-status-checkin-personalhomecare'))
-                            <div class="row justify-content-center row-btn">
+                            <div class="row justify-content-center mt-4">
                                 <div class="form-group"
                                     style="margin-bottom: 0;">
                                     <button type="button"
