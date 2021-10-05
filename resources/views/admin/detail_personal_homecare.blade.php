@@ -851,186 +851,39 @@ $menu_item_page = "personal_homecare";
                                         <td class="text-center" style="border: 1px solid black;margin: 0;"><h4>IN</h4></td>
                                         <td class="text-center" style="border: 1px solid black;margin: 0;"><h4>CATATAN</h4></td>
                                     </thead>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Pulse Pegangan
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td rowspan="17" style="border: 1px solid black; max-width: 150px;">
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Buku Manual
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Bantalan Pantat
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Pad Bantalan
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Botol Plastik
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Bandage
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                        Sabuk Pinggang
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Kabel
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          <h4>MESIN</h4>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Normal
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Need Repair
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          <h4>FISIK</h4>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Baru
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Moderate
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; border-width: 0 1px;">
-                                          Need Repair
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                        <td class="text-center" style="border: 1px solid black; border-width: 0 1px;">
-                                          <input type="checkbox"/>
-                                        </td>
-                                    </tr>
+                                    @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
+                                        <tr>
+                                            <td style="border: 1px solid black; border-width: 0 1px;">
+                                                <i class="mdi
+                                                    @if(isset($personalhomecare->checklistOut['condition']['completeness']))
+                                                        {{ in_array($arr_completness[$idx_i],
+                                                        $personalhomecare->checklistOut['condition']['completeness']) ?
+                                                        "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                    @else
+                                                        mdi-checkbox-blank-outline"
+                                                    @endif
+                                                    style="font-size: 24px; color: #fed713;">
+                                                </i>
+                                            </td>
+                                            <td style="border: 1px solid black; border-width: 0 1px;">
+                                                <i class="mdi
+                                                    @if(isset($personalhomecare->checklistIn['condition']['completeness']))
+                                                        {{ in_array($arr_completness[$idx_i],
+                                                        $personalhomecare->checklistIn['condition']['completeness']) ?
+                                                        "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}"
+                                                    @else
+                                                        mdi-checkbox-blank-outline"
+                                                    @endif
+                                                    style="font-size: 24px; color: #fed713;">
+                                                </i>
+                                            </td>
+                                            
+                                            <td>
+                                                
+                                            </td>
+                                        </tr>
+                                    @endfor
+                                    
                                     <tr>
                                         <td class="text-right" style="border: 1px solid black;">
                                           <h4>TOTAL CHECK:</h4>
