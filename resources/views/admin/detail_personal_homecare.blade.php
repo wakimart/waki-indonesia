@@ -854,6 +854,9 @@ $menu_item_page = "personal_homecare";
                                     @for($idx_i = 1; $idx_i < sizeof($arr_completness); $idx_i++)
                                         <tr>
                                             <td style="border: 1px solid black; border-width: 0 1px;">
+                                                {{ $arr_completness[$idx_i] }}
+                                            </td>
+                                            <td style="border: 1px solid black; border-width: 0 1px;">
                                                 <i class="mdi
                                                     @if(isset($personalhomecare->checklistOut['condition']['completeness']))
                                                         {{ in_array($arr_completness[$idx_i],
@@ -878,7 +881,7 @@ $menu_item_page = "personal_homecare";
                                                 </i>
                                             </td>
                                             
-                                            <td>
+                                            <td style="border: 1px solid black; border-width: 0 1px;">
                                                 
                                             </td>
                                         </tr>
