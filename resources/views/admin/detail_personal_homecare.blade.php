@@ -61,7 +61,7 @@ $menu_item_page = "personal_homecare";
         flex-direction: initial;
         padding-bottom: 2em;
     }
-    
+
     .cell-wrap {
         vertical-align: top;
     }
@@ -302,8 +302,8 @@ $menu_item_page = "personal_homecare";
                                             {{ date("d/m/Y", strtotime($personalhomecare['schedule'])) }}
                                         </td>
                                         <td class="text-center">
-                                            {{ $personalhomecare->status == "process_extend" ? date("d/m/Y", 
-                                                strtotime($personalhomecare->schedule . "+8 days")) : date("d/m/Y", 
+                                            {{ $personalhomecare->status == "process_extend" ? date("d/m/Y",
+                                                strtotime($personalhomecare->schedule . "+8 days")) : date("d/m/Y",
                                                 strtotime($personalhomecare->schedule . "+5 days")) }}
                                         </td>
                                     </tr>
@@ -328,7 +328,7 @@ $menu_item_page = "personal_homecare";
                                             </i>
                                         </td>
                                         <td class="text-center">
-                                            <i class="mdi 
+                                            <i class="mdi
                                                 @if(isset($personalhomecare->checklistIn['condition']['completeness']))
                                                     {{ in_array($arr_completness[0],
                                                     $personalhomecare->checklistIn['condition']['completeness']) ?
@@ -358,7 +358,7 @@ $menu_item_page = "personal_homecare";
                                                 </i>
                                             </td>
                                             <td class="text-center">
-                                                <i class="mdi 
+                                                <i class="mdi
                                                     @if(isset($personalhomecare->checklistIn['condition']['completeness']))
                                                         {{ in_array($arr_completness[$idx_i],
                                                         $personalhomecare->checklistIn['condition']['completeness']) ?
@@ -374,12 +374,13 @@ $menu_item_page = "personal_homecare";
                                     <tr>
                                         <td colspan="2">Total Completeness Checklist</td>
                                         <td class="text-center">
-                                            {{sizeof($personalhomecare->checklistOut['condition']['completeness'])}}
+                                            {{ isset($personalhomecare->checklistOut['condition']['completeness']) ?
+                                                sizeof($personalhomecare->checklistOut['condition']['completeness']) : "0" }}
                                         </td>
                                         <td class="text-center">
-                                            {{ isset($personalhomecare->checklistIn['condition']['completeness']) ? 
+                                            {{ isset($personalhomecare->checklistIn['condition']['completeness']) ?
                                                 sizeof($personalhomecare->checklistIn['condition']['completeness']) : "0" }}
-                                            
+
                                         </td>
                                     </tr>
                                     <tr>
@@ -766,11 +767,9 @@ $menu_item_page = "personal_homecare";
                                       PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
                                   <h5>
                               </div>
-                              <br>
                               <div style="width: 95%; margin: auto; text-align: justify;">
                                   <p>Saya yang bertanda tangan, menyatakan telah menerima barang dalam keadaan baik dan berfungsi normal sesuai data di bawah ini. Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
                               </div>
-                              <br>
                               <div>
                                   <div style="width: 100%; background-color: #b4d9c4; padding: 0.25em; margin-bottom: 0.5em;">
                                       <h4 style="padding-left: 5%;margin: 0;">
@@ -808,11 +807,9 @@ $menu_item_page = "personal_homecare";
                                       PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
                                   <h5>
                               </div>
-                              <br>
                               <div style="width: 95%; margin: auto; text-align: justify;">
                                   <p>Saya yang bertanda tangan, menyatakan telah menerima barang dalam keadaan baik dan berfungsi normal sesuai data di bawah ini. Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
                               </div>
-                              <br>
                               <div>
                                   <div style="width: 100%; background-color: #b4d9c4; padding: 0.25em; margin-bottom: 0.5em;">
                                     <h4 style="padding-left: 5%;margin: 0;">
@@ -849,10 +846,10 @@ $menu_item_page = "personal_homecare";
                             <div style="margin-top: 1em;">
                                 <table class="col-md-12" style="border: 1px solid black; width: 100%;">
                                     <thead>
-                                        <td class="text-center" style="border: 1px solid black;"><h4>KELENGKAPAN</h4></td>
-                                        <td class="text-center" style="border: 1px solid black;"><h4>OUT</h4></td>
-                                        <td class="text-center" style="border: 1px solid black;"><h4>IN</h4></td>
-                                        <td class="text-center" style="border: 1px solid black;"><h4>CATATAN</h4></td>
+                                        <td class="text-center" style="border: 1px solid black;margin: 0;"><h4>KELENGKAPAN</h4></td>
+                                        <td class="text-center" style="border: 1px solid black;margin: 0;"><h4>OUT</h4></td>
+                                        <td class="text-center" style="border: 1px solid black;margin: 0;"><h4>IN</h4></td>
+                                        <td class="text-center" style="border: 1px solid black;margin: 0;"><h4>CATATAN</h4></td>
                                     </thead>
                                     <tr>
                                         <td style="border: 1px solid black; border-width: 0 1px;">
