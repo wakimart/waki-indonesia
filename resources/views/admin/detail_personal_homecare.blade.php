@@ -883,14 +883,18 @@ $menu_item_page = "personal_homecare";
                                             </td>
                                         </tr>
                                     @endfor
-                                    
                                     <tr>
                                         <td class="text-right" style="border: 1px solid black;">
                                           <h4>TOTAL CHECK:</h4>
                                         </td>
                                         <td class="text-center" style="border: 1px solid black;">
+                                        {{ isset($personalhomecare->checklistOut['condition']['completeness']) ?
+                                                sizeof($personalhomecare->checklistOut['condition']['completeness']) : "0" }}
                                         </td>
                                         <td class="text-center" style="border: 1px solid black;">
+                                        
+                                            {{ isset($personalhomecare->checklistIn['condition']['completeness']) ?
+                                                sizeof($personalhomecare->checklistIn['condition']['completeness']) : "0" }}
                                         </td>
                                         <td class="text-center" style="border: 1px solid black;">
                                         </td>
