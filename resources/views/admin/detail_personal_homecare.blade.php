@@ -833,12 +833,12 @@ $menu_item_page = "personal_homecare";
                                   </div>
                                   <div style="width: 98%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
                                       <h5>
-                                          NAMA PRODUK:
+                                          NAMA PRODUK: {{ $personalhomecare->personalHomecareProduct->product['name'] }}
                                       </h5>
                                   </div>
                                   <div style="width: 98%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
                                       <h5>
-                                          KODE PRODUK:
+                                          KODE PRODUK: {{ $personalhomecare->personalHomecareProduct->product['code'] }}
                                       </h5>
                                   </div>
                               </div>
@@ -1048,7 +1048,7 @@ $menu_item_page = "personal_homecare";
                                 </table>
                             </div>
                         </div>
-                        <br><br><br><br><br><br><br>
+                        <br><br><br><br><br>
                         <div style="width: 100%; margin: auto; text-align: justify;">
                             <div style="width: 24%; float: left;">
                                 <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
@@ -1071,11 +1071,11 @@ $menu_item_page = "personal_homecare";
                                 </div>
                             </div>
                         </div>
-                        <br><br>
+                        <br>
                         <div class="clearfix"></div>
                         <div style="width:90%;margin:1.5em auto 0;text-align:justify">
-                            <p>Demikian surat tanda terima ini dibuat sebagai bukti yang sah.
-                            <h5>SYARAT & KETENTUAN:</h5>
+                            <p>Demikian surat tanda terima ini dibuat sebagai bukti yang sah.</p>
+                            <h5 style="margin-bottom:0.2em;">SYARAT & KETENTUAN:</h5>
                             <div style="width: 90%; margin: auto;">
                                 <ol type="1">
                                     <li>Program pinjamin produk 5 hari (PP5H) tidak dipungut biaya apapun.</li>
