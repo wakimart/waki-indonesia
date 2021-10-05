@@ -354,6 +354,8 @@ function setChecklist(code) {
     }
     else if(code == "WKA2024"){
         firstLetter = "F";
+    } else if (code === "WKT2090") {
+        firstLetter = "G";
     }
 
     document.getElementById("checklist_prod").innerHTML = "";
