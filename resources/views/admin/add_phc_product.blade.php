@@ -77,7 +77,7 @@ $menu_item_second = "add_phc_product";
                 </ol>
             </nav>
         </div>
-        
+
         <form id="add-phc-product"
             method="POST"
             action="{{ route("store_phc_product") }}">
@@ -371,7 +371,7 @@ function setChecklist(code) {
                                     +"</div>");
         });
     }
-    
+
 }
 
 function setCodeSuffix() {
@@ -396,6 +396,8 @@ function setCodeSuffix() {
     }
     else if(productCode == "WKA2024"){
         productCode = "F";
+    } else if (productCode === "WKT2090") {
+        productCode = "G";
     }
     else{
         productCode = "-";
@@ -461,6 +463,8 @@ function setCode() {
     }
     else if(productCode == "WKA2024"){
         productCode = "F";
+    } else if (productCode === "WKT2090") {
+        productCode = "G";
     }
 
     document.getElementById("code").value = `${productCode}${warehouse_id}_${increment}`;
