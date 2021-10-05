@@ -13,6 +13,7 @@ class PersonalHomecareChecklist extends Model
         "D" => ["Pulse Pegangan", "Buku Manual", "Bantalan Pantat", "Pad Bantalan", "Botol Pelastik", "Bandage", "Sabuk Pinggang", "Kabel"],
         "E" => ["Filter Udara", "Tangki Air", "Kabel"],
         "F" => ["Filter Udara", "Tangki Air", "Kabel"],
+        "G" => ["Pulse Pegangan", "Bantalan Pijat", "Pad Bantalan", "Bandage", "Sabuk Pinggang", "Kabel", "Ultrasonic", "Laser Wrist Band"],
     ];
 
     protected $fillable = [
