@@ -100,7 +100,9 @@ class PersonalHomecareController extends Controller
             ->orderBy('code', 'asc')
             ->get();
 
-        $personalhomecares = PersonalHomecare::where('active', true)->get();
+        $personalhomecares = PersonalHomecare::where('active', true)
+            ->whereNotIn('status', ['new', 'verified'])
+            ->get();
 
         // Filter
         if ($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch') {

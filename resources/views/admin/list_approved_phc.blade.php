@@ -5,6 +5,11 @@ $menu_item_second = "list_approved";
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+    integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
 <style type="text/css">
     .center {
         text-align: center;
@@ -36,17 +41,31 @@ $menu_item_second = "list_approved";
     }
 
     @media (max-width: 767.98px) {
-    .fc .fc-toolbar.fc-header-toolbar {
-        display: block;
-        text-align: center;
-        float: none !important;
+        .fc .fc-toolbar.fc-header-toolbar {
+            display: block;
+            text-align: center;
+            float: none !important;
+        }
+
+        .fc-header-toolbar .fc-toolbar-chunk {
+            display: block;
+            float: none !important;
+        }
     }
 
-    .fc-header-toolbar .fc-toolbar-chunk {
-        display: block;
-        float: none !important;
+    .select2-selection__rendered {
+        line-height: 45px !important;
     }
-}
+
+    .select2-container .select2-selection--single {
+        height: 45px !important;
+    }
+
+    .select2-container--default
+    .select2-selection--single
+    .select2-selection__arrow {
+        top: 10px;
+    }
 
 </style>
 @endsection
@@ -76,35 +95,46 @@ $menu_item_second = "list_approved";
         <div class="row">
 
             <div class="col-12" style="margin-bottom: 0;">
-                <div class="col-xs-6 col-sm-4" style="padding: 0;display: inline-block;">
-					<div class="form-group">
-						<label for="">Filter By Team</label>
-						<select class="form-control" id="filter_branch" name="filter_branch">
-							<option value="" selected="">All Branch</option>
-							@foreach($branches as $branch)
-							@php
-								$selected = "";
-								if(isset($_GET['filter_branch'])){
-								if($_GET['filter_branch'] == $branch['id']){
-									$selected = "selected=\"\"";
-								}
-								}
-							@endphp
-
-							<option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-							@endforeach
-						</select>
-						<div class="validation"></div>
-					</div>
-				</div>
-                @if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
-                <div class="col-xs-6 col-sm-6" style="padding: 0; display: inline-block">
-                    <label for=""></label>
-                    <div class="form-group">
-                        <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+                @if (Auth::user()->roles[0]->slug !== "branch")
+                    <div class="col-xs-6 col-sm-4"
+                        style="padding: 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="filter-branch">Search by Branch</label>
+                            <select class="form-control"
+                                id="filter_branch"
+                                name="filter_branch">
+                                <option value="">Choose Branch</option>
+                                @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}"
+                                        {!! isset($_GET["filter_branch"]) && $_GET["filter_branch"] == $branch->id ? "selected" : "" !!}>
+                                        {{ $branch->code }} - {{ $branch->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                </div>
+                    <div class="col-xs-6 col-sm-6" style="padding: 0; display: inline-block">
+                        <div class="form-group">
+                            <button id="btn-filter" 
+                                type="button" 
+                                class="btn btn-gradient-primary m-1" 
+                                name="filter" 
+                                value="-">
+                                <span class="mdi mdi-filter"></span> 
+                                Apply Filter
+                            </button>
+                            <button id="btn-filter_reset" 
+                                type="button" 
+                                class="btn btn-gradient-danger m-1" 
+                                name="filter_reset" 
+                                value="-">
+                                <span class="mdi mdi-refresh"></span> 
+                                Reset Filter
+                            </button>
+                        </div>
+                    </div>
                 @endif
+
             </div>
 
             <div class="col-12 grid-margin stretch-card">
@@ -238,9 +268,16 @@ $menu_item_second = "list_approved";
 @endsection
 
 @section("script")
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+    integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+    defer></script>
 <script type="application/javascript">
-    function submitDelete(e) {
+    document.addEventListener("DOMContentLoaded", function () {
+        $("#filter_branch").select2();
+    });
+        function submitDelete(e) {
         document.getElementById("id-delete").value = e.dataset.id;
     }
     
@@ -248,8 +285,8 @@ $menu_item_second = "list_approved";
         $("#btn-filter").click(function (e) {
             var urlParamArray = new Array();
             var urlParamStr = "";
-            if($('#search').val() != ""){
-                urlParamArray.push("search=" + $('#search').val());
+            if($('#filter_branch').val() != ""){
+                urlParamArray.push("filter_branch=" + $('#filter_branch').val());
             }
             for (var i = 0; i < urlParamArray.length; i++) {
                 if (i === 0) {
@@ -258,7 +295,11 @@ $menu_item_second = "list_approved";
                     urlParamStr += "&" + urlParamArray[i]
                 }
             }
-            window.location.href = "{{route('list_all_phc')}}" + urlParamStr;
+            window.location.href = "{{route('list_approved_phc')}}" + urlParamStr;
+        });
+
+        $("#btn-filter_reset").click(function (e) {
+            window.location.href = "{{route('list_approved_phc')}}";
         });
     }); 
 
@@ -293,7 +334,7 @@ $menu_item_second = "list_approved";
                 cso : '{{ $personalhomecare->cso->code }}',
                 status : '{{ strtoupper($personalhomecare->status) }}',
                 start : '{{ $personalhomecare['schedule'] }}',
-                end : '{{ date("Y-m-d", strtotime($personalhomecare->schedule . "T23.59.00" . "+5 days")) }}',
+                end : '{{ $personalhomecare->status == "process_extend" ? date("Y-m-d", strtotime($personalhomecare->schedule . "T23.59.00" . "+8 days")) : date("Y-m-d", strtotime($personalhomecare->schedule . "T23.59.00" . "+5 days")) }}',
                 img : '{{ asset('sources/phc.png')}}',
                 view : '{{ route('detail_personal_homecare', ['id' => $personalhomecare['id']]) }}',
                 edit : '{{ route('edit_personal_homecare', ['id' => $personalhomecare['id']]) }}',
