@@ -274,7 +274,7 @@ $menu_item_second = "list_all";
                                                 @endif
                                             </td>
                                             <td class="center">
-                                                @if($personalhomecare->status == "verified" || $personalhomecare->status == "approve_out")
+                                                @if($personalhomecare->status == "approve_out")
                                                     <a href="#modal-reschedule" 
                                                         data-toggle="modal" 
                                                         data-target="#modal-reschedule" 
@@ -383,6 +383,17 @@ $menu_item_second = "list_all";
                                 name="reschedule_date" 
                                 value="" 
                                 required />
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="reschedule_reason">Reschedule Reason</label>
+                            <textarea class="form-control"
+                                id="reschedule_reason"
+                                name="reschedule_reason"
+                                rows="3"
+                                required >
+                            </textarea>
                         </div>
                     </div>
                     <div class="modal-footer">

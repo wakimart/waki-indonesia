@@ -866,6 +866,7 @@ class PersonalHomecareController extends Controller
             if(!isset($request['status'])){
                 $phcNya = PersonalHomecare::find($request->id);
                 $phcNya->reschedule_date = $request->reschedule_date;
+                $phcNya->reschedule_reason = $request->reschedule_reason;
                 $phcNya->save();
 
                 DB::commit();
@@ -877,15 +878,31 @@ class PersonalHomecareController extends Controller
                     ->with("success", "Acc for Reschedule Personal Homecare Success !");
             }
             else{
+                $phcNya = PersonalHomecare::find($request->id);
                 if($request->status == "acceptance"){
-                    $phcNya = PersonalHomecare::find($request->id);
                     $phcNya->schedule = $phcNya->reschedule_date;
+                    $phcNya->status = 'approve_out_res';
+                    $phcNya->save();
+                }
+                else{
+                    $phcNya->reschedule_date = null;
                     $phcNya->save();
                 }
 
-                $phcNya = PersonalHomecare::find($request->id);
-                $phcNya->reschedule_date = null;
-                $phcNya->save();
+                $userId = Auth::user()["id"];
+                $historyPhc["type_menu"] = "Personal Homecare";
+                $historyPhc["method"] = "Reschedule";
+                $historyPhc["meta"] = json_encode(
+                    [
+                        "user" => $userId,
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $phcNya->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $historyPhc["user_id"] = $userId;
+                $historyPhc["menu_id"] = $request->id;
+                HistoryUpdate::create($historyPhc);
 
                 DB::commit();
 
