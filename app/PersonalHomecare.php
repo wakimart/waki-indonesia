@@ -26,6 +26,7 @@ class PersonalHomecare extends Model
         "is_extend",
         "reschedule_date",
         "extend_reason",
+        "reschedule_reason",
     ];
 
     public function branch()

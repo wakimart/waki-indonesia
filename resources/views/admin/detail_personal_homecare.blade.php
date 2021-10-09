@@ -297,7 +297,16 @@ $menu_item_page = "personal_homecare";
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2">Schedule</td>
+                                        @php 
+                                            $txtRes = 'Schedule';
+                                            foreach ($histories as $val) {
+                                                if($val->method == 'Reschedule'){
+                                                    $txtRes = 'Reschedule';
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
+                                        <td colspan="2">{{ $txtRes }}</td>
                                         <td class="text-center">
                                             {{ date("d/m/Y", strtotime($personalhomecare['schedule'])) }}
                                         </td>
@@ -602,8 +611,9 @@ $menu_item_page = "personal_homecare";
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row justify-content-center">
+                            <div class="text-center">
                                 <h2>Reschedule from {{ date("d/m/Y", strtotime($personalhomecare['schedule'])) }} to {{ date("d/m/Y", strtotime($personalhomecare['reschedule_date'])) }}</h2>
+                                <p>{{ $personalhomecare["reschedule_reason"] }}</p>
                             </div>
                             <form id="actionAdd"
                                 class="forms-sample"
