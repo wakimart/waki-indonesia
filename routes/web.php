@@ -218,19 +218,19 @@ Route::group(['prefix' => 'cms-admin'], function () {
         ->name("dashboard_hs");
 
     // Frontend CMS
-    Route::get('/frontend-cms', 'FrontendCmsController@index')
-        ->name('index_frontendcms')
+    Route::get('/frontend-cms', 'AlbumController@create')
+        ->name('add_album')
         ->middleware('can:browse-frontendcms');
     // Add Frontend CMS
-    Route::post('/frontend-cms', 'FrontendCmsController@store')
-        ->name('store_frontendcms');
+    Route::post("/frontend-cms/store/album", "AlbumController@store")
+        ->name("store_frontendcms_album");
     Route::post("/frontend-cms/add/image", "FrontendCmsController@storeImageGallery")
         ->name("store_frontendcms_image");
     Route::post("/frontend-cms/add/video", "FrontendCmsController@storeVideoGallery")
         ->name("store_frontendcms_video");
     // Update Frontend CMS
-    Route::post('/frontend-cms/update', 'FrontendCmsController@update')
-        ->name('update_frontendcms');
+    Route::get("/frontend-cms/edit/album", "AlbumController@edit")
+        ->name("edit_album");
     Route::post("/frontend-cms/update/image", "FrontendCmsController@updateImageGallery")
         ->name("update_frontendcms_image");
     Route::post("frontend-cms/update/video", "FrontendCmsController@updateVideoGallery")
@@ -240,6 +240,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         ->name("delete_frontendcms_image");
     Route::post("frontend-cms/delete/video", "FrontendCmsController@destroyVideo")
         ->name("delete_frontendcms_video");
+
+    // Add Frontend CMS Event
+    Route::post("/frontend-cms/store/event", "EventController@store")
+            ->name("store_event");
 
     //change password admin
     Route::post('/changePassword','UserAdminController@changePassword')
