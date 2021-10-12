@@ -882,6 +882,7 @@ class PersonalHomecareController extends Controller
                 if($request->status == "acceptance"){
                     $phcNya->schedule = $phcNya->reschedule_date;
                     $phcNya->status = 'approve_out_res';
+                    $phcNya->reschedule_date = null;
                     $phcNya->save();
                 }
                 else{
