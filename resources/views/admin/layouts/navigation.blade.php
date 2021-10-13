@@ -84,6 +84,14 @@
         </a>
       </li>
       @endif
+      @if(Gate::check('browse-personal-homecare'))
+      <li class="nav-item"> 
+        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_approved'? 'active': '' }}" 
+          href="{{  route('list_approved_phc') }}">
+          List Approve Out Product
+        </a>
+      </li>
+      @endif
       @if(Gate::check('add-personal-homecare'))
       <li class="nav-item"> 
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_personal_homecare'? 'active': '' }}" 

@@ -95,7 +95,7 @@ $menu_item_second = "list_approved";
         <div class="row">
 
             <div class="col-12" style="margin-bottom: 0;">
-                @if (Auth::user()->roles[0]->slug !== "branch")
+                @if (Auth::user()->roles[0]->slug !== "branch" && Auth::user()->roles[0]->slug !== "cso")
                     <div class="col-xs-6 col-sm-4"
                         style="padding: 0; display: inline-block;">
                         <div class="form-group">
