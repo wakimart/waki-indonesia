@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Banner;
 use App\OurGallery;
 use App\CategoryProduct;
+use App\Album;
 use App\Product;
 use App\Version;
 class IndexController extends Controller
@@ -20,7 +21,8 @@ class IndexController extends Controller
         $banners = Banner::all();
         $galleries = OurGallery::all();
         $categoryProducts = CategoryProduct::all();
-        return view('index', compact('banners', 'galleries', 'categoryProducts'));
+        $albums = Album::where('active', true)->get();
+        return view('index', compact('banners', 'galleries', 'categoryProducts', 'albums'));
     }
 
 

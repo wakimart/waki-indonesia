@@ -379,6 +379,7 @@
 		    $('#video-2')[0].pause();
 		  });
 		});
-		</script>
+	</script>
+	@yield('script')
 </body>
 </html>

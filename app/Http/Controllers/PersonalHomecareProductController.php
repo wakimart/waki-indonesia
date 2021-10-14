@@ -64,6 +64,7 @@ class PersonalHomecareProductController extends Controller
             ->get();
 
         $products = Product::select("id", "code", "name")
+            ->whereIn("id", [4,3,2,1,33])
             ->where("active", true)
             ->get();
 

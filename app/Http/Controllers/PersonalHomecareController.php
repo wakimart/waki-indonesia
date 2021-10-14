@@ -100,14 +100,26 @@ class PersonalHomecareController extends Controller
             ->orderBy('code', 'asc')
             ->get();
 
-        $personalhomecares = PersonalHomecare::where('active', true)
-            ->whereNotIn('status', ['new', 'verified'])
-            ->get();
+        $personalhomecares = PersonalHomecare::where('active', true);
 
         // Filter
-        if ($request->has('filter_branch') && Auth::user()->roles[0]['slug'] != 'branch') {
+        if ($request->has('filter_branch')) {
             $personalhomecares = $personalhomecares->where('branch_id', $request->filter_branch);
         }
+
+        //khusus cso
+        if (Auth::user()->roles[0]->slug === "cso") {
+            $personalhomecares = $personalhomecares->where("cso_id", Auth::user()->cso["id"]);
+        }
+        else if (Auth::user()->roles[0]->slug === "branch" || Auth::user()->roles[0]->slug === "area-manager") {
+            $arrBranches = [];
+            foreach (Auth::user()->listBranches() as $value) {
+                $arrBranches[] = $value['id'];
+            }
+            $personalhomecares = $personalhomecares->whereIn('branch_id', $arrBranches);
+        }
+
+        $personalhomecares = $personalhomecares->where('status', 'process')->get();
 
         return view('admin.list_approved_phc', compact(
             'personalhomecares',
@@ -579,6 +591,8 @@ class PersonalHomecareController extends Controller
                 $this->accNotif($phc, "acc_ask");
             }
             elseif ($request->status == "approve_out") {
+                HomeServiceController::createPp5hHs($phc);
+
                 $phc->status = $request->status;
                 $phc->save();
             }

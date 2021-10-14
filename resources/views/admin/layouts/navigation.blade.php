@@ -9,7 +9,7 @@
 
 @if(Gate::check('browse-frontendcms'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'index_frontendcms'? 'active': '' }} nav-item">
-	<a class="nav-link" href="{{  route('index_frontendcms') }}">
+	<a class="nav-link" href="{{ route('add_album') }}">
 		<span class="menu-title">Front-End CMS</span>
 		<i class="mdi mdi-format-float-left menu-icon"></i>
 	</a>
@@ -81,6 +81,14 @@
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_product'? 'active': '' }}" 
           href="{{  route('list_phc_product') }}">
           List Product
+        </a>
+      </li>
+      @endif
+      @if(Gate::check('browse-personal-homecare'))
+      <li class="nav-item"> 
+        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_approved'? 'active': '' }}" 
+          href="{{  route('list_approved_phc') }}">
+          List Approve Out Product
         </a>
       </li>
       @endif
