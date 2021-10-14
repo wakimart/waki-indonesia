@@ -379,6 +379,7 @@ $menu_item_second = "list_approved";
             };
         },
         eventClick: function(info) {
+            console.log(info.event.extendedProps.view);
             $("#myTable").show(500);
             $('#theader').html(moment(info.event.start).format('MMMM Do YYYY'));
             $('#start').html(moment(info.event.start).format('M/DD/YYYY'));
@@ -388,8 +389,8 @@ $menu_item_second = "list_approved";
             $('#branch').html(info.event.extendedProps.branch);
             $('#cso').html(info.event.extendedProps.cso);
             $('#status').html(info.event.extendedProps.status);
-            $(".view a[href='#']").prop('href', info.event.extendedProps.view);
-            $(".edit a[href='#']").prop('href', info.event.extendedProps.edit);
+            $(".view a").prop('href', info.event.extendedProps.view);
+            $(".edit a").prop('href', info.event.extendedProps.edit);
         }
         });
 
