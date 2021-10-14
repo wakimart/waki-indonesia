@@ -21,7 +21,7 @@ $menu_item_page = "user";
         border:solid 1px rgba(128, 128, 128, 0.32941);
         padding:10px;
         border-radius:3px;
-        }
+    }
 
     .del {
         position: absolute;
@@ -38,6 +38,7 @@ $menu_item_page = "user";
     #intro {
         padding-top: 2em;
     }
+
     button{
         background: #1bb1dc;
         border: 0;
@@ -1084,6 +1085,168 @@ $menu_item_page = "user";
                                                 id="delete-submission"
                                                 value="delete-submission" />
                                             Delete Submission
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-phc-product">
+                                <span style="display: block;">PERSONAL HOMECARE PRODUCT</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-phc-product">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-phc-product"
+                                                value="add-phc-product" />
+                                            Add Personal Homcare Product
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-phc-product">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="browse-phc-product"
+                                                value="browse-phc-product" />
+                                            Browse Personal Homcare Product
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-phc-product">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-phc-product"
+                                                value="edit-phc-product" />
+                                            Edit Personal Homcare Product
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-phc-product">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-phc-product"
+                                                value="delete-phc-product" />
+                                            Delete Personal Homcare Product
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-personal-homecare">
+                                <span style="display: block;">PERSONAL HOMECARE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-personal-homecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-personal-homecare"
+                                                value="add-personal-homecare" />
+                                            Add Personal Homcare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-personal-homecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="browse-personal-homecare"
+                                                value="browse-personal-homecare" />
+                                            Browse Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-personal-homecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-personal-homecare"
+                                                value="edit-personal-homecare" />
+                                            Edit Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-personal-homecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="detail-personal-homecare"
+                                                value="detail-personal-homecare" />
+                                            Detail Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-personal-homecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-personal-homecare"
+                                                value="delete-personal-homecare" />
+                                            Delete Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-checkout-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-checkout-personalhomecare"
+                                                value="change-status-checkout-personalhomecare" />
+                                            Change Status Checkout Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-checkin-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-checkin-personalhomecare"
+                                                value="change-status-checkin-personalhomecare" />
+                                            Change Status Check-in Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-verified-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-verified-personalhomecare"
+                                                value="change-status-verified-personalhomecare" />
+                                            Change Status Verified Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="acc-reschedule-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="acc-reschedule-personalhomecare"
+                                                value="acc-reschedule-personalhomecare" />
+                                            Acc Reschedule Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="acc-extend-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="acc-extend-personalhomecare"
+                                                value="acc-extend-personalhomecare" />
+                                            Acc Extend Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-product-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-product-personalhomecare"
+                                                value="change-status-product-personalhomecare" />
+                                            Change Status Product Personal Homecare
                                         </label>
                                     </div>
                                 </div>

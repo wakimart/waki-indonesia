@@ -14,6 +14,9 @@ use App\RajaOngkir;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+Route::get("/accNotif", "ReferenceController@accNotif")
+    ->name("acc_notif_reference");
+
 Auth::routes(['verify' => true]);
 Route::resource('gcalendar', 'gCalendarController');
 Route::get('oauth', ['as' => 'oauthCallback', 'uses' => 'gCalendarController@oauth'])->name('oauthCallback');
@@ -23,6 +26,10 @@ Route::get('/', 'IndexController@index')->name('index');
 Route::get('/product_category/{id}', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
 Route::get('/firebase','FirebaseController@index');
+
+//Personal Homecare
+Route::get('/personal-homecare/{id}', 'PersonalHomecareController@phForm')->name('personal_homecare');
+Route::get('/thankyou-personal-homecare/{id}', 'PersonalHomecareController@thankyouForm')->name('thankyou_ph');
 
 //Service Product
 Route::get('/service', 'ServiceController@indexUser')->name('service');
@@ -109,7 +116,7 @@ Route::group(['prefix' => 'api-apps'], function () {
 	    Route::post('list','HomeServiceController@listApi'); //list home service
 		Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
 		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
-        Route::post("/add/geolocation", "UserGeolocationController@addApi"); // Upload geolocation data
+        Route::post("/add/geolocation", "UserGeolocationController@addApi_2"); // Upload geolocation data
         Route::post("/add/start-geolocation", "UserGeolocationController@addStartImageApi");
         Route::get("/fetch/status-presence", "UserGeolocationController@fetchStatusPresence");
 	});
@@ -211,19 +218,19 @@ Route::group(['prefix' => 'cms-admin'], function () {
         ->name("dashboard_hs");
 
     // Frontend CMS
-    Route::get('/frontend-cms', 'FrontendCmsController@index')
-        ->name('index_frontendcms')
+    Route::get('/frontend-cms', 'AlbumController@create')
+        ->name('add_album')
         ->middleware('can:browse-frontendcms');
     // Add Frontend CMS
-    Route::post('/frontend-cms', 'FrontendCmsController@store')
-        ->name('store_frontendcms');
+    Route::post("/frontend-cms/store/album", "AlbumController@store")
+        ->name("store_frontendcms_album");
     Route::post("/frontend-cms/add/image", "FrontendCmsController@storeImageGallery")
         ->name("store_frontendcms_image");
     Route::post("/frontend-cms/add/video", "FrontendCmsController@storeVideoGallery")
         ->name("store_frontendcms_video");
     // Update Frontend CMS
-    Route::post('/frontend-cms/update', 'FrontendCmsController@update')
-        ->name('update_frontendcms');
+    Route::get("/frontend-cms/edit/album", "AlbumController@edit")
+        ->name("edit_album");
     Route::post("/frontend-cms/update/image", "FrontendCmsController@updateImageGallery")
         ->name("update_frontendcms_image");
     Route::post("frontend-cms/update/video", "FrontendCmsController@updateVideoGallery")
@@ -233,6 +240,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         ->name("delete_frontendcms_image");
     Route::post("frontend-cms/delete/video", "FrontendCmsController@destroyVideo")
         ->name("delete_frontendcms_video");
+
+    // Add Frontend CMS Event
+    Route::post("/frontend-cms/store/event", "EventController@store")
+            ->name("store_event");
 
     //change password admin
     Route::post('/changePassword','UserAdminController@changePassword')
@@ -755,6 +766,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::post("/delete", "ReferenceController@destroy")
             ->name("delete_reference");
+
+        Route::post("/accNotif", "ReferenceController@accNotif")
+            ->name("acc_notif_reference");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {
@@ -880,6 +894,67 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Delete prize
         Route::post("/delete", "PrizeController@destroy")
             ->name("delete_prize");
+    });
+
+    Route::group(["prefix" => "personal-homecare", "middleware" => "auth"], function () {
+        Route::get("add-product", "PersonalHomecareProductController@create")
+            ->name("add_phc_product")
+            ->middleware('can:add-phc-product');
+        Route::post("store-product", "PersonalHomecareProductController@store")
+            ->name("store_phc_product")
+            ->middleware("can:add-phc-product");
+        Route::get("get-product-increment", "PersonalHomecareProductController@getProductIncrement")
+            ->name("get_phc_product_increment");
+        Route::get("list-product", 'PersonalHomecareProductController@index')
+            ->name("list_phc_product")
+            ->middleware('can:browse-phc-product');
+        Route::get("detail-product/{id}", 'PersonalHomecareProductController@show')
+            ->name("detail_phc_product")
+            ->middleware('can:browse-phc-product');
+        Route::get("edit-product/{id}", "PersonalHomecareProductController@edit")
+            ->name("edit_phc_product")
+            ->middleware("can:edit-phc-product");
+        Route::post("update-product", "PersonalHomecareProductController@update")
+            ->name("update_phc_product")
+            ->middleware("can:edit-phc-product");
+        Route::post("delete-product", "PersonalHomecareProductController@destroy")
+            ->name("delete_phc_product");
+
+        Route::get("add", "PersonalHomecareController@create")
+            ->name("add_personal_homecare")
+            ->middleware('can:add-personal-homecare');
+        Route::post("store", "PersonalHomecareController@store")
+            ->name("store_personal_homecare")
+            ->middleware("can:add-personal-homecare");
+        Route::get("get-product", "PersonalHomecareController@getPhcProduct")
+            ->name("get_phc_product");
+        Route::get("check-phone", "PersonalHomecareController@checkPhone")
+            ->name("check_phc_phone");
+        Route::get("list-all", 'PersonalHomecareController@index')
+            ->name("list_all_phc");
+        Route::get("list-approved", 'PersonalHomecareController@listApproved')
+            ->name("list_approved_phc")
+            ->middleware("can:browse-personal-homecare");
+        Route::get("edit/{id}", "PersonalHomecareController@edit")
+            ->name("edit_personal_homecare")
+            ->middleware("can:edit-personal-homecare");
+        Route::post("update", "PersonalHomecareController@update")
+            ->name("update_personal_homecare")
+            ->middleware("can:edit-personal-homecare");
+        Route::post("update/status", "PersonalHomecareController@updateStatus")
+            ->name("update_personal_homecare_status");
+        Route::post("update/checklist-in", "PersonalHomecareController@updateChecklistIn")
+            ->name("update_personal_homecare_checklist_in");
+        Route::get("detail/{id}", "PersonalHomecareController@detail")
+            ->name("detail_personal_homecare")
+            ->middleware("can:detail-personal-homecare");
+        Route::post("delete", "PersonalHomecareController@destroy")
+            ->name("delete_personal_homecare");
+
+        Route::post("extendPersonalHomecare", "PersonalHomecareController@extendPersonalHomecare")
+            ->name("extend_personal_homecare");
+        Route::post("reschedulePersonalHomecare", "PersonalHomecareController@reschedulePersonalHomecare")
+            ->name("reschedule_personal_homecare");
     });
 });
 

@@ -28,7 +28,6 @@ $menu_item_second = "track_homeservice";
     #map {
         height: 800px;
     }
-
 </style>
 @endsection
 
@@ -59,7 +58,7 @@ $menu_item_second = "track_homeservice";
                 <div class="col-md-12 col-sm-12 col-xs-12 row">
                     <div class="col-md-6 col-sm-12 col-xs-12"
                         style="padding-left: 0;">
-                        <form>
+                        <form id="form-search">
                             <div class="col-xs-6 col-sm-6 col-md-6"
                                 style="padding: 0; display: inline-block;">
                                 <div class="form-group">
@@ -85,24 +84,34 @@ $menu_item_second = "track_homeservice";
                     </div>
                     <div class="col-md-6 col-sm-12 col-xs-12"
                         style="padding-left: 0;">
-                        @if (!empty($userGeolocations) && $userGeolocations->isNotEmpty())
+                        @if (!empty($branches) && $branches->isNotEmpty())
                             <div class="col-xs-6 col-sm-6 col-md-6"
                                 style="padding: 0; display: inline-block;">
                                 <div class="form-group">
                                     <label class="col-sm-12 col-xs-12"
-                                        for="cso"
+                                        for="branch"
                                         style="padding-left: 0;">
-                                        CSO
+                                        Branch
                                     </label>
                                     <select class="form-control"
                                         style="width: 100%"
-                                        id="cso"
-                                        name="user_id"
-                                        required>
-                                        <option value="">Choose CSO</option>
-                                        @foreach ($userGeolocations as $userGeolocation)
-                                            <option value="{{ $userGeolocation->user_id }}">
-                                                {{ $userGeolocation->code }} - {{ $userGeolocation->name }}
+                                        form="form-search"
+                                        id="branch"
+                                        name="branch_id">
+                                        <option value="">Choose Branch</option>
+                                        @foreach ($branches as $branch)
+                                            <?php
+                                            $selected = false;
+                                            if(isset($_GET["branch_id"])){
+                                                if ($branch->id == $_GET["branch_id"]) {
+                                                    $selected = true;
+                                                }
+                                            }
+                                            
+                                            ?>
+                                            <option value="{{ $branch->id }}"
+                                                {!! $selected ? "selected" : "" !!}>
+                                                {{ $branch->code }} - {{ $branch->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -113,7 +122,7 @@ $menu_item_second = "track_homeservice";
                                     <button id="btn-filter"
                                         type="submit"
                                         class="btn btn-gradient-primary"
-                                        onclick="getGeolocation()">
+                                        form="form-search">
                                         <span class="mdi mdi-magnify"></span> Search
                                     </button>
                                 </div>
@@ -122,6 +131,79 @@ $menu_item_second = "track_homeservice";
                     </div>
                 </div>
             </div>
+
+            @if (!empty($userGeolocations) && $userGeolocations->isNotEmpty())
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive"
+                                style="border: 1px solid #ebedf2;">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>CSO Code</th>
+                                            <th>Name</th>
+                                            <th class="text-center">
+                                                Check In
+                                            </th>
+                                            <th class="text-center">
+                                                Check Out
+                                            </th>
+                                            <th class="text-center">View</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($userGeolocations as $userGeolocations)
+                                            <tr>
+                                                <td>
+                                                    {{ $userGeolocations->cso_code }}
+                                                </td>
+                                                <td>
+                                                    {{ $userGeolocations->name }}
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ asset("sources/geolocation/" . $_GET["date"] . "/img/" . $userGeolocations->presence_image[0]) }}"
+                                                        target="_blank">
+                                                        <i class="mdi mdi-image" style="font-size: 24px; color: #0d6efd;"></i>
+                                                    </a>
+                                                    @php
+                                                        if(isset($userGeolocations->presence_image[0])){
+                                                            $imgName = explode("_", $userGeolocations->presence_image[0]);
+                                                            echo '<p style="margin-top: 1em">'.date("H:i:s", $imgName[1])."</p>";
+                                                        }
+                                                    @endphp
+                                                </td>
+                                                <td class="text-center">
+                                                    @if (isset($userGeolocations->presence_image[1]))
+                                                        <a href="{{ asset("sources/geolocation/" . $_GET["date"] . "/img/" . $userGeolocations->presence_image[1]) }}"
+                                                            target="_blank">
+                                                            <i class="mdi mdi-image" style="font-size: 24px; color: #0d6efd;"></i>
+                                                        </a>
+                                                        @php
+                                                            $imgName = explode("_", $userGeolocations->presence_image[1]);
+                                                            echo '<p style="margin-top: 1em">'.date("H:i:s", $imgName[1])."</p>";
+                                                        @endphp
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    @if (isset($userGeolocations->filename))
+                                                        <button type="button"
+                                                            class="btn"
+                                                            data-user="{{ $userGeolocations->user_id }}"
+                                                            onclick="getGeolocation(this)">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: #3dd5f3;"></i>
+                                                        </button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
@@ -151,24 +233,39 @@ $menu_item_second = "track_homeservice";
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-6">
-                                <img src="#"
-                                    id="presence-start"
-                                    class="img-thumbnail" />
-                            </div>
-                            <div class="col-md-6">
-                                <img src="#"
-                                    id="presence-end"
-                                    class="img-thumbnail" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="modal fade"
+    id="error-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Error</h5>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p id="error-body">
+                    Failed to load geolocation data.
+                    <br>
+                    Reason: There's something wrong with the device GPS.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                    class="btn btn-gradient-primary"
+                    data-dismiss="modal">
+                    Close
+                </button>
             </div>
         </div>
     </div>
@@ -187,11 +284,11 @@ $menu_item_second = "track_homeservice";
 let tableRowCounter = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
-    $("#cso").select2();
+    $("#branch").select2();
 });
 
-function getGeolocation() {
-    const userId = document.getElementById("cso").value;
+function getGeolocation(e) {
+    const userId = e.dataset.user;
     const date = document.getElementById("date").value;
 
     fetch(`{{ route("fetch_geolocation") }}?user_id=${userId}&date=${date}`, {
@@ -206,10 +303,16 @@ function getGeolocation() {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        return response.json();
+        return response.text();
     }).then(function (response) {
-        initMap(response);
-        presenceImage(userId, date);
+        try {
+            const json = JSON.parse(response);
+            initMap(json);
+            // presenceImage(userId, date);
+        } catch (error) {
+            $("#error-modal").modal("show");
+            console.error(error);
+        }
     }).catch(function (error) {
         console.error(error);
     });

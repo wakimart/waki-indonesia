@@ -24,14 +24,17 @@ class Cso extends Model
     {
         return $this->hasMany('App\Order');
     }
+
     public function order_30_sales()
     {
         return $this->hasMany('App\Order', '30_cso_id', 'id');
     }
+
     public function order_70_sales()
     {
         return $this->hasMany('App\Order', '70_cso_id', 'id');
     }
+
     public function home_service()
     {
         return $this->hasMany('App\HomeService', 'cso_id', 'id');
@@ -40,6 +43,11 @@ class Cso extends Model
     public function home_service2()
     {
         return $this->hasMany('App\HomeService', 'cso2_id', 'id');
+    }
+
+    public function personalHomecare()
+    {
+        return $this->hasMany('App\PersonalHomecare');
     }
 
     public function user()

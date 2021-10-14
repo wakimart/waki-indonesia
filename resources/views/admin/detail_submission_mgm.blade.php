@@ -29,9 +29,9 @@ if (
     }
 
     .table-responsive table {
-        width: 100%; 
+        width: 100%;
         overflow:scroll;
-    } 
+    }
 
     .table-responsive table .form-control {
         height: 32px;
@@ -71,8 +71,7 @@ if (
     }
 
     @media screen and (max-width: 768px) {
-
-        .table-responsive{
+        .table-responsive {
             margin-right: 10px;
         }
     }
@@ -154,7 +153,7 @@ if (
                 <div class="table-responsive">
                     <table class="col-md-12">
                         <thead>
-                            <td colspan="12">Reference</td>
+                            <td colspan="14">Reference</td>
                         </thead>
                         <thead style="background-color: #80808012 !important;">
                             <tr>
@@ -167,10 +166,12 @@ if (
                                 <td>Prize</td>
                                 <td>Status</td>
                                 <td>Deliv. Status</td>
+                                <td>Final Status</td>
                                 @if ($specialPermission)
                                     <td class="text-center">View</td>
                                 @endif
                                 <td class="text-center">Edit</td>
+                                <td class="text-center">ACC</td>
                                 <td class="text-center">Delete</td>
                             </tr>
                         </thead>
@@ -210,15 +211,18 @@ if (
                                         id="order_{{ $key }}"
                                         data-order="{{ $reference->order_id }}"
                                         style="overflow-x: auto;">
-                                        @php
+                                        <?php
                                         if (!empty($reference->order_id)) {
                                             $order = Order::select("id", "code")
                                                 ->where("id", $reference->order_id)
                                                 ->first();
-
-                                            echo $order->code;
+                                            echo '<a href="'
+                                                . route("detail_order", ["code" => $order->code])
+                                                . '">'
+                                                . $order->code
+                                                . '</a>';
                                         }
-                                        @endphp
+                                        ?>
                                     </td>
                                     <td class="text-center"
                                         id="prize_{{ $key }}"
@@ -243,6 +247,12 @@ if (
                                         data-deliveryprize="{{ $reference->delivery_status_prize }}"
                                         data-permission="{{ $specialPermission }}">
                                         {{ $reference->delivery_status_prize }}
+                                    </td>
+                                    <td class="text-center"
+                                        id="delivery_status_prize_{{ $key }}"
+                                        data-deliveryprize="{{ $reference->reference_souvenir['final_status'] }}"
+                                        data-permission="{{ $specialPermission }}">
+                                        {{ $reference->reference_souvenir['final_status'] }}
                                     </td>
                                     {{-- <td class="center"
                                         id="image_{{ $key }}"
@@ -273,7 +283,7 @@ if (
                                         </td>
                                     @endif
                                     <td class="text-center">
-                                        @if ($reference->status_souvenir !== "success")
+                                        @if ($reference->status_prize !== "success")
                                             <button class="btn"
                                                 id="btn-edit-save_{{ $key }}"
                                                 style="padding: 0;"
@@ -283,6 +293,19 @@ if (
                                                 data-target="#edit-reference"
                                                 value="{{ $reference->id }}">
                                                 <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                            </button>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if($reference->status_prize == "success" && $reference->delivery_status_prize == null )
+                                            <button class="btn"
+                                                id="btn-share-acc-reference_{{ $key }}"
+                                                style="padding: 0;"
+                                                onclick="shareAccReference(this)"
+                                                data-id="{{ $reference->id }}"
+                                                data-toggle="modal"
+                                                data-target="#share-acc-reference-modal">
+                                                <i class="mdi mdi-share-variant" style="font-size: 24px; color: #4CAF50;"></i>
                                             </button>
                                         @endif
                                     </td>
@@ -307,13 +330,10 @@ if (
             <div class="col-md-12 text-center mt-4">
                 <button class="btn btn-gradient-primary mt-2"
                     data-toggle="modal"
-                    data-target="#edit-reference"
-                    onclick="clickAdd()">
+                    data-target="#edit-reference">
                     Add Reference - MGM
                 </button>
             </div>
-
-
 
             <div class="col-md-12 center"
                 style="margin-top: 3em;">
@@ -399,13 +419,17 @@ if (
                 </button>
             </div>
             <div class="modal-body">
-                <form id="edit-form" method="POST" enctype="multipart/form-data">
+                <form id="edit-form" method="POST" action="{{ route("store_reference_mgm") }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" id="edit-id" name="id" value="" />
                     <input type="hidden"
                         id="url"
                         name="url"
                         value="{{ url()->full() }}" />
+                    <input type="hidden"
+                        id="edit-id"
+                        name="submission_id"
+                        value="{{ $submission->id }}" />
                     <div class="form-group">
                         <label for="edit-name">Name</label>
                         <input type="text"
@@ -619,8 +643,7 @@ if (
                     </table>
                 </div>
 
-                <form id="formUpdateStatus" method="POST" action="{{ route('update_reference_mgm') }}">
-                    @csrf
+                @if(isset($_GET['id_ref']) && Auth::user()->id == 1)
                     <div class="form-group">
                         <label>Other Detail</label>
                         <table id="table-detail-other" style="margin: 1em 0em;">
@@ -629,27 +652,63 @@ if (
                                 <td>Name</td>
                                 <td>Status</td>
                                 <td>Status Delivery</td>
+                                <td>Status Final</td>
                             </thead>
                             <tbody id="append_tbody_other">
 
                             </tbody>
                         </table>
-
-                        <input id="ref_id" type="hidden" name="id" />
-                        <input id="ref_name" type="hidden" name="name" />
-                        <input id="ref_phone" type="hidden" name="phone" />
-                        <input id="ref_age" type="hidden" name="age" />
-                        <input id="ref_province" type="hidden" name="province" />
-                        <input id="ref_city" type="hidden" name="city" />
-                        <input id="refs_order" type="hidden" name="order_id" />
-
-                        <button class="btn btn-primary"
-                            type="submit"
-                            id="btn-confirmUpdate">
-                            Save
-                        </button>
                     </div>
-                </form>
+
+                    <form id="formUpdateStatusAcc" method="POST" action="{{ route('update_reference_mgm') }}">
+                        @csrf
+                        <div class="form-group">
+
+                            <input id="ref_id" type="hidden" name="id" />
+                            <input type="hidden" name="delivery_status_prize" value="delivered by CSO" />
+
+                            <div style="text-align: center;">
+                                <h5>Are you sure want to deliver by CSO for this reference ?</h5>
+                                <button type="submit" class="btn btn-gradient-primary">Yes</button>
+                                <button class="btn btn-gradient-danger" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                @else
+                    <form id="formUpdateStatus" method="POST" action="{{ route('update_reference_mgm') }}">
+                        @csrf
+                        <div class="form-group">
+                            <label>Other Detail</label>
+                            <table id="table-detail-other" style="margin: 1em 0em;">
+                                <thead>
+                                    <td>Item</td>
+                                    <td>Name</td>
+                                    <td>Status</td>
+                                    <td>Status Delivery</td>
+                                    <td>Status Final</td>
+                                </thead>
+                                <tbody id="append_tbody_other">
+
+                                </tbody>
+                            </table>
+
+                            <input id="ref_id" type="hidden" name="id" />
+                            <input id="ref_name" type="hidden" name="name" />
+                            <input id="ref_phone" type="hidden" name="phone" />
+                            <input id="ref_age" type="hidden" name="age" />
+                            <input id="ref_province" type="hidden" name="province" />
+                            <input id="ref_city" type="hidden" name="city" />
+                            <input id="refs_order" type="hidden" name="order_id" />
+
+                            <button class="btn btn-primary"
+                                type="submit"
+                                id="btn-confirmUpdate">
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                @endif
+
             </div>
         </div>
     </div>
@@ -687,6 +746,43 @@ if (
                     </button>
                 </form>
                 <button class="btn btn-light" type="button">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade"
+    id="share-acc-reference-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-center">
+                    Are you sure want to Acc this reference?
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{{ route("acc_notif_reference") }}">
+                    @csrf
+                    <input type="hidden" name="id" id="acc-reference-id" />
+                    <input type="hidden"
+                        name="url"
+                        value="{{ url()->full() }}" />
+                    <button type="submit" class="btn btn-light">
+                        Yes
+                    </button>
+                </form>
+                <button class="btn btn-gradient-danger" type="button">No</button>
             </div>
         </div>
     </div>
@@ -861,6 +957,7 @@ function loadDataPerRef(ref_id) {
             var data_order = data['data_order'];
             var data_prize = data['data_prize'];
             var detail_product = data['detail_product'];
+            console.log(data_prize);
 
             // Detail HS
             if (data_hs != null) {
@@ -947,25 +1044,31 @@ function loadDataPerRef(ref_id) {
                         <tr id="tr_detail_souvenir">\
                             <td>PRIZE</td>\
                             <td>\
-                                <select id="select_edit-prize_'+p+'" class="form-control" name="prize_id">'
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-prize_'+p+'" class="form-control" name="prize_id">'
                                 + prizeOptionAll +
                                 '</select>\
                             </td>\
                             <td>\
-                                <select id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
-                                    <option value="">Choose Status</option>\
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-status-prize_'+p+'" class="form-control" name="status_prize">\
+                                    <option value="" disabled>Choose Status</option>\
                                     <option value="pending">pending</option>\
                                     <option value="success">success</option>\
                                 </select>\
                             </td>\
                             <td>\
-                                <select id="select_edit-delivery-status-prize_'+p+'" class="form-control" name="delivery_status_prize">\
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-delivery-status-prize_'+p+'" class="form-control" name="delivery_status_prize">\
                                     <option value="">Choose Status Delivery</option>\
                                     <option value="undelivered">undelivered</option>\
                                     @if(Auth::user()->id == 1)
                                         <option value="delivered by CSO">delivered by CSO</option>\
                                     @endif
                                     <option value="delivered by Courier">delivered by Courier</option>\
+                                </select>\
+                            </td>\
+                            <td>\
+                                <select {{ Auth::user()->id == 1 && isset($_GET['id_ref']) ? "disabled" : "" }} id="select_edit-status-final-status_'+p+'" class="form-control" name="final_status">\
+                                    <option value="" disabled>Choose Status</option>\
+                                    <option value="pending">pending</option>\
                                     <option value="success">success</option>\
                                 </select>\
                             </td>\
@@ -975,6 +1078,7 @@ function loadDataPerRef(ref_id) {
                     $('#select_edit-prize_'+p).val(data_refs[p]['prize_id']);
                     $('#select_edit-status-prize_'+p).val(data_refs[p]['status_prize']);
                     $('#select_edit-delivery-status-prize_'+p).val(data_refs[p]['delivery_status_prize']);
+                    $('#select_edit-status-final-status_'+p).val(data_refs[p]['final_status']);
                 }
             }
 
@@ -1074,6 +1178,7 @@ $(document).ready(function () {
     // KHUSUS UNTUK ORDER
     $("#choose-order").on('shown.bs.modal', function (event) {
         originButton = event.relatedTarget.dataset.originbutton;
+        console.log(originButton);
 
         let submission_id = "{{ $submission->id }}";
         getOrderSubmission("", submission_id, originButton);
@@ -1086,7 +1191,7 @@ $(document).ready(function () {
     $('#order-filter-name_phone').on('input', function (e) {
         let submission_id = "{{ $submission->id }}";
         let filter = $(this).val();
-        getOrderSubmission(filter, submission_id);
+        getOrderSubmission(filter, submission_id, "btn_choose_order");
     });
 
     function getOrderSubmission(filter, submission_id, originButton) {
@@ -1177,7 +1282,7 @@ $(document).ready(function () {
         }
         else{
             alert("Input Success !!!");
-            window.location.reload()
+            window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
         }
 
         document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";
@@ -1186,6 +1291,29 @@ $(document).ready(function () {
     function errorHandler(event){
         document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";
     }
+
+    $("#formUpdateStatusAcc").on("submit", function (e) {
+        e.preventDefault();
+        frmAdd = _("formUpdateStatusAcc");
+        frmAdd = new FormData(document.getElementById("formUpdateStatusAcc"));
+        frmAdd.enctype = "multipart/form-data";
+        var URLNya = $("#formUpdateStatusAcc").attr('action');
+
+        var ajax = new XMLHttpRequest();
+        ajax.addEventListener("load", completeHandler_2, false);
+        ajax.open("POST", URLNya);
+        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+        ajax.send(frmAdd);
+    });
+
+    function completeHandler_2(event){
+        alert("Input Success !!!");
+        window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
+    }
+
+    @if(isset($_GET['id_ref']))
+        loadDataPerRef({{$_GET['id_ref']}});
+    @endif
 });
 
 function selectOrderNya(id, code) {
@@ -1206,6 +1334,10 @@ function selectOrderForEdit(id, code, origin) {
 
 function deleteReference(e) {
     document.getElementById("delete-reference-id").value = e.dataset.id;
+}
+
+function shareAccReference(e) {
+    document.getElementById("acc-reference-id").value = e.dataset.id;
 }
 </script>
 @endsection

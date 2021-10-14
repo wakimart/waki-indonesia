@@ -328,52 +328,90 @@
       <header class="section-header">
         <h2 class="section-title">Our Gallery</h2>
       </header>
+      
+      <section class="Grid">
+        <div class="Grid-row">
+          @foreach($albums as $key => $album)
+            @php
+              $string = str_replace(' ', '', $album->event['name']);
+              $codePath = strtolower($string);
 
-      <div class="row">
-        <div class="col-lg-12">
-          <ul id="portfolio-flters">
-            <li data-filter=".filter-photo" class="filter-active">Photo</li>
-            <li data-filter=".filter-video" >Video</li>
-          </ul>
+              $photoPath = asset('sources/album/' . $codePath);
+
+              $index = $key + 1;
+            @endphp
+            <a class="Card" onClick="openGallery({{$index}})" id="card-{{$key+1}}">
+                <div class="Card-thumb">
+                    <div class="Card-shadow"></div>
+                    <div class="Card-shadow"></div>
+                    <div class="Card-shadow"></div>
+                    <div class="Card-image" style="background-image: url({{$photoPath.'/'.$album['arr_photo'][0]}})"></div>
+                </div>
+                <div class="Card-title"><span>{{$album->event['name']}}</span></div>
+                @if(Utils::$lang=='id')
+                <div class="Card-explore"><span>Lihat Semua</span></div><button class="Card-button">Lihat Semua</button>
+                @elseif(Utils::$lang=='eng')
+                <div class="Card-explore"><span>See More</span></div><button class="Card-button">View More</button>
+                @endif
+            </a>
+          @endforeach
         </div>
-      </div>
+      </section>
 
-      <div class="row portfolio-container">
+      @foreach($albums as $key => $album)
         @php
-        foreach($galleries as $gallerie){
-          $photos = json_decode($gallerie->photo, true);
-          $photoPath = asset('sources/portfolio/');
-          $videos = json_decode($gallerie->url_youtube, true);
+          $string = str_replace(' ', '', $album->event['name']);
+          $codePath = strtolower($string);
 
-          $photoPath = asset('sources/portfolio/');
-        }
+          $photoPath = asset('sources/album/' . $codePath);
         @endphp
+        <section class="Gallery" id="gallery-{{$key+1}}">
 
-        @for($x = 0; $x < sizeof($photos); $x++)
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{$photoPath.'/'.$photos[$x]}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo {{$x+1}}</a></h4>
-              <p>App</p>
-              <div>
-                <a href="#" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
+          <div class="row my-5">
+            <div class="tabs-container">
+              <ul id="portfolio-flters">
+                @if(Utils::$lang=='id')
+                <li data-filter=".filter-photo" class="filter-active">Foto</li>
+                <li data-filter=".filter-video" >Video</li>
+                @elseif(Utils::$lang=='eng')
+                <li data-filter=".filter-photo" class="filter-active">Photo</li>
+                <li data-filter=".filter-video" >Video</li>
+                @endif
+              </ul>
             </div>
           </div>
-        </div>
-        @endfor
 
-        @for($v = 0; $v < sizeof($videos) ; $v++)
-        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
-          <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">{{$videos[$v]['title']}}</h5>
-            <iframe width="100%" height="auto" position="relative" src="{{$videos[$v]['url']}}" frameborder="0" allowfullscreen=""></iframe>
+          <div class="Gallery-header"><a class="Gallery-close" onclick="closeAll()">×</a></div>
+          <div class="row portfolio-container">
+            @for($x = 0; $x < sizeof($album['arr_photo']); $x++)
+            <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+              <div class="portfolio-wrap">
+                <img src="{{$photoPath.'/'.$album['arr_photo'][$x]}}" class="img-fluid" alt="">
+                <div class="portfolio-info">
+                  @if(Utils::$lang=='id')
+                  <h4><a href="#">Foto {{$x+1}}</a></h4>
+                  @elseif(Utils::$lang=='eng')
+                  <h4><a href="#">Photo {{$x+1}}</a></h4>
+                  @endif
+                  <div>
+                    <a href="{{$photoPath.'/'.$album['arr_photo'][$x]}}" data-lightbox="portfolio" data-title="Foto" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            @endfor
+
+            @for($v = 0; $v < sizeof($album['url_video']) ; $v++)
+            <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+              <div class="portfolio-wrap2">
+                <h5 class="portfolio-video-title">{{$album['url_video'][$v]['title']}}</h5>
+                <iframe width="100%" height="auto" position="relative" src="{{$album['url_video'][$v]['url']}}" frameborder="0" allowfullscreen=""></iframe>
+              </div>
+            </div>
+            @endfor
           </div>
-        </div>
-        @endfor
-
-      </div>
+        </section>
+      @endforeach
     </div>
   </section>
 
@@ -456,3 +494,29 @@
   <!-- #business -->
 </main>
 @endsection
+
+@section('script')
+<script>
+
+  function openGallery(id) {
+    closeAll();
+    const gallery = document.getElementById('gallery-'+id);
+    const card = document.getElementById('card-'+id);
+    gallery.classList.add('Gallery--active');
+    card.classList.add('Card--active');
+  }
+
+function closeAll() {
+  const galleryActv = document.querySelector('.Gallery--active');
+  const cardActv = document.querySelector('.Card--active');
+  if (galleryActv) {
+    galleryActv.classList.remove('Gallery--active');
+  }
+  if (cardActv) {
+    cardActv.classList.remove('Card--active');
+  }
+}
+
+</script>
+@endsection
+

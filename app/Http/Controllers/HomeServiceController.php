@@ -562,6 +562,7 @@ class HomeServiceController extends Controller
             "b.code AS branch_code",
             "b.name AS branch_name",
             "c.name AS cso_name",
+            "r.slug AS role_slug",
             "h.created_at AS created_at",
             "h.updated_at AS updated_at"
         )
@@ -577,6 +578,24 @@ class HomeServiceController extends Controller
             "c.id",
             "=",
             "h.cso_id"
+        )
+        ->leftJoin(
+            "users AS u",
+            "u.cso_id",
+            "=",
+            "c.id"
+        )
+        ->leftJoin(
+            "role_users AS ru",
+            "ru.user_id",
+            "=",
+            "u.id"
+        )
+        ->leftJoin(
+            "roles AS r",
+            "r.id",
+            "=",
+            "ru.role_id"
         )
         ->where("h.active", true);
 
@@ -1817,6 +1836,27 @@ class HomeServiceController extends Controller
                     'result' =>$result,
                     'data' => $data
                 ], 200);
+        }
+    }
+
+    public static function createPp5hHs($personal_homecare){
+        $data = [];
+        $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($personal_homecare['phone'], -4);
+        $data['type_customer'] = "WAKi Customer (Type B)";
+        $data['type_homeservices'] = "Program Pinjamin 5 Hari";
+        $data['name'] = $personal_homecare['name'];
+        $data['address'] = $personal_homecare['address'];
+        $data['phone'] = $personal_homecare['phone'];
+        $data['province'] = $personal_homecare['province_id'];
+        $data['city'] = $personal_homecare['city_id'];
+        $data['distric'] = $personal_homecare['subdistrict_id'];
+        $data['cso_id'] = $personal_homecare['cso_id'];
+        $data['branch_id'] = $personal_homecare['branch_id'];
+        $data['cso_phone'] = Cso::find($personal_homecare['cso_id'])['phone'];
+
+        for ($i=0; $i < 5; $i++) { 
+            $data['appointment'] = date("Y-m-d h:i:s", strtotime($personal_homecare['schedule']." 10:00:00" . "+".$i." days"));
+            HomeService::create($data);
         }
     }
 }

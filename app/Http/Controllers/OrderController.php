@@ -352,6 +352,7 @@ class OrderController extends Controller
      */
     public function update(Request $request)
     {
+        // return response()->json(['errors' => $request->all()], 500);
         DB::beginTransaction();
         try{
             $historyUpdate= [];
@@ -404,16 +405,20 @@ class OrderController extends Controller
             //update image
             $arr_image_before = $orders['image'];
             $namaGambar = [];
-            $namaGambar = array_values($arr_image_before);
+            if($arr_image_before != null){
+                $namaGambar = array_values($arr_image_before);
+            }
             $idxImg = 1;
 
             if ($request->hasFile('images0') || $request->hasFile('images1') || $request->hasFile('images2')){
                 // Store image
                 for ($i = 0; $i < $request->total_images; $i++) {
                     if ($request->hasFile('images' . $i)) {
-                        if (array_key_exists($i, $arr_image_before)) {
-                            if (File::exists("sources/order/" . $arr_image_before[$i])) {
-                                File::delete("sources/order/" . $arr_image_before[$i]);
+                        if($arr_image_before != null){
+                            if (array_key_exists($i, $arr_image_before)) {
+                                if (File::exists("sources/order/" . $arr_image_before[$i])) {
+                                    File::delete("sources/order/" . $arr_image_before[$i]);
+                                }
                             }
                         }
 
@@ -431,8 +436,10 @@ class OrderController extends Controller
                         $namaGambar[$i] = $fileName;
                         $idxImg++;
                     } else {
-                        if (array_key_exists($i, $arr_image_before)) {
-                            $namaGambar[$i] = $arr_image_before[$i];
+                        if($arr_image_before != null){
+                            if (array_key_exists($i, $arr_image_before)) {
+                                $namaGambar[$i] = $arr_image_before[$i];
+                            }
                         }
                     }
                 }

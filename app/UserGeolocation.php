@@ -11,6 +11,7 @@ class UserGeolocation extends Model
         "presence_image",
         "date",
         "filename",
+        "device_id",
     ];
 
     protected $casts = [

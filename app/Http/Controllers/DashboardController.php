@@ -7,6 +7,7 @@ use App\Order;
 use App\RegistrationPromotion;
 use App\Role;
 use App\User;
+use App\PersonalHomecare;
 use App\ReferenceSouvenir;
 use Exception;
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ class DashboardController extends Controller
             // Update role user yg baru
             $role = Role::where('slug', Auth::user()->roles[0]['slug'])->get();
             $users = User::find(Auth::user()->id);
-            $check_permission = Str::contains($users->permissions, 'add-service');
+            $check_permission = Str::contains($users->permissions, 'change-status-verified-personalhomecare');
 
             if (!$check_permission) {
                 $users->permissions = $role[0]['permissions'];
@@ -73,6 +74,16 @@ class DashboardController extends Controller
                     ->select('reference_souvenirs.*')
                     ->get();
 
+        //khusus untuk reference souvenir need to acc
+        $refSouvenirs = ReferenceSouvenir::where('is_acc', true)->get();
+
+        //khusus untuk personal homecare to acc
+        $personalHomecares = PersonalHomecare::where('active', true)
+                        ->whereIn('status', ['new', 'waiting_in', 'verified'])
+                        ->orWhereNotNull('reschedule_date')
+                        ->orWhere('is_extend', true)
+                        ->get();
+
         return view(
             "admin.dashboard",
             compact(
@@ -80,6 +91,8 @@ class DashboardController extends Controller
                 "order",
                 "registration",
                 "references",
+                "refSouvenirs",
+                "personalHomecares"
             )
         );
     }

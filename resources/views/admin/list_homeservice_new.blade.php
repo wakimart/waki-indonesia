@@ -105,7 +105,9 @@ $menu_item_second = "list_homeservice";
                                 <div class="col-xs-6 col-sm-3"
                                     style="padding: 0; display: inline-block;">
                                     <div class="form-group">
-                                        <label for="">Filter By City</label>
+                                        <label for="filter_province">
+                                            Filter By City
+                                        </label>
                                         <select class="form-control"
                                             id="filter_province"
                                             onchange="setCity(this)"
@@ -262,14 +264,16 @@ $menu_item_second = "list_homeservice";
                                 <div class="col-xs-6 col-sm-3"
                                     style="padding: 0;display: inline-block;">
                                     <div class="form-group">
-                                        <label for="">Filter By Team</label>
+                                        <label for="filter_branch">
+                                            Filter By Team
+                                        </label>
                                         <select class="form-control"
                                             id="filter_branch"
                                             name="filter_branch">
                                             <option value="" selected="">
                                                 All Branch
                                             </option>
-                                            @foreach($branches as $branch)
+                                            @foreach ($branches as $branch)
                                                 @php
                                                 $selected = "";
 
@@ -293,7 +297,9 @@ $menu_item_second = "list_homeservice";
                                 <div class="col-xs-6 col-sm-3"
                                     style="padding: 0;display: inline-block;">
                                     <div class="form-group">
-                                        <label for="">Filter By CSO</label>
+                                        <label for="filter_cso">
+                                            Filter By CSO
+                                        </label>
                                         <input name="filter_cso"
                                             id="filter_cso"
                                             list="data_cso"
@@ -307,7 +313,7 @@ $menu_item_second = "list_homeservice";
                                         <datalist id="data_cso">
                                             <select class="form-control">
                                                 <option value="All CSO"></option>
-                                                @foreach($csos as $cso)
+                                                @foreach ($csos as $cso)
                                                     <option value="{{ $cso['code'] }}-{{ $cso['name'] }}"></option>
                                                 @endforeach
                                             </select>
@@ -438,32 +444,32 @@ $menu_item_second = "list_homeservice";
                                 </div>
 
                                 <?php
-                                    $currentMonth = date("n");
+                                $currentMonth = date("n");
+                                $previousMonth = (int) $currentMonth - 1;
+                                $nextMonth = (int) $currentMonth + 1;
+                                $month = date("m");
+                                $year = date("Y");
+
+                                $currentMonth_text = date("F");
+
+                                if(isset($_GET['isSubmission'])){
+                                    $get_appointment = strtotime($_GET['appointment']);
+
+                                    $currentMonth = date("n", $get_appointment);
                                     $previousMonth = (int) $currentMonth - 1;
                                     $nextMonth = (int) $currentMonth + 1;
-                                    $month = date("m");
-                                    $year = date("Y");
+                                    $month = date("m", $get_appointment);
+                                    $year = date("Y", $get_appointment);
 
-                                    $currentMonth_text = date("F");
+                                    $currentMonth_text = date("F", $get_appointment);
+                                }
 
-                                    if(isset($_GET['isSubmission'])){
-                                        $get_appointment = strtotime($_GET['appointment']);
-
-                                        $currentMonth = date("n", $get_appointment);
-                                        $previousMonth = (int) $currentMonth - 1;
-                                        $nextMonth = (int) $currentMonth + 1;
-                                        $month = date("m", $get_appointment);
-                                        $year = date("Y", $get_appointment);
-
-                                        $currentMonth_text = date("F", $get_appointment);
-                                    }
-
-                                    if ($previousMonth < 10) {
-                                        $previousMonth = "0" . $previousMonth;
-                                    }
-                                    if ($nextMonth < 10) {
-                                        $nextMonth = "0". $nextMonth;
-                                    }
+                                if ($previousMonth < 10) {
+                                    $previousMonth = "0" . $previousMonth;
+                                }
+                                if ($nextMonth < 10) {
+                                    $nextMonth = "0". $nextMonth;
+                                }
                                 ?>
                                 <div class="cjslib-month"
                                     style="background-color: rgb(255, 193, 7); color: rgb(255, 255, 255);">
@@ -540,7 +546,7 @@ $menu_item_second = "list_homeservice";
                                     $iMax = 28;
                                     $temp_search = date("Y-m-");
 
-                                    if(isset($_GET['isSubmission'])){
+                                    if (isset($_GET['isSubmission'])) {
                                         $get_appointment = strtotime($_GET['appointment']);
 
                                         $todayDate = (int) date("j", $get_appointment);
@@ -783,65 +789,69 @@ $menu_item_second = "list_homeservice";
                                                             <?php if (!$isAdminManagement): ?>
                                                                 <td style="text-align: center">
                                                                     <?php
-                                                                        if(Gate::check('detail-home_service')){
-                                                                            echo '<button '
-                                                                            . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                                                                    if (Gate::check('detail-home_service')) {
+                                                                        echo '<button '
+                                                                        . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                                                                        . 'type="button" '
+                                                                        . 'data-toggle="modal" '
+                                                                        . 'data-target="#viewHomeServiceModal" '
+                                                                        . 'onclick="clickView(this)" '
+                                                                        . 'value="' . $dayData->hs_id . '">'
+                                                                        . '</button>';
+                                                                    }
+                                                                    ?>
+                                                                </td>
+                                                                <td style="text-align: center">
+                                                                    <?php
+                                                                    if (Gate::check('edit-home_service')) {
+                                                                        echo '<button '
+                                                                            . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
                                                                             . 'type="button" '
                                                                             . 'data-toggle="modal" '
-                                                                            . 'data-target="#viewHomeServiceModal" '
-                                                                            . 'onclick="clickView(this)" '
+                                                                            . 'data-target="#cashHomeServiceModal" '
+                                                                            . 'onclick="clickCash(this)" '
                                                                             . 'value="' . $dayData->hs_id . '">'
                                                                             . '</button>';
-                                                                        }
+                                                                    }
                                                                     ?>
                                                                 </td>
                                                                 <td style="text-align: center">
                                                                     <?php
-                                                                        if(Gate::check('edit-home_service')){
-                                                                            echo '<button '
-                                                                                . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
-                                                                                . 'type="button" '
-                                                                                . 'data-toggle="modal" '
-                                                                                . 'data-target="#cashHomeServiceModal" '
-                                                                                . 'onclick="clickCash(this)" '
-                                                                                . 'value="' . $dayData->hs_id . '">'
-                                                                                . '</button>';
-                                                                        }
-                                                                    ?>
-                                                                </td>
-                                                                <td style="text-align: center">
-                                                                    <?php
-                                                                        if(Gate::check('edit-home_service')){
-                                                                            echo '<button '
-                                                                                . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
-                                                                                . 'type="button" '
-                                                                                . 'data-toggle="modal" '
-                                                                                . 'data-target="#editHomeServiceModal" ';
+                                                                    if (Gate::check('edit-home_service')) {
+                                                                        echo '<button '
+                                                                            . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
+                                                                            . 'type="button" '
+                                                                            . 'data-toggle="modal" '
+                                                                            . 'data-target="#editHomeServiceModal" ';
 
-                                                                            if (Auth::user()->roles[0]["slug"] === "cso") {
-                                                                                echo 'data-cso="true" ';
-                                                                            } else {
-                                                                                echo 'data-cso="false" ';
-                                                                            }
-
-                                                                            echo 'onclick="clickEdit(this)" '
-                                                                                . 'value="' . $dayData->hs_id . '">'
-                                                                                . '</button>';
+                                                                        if (Auth::user()->roles[0]["slug"] === "cso") {
+                                                                            echo 'data-cso="true" ';
+                                                                        } else {
+                                                                            echo 'data-cso="false" ';
                                                                         }
+
+                                                                        echo 'onclick="clickEdit(this)" '
+                                                                            . 'value="' . $dayData->hs_id . '">'
+                                                                            . '</button>';
+                                                                    }
                                                                     ?>
                                                                 </td>
                                                                 <td style="text-align: center">
                                                                     <?php
-                                                                        if(Gate::check('delete-home_service')){
-                                                                            echo '<button '
-                                                                                . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
-                                                                                . 'type="button" '
-                                                                                . 'data-toggle="modal" '
-                                                                                . 'data-target="#deleteHomeServiceModal" '
-                                                                                . 'onclick="clickCancel(this)" '
-                                                                                . 'value="' . $dayData->hs_id . '">'
-                                                                                . '</button>';
-                                                                        }
+                                                                    if (
+                                                                        Gate::check('delete-home_service')
+                                                                        && $dayData->role_slug !== "admin"
+                                                                        && $dayData->role_slug !== "head-admin"
+                                                                    ) {
+                                                                        echo '<button '
+                                                                            . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
+                                                                            . 'type="button" '
+                                                                            . 'data-toggle="modal" '
+                                                                            . 'data-target="#deleteHomeServiceModal" '
+                                                                            . 'onclick="clickCancel(this)" '
+                                                                            . 'value="' . $dayData->hs_id . '">'
+                                                                            . '</button>';
+                                                                    }
                                                                     ?>
                                                                 </td>
                                                             <?php else: ?>
@@ -1001,7 +1011,7 @@ $menu_item_second = "list_homeservice";
                     </div>
                     <div class="modal-body">
                         <h5 style="text-align:center;"></h5>
-                        {{ csrf_field() }}
+                        @csrf
                         <input type="hidden" id="edit-id" name="id" value="" />
                         <div class="form-group">
                             <span>Type Customer</span>
@@ -1286,7 +1296,7 @@ $menu_item_second = "list_homeservice";
                     <form id="frmCancel"
                         method="post"
                         action="{{ route('update_homeService') }}">
-                        {{ csrf_field() }}
+                        @csrf
                         <input type="hidden"
                             id="hiddenInput"
                             name="cancel"
@@ -1331,7 +1341,7 @@ $menu_item_second = "list_homeservice";
                         </button>
                     </div>
                     <div class="modal-body">
-                        <h5 style="text-align:center;">
+                        <h5 style="text-align: center;">
                             Did you manage to get cash? <span id="cash_or_not_txt" style="color: black;"></span>
                         </h5>
                         <br>
@@ -1345,14 +1355,25 @@ $menu_item_second = "list_homeservice";
                                 placeholder="Cash Description"></textarea>
                             <label for="">Bukti Foto (WAJIB): </label>
                             <div id="divImageCash" style="padding: 0.5em;">
-                                <img id="showImageCash" src="" height="300px" width="450px">
+                                <img id="showImageCash"
+                                    src=""
+                                    height="300px"
+                                    width="450px" />
                             </div>
-                            <input type="file" class="form-control" name="cash_image" id="cash_image" accept="image/*" placeholder="Bukti Foto" required data-msg="Mohon Sertakan Foto" style="text-transform:uppercase"/>
+                            <input type="file"
+                                class="form-control"
+                                name="cash_image"
+                                id="cash_image"
+                                accept="image/*"
+                                placeholder="Bukti Foto"
+                                required
+                                data-msg="Mohon Sertakan Foto"
+                                style="text-transform: uppercase;" />
                             <div class="validation"></div>
                         </div>
                     </div>
                     <div class="modal-footer footer-cash" id="footer-cash">
-                        {{ csrf_field() }}
+                        @csrf
                         <input type="hidden"
                             id="idEditCash"
                             name="id"
@@ -1427,7 +1448,7 @@ $menu_item_second = "list_homeservice";
                     </div>
                 </div>
                 <div class="modal-footer">
-                    {{ csrf_field() }}
+                    @csrf
                     <input type="hidden"
                         id="hiddenInput"
                         name="cancel"
@@ -1478,7 +1499,7 @@ $menu_item_second = "list_homeservice";
                     </div>
                 </div>
                 <div class="modal-footer">
-                    {{csrf_field()}}
+                    @csrf
                     <input type="hidden"
                         id="hiddenInput"
                         name="cancel"

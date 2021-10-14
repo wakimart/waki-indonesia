@@ -136,7 +136,26 @@ class RolesSeeder extends Seeder
 
                 // Reference (Head Admin)
                 "edit-reference-status" => true,
-        	]),
+
+                // Personal Homecare Product (Head Admin)
+                "add-phc-product" => true,
+                "browse-phc-product" => true,
+                "edit-phc-product" => true,
+                "delete-phc-product" => true,
+
+                // Personal Homecare (Head Admin)
+                "add-personal-homecare" => false,
+                "browse-personal-homecare" => true,
+                "edit-personal-homecare" => false,
+                "detail-personal-homecare" => true,
+                "delete-personal-homecare" => false,
+                "change-status-checkin-personalhomecare" => true,
+                "change-status-checkout-personalhomecare" => true,
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => true,
+            ]),
         ]);
 
         $admin = Role::create([
@@ -263,6 +282,25 @@ class RolesSeeder extends Seeder
 
                 // Reference (Admin)
                 "edit-reference-status" => true,
+
+                // Personal Homecare Product (Admin)
+                "add-phc-product" => false,
+                "browse-phc-product" => true,
+                "edit-phc-product" => false,
+                "delete-phc-product" => false,
+
+                // Personal Homecare (Admin)
+                "add-personal-homecare" => false,
+                "browse-personal-homecare" => true,
+                "edit-personal-homecare" => false,
+                "detail-personal-homecare" => true,
+                "delete-personal-homecare" => false,
+                "change-status-checkin-personalhomecare" => false,
+                "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => false,
+                "acc-reschedule-personalhomecare" => false,
+                "acc-extend-personalhomecare" => false,
+                "change-status-product-personalhomecare" => false,
         	]),
         ]);
 
@@ -384,6 +422,25 @@ class RolesSeeder extends Seeder
 
                 // Reference (CSO)
                 "edit-reference-status" => false,
+
+                // Personal Homecare Product (CSO)
+                "add-phc-product" => false,
+                "browse-phc-product" => true,
+                "edit-phc-product" => false,
+                "delete-phc-product" => false,
+
+                // Personal Homecare (CSO)
+                "add-personal-homecare" => true,
+                "browse-personal-homecare" => true,
+                "edit-personal-homecare" => true,
+                "detail-personal-homecare" => true,
+                "delete-personal-homecare" => true,
+                "change-status-checkin-personalhomecare" => false,
+                "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => false,
+                "acc-reschedule-personalhomecare" => false,
+                "acc-extend-personalhomecare" => false,
+                "change-status-product-personalhomecare" => false,
             ]),
         ]);
 
@@ -505,6 +562,25 @@ class RolesSeeder extends Seeder
 
                 // Reference (Branch)
                 "edit-reference-status" => false,
+
+                // Personal Homecare Product (Branch)
+                "add-phc-product" => false,
+                "browse-phc-product" => true,
+                "edit-phc-product" => false,
+                "delete-phc-product" => false,
+
+                // Personal Homecare (Branch)
+                "add-personal-homecare" => true,
+                "browse-personal-homecare" => true,
+                "edit-personal-homecare" => true,
+                "detail-personal-homecare" => true,
+                "delete-personal-homecare" => true,
+                "change-status-checkin-personalhomecare" => false,
+                "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => false,
+                "acc-reschedule-personalhomecare" => false,
+                "acc-extend-personalhomecare" => false,
+                "change-status-product-personalhomecare" => false,
             ]),
         ]);
 
@@ -626,6 +702,25 @@ class RolesSeeder extends Seeder
 
                 // Reference (Area Manager)
                 "edit-reference-status" => false,
+
+                // Personal Homecare Product (Area Manager)
+                "add-phc-product" => false,
+                "browse-phc-product" => true,
+                "edit-phc-product" => false,
+                "delete-phc-product" => false,
+
+                // Personal Homecare (Area Manager)
+                "add-personal-homecare" => false,
+                "browse-personal-homecare" => true,
+                "edit-personal-homecare" => false,
+                "detail-personal-homecare" => true,
+                "delete-personal-homecare" => false,
+                "change-status-checkin-personalhomecare" => false,
+                "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => false,
             ]),
         ]);
 
@@ -747,6 +842,25 @@ class RolesSeeder extends Seeder
 
                 // Reference (Head Manager)
                 "edit-reference-status" => false,
+
+                // Personal Homecare Product (Head Manager)
+                "add-phc-product" => false,
+                "browse-phc-product" => true,
+                "edit-phc-product" => false,
+                "delete-phc-product" => false,
+
+                // Personal Homecare (Head Manager)
+                "add-personal-homecare" => false,
+                "browse-personal-homecare" => true,
+                "edit-personal-homecare" => false,
+                "detail-personal-homecare" => true,
+                "delete-personal-homecare" => false,
+                "change-status-checkin-personalhomecare" => false,
+                "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => false,
             ]),
         ]);
 
@@ -874,6 +988,25 @@ class RolesSeeder extends Seeder
 
                 // Reference (Admin Management)
                 "edit-reference-status" => false,
+
+                // Personal Homecare Product (Admin Management)
+                "add-phc-product" => true,
+                "browse-phc-product" => true,
+                "edit-phc-product" => true,
+                "delete-phc-product" => true,
+
+                // Personal Homecare (Admin Management)
+                "add-personal-homecare" => false,
+                "browse-personal-homecare" => true,
+                "edit-personal-homecare" => true,
+                "detail-personal-homecare" => true,
+                "delete-personal-homecare" => true,
+                "change-status-checkin-personalhomecare" => false,
+                "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => false,
             ]),
         ]);
     }

@@ -6674,10 +6674,10 @@ a.close.disabled {
       border-left-color: #000; }
 
 .tooltip-inner {
-  max-width: 200px;
+  max-width: 100%;
   padding: 0.4rem 0.75rem;
   color: #fff;
-  text-align: center;
+  text-align: left;
   background-color: #000;
   border-radius: 0.375rem; }
 
