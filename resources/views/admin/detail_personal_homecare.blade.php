@@ -546,7 +546,7 @@ $menu_item_page = "personal_homecare";
                     </div>
                 </div>
             </div>
-        @elseif (strtolower($personalhomecare['status']) == "approve_out")
+        @elseif (strtolower($personalhomecare['status']) == "approve_out" || strtolower($personalhomecare['status']) == "approve_out_res")
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
