@@ -140,7 +140,7 @@ $menu_item_page = "frontendcms";
                                     <form method="POST"
                                         id="update-photo-{{ $x }}"
                                         enctype="multipart/form-data"
-                                        action="{{ route("update_galleries_image") }}">
+                                        action="{{ route("update_frontendcms_image") }}">
                                         @csrf
                                         <input type="hidden"
                                             name="sequence"
@@ -246,7 +246,7 @@ $menu_item_page = "frontendcms";
                 <form id="add-photo"
                     method="POST"
                     enctype="multipart/form-data"
-                    action="{{ route("store_galleries_image") }}">
+                    action="{{ route("store_frontendcms_image") }}">
                     @csrf
                     <div class="custom-file">
                         <input type="file"
@@ -322,13 +322,13 @@ $menu_item_page = "frontendcms";
 @section("script")
 <script type="application/javascript">
 function clickDeleteImage(e) {
-    const DELETE_URL = '<?php echo route("delete_galleries_image"); ?>';
+    const DELETE_URL = '<?php echo route("delete_frontendcms_image"); ?>';
     document.getElementById("delete-form").setAttribute("action", DELETE_URL);
     document.getElementById("delete-sequence").setAttribute("value", e.dataset.sequence);
 }
 
 function clickDeleteVideo(e) {
-    const DELETE_URL = '<?php echo route("delete_galleries_video"); ?>';
+    const DELETE_URL = '<?php echo route("delete_frontendcms_video"); ?>';
     document.getElementById("delete-form").setAttribute("action", DELETE_URL);
     document.getElementById("delete-sequence").setAttribute("value", e.dataset.sequence);
 }
