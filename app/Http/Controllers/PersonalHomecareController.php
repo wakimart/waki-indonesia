@@ -591,6 +591,8 @@ class PersonalHomecareController extends Controller
                 $this->accNotif($phc, "acc_ask");
             }
             elseif ($request->status == "approve_out") {
+                HomeServiceController::createPp5hHs($phc);
+
                 $phc->status = $request->status;
                 $phc->save();
             }
