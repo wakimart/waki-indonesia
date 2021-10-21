@@ -81,13 +81,13 @@
                             <table class="table table-bordered">
                                 <thead style="text-align: center; background-color: aliceblue;">
                                     <tr>
-                                        <td colspan="4">Personal Homecare Data</td>
+                                        <td colspan="3">Personal Homecare Data</td>
                                         <td rowspan="2">View</td>
                                     </tr>
                                     <tr>
                                         <td>Status</td>
-                                        <td>Name - Phone</td>
-                                        <td>Branch - CSO</td>
+                                        <td>Customer <br class="break">(Branch - CSO)</td>
+                                        <!-- <td>Branch <br class="break">(CSO)</td> -->
                                         <td>Product</td>
                                     </tr>
                                 </thead>
@@ -103,9 +103,14 @@
                                                     {{ $personalHomecare['status'] }}
                                                 @endif
                                             </td>
-                                            <td>{{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}</td>
-                                            <td>{{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['name'] }}</td>
-                                            <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['name'] }}</td>
+                                            <td>
+                                                {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }} 
+                                                <br class="break">
+                                                ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
+                                            </td>
+                                            <!-- <td>{{ $personalHomecare['name'] }} <br class="break">({{ $personalHomecare['phone'] }})</td>
+                                            <td>{{ $personalHomecare->branch['code'] }} <br class="break">({{ $personalHomecare->cso['code'] }})</td> -->
+                                            <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['code'] }}</td>
                                             <td style="text-align: center;">
                                                 <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px;"></i>

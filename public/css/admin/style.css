@@ -10831,6 +10831,24 @@ code {
     margin: auto 0;
     color: #b1b1b1; }
 
+    br.break{
+      display: block;
+      content: "";
+      margin-top: 15px;
+    }
+    
+  /* br.break{
+    display: none;
+  }
+
+  @media (max-width: 991px){
+    br.break{
+      display: block;
+      content: "";
+      margin-top: 15px;
+    }
+  } */
+
 /*-------------------------------------------------------------------*/
 /* === Components === */
 /* Badges */
