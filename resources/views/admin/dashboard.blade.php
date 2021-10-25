@@ -95,7 +95,6 @@
                                     @foreach($personalHomecares as $personalHomecare)
                                         <tr>
                                             <td>
-                                                {{ $personalHomecare['id'] }} | 
                                                 @if($personalHomecare->is_extend)
                                                     Extend Acc
                                                 @elseif($personalHomecare->reschedule_date != null)
