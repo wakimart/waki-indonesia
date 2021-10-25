@@ -80,8 +80,13 @@ class DashboardController extends Controller
         //khusus untuk personal homecare to acc
         $personalHomecares = PersonalHomecare::where('active', true)
                         ->whereIn('status', ['new', 'waiting_in', 'verified'])
-                        ->orWhereNotNull('reschedule_date')
-                        ->orWhere('is_extend', true)
+                        ->orWhere(function ($q){
+                            $q->whereNotNull('reschedule_date');
+                        })
+                        ->orWhere(function ($q){
+                            $q->where([['is_extend', true], ['status', 'process']]);
+                        })
+                        ->orderBy("updated_at", "desc")
                         ->get();
 
         return view(
