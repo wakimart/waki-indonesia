@@ -137,6 +137,21 @@ class ReferenceController extends Controller
             ));
             $referenceSouvenir->save();
 
+            //history change
+            $user = Auth::user();
+            $historyUpdateSubmission = [];
+            $historyUpdateSubmission["type_menu"] = "Submission";
+            $historyUpdateSubmission["method"] = "New Reference";
+            $historyUpdateSubmission["meta"] = json_encode([
+                "user" => $user["id"],
+                "createdAt" => date("Y-m-d H:i:s"),
+                "dataChange" => ["New Reference Name" => $reference->name],
+            ], JSON_THROW_ON_ERROR);
+
+            $historyUpdateSubmission["user_id"] = $user["id"];
+            $historyUpdateSubmission["menu_id"] = $request->submission_id;
+            HistoryUpdate::create($historyUpdateSubmission);
+
             DB::commit();
 
             return redirect($request->url)->with("success", "Data referensi berhasil dimasukkan.");
@@ -276,9 +291,9 @@ class ReferenceController extends Controller
 
     public function updateReferenceMGM(Request $request)
     {
-        // return response()->json([
-        //         "errors" => $request->all(),
-        //     ], 500);
+        return response()->json([
+                "errors" => $request->all(),
+            ], 200);
 
         DB::beginTransaction();
 
@@ -306,8 +321,24 @@ class ReferenceController extends Controller
             $referenceSouvenir->save();
 
             $userId = Auth::user()["id"];
-            $this->historyReference($reference, "update", $userId);
-            $this->historyReferenceSouvenir($referenceSouvenir, "update", $userId);
+
+            if(sizeof($reference->getChanges()) > 0){
+                if($request->has('delivery_status_prize')){
+                    if($request->delivery_status_prize == "delivered by CSO"){
+                        $this->historyReference($reference, "Acc Approved Data Reference \n(".$reference['name'].")", $userId);
+                    }
+                    else{
+                        $this->historyReference($reference, "Update Data Reference \n(".$reference['name'].")", $userId);
+                    }
+                }
+                else{
+                    $this->historyReference($reference, "Update Data Reference \n(".$reference['name'].")", $userId);
+                }
+            }
+
+            if(sizeof($referenceSouvenir->getChanges()) > 0){
+                $this->historyReferenceSouvenir($referenceSouvenir, "Update Reference Souvenir \n(".$reference['name'].")", $userId);
+            }
 
             DB::commit();
 
@@ -329,7 +360,7 @@ class ReferenceController extends Controller
         string $method,
         int $userId
     ) {
-        $historyReference["type_menu"] = "Reference";
+        $historyReference["type_menu"] = "Submission";
         $historyReference["method"] = $method;
         $historyReference["meta"] = json_encode(
             [
@@ -340,7 +371,7 @@ class ReferenceController extends Controller
             JSON_THROW_ON_ERROR
         );
         $historyReference["user_id"] = $userId;
-        $historyReference["menu_id"] = $reference->id;
+        $historyReference["menu_id"] = $reference->submission['id'];
         HistoryUpdate::create($historyReference);
     }
 
@@ -349,7 +380,7 @@ class ReferenceController extends Controller
         string $method,
         int $userId
     ) {
-        $historyReferenceSouvenir["type_menu"] = "Reference Souvenir";
+        $historyReferenceSouvenir["type_menu"] = "Submission";
         $historyReferenceSouvenir["method"] = $method;
         $historyReferenceSouvenir["meta"] = json_encode(
             [
@@ -360,7 +391,7 @@ class ReferenceController extends Controller
             JSON_THROW_ON_ERROR
         );
         $historyReferenceSouvenir["user_id"] = $userId;
-        $historyReferenceSouvenir["menu_id"] = $referenceSouvenir->id;
+        $historyReferenceSouvenir["menu_id"] = $referenceSouvenir->reference->submission['id'];
         HistoryUpdate::create($historyReferenceSouvenir);
     }
 
@@ -457,6 +488,9 @@ class ReferenceController extends Controller
         $referenceSouvenirs = ReferenceSouvenir::where('reference_id', '=', $request->id)->first();
         $referenceSouvenirs->is_acc = true;
         $referenceSouvenirs->save();
+
+        $userId = Auth::user()["id"];
+        $this->historyReferenceSouvenir($referenceSouvenirs, "Ask ACC Reference Souvenir \n(".$referenceNya['name'].")", $userId);
         //end update is_acc
 
         if(sizeof($fcm_tokenNya) > 0)

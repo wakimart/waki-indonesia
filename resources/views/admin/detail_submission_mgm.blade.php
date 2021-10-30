@@ -401,6 +401,7 @@ if (
         <h2>CANNOT FIND SUBMISSION</h2>
     </div>
 @endif
+
 <div class="modal fade"
     id="edit-reference"
     tabindex="-1"
@@ -643,7 +644,7 @@ if (
                     </table>
                 </div>
 
-                @if(isset($_GET['id_ref']) && Auth::user()->id == 1)
+                @if(isset($_GET['id_ref']) && Auth::user()->id == 3)
                     <div class="form-group">
                         <label>Other Detail</label>
                         <table id="table-detail-other" style="margin: 1em 0em;">
@@ -669,8 +670,8 @@ if (
 
                             <div style="text-align: center;">
                                 <h5>Are you sure want to deliver by CSO for this reference ?</h5>
-                                <button type="submit" class="btn btn-gradient-primary">Yes</button>
-                                <button class="btn btn-gradient-danger" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
                             </div>
                         </div>
                     </form>
@@ -1296,6 +1297,7 @@ $(document).ready(function () {
         e.preventDefault();
         frmAdd = _("formUpdateStatusAcc");
         frmAdd = new FormData(document.getElementById("formUpdateStatusAcc"));
+        console.log(e);
         frmAdd.enctype = "multipart/form-data";
         var URLNya = $("#formUpdateStatusAcc").attr('action');
 
@@ -1308,7 +1310,8 @@ $(document).ready(function () {
 
     function completeHandler_2(event){
         alert("Input Success !!!");
-        window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
+        console.log(event.target.responseText);
+        // window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
     }
 
     @if(isset($_GET['id_ref']))

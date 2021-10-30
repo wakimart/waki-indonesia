@@ -574,6 +574,24 @@ class SubmissionController extends Controller
             $submission->cso_id = $csoId;
             $submission->save();
 
+            //history change
+            $user = Auth::user();
+            $historyUpdateSubmission = [];
+            $historyUpdateSubmission["type_menu"] = "Submission";
+            $historyUpdateSubmission["method"] = "Update MGM Data";
+            $historyUpdateSubmission["meta"] = json_encode([
+                "user" => $user["id"],
+                "createdAt" => date("Y-m-d H:i:s"),
+                "dataChange" => $submission->getChanges(),
+            ], JSON_THROW_ON_ERROR);
+
+            $historyUpdateSubmission["user_id"] = $user["id"];
+            $historyUpdateSubmission["menu_id"] = $request->id;
+
+            HistoryUpdate::create($historyUpdateSubmission);
+
+            DB::commit();
+
             return redirect()
                 ->route("detail_submission_form", ["id" => $request->id, "type" => "mgm"])
                 ->with('success', 'Data berhasil diperbarui.');
@@ -628,6 +646,8 @@ class SubmissionController extends Controller
                 }
             }
             $submissionImage->save();
+
+            DB::commit();
 
             return redirect()
                 ->route("detail_submission_form", ["id" => $request->id, "type" => "referensi"])
