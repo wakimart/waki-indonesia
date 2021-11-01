@@ -1293,26 +1293,26 @@ $(document).ready(function () {
         document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";
     }
 
-    $("#formUpdateStatusAcc").on("submit", function (e) {
-        e.preventDefault();
-        frmAdd = _("formUpdateStatusAcc");
-        frmAdd = new FormData(document.getElementById("formUpdateStatusAcc"));
-        console.log(e);
-        frmAdd.enctype = "multipart/form-data";
-        var URLNya = $("#formUpdateStatusAcc").attr('action');
+    // $("#formUpdateStatusAcc").on("submit", function (e) {
+    //     e.preventDefault();
+    //     frmAdd = _("formUpdateStatusAcc");
+    //     frmAdd = new FormData(document.getElementById("formUpdateStatusAcc"));
+    //     console.log(e);
+    //     frmAdd.enctype = "multipart/form-data";
+    //     var URLNya = $("#formUpdateStatusAcc").attr('action');
 
-        var ajax = new XMLHttpRequest();
-        ajax.addEventListener("load", completeHandler_2, false);
-        ajax.open("POST", URLNya);
-        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
-        ajax.send(frmAdd);
-    });
+    //     var ajax = new XMLHttpRequest();
+    //     ajax.addEventListener("load", completeHandler_2, false);
+    //     ajax.open("POST", URLNya);
+    //     ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+    //     ajax.send(frmAdd);
+    // });
 
-    function completeHandler_2(event){
-        alert("Input Success !!!");
-        console.log(event.target.responseText);
-        // window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
-    }
+    // function completeHandler_2(event){
+    //     alert("Input Success !!!");
+    //     console.log(event.target.responseText);
+    //     // window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
+    // }
 
     @if(isset($_GET['id_ref']))
         loadDataPerRef({{$_GET['id_ref']}});

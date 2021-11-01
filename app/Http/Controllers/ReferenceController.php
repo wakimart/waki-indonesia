@@ -291,10 +291,6 @@ class ReferenceController extends Controller
 
     public function updateReferenceMGM(Request $request)
     {
-        return response()->json([
-                "errors" => $request->all(),
-            ], 200);
-
         DB::beginTransaction();
 
         try {
@@ -316,35 +312,49 @@ class ReferenceController extends Controller
                 "delivery_status_prize",
                 "final_status",
             ));
-            $referenceSouvenir->is_acc = false;
 
+            if($request->has('status_acc')){
+                if($request->status_acc == "false"){
+                    $referenceSouvenir->delivery_status_prize = null;
+                }
+            }
+            $referenceSouvenir->is_acc = false;
             $referenceSouvenir->save();
 
             $userId = Auth::user()["id"];
-
             if(sizeof($reference->getChanges()) > 0){
-                if($request->has('delivery_status_prize')){
-                    if($request->delivery_status_prize == "delivered by CSO"){
-                        $this->historyReference($reference, "Acc Approved Data Reference \n(".$reference['name'].")", $userId);
-                    }
-                    else{
-                        $this->historyReference($reference, "Update Data Reference \n(".$reference['name'].")", $userId);
-                    }
-                }
-                else{
-                    $this->historyReference($reference, "Update Data Reference \n(".$reference['name'].")", $userId);
-                }
+                $this->historyReference($reference, "Update Data Reference \n(".$reference['name'].")", $userId);
             }
 
             if(sizeof($referenceSouvenir->getChanges()) > 0){
-                $this->historyReferenceSouvenir($referenceSouvenir, "Update Reference Souvenir \n(".$reference['name'].")", $userId);
+                if($request->has('status_acc')){
+                    if($request->status_acc == "true"){
+                        $this->historyReference($reference, "Acc Approved Data Reference \n(".$reference['name'].")", $userId);
+                    }
+                    elseif($request->status_acc == "false"){
+                        $this->historyReference($reference, "Acc Rejected Data Reference \n(".$reference['name'].")", $userId);
+                    }
+                }
+                else{
+                    $this->historyReferenceSouvenir($referenceSouvenir, "Update Reference Souvenir \n(".$reference['name'].")", $userId);
+                }
             }
 
             DB::commit();
 
-            return response()->json([
-                "success" => $referenceSouvenir,
-            ], 200);
+            if($request->has('status_acc') || $request->has('order_id')){
+                return redirect()
+                    ->route("detail_submission_form", [
+                        "id" => $reference->submission['id'],
+                        "type" => "mgm",
+                    ])
+                    ->with('success', 'Data berhasil dimasukkan.');
+            }
+            else{
+                return response()->json([
+                    "success" => $reference,
+                ], 200);
+            }
         } catch (Exception $e) {
             DB::rollBack();
 
