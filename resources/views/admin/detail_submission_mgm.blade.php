@@ -644,7 +644,7 @@ if (
                     </table>
                 </div>
 
-                @if(isset($_GET['id_ref']) && Auth::user()->id == 3)
+                @if(isset($_GET['id_ref']) && Auth::user()->id == 1)
                     <div class="form-group">
                         <label>Other Detail</label>
                         <table id="table-detail-other" style="margin: 1em 0em;">
