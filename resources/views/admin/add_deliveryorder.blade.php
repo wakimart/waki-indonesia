@@ -96,7 +96,7 @@ $menu_item_second = "add_deliveryorder";
                             action="{{ route('store_deliveryorder') }}">
                             @csrf
                             <div class="form-group">
-                                <label><h2>Data Pelanggan</h2></label>
+                                <label><h2>Data Member</h2></label>
                                 <br/>
                                 <label id="member_label" for="member_input">
                                     No. MPC (optional)
@@ -137,7 +137,7 @@ $menu_item_second = "add_deliveryorder";
                                     data-msg="Mohon Pilih Provinsi"
                                     required>
                                     <option selected disabled value="">
-                                        Pilihan Provinsi
+                                        Choose Province
                                     </option>
 
                                     <?php
@@ -163,7 +163,7 @@ $menu_item_second = "add_deliveryorder";
                                     data-msg="Mohon Pilih Kota"
                                     required>
                                     <option selected disabled value="">
-                                        Pilihan Kota
+                                        Choose City
                                     </option>
                                 </select>
                                 <div class="validation"></div>
@@ -176,7 +176,7 @@ $menu_item_second = "add_deliveryorder";
                                     data-msg="Mohon Pilih Kecamatan"
                                     required>
                                     <option selected disabled value="">
-                                        Pilihan Kecamatan
+                                        Choose Sub District
                                     </option>
                                 </select>
                                 <div class="validation"></div>
@@ -318,7 +318,7 @@ $menu_item_second = "add_deliveryorder";
                 </button>
             </div>
             <div class="modal-body">
-                <p id="txt-success">Appointment telah berhasil dibuat.</p>
+                <p id="txt-success">Appointment successfully made.</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-gradient-primary"
@@ -346,7 +346,7 @@ $menu_item_second = "add_deliveryorder";
             </div>
             <div class="modal-body">
                 <p id="txt-success">
-                    "Appointment dengan nomer ini sudah ada!"
+                    "Appointment with this phone number already exist!!"
                 </p>
             </div>
             <div class="modal-footer">

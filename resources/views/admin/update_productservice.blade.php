@@ -267,13 +267,57 @@
 				                	<br>
 				                	@for($i = 0; $i < count($cbx_issues); $i++)
 			                			@if(in_array($cbx_issues[$i], $issues[0]->issues))
+				                			@if($cbx_issues[$i] == "Kerusakan Listrik")
 				                			<label class="checkbox-inline">
-										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true" disabled="">{{$cbx_issues[$i]}}
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true">Electrical Breakdown
 										    </label>
+										    @elseif($cbx_issues[$i] == "Bersuara/Bergetar")
+										    <label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true">Noise/Vibrate
+										    </label>
+										    @elseif($cbx_issues[$i] == "Heating")
+										    <label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true">Heating
+										    </label>
+										    @elseif($cbx_issues[$i] == "Jatuh, Pecah, Unit Lepas")
+										    <label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true">Fall, break, loose unit
+										    </label>
+										    @elseif($cbx_issues[$i] == "Kerusakan Mekanik")
+										    <label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true">Mechanical Damage
+										    </label>
+										    @elseif($cbx_issues[$i] == "Lainnya...")
+										    <label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" checked="true">Others...
+										    </label>
+										    @endif
 										@else
-											<label class="checkbox-inline">
-										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}" disabled="">{{$cbx_issues[$i]}}
+											@if($cbx_issues[$i] == "Kerusakan Listrik")
+				                			<label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}">Electrical Breakdown
 										    </label>
+										    @elseif($cbx_issues[$i] == "Bersuara/Bergetar")
+										    <label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}">Noise/Vibrate
+										    </label>
+										    @elseif($cbx_issues[$i] == "Heating")
+										    <label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}">Heating
+										    </label>
+										    @elseif($cbx_issues[$i] == "Jatuh, Pecah, Unit Lepas")
+										    <label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}">Fall, break, loose unit
+										    </label>
+										    @elseif($cbx_issues[$i] == "Kerusakan Mekanik")
+										    <label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}">Mechanical Damage
+										    </label>
+										    @elseif($cbx_issues[$i] == "Lainnya...")
+										    <label class="checkbox-inline">
+										      	<input id="cbx_issue-{{$i}}-{{$key}}" name="cbx_issue-{{$key}}" style="margin-right: 10px;" type="checkbox" value="{{$cbx_issues[$i]}}">Others...
+										    </label>
+										    @endif
 			                			@endif
 			                		@endfor
 

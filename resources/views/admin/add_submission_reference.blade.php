@@ -96,7 +96,7 @@ $menu_item_second = "add_submission_reference";
     <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">
-                Add Submission - Referensi BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI
+                Add Submission - Reference SHARE LOVE HEALTHY WITH WAKI
             </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -109,7 +109,7 @@ $menu_item_second = "add_submission_reference";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Add Submission - Referensi
+                        Add Submission - Reference
                     </li>
                 </ol>
             </nav>
@@ -134,7 +134,7 @@ $menu_item_second = "add_submission_reference";
                                 <input type="text"
                                     readonly
                                     disabled
-                                    value="Referensi BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI" />
+                                    value="Reference SHARE LOVE HEALTHY WITH WAKI" />
                             </div>
 
                             <div class="form-group">
@@ -182,7 +182,7 @@ $menu_item_second = "add_submission_reference";
                                     onchange="setCity(this)"
                                     required>
                                     <option selected disabled value="" hidden>
-                                        Pilihan Provinsi
+                                        Choose Province
                                     </option>
                                     <?php
                                     $result = RajaOngkir::FetchProvince();
@@ -209,7 +209,7 @@ $menu_item_second = "add_submission_reference";
                                     onchange="setDistrict(this)"
                                     required>
                                     <option selected disabled value="" hidden>
-                                        Pilihan Kota
+                                        Choose City
                                     </option>
                                 </select>
                             </div>
@@ -222,7 +222,7 @@ $menu_item_second = "add_submission_reference";
                                     data-msg="Mohon Pilih Kecamatan"
                                     required>
                                     <option selected disabled value="" hidden>
-                                        Pilihan Kecamatan
+                                        Choose Sub-district
                                     </option>
                                 </select>
                             </div>
@@ -344,7 +344,7 @@ $menu_item_second = "add_submission_reference";
                                                     disabled
                                                     value=""
                                                     hidden>
-                                                    Pilih Provinsi
+                                                    Choose Province
                                                 </option>
                                                 <?php
                                                 $result = RajaOngkir::FetchProvince();
@@ -375,7 +375,7 @@ $menu_item_second = "add_submission_reference";
                                                     disabled
                                                     value=""
                                                     hidden>
-                                                    Pilih Kota
+                                                    Choose City
                                                 </option>
                                             </select>
                                         </div>

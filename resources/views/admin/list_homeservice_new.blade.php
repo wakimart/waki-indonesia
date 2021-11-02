@@ -912,53 +912,53 @@ $menu_item_second = "list_homeservice";
                             <td id="view-no_member" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Nama: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Name: </td>
                             <td id="view-name" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Telp: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Phone Number: </td>
                             <td id="view-phone" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Provinsi: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Province: </td>
                             <td id="view-province" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kota/Kabupaten: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">City: </td>
                             <td id="view-city" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kecamatan: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Sub-district: </td>
                             <td id="view-distric" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Alamat: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Address: </td>
                             <td id="view-address" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
 
                         <tr><td style="padding-top: 1em;"></td></tr>
 
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Cabang: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Branch: </td>
                             <td id="view-branch" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode CSO: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">CSO Code: </td>
                             <td id="view-cso" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode Partner CSO: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">CSO Code Partner: </td>
                             <td id="view-cso2" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
 
                         <tr><td style="padding-top: 1em;"></td></tr>
 
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Tanggal: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Date: </td>
                             <td id="view-date" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                         <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Jam: </td>
+                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Time: </td>
                             <td id="view-time" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                     </table>
@@ -1048,7 +1048,7 @@ $menu_item_second = "list_homeservice";
                                 readonly
                                 disabled>
                                 <option value="Program Penjelas Ulang">
-                                    Program Penjelas Ulang
+                                    Re-explanation Program
                                 </option>
                                 <option value="Home service">
                                     Home Service
@@ -1057,7 +1057,7 @@ $menu_item_second = "list_homeservice";
                                     Home Tele Voucher
                                 </option>
                                 <option value="Home Eksklusif Therapy">
-                                    Home Eksklusif Therapy
+                                    Home Exclusive Therapy
                                 </option>
                                 <option value="Home Free Family Therapy">
                                     Home Free Family Therapy
@@ -1072,13 +1072,13 @@ $menu_item_second = "list_homeservice";
                                     Home Tele Free Gift
                                 </option>
                                 <option value="Home Refrensi Product">
-                                    Home Refrensi Product
+                                    Home Product Refrence
                                 </option>
                                 <option value="Home Delivery">
                                     Home Delivery
                                 </option>
                                 <option value="Home Free Refrensi Therapy VIP">
-                                    Home Free Refrensi Therapy VIP
+                                    Home Free Refrence Therapy VIP
                                 </option>
                                 <option value="Home WAKi di Rumah Aja">
                                     Home WAKi di Rumah Aja
@@ -1088,7 +1088,7 @@ $menu_item_second = "list_homeservice";
                                 <strong></strong>
                             </span>
                         </div>
-                        <h5>Data Pelanggan</h5>
+                        <h5>Data Customer</h5>
                         <div class="form-group">
                             <input type="text"
                                 name="no_member"
@@ -1102,7 +1102,7 @@ $menu_item_second = "list_homeservice";
                                 class="form-control"
                                 name="name"
                                 id="edit-name"
-                                placeholder="Nama"
+                                placeholder="Name"
                                 required
                                 data-msg="Mohon Isi Nama" />
                             <div class="validation"></div>
@@ -1112,7 +1112,7 @@ $menu_item_second = "list_homeservice";
                                 class="form-control"
                                 name="phone"
                                 id="edit-phone"
-                                placeholder="Nomor Telepon"
+                                placeholder="Phone Number"
                                 required
                                 data-msg="Mohon Isi Nomor Telepon" />
                             <div class="validation"></div>
@@ -1125,7 +1125,7 @@ $menu_item_second = "list_homeservice";
                                 onchange="setCity(this)"
                                 data-msg="Mohon Isi Provinsi">
                                 <option selected disabled value="">
-                                    Pilihan Provinsi
+                                    Choose Province
                                 </option>
 
                                 @php
@@ -1173,7 +1173,7 @@ $menu_item_second = "list_homeservice";
                                 rows="5"
                                 required
                                 data-msg="Mohon Isi Alamat"
-                                placeholder="Alamat"></textarea>
+                                placeholder="Address"></textarea>
                             <div class="validation"></div>
                         </div>
 
@@ -1187,7 +1187,7 @@ $menu_item_second = "list_homeservice";
                                 data-msg="Mohon Pilih Cabang"
                                 required>
                                 <option selected disabled value="">
-                                    Pilihan Cabang
+                                    Choose Branch
                                 </option>
 
                                 @foreach ($branches as $branch)
@@ -1203,7 +1203,7 @@ $menu_item_second = "list_homeservice";
                                 class="form-control cso"
                                 name="cso_id"
                                 id="edit-cso"
-                                placeholder="Kode CSO"
+                                placeholder="CSO Code"
                                 required
                                 data-msg="Mohon Isi Kode CSO"
                                 style="text-transform:uppercase" />
@@ -1214,7 +1214,7 @@ $menu_item_second = "list_homeservice";
                                 class="form-control"
                                 name="cso_phone"
                                 id="edit-cso_phone"
-                                placeholder="No. Telepon CSO"
+                                placeholder="CSO Phone Number"
                                 required
                                 data-msg="Mohon Isi Nomor Telepon" />
                             <div class="validation"></div>
@@ -1224,20 +1224,20 @@ $menu_item_second = "list_homeservice";
                                 class="form-control cso"
                                 name="cso2_id"
                                 id="edit-cso2"
-                                placeholder="Kode Partner CSO (opsional)"
+                                placeholder="CSO Code Partner (opsional)"
                                 style="text-transform: uppercase;" />
                             <div class="validation" id="validation_cso2"></div>
                         </div>
 
                         <br>
 
-                        <h5>Waktu Home Service</h5>
+                        <h5>Home Service Appointment</h5>
                         <div class="form-group">
                             <input type="date"
                                 class="form-control"
                                 name="date"
                                 id="edit-date"
-                                placeholder="Tanggal Janjian"
+                                placeholder="Date"
                                 required
                                 data-msg="Mohon Isi Tanggal" />
                             <div class="validation"></div>
@@ -1247,7 +1247,7 @@ $menu_item_second = "list_homeservice";
                                 class="form-control"
                                 name="time"
                                 id="edit-time"
-                                placeholder="Jam Janjian"
+                                placeholder="Time"
                                 required
                                 data-msg="Mohon Isi Jam" />
                             <div class="validation"></div>
@@ -1353,7 +1353,7 @@ $menu_item_second = "list_homeservice";
                                 rows="5"
                                 required
                                 placeholder="Cash Description"></textarea>
-                            <label for="">Bukti Foto (WAJIB): </label>
+                            <label for="">Photo Proof (REQUIRED): </label>
                             <div id="divImageCash" style="padding: 0.5em;">
                                 <img id="showImageCash"
                                     src=""
@@ -1412,7 +1412,7 @@ $menu_item_second = "list_homeservice";
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Tanggal Awal</label>
+                        <label>Start Date</label>
                         <input type="date"
                             class="form-control"
                             name="date"
@@ -1424,7 +1424,7 @@ $menu_item_second = "list_homeservice";
                         <div class="validation"></div>
                     </div>
                     <div class="form-group">
-                        <label>Tanggal Akhir</label>
+                        <label>End Date</label>
                         <input type="date"
                             class="form-control"
                             name="date"
@@ -1486,7 +1486,7 @@ $menu_item_second = "list_homeservice";
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Tanggal Input</label>
+                        <label>Date</label>
                         <input type="date"
                             class="form-control"
                             name="date"

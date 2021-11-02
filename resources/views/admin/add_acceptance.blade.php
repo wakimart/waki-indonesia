@@ -152,13 +152,13 @@ $menu_item_second = "add_acceptance_form";
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
-	              				<label for="">Upgrade Date (Bulan/Tanggal/Tahun)</label>
+	              				<label for="">Upgrade Date (Month/Day/Year)</label>
 	              				<input type="date" class="form-control" name="upgrade_date" id="upgrade_date" placeholder="Upgrade Date" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal"/>
 	              				<div class="validation"></div>
 	              			</div>
 
 	              			<div class="form-group">
-								<label for=""><h2>Data Pelanggan</h2></label><br/>
+								<label for=""><h2>Data Member</h2></label><br/>
 	                			<label for="">No. MPC (optional)</label>
 	                			<input type="text" class="form-control" id="no_mpc" name="no_mpc" placeholder="No. Member">
 	                			<div class="validation"></div>
@@ -176,7 +176,7 @@ $menu_item_second = "add_acceptance_form";
 	              			<div class="form-group">
 				                <label for="">Province</label>
 								<select class="form-control" id="province" name="province" data-msg="Mohon Pilih Provinsi" required>
-									<option selected disabled value="">Pilihan Provinsi</option>
+									<option selected disabled value="">Choose Province</option>
 
 									@php
 										$result = RajaOngkir::FetchProvince();
@@ -194,14 +194,14 @@ $menu_item_second = "add_acceptance_form";
 							<div class="form-group">
 				                <label for="">City</label>
 								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
-									<option selected disabled value="">Pilihan Kota</option>
+									<option selected disabled value="">Choose City</option>
 								</select>
 								<div class="validation"></div>
 							</div>
 							<div class="form-group">
 				                <label for="">Sub District</label>
 								<select class="form-control" id="subDistrict" name="district" data-msg="Mohon Pilih Kecamatan" required>
-									<option selected disabled value="">Pilihan Kecamatan</option>
+									<option selected disabled value="">Choose Sub-district</option>
 								</select>
 								<div class="validation"></div>
 	              			</div>
@@ -215,7 +215,7 @@ $menu_item_second = "add_acceptance_form";
 								<label for=""><h2>Product Upgrade</h2></label><br/>
 	                			<label for="">New Product</label>
 	                			<select class="form-control" id="newproduct_id" name="newproduct_id" data-msg="Mohon Pilih Product Baru" required>
-									<option selected disabled value="">Pilihan Product</option>
+									<option selected disabled value="">Choose Product</option>
 									@foreach($products as $product)
 		                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
 		                            @endforeach
@@ -240,7 +240,7 @@ $menu_item_second = "add_acceptance_form";
 	              			<div class="form-group">
 	                			<label for="">Old Product</label>
 	                			<select class="form-control" id="oldproduct_id" name="oldproduct_id" data-msg="Mohon Pilih Produk Lama" required>
-									<option selected disabled value="">Pilihan Product</option>
+									<option selected disabled value="">Choose Product</option>
 									@foreach($products as $product)
 		                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
 		                            @endforeach
@@ -254,7 +254,7 @@ $menu_item_second = "add_acceptance_form";
 		                        <div class="validation"></div>
 		                    </div>
 	              			<div class="form-group">
-	              				<label for="">Purchase Date Old Product (Bulan/Tanggal/Tahun)</label>
+	              				<label for="">Purchase Date Old Product (Month/Day/Year)</label>
 	              				<input type="date" class="form-control" name="purchase_date" id="purchase_date" placeholder="Purchase Date" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
 	              				<div class="validation"></div>
 	              			</div>
@@ -270,7 +270,7 @@ $menu_item_second = "add_acceptance_form";
 		                    </div>
 
 		                    <div class="form-group" >
-	              				<label for="">Kelengkapan</label>
+	              				<label for="">Completeness</label>
 		                        <div class="div-CheckboxGroup" required>
 		                        	<div class="form-check form-check">
 		                                <input class="form-check-input" type="checkbox" id="kelengkapan-mesin" name="kelengkapan[]" value="mesin">
@@ -286,7 +286,7 @@ $menu_item_second = "add_acceptance_form";
 		                            </div>
 		                            <div class="form-check form-check">
 		                                <input class="form-check-input" type="checkbox" id="kelengkapan-kabel" name="kelengkapan[]" value="kabel">
-		                                <label class="form-check-label" for="kelengkapan-kabel">cabel</label>
+		                                <label class="form-check-label" for="kelengkapan-kabel">Cable</label>
 		                            </div>
 		                            <div class="form-check form-check">
 		                                <input class="form-check-input" type="checkbox" id="kelengkapan-other" name="kelengkapan[]" value="other">

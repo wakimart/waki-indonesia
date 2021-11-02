@@ -213,7 +213,7 @@ $menu_item_second = "detail_upgrade_form";
 									</tr>
 
 									<tr>
-										<td rowspan="5">Kelengkapan: </td>
+										<td rowspan="5">Completeness: </td>
 										<td><i class="mdi {{ in_array("mesin", $upgrade->acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Mesin
 										</td>
 									</tr>
@@ -237,11 +237,11 @@ $menu_item_second = "detail_upgrade_form";
 											<i class="mdi {{ in_array("other", $upgrade->acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Other: {{ isset($upgrade->acceptance['arr_condition']['kelengkapan']['other']) ? $upgrade->acceptance['arr_condition']['kelengkapan']['other'][0] : "-" }}
 										</td></tr>
 									<tr>
-										<td>Kondisi Mesin: </td>
+										<td>Machine Condition: </td>
 										<td>{{ ucwords($upgrade->acceptance['arr_condition']['kondisi']) }}</td>
 									</tr>
 									<tr>
-										<td>Tampilan: </td>
+										<td>Body Condition: </td>
 										<td>{{ ucwords($upgrade->acceptance['arr_condition']['tampilan']) }}</td>
 									</tr>
 									<tr>

@@ -176,7 +176,7 @@ $menu_item_second = "add_submission_mgm";
                                     data-msg="Mohon Pilih Provinsi"
                                     required>
                                     <option selected disabled value="" hidden>
-                                        Pilihan Provinsi
+                                        Choose Province
                                     </option>
                                     <?php
                                     $result = RajaOngkir::FetchProvince();
@@ -202,7 +202,7 @@ $menu_item_second = "add_submission_mgm";
                                     data-msg="Mohon Pilih Kota"
                                     required>
                                     <option selected disabled value="" hidden>
-                                        Pilihan Kota
+                                        Choose City
                                     </option>
                                 </select>
                             </div>
@@ -215,7 +215,7 @@ $menu_item_second = "add_submission_mgm";
                                     data-msg="Mohon Pilih Kecamatan"
                                     required>
                                     <option selected disabled value="" hidden>
-                                        Pilihan Kecamatan
+                                        Choose Sub-district
                                     </option>
                                 </select>
                             </div>
@@ -330,7 +330,7 @@ $menu_item_second = "add_submission_mgm";
                                                     disabled
                                                     value=""
                                                     hidden>
-                                                    Pilih Provinsi
+                                                    Choose Province
                                                 </option>
                                                 <?php
                                                 $result = RajaOngkir::FetchProvince();
@@ -359,7 +359,7 @@ $menu_item_second = "add_submission_mgm";
                                                     disabled
                                                     value=""
                                                     hidden>
-                                                    Pilih Kota
+                                                    Choose City
                                                 </option>
                                             </select>
                                             <div class="validation"></div>

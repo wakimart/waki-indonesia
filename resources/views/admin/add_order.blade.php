@@ -97,7 +97,7 @@ $menu_item_second = "add_order";
                             action="{{ route('admin_store_order') }}">
                             @csrf
                             <div class="form-group">
-                                <label for="orderDate">Waktu Order</label>
+                                <label for="orderDate">Order Date</label>
                                 <input type="date"
                                     class="form-control"
                                     name="orderDate"
@@ -148,7 +148,7 @@ $menu_item_second = "add_order";
                                     data-msg="Mohon Pilih Provinsi"
                                     required>
                                     <option selected disabled value="">
-                                        Pilihan Provinsi
+                                        Choose Province
                                     </option>
 
                                     <?php
@@ -174,7 +174,7 @@ $menu_item_second = "add_order";
                                     data-msg="Mohon Pilih Kota"
                                     required>
                                     <option selected disabled value="">
-                                        Pilihan Kota
+                                        Choose City
                                     </option>
                                 </select>
                                 <div class="validation"></div>
@@ -187,7 +187,7 @@ $menu_item_second = "add_order";
                                     data-msg="Mohon Pilih Kecamatan"
                                     required>
                                     <option selected disabled value="">
-                                        Pilihan Kecamatan
+                                        Choose Sub-district
                                     </option>
                                 </select>
                                 <div class="validation"></div>
@@ -231,7 +231,7 @@ $menu_item_second = "add_order";
                                     class="form-control cust-2"
                                     name="name-2"
                                     id="name-2"
-                                    placeholder="Nama"
+                                    placeholder="Name"
                                     data-msg="Mohon Isi Nama" />
                                 <div class="validation"></div>
                             </div>
@@ -240,7 +240,7 @@ $menu_item_second = "add_order";
                                     class="form-control cust-2"
                                     name="phone-2"
                                     id="phone-2"
-                                    placeholder="No. Telepon"
+                                    placeholder="Phone Number"
                                     data-msg="Mohon Isi Nomor Telepon" />
                                 <div class="validation"></div>
                             </div>
@@ -249,7 +249,7 @@ $menu_item_second = "add_order";
                                     class="form-control cust-2"
                                     name="city-2"
                                     id="city-2"
-                                    placeholder="Kota"
+                                    placeholder="City"
                                     data-msg="Mohon Isi Kota" />
                                 <div class="validation"></div>
                             </div>
@@ -259,14 +259,14 @@ $menu_item_second = "add_order";
                                     id="address-2"
                                     rows="5"
                                     data-msg="Mohon Isi Alamat"
-                                    placeholder="Alamat"></textarea>
+                                    placeholder="Address"></textarea>
                                 <div class="validation"></div>
                             </div>
                             <div class="text-center">
                                 <button id="tambah_member"
                                     type="button"
                                     style="background: #4caf3ab3">
-                                    Tambah Pembeli
+                                    Add Member
                                 </button>
                             </div>
                             <br>
@@ -578,7 +578,7 @@ $menu_item_second = "add_order";
                             </div>
                             <div class="form-group">
                                 <div class="col-xs-12">
-                                    <label>Bukti Pembayaran</label>
+                                    <label>Payment Proof</label>
                                     <span style="float: right;">min. 1 picture</span>
                                 </div>
                                 @for ($i = 0; $i < 3; $i++)
@@ -648,7 +648,7 @@ $menu_item_second = "add_order";
                 </button>
             </div>
             <div class="modal-body">
-                <p id="txt-success">Appointment telah berhasil dibuat.</p>
+                <p id="txt-success">Appointment successfully made.</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-gradient-primary"
@@ -676,7 +676,7 @@ $menu_item_second = "add_order";
             </div>
             <div class="modal-body">
                 <p id="txt-success">
-                    "Appointment dengan nomer ini sudah ada!"
+                    "Appointment with this phone number already exist!!"
                 </p>
             </div>
             <div class="modal-footer">

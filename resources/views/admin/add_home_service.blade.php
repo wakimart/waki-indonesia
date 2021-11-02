@@ -73,17 +73,17 @@ $menu_item_second = "add_home_service";
 							<div class="form-group">
 								<span>Type Home Service</span>
 								<select id="type_homeservices" style="margin-top: 0.5em;" class="form-control" style="height: auto;" name="type_homeservices" value="" required>
-                                    <option value="Program Penjelas Ulang">Program Penjelas Ulang</option>
+                                    <option value="Program Penjelas Ulang">Re-explanation Program</option>
                                     <option value="Home service">Home Service</option>
                                     <option value="Home Tele Voucher">Home Tele Voucher</option>
-                                    <option value="Home Eksklusif Therapy">Home Eksklusif Therapy</option>
+                                    <option value="Home Eksklusif Therapy">Home Exclusive Therapy</option>
                                     <option value="Home Free Family Therapy">Home Free Family Therapy</option>
                                     <option value="Home Demo Health & Safety with WAKi">Home Demo Health & Safety with WAKi</option>
                                     <option value="Home Voucher">Home Voucher</option>
                                     <option value="Home Tele Free Gift">Home Tele Free Gift</option>
-                                    <option value="Home Refrensi Product">Home Refrensi Product</option>
+                                    <option value="Home Refrensi Product">Home Product Refrence</option>
                                     <option value="Home Delivery">Home Delivery</option>
-                                    <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
+                                    <option value="Home Free Refrensi Therapy VIP">Home Free Refrence Therapy VIP</option>
                                     <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
 								</select>
 								<span class="invalid-feedback">
@@ -91,7 +91,7 @@ $menu_item_second = "add_home_service";
 								</span>
 							</div>
           			<div class="form-group">
-                  <label for=""><h2>Data Pelanggan</h2></label><br/>
+                  <label for=""><h2>Data Member</h2></label><br/>
             			<label for="">No. Member (optional)</label>
             			<input type="number" class="form-control" id="no_member" name="no_member" placeholder="No. Member (optional)">
             			<div class="validation"></div>
@@ -108,7 +108,7 @@ $menu_item_second = "add_home_service";
           			<div class="form-group">
 	                <label for="">Province</label>
 								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
-									<option selected disabled value="">Pilihan Provinsi</option>
+									<option selected disabled value="">Choose Province</option>
 									@php
 										$result = RajaOngkir::FetchProvince();
 										$result = $result['rajaongkir']['results'];
@@ -127,21 +127,21 @@ $menu_item_second = "add_home_service";
                 <div class="validation"></div>
                 </div>
       			    <div class="form-group">
-	                <label for="exampleTextarea1">Kota</label>
+	                <label for="exampleTextarea1">City</label>
 	                <select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
-						<option selected disabled value="">Pilihan Kota</option>
+						<option selected disabled value="">Choose City</option>
 					</select>
                   <div class="validation"></div>
                 </div>
 							<div class="form-group">
-                <label for="exampleTextarea1">Kecamatan</label>
+                <label for="exampleTextarea1">Sub-district</label>
                 <select class="form-control" id="subDistrict" name="subDistrict" data-msg="Mohon Pilih Kecamatan" required>
-									<option selected disabled value="">Pilihan Kecamatan</option>
+									<option selected disabled value="">Choose Sub-district</option>
 								</select>
                 <div class="validation"></div>
 							</div>
 							<div class="form-group">
-                <label for="exampleTextarea1">Alamat</label>
+                <label for="exampleTextarea1">Address</label>
                 <textarea class="form-control" name="address" rows="5" required data-msg="Mohon Isi Alamat" placeholder="Alamat" required></textarea>
                 <div class="validation"></div>
         			</div>
@@ -151,7 +151,7 @@ $menu_item_second = "add_home_service";
 								<label for=""><h2>Data CSO</h2></label><br/>
                   				<label for="">Cabang</label>
 								<select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-                                    <option selected disabled value="">Pilihan Cabang</option>
+                                    <option selected disabled value="">Choose Branch</option>
                                     @foreach($branches as $branch)
                                         @php
                                             if(isset($autofill) && $branch['id'] == $autofill->submission->branch['id']){
@@ -166,7 +166,7 @@ $menu_item_second = "add_home_service";
 							</div>
 
 							<div class="form-group">
-								<label for="">Kode CSO</label>
+								<label for="">CSO Code</label>
 									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Kode CSO" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['code'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
 									<div class="validation" id="validation_cso"></div>
 									<span class="invalid-feedback">
@@ -176,7 +176,7 @@ $menu_item_second = "add_home_service";
 							</div>
 
 							<div class="form-group d-none">
-								<label for="">No Telepon CSO</label>
+								<label for="">CSO Phone Number</label>
 									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" data-msg="Mohon Isi Nomor Telepon" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
 									<div class="validation"></div>
 									<span class="invalid-feedback">
@@ -186,7 +186,7 @@ $menu_item_second = "add_home_service";
 							</div>
 
 							<div class="form-group">
-								<label for="">Kode Partner CSO(Optional)</label>
+								<label for="">CSO Code Partner(Optional)</label>
 								<input type="text" class="form-control" name="cso2_id" id="cso2" placeholder="Kode Partner CSO (opsional)" style="text-transform:uppercase"/>
 								<div class="validation"></div>
 								<span class="invalid-feedback">
@@ -195,13 +195,13 @@ $menu_item_second = "add_home_service";
                   <div class="validation"></div>
                 </div>
 
-              <label for=""><h2>Waktu Home Service</h2></label><br/>
+              <label for=""><h2>Home Service Time</h2></label><br/>
 
               <div class="text-center"><button id="tambah_appointment" type="button" style="display: none;background: #4caf3ab3">Tambah Appointment</button></div>
 
                 <div class="form_appoint_container">
                     <div class="form-group">
-                        <label for="">Tanggal Janjian</label>
+                        <label for="">Appointment Date</label>
                         <input type="date"
                             class="form-control"
                             name="date[]"
@@ -219,7 +219,7 @@ $menu_item_second = "add_home_service";
                         </span>
                     </div>
                     <div class="form-group">
-                        <label for="">Jam Janjian</label>
+                        <label for="">Appointment Time</label>
                         <input type="time"
                             class="form-control"
                             name="time[]"
@@ -301,7 +301,7 @@ $menu_item_second = "add_home_service";
 							</div>
 
 							<div class="form-group">
-								<label for="">No Telepon CSO</label>
+								<label for="">CSO Phone Number</label>
 									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="CSO Phone Number" data-msg="Please fill the CSO Phone Number" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
 									<div class="validation"></div>
 									<span class="invalid-feedback">
@@ -373,7 +373,7 @@ $menu_item_second = "add_home_service";
               </button>
             </div>
             <div class="modal-body">
-              <p id="txt-success">Appointment telah berhasil dibuat.</p>
+              <p id="txt-success">Appointment successfully made.</p>
             </div>
             <div class="modal-footer">
               <button class="btn btn-gradient-primary" type="button" data-dismiss="modal">OK</button>
@@ -393,7 +393,7 @@ $menu_item_second = "add_home_service";
               </button>
             </div>
             <div class="modal-body">
-              <p id="txt-success">"Appointment dengan nomer ini sudah ada!!"</p>
+              <p id="txt-success">"Appointment with this phone number already exist!!"</p>
             </div>
             <div class="modal-footer">
               <button class="btn btn-gradient-danger" type="button" data-dismiss="modal">OK</button>

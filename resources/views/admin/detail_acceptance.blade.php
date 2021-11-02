@@ -307,9 +307,9 @@ $menu_item_second = "list_acceptance_form";
                                     </tr>
 
                                     <tr>
-                                        <td rowspan="5">Kelengkapan</td>
+                                        <td rowspan="5">Completeness</td>
                                         <td>
-                                            <i class="mdi {{ in_array("mesin", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Mesin
+                                            <i class="mdi {{ in_array("mesin", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Machine
                                         </td>
                                     </tr>
                                     <tr>
@@ -319,12 +319,12 @@ $menu_item_second = "list_acceptance_form";
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi {{ in_array("aksesoris", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Aksesoris
+                                            <i class="mdi {{ in_array("aksesoris", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Accessories
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                            <i class="mdi {{ in_array("kabel", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Kabel
+                                            <i class="mdi {{ in_array("kabel", $acceptance['arr_condition']['kelengkapan']) ? "mdi-check-box-outline" : "mdi-checkbox-blank-outline" }}" style="font-size: 24px; color: #fed713;"></i> Cable
                                         </td>
                                     </tr>
                                     <tr>
@@ -333,13 +333,13 @@ $menu_item_second = "list_acceptance_form";
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Kondisi Mesin</td>
+                                        <td>Machine Condition</td>
                                         <td>
                                             {{ ucwords($acceptance['arr_condition']['kondisi']) }}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Tampilan</td>
+                                        <td>Body Condition</td>
                                         <td>
                                             {{ ucwords($acceptance['arr_condition']['tampilan']) }}
                                         </td>

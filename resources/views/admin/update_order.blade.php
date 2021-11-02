@@ -505,7 +505,7 @@ $menu_item_page = "order";
 			                
 			                <div class="form-group">
                                 <div class="col-xs-12">
-                                    <label>Bukti Pembayaran</label>
+                                    <label>Payment Proof</label>
                                 </div>
                                 @for ($i = 0; $i < 3; $i++)
                                     <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"

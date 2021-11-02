@@ -131,23 +131,23 @@
 				                	<label for="">Issues</label>
 				                	<br>
 				                	<label class="checkbox-inline">
-								      	<input id="cbx_issue-0-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Kerusakan Listrik">Kerusakan Listrik
+								      	<input id="cbx_issue-0-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Kerusakan Listrik">Electrical Breakdown
 								    </label>
 								    <label class="checkbox-inline">
-								      	<input id="cbx_issue-1-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Bersuara/Bergetar">Bersuara/Bergetar
+								      	<input id="cbx_issue-1-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Bersuara/Bergetar">Noise/Vibrate
 								    </label>
 								    <label class="checkbox-inline">
 								      	<input id="cbx_issue-2-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Heating">Heating
 								    </label>
 								    <br>
 								    <label class="checkbox-inline">
-								      	<input id="cbx_issue-3-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Jatuh, Pecah, Unit Lepas">Jatuh, Pecah, Unit Lepas
+								      	<input id="cbx_issue-3-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Jatuh, Pecah, Unit Lepas">Fall, break, loose unit
 								    </label>
 								    <label class="checkbox-inline">
-								      	<input id="cbx_issue-4-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Kerusakan Mekanik">Kerusakan Mekanik
+								      	<input id="cbx_issue-4-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Kerusakan Mekanik">Mechanical Damage
 								    </label>
 								    <label class="checkbox-inline">
-								      	<input id="cbx_issue-5-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Lainnya...">Lainnya...
+								      	<input id="cbx_issue-5-0" name="cbx_issue-0" style="margin-right: 10px;" type="checkbox" value="Lainnya...">Other...
 								    </label>
 
 				                    <textarea class="form-control" id="issues-0" rows="5" data-msg="Mohon Isi Issues" placeholder="Description" required=""></textarea>
@@ -193,7 +193,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p id="txt-success">Appointment telah berhasil dibuat.</p>
+                <p id="txt-success">Service successfully made.</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-gradient-primary" type="button" data-dismiss="modal">OK</button>
@@ -213,7 +213,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p id="txt-success">"Appointment dengan nomer ini sudah ada!!"</p>
+                <p id="txt-success">"Service input failed."</p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-gradient-danger" type="button" data-dismiss="modal">OK</button>

@@ -10,9 +10,9 @@
                         <div class="brand-logo">
                             <img src="{{ asset('sources/logosince.svg') }}">
                         </div>
-                        <h4>WAKi Indonesia Admin</h4>
+                        <h4>WAKi Philippines Admin</h4>
                         <h6 class="font-weight-light">
-                            Masuk untuk melanjutkan.
+                            Login to continue.
                         </h6>
 
                         <form class="pt-3" method="POST" action="{{ route('admin_login') }}">

@@ -129,7 +129,7 @@
                                 </div>
                                 <div class="nav-profile-text d-flex flex-column">
                                     <span class="font-weight-bold mb-2">Welcome, {{ Auth::user()->name }}</span>
-                                    <span class="text-secondary text-small">Admin WAKI Indonesia</span>
+                                    <span class="text-secondary text-small">Admin WAKI Philippines</span>
                                 </div>
                                 <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
                                 <span class="text-secondary text-small"><a href="#" data-toggle="modal" data-target="#modal-ChangePassword">Change Password</a></span>
