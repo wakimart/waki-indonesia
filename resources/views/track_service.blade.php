@@ -313,7 +313,7 @@
                                         <h6 style="color: #048b32; font-weight: 700;">New</h6>
                                         <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($services['service_date'])) }}</h6>
                                         <hr>
-                                        <p style="font-weight: 400;">Pengajuan Servis telah diterima</p>
+                                        <p style="font-weight: 400;">Service application has been accepted</p>
                                     </div>
                             </div>
                         </div>
@@ -457,9 +457,9 @@
                                                                     <h6 class="text-center" style="font-weight: 600;">Biaya Service</h6>
                                                                     <thead>
                                                                     <tr> 
-                                                                        <th class="text-center">Nama</th>
+                                                                        <th class="text-center">Name</th>
                                                                         <th class="text-center">Qty</th>
-                                                                        <th class="text-center">Harga (Rp)</th>
+                                                                        <th class="text-center">Price (Rp)</th>
                                                                         <th class="text-center">Total (Rp)</th>
                                                                     </tr>
                                                                     </thead>
@@ -680,7 +680,7 @@
                                         <h6 style="color: #048b32; font-weight: 700;">New</h6>
                                         <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($services['service_date'])) }}</h6>
                                         <hr>
-                                        <p style="font-weight: 400;">Pengajuan Servis telah diterima</p>
+                                        <p style="font-weight: 400;">Service application has been accepted</p>
                                     </div>
                             </div>
                         </div>
@@ -698,7 +698,7 @@
                                                 <h6 style="color: #048b32; font-weight: 700;">Processed</h6>
                                                 <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
                                                 <hr>
-                                                 <p style="font-weight: 400;">Produk sedang diproses</p>
+                                                 <p style="font-weight: 400;">Product is being processed</p>
                                                 <div class="card">
                                                     <div class="card-body">
                                                         <h6 class="text-center" style="font-weight: 600;">Detail Sparepart</h6>
@@ -726,7 +726,7 @@
                                                         <h6 style="color: #048b32; font-weight: 700;">Repaired</h6>
                                                         <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
                                                         <hr>
-                                                        <p style="font-weight: 400;">Produk dalam proses Repaired</p>
+                                                        <p style="font-weight: 400;">Product is in the process of Repaired</p>
                                                     </div>
                                                 </div>
                                             @else
@@ -748,7 +748,7 @@
                                                 <h6 style="color: #048b32; font-weight: 700;">Quality Control</h6>
                                                 <h6 style="font-weight: 500; padding-top: 0">{{ date('d M Y', strtotime($history_status['updated_at'])) }}</h6>
                                                 <hr>
-                                                <p style="font-weight: 400;">Produk dalam proses Quality Control</p>
+                                                <p style="font-weight: 400;">Product is in the process of Quality Control</p>
                                             </div>
                                         </div>
                                         @elseif (strtolower($history_status['status']) == "delivery")
@@ -784,7 +784,7 @@
                                                       </div>
                                                     </div>
                                                 </div>{{-- 
-                                                <p style="font-weight: 400;">Produk telah dikirim pada</p>
+                                                <p style="font-weight: 400;">Product has been shipped on</p>
                                                     <p>{{$service_option['recipient_name']}}<br>{{$service_option['address']}}</p> --}}
                                             </div>
                                         </div>
@@ -837,9 +837,9 @@
                                                         {{-- <h6 class="card-title" style="font-weight: 600;">Product {{$key + 1}}</h6> --}}
                                                         <table class="table table-borderless table-responsive">
                                                             <tr>
-                                                                    <th>Nama Sparepart</th>
+                                                                    <th>Sparepart Name</th>
                                                                     <th>Qty</th>
-                                                                    <th>Harga (Rp)</th>
+                                                                    <th>Price (Rp)</th>
                                                                     <th>Total (Rp)</th>
                                                             </tr>
                                                             

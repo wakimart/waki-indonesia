@@ -57,7 +57,7 @@
                 </table>
                 <table class="col-md-12">
                     <thead>
-                        <td colspan="2">Data Pemesan</td>
+                        <td colspan="2">Customer Information</td>
                     </thead>
                     <tr>
                         <td>Member Code: </td>

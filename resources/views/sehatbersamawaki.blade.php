@@ -92,7 +92,7 @@
     <div class="container">
         <div class="row justify-content-center no-gutters">
             <h2 style="margin: 0 5px 0 5px;">
-               Program BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI
+               HEALTHY LOVE SHARING PROGRAM WITH WAKI
             </h2>
         </div>
         <h5 style="text-align: center;">{{ $submission['code'] }}</h5>
@@ -101,7 +101,7 @@
             <div class="col-12 no-gutters">
                 <div class="row">
                     <div class="col-6">
-                        <b><p>Cabang</p></b>
+                        <b><p>Branch</p></b>
                     </div>
                     <div class="col-6">
                         <p>: {{$submission->branch['code']}} - {{$submission->branch['name']}}</p>
@@ -109,7 +109,7 @@
                 </div>
                 <div class="row">
                     <div class="col-6">
-                        <b><p>Tanggal</p></b>
+                        <b><p>Date</p></b>
                     </div>
                     <div class="col-6">
                         <p>: {{$submission['created_at']}}</p>
@@ -117,7 +117,7 @@
                 </div>
                 <div class="row">
                     <div class="col-6">
-                        <b><p>Nama Customer</p></b>
+                        <b><p>Customer Name</p></b>
                     </div>
                     <div class="col-6">
                         <p>: {{$submission['name']}}</p>
@@ -125,7 +125,7 @@
                 </div>
                 <div class="row">
                     <div class="col-6">
-                        <b><p>Alamat</p></b>
+                        <b><p>Address</p></b>
                     </div>
                     <div class="col-6">
                         <p>: {{$submission['address']}} <br>
@@ -134,7 +134,7 @@
                 </div>
                 <div class="row">
                     <div class="col-6">
-                        <b><p>Telp. / HP</p></b>
+                        <b><p>Phone Number</p></b>
                     </div>
                     <div class="col-6">
                         <p>: {{$submission['phone']}}</p>
@@ -142,7 +142,7 @@
                 </div>
                 {{-- <div class="row">
                     <div class="col-6">
-                        <b><p>Produk WAKi</p></b>
+                        <b><p>WAKi Product</p></b>
                     </div>
                     <div class="col-6">
                         <p>: WKA2021 ( AIR WASHER )</p>
@@ -163,19 +163,19 @@
             <div class="col-md-12 col-sm-12">
                 <div class="row">
                     <div class="col-md-2 col-sm-2">
-                        <b><p>Cabang</p></b>
+                        <b><p>Branch</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
                         <p>: {{$submission->branch['code']}} - {{$submission->branch['name']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
-                        <b><p>Tanggal</p></b>
+                        <b><p>Date</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
                         <p>: {{$submission['created_at']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
-                        <b><p>Nama Customer</p></b>
+                        <b><p>Customer Name</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
                         <p>: {{$submission['name']}}</p>
@@ -187,20 +187,20 @@
                         <p>: {{$submission['no_member']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
-                        <b><p>Alamat</p></b>
+                        <b><p>Address</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
                         <p>: {{$submission['address']}} <br>
                             {{$submission->province_obj['province']}}, {{$submission->city_obj['city_name']}}, {{$submission->district_obj['subdistrict_name']}}</p>
                     </div>
                     <div class="col-md-2 col-sm-2">
-                        <b><p>Telp. / HP</p></b>
+                        <b><p>Phone Number</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
                         <p>: {{$submission['phone']}}</p>
                     </div>
                     {{-- <div class="col-md-2 col-sm-2">
-                        <b><p>Produk WAKi</p></b>
+                        <b><p>WAKi Product</p></b>
                     </div>
                     <div class="col-md-4 col-sm-4">
                         <p>: WKA2021 ( AIR WASHER )</p>
@@ -213,7 +213,7 @@
                 <div class="table-responsive">
                     <table class="table table-borderless produk" style="border:1px #ccc solid;">
                         <tr class="text-center" style="border-bottom: 1px solid #ccc;">
-                            <th colspan="3">Produk Hadiah</th>
+                            <th colspan="3">Prize Product</th>
                         </tr>
                         <tr>
                             @php
@@ -239,8 +239,8 @@
           <table class="col-md-12">
               <tr>
                   <td>
-                        <p class="pInTable text-center">Isi produk yang dipilih di kolom yang tersedia. Jika 1 refrensi berhasil dikunjungi,
-                                            maka preferensi berhak mendapatkan 1 produk.
+                        <p class="pInTable text-center">Fill the selected product in the column provided. If 1 reference is successfully visited,
+                                             then the preference is entitled to 1 product.
                         </p>
                   </td>
               </tr>
@@ -252,13 +252,13 @@
                 <table class="table table-bordered">
                     <tr class='text-center'>
                         <th>No</th>
-                        <th>Nama</th>
-                        <th>No. Tlp /HP</th>
-                        <th>Kota</th>
-                        <th>Produk yang dipilih (Pereferensi)</th>
-                        <th>Tanggal Appointment</th>
-                        <th>Status Referensi</th>
-                        <th>Status Produk</th>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th>City</th>
+                        <th>Selected product (Reference)</th>
+                        <th>Appointment Date</th>
+                        <th>Reference Status</th>
+                        <th>Status Product</th>
                     </tr>
                     @foreach($submission->reference as $keyNya => $referenceNya)
                         @php
@@ -291,17 +291,17 @@
             <div class="table-responsive sk">
                 <table class="table table-bordered">
                     <tr>
-                        <th>Syarat dan ketentuan :</th>
+                        <th>Terms and conditions :</th>
                     </tr>
                     <tr>
                         <td>
-                            <p class="pInTable">1. Harus sudah menjadi member WAKimart.</p>
-                            <p class="pInTable">2. Minimal usia 35 tahun per keluarga dari teman atau saudara.</p>
-                            <p class="pInTable">3. Memberikan screenshot bukti appointment (share Link) telah dijadwalkan untuk kunjungan (minimal 1x).</p>
-                            <p class="pInTable">4. Program Sehat bersama WAKi harus diisi lengkap dan benar adanya.</p>
-                            <p class="pInTable">5. Voucher belanja dan produk tidak dapat ditukarkan dalam bentuk tunai.</p>
-                            <p class="pInTable">6. Pembelanjaan menggunakan E-Voucher harus lebih dari nilai E-Voucher.</p>
-                            <p class="pInTable">7. Syarat dan ketentuan dapat berubah tanpa pemberitahuan sebelumnya.</p>
+                            <p class="pInTable">1. Must already be a WAKimart member.</p>
+                            <p class="pInTable">2. Minimum age 35 years per family of friends or relatives.</p>
+                            <p class="pInTable">3. Provide a screenshot of proof of the appointment (share link) that has been scheduled for a visit (minimum 1x).</p>
+                            <p class="pInTable">4. The Healthy Program with WAKi must be filled out completely and correctly.</p>
+                            <p class="pInTable">5. Shopping vouchers and products cannot be exchanged for cash.</p>
+                            <p class="pInTable">6. Purchases using the E-Voucher must be more than the value of the E-Voucher.</p>
+                            <p class="pInTable">7. Terms and conditions are subject to change without prior notice.</p>
                         </td>
                     </tr>
                 </table>

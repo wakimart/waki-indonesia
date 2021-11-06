@@ -52,7 +52,7 @@
                 @if($homeService->type_homeservices != "Soft Launching WAKimart Apps")
                     REGISTRASI {{strtoUpper($homeService->type_homeservices)}} BERHASIL
                 @else
-                    REGISTRASI "Invitation Soft Launching WAKimart Apps" BERHASIL
+                    REGISTRATION "Invitation Soft Launching WAKimart Apps" SUCCESSFUL!
                 @endif
             </h2>
         </div>
@@ -61,42 +61,42 @@
           <table class="col-md-12">
               <tr>
                   <td>
-                      <p class="pInTable">Terima kasih kepada Bapak/Ibu yang terhormat atas dukungan dan dorongan yang telah 
-                      diberikan kepada WAKi Indonesia agar dapat berkembang dan menjadi lebih baik di masa mendatang.</p>
+                      <p class="pInTable">Thank you, dear sir/madam, for your support and encouragement
+                       given to WAKi Philippines in order to develop and become better in the future.</p>
                         @if($homeService->type_homeservices == "Home service")
-                          <p class="pInTable">Tujuan Home Service adalah untuk merapatkan hubungan antara
-                            bapak/ibu sama WAKi dan biar bapak/ibu lebih memahami cara guna
-                            WAKi produk supaya capai kesan yang lebih baik.</p>
+                          <p class="pInTable">The purpose of Home Service is to close the relationship between
+                             ladies and gentlemen and WAKi and so that you understand better how to use it
+                             WAKi the product to achieve a better impression.</p>
                             
                             
-                          <p class="pInTable">Team WAKi Home Service akan menghubungi terlebih dahulu
-                            sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
-                            atau perubahan jadwal home service, dapat menghubungi WAKi
-                            Home Service Department kembali di nomor (+6281234511881) atau
+                          <p class="pInTable">The WAKi Home Service team will contact you first
+                             before leaving for your place. For more information
+                             or changes to the home service schedule, you can contact WAKi
+                             Home Service Department is back at number (+639989888899) or
                             {{ $homeService->cso['name'] }}, {{ $homeService['cso_phone'] }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
                         @elseif($homeService->type_homeservices == "Soft Launching WAKimart Apps")
-                            <p class="pInTable">Bapak/Ibu yang terhormat berkesempatan untuk menjadi member 
-                            WAKimart berikut dengan voucher "Salam Perkenalan"
-                            tanpa dipungut biaya apapun. Tujuan Invitation Invitation Soft Launching WAKimart Apps adalah untuk mempermudah Bapak/Ibu 
-                            dalam proses pengaktifan voucher "Salam Perkenalan" dan supaya lebih memahami 
-                            keuntungan member WAKimart dengan baik.</p>
+                            <p class="pInTable">Dear Sir/Madam, have the opportunity to become a member
+                             The following WAKimart with a "Greetings of Introduction" voucher
+                             without any charge. The purpose of the Invitation Invitation Soft Launching WAKimart Apps is to make it easier for you
+                             in the process of activating the "Greetings of Introduction" voucher and to better understand
+                             WAKimart member benefits well.</p>
                             
                             
-                          <p class="pInTable">Team WAKi Soft Launching WAKimart Apps akan menghubungi terlebih dahulu
-                            sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
-                            atau perubahan jadwal Invitation Soft Launching WAKimart Apps, dapat menghubungi WAKi 
-                            Soft Launching WAKimart Apps Department kembali di nomor (+6281234511881) atau
+                          <p class="pInTable">The WAKi Soft Launching WAKimart Apps team will contact you first
+                             before leaving for your place. For more information
+                             or changes to the schedule for the Invitation Soft Launching of WAKimart Apps, please contact WAKi
+                             Soft Launching of WAKimart Apps Department is back at number (+639989888899) or
                             {{ $homeService->cso['name'] }}, {{ $homeService['cso_phone'] }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
                         @else
-                            <p class="pInTable">Tujuan {{$homeService->type_homeservices}} adalah untuk merapatkan hubungan antara 
-                            Bapak/Ibu dengan WAKi  dan supaya Bapak/Ibu lebih memahami 
-                            keuntungan member WAKi supaya capai kesan yang lebih baik.</p>
+                            <p class="pInTable">The purpose of {{$homeService->type_homeservices}} is to close the relationship between
+                             Sir/Madam with WAKi and so that you can understand better
+                             WAKi member benefits to achieve a better impression.</p>
                             
                             
-                          <p class="pInTable">Team WAKi {{$homeService->type_homeservices}} akan menghubungi terlebih dahulu
-                            sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
-                            atau perubahan jadwal {{$homeService->type_homeservices}}, dapat menghubungi WAKi
-                            {{$homeService->type_homeservices}} Department kembali di nomor (+6281234511881) atau
+                          <p class="pInTable">Team WAKi {{$homeService->type_homeservices}} will contact first
+                             before leaving for your place. For more information
+                             or schedule changes {{$homeService->type_homeservices}}, can contact WAKi
+                             {{$homeService->type_homeservices}} Department back at (+639989888899) or
                             {{ $homeService->cso['name'] }}, {{ $homeService->cso['phone'] }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
                         @endif
                   </td>
@@ -107,22 +107,22 @@
         <div class="row justify-content-center">
             <table class="col-md-12">
                 <thead>
-                    <td colspan="2">Informasi Kustomer </td>
+                    <td colspan="2">Customer Information </td>
                 </thead>
                 <tr>
                     <td>No. Member : </td>
                     <td>{{ $homeService['no_member'] }}</td>
                 </tr>
                 <tr>
-                    <td>Nama : </td>
+                    <td>Name : </td>
                     <td>{{ $homeService['name'] }}</td>
                 </tr>
                 <tr>
-                    <td>No. Telp : </td>
+                    <td>Phone Number : </td>
                     <td>{{ $homeService['phone'] }}</td>
                 </tr>
                 <tr>
-                    <td>Alamat : </td>
+                    <td>Address : </td>
                     <td>{{ $homeService['address'] }}</td>
                 </tr>
                 <tr>
@@ -133,7 +133,7 @@
             @foreach ($samephones as $key => $samephone)
                 <table class="col-md-12">
                     <thead>
-                        <td colspan="2">Tanggal dan Waktu Janjian  {{$key + 1}}</td>
+                        <td colspan="2">Appointment {{$key + 1}}</td>
                     </thead>
 
                     @php
@@ -141,11 +141,11 @@
                     @endphp
 
                     <tr>
-                        <td>Tanggal : </td>
+                        <td>Date : </td>
                         <td>{{ $dt->format('j/m/Y') }}</td>
                     </tr>
                     <tr>
-                        <td>Waktu : </td>
+                        <td>Time : </td>
                         <td>{{ $dt->format('H:i') }}</td>
                     </tr>
 
@@ -153,35 +153,35 @@
             @endforeach
             <table class="col-md-12">
                 <thead>
-                    <td colspan="2">Kebijakan Home Service WAKi</td>
+                    <td colspan="2">WAKi Home Service Policy</td>
                 </thead>
                 <tr>
                     <td>
                         @if($homeService->type_homeservices == "Home service")
-                          <p class="pInTable">1. Home Service dari WAKi tidak dipungut biaya apapun.</p>
-                          <p class="pInTable">2. Biaya akan dikenakan kepada konsumen jika ada sparepart ataupun kerusakan
-                            di luar persetujuan MPC / Warranty.</p>
-                          <p class="pInTable">3. Kenyamanan dan keamanan konsumen kami adalah prioritas pertama. Jika
-                            ada sesuatu bisa hubungi kami melalui Home Service department:
-                            +6281234511881.</p>
-                          <p class="pInTable">4. Form ini akan diberikan carbon copy (CC) kepada Customer, Petugas, Ketua Cabang,
-                            Home Service Department.</p>
+                          <p class="pInTable">1. Home Service from WAKi is free of charge.</p>
+                           <p class="pInTable">2. Fees will be charged to consumers if there are spare parts or damage
+                             beyond MPC approval / Warranty.</p>
+                           <p class="pInTable">3. The comfort and safety of our consumers is our first priority. If
+                             anything can contact us via Home Service department:
+                             +639989888899.</p>
+                           <p class="pInTable">4. This form will be given a carbon copy (CC) to the Customer, Officer, Branch Manager,
+                             Home Service Department.</p>
                         @elseif($homeService->type_homeservices == "Soft Launching WAKimart Apps")
-                          <p class="pInTable">1. Soft Launching WAKimart Apps dari WAKi tidak dipungut biaya apapun.</p>
-                          <p class="pInTable">2. Konsumen akan mendapatkan keuntungan sesuai dengan ketentuan yang berlaku.</p>
-                          <p class="pInTable">3. Kenyamanan dan keamanan konsumen kami adalah prioritas pertama. Jika
-                            ada sesuatu bisa hubungi kami melalui Soft Launching WAKimart Apps department:
-                            +6281234511881.</p>
-                          <p class="pInTable">4. Form ini akan diberikan carbon copy (CC) kepada Customer, Petugas, Ketua Cabang,
-                            Soft Launching WAKimart Apps Department.</p>
+                          <p class="pInTable">1. Soft Launching of WAKimart Apps from WAKi is free of charge.</p>
+                           <p class="pInTable">2. Consumers will benefit in accordance with applicable regulations.</p>
+                           <p class="pInTable">3. The comfort and safety of our consumers is our first priority. If
+                             there is something you can contact us through the Soft Launching WAKimart Apps department:
+                             +6399898888899.</p>
+                           <p class="pInTable">4. This form will be given a carbon copy (CC) to the Customer, Officer, Branch Manager,
+                             Soft Launching of WAKimart Apps Department.</p>
                         @else
-                          <p class="pInTable">1. Upgrade Member dari WAKi tidak dipungut biaya apapun.</p>
-                          <p class="pInTable">2. Konsumen akan mendapatkan keuntungan sesuai dengan ketentuan yang berlaku.</p>
-                          <p class="pInTable">3. Kenyamanan dan keamanan konsumen kami adalah prioritas pertama. Jika
-                            ada sesuatu bisa hubungi kami melalui Upgrade Member department:
-                            +6281234511881.</p>
-                          <p class="pInTable">4. Form ini akan diberikan carbon copy (CC) kepada Customer, Petugas, Ketua Cabang,
-                            Upgrade Member Department.</p>
+                          <p class="pInTable">1. Member upgrade from WAKi is free of charge.</p>
+                           <p class="pInTable">2. Consumers will benefit in accordance with applicable regulations.</p>
+                           <p class="pInTable">3. The comfort and safety of our consumers is our first priority. If
+                             there is something can contact us via Upgrade Member department:
+                             +6399898888899.</p>
+                           <p class="pInTable">4. This form will be given a carbon copy (CC) to the Customer, Officer, Branch Manager,
+                             Upgrade Member Department.</p>
                         @endif
                     </td>
                 </tr>

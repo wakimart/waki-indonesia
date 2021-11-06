@@ -327,13 +327,13 @@
         <br>
         <div class="row justify-content-center mt-5">
             <h4 class="text-center" style="font-size: 50px; font-family: 'Poppins', sans-serif; font-weight: 500; color: #f0bc5e;">
-                Selamat Bpk/Ibu {{ $personalhomecare['name'] }}
+                Congratulation Sir/Madam {{ $personalhomecare['name'] }}
             </h4>
         </div>
         <div class="row justify-content-center">
             <p class="text-center" style="font-size: 18px; color: #000; font-weight: 500;">
-                telah tergabung dalam program
-                <span style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #002853;"> Pinjamin Produk 5 Hari</span> 
+                have joined the program
+                <span style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #002853;"> Lend Product 5 Days</span> 
             </p> 
         </div>
         <div class="row my-5">
@@ -341,8 +341,8 @@
                 <div class="d-flex" style="align-items: center;">
                     <img style="margin-right: 15px; width: 120px;" src="{{asset('sources/ph-desc.png')}}"> 
                     <span>
-                        <p style="margin-top: 2em; margin-bottom: 0.7em; font-weight: bold;">APA ITU PROGRAM PINJAMIN PRODUK 5 HARI?</p>
-                        <p>Bapak & Ibu bisa mencoba produk WAKi (Electro/Hepa/HPT) di rumah sendiri selama 5 hari, dimana petugas kami akan mendemokan produk tersebut sebelumnya.</p>
+                        <p style="margin-top: 2em; margin-bottom: 0.7em; font-weight: bold;">WHAT IS THE 5 DAY PRODUCT LEND PROGRAM?</p>
+                        <p>Sir/Madam, you can try WAKi products (Electro/Hepa/HPT) at home for 5 days, where our staff will demonstrate the product beforehand.</p>
                     </span>
                 </div>
             </div>
@@ -351,7 +351,7 @@
                     <img style="margin-right: 15px; width: 120px;" src="{{asset('sources/ph-form.png')}}"> 
                     <span>
                     <p style="margin-top: 2em; margin-bottom: 0.7em; font-weight: bold;">TUJUAN :</p>
-                    <p>Visi WAKi adalah Sehat Bersama WAKi menuju kehidupan yang lebih baik. Dengan kondisi seperti ini, program ini dibuat khusus untuk meminimalisirkan adanya kontak fisik secara langsung. </p>
+                    <p>WAKi's vision is to be Healthy with WAKi towards a better life. Under these conditions, this program is specially designed to minimize direct physical contact. </p>
                     </span>
                 </div>
             </div>
@@ -383,7 +383,7 @@
                             <div class="row">
                                 <div class="col-3">
                                     <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
-                                        Nama
+                                        Name
                                     </label>
 
                                 </div>
@@ -396,7 +396,7 @@
                             <div class="row">
                                 <div class="col-3">
                                     <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
-                                        Nomor Telepon
+                                        Phone Number
                                     </label>
 
                                 </div>
@@ -409,7 +409,7 @@
                             <div class="row">
                                 <div class="col-3">
                                     <label style="color: #737373; font-weight: 600; font-size: 0.9em;  ">
-                                        Alamat
+                                        Address
                                     </label>
 
                                 </div>
@@ -458,9 +458,9 @@
             <div id="table-desk" class="col-md-12 col-sm-12 col-xs-12">
                 <ul class="responsive-table">
                     <li class="table-header aqua-gradient color-block">
-                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Jadwal</div>
-                        <div class="col-lg-4 col-md-3 col-sm-3 col-xs-3">Nama Produk</div>
-                        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3">Kode Produk</div>
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">Appointment</div>
+                        <div class="col-lg-4 col-md-3 col-sm-3 col-xs-3">Product Name</div>
+                        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3">Product Code</div>
                     </li>
                     <li class="table-row">
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" data-label="Jadwal">
@@ -479,9 +479,9 @@
                 <table class="table col-md-12">
                     <thead>
                         <tr>
-                            <th>Jadwal</th>
-                            <th>Nama Produk</th>
-                            <th>Kode Produk</th>
+                            <th>Appointment</th>
+                            <th>Product Name</th>
+                            <th>Product Code</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -612,34 +612,34 @@
             <div class="table-responsive">
                 <table class="table table-borderless sk">
                     <thead>
-                        <th colspan="2">Syarat dan Ketentuan</th>
+                        <th colspan="2">Terms and Conditions</th>
                     </thead>
                     <tbody class="sk">
                         <tr>
                             <td>1.</td>
-                            <td>Program pinjamin produk 5 hari (PP5H) tidak dipungut biaya apapun.</td>
+                            <td>The 5-day product loan program (PP5H) is free of charge.</td>
                         </tr>
                         <tr>
                             <td>2.</td>
-                            <td>Sudah menjadi member WAKimart dan minimal berusia 35 tahun.</td>
+                            <td>Already a WAKimart member and at least 35 years old.</td>
                         </tr>
                         <tr>
                             <td>3.</td>
-                            <td>Apabila ada kekurangan, kehilangan ataupun kerusakan pada produk saat pengembalian, berarti membeli barang dengan harga normal sesuai ketentuan yang ada.</td>
+                            <td>If there is a shortage, loss or damage to the product when returning, it means buying goods at normal prices according to existing provisions.</td>
                         </tr>
                         <tr>
                             <td>4.</td>
-                            <td>Kekurangan aksesoris produk harap dikembalikan paling lambat 7 hari setelah program PP5H berakhir.</td>
+                            <td>The lack of product accessories must be returned no later than 7 days after the PP5H program ends.</td>
                         </tr>
                         <tr>
                             <td>5.</td>
-                            <td>Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya.</td>
+                            <td>Terms and Conditions are subject to change without prior notice.</td>
                         </tr>
                         <tr>
                             <td>6.</td>
-                            <td>Kenyamanan dan keamanan konsumen kami adalah prioritas pertama.
-                            Apabila ada sesuatu atau ada pertanyaan bisa menghubungi melalui facebook page 
-                            WAKi Indonesia atau customer care kami di : +62 815-5467-3357</td>
+                            <td>The comfort and safety of our customers is our first priority.
+                            If there is something or there are questions, please contact us via the Facebook page
+                            WAKi Philippines or our customer care at : +639989888899</td>
                         </tr>
                     </tbody>
                 </table>
