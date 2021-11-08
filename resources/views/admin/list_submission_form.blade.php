@@ -176,7 +176,20 @@ if (isset($_GET["filter_type"])) {
                             </thead>
                             <tbody>
                                 @foreach($submissions as $key => $submission)
-                                    <tr>
+                                    @php
+                                        //khusus admin KEzia
+                                        $submission_done = "";
+                                        if(strtoupper($submission->type) == "MGM" && Auth::user()->id == 2){
+                                            foreach ($submission->reference as $perRef) {
+                                                if($perRef->reference_souvenir['status_prize'] == 'success'){
+                                                    $submission_done = "background-color: #beffc9;";
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    @endphp
+
+                                    <tr style="{{ $submission_done }}">
                                         <td class="text-right">{{ $i }}</td>
                                         <td>
                                             {{ date("d F Y", strtotime($submission->created_at)) }}
