@@ -444,6 +444,55 @@ $menu_item_second = "add_personal_homecare";
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Home Service Appointment</h2>
+
+                        @for($hs = 0; $hs < 5; $hs++)
+                        <label>Appointment {{$hs + 1}}</label>
+                        <div class="form-group">
+                            <label for="">Date</label>
+                            <input type="date"
+                                form="add-phc"
+                                class="form-control"
+                                name="date[]"
+                                id="date-{{$hs}}"
+                                placeholder="Tanggal Janjian"
+                                required
+                                value="<?php echo date('Y-m-j'); ?>"
+                                onload="setMinAppointmentTime(this)"
+                                data-msg="Mohon Isi Tanggal" readonly/>
+                            <div class="validation"></div>
+                            <span class="invalid-feedback">
+                                <strong></strong>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Time</label>
+                            <input type="time"
+                                form="add-phc"
+                                class="form-control"
+                                name="time[]"
+                                id="time-{{$hs}}"
+                                placeholder="Jam Janjian"
+                                value="<?php echo date('H:i'); ?>"
+                                required
+                                data-msg="Mohon Isi Jam"
+                                min="<?php echo date("H:i") ?>"
+                                max="20:00" />
+                            <div class="validation"></div>
+                            <span class="invalid-feedback">
+                                <strong></strong>
+                            </span>
+                        </div>
+                        @endfor
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <button type="submit"
             id="submit-button"
             form="add-phc"
@@ -490,8 +539,66 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#cso_id").select2();
 });
 
+function setMinAppointmentTime(e) {
+    // Tanggal & waktu dari inputan
+    const getCurrentDate = new Date(Date.parse(e.value));
+
+    // Tanggal & waktu hari ini
+    const today = new Date();
+
+    if (
+        getCurrentDate.getFullYear() === today.getFullYear()
+        && getCurrentDate.getMonth() === today.getMonth()
+        && getCurrentDate.getDate() === today.getDate()
+    ) {
+        if (today.getHours() < 10) {
+            document.getElementById("time").setAttribute("min", "10:00");
+        } else if (today.getHours() >= 10 && today.getHours() < 20) {
+            document.getElementById("time").setAttribute(
+                "min",
+                ("0" + (getCurrentDate.getHours() + 1)).slice(-2)
+                + ":"
+                + ("0" + (getCurrentDate.getMinutes() + 1)).slice(-2)
+            );
+        } else if (today.getHours() >= 20) {
+            document.getElementById("time").setAttribute("disabled", "");
+        }
+    } else {
+        document.getElementById("time").setAttribute("min", "10:00");
+    }
+}
+
 function setProduct() {
     let date = $("#schedule").val();
+
+    //set for appointment hs
+    if(date != ""){
+        var selected_date = new Date(date);
+        var next_selected_date = new Date (selected_date);  
+        for (var hs = 0; hs < 5; hs++) {
+            if(hs != 0){
+                next_selected_date.setDate(selected_date.getDate() + 1);
+                selected_date.setDate(next_selected_date.getDate());
+            }
+
+            var hs_date = next_selected_date.getDate();
+            //console.log(hs_date.length);
+            if(hs_date < 10){
+                hs_date = '0' + hs_date;
+            }
+            var hs_month = next_selected_date.getMonth() + 1;
+            if(hs_month < 10){
+                hs_month = '0' + hs_month;
+            }
+            var hs_year = next_selected_date.getFullYear();
+            var fixed_date_hs =  hs_year + "-" + hs_month + "-" + hs_date;
+            console.log(fixed_date_hs);
+            document.getElementById("date-" + hs).value = fixed_date_hs;
+        }    
+    }
+    //end set for appointment hs
+
+
     let branch_id = $("#branch_id").val();
     console.log({date, branch_id});
     if(date != "" && branch_id != ""){

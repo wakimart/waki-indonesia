@@ -7,6 +7,7 @@ use App\Cso;
 use App\User;
 use App\HistoryUpdate;
 use App\PersonalHomecare;
+use App\HomeService;
 use App\PersonalHomecareChecklist;
 use App\PersonalHomecareProduct;
 use App\RajaOngkir_City;
@@ -182,6 +183,27 @@ class PersonalHomecareController extends Controller
         ));
     }
 
+    public function createPp5hHs($personal_homecare){
+        $data = [];
+        $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($personal_homecare['phone'], -4);
+        $data['type_customer'] = "WAKi Customer (Type B)";
+        $data['type_homeservices'] = "Program Pinjamin 5 Hari";
+        $data['name'] = $personal_homecare['name'];
+        $data['address'] = $personal_homecare['address'];
+        $data['phone'] = $personal_homecare['phone'];
+        $data['province'] = $personal_homecare['province_id'];
+        $data['city'] = $personal_homecare['city_id'];
+        $data['distric'] = $personal_homecare['subdistrict_id'];
+        $data['cso_id'] = $personal_homecare['cso_id'];
+        $data['branch_id'] = $personal_homecare['branch_id'];
+        $data['cso_phone'] = Cso::find($personal_homecare['cso_id'])['phone'];
+
+        for ($i=0; $i < 5; $i++) {
+            $data['appointment'] = $personal_homecare['schedule'][$i];
+            HomeService::create($data);
+        }
+    }
+
     public function store(Request $request)
     {
         DB::beginTransaction();
@@ -202,6 +224,30 @@ class PersonalHomecareController extends Controller
                 "cso_id",
                 "ph_product_id",
             ));
+
+            //store homeservice personal homecare
+            $personal_homecare = [];
+            $personal_homecare['phone'] = $request->input('phone');
+            $personal_homecare['name'] = $request->input('name');
+            $personal_homecare['address'] = $request->input('address');
+            $personal_homecare['province_id'] = $request->input('province_id');
+            $personal_homecare['city_id'] = $request->input('city_id');
+            $personal_homecare['subdistrict_id'] = $request->input('subdistrict_id');
+            $personal_homecare['branch_id'] = $request->input('branch_id');
+            $personal_homecare['cso_id'] = $request->input('cso_id');
+
+            $personal_homecare['schedule'] = [];
+            $get_dateAppointment = $request->date;
+            $get_timeAppointment = $request->time;
+            $index = 0;
+            foreach ($get_dateAppointment as $key => $date_hs) {
+                $inputAppointment = $date_hs." ".$get_timeAppointment[$key];
+                array_push($personal_homecare['schedule'], $inputAppointment);
+            }
+
+            $this->createPp5hHs($personal_homecare);           
+
+            //end store homeservice personal homecare
 
             if ($request->hasFile("id_card_image")) {
                 $timestamp = (string) time();

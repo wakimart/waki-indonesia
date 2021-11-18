@@ -18,12 +18,14 @@ use App\Utils;
 use App\Reference;
 use DateTime;
 use Validator;
+use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class HomeServiceController extends Controller
@@ -1094,6 +1096,7 @@ class HomeServiceController extends Controller
         $homeService = HomeService::find($request->id);
         if($request->has('cancel')){
             $homeService->active = false;
+            $homeService->is_acc = false;
             $homeService->save();
         }
         else if($request->has('cash')){
@@ -1314,6 +1317,73 @@ class HomeServiceController extends Controller
         $homeService->active = false;
         $homeService->save();
         return view('admin.list_order');
+    }
+
+    function sendFCM($body){
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Authorization: key=AAAAfcgwZss:APA91bGg7XK9XjDvLLqR36mKsC-HwEx_l5FPGXDE3bKiysfZ2yzUKczNcAuKED6VCQ619Q8l55yVh4VQyyH2yyzwIJoVajaK4t3TJV-x-4f_a9WUzIcnOYzixPIUB5DeuWRIAh1v8Yld',
+            'Content-Type: application/json'
+        ));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+
+        $result = curl_exec($curl);
+        if ($result === FALSE) {
+            die('Oops! FCM Send Error: ' . curl_error($curl));
+            $this->info(curl_error($curl));
+        }
+        curl_close($curl);
+        // return $result;
+    }
+
+    public function accNotif(Request $request)
+    {
+        $fcm_tokenNya = [];
+        $userNya = User::where('users.fmc_token', '!=', null)
+                    ->whereIn('role_users.role_id', [1,2,7])
+                    ->leftjoin('role_users', 'users.id', '=',  'role_users.user_id')
+                    ->get();
+        foreach ($userNya as $value) {
+            if($value['fmc_token'] != null){
+                foreach ($value['fmc_token'] as $fcmSatuan) {
+                    if($fcmSatuan != null){
+                        array_push($fcm_tokenNya, $fcmSatuan);
+                    }
+                }
+            }
+        }
+
+        $homeserviceNya = HomeService::find($request->id);
+
+
+        $body = ['registration_ids'=>$fcm_tokenNya,
+            'collapse_key'=>"type_a",
+            "content_available" => true,
+            "priority" => "high",
+            "notification" => [
+                "body" => "Acc Cancel Home Service for ".$homeserviceNya->type_homeservices." from customer ".$homeserviceNya->name.". By ".$homeserviceNya->branch['code']."-".$homeserviceNya->cso['name'],
+                "title" => "Home Service",
+                "icon" => "ic_launcher"
+            ],
+            "data" => [
+                "url" => URL::to(route('admin_list_homeService', ["id_hs"=>$homeserviceNya['id']])),
+            ]];
+
+        $homeserviceNya->is_acc = true;
+        $homeserviceNya->save();
+        //end update is_acc
+
+        if(sizeof($fcm_tokenNya) > 0)
+        {
+            $this->sendFCM(json_encode($body));
+        }
+        return redirect($request->url)->with("success", "Permintaan Acc telah dikirim.");
     }
 
     //KHUSUS API APPS

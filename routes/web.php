@@ -364,6 +364,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {
+        //notif acc cancel hs
+        Route::post("/accNotifHomeservice", "HomeServiceController@accNotif")
+            ->name("acc_cancel_notif_homeservice");
+
         //Add Form home service
         Route::get('/', 'HomeServiceController@indexAdmin')
             ->name('admin_add_homeService')

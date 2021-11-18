@@ -969,24 +969,41 @@ $menu_item_second = "list_homeservice";
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <a id="url_share"
-                        href=""
-                        data-action="share/whatsapp/share"
-                        target="_blank">
-                        <button id="btn-share"
-                            type="button"
-                            class="btn btn-gradient-primary mr-2">
-                            <span class="mdi mdi-whatsapp"
-                                style="font-size: 18px;">
-                            </span>
-                            Share
+                    @if(isset($_GET['id_hs']) && Auth::user()->id == 1)
+                        <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}">
+                            @csrf
+                            <div class="form-group">
+
+                                <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+
+                                <div style="text-align: center;">
+                                    <h5>Are you sure want to cancel this Home Service?</h5>
+                                    <button type="submit" id="input_id_hs_hidden" class="btn btn-gradient-primary" name="id" value="-">Yes</button>
+                                    <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                                </div>
+                            </div>
+                        </form>
+                    @else
+                        <a id="url_share"
+                            href=""
+                            data-action="share/whatsapp/share"
+                            target="_blank">
+                            <button id="btn-share"
+                                type="button"
+                                class="btn btn-gradient-primary mr-2">
+                                <span class="mdi mdi-whatsapp"
+                                    style="font-size: 18px;">
+                                </span>
+                                Share
+                            </button>
+                        </a>
+                        <button class="btn btn-light"
+                            data-dismiss="modal"
+                            aria-label="Close">
+                            Cancel
                         </button>
-                    </a>
-                    <button class="btn btn-light"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                        Cancel
-                    </button>
+                    @endif
+                    
                 </div>
             </div>
         </div>
@@ -1274,7 +1291,7 @@ $menu_item_second = "list_homeservice";
             </div>
         </div>
     </div>
-    <!-- End Modal Edit -->
+    <!-- End Modal Edit -->   
 
     <!-- Modal Delete -->
     <div class="modal fade"
@@ -1294,18 +1311,18 @@ $menu_item_second = "list_homeservice";
                 </div>
                 <div class="modal-body">
                     <h5 style="text-align: center;">
-                        Are you sure to cancel this appointment?
+                        Are you sure to Share Acc to Cancel this appointment?
                     </h5>
                 </div>
                 <div class="modal-footer">
                     <form id="frmCancel"
                         method="post"
-                        action="{{ route('update_homeService') }}">
+                        action="{{ route("acc_cancel_notif_homeservice") }}">
                         @csrf
+                        <input type="hidden" name="id" id="acc-cancel-homeservice-id" />
                         <input type="hidden"
-                            id="hiddenInput"
-                            name="cancel"
-                            value="1" />
+                            name="url"
+                            value="{{ url()->full() }}" />
                         <button type="submit"
                             id="btn-cancel"
                             class="btn btn-gradient-danger mr-2"
@@ -1533,6 +1550,15 @@ $menu_item_second = "list_homeservice";
 
 @section('script')
 <script type="application/javascript">
+
+$(document).ready(function(){
+    //load modal Acc Cancel HS
+    @if(isset($_GET['id_hs']))
+        clickView({{$_GET['id_hs']}});
+    @endif
+    //end load modal Acc Cancel HS
+});
+
 {{-- Mendapatkan CSRF Token --}}
 function getCSRF() {
     {{-- Mendapatkan semua elemen dengan tag meta --}}
@@ -1781,10 +1807,18 @@ function changeDate(click) {
 
 {{-- View detail home service --}}
 function clickView(btn) {
+    var id_hs = btn;
+    if(isNaN(id_hs)){
+        id_hs = btn.value;
+        console.log(id_hs);
+    }else{
+        console.log(id_hs);
+    }
+
     const URL = "<?php echo route('detail_homeService'); ?>";
 
     fetch(
-        URL + "?id=" + btn.value,
+        URL + "?id=" + id_hs,
         {
             method: "GET",
             headers: {
@@ -1827,12 +1861,18 @@ function clickView(btn) {
         document.getElementById("view-cso2").innerHTML = result.cso2_code_name;
         document.getElementById("view-date").innerHTML = dateString;
         document.getElementById("view-time").innerHTML = timeString;
-        document.getElementById("url_share").setAttribute(
-            "href",
-            "whatsapp://send?text=<?php echo route('homeServices_success'); ?>"
-            + "?code="
-            + result.code
-        );
+
+        @if(isset($_GET['id_hs']))
+            $("#input_id_hs_hidden").val(id_hs);
+            $("#viewHomeServiceModal").modal("show");
+        @else
+            document.getElementById("url_share").setAttribute(
+                "href",
+                "whatsapp://send?text=<?php echo route('homeServices_success'); ?>"
+                + "?code="
+                + result.code
+            );
+        @endif
     }).catch(function (error) {
         console.error(error);
     });
