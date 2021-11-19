@@ -282,6 +282,34 @@ $menu_item_second = "list_order";
                                 name="filter_string">
                         </div>
                     </div>
+
+                    <div class="col-xs-6 col-sm-4"
+                        style="padding: 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="">Filter By Promo</label>
+                            <select class="form-control"
+                                id="filter_promo"
+                                name="filter_promo">
+                                <option value="" selected="">All Promo</option>
+                                @foreach($promos as $promo)
+                                    @php
+                                    $selected = "";
+                                    if (isset($_GET['filter_promo'])) {
+                                        if ($_GET['filter_promo'] == $promo['id']) {
+                                            $selected = "selected=\"\"";
+                                        }
+                                    }
+                                    @endphp
+
+                                    <option {{ $selected }}
+                                        value="{{ $promo['id'] }}">
+                                        {{ $promo['code'] }} ({{ $promo->productName()[0] }} - {{ $promo->productName()[1] }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="validation"></div>
+                        </div>
+                    </div>
                 </div>
             @endif
 
@@ -862,6 +890,10 @@ $(document).on("click", "#btn-filter", function (e) {
 
     if ($('#filter_string').val() != "") {
         urlParamArray.push("filter_string=" + $('#filter_string').val());
+    }
+    
+    if ($('#filter_promo').val() != "") {
+        urlParamArray.push("filter_promo=" + $('#filter_promo').val());
     }
 
     for (var i = 0; i < urlParamArray.length; i++) {

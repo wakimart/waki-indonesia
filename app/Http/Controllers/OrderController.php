@@ -277,6 +277,10 @@ class OrderController extends Controller
             $orders = $orders->where('customer_type', $request->filter_type);
         }
 
+        if ($request->has('filter_promo')) {
+            $orders = $orders->where('product', 'like', '%"id":"'.$request->filter_promo.'"%');
+        }
+
         if ($request->has("filter_string")) {
             $filterString = $request->filter_string;
             $orders = $orders->where(
@@ -302,9 +306,10 @@ class OrderController extends Controller
 
         $countOrders = $orders->count();
         $categories = CategoryProduct::all();
+        $promos = Promo::all();
         $orders = $orders->sortable(['orderDate' => 'desc'])->paginate(10);
 
-        return view('admin.list_order', compact('orders','countOrders','branches', 'categories'));
+        return view('admin.list_order', compact('orders','countOrders','branches', 'categories', 'promos'));
     }
 
     public function admin_DetailOrder(Request $request)
