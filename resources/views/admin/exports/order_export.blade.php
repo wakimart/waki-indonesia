@@ -9,13 +9,12 @@
 <table>
     <thead>
         <tr>
+            <th>Branch</th>
             <th>OrderDate</th>
             <th>Order Code</th>
             <th>CSO</th>
             <th>Name</th>
             <th>Phone Number</th>
-            <th>City</th>
-            <th>Distric</th>
             <th>Address</th>
             <th>Promo Names</th>
             <th>Total</th>
@@ -26,13 +25,12 @@
         @if (count($order)!=0)
             @foreach ($order as $order )
             <tr>
+                <td> {{$order->branch['code']}} </td>
                 <td> {{$order['orderDate']}} </td>
                 <td> {{$order['code']}} </td>
                 <td> {{$order->getCSO()->code}} </td>
                 <td> {{$order['name']}} </td>
                 <td> {{$order['phone']}} </td>
-                <td> {{$order['city']}} </td>
-                <td> {{$order['distric']}} </td>
                 <td> {{$order['address']}} </td>
 
                 @php
