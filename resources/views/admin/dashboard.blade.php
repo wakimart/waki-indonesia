@@ -362,52 +362,75 @@
         </div>
 
         @if(Gate::check('change-status-checkin-personalhomecare') == true || Gate::check('change-status-checkout-personalhomecare') == true || Gate::check('change-status-verified-personalhomecare') == true || Gate::check('acc-reschedule-personalhomecare') == true || Gate::check('acc-extend-personalhomecare') == true)
-        <div class="row">
-            <div class="col-md-12 grid-margin stretch-card">
+            <div class="col-12 grid-margin stretch-card px-0">
                 <div class="card">
+                    <div class="card-header" style="background: none;">
+                        <h4 style="margin-bottom: 1em;">
+                            Personal Homecare ACC
+                        </h4>
+                        <ul class="nav nav-tabs card-header-tabs">
+                            @foreach($personalHomecares as $keyNya => $arrPP5H)
+                                <li class="nav-item">
+                                    <a class="nav-link {{ $keyNya == "new" ? 'active' : '' }}"
+                                        style="font-weight: 500; font-size: 1em;"
+                                        id="{{ $keyNya }}-tab"
+                                        data-toggle="tab"
+                                        href="#{{ $keyNya }}-table" 
+                                        role="tab"
+                                        aria-controls="{{ $keyNya }}"
+                                        aria-selected="true">
+                                        {{ ucwords(str_replace("_", " ",$keyNya)) }} ({{ sizeof($arrPP5H) }})
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                     <div class="card-body">
-                        <div class="clearfix">
-                            <h4 class="card-title float-left">
-                                Personal Homecare to Acc (total : {{ sizeof($personalHomecares) }})
-                            </h4>
-                        </div>
-                        {{-- <canvas id="homeservice-chart" class="mt-4"></canvas> --}}
-                        <div class="table-responsive" style="border: 1px solid #ebedf2;">
-                            <table class="table table-bordered">
-                                <thead style="text-align: center; background-color: aliceblue;">
-                                    <tr>
-                                        <td rowspan="2">View</td>
-                                        <td colspan="4">Personal Homecare Data</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Status</td>
-                                        <td>Name - Phone</td>
-                                        <td>Branch - CSO</td>
-                                        <td>Product</td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($personalHomecares as $personalHomecare)
-                                        <tr>
-                                            <td style="text-align: center;">
-                                                <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
-                                                    <i class="mdi mdi-eye" style="font-size: 24px;"></i>
-                                                </a>
-                                            </td>
-                                            
-                                            <td>{{ $personalHomecare['status'] }}</td>
-                                            <td>{{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}</td>
-                                            <td>{{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['name'] }}</td>
-                                            <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['name'] }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <div class="tab-content" id="myTabContent">
+                            @foreach($personalHomecares as $keyNya => $arrPP5H)
+                                <div class="tab-pane fade show {{ $keyNya == "new" ? 'active' : '' }} p-3" id="{{ $keyNya }}-table" role="tabpanel" aria-labelledby="{{ $keyNya }}-tab">
+                                    <h5 style="margin-bottom: 0.5em;">
+                                        Status {{ ucwords(str_replace("_", " ",$keyNya)) }} | Total: {{ sizeof($arrPP5H) }}
+                                    </h5>
+                                    <div class="table-responsive"
+                                        style="border: 1px solid #ebedf2;">
+                                        <table class="table table-bordered">
+                                            <thead style="text-align: center; background-color: aliceblue;">
+                                                <tr>
+                                                    <td colspan="2">Personal Homecare Data</td>
+                                                    <td rowspan="2">View</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Customer <br class="break">(Branch - CSO)</td>
+                                                    <td>Product</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($arrPP5H as $personalHomecare)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }} 
+                                                            <br class="break">
+                                                            ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
+                                                        </td>
+                                                        <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['code'] }}</td>
+                                                        <td style="text-align: center;">
+                                                            <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
+                                                                <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         @endif
     </div>
 </div>
