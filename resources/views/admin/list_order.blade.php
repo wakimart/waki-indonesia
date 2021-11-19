@@ -528,17 +528,33 @@ $menu_item_second = "list_order";
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label>Pick a Date</label>
-                    <input type="date"
-                        class="form-control"
-                        name="orderDate"
-                        id="orderDate"
-                        placeholder="Awal Tanggal"
-                        required
-                        data-msg="Mohon Isi Tanggal"
-                        onload="getDate()" />
-                    <div class="validation"></div>
+                <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+                    <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date"
+                                class="form-control"
+                                name="start_orderDate"
+                                id="start_orderDate"
+                                required
+                                data-msg="Mohon Isi Tanggal"
+                                onload="getDate()" />
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date"
+                                class="form-control"
+                                name="end_orderDate"
+                                id="end_orderDate"
+                                required
+                                data-msg="Mohon Isi Tanggal"
+                                onload="getDate()" />
+                            <div class="validation"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
                     <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
@@ -652,6 +668,35 @@ $menu_item_second = "list_order";
                             <div class="validation"></div>
                         </div>
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Filter By Promo</label>
+                    <select class="form-control"
+                        id="filter_promo_modal"
+                        name="filter_promo_modal">
+                        <option value="">
+                            All Promo & Product
+                        </option>
+                        <option value="promo" selected>
+                            Only All Promo
+                        </option>
+                        @foreach($promos as $promo)
+                            @php
+                            $selected = "";
+                            if (isset($_GET['filter_promo_modal'])) {
+                                if ($_GET['filter_promo_modal'] == $promo['id']) {
+                                    $selected = "selected=\"\"";
+                                }
+                            }
+                            @endphp
+
+                            <option {{ $selected }} value="{{ $promo['id'] }}">
+                                {{ $promo['code'] }} ({{ $promo->productName()[0] }} - {{ $promo->productName()[1] }})
+                            </option>
+                        @endforeach
+                    </select>
+                    <div class="validation"></div>
                 </div>
 
                 <div class="modal-footer">
@@ -783,12 +828,18 @@ $(document).ready(function(e){
         var urlParamArray = new Array();
         var urlParamStr = "";
 
-        if($('#orderDate').val() != ""){
-            urlParamArray.push("orderDate=" + $('#orderDate').val());
+        if($('#start_orderDate').val() != ""){
+            urlParamArray.push("start_orderDate=" + $('#start_orderDate').val());
+        }
+        if($('#end_orderDate').val() != ""){
+            urlParamArray.push("end_orderDate=" + $('#end_orderDate').val());
         }
 
         if($('#report_cso_modal').val() != ""){
             urlParamArray.push("report_cso_modal=" + $('#report_cso_modal').val());
+        }
+        if($('#filter_promo_modal').val() != ""){
+            urlParamArray.push("filter_promo=" + $('#filter_promo_modal').val());
         }
 
         // if($('#categoryReport').val() != "" || $('#categoryReport').val() != null){

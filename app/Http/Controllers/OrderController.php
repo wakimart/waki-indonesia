@@ -541,12 +541,17 @@ class OrderController extends Controller
 
     public function export_to_xls(Request $request)
     {
-        $date = null;
+        $start_date = null;
+        $end_date = null;
         $cso = null;
         $city = null;
         $category = null;
-        if($request->has('orderDate') && $request->orderDate != "undefined"){
-            $date = $request->orderDate;
+        $promo = null;
+        if($request->has('start_orderDate') && $request->start_orderDate != "undefined"){
+            $start_date = $request->start_orderDate;
+        }
+        if($request->has('end_orderDate') && $request->end_orderDate != "undefined"){
+            $end_date = $request->end_orderDate;
         }
         if($request->has('cso') && $request->cso != "undefined"){
             $cso = $request->cso;
@@ -557,8 +562,11 @@ class OrderController extends Controller
         if($request->has('category') && $request->category != "undefined"){
             $category = $request->category;
         }
+        if($request->has('filter_promo') && $request->filter_promo != "undefined"){
+            $promo = $request->filter_promo;
+        }
 
-        return Excel::download(new OrderExport($date, $city, $category, $cso), 'Order Report.xlsx');
+        return Excel::download(new OrderExport($start_date, $end_date, $city, $category, $cso, $promo), 'Order Report.xlsx');
     }
 
     public function ListOrderforSubmission(Request $request)

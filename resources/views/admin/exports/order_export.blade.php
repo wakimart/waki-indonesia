@@ -17,6 +17,7 @@
             <th>City</th>
             <th>Distric</th>
             <th>Address</th>
+            <th>Promo Names</th>
             <th>Total</th>
         </tr>
     </thead>
@@ -33,6 +34,12 @@
                 <td> {{$order['city']}} </td>
                 <td> {{$order['distric']}} </td>
                 <td> {{$order['address']}} </td>
+
+                @php
+                    $ProductPromos = json_decode($order['product'], true);
+                @endphp
+                <td> {{ App\DeliveryOrder::$Promo[$ProductPromos[0]['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromos[0]['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromos[0]['id']]['harga'] }} ) </td>
+
                 <td> {{$order['total_payment']}}</td>
             </tr>
             @endforeach
