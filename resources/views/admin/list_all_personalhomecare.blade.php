@@ -287,7 +287,7 @@ $menu_item_second = "list_all";
                                                 @endif
                                             </td>
                                             <td class="center">
-                                                @if($personalhomecare->status == "rejected" || $personalhomecare->status == "new" || $personalhomecare->status == "verified")
+                                                @if(Auth::user()->roles[0]["slug"] === "head-admin" || Auth::user()->roles[0]["slug"] === "admin")
                                                     <a class="btn-delete disabled"
                                                         data-toggle="modal"
                                                         href="#deleteDoModal"
@@ -295,6 +295,16 @@ $menu_item_second = "list_all";
                                                         data-id="{{ $personalhomecare->id }}">
                                                         <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                     </a>
+                                                @else
+                                                    @if($personalhomecare->status == "rejected" || $personalhomecare->status == "new" || $personalhomecare->status == "verified")
+                                                        <a class="btn-delete disabled"
+                                                            data-toggle="modal"
+                                                            href="#deleteDoModal"
+                                                            onclick="submitDelete(this)"
+                                                            data-id="{{ $personalhomecare->id }}">
+                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                        </a>
+                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>

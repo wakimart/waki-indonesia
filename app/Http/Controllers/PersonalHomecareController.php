@@ -197,6 +197,7 @@ class PersonalHomecareController extends Controller
         $data['cso_id'] = $personal_homecare['cso_id'];
         $data['branch_id'] = $personal_homecare['branch_id'];
         $data['cso_phone'] = Cso::find($personal_homecare['cso_id'])['phone'];
+        $data['personalhomecare_id'] = $personal_homecare['personalhomecare_id'];
 
         for ($i=0; $i < 5; $i++) {
             $data['appointment'] = $personal_homecare['schedule'][$i];
@@ -209,7 +210,6 @@ class PersonalHomecareController extends Controller
         DB::beginTransaction();
 
         try {
-
             // STORE PERSONAL HOMECARE
             $personalHomecare = new PersonalHomecare();
             $personalHomecare->fill($request->only(
@@ -224,30 +224,6 @@ class PersonalHomecareController extends Controller
                 "cso_id",
                 "ph_product_id",
             ));
-
-            //store homeservice personal homecare
-            $personal_homecare = [];
-            $personal_homecare['phone'] = $request->input('phone');
-            $personal_homecare['name'] = $request->input('name');
-            $personal_homecare['address'] = $request->input('address');
-            $personal_homecare['province_id'] = $request->input('province_id');
-            $personal_homecare['city_id'] = $request->input('city_id');
-            $personal_homecare['subdistrict_id'] = $request->input('subdistrict_id');
-            $personal_homecare['branch_id'] = $request->input('branch_id');
-            $personal_homecare['cso_id'] = $request->input('cso_id');
-
-            $personal_homecare['schedule'] = [];
-            $get_dateAppointment = $request->date;
-            $get_timeAppointment = $request->time;
-            $index = 0;
-            foreach ($get_dateAppointment as $key => $date_hs) {
-                $inputAppointment = $date_hs." ".$get_timeAppointment[$key];
-                array_push($personal_homecare['schedule'], $inputAppointment);
-            }
-
-            $this->createPp5hHs($personal_homecare);           
-
-            //end store homeservice personal homecare
 
             if ($request->hasFile("id_card_image")) {
                 $timestamp = (string) time();
@@ -273,6 +249,32 @@ class PersonalHomecareController extends Controller
             }
 
             $personalHomecare->save();
+
+
+            //store homeservice personal homecare
+            $personal_homecare = [];
+            $personal_homecare['personalhomecare_id'] = $personalHomecare->id;
+            $personal_homecare['phone'] = $request->input('phone');
+            $personal_homecare['name'] = $request->input('name');
+            $personal_homecare['address'] = $request->input('address');
+            $personal_homecare['province_id'] = $request->input('province_id');
+            $personal_homecare['city_id'] = $request->input('city_id');
+            $personal_homecare['subdistrict_id'] = $request->input('subdistrict_id');
+            $personal_homecare['branch_id'] = $request->input('branch_id');
+            $personal_homecare['cso_id'] = $request->input('cso_id');
+
+            $personal_homecare['schedule'] = [];
+            $get_dateAppointment = $request->date;
+            $get_timeAppointment = $request->time;
+            $index = 0;
+            foreach ($get_dateAppointment as $key => $date_hs) {
+                $inputAppointment = $date_hs." ".$get_timeAppointment[$key];
+                array_push($personal_homecare['schedule'], $inputAppointment);
+            }
+
+            $this->createPp5hHs($personal_homecare);           
+
+            //end store homeservice personal homecare
 
             DB::commit();
 
@@ -853,9 +855,12 @@ class PersonalHomecareController extends Controller
             ->where("history_updates.menu_id", $request->id)
             ->get();
 
+        $homeservices = HomeService::where("personalhomecare_id", $request->id)->get();
+
         return view('admin.detail_personal_homecare', compact(
             'personalhomecare',
             "histories",
+            "homeservices",
         ));
     }
 

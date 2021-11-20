@@ -277,6 +277,45 @@ $menu_item_page = "personal_homecare";
 
         <div class="row">
             <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <h2>Home Service Appointment</h2>
+                        </div>
+                        <div class="row justify-content-center mt-3">
+                            <div class="table-responsive">
+                                <table class="table-bordered col-md-12">
+                                    <thead style="background: none;">
+                                        <th>No.</th>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>View</th>
+                                    </thead>
+                                    @foreach($homeservices as $key => $homeservice)
+                                    @php
+                                        $appointment = new DateTime($homeservice['appointment']);
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $key+1 }}</td>
+                                        <td>{{ $appointment->format('j/m/Y') }}</td>
+                                        <td>{{ $appointment->format('H:i') }}</td>
+                                        <td style="text-align: center;">
+                                            <a href="{{ route('admin_list_homeService', ['id_detail_hs'=>$homeservice['id']]) }}">
+                                                <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
                 <div class="card" style="padding: 1em;">
                     <div class="card-body">
                         <div class="row justify-content-center">
