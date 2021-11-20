@@ -1555,6 +1555,8 @@ $(document).ready(function(){
     //load modal Acc Cancel HS
     @if(isset($_GET['id_hs']))
         clickView({{$_GET['id_hs']}});
+    @elseif(isset($_GET['id_detail_hs']))
+        clickView({{$_GET['id_detail_hs']}});
     @endif
     //end load modal Acc Cancel HS
 });
@@ -1864,6 +1866,8 @@ function clickView(btn) {
 
         @if(isset($_GET['id_hs']))
             $("#input_id_hs_hidden").val(id_hs);
+            $("#viewHomeServiceModal").modal("show");
+        @elseif(isset($_GET['id_detail_hs']))
             $("#viewHomeServiceModal").modal("show");
         @else
             document.getElementById("url_share").setAttribute(

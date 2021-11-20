@@ -70,4 +70,9 @@ class PersonalHomecare extends Model
     {
         return RajaOngkir_Subdistrict::where("subdistrict_id", $this->subdistrict_id)->first()->subdistrict_name;
     }
+
+    public function homeservice()
+    {
+        return $this->hasMany('App\HomeService');
+    }
 }
