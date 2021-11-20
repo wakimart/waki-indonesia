@@ -975,10 +975,12 @@ $menu_item_second = "list_homeservice";
                             <div class="form-group">
 
                                 <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                                <input type="hidden" id="input_id_hs_hidden" name="id" value="-" />
 
                                 <div style="text-align: center;">
                                     <h5>Are you sure want to cancel this Home Service?</h5>
-                                    <button type="submit" id="input_id_hs_hidden" class="btn btn-gradient-primary" name="id" value="-">Yes</button>
+                                    <p id="cancel_desc_view"></p>
+                                    <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
                                     <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
                                 </div>
                             </div>
@@ -1313,6 +1315,14 @@ $menu_item_second = "list_homeservice";
                     <h5 style="text-align: center;">
                         Are you sure to Share Acc to Cancel this appointment?
                     </h5>
+
+                    <textarea class="form-control mt-3"
+                        form="frmCancel" 
+                        name="cancel_desc"
+                        id="cancel_desc"
+                        rows="5"
+                        required
+                        placeholder="Cancel Description (Alasan Cancel)"></textarea>
                 </div>
                 <div class="modal-footer">
                     <form id="frmCancel"
@@ -1864,6 +1874,7 @@ function clickView(btn) {
 
         @if(isset($_GET['id_hs']))
             $("#input_id_hs_hidden").val(id_hs);
+            document.getElementById("cancel_desc_view").innerHTML = result.cancel_desc;
             $("#viewHomeServiceModal").modal("show");
         @else
             document.getElementById("url_share").setAttribute(
