@@ -480,7 +480,7 @@ $menu_item_second = "add_personal_homecare";
                                 value="<?php echo date('H:i'); ?>"
                                 required
                                 data-msg="Mohon Isi Jam"
-                                min="<?php echo date("H:i") ?>"
+                                min="10:00"
                                 max="20:00" />
                             <div class="validation"></div>
                             <span class="invalid-feedback">

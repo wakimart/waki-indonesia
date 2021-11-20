@@ -969,8 +969,8 @@ $menu_item_second = "list_homeservice";
                     </table>
                 </div>
                 <div class="modal-footer">
-                    @if(isset($_GET['id_hs']) && Auth::user()->id == 1)
-                        <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}">
+                    @if(isset($_GET['id_hs']) && Auth::user()->inRole("head-admin"))
+                        <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
                             @csrf
                             <div class="form-group">
 
