@@ -1095,9 +1095,25 @@ class HomeServiceController extends Controller
     public function update(Request $request){
         $homeService = HomeService::find($request->id);
         if($request->has('cancel')){
-            $homeService->active = false;
+
+            $titleNya = "Rejected - ACC Cancel [Home Service]";
+            $messagesNya = "Acc Cancel Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Rejected";
+
+            if($request->status_acc == "true"){
+                $titleNya = "Approved - ACC Cancel [Home Service]";
+                $messagesNya = "Acc Cancel Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Approved";
+                $homeService->active = false;
+            }
             $homeService->is_acc = false;
             $homeService->save();
+
+            $userNya = [$homeService->cso->user];
+            foreach ($homeService->branch->cso as $perCso) {
+                if($perCso->user != null){
+                    array_push($userNya, $perCso->user);
+                }
+            }
+            $this->NotifTo($userNya, $messagesNya, $titleNya);
         }
         else if($request->has('cash')){
             if($request->cash == 0){
@@ -1376,6 +1392,7 @@ class HomeServiceController extends Controller
             ]];
 
         $homeserviceNya->is_acc = true;
+        $homeserviceNya->cancel_desc = $request->cancel_desc;
         $homeserviceNya->save();
         //end update is_acc
 
@@ -1384,6 +1401,35 @@ class HomeServiceController extends Controller
             $this->sendFCM(json_encode($body));
         }
         return redirect($request->url)->with("success", "Permintaan Acc telah dikirim.");
+    }
+
+    public function NotifTo($userNya, $messagesNya, $titleNya)
+    {
+        $fcm_tokenNya = [];
+        foreach ($userNya as $value) {
+            if($value['fmc_token'] != null){
+                foreach ($value['fmc_token'] as $fcmSatuan) {
+                    if($fcmSatuan != null){
+                        array_push($fcm_tokenNya, $fcmSatuan);
+                    }
+                }
+            }
+        }
+
+        $body = ['registration_ids'=>$fcm_tokenNya,
+            'collapse_key'=>"type_a",
+            "content_available" => true,
+            "priority" => "high",
+            "notification" => [
+                "body" => $messagesNya,
+                "title" => $titleNya,
+                "icon" => "ic_launcher"
+            ]];
+
+        if(sizeof($fcm_tokenNya) > 0)
+        {
+            $this->sendFCM(json_encode($body));
+        }
     }
 
     //KHUSUS API APPS

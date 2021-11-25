@@ -250,7 +250,6 @@ class PersonalHomecareController extends Controller
 
             $personalHomecare->save();
 
-
             //store homeservice personal homecare
             $personal_homecare = [];
             $personal_homecare['personalhomecare_id'] = $personalHomecare->id;

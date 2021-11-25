@@ -78,16 +78,37 @@ class DashboardController extends Controller
         $refSouvenirs = ReferenceSouvenir::where('is_acc', true)->get();
 
         //khusus untuk personal homecare to acc
-        $personalHomecares = PersonalHomecare::where('active', true)
-                        ->whereIn('status', ['new', 'waiting_in', 'verified'])
-                        ->orWhere(function ($q){
-                            $q->whereNotNull('reschedule_date');
-                        })
-                        ->orWhere(function ($q){
-                            $q->where([['is_extend', true], ['status', 'process']]);
-                        })
+        $personalHomecares = [];
+        $personalHomecares['new'] = PersonalHomecare::where([['active', true], ['status', 'new']])
                         ->orderBy("updated_at", "desc")
                         ->get();
+        $personalHomecares['verified'] = PersonalHomecare::where([['active', true], ['status', 'verified']])
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+        $personalHomecares['waiting_in'] = PersonalHomecare::where([['active', true], ['status', 'waiting_in']])
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+        $personalHomecares['reschedule_acc'] = PersonalHomecare::where('active', true)
+                        ->whereNotNull('reschedule_date')
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+        $personalHomecares['extend_acc'] = PersonalHomecare::where([['active', true], ['is_extend', true]])
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+
+        // $personalHomecares = PersonalHomecare::where('active', true)
+        //                 ->whereIn('status', ['new', 'waiting_in', 'verified'])
+        //                 ->orWhere(function ($q){
+        //                     $q->whereNotNull('reschedule_date');
+        //                 })
+        //                 ->orWhere(function ($q){
+        //                     $q->where('is_extend', true);
+        //                 })
+        //                 ->orderBy("updated_at", "desc")
+        //                 ->get();
+
+        //khusus untuk acc delete HS
+        $accDeleteHS = HomeService::where([['active', true], ['is_acc', true]])->get();
 
         return view(
             "admin.dashboard",
@@ -97,7 +118,8 @@ class DashboardController extends Controller
                 "registration",
                 "references",
                 "refSouvenirs",
-                "personalHomecares"
+                "personalHomecares",
+                "accDeleteHS"
             )
         );
     }
