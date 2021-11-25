@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 use Throwable;
+use DateTime;
 
 class PersonalHomecareController extends Controller
 {
@@ -872,6 +873,16 @@ class PersonalHomecareController extends Controller
             $phc->active = false;
             $phc->save();
 
+            // homeservices
+            $homeServiceRelation = HomeService::where('personalhomecare_id', $phc->id)->get();
+            if ( count($homeServiceRelation) > 0 ) {
+                foreach ( $homeServiceRelation as $hs ) {
+                    $hsData = HomeService::find($hs->id);
+                    $hsData->active = false;
+                    $hsData->update();
+                }
+            }
+
             $userId = Auth::user()["id"];
             $historyDeletePhc["type_menu"] = "Personal Homecare";
             $historyDeletePhc["method"] = "Delete";
@@ -948,6 +959,27 @@ class PersonalHomecareController extends Controller
                     $phcNya->status = 'approve_out_res';
                     $phcNya->reschedule_date = null;
                     $phcNya->save();
+
+                    // homeservices
+                    $homeServiceRelation = DB::table('personal_homecares as ph')
+                                        ->join('home_services as hs', 'ph.id', '=', 'hs.personalhomecare_id')
+                                        ->select('hs.id')
+                                        ->where('hs.personalhomecare_id', $phcNya->id)
+                                        ->orderBy('ph.id', 'asc')
+                                        ->orderBy('hs.appointment', 'asc')
+                                        ->get();
+                    if ( count($homeServiceRelation) > 0 ) {
+                        foreach ( $homeServiceRelation as $index => $hs ) {
+                            $hsData = HomeService::find($hs->id);
+                            // reschedule appointment date
+                            // get appointment time 
+                            $appointmentDate = new DateTime($hsData->appointment);
+                            $time = $appointmentDate->format('H:i:s');
+                            $newAppointmentDate = date('Y-m-d', strtotime($phcNya->schedule . "+$index day"));
+                            $hsData->appointment = $newAppointmentDate." ".$time;
+                            $hsData->update();
+                        }
+                    }
                 }
                 else{
                     $phcNya->reschedule_date = null;
