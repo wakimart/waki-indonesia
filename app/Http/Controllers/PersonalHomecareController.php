@@ -863,38 +863,110 @@ class PersonalHomecareController extends Controller
         ));
     }
 
-    public function destroy(Request $request)
-    {
+    public function accCancel(Request $request){
         DB::beginTransaction();
 
         try {
             $phc = PersonalHomecare::where("id", $request->id)->first();
-            $phc->active = false;
+            $phc->is_cancel = true;
+            $phc->cancel_desc = "ACC Time (".now().") : ".$request->cancel_desc;
             $phc->save();
 
-            $userId = Auth::user()["id"];
-            $historyDeletePhc["type_menu"] = "Personal Homecare";
-            $historyDeletePhc["method"] = "Delete";
-            $historyDeletePhc["meta"] = json_encode(
-                [
-                    "user" => $userId,
-                    "createdAt" => date("Y-m-d H:i:s"),
-                    "dataChange" => $phc->getChanges(),
-                ],
-                JSON_THROW_ON_ERROR
-            );
-            $historyDeletePhc["user_id"] = $userId;
-            $historyDeletePhc["menu_id"] = $request->id;
-            HistoryUpdate::create($historyDeletePhc);
+            //sent notif
+            $userNya = User::where('users.fmc_token', '!=', null)
+                        ->whereIn('role_users.role_id', [1,2,5,6,7])
+                        ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                        ->get();
+
+            $titleNya = "ACC Cancel [Personal Homecare]";
+            $messageNya = "By ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
+            $urlNya = URL::to(route('detail_personal_homecare', ['id'=>$phc['id']]));
+            $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
 
             DB::commit();
 
             return redirect()
                 ->route("list_all_phc")
-                ->with("success", "Personal Homecare has been successfully deleted.");
+                ->with("success", "ACC Cancel Personal Homecare has been Sent.");
+        }
+        catch (Exception $e){
+            DB::rollBack();
+            return response()->json(["error" => $e->getMessage()], 500);
+        }
+    }
+
+    public function destroy(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $titleNya = "";
+            if($request->has('cancel_approved')){
+                $phc = PersonalHomecare::where("id", $request->id)->first();
+                $phc->is_cancel = false;
+                $phc->cancel_desc = null;
+                $phc->active = false;
+                $phc->save();
+
+                $userId = Auth::user()["id"];
+                $historyDeletePhc["type_menu"] = "Personal Homecare";
+                $historyDeletePhc["method"] = "Delete";
+                $historyDeletePhc["meta"] = json_encode(
+                    [
+                        "user" => $userId,
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $phc->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $historyDeletePhc["user_id"] = $userId;
+                $historyDeletePhc["menu_id"] = $request->id;
+                HistoryUpdate::create($historyDeletePhc);
+
+                DB::commit();
+                
+                //sent notif
+                $titleNya = "ACC Cancel Approved [Personal Homecare]";
+                $userNya = [$phc->cso->user];
+                foreach ($phc->branch->cso as $perCso) {
+                    if($perCso->user != null){
+                        array_push($userNya, $perCso->user);
+                    }
+                }
+                $messageNya = "By ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
+                $urlNya = null;
+                $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+
+                return redirect()
+                    ->route("list_all_phc")
+                    ->with("success", "Personal Homecare has been successfully deleted.");
+            }
+            elseif($request->has('cancel_rejected')){
+                $phc = PersonalHomecare::where("id", $request->id)->first();
+                $phc->is_cancel = false;
+                $phc->cancel_desc = null;
+                $phc->save();
+
+                DB::commit();
+
+                //sent notif
+                $titleNya = "ACC Cancel Rejected [Personal Homecare]";
+                $userNya = [$phc->cso->user];
+                foreach ($phc->branch->cso as $perCso) {
+                    if($perCso->user != null){
+                        array_push($userNya, $perCso->user);
+                    }
+                }
+                $messageNya = "By ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
+                $urlNya = null;
+                $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+
+                return redirect()
+                    ->route("detail_personal_homecare", ['id'=>$request->id])
+                    ->with("success", "Personal Homecare Cancel has been successfully Rejected.");
+            }
         } catch (Exception $e) {
             DB::rollBack();
-
             return response()->json(["error" => $e->getMessage()], 500);
         }
     }
@@ -1128,6 +1200,38 @@ class PersonalHomecareController extends Controller
         //         "url" => URL::to(route('detail_personal_homecare', ['id'=>$personalhomecare_obj['id']])),
         //         "branch_cso" => $personalhomecare_obj->branch['code']."-".$personalhomecare_obj->cso['name'],
         //     ]];
+
+        if(sizeof($fcm_tokenNya) > 0)
+        {
+            $this->sendFCM(json_encode($body));
+        }
+    }
+
+    public function NotifTo($userNya, $messagesNya, $titleNya, $urlNya)
+    {
+        $fcm_tokenNya = [];
+        foreach ($userNya as $value) {
+            if($value['fmc_token'] != null){
+                foreach ($value['fmc_token'] as $fcmSatuan) {
+                    if($fcmSatuan != null){
+                        array_push($fcm_tokenNya, $fcmSatuan);
+                    }
+                }
+            }
+        }
+
+        $body = ['registration_ids'=>$fcm_tokenNya,
+            'collapse_key'=>"type_a",
+            "content_available" => true,
+            "priority" => "high",
+            "notification" => [
+                "body" => $messagesNya,
+                "title" => $titleNya,
+                "icon" => "ic_launcher"
+            ],
+            "data" => [
+                "url" => $urlNya,
+            ]];
 
         if(sizeof($fcm_tokenNya) > 0)
         {

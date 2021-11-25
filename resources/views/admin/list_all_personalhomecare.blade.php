@@ -287,7 +287,7 @@ $menu_item_second = "list_all";
                                                 @endif
                                             </td>
                                             <td class="center">
-                                                @if(Auth::user()->roles[0]["slug"] === "head-admin" || Auth::user()->roles[0]["slug"] === "admin")
+                                                @if($personalhomecare->status != "done")
                                                     <a class="btn-delete disabled"
                                                         data-toggle="modal"
                                                         href="#deleteDoModal"
@@ -295,16 +295,6 @@ $menu_item_second = "list_all";
                                                         data-id="{{ $personalhomecare->id }}">
                                                         <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                     </a>
-                                                @else
-                                                    @if($personalhomecare->status == "rejected" || $personalhomecare->status == "new" || $personalhomecare->status == "verified")
-                                                        <a class="btn-delete disabled"
-                                                            data-toggle="modal"
-                                                            href="#deleteDoModal"
-                                                            onclick="submitDelete(this)"
-                                                            data-id="{{ $personalhomecare->id }}">
-                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                        </a>
-                                                    @endif
                                                 @endif
                                             </td>
                                         </tr>
@@ -339,13 +329,21 @@ $menu_item_second = "list_all";
                 </div>
                 <div class="modal-body">
                     <h5 style="text-align:center;">
-                        Are you sure to delete this product?
+                        Are you sure to Acc Cancel this Personal Homecare?
                     </h5>
+                    <textarea class="form-control mt-3"
+                        id="cancel_desc"
+                        name="cancel_desc"
+                        form="frmDelete" 
+                        rows="4"
+                        placeholder="Cancel Description (Alasan Cancel)"
+                        required >
+                    </textarea>
                 </div>
                 <div class="modal-footer">
                     <form id="frmDelete"
                         method="post"
-                        action="{{ route('delete_personal_homecare') }}">
+                        action="{{ route('acc_cancel_personal_homecare') }}">
                         @csrf
                         <input type="hidden" name="id" id="id-delete" />
                         <button type="submit"
