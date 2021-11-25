@@ -500,6 +500,9 @@ class PersonalHomecareController extends Controller
                     "province_id",
                     "city_id",
                     "subdistrict_id",
+                    "branch_id",
+                    "cso_id",
+                    "ph_product_id",
                 ));
             }
 
@@ -531,6 +534,7 @@ class PersonalHomecareController extends Controller
                 $personalHomecare->status = "process";
             }
 
+            
             $personalHomecare->save();
 
             // FOR HISTORY
@@ -550,66 +554,69 @@ class PersonalHomecareController extends Controller
             HistoryUpdate::create($historyPH);
 
             // UPDATE PERSONAL HOMECARE CHECKLIST OUT
-            $phcChecklistOut = PersonalHomecareChecklist::where(
+            if($personalHomecare->checklist_out != null){
+                $phcChecklistOut = PersonalHomecareChecklist::where(
                     "id",
                     $personalHomecare->checklist_out
                 )
                 ->first();
 
-            $condition["completeness"] = $request->input("completeness");
-            if ($request->has("other_completeness")) {
-                $condition["other"] = $request->input("other_completeness");
-            }
-            if($condition["completeness"] == null){
-                $condition["completeness"] = [];
-            }
-            $condition["machine"] = $request->input("machine_condition");
-            $condition["physical"] = $request->input("physical_condition");
-            $phcChecklistOut->condition = $condition;
+                $condition["completeness"] = $request->input("completeness");
+                if ($request->has("other_completeness")) {
+                    $condition["other"] = $request->input("other_completeness");
+                }
+                if($condition["completeness"] == null){
+                    $condition["completeness"] = [];
+                }
 
-            $imageArray = $phcChecklistOut->image;
-            $userId = Auth::user()["id"];
-            $path = "sources/phc-checklist";
-            if ($request->hasFile("product_photo_1")) {
-                $fileName = time()
-                    . "_"
-                    . $userId
-                    . "_"
-                    . "1."
-                    . $request->file("product_photo_1")->getClientOriginalExtension();
-                $request->file("product_photo_1")->move($path, $fileName);
-                $imageArray[0] = $fileName;
+                $condition["machine"] = $request->input("machine_condition");
+                $condition["physical"] = $request->input("physical_condition");
+                $phcChecklistOut->condition = $condition;
+
+                $imageArray = $phcChecklistOut->image;
+                $userId = Auth::user()["id"];
+                $path = "sources/phc-checklist";
+                if ($request->hasFile("product_photo_1")) {
+                    $fileName = time()
+                        . "_"
+                        . $userId
+                        . "_"
+                        . "1."
+                        . $request->file("product_photo_1")->getClientOriginalExtension();
+                    $request->file("product_photo_1")->move($path, $fileName);
+                    $imageArray[0] = $fileName;
+                }
+
+                if ($request->hasFile("product_photo_2")) {
+                    $fileName = time()
+                        . "_"
+                        . $userId
+                        . "_"
+                        . "2."
+                        . $request->file("product_photo_2")->getClientOriginalExtension();
+                    $request->file("product_photo_2")->move($path, $fileName);
+                    $imageArray[1] = $fileName;
+                }
+
+                $phcChecklistOut->image = $imageArray;
+                $phcChecklistOut->save();    
+
+                // FOR HISTORY Checkout
+                $userId = Auth::user()["id"];
+                $historyPH["type_menu"] = "Personal Homecare Checkout";
+                $historyPH["method"] = "Change Data";
+                $historyPH["meta"] = json_encode(
+                    [
+                        "user" => $userId,
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $phcChecklistOut->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $historyPH["user_id"] = $userId;
+                $historyPH["menu_id"] = $request->id;
+                HistoryUpdate::create($historyPH);
             }
-
-            if ($request->hasFile("product_photo_2")) {
-                $fileName = time()
-                    . "_"
-                    . $userId
-                    . "_"
-                    . "2."
-                    . $request->file("product_photo_2")->getClientOriginalExtension();
-                $request->file("product_photo_2")->move($path, $fileName);
-                $imageArray[1] = $fileName;
-            }
-
-            $phcChecklistOut->image = $imageArray;
-            $phcChecklistOut->save();
-
-            // FOR HISTORY Checkout
-            $userId = Auth::user()["id"];
-            $historyPH["type_menu"] = "Personal Homecare Checkout";
-            $historyPH["method"] = "Change Data";
-            $historyPH["meta"] = json_encode(
-                [
-                    "user" => $userId,
-                    "createdAt" => date("Y-m-d H:i:s"),
-                    "dataChange" => $phcChecklistOut->getChanges(),
-                ],
-                JSON_THROW_ON_ERROR
-            );
-            $historyPH["user_id"] = $userId;
-            $historyPH["menu_id"] = $request->id;
-            HistoryUpdate::create($historyPH);
 
             DB::commit();
 
@@ -638,8 +645,6 @@ class PersonalHomecareController extends Controller
                 $this->accNotif($phc, "acc_ask");
             }
             elseif ($request->status == "approve_out") {
-                HomeServiceController::createPp5hHs($phc);
-
                 $phc->status = $request->status;
                 $phc->save();
             }
