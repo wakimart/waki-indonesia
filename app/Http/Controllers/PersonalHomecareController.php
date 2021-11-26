@@ -920,6 +920,21 @@ class PersonalHomecareController extends Controller
             $phcNya->extend_reason = $request->extend_reason;
             $phcNya->save();
 
+            $userId = Auth::user()["id"];
+            $historyPhc["type_menu"] = "Personal Homecare";
+            $historyPhc["method"] = "Extend Ask ACC";
+            $historyPhc["meta"] = json_encode(
+                [
+                    "user" => $userId,
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "dataChange" => $phcNya->getChanges(),
+                ],
+                JSON_THROW_ON_ERROR
+            );
+            $historyPhc["user_id"] = $userId;
+            $historyPhc["menu_id"] = $request->id;
+            HistoryUpdate::create($historyPhc);
+
             DB::commit();
 
             $this->accNotif($phcNya, "acc_extend");
@@ -943,6 +958,21 @@ class PersonalHomecareController extends Controller
                 $phcNya->reschedule_date = $request->reschedule_date;
                 $phcNya->reschedule_reason = $request->reschedule_reason;
                 $phcNya->save();
+
+                $userId = Auth::user()["id"];
+                $historyPhc["type_menu"] = "Personal Homecare";
+                $historyPhc["method"] = "Reschedule Ask ACC";
+                $historyPhc["meta"] = json_encode(
+                    [
+                        "user" => $userId,
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $phcNya->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $historyPhc["user_id"] = $userId;
+                $historyPhc["menu_id"] = $request->id;
+                HistoryUpdate::create($historyPhc);
 
                 DB::commit();
 
