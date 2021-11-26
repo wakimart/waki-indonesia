@@ -721,6 +721,44 @@ $menu_item_page = "personal_homecare";
             </div>
         @endif
 
+        @if ($personalhomecare['is_cancel'] && (Gate::check('acc-extend-personalhomecare') || Gate::check('acc-extend-personalhomecare')))
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="text-center">
+                                <h2>ACC Cancel Personal Homecare ?</h2>
+                                <p>{{ $personalhomecare["cancel_desc"] }}</p>
+                            </div>
+                            <form id="actionAdd"
+                                class="forms-sample"
+                                method="POST"
+                                action="{{ route("delete_personal_homecare") }}">
+                                @csrf
+                                <input type="hidden"
+                                    name="id"
+                                    value="{{ $personalhomecare['id'] }}" />
+                                <div class="form-group row justify-content-center">
+                                    <button type="submit"
+                                        class="btn btn-gradient-primary mr-2 btn-lg"
+                                        name="cancel_approved"
+                                        value="true">
+                                        Approved
+                                    </button>
+                                    <button type="submit"
+                                        class="btn btn-gradient-danger mr-2 btn-lg"
+                                        name="cancel_rejected"
+                                        value="true">
+                                        Reject
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         @if (strtolower($personalhomecare['status']) != "new" && strtolower($personalhomecare['status']) != "rejected" )
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">

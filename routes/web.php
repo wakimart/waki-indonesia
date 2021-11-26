@@ -952,6 +952,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("detail/{id}", "PersonalHomecareController@detail")
             ->name("detail_personal_homecare")
             ->middleware("can:detail-personal-homecare");
+        Route::post("acc_cancel", "PersonalHomecareController@accCancel")
+            ->name("acc_cancel_personal_homecare");
         Route::post("delete", "PersonalHomecareController@destroy")
             ->name("delete_personal_homecare");
 

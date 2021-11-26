@@ -95,6 +95,10 @@ class DashboardController extends Controller
         $personalHomecares['extend_acc'] = PersonalHomecare::where([['active', true], ['is_extend', true]])
                         ->orderBy("updated_at", "desc")
                         ->get();
+        $personalHomecares['cancel_acc'] = PersonalHomecare::where([['active', true], ['is_cancel', true]])
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+
 
         // $personalHomecares = PersonalHomecare::where('active', true)
         //                 ->whereIn('status', ['new', 'waiting_in', 'verified'])
