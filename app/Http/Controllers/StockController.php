@@ -17,9 +17,12 @@ class StockController extends Controller
      */
     public function index()
     {
-        $stocks = Stock::with('product')->where('active', true)->whereNotNull('type_warehouse')->get();
+        $stocks = Stock::with('product')
+            ->where('active', true)
+            ->whereNotNull('type_warehouse')
+            ->get();
         $stocks = $stocks->groupBy('product_id');
-        // dd($stocks->toArray());
+
         return view('admin.list_stock', compact('stocks'));
     }
 
@@ -108,6 +111,17 @@ class StockController extends Controller
                     "stocks.warehouse_id",
                     $request->get("filter_warehouse")
                 );
+        }
+
+        if (!empty($request->get("filter_month"))) {
+            $stocks = $stocks->addSelect(
+                DB::raw(
+                    "IFNULL(stocks.quantity "
+                    . "- (SELECT IFNULL(SUM(hs.quantity), 0) FROM history_stocks AS hs WHERE hs.stock_id = stocks.id AND hs.type = 'in' AND hs.date > '" . $request->get("filter_month") . "') "
+                    . "+ (SELECT IFNULL(SUM(hs2.quantity), 0) FROM history_stocks AS hs2 WHERE hs2.stock_id = stocks.id AND hs2.type = 'out' AND hs2.date > '" . $request->get("filter_month") . "')"
+                    . ", 0) AS month_quantity"
+                ),
+            );
         }
 
         $stocks = $stocks->groupBy("product_id")->paginate(10);
