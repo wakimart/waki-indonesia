@@ -3,6 +3,19 @@
 ?>
 @extends('admin.layouts.template')
 
+@section('style')
+<style type="text/css">
+    .wrapper {
+        overflow: auto;
+        width: auto;
+        max-height: 600px;
+        white-space: nowrap;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+</style>
+@endsection
+
 @section('content')
 @can('show-dashboard')
 <div class="main-panel">
@@ -142,7 +155,7 @@
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body wrapper">
                         <div class="clearfix">
                             <h4 class="card-title float-left">
                                 Cancel Homeservice to Acc (total : {{ sizeof($accDeleteHS) }})
