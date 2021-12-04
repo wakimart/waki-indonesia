@@ -1,4 +1,4 @@
-<?php 
+<?php
     use App\Order;
 ?>
 @extends('admin.layouts.template')
@@ -94,7 +94,7 @@
                                         style="font-weight: 500; font-size: 1em;"
                                         id="{{ $keyNya }}-tab"
                                         data-toggle="tab"
-                                        href="#{{ $keyNya }}-table" 
+                                        href="#{{ $keyNya }}-table"
                                         role="tab"
                                         aria-controls="{{ $keyNya }}"
                                         aria-selected="true">
@@ -104,7 +104,7 @@
                             @endforeach
                         </ul>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body wrapper">
                         <div class="tab-content" id="myTabContent">
                             @foreach($personalHomecares as $keyNya => $arrPP5H)
                                 <div class="tab-pane fade show {{ $keyNya == "new" ? 'active' : '' }} p-3" id="{{ $keyNya }}-table" role="tabpanel" aria-labelledby="{{ $keyNya }}-tab">
@@ -128,7 +128,7 @@
                                                 @foreach($arrPP5H as $personalHomecare)
                                                     <tr>
                                                         <td>
-                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }} 
+                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
                                                             ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
                                                         </td>
@@ -181,7 +181,7 @@
                                             <td>
                                                 Type HS : {{ $perHomeservice['type_homeservices'] }}
                                                 <br class="break">
-                                                {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }} 
+                                                {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }}
                                                 <br class="break">
                                                 ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }})
                                             </td>
@@ -204,7 +204,7 @@
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body wrapper">
                         <div class="clearfix">
                             <h4 class="card-title float-left">
                                 Reference Souvenir to Acc (total : {{ sizeof($refSouvenirs) }})
@@ -388,7 +388,7 @@
                                         style="font-weight: 500; font-size: 1em;"
                                         id="{{ $keyNya }}-tab"
                                         data-toggle="tab"
-                                        href="#{{ $keyNya }}-table" 
+                                        href="#{{ $keyNya }}-table"
                                         role="tab"
                                         aria-controls="{{ $keyNya }}"
                                         aria-selected="true">
@@ -422,7 +422,7 @@
                                                 @foreach($arrPP5H as $personalHomecare)
                                                     <tr>
                                                         <td>
-                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }} 
+                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
                                                             ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
                                                         </td>
