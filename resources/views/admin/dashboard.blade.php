@@ -201,7 +201,11 @@
                                                   <div class="form-group">
 
                                                       <input type="hidden" id="hiddenInput" name="cancel" value="1" />
-                                                      <input type="hidden" id="input_id_hs_hidden" name="id" value="-" />
+                                                      <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $perHomeservice->id }}" />
+
+                                                      <div style="text-align: center;">
+                                                        <p>Do you approved it ?</p>
+                                                      </div>
 
                                                       <div style="text-align: center;">
                                                           <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
