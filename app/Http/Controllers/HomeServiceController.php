@@ -1114,6 +1114,8 @@ class HomeServiceController extends Controller
                 }
             }
             $this->NotifTo($userNya, $messagesNya, $titleNya);
+
+            return redirect()->route('dashboard')->with("success", "HomeService Acc telah diproses.");
         }
         else if($request->has('cash')){
             if($request->cash == 0){
