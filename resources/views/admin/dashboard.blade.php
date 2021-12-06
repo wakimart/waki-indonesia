@@ -1,4 +1,4 @@
-<?php 
+<?php
     use App\Order;
 ?>
 @extends('admin.layouts.template')
@@ -94,7 +94,7 @@
                                         style="font-weight: 500; font-size: 1em;"
                                         id="{{ $keyNya }}-tab"
                                         data-toggle="tab"
-                                        href="#{{ $keyNya }}-table" 
+                                        href="#{{ $keyNya }}-table"
                                         role="tab"
                                         aria-controls="{{ $keyNya }}"
                                         aria-selected="true">
@@ -128,7 +128,7 @@
                                                 @foreach($arrPP5H as $personalHomecare)
                                                     <tr>
                                                         <td>
-                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }} 
+                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
                                                             ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
                                                         </td>
@@ -167,11 +167,11 @@
                                 <thead style="text-align: center; background-color: aliceblue;">
                                     <tr>
                                         <td colspan="2">Home Service Data</td>
-                                        <td rowspan="2">View</td>
+                                        <td rowspan="2">Acc/Reject</td>
                                     </tr>
                                     <tr>
                                         <td>Schedule</td>
-                                        <td>Detail Home Service</td>
+                                        <td>Detail & Cancel Reason Home Service</td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -179,16 +179,41 @@
                                         <tr>
                                             <td>{{ date_format(date_create($perHomeservice['appointment']), 'd/m/Y H:i') }}</td>
                                             <td>
+                                              <div class="detailHs" style="border-bottom: 0.2px solid #2f2f2f">
                                                 Type HS : {{ $perHomeservice['type_homeservices'] }}
                                                 <br class="break">
-                                                {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }} 
+                                                {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }}
                                                 <br class="break">
                                                 ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }})
+                                                <br class="break">
+                                              </div>
+
+                                              <br class="break">
+                                              <div class="cancelReason" style="font-weight:bold;">
+                                                {{ $perHomeservice['cancel_desc'] }}
+                                              </div>
                                             </td>
+
                                             <td style="text-align: center;">
+                                              @if(Auth::user()->inRole("head-admin"))
+                                              <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                                                  @csrf
+                                                  <div class="form-group">
+
+                                                      <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                                                      <input type="hidden" id="input_id_hs_hidden" name="id" value="-" />
+
+                                                      <div style="text-align: center;">
+                                                          <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                                          <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                                                      </div>
+                                                  </div>
+                                              </form>
+                                              @else
                                                 <a href="{{ route('admin_list_homeService', ["id_hs"=>$perHomeservice['id']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                                 </a>
+                                              @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -388,7 +413,7 @@
                                         style="font-weight: 500; font-size: 1em;"
                                         id="{{ $keyNya }}-tab"
                                         data-toggle="tab"
-                                        href="#{{ $keyNya }}-table" 
+                                        href="#{{ $keyNya }}-table"
                                         role="tab"
                                         aria-controls="{{ $keyNya }}"
                                         aria-selected="true">
@@ -422,7 +447,7 @@
                                                 @foreach($arrPP5H as $personalHomecare)
                                                     <tr>
                                                         <td>
-                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }} 
+                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
                                                             ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
                                                         </td>
