@@ -181,12 +181,12 @@
                         <div class="d-flex flex-wrap mt-4" style="align-items: center;">
                             <p>Terpilih : <span id="terpilih"></span></p>
                             <div style="margin-left: auto;">
-                                <form id="" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                                <form id="" method="POST" action="{{ route('update_homeService') }}">
                                     @csrf
                                     <div class="form-group">
-                                        <div class="d-flex flex-wrap">
-                                            <button type="submit" id="AccHS" class="btn btn-md btn-outline-success mr-2" name="status_acc" value="true">Approved All</button>
-                                            <button type="submit" id="CancelHS" class="btn btn-md btn-outline-danger" name="status_acc" value="false">Reject All</button>
+                                        <div class="d-flex flex-wrap" style="justify-content: right;">
+                                            <button type="submit" id="AccHS" class="btn btn-md btn-outline-success" name="status_acc" value="true">Approved All</button>
+                                            <button type="submit" id="CancelHS" class="btn btn-md btn-outline-danger ml-2" name="status_acc" value="false">Reject All</button>
                                         </div>
                                     </div>
                                 </form>
@@ -205,7 +205,7 @@
                                             <div class="form-group mb-0">
                                                 <input type="checkbox" id="checkAll" name="" value="true"
                                                     class="form-control checkBoxes"     
-                                                    style="position: relative;"/>
+                                                    style="position: relative; width: 16px; margin: auto;"/>
                                             </div>
                                         </td>
                                         <td>Schedule</td>
@@ -222,7 +222,7 @@
                                                         class="form-control checkBoxes checkHS" 
                                                         id="checkHS-{{$perHomeservice['id']}}" 
                                                         value="{{$perHomeservice['id']}}"
-                                                        style="position: relative;"/>
+                                                        style="position: relative; width: 16px; margin: auto;"/>
                                                 </div>
                                             </td>
                                             <td>{{ date_format(date_create($perHomeservice['appointment']), 'd/m/Y H:i') }}</td>
