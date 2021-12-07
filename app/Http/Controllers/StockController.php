@@ -43,7 +43,12 @@ class StockController extends Controller
             ->whereNull('stocks.type_warehouse')
             ->where('stocks.active', true);
 
-        $warehouses = Warehouse::select("id", "code", "name")
+        $warehouses = Warehouse::where("active", true)
+            ->orderBy("code")
+            ->get();
+
+        $parentWarehouses = Warehouse::select("id", "code", "name", "city_id")
+            ->whereNull('parent_warehouse_id')
             ->where("active", true)
             ->orderBy("code")
             ->get();
@@ -67,6 +72,7 @@ class StockController extends Controller
         if (
             !empty($request->get("filter_product"))
             && empty($request->get("filter_warehouse"))
+            && empty($request->get("filter_city"))
         ) {
             $stocks = $stocks->addSelect(
                     "warehouses.code AS warehouse_code",
@@ -82,13 +88,23 @@ class StockController extends Controller
         } elseif (
             empty($request->get("filter_product"))
             && !empty($request->get("filter_warehouse"))
+            && !empty($request->get("filter_city"))
         ) {
+            $warehouses = $warehouses->where(
+                    "city_id",
+                    $request->get("filter_city")
+                )
+                ->where(
+                    "parent_warehouse_id",
+                    $request->get("filter_warehouse")
+                );
+
             $stocks = $stocks->where(function ($query) use ($request) {
                 $query->where(
-                        "stocks.warehouse_id",
-                        $request->get("filter_warehouse")
+                        "warehouses.city_id",
+                        $request->get("filter_city")
                     )
-                    ->orWhere(
+                    ->where(
                         "warehouses.parent_warehouse_id",
                         $request->get("filter_warehouse")
                     );
@@ -102,6 +118,7 @@ class StockController extends Controller
         } elseif (
             !empty($request->get("filter_product"))
             && !empty($request->get("filter_warehouse"))
+            && !empty($request->get("filter_city"))
         ) {
             $stocks = $stocks->where(
                     "stocks.product_id",
@@ -110,6 +127,10 @@ class StockController extends Controller
                 ->where(
                     "stocks.warehouse_id",
                     $request->get("filter_warehouse")
+                )
+                ->where(
+                    "warehouses.city_id",
+                    $request->get("filter_city")
                 );
         }
 
@@ -130,8 +151,14 @@ class StockController extends Controller
                 'stocks',
                 "products",
                 "warehouses",
+                "parentWarehouses",
             ))
             ->with('i', (request()->input('page', 1) - 1) * 10);
+    }
+
+    public function fetchParentByCity($city){
+        $parentWarehouse = Warehouse::whereNull('parent_warehouse_id')->where([['city_id', $city], ['active', true]])->get();
+        return response()->json($parentWarehouse);
     }
 
     /**

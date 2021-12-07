@@ -80,6 +80,8 @@ Route::get('/fetchDistrict/{city}', function ($city) {
 Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSouvenir");
 Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
 
+Route::get('/fetchParentByCity/{city}', 'StockController@fetchParentByCity')->name('fetchParentByCity');
+
 Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)

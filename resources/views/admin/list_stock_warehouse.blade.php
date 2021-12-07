@@ -56,194 +56,315 @@ $menu_item_second = "list_stock_warehouse";
 
         <div class="row">
             <div class="col-12" style="margin-bottom: 0;">
-                <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
-                    <div class="form-group">
-                        <label for="filter_name">Search By Name</label>
-                        <input class="form-control"
-                            id="filter_name"
-                            name="filter_name"
-                            placeholder="Search By Name"
-                            form="form-search"
-                            value="{{ $_GET['filter_name'] ?? "" }}" />
+                <div class="row" style="padding-right: 20px; padding-left: 20px;">
+                    {{-- <div class="col-xs-6 col-sm-4 col-lg-4"
+                        style="margin-bottom: 0; padding: 0 5px 0 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="filter_name">Search By Name</label>
+                            <input class="form-control"
+                                id="filter_name"
+                                name="filter_name"
+                                placeholder="Search By Name"
+                                form="form-search"
+                                value="{{ $_GET['filter_name'] ?? "" }}" />
+                        </div>
                     </div>
-                </div>
-
-                <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
-                    <div class="form-group">
-                        <label for="filter_code">Search By Code</label>
-                        <input class="form-control"
-                            id="filter_code"
-                            name="filter_code"
-                            placeholder="Search By Code"
-                            form="form-search"
-                            value="{{ $_GET['filter_code'] ?? "" }}" />
+    
+                    <div class="col-xs-6 col-sm-4 col-lg-4"
+                        style="margin-bottom: 0; padding: 0 5px 0 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="filter_code">Search By Code</label>
+                            <input class="form-control"
+                                id="filter_code"
+                                name="filter_code"
+                                placeholder="Search By Code"
+                                form="form-search"
+                                value="{{ $_GET['filter_code'] ?? "" }}" />
+                        </div>
+                    </div> --}}
+                    
+                    <div class="col-xs-6 col-sm-4 col-lg-3"
+                        style="margin-bottom: 0; padding: 0 5px 0 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="filter_month">Filter by Month</label>
+                            <input type="date"
+                                class="form-control"
+                                name="filter_month"
+                                id="filter_month"
+                                min="{{ date("Y-m-d", strtotime("-2 months")) }}"
+                                value="{{ $_GET["filter_month"] ?? '' }}"
+                                form="form-search" />
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
-                    <div class="form-group">
-                        <label for="filter_product">Filter by Product</label>
-                        <select class="form-control"
-                            name="filter_product"
-                            id="filter_product"
-                            form="form-search">
-                            @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]))
-                                <option disabled>Select Product</option>
-                            @else
-                                <option disabled selected>
-                                    Select Product
-                                </option>
-                            @endif
-                            @foreach ($products as $product)
-                                @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]) && $_GET["filter_product"] == $product->id)
-                                    <option value="{{ $product->id }}" selected>
-                                        {{ $product->code }} - {{ $product->name }}
-                                    </option>
+                    
+                    <div class="col-xs-6 col-sm-4 col-md-3"
+                        style="margin-bottom: 0; padding: 0 5px 0 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="filter_product">Filter by Product</label>
+                            <select class="form-control"
+                                name="filter_product"
+                                id="filter_product"
+                                form="form-search">
+                                @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]))
+                                    <option disabled>Select Product</option>
                                 @else
-                                    <option value="{{ $product->id }}">
-                                        {{ $product->code }} - {{ $product->name }}
+                                    <option disabled selected>
+                                        Select Product
                                     </option>
                                 @endif
-                            @endforeach
-                        </select>
+                                @foreach ($products as $product)
+                                    @if (isset($_GET["filter_product"]) && !empty($_GET["filter_product"]) && $_GET["filter_product"] == $product->id)
+                                        <option value="{{ $product->id }}" selected>
+                                            {{ $product->code }} - {{ $product->name }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $product->id }}">
+                                            {{ $product->code }} - {{ $product->name }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
-                    <div class="form-group">
-                        <label for="filter_warehouse">
-                            Filter by Warehouse
-                        </label>
-                        <select class="form-control"
-                            name="filter_warehouse"
-                            id="filter_warehouse"
-                            form="form-search">
-                            @if (isset($_GET["filter_warehouse"]) && !empty($_GET["filter_warehouse"]))
-                                <option disabled>Select Warehouse</option>
-                            @else
-                                <option disabled selected>
-                                    Select Warehouse
-                                </option>
-                            @endif
-                            @foreach ($warehouses as $warehouse)
-                                @if (isset($_GET["filter_warehouse"]) && !empty($_GET["filter_warehouse"]) && $_GET["filter_warehouse"] == $warehouse->id)
-                                    <option value="{{ $warehouse->id }}" selected>
-                                        {{ $warehouse->code }} - {{ $warehouse->name }}
-                                    </option>
+                    <div class="col-xs-6 col-sm-4 col-md-3"
+                        style="margin-bottom: 0; padding: 0 5px 0 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="filter_city">
+                                Filter by City
+                            </label>
+                            <select class="form-control"
+                                name="filter_city"
+                                id="filter_city"
+                                form="form-search"
+                                onchange="setParentWarehouse(this)">
+                                @if (isset($_GET["filter_city"]) && !empty($_GET["filter_city"]))
+                                    <option disabled>Select City</option>
                                 @else
-                                    <option value="{{ $warehouse->id }}">
-                                        {{ $warehouse->code }} - {{ $warehouse->name }}
+                                    <option disabled selected>
+                                        Select City
                                     </option>
                                 @endif
-                            @endforeach
-                        </select>
+                                @foreach ($parentWarehouses as $parentWarehouse)
+                                    @if (isset($_GET["filter_city"]) && !empty($_GET["filter_city"]) && $_GET["filter_city"] == $parentWarehouse->city_id)
+                                        <option value="{{ $parentWarehouse->city_id }}" selected>
+                                            {{ $parentWarehouse->getCityFullName() }}
+                                        </option>
+                                    @else
+                                        <option value="{{ $parentWarehouse->city_id }}">
+                                            {{ $parentWarehouse->getCityFullName() }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                </div>
-
-                <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
-                    <div class="form-group">
-                        <label for="filter_month">Filter by Month</label>
-                        <input type="date"
-                            class="form-control"
-                            name="filter_month"
-                            id="filter_month"
-                            min="{{ date("Y-m-d", strtotime("-2 months")) }}"
-                            value="{{ $_GET["filter_month"] ?? '' }}"
-                            form="form-search" />
+                    
+                    <div class="col-xs-6 col-sm-4 col-md-3"
+                        style="margin-bottom: 0; padding: 0 5px 0 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="filter_warehouse">
+                                Filter by Parent Warehouse
+                            </label>
+                            <select class="form-control"
+                                name="filter_warehouse"
+                                id="filter_warehouse"
+                                form="form-search">
+                                    <option disabled selected>
+                                        Select Parent Warehouse
+                                    </option>
+                            </select>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-xs-6 col-sm-6"
-                    style="padding: 0; display: inline-block;">
-                    <div class="form-group">
-                        <button class="btn btn-gradient-primary m-1"
-                            type="submit"
-                            form="form-search">
-                            <span class="mdi mdi-filter"></span>
-                            Apply Filter
-                        </button>
-                        <button id="btn-filter_reset"
-                            type="button"
-                            class="btn btn-gradient-danger m-1">
-                            <span class="mdi mdi-refresh"></span>
-                            Reset Filter
-                        </button>
+                </div>
+                <div class="row" style="padding-right: 20px; padding-left: 20px;">
+                    <div class="col-xs-12 col-sm-12"
+                        style="padding: 0; display: inline-block;">
+                        <div class="form-group">
+                            <button class="btn btn-gradient-primary m-1"
+                                type="submit"
+                                form="form-search">
+                                <span class="mdi mdi-filter"></span>
+                                Apply Filter
+                            </button>
+                            <button id="btn-filter_reset"
+                                type="button"
+                                class="btn btn-gradient-danger m-1">
+                                <span class="mdi mdi-refresh"></span>
+                                Reset Filter
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
+                    <div class="card-header" style="background: none;">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active"
+                                    style="font-weight: 500; font-size: 1em;"
+                                    id="Semua-tab"
+                                    data-toggle="tab"
+                                    href="#Semua-table" 
+                                    role="tab"
+                                    aria-controls="Semua"
+                                    aria-selected="true">
+                                    Semua
+                                </a>
+                            </li>
+                            @if ((isset($_GET["filter_city"]) && !empty($_GET["filter_city"])) && (isset($_GET["filter_warehouse"]) && !empty($_GET["filter_warehouse"])))
+                                @foreach($warehouses as $key => $warehouse)                        
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                        style="font-weight: 500; font-size: 1em;"
+                                        id="{{$key}}-tab"
+                                        data-toggle="tab"
+                                        href="#{{$key}}-table" 
+                                        role="tab"
+                                        aria-controls="{{$key}}"
+                                        aria-selected="true">
+                                        {{$warehouse['name']}}
+                                    </a>
+                                </li>
+                                @endforeach
+                            @endif
+                        </ul>
+                    </div>
                     <div class="card-body">
-                        <h5 style="margin-bottom: 0.5em;">
-                            Total: {{ $stocks->total() }} data
-                        </h5>
-                        <div class="table-responsive"
-                            style="border: 1px solid #ebedf2;">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">No.</th>
-                                        @if ((isset($_GET["filter_product"]) && !empty($_GET["filter_product"])) || (empty($_GET["filter_warehouse"]) &&!empty($_GET["filter_warehouse"])))
-                                            <th>Warehouse</th>
-                                        @endif
-                                        <th>Code</th>
-                                        <th>Name</th>
-                                        <th>Remaining Stock</th>
-                                        <th colspan="2" class="text-center">
-                                            Edit/Delete
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($stocks as $stock)
-                                        <tr>
-                                            <td class="text-right">
-                                                {{ ++$i }}
-                                            </td>
-                                            @if ((isset($_GET["filter_product"]) && !empty($_GET["filter_product"])) || (empty($_GET["filter_warehouse"]) &&!empty($_GET["filter_warehouse"])))
-                                                <td>
-                                                    {{ $stock->warehouse_code }} - {{ $stock->warehouse_name }}
-                                                </td>
-                                            @endif
-                                            <td>
-                                                {{ $stock->product_code }}
-                                            </td>
-                                            <td>
-                                                {{ $stock->product_name }}
-                                            </td>
-                                            <td>
-                                                @if (isset($_GET["filter_month"]) && !empty($_GET["filter_month"]))
-                                                    {{ $stock->month_quantity }}
-                                                @else
-                                                    {{ $stock->quantity }}
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active pl-3 pr-3 pb-3 pt-1" id="Semua-table" role="tabpanel" aria-labelledby="Semua-tab">
+                                <h5 style="margin-bottom: 1em;">
+                                    Total: {{ $stocks->total() }} data
+                                </h5>
+                                <div class="table-responsive"
+                                    style="border: 1px solid #ebedf2;">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">No.</th>
+                                                @if ((isset($_GET["filter_product"]) && !empty($_GET["filter_product"])) || (empty($_GET["filter_warehouse"]) &&!empty($_GET["filter_warehouse"])))
+                                                    <th>Warehouse</th>
                                                 @endif
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                </a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a class="btn-delete disabled"
-                                                    data-toggle="modal"
-                                                    href="#deleteDoModal"
-                                                    onclick="submitDelete(this)"
-                                                    data-id="{{ $stock->id }}">
-                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <br>
-                            {{ $stocks->links() }}
+                                                <th>Code</th>
+                                                <th>Name</th>
+                                                <th>Remaining Stock</th>
+                                                <th colspan="2" class="text-center">
+                                                    Edit/Delete
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($stocks as $stock)
+                                                <tr>
+                                                    <td class="text-right">
+                                                        {{ ++$i }}
+                                                    </td>
+                                                    @if ((isset($_GET["filter_product"]) && !empty($_GET["filter_product"])) || (empty($_GET["filter_warehouse"]) &&!empty($_GET["filter_warehouse"])))
+                                                        <td>
+                                                            {{ $stock->warehouse_code }} - {{ $stock->warehouse_name }}
+                                                        </td>
+                                                    @endif
+                                                    <td>
+                                                        {{ $stock->product_code }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $stock->product_name }}
+                                                    </td>
+                                                    <td>
+                                                        @if (isset($_GET["filter_month"]) && !empty($_GET["filter_month"]))
+                                                            {{ $stock->month_quantity }}
+                                                        @else
+                                                            {{ $stock->quantity }}
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="">
+                                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a class="btn-delete disabled"
+                                                            data-toggle="modal"
+                                                            href="#deleteDoModal"
+                                                            onclick="submitDelete(this)"
+                                                            data-id="{{ $stock->id }}">
+                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    {{ $stocks->links() }}
+                                </div>
+
+                            </div>
+                            @foreach($warehouses as $key => $warehouse)
+                                <div class="tab-pane fade show pl-3 pr-3 pb-3 pt-1" id="{{$key}}-table" role="tabpanel" aria-labelledby="{{ $key }}-tab">
+                                    <h5 style="margin-bottom: 1em;">
+                                        Total: {{ $stocks->total() }} data
+                                    </h5>
+                                    <div class="table-responsive"
+                                        style="border: 1px solid #ebedf2;">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">No.</th>
+                                                    <th>Code</th>
+                                                    <th>Name</th>
+                                                    <th>Remaining Stock</th>
+                                                    <th colspan="2" class="text-center">
+                                                        Edit/Delete
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($warehouse->stock as $stockData)
+                                                    <tr>
+                                                        <td class="text-right">
+                                                            {{ ++$i }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $stockData->product['code'] }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $stockData->product['name'] }}
+                                                        </td>
+                                                        <td>
+                                                            @if (isset($_GET["filter_month"]) && !empty($_GET["filter_month"]))
+                                                                {{ $stockData->month_quantity }}
+                                                            @else
+                                                                {{ $stockData['quantity'] }}
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <a href="">
+                                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                            </a>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <a class="btn-delete disabled"
+                                                                data-toggle="modal"
+                                                                href="#deleteDoModal"
+                                                                onclick="submitDelete(this)"
+                                                                data-id="{{ $stockData['id'] }}">
+                                                                <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <br>
+                                        {{ $stocks->links() }}
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -292,23 +413,76 @@ $menu_item_second = "list_stock_warehouse";
 @endsection
 
 @section("script")
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
+    crossorigin="anonymous"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
     integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
     defer></script>
 <script type="application/javascript">
-function submitDelete(e) {
-    document.getElementById("id-delete").value = e.dataset.id;
-}
+    function submitDelete(e) {
+        document.getElementById("id-delete").value = e.dataset.id;
+    }
 
-document.addEventListener("DOMContentLoaded", function() {
-    $("#filter_product").select2();
-    $("#filter_warehouse").select2();
+    document.addEventListener("DOMContentLoaded", function() {
+        $("#filter_product").select2();
+        $("#filter_warehouse").select2();
+        $("#filter_city").select2();
 
-    $("#btn-filter_reset").click(function (e) {
-        window.location.href = "{{ route('list_stock_warehouse') }}";
+        $("#btn-filter_reset").click(function (e) {
+            window.location.href = "{{ route('list_stock_warehouse') }}";
+        });
     });
-});
+
+</script>
+<script>
+    function setParentWarehouse(e) {
+        const URL = '{{ route("fetchParentByCity", ['city' => ""]) }}/' + e.value;
+
+        fetch(
+            URL,
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+                mode: "same-origin",
+                referrerPolicy: "no-referrer",
+            }
+        ).then(function (response) {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return response.json();
+        }).then(function (response) {
+            const result = response;
+
+            let optionsParent = "";
+
+            if (result.length > 0) {
+                $("#filter_warehouse").select2("destroy");
+
+                result.forEach(function (currentValue) {
+                    optionsParent += '<option value="'
+                        + currentValue["id"]
+                        + '">'
+                        + currentValue['code']
+                        + " - "
+                        + currentValue['name']
+                        + '</option>';
+                });
+
+                document.getElementById("filter_warehouse").innerHTML = optionsParent;
+
+                $("#filter_warehouse").select2();
+            }
+        }).catch(function (error) {
+            console.error(error);
+        })
+    }
 </script>
 @endsection

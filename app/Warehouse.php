@@ -39,7 +39,7 @@ class Warehouse extends Model
     {
         $city = RajaOngkir_City::where("city_id", $this->city_id)->first();
 
-        return $city->type . " " . $city->city_name;
+        return $city['type'] . " " . $city['city_name'];
     }
 
     public function getDistrictName()
