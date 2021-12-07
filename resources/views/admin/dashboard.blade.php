@@ -13,6 +13,22 @@
         padding-bottom: 10px;
         padding-top: 10px;
     }
+
+    .btn-outline-success.disabled, .btn-outline-success:disabled:hover {
+        color: #1bcfb4 !important;
+        background: transparent !important;
+    }
+
+    .btn-outline-danger.disabled, .btn-outline-danger:disabled:hover {
+        color: #fe7c96 !important;
+        background: transparent !important;
+    }
+
+    @media(max-width: 437px){
+        #AccHS{
+            margin-bottom: 1em;
+        }
+    }
 </style>
 @endsection
 
@@ -162,21 +178,53 @@
                             </h4>
                         </div>
                         {{-- <canvas id="homeservice-chart" class="mt-4"></canvas> --}}
-                        <div class="table-responsive" style="border: 1px solid #ebedf2;">
+                        <div class="d-flex flex-wrap mt-4" style="align-items: center;">
+                            <p>Terpilih : <span id="terpilih"></span></p>
+                            <div style="margin-left: auto;">
+                                <form id="" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                                    @csrf
+                                    <div class="form-group">
+                                        <div class="d-flex flex-wrap">
+                                            <button type="submit" id="AccHS" class="btn btn-md btn-outline-success mr-2" name="status_acc" value="true">Approved All</button>
+                                            <button type="submit" id="CancelHS" class="btn btn-md btn-outline-danger" name="status_acc" value="false">Reject All</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="table-responsive tableHS" style="border: 1px solid #ebedf2;">
                             <table class="table table-bordered">
                                 <thead style="text-align: center; background-color: aliceblue;">
-                                    <tr>
+                                    {{-- <tr>
+                                        <td rowspan="2"></td>
                                         <td colspan="2">Home Service Data</td>
                                         <td rowspan="2">Acc/Reject</td>
-                                    </tr>
+                                    </tr> --}}
                                     <tr>
+                                        <td class="text-center">
+                                            <div class="form-group mb-0">
+                                                <input type="checkbox" id="checkAll" name="" value="true"
+                                                    class="form-control checkBoxes"     
+                                                    style="position: relative;"/>
+                                            </div>
+                                        </td>
                                         <td>Schedule</td>
                                         <td>Detail & Cancel Reason Home Service</td>
+                                        <td>Acc/Reject</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($accDeleteHS as $perHomeservice)
                                         <tr>
+                                            <td class="text-center">
+                                                <div class="form-group">
+                                                    <input type="checkbox" name="" 
+                                                        class="form-control checkBoxes checkHS" 
+                                                        id="checkHS-{{$perHomeservice['id']}}" 
+                                                        value="{{$perHomeservice['id']}}"
+                                                        style="position: relative;"/>
+                                                </div>
+                                            </td>
                                             <td>{{ date_format(date_create($perHomeservice['appointment']), 'd/m/Y H:i') }}</td>
                                             <td>
                                               <div class="detailHs" style="border-bottom: 0.2px solid #2f2f2f">
@@ -554,5 +602,37 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error(error);
     });
 }, false);
+</script>
+<script type="text/javascript">
+     $(document).ready(function() {
+        $('#terpilih').text(' ');
+
+        var jumlahTerpilih = function() {
+            var terpilih = $(".checkHS:checked").length;
+            if (terpilih > 0) {
+                $("#terpilih").text(terpilih);
+            } else {
+                $("#terpilih").text(' ');
+            }
+        };
+
+        $("#checkAll").click(function() {
+            $('.checkHS').prop('checked', this.checked);
+            jumlahTerpilih();
+        });
+
+        $('.checkHS').change(function() {
+            $("#checkAll").prop("checked", $(".checkHS").length === $(".checkHS:checked").length);
+            jumlahTerpilih();
+        });
+
+        var checkBoxes = $('.tableHS .checkBoxes');
+        checkBoxes.change(function () {
+            $('#AccHS').prop('disabled', checkBoxes.filter(':checked').length < 2);
+            $('#CancelHS').prop('disabled', checkBoxes.filter(':checked').length < 2);
+        });
+        $('.tableHS .checkBoxes').change();
+
+    });
 </script>
 @endsection
