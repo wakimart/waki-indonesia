@@ -133,7 +133,7 @@
                                             <thead style="text-align: center; background-color: aliceblue;">
                                                 <tr>
                                                     <td colspan="2">Personal Homecare Data</td>
-                                                    <td rowspan="2">View</td>
+                                                    <td rowspan="2">Acc/Reject/Detail</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Customer <br class="break">(Branch - CSO)</td>
@@ -147,12 +147,49 @@
                                                             {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
                                                             ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
+
+                                                            @if ($personalHomecare['is_extend'] && Gate::check('acc-extend-personalhomecare'))
+                                                            <br class="break">
+                                                            <div class="extendReason" style="font-weight:bold;">
+                                                              <span>{{ $personalHomecare["extend_reason"] }}</span>
+                                                            </div>
+                                                            @endif
+
+                                                            @if ($personalHomecare['is_cancel'] && (Gate::check('acc-extend-personalhomecare') || Gate::check('acc-extend-personalhomecare')))
+                                                            <br class="break">
+                                                            <div class="extendReason" style="font-weight:bold;">
+                                                              <span>{{ $personalHomecare["cancel_desc"] }}</span>
+                                                            </div>
+                                                            @endif
                                                         </td>
                                                         <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['code'] }}</td>
                                                         <td style="text-align: center;">
-                                                            <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
+                                                          @if(Auth::user()->inRole("head-admin"))
+                                                          <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                                                              @csrf
+                                                              <div class="form-group">
+
+                                                                  <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                                                                  <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $personalHomecare->id }}" />
+
+                                                                  <div style="text-align: center;">
+                                                                    <p>Do you approved it ?</p>
+                                                                  </div>
+
+                                                                  <div style="text-align: center;">
+                                                                      <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                                                      <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                                                                  </div>
+                                                              </div>
+                                                          </form>
+                                                          <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
+                                                              <i class="mdi mdi-eye" style="font-size: 12px; text-decoration:none;">More Detail</i>
+                                                          </a>
+                                                          @else
+                                                            <a href="{{ route('admin_list_homeService', ["id_hs"=>$perHomeservice['id']]) }}">
                                                                 <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                                             </a>
+                                                          @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -171,13 +208,12 @@
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
-                    <div class="card-body wrapper">
+                    <div class="card-body">
                         <div class="clearfix">
                             <h4 class="card-title float-left">
                                 Cancel Homeservice to Acc (total : {{ sizeof($accDeleteHS) }})
                             </h4>
                         </div>
-                        {{-- <canvas id="homeservice-chart" class="mt-4"></canvas> --}}
                         <div class="d-flex flex-wrap mt-4" style="align-items: center;">
                             <p>Terpilih : <span id="terpilih"></span></p>
                             <div style="margin-left: auto;">
@@ -192,19 +228,14 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="table-responsive tableHS" style="border: 1px solid #ebedf2;">
+                        <div class="table-responsive tableHS wrapper" style="border: 1px solid #ebedf2;">
                             <table class="table table-bordered">
                                 <thead style="text-align: center; background-color: aliceblue;">
-                                    {{-- <tr>
-                                        <td rowspan="2"></td>
-                                        <td colspan="2">Home Service Data</td>
-                                        <td rowspan="2">Acc/Reject</td>
-                                    </tr> --}}
                                     <tr>
                                         <td class="text-center">
                                             <div class="form-group mb-0">
                                                 <input type="checkbox" id="checkAll" name="" value="true"
-                                                    class="form-control checkBoxes"     
+                                                    class="form-control checkBoxes"
                                                     style="position: relative; width: 16px; margin: auto;"/>
                                             </div>
                                         </td>
@@ -218,9 +249,9 @@
                                         <tr>
                                             <td class="text-center">
                                                 <div class="form-group">
-                                                    <input type="checkbox" name="" 
-                                                        class="form-control checkBoxes checkHS" 
-                                                        id="checkHS-{{$perHomeservice['id']}}" 
+                                                    <input type="checkbox" name=""
+                                                        class="form-control checkBoxes checkHS"
+                                                        id="checkHS-{{$perHomeservice['id']}}"
                                                         value="{{$perHomeservice['id']}}"
                                                         style="position: relative; width: 16px; margin: auto;"/>
                                                 </div>
@@ -288,7 +319,7 @@
                             </h4>
                         </div>
                         {{-- <canvas id="homeservice-chart" class="mt-4"></canvas> --}}
-                        <div class="table-responsive" style="border: 1px solid #ebedf2;">
+                        <div class="table-responsive wrapper" style="border: 1px solid #ebedf2;">
                             <table class="table table-bordered">
                                 <thead style="text-align: center; background-color: aliceblue;">
                                     <tr>
