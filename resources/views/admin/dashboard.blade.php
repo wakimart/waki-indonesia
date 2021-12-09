@@ -110,7 +110,7 @@
                                         style="font-weight: 500; font-size: 1em;"
                                         id="{{ $keyNya }}-tab"
                                         data-toggle="tab"
-                                        href="#{{ $keyNya }}-table"
+                                        href="#tabs-{{ $keyNya }}"
                                         role="tab"
                                         aria-controls="{{ $keyNya }}"
                                         aria-selected="true">
@@ -123,26 +123,53 @@
                     <div class="card-body">
                         <div class="tab-content" id="myTabContent">
                             @foreach($personalHomecares as $keyNya => $arrPP5H)
-                                <div class="tab-pane fade show {{ $keyNya == "new" ? 'active' : '' }} p-3" id="{{ $keyNya }}-table" role="tabpanel" aria-labelledby="{{ $keyNya }}-tab">
-                                    <h5 style="margin-bottom: 0.5em;">
-                                        Status {{ ucwords(str_replace("_", " ",$keyNya)) }} | Total: {{ sizeof($arrPP5H) }}
+                                <div class="tab-pane fade show {{ $keyNya == "new" ? 'active' : '' }} p-3" id="tabs-{{ $keyNya }}" role="tabpanel" aria-labelledby="{{ $keyNya }}-tab">
+                                    <h5 class="mb-3">
+                                        Personal Homecare Data | Status {{ ucwords(str_replace("_", " ",$keyNya)) }} (Total: {{ sizeof($arrPP5H) }})
                                     </h5>
-                                    <div class="table-responsive"
+                                    <div class="d-flex flex-wrap mt-4" style="align-items: center;">
+                                        <p>Terpilih : <span id="checkedPH" class="checkedPH"></span></p>
+                                        <div style="margin-left: auto;">
+                                            <form id="" method="POST" action="">
+                                                @csrf
+                                                <div class="form-group">
+                                                    <div class="d-flex flex-wrap" style="justify-content: right;">
+                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status_acc" value="true">Approved All</button>
+                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status_acc" value="false">Reject All</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive table-PP5H"
                                         style="border: 1px solid #ebedf2;">
                                         <table class="table table-bordered">
                                             <thead style="text-align: center; background-color: aliceblue;">
                                                 <tr>
-                                                    <td colspan="2">Personal Homecare Data</td>
-                                                    <td rowspan="2">Acc/Reject/Detail</td>
-                                                </tr>
-                                                <tr>
+                                                    <td class="text-center">
+                                                        <div class="form-group mb-0">
+                                                            <input type="checkbox" id="{{$keyNya}}" name="" value="true"
+                                                                class="form-control SelectAll_Dynamic checkBoxPH"
+                                                                style="position: relative; width: 16px; margin: auto;"/>
+                                                        </div>
+                                                    </td>
                                                     <td>Customer <br class="break">(Branch - CSO)</td>
                                                     <td>Product</td>
+                                                    <td>Acc/Reject/Detail</td>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach($arrPP5H as $personalHomecare)
                                                     <tr>
+                                                        <td class="text-center">
+                                                            <div class="form-group">
+                                                                <input type="checkbox" name=""
+                                                                    class="form-control checkBoxPH"
+                                                                    id="{{$keyNya}}"
+                                                                    value="{{$personalHomecare['id']}}"
+                                                                    style="position: relative; width: 16px; margin: auto;"/>
+                                                            </div>
+                                                        </td>
                                                         <td>
                                                             {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
@@ -228,7 +255,7 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="table-responsive tableHS wrapper" style="border: 1px solid #ebedf2;">
+                        <div class="table-responsive tableHS wrapper" style="border: 1px solid #ebedf2; padding-top: 0;">
                             <table class="table table-bordered">
                                 <thead style="text-align: center; background-color: aliceblue;">
                                     <tr>
@@ -496,7 +523,7 @@
                                         style="font-weight: 500; font-size: 1em;"
                                         id="{{ $keyNya }}-tab"
                                         data-toggle="tab"
-                                        href="#{{ $keyNya }}-table"
+                                        href="#tabs-{{ $keyNya }}"
                                         role="tab"
                                         aria-controls="{{ $keyNya }}"
                                         aria-selected="true">
@@ -509,7 +536,7 @@
                     <div class="card-body">
                         <div class="tab-content" id="myTabContent">
                             @foreach($personalHomecares as $keyNya => $arrPP5H)
-                                <div class="tab-pane fade show {{ $keyNya == "new" ? 'active' : '' }} p-3" id="{{ $keyNya }}-table" role="tabpanel" aria-labelledby="{{ $keyNya }}-tab">
+                                <div class="tab-pane fade show {{ $keyNya == "new" ? 'active' : '' }} p-3" id="tabs-{{ $keyNya }}" role="tabpanel" aria-labelledby="{{ $keyNya }}-tab">
                                     <h5 style="margin-bottom: 0.5em;">
                                         Status {{ ucwords(str_replace("_", " ",$keyNya)) }} | Total: {{ sizeof($arrPP5H) }}
                                     </h5>
@@ -634,6 +661,64 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 }, false);
 </script>
+
+{{-- checkbox untuk PP5H --}}
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        let checkboxes = $('.checkBoxPH').closest('div[id^="tabs-"]').find('input:checkbox');
+        let allCheckboxes = $('.SelectAll_Dynamic').closest('div[id^="tabs-"]').find('input:checkbox').not(":eq(0)");
+        let flag = true;
+
+        $.each(allCheckboxes, function( i, val ) {
+            if($(val).prop('checked') == false)
+            flag = false;
+        });
+
+        if(flag)
+        $('.SelectAll_Dynamic').prop('checked', true);
+
+        $('.SelectAll_Dynamic').click(function() {
+            const select_Id = this.id;
+            const checked = $(this).prop('checked');
+            $('#tabs-' + select_Id).find('input:checkbox').prop('checked', checked);
+            checkedLength();
+        });
+
+        $('.tab-pane').find('input:checkbox:not(:first)').click(function() {
+            if (!$(this).is(':checked')) {
+                $(this).closest('.tab-pane').find('input:checkbox:first').prop('checked', false);
+                checkedLength();
+            } else {
+                const checkbox_length = $(this).closest('.tab-pane').find('input:checkbox:not(:first)').length;
+                const checked_check_box_length = $(this).closest('.tab-pane').find('input:checkbox:not(:first):checked').length;
+                if (checkbox_length == checked_check_box_length) {
+                    $(this).closest('.tab-pane').find('input:checkbox:first').prop('checked', true);
+                }
+                checkedLength();
+            }
+        });
+        
+        let checkedLength = function() {
+            const checkedlength = $('.tab-pane.active').find('input:checkbox:not(:first):checked').length;
+            if (checkedlength > 0) {
+                $('.tab-pane.active').find('#checkedPH').text(checkedlength);
+            } else {
+                $('.tab-pane.active').find('#checkedPH').text(' ');
+            }
+        };
+
+        checkboxes.change(function () {
+            const lengthchecked = $('.tab-pane.active').find('input:checkbox:not(:first):checked').length;
+            const tabs_id = this.id;
+            $('#AccPH-' + tabs_id).prop('disabled', lengthchecked < 2);
+            $('#CancelPH-' + tabs_id).prop('disabled', lengthchecked < 2);
+        });
+        checkboxes.change();
+    });
+</script>
+
+{{-- checkbox untuk HS --}}
 <script type="text/javascript">
      $(document).ready(function() {
         $('#terpilih').text(' ');
