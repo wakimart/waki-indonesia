@@ -1,7 +1,36 @@
-<?php 
+<?php
     use App\Order;
 ?>
 @extends('admin.layouts.template')
+
+@section('style')
+<style type="text/css">
+    .wrapper {
+        overflow: auto;
+        width: auto;
+        max-height: 600px;
+        white-space: nowrap;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+
+    .btn-outline-success.disabled, .btn-outline-success:disabled:hover {
+        color: #1bcfb4 !important;
+        background: transparent !important;
+    }
+
+    .btn-outline-danger.disabled, .btn-outline-danger:disabled:hover {
+        color: #fe7c96 !important;
+        background: transparent !important;
+    }
+
+    @media(max-width: 437px){
+        #AccHS{
+            margin-bottom: 1em;
+        }
+    }
+</style>
+@endsection
 
 @section('content')
 @can('show-dashboard')
@@ -81,7 +110,7 @@
                                         style="font-weight: 500; font-size: 1em;"
                                         id="{{ $keyNya }}-tab"
                                         data-toggle="tab"
-                                        href="#{{ $keyNya }}-table" 
+                                        href="#{{ $keyNya }}-table"
                                         role="tab"
                                         aria-controls="{{ $keyNya }}"
                                         aria-selected="true">
@@ -104,7 +133,7 @@
                                             <thead style="text-align: center; background-color: aliceblue;">
                                                 <tr>
                                                     <td colspan="2">Personal Homecare Data</td>
-                                                    <td rowspan="2">View</td>
+                                                    <td rowspan="2">Acc/Reject/Detail</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Customer <br class="break">(Branch - CSO)</td>
@@ -115,15 +144,52 @@
                                                 @foreach($arrPP5H as $personalHomecare)
                                                     <tr>
                                                         <td>
-                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }} 
+                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
                                                             ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
+
+                                                            @if ($personalHomecare['is_extend'] && Gate::check('acc-extend-personalhomecare'))
+                                                            <br class="break">
+                                                            <div class="extendReason" style="font-weight:bold;">
+                                                              <span>{{ $personalHomecare["extend_reason"] }}</span>
+                                                            </div>
+                                                            @endif
+
+                                                            @if ($personalHomecare['is_cancel'] && (Gate::check('acc-extend-personalhomecare') || Gate::check('acc-extend-personalhomecare')))
+                                                            <br class="break">
+                                                            <div class="extendReason" style="font-weight:bold;">
+                                                              <span>{{ $personalHomecare["cancel_desc"] }}</span>
+                                                            </div>
+                                                            @endif
                                                         </td>
                                                         <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['code'] }}</td>
                                                         <td style="text-align: center;">
-                                                            <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
+                                                          @if(Auth::user()->inRole("head-admin"))
+                                                          <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                                                              @csrf
+                                                              <div class="form-group">
+
+                                                                  <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                                                                  <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $personalHomecare->id }}" />
+
+                                                                  <div style="text-align: center;">
+                                                                    <p>Do you approved it ?</p>
+                                                                  </div>
+
+                                                                  <div style="text-align: center;">
+                                                                      <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                                                      <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                                                                  </div>
+                                                              </div>
+                                                          </form>
+                                                          <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
+                                                              <i class="mdi mdi-eye" style="font-size: 12px; text-decoration:none;">More Detail</i>
+                                                          </a>
+                                                          @else
+                                                            <a href="{{ route('admin_list_homeService', ["id_hs"=>$perHomeservice['id']]) }}">
                                                                 <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                                             </a>
+                                                          @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -148,34 +214,89 @@
                                 Cancel Homeservice to Acc (total : {{ sizeof($accDeleteHS) }})
                             </h4>
                         </div>
-                        {{-- <canvas id="homeservice-chart" class="mt-4"></canvas> --}}
-                        <div class="table-responsive" style="border: 1px solid #ebedf2;">
+                        <div class="d-flex flex-wrap mt-4" style="align-items: center;">
+                            <p>Terpilih : <span id="terpilih"></span></p>
+                            <div style="margin-left: auto;">
+                                <form id="" method="POST" action="{{ route('update_homeService') }}">
+                                    @csrf
+                                    <div class="form-group">
+                                        <div class="d-flex flex-wrap" style="justify-content: right;">
+                                            <button type="submit" id="AccHS" class="btn btn-md btn-outline-success" name="status_acc" value="true">Approved All</button>
+                                            <button type="submit" id="CancelHS" class="btn btn-md btn-outline-danger ml-2" name="status_acc" value="false">Reject All</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="table-responsive tableHS wrapper" style="border: 1px solid #ebedf2;">
                             <table class="table table-bordered">
                                 <thead style="text-align: center; background-color: aliceblue;">
                                     <tr>
-                                        <td colspan="2">Home Service Data</td>
-                                        <td rowspan="2">View</td>
-                                    </tr>
-                                    <tr>
+                                        <td class="text-center">
+                                            <div class="form-group mb-0">
+                                                <input type="checkbox" id="checkAll" name="" value="true"
+                                                    class="form-control checkBoxes"
+                                                    style="position: relative; width: 16px; margin: auto;"/>
+                                            </div>
+                                        </td>
                                         <td>Schedule</td>
-                                        <td>Detail Home Service</td>
+                                        <td>Detail & Cancel Reason Home Service</td>
+                                        <td>Acc/Reject</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($accDeleteHS as $perHomeservice)
                                         <tr>
+                                            <td class="text-center">
+                                                <div class="form-group">
+                                                    <input type="checkbox" name=""
+                                                        class="form-control checkBoxes checkHS"
+                                                        id="checkHS-{{$perHomeservice['id']}}"
+                                                        value="{{$perHomeservice['id']}}"
+                                                        style="position: relative; width: 16px; margin: auto;"/>
+                                                </div>
+                                            </td>
                                             <td>{{ date_format(date_create($perHomeservice['appointment']), 'd/m/Y H:i') }}</td>
                                             <td>
+                                              <div class="detailHs" style="border-bottom: 0.2px solid #2f2f2f">
                                                 Type HS : {{ $perHomeservice['type_homeservices'] }}
                                                 <br class="break">
-                                                {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }} 
+                                                {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }}
                                                 <br class="break">
                                                 ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }})
+                                                <br class="break">
+                                              </div>
+
+                                              <br class="break">
+                                              <div class="cancelReason" style="font-weight:bold;">
+                                                {{ $perHomeservice['cancel_desc'] }}
+                                              </div>
                                             </td>
+
                                             <td style="text-align: center;">
+                                              @if(Auth::user()->inRole("head-admin"))
+                                              <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                                                  @csrf
+                                                  <div class="form-group">
+
+                                                      <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                                                      <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $perHomeservice->id }}" />
+
+                                                      <div style="text-align: center;">
+                                                        <p>Do you approved it ?</p>
+                                                      </div>
+
+                                                      <div style="text-align: center;">
+                                                          <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                                          <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                                                      </div>
+                                                  </div>
+                                              </form>
+                                              @else
                                                 <a href="{{ route('admin_list_homeService', ["id_hs"=>$perHomeservice['id']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                                 </a>
+                                              @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -198,7 +319,7 @@
                             </h4>
                         </div>
                         {{-- <canvas id="homeservice-chart" class="mt-4"></canvas> --}}
-                        <div class="table-responsive" style="border: 1px solid #ebedf2;">
+                        <div class="table-responsive wrapper" style="border: 1px solid #ebedf2;">
                             <table class="table table-bordered">
                                 <thead style="text-align: center; background-color: aliceblue;">
                                     <tr>
@@ -375,7 +496,7 @@
                                         style="font-weight: 500; font-size: 1em;"
                                         id="{{ $keyNya }}-tab"
                                         data-toggle="tab"
-                                        href="#{{ $keyNya }}-table" 
+                                        href="#{{ $keyNya }}-table"
                                         role="tab"
                                         aria-controls="{{ $keyNya }}"
                                         aria-selected="true">
@@ -409,7 +530,7 @@
                                                 @foreach($arrPP5H as $personalHomecare)
                                                     <tr>
                                                         <td>
-                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }} 
+                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
                                                             ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
                                                         </td>
@@ -512,5 +633,37 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error(error);
     });
 }, false);
+</script>
+<script type="text/javascript">
+     $(document).ready(function() {
+        $('#terpilih').text(' ');
+
+        var jumlahTerpilih = function() {
+            var terpilih = $(".checkHS:checked").length;
+            if (terpilih > 0) {
+                $("#terpilih").text(terpilih);
+            } else {
+                $("#terpilih").text(' ');
+            }
+        };
+
+        $("#checkAll").click(function() {
+            $('.checkHS').prop('checked', this.checked);
+            jumlahTerpilih();
+        });
+
+        $('.checkHS').change(function() {
+            $("#checkAll").prop("checked", $(".checkHS").length === $(".checkHS:checked").length);
+            jumlahTerpilih();
+        });
+
+        var checkBoxes = $('.tableHS .checkBoxes');
+        checkBoxes.change(function () {
+            $('#AccHS').prop('disabled', checkBoxes.filter(':checked').length < 2);
+            $('#CancelHS').prop('disabled', checkBoxes.filter(':checked').length < 2);
+        });
+        $('.tableHS .checkBoxes').change();
+
+    });
 </script>
 @endsection

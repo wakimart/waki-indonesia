@@ -112,7 +112,7 @@ class DashboardController extends Controller
         //                 ->get();
 
         //khusus untuk acc delete HS
-        $accDeleteHS = HomeService::where([['active', true], ['is_acc', true]])->get();
+        $accDeleteHS = HomeService::where([['active', true], ['is_acc', true]])->orderBy("updated_at", "desc")->get();
 
         return view(
             "admin.dashboard",
