@@ -399,8 +399,11 @@ $menu_item_second = "list_all";
                             <textarea class="form-control"
                                 id="reschedule_reason"
                                 name="reschedule_reason"
+                                minlength="80" 
+                                maxlength="200" 
                                 rows="3"
-                                required >
+                                placeholder="[Please explain your reason minimal 80 character]"
+                                required>
                             </textarea>
                         </div>
                     </div>
@@ -445,6 +448,12 @@ function submitReschedule(e) {
 }
  
 $(document).ready(function (e) {
+    @if(isset($_GET['pending_reschedule']) && isset($_GET['id_phc']))
+        var get_id_phc = {{$_GET['id_phc']}};
+        document.getElementById("id-reschedule").value = get_id_phc;
+        $("#modal-reschedule").modal("show");
+    @endif
+
     $("#btn-filter").click(function (e) {
         var urlParamArray = new Array();
         var urlParamStr = "";

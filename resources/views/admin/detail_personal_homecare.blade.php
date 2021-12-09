@@ -675,6 +675,12 @@ $menu_item_page = "personal_homecare";
                                         value="rejected">
                                         Reject
                                     </button>
+                                    <button type="submit"
+                                        class="btn btn-gradient-warning mr-2 btn-lg"
+                                        name="status"
+                                        value="pending_reschedule">
+                                        Pending
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -712,6 +718,12 @@ $menu_item_page = "personal_homecare";
                                         name="status"
                                         value="">
                                         Reject
+                                    </button>
+                                    <button type="submit"
+                                        class="btn btn-gradient-warning mr-2 btn-lg"
+                                        name="status"
+                                        value="pending_extend">
+                                        Pending
                                     </button>
                                 </div>
                             </form>
@@ -1436,8 +1448,9 @@ $menu_item_page = "personal_homecare";
                             <textarea class="form-control"
                                 name="extend_reason"
                                 id="extend_reason"
+                                minlength="80" 
                                 maxlength="200"
-                                placeholder="Extend Reason"
+                                placeholder="[Please explain your reason minimal 80 character]"
                                 required></textarea>
                         </div>
                     </form>
@@ -1491,6 +1504,10 @@ $(document).ready(function() {
         return true;
     });
     $("#success-alert").hide();
+
+    @if(isset($_GET['pending_extend']))
+        $("#modal-extend").modal("show");
+    @endif
 });
 </script>
 @endsection

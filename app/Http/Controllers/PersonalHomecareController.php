@@ -716,8 +716,30 @@ class PersonalHomecareController extends Controller
             elseif($request->status == "process_extend_reject"){
                 $phc->is_extend = false;
                 $phc->save();
-            }
+            }elseif($request->status == "pending_extend"){
+                $phc->is_extend = false;
+                $phc->extend_reason = null;
+                $phc->save();
 
+                //send notif to cso
+                $userNya = [$phc->cso->user];
+                foreach ($phc->branch->cso as $perCso) {
+                    if($perCso->user != null && !in_array($perCso->user, $userNya)){
+                        array_push($userNya, $perCso->user);
+                    }
+                }
+                // $userNya = User::where('users.fmc_token', '!=', null)
+                //         ->whereIn('role_users.role_id', [1,2,5,6,7])
+                //         ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                //         ->get();
+
+                $titleNya = "PENDING! - ACC Extend [Personal Homecare]";
+                $messageNya = "Please try again to extend ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
+                $urlNya = URL::to(route('detail_personal_homecare', ['id'=>$phc['id'], 'pending_extend' => true]));
+                $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+
+                //dd($this->NotifTo($userNya, $messageNya, $titleNya, $urlNya));
+            }
 
             $userId = Auth::user()["id"];
             $historyPH["type_menu"] = "Personal Homecare";
@@ -1113,10 +1135,34 @@ class PersonalHomecareController extends Controller
                         }
                     }
                 }
-                else{
+                elseif($request->status == "rejected"){
                     $phcNya->reschedule_date = null;
                     $phcNya->save();
-                }
+                }elseif($request->status == "pending_reschedule"){
+                    $phcNya->reschedule_date = null;
+                    $phcNya->reschedule_reason = null;
+                    $phcNya->save();
+
+                    //send notif to cso-branch
+                    $userNya = [$phcNya->cso->user];
+                    foreach ($phcNya->branch->cso as $perCso) {
+                        if($perCso->user != null && !in_array($perCso->user, $userNya)){
+                            array_push($userNya, $perCso->user);
+                        }
+                    }
+
+                    // $userNya = User::where('users.fmc_token', '!=', null)
+                    //         ->whereIn('role_users.role_id', [1,2,5,6,7])
+                    //         ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                    //         ->get();
+                    //dd($userNya);
+
+                    $titleNya = "PENDING! - ACC Reschedule [Personal Homecare]";
+                    $messageNya = "Please try again to reschedule ".$phcNya->branch['code']."-".$phcNya->cso['name']." for ".$phcNya->name." [".$phcNya->personalHomecareProduct['code']." - ".$phcNya->personalHomecareProduct->product['name']."] ";
+                    $urlNya = URL::to(route('list_all_phc', ['id_phc'=>$phcNya['id'], 'pending_reschedule' => true]));
+                    $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+                    //end send notif to cso-branch
+                }   
 
                 $userId = Auth::user()["id"];
                 $historyPhc["type_menu"] = "Personal Homecare";
@@ -1311,6 +1357,7 @@ class PersonalHomecareController extends Controller
                 }
             }
         }
+        // dd($fcm_tokenNya);
 
         $body = ['registration_ids'=>$fcm_tokenNya,
             'collapse_key'=>"type_a",
@@ -1325,8 +1372,9 @@ class PersonalHomecareController extends Controller
                 "url" => $urlNya,
             ]];
 
-        if(sizeof($fcm_tokenNya) > 0)
-        {
+
+        if(sizeof($fcm_tokenNya) > 0){
+            //dd($body);
             $this->sendFCM(json_encode($body));
         }
     }
