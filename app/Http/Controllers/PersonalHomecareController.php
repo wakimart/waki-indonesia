@@ -633,145 +633,220 @@ class PersonalHomecareController extends Controller
 
     public function updateStatus(Request $request)
     {
-        DB::beginTransaction();
+        if (!empty($request->phcData)) {  // reject all or approved all
+            DB::beginTransaction();
+            try {          
+                if (substr($request->phcData, 0, 4) == "true") {
+                    $phcID = explode(",", substr($request->phcData,5));
+                } else {
+                    $phcID = explode(",", $request->phcData);
+                }
+                $phcDatas = PersonalHomecare::whereIn("id", $phcID)->get();
+                foreach ($phcDatas as $val){
+                    $phc = PersonalHomecare::find($val->id);
+                    if ($request->status == "process_extend"){
+                        $phc->status = $request->status;
+                        $phc->is_extend = false;
+                        $phc->save();
+                    }
+                    elseif($request->status == "process_extend_reject"){
+                        $phc->is_extend = false;
+                        $phc->save();
+                    }else{
+                        $phc->is_extend = false;
+                        $phc->extend_reason = null;
+                        $phc->save();
 
-        try {
+                        //send notif to cso
+                        $userNya = [$phc->cso->user];
+                        foreach ($phc->branch->cso as $perCso) {
+                            if($perCso->user != null && !in_array($perCso->user, $userNya)){
+                                array_push($userNya, $perCso->user);
+                            }
+                        }
+                        // $userNya = User::where('users.fmc_token', '!=', null)
+                        //         ->whereIn('role_users.role_id', [1,2,5,6,7])
+                        //         ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                        //         ->get();
 
-            $phc = PersonalHomecare::where("id", $request->id)->first();
+                        $titleNya = "PENDING! - ACC Extend [Personal Homecare]";
+                        $messageNya = "Please try again to extend ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
+                        $urlNya = URL::to(route('detail_personal_homecare', ['id'=>$phc['id'], 'pending_extend' => true]));
+                        $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
 
-            if ($request->status == "verified") {
-                $phc->status = $request->status;
-                $phc->save();
+                        //dd($this->NotifTo($userNya, $messageNya, $titleNya, $urlNya));
+                    }
 
-                $this->accNotif($phc, "acc_ask");
+                    $userId = Auth::user()["id"];
+                    $historyPH["type_menu"] = "Personal Homecare";
+                    $historyPH["method"] = "Change Status";
+                    $historyPH["meta"] = json_encode(
+                        [
+                            "user" => $userId,
+                            "createdAt" => date("Y-m-d H:i:s"),
+                            "dataChange" => $phc->getChanges(),
+                        ],
+                        JSON_THROW_ON_ERROR
+                    );
+                    $historyPH["user_id"] = $userId;
+                    $historyPH["menu_id"] = $val->id;
+                    HistoryUpdate::create($historyPH);
+                    DB::commit();
+                    if($request->status == "process_extend" || $request->status == "process_extend_reject"){
+                        $this->accNotif($phc, $request->status);
+                    }
+                    else{
+                        $this->accNotif($phc, "acc_done");
+                    }    
+                }
+                return redirect()
+                    ->route("dashboard")
+                    ->with("success", "Status has been successfully updated.");
+            } catch (Throwable $th) {
+                DB::rollBack();
+                return response()->json(["error" => $th->getMessage()], 500);
             }
-            elseif ($request->status == "approve_out") {
-                $phc->status = $request->status;
-                $phc->save();
-            }
-            elseif ($request->status == "rejected") {
-                $phc->status = $request->status;
-                $phc->save();
-            }
-            elseif($request->status == "process"){
-                $phcProductNya = PersonalHomecareProduct::find($request->id_product);
-                $tempChecklist = $phcProductNya->currentChecklist;
-                $phcChecklistOut = $tempChecklist->replicate();
+        } else {
+            DB::beginTransaction();
 
-                $imageArray = [];
+            try {
+
+                $phc = PersonalHomecare::where("id", $request->id)->first();
+
+                if ($request->status == "verified") {
+                    $phc->status = $request->status;
+                    $phc->save();
+
+                    $this->accNotif($phc, "acc_ask");
+                }
+                elseif ($request->status == "approve_out") {
+                    $phc->status = $request->status;
+                    $phc->save();
+                }
+                elseif ($request->status == "rejected") {
+                    $phc->status = $request->status;
+                    $phc->save();
+                }
+                elseif($request->status == "process"){
+                    $phcProductNya = PersonalHomecareProduct::find($request->id_product);
+                    $tempChecklist = $phcProductNya->currentChecklist;
+                    $phcChecklistOut = $tempChecklist->replicate();
+
+                    $imageArray = [];
+                    $userId = Auth::user()["id"];
+                    $path = "sources/phc-checklist";
+                    if ($request->hasFile("product_photo_1")) {
+                        $fileName = time()
+                            . "_"
+                            . $userId
+                            . "_"
+                            . "1."
+                            . $request->file("product_photo_1")->getClientOriginalExtension();
+                        $request->file("product_photo_1")->move($path, $fileName);
+                        $imageArray[0] = $fileName;
+                    }
+
+                    if ($request->hasFile("product_photo_2")) {
+                        $fileName = time()
+                            . "_"
+                            . $userId
+                            . "_"
+                            . "2."
+                            . $request->file("product_photo_2")->getClientOriginalExtension();
+                        $request->file("product_photo_2")->move($path, $fileName);
+                        $imageArray[1] = $fileName;
+                    }
+
+                    $phcChecklistOut->image = $imageArray;
+                    $phcChecklistOut->save();
+
+                    $phcProductNya->status = "unavailable";
+                    $phcProductNya->current_checklist_id = $phcChecklistOut->id;
+                    $phcProductNya->save();
+
+                    $phc->checklist_out = $phcChecklistOut->id;
+                    $phc->status = $request->status;
+                    $phc->save();
+
+                }
+                elseif($request->status == "done"){
+                    PersonalHomecareProduct::where("id", $request->id_product)
+                        ->update(["status" => "available"]);
+
+                    $phc->status = $request->status;
+                    $phc->save();
+                }elseif($request->status == "pending_product"){
+                    $this->accNotif($phc, "waiting_in_rejected");
+
+                    return redirect()
+                        ->route("detail_personal_homecare", ["id" => $request->id])
+                        ->with("success", "Status has been successfully updated.");
+                }
+                elseif($request->status == "process_extend"){
+                    $phc->status = $request->status;
+                    $phc->is_extend = false;
+                    $phc->save();
+                }
+                elseif($request->status == "process_extend_reject"){
+                    $phc->is_extend = false;
+                    $phc->save();
+                }elseif($request->status == "pending_extend"){
+                    $phc->is_extend = false;
+                    $phc->extend_reason = null;
+                    $phc->save();
+
+                    //send notif to cso
+                    $userNya = [$phc->cso->user];
+                    foreach ($phc->branch->cso as $perCso) {
+                        if($perCso->user != null && !in_array($perCso->user, $userNya)){
+                            array_push($userNya, $perCso->user);
+                        }
+                    }
+                    // $userNya = User::where('users.fmc_token', '!=', null)
+                    //         ->whereIn('role_users.role_id', [1,2,5,6,7])
+                    //         ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                    //         ->get();
+
+                    $titleNya = "PENDING! - ACC Extend [Personal Homecare]";
+                    $messageNya = "Please try again to extend ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
+                    $urlNya = URL::to(route('detail_personal_homecare', ['id'=>$phc['id'], 'pending_extend' => true]));
+                    $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+
+                    //dd($this->NotifTo($userNya, $messageNya, $titleNya, $urlNya));
+                }
+
                 $userId = Auth::user()["id"];
-                $path = "sources/phc-checklist";
-                if ($request->hasFile("product_photo_1")) {
-                    $fileName = time()
-                        . "_"
-                        . $userId
-                        . "_"
-                        . "1."
-                        . $request->file("product_photo_1")->getClientOriginalExtension();
-                    $request->file("product_photo_1")->move($path, $fileName);
-                    $imageArray[0] = $fileName;
+                $historyPH["type_menu"] = "Personal Homecare";
+                $historyPH["method"] = "Change Status";
+                $historyPH["meta"] = json_encode(
+                    [
+                        "user" => $userId,
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $phc->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $historyPH["user_id"] = $userId;
+                $historyPH["menu_id"] = $request->id;
+                HistoryUpdate::create($historyPH);
+
+                DB::commit();
+
+                if($request->status == "process_extend" || $request->status == "process_extend_reject"){
+                    $this->accNotif($phc, $request->status);
                 }
-
-                if ($request->hasFile("product_photo_2")) {
-                    $fileName = time()
-                        . "_"
-                        . $userId
-                        . "_"
-                        . "2."
-                        . $request->file("product_photo_2")->getClientOriginalExtension();
-                    $request->file("product_photo_2")->move($path, $fileName);
-                    $imageArray[1] = $fileName;
+                else{
+                    $this->accNotif($phc, "acc_done");
                 }
-
-                $phcChecklistOut->image = $imageArray;
-                $phcChecklistOut->save();
-
-                $phcProductNya->status = "unavailable";
-                $phcProductNya->current_checklist_id = $phcChecklistOut->id;
-                $phcProductNya->save();
-
-                $phc->checklist_out = $phcChecklistOut->id;
-                $phc->status = $request->status;
-                $phc->save();
-
-            }
-            elseif($request->status == "done"){
-                PersonalHomecareProduct::where("id", $request->id_product)
-                    ->update(["status" => "available"]);
-
-                $phc->status = $request->status;
-                $phc->save();
-            }elseif($request->status == "pending_product"){
-                $this->accNotif($phc, "waiting_in_rejected");
 
                 return redirect()
                     ->route("detail_personal_homecare", ["id" => $request->id])
                     ->with("success", "Status has been successfully updated.");
+            } catch (Throwable $th) {
+                DB::rollBack();
+
+                return response()->json(["error" => $th->getMessage()], 500);
             }
-            elseif($request->status == "process_extend"){
-                $phc->status = $request->status;
-                $phc->is_extend = false;
-                $phc->save();
-            }
-            elseif($request->status == "process_extend_reject"){
-                $phc->is_extend = false;
-                $phc->save();
-            }elseif($request->status == "pending_extend"){
-                $phc->is_extend = false;
-                $phc->extend_reason = null;
-                $phc->save();
-
-                //send notif to cso
-                $userNya = [$phc->cso->user];
-                foreach ($phc->branch->cso as $perCso) {
-                    if($perCso->user != null && !in_array($perCso->user, $userNya)){
-                        array_push($userNya, $perCso->user);
-                    }
-                }
-                // $userNya = User::where('users.fmc_token', '!=', null)
-                //         ->whereIn('role_users.role_id', [1,2,5,6,7])
-                //         ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
-                //         ->get();
-
-                $titleNya = "PENDING! - ACC Extend [Personal Homecare]";
-                $messageNya = "Please try again to extend ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
-                $urlNya = URL::to(route('detail_personal_homecare', ['id'=>$phc['id'], 'pending_extend' => true]));
-                $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
-
-                //dd($this->NotifTo($userNya, $messageNya, $titleNya, $urlNya));
-            }
-
-            $userId = Auth::user()["id"];
-            $historyPH["type_menu"] = "Personal Homecare";
-            $historyPH["method"] = "Change Status";
-            $historyPH["meta"] = json_encode(
-                [
-                    "user" => $userId,
-                    "createdAt" => date("Y-m-d H:i:s"),
-                    "dataChange" => $phc->getChanges(),
-                ],
-                JSON_THROW_ON_ERROR
-            );
-            $historyPH["user_id"] = $userId;
-            $historyPH["menu_id"] = $request->id;
-            HistoryUpdate::create($historyPH);
-
-            DB::commit();
-
-            if($request->status == "process_extend" || $request->status == "process_extend_reject"){
-                $this->accNotif($phc, $request->status);
-            }
-            else{
-                $this->accNotif($phc, "acc_done");
-            }
-
-            return redirect()
-                ->route("detail_personal_homecare", ["id" => $request->id])
-                ->with("success", "Status has been successfully updated.");
-        } catch (Throwable $th) {
-            DB::rollBack();
-
-            return response()->json(["error" => $th->getMessage()], 500);
         }
     }
 
@@ -950,87 +1025,173 @@ class PersonalHomecareController extends Controller
 
     public function destroy(Request $request)
     {
-        DB::beginTransaction();
-
-        try {
-            $titleNya = "";
-            if($request->has('cancel_approved')){
-                $phc = PersonalHomecare::where("id", $request->id)->first();
-                $phc->is_cancel = false;
-                $phc->cancel_desc = null;
-                $phc->active = false;
-                $phc->save();
-
-                // homeservices
-                $homeServiceRelation = HomeService::where('personalhomecare_id', $phc->id)->get();
-                if ( count($homeServiceRelation) > 0 ) {
-                    foreach ( $homeServiceRelation as $hs ) {
-                        $hsData = HomeService::find($hs->id);
-                        $hsData->active = false;
-                        $hsData->update();
-                    }
+        if (!empty($request->phcData)) {  // reject all or approved all
+            DB::beginTransaction();
+            try {          
+                if (substr($request->phcData, 0, 4) == "true") {
+                    $phcID = explode(",", substr($request->phcData,5));
+                } else {
+                    $phcID = explode(",", $request->phcData);
                 }
+                $phcDatas = PersonalHomecare::whereIn("id", $phcID)->get();
+                foreach ($phcDatas as $val){
+                    $titleNya = "";
+                    if($request->has('cancel_approved')){
+                        $phc = PersonalHomecare::where("id", $val->id)->first();
+                        $phc->is_cancel = false;
+                        $phc->cancel_desc = null;
+                        $phc->active = false;
+                        $phc->save();
 
-                $userId = Auth::user()["id"];
-                $historyDeletePhc["type_menu"] = "Personal Homecare";
-                $historyDeletePhc["method"] = "Delete";
-                $historyDeletePhc["meta"] = json_encode(
-                    [
-                        "user" => $userId,
-                        "createdAt" => date("Y-m-d H:i:s"),
-                        "dataChange" => $phc->getChanges(),
-                    ],
-                    JSON_THROW_ON_ERROR
-                );
-                $historyDeletePhc["user_id"] = $userId;
-                $historyDeletePhc["menu_id"] = $request->id;
-                HistoryUpdate::create($historyDeletePhc);
+                        // homeservices
+                        $homeServiceRelation = HomeService::where('personalhomecare_id', $phc->id)->get();
+                        if ( count($homeServiceRelation) > 0 ) {
+                            foreach ( $homeServiceRelation as $hs ) {
+                                $hsData = HomeService::find($hs->id);
+                                $hsData->active = false;
+                                $hsData->update();
+                            }
+                        }
 
-                DB::commit();
-                
-                //sent notif
-                $titleNya = "ACC Cancel Approved [Personal Homecare]";
-                $userNya = [$phc->cso->user];
-                foreach ($phc->branch->cso as $perCso) {
-                    if($perCso->user != null){
-                        array_push($userNya, $perCso->user);
-                    }
+                        $userId = Auth::user()["id"];
+                        $historyDeletePhc["type_menu"] = "Personal Homecare";
+                        $historyDeletePhc["method"] = "Delete";
+                        $historyDeletePhc["meta"] = json_encode(
+                            [
+                                "user" => $userId,
+                                "createdAt" => date("Y-m-d H:i:s"),
+                                "dataChange" => $phc->getChanges(),
+                            ],
+                            JSON_THROW_ON_ERROR
+                        );
+                        $historyDeletePhc["user_id"] = $userId;
+                        $historyDeletePhc["menu_id"] = $val->id;
+                        HistoryUpdate::create($historyDeletePhc);
+
+                        DB::commit();
+                        
+                        //sent notif
+                        $titleNya = "ACC Cancel Approved [Personal Homecare]";
+                        $userNya = [$phc->cso->user];
+                        foreach ($phc->branch->cso as $perCso) {
+                            if($perCso->user != null){
+                                array_push($userNya, $perCso->user);
+                            }
+                        }
+                        $messageNya = "By ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
+                        $urlNya = null;
+                        $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+                    }else{
+                        $phc = PersonalHomecare::where("id", $val->id)->first();
+                        $phc->is_cancel = false;
+                        $phc->cancel_desc = null;
+                        $phc->save();
+
+                        DB::commit();
+
+                        //sent notif
+                        $titleNya = "ACC Cancel Rejected [Personal Homecare]";
+                        $userNya = [$phc->cso->user];
+                        foreach ($phc->branch->cso as $perCso) {
+                            if($perCso->user != null){
+                                array_push($userNya, $perCso->user);
+                            }
+                        }
+                        $messageNya = "By ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
+                        $urlNya = null;
+                        $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+                    }   
                 }
-                $messageNya = "By ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
-                $urlNya = null;
-                $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
-
                 return redirect()
-                    ->route("list_all_phc")
-                    ->with("success", "Personal Homecare has been successfully deleted.");
+                    ->route("dashboard")
+                    ->with("success", "Status has been successfully updated.");
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json(["error" => $e->getMessage()], 500);
             }
-            elseif($request->has('cancel_rejected')){
-                $phc = PersonalHomecare::where("id", $request->id)->first();
-                $phc->is_cancel = false;
-                $phc->cancel_desc = null;
-                $phc->save();
+        } else {
+            DB::beginTransaction();
 
-                DB::commit();
+            try {
+                $titleNya = "";
+                if($request->has('cancel_approved')){
+                    $phc = PersonalHomecare::where("id", $request->id)->first();
+                    $phc->is_cancel = false;
+                    $phc->cancel_desc = null;
+                    $phc->active = false;
+                    $phc->save();
 
-                //sent notif
-                $titleNya = "ACC Cancel Rejected [Personal Homecare]";
-                $userNya = [$phc->cso->user];
-                foreach ($phc->branch->cso as $perCso) {
-                    if($perCso->user != null){
-                        array_push($userNya, $perCso->user);
+                    // homeservices
+                    $homeServiceRelation = HomeService::where('personalhomecare_id', $phc->id)->get();
+                    if ( count($homeServiceRelation) > 0 ) {
+                        foreach ( $homeServiceRelation as $hs ) {
+                            $hsData = HomeService::find($hs->id);
+                            $hsData->active = false;
+                            $hsData->update();
+                        }
                     }
-                }
-                $messageNya = "By ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
-                $urlNya = null;
-                $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
 
-                return redirect()
-                    ->route("detail_personal_homecare", ['id'=>$request->id])
-                    ->with("success", "Personal Homecare Cancel has been successfully Rejected.");
+                    $userId = Auth::user()["id"];
+                    $historyDeletePhc["type_menu"] = "Personal Homecare";
+                    $historyDeletePhc["method"] = "Delete";
+                    $historyDeletePhc["meta"] = json_encode(
+                        [
+                            "user" => $userId,
+                            "createdAt" => date("Y-m-d H:i:s"),
+                            "dataChange" => $phc->getChanges(),
+                        ],
+                        JSON_THROW_ON_ERROR
+                    );
+                    $historyDeletePhc["user_id"] = $userId;
+                    $historyDeletePhc["menu_id"] = $request->id;
+                    HistoryUpdate::create($historyDeletePhc);
+
+                    DB::commit();
+                    
+                    //sent notif
+                    $titleNya = "ACC Cancel Approved [Personal Homecare]";
+                    $userNya = [$phc->cso->user];
+                    foreach ($phc->branch->cso as $perCso) {
+                        if($perCso->user != null){
+                            array_push($userNya, $perCso->user);
+                        }
+                    }
+                    $messageNya = "By ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
+                    $urlNya = null;
+                    $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+
+                    return redirect()
+                        ->route("list_all_phc")
+                        ->with("success", "Personal Homecare has been successfully deleted.");
+                }
+                else{
+                    $phc = PersonalHomecare::where("id", $request->id)->first();
+                    $phc->is_cancel = false;
+                    $phc->cancel_desc = null;
+                    $phc->save();
+
+                    DB::commit();
+
+                    //sent notif
+                    $titleNya = "ACC Cancel Rejected [Personal Homecare]";
+                    $userNya = [$phc->cso->user];
+                    foreach ($phc->branch->cso as $perCso) {
+                        if($perCso->user != null){
+                            array_push($userNya, $perCso->user);
+                        }
+                    }
+                    $messageNya = "By ".$phc->branch['code']."-".$phc->cso['name']." for ".$phc->name." [".$phc->personalHomecareProduct['code']." - ".$phc->personalHomecareProduct->product['name']."] ";
+                    $urlNya = null;
+                    $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+
+                    return redirect()
+                        ->route("detail_personal_homecare", ['id'=>$request->id])
+                        ->with("success", "Personal Homecare Cancel has been successfully Rejected.");
+                }
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json(["error" => $e->getMessage()], 500);
             }
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json(["error" => $e->getMessage()], 500);
         }
     }
 
@@ -1074,124 +1235,221 @@ class PersonalHomecareController extends Controller
     }
 
     public function reschedulePersonalHomecare(Request $request){
-        DB::beginTransaction();
-
-        try {
-            if(!isset($request['status'])){
-                $phcNya = PersonalHomecare::find($request->id);
-                $phcNya->reschedule_date = $request->reschedule_date;
-                $phcNya->reschedule_reason = $request->reschedule_reason;
-                $phcNya->save();
-
-                $userId = Auth::user()["id"];
-                $historyPhc["type_menu"] = "Personal Homecare";
-                $historyPhc["method"] = "Reschedule Ask ACC";
-                $historyPhc["meta"] = json_encode(
-                    [
-                        "user" => $userId,
-                        "createdAt" => date("Y-m-d H:i:s"),
-                        "dataChange" => $phcNya->getChanges(),
-                    ],
-                    JSON_THROW_ON_ERROR
-                );
-                $historyPhc["user_id"] = $userId;
-                $historyPhc["menu_id"] = $request->id;
-                HistoryUpdate::create($historyPhc);
-
-                DB::commit();
-
-                $this->accNotif($phcNya, "acc_reschedule");
-
-                return redirect()
-                    ->route("detail_personal_homecare", ["id" => $request->id])
-                    ->with("success", "Acc for Reschedule Personal Homecare Success !");
-            }
-            else{
-                $phcNya = PersonalHomecare::find($request->id);
-                if($request->status == "acceptance"){
-                    $phcNya->schedule = $phcNya->reschedule_date;
-                    $phcNya->status = 'approve_out_res';
-                    $phcNya->reschedule_date = null;
-                    $phcNya->save();
-
-                    // homeservices
-                    $homeServiceRelation = DB::table('personal_homecares as ph')
-                                        ->join('home_services as hs', 'ph.id', '=', 'hs.personalhomecare_id')
-                                        ->select('hs.id')
-                                        ->where('hs.personalhomecare_id', $phcNya->id)
-                                        ->orderBy('ph.id', 'asc')
-                                        ->orderBy('hs.appointment', 'asc')
-                                        ->get();
-                    if ( count($homeServiceRelation) > 0 ) {
-                        foreach ( $homeServiceRelation as $index => $hs ) {
-                            $hsData = HomeService::find($hs->id);
-                            // reschedule appointment date
-                            // get appointment time 
-                            $appointmentDate = new DateTime($hsData->appointment);
-                            $time = $appointmentDate->format('H:i:s');
-                            $newAppointmentDate = date('Y-m-d', strtotime($phcNya->schedule . "+$index day"));
-                            $hsData->appointment = $newAppointmentDate." ".$time;
-                            $hsData->update();
-                        }
-                    }
+        if (!empty($request->phcData)) {  // reject all or approved all
+            DB::beginTransaction();
+    
+            try {
+                if (substr($request->phcData, 0, 4) == "true") {
+                    $phcID = explode(",", substr($request->phcData,5));
+                } else {
+                    $phcID = explode(",", $request->phcData);
                 }
-                elseif($request->status == "rejected"){
-                    $phcNya->reschedule_date = null;
-                    $phcNya->save();
-                }elseif($request->status == "pending_reschedule"){
-                    $phcNya->reschedule_date = null;
-                    $phcNya->reschedule_reason = null;
-                    $phcNya->save();
-
-                    //send notif to cso-branch
-                    $userNya = [$phcNya->cso->user];
-                    foreach ($phcNya->branch->cso as $perCso) {
-                        if($perCso->user != null && !in_array($perCso->user, $userNya)){
-                            array_push($userNya, $perCso->user);
+                $phcDatas = PersonalHomecare::whereIn('id', $phcID)->get();
+                foreach ($phcDatas as $val){
+                    $phcNya = PersonalHomecare::find($val->id);
+                    if($request->status == "acceptance"){
+                        $phcNya->schedule = $phcNya->reschedule_date;
+                        $phcNya->status = 'approve_out_res';
+                        $phcNya->reschedule_date = null;
+                        $phcNya->update();
+    
+                        // homeservices
+                        $homeServiceRelation = DB::table('personal_homecares as ph')
+                                            ->join('home_services as hs', 'ph.id', '=', 'hs.personalhomecare_id')
+                                            ->select('hs.id')
+                                            ->where('hs.personalhomecare_id', $phcNya->id)
+                                            ->orderBy('ph.id', 'asc')
+                                            ->orderBy('hs.appointment', 'asc')
+                                            ->get();
+                        if ( count($homeServiceRelation) > 0 ) {
+                            foreach ( $homeServiceRelation as $index => $hs ) {
+                                $hsData = HomeService::find($hs->id);
+                                // reschedule appointment date
+                                // get appointment time 
+                                $appointmentDate = new DateTime($hsData->appointment);
+                                $time = $appointmentDate->format('H:i:s');
+                                $newAppointmentDate = date('Y-m-d', strtotime($phcNya->schedule . "+$index day"));
+                                $hsData->appointment = $newAppointmentDate." ".$time;
+                                $hsData->update();
+                            }
                         }
                     }
-
-                    // $userNya = User::where('users.fmc_token', '!=', null)
-                    //         ->whereIn('role_users.role_id', [1,2,5,6,7])
-                    //         ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
-                    //         ->get();
-                    //dd($userNya);
-
-                    $titleNya = "PENDING! - ACC Reschedule [Personal Homecare]";
-                    $messageNya = "Please try again to reschedule ".$phcNya->branch['code']."-".$phcNya->cso['name']." for ".$phcNya->name." [".$phcNya->personalHomecareProduct['code']." - ".$phcNya->personalHomecareProduct->product['name']."] ";
-                    $urlNya = URL::to(route('list_all_phc', ['id_phc'=>$phcNya['id'], 'pending_reschedule' => true]));
-                    $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
-                    //end send notif to cso-branch
-                }   
-
-                $userId = Auth::user()["id"];
-                $historyPhc["type_menu"] = "Personal Homecare";
-                $historyPhc["method"] = "Reschedule";
-                $historyPhc["meta"] = json_encode(
-                    [
-                        "user" => $userId,
-                        "createdAt" => date("Y-m-d H:i:s"),
-                        "dataChange" => $phcNya->getChanges(),
-                    ],
-                    JSON_THROW_ON_ERROR
-                );
-                $historyPhc["user_id"] = $userId;
-                $historyPhc["menu_id"] = $request->id;
-                HistoryUpdate::create($historyPhc);
-
-                DB::commit();
-
-                $this->accNotif($phcNya, "acc_reschedule_".$request->status);
+                    elseif($request->status == "rejected"){
+                        $phcNya->reschedule_date = null;
+                        $phcNya->save();
+                    }elseif($request->status == "pending_reschedule"){
+                        $phcNya->reschedule_date = null;
+                        $phcNya->reschedule_reason = null;
+                        $phcNya->save();
+    
+                        //send notif to cso-branch
+                        $userNya = [$phcNya->cso->user];
+                        foreach ($phcNya->branch->cso as $perCso) {
+                            if($perCso->user != null && !in_array($perCso->user, $userNya)){
+                                array_push($userNya, $perCso->user);
+                            }
+                        }
+    
+                        // $userNya = User::where('users.fmc_token', '!=', null)
+                        //         ->whereIn('role_users.role_id', [1,2,5,6,7])
+                        //         ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                        //         ->get();
+                        //dd($userNya);
+    
+                        $titleNya = "PENDING! - ACC Reschedule [Personal Homecare]";
+                        $messageNya = "Please try again to reschedule ".$phcNya->branch['code']."-".$phcNya->cso['name']." for ".$phcNya->name." [".$phcNya->personalHomecareProduct['code']." - ".$phcNya->personalHomecareProduct->product['name']."] ";
+                        $urlNya = URL::to(route('list_all_phc', ['id_phc'=>$phcNya['id'], 'pending_reschedule' => true]));
+                        $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+                        //end send notif to cso-branch
+                    }   
+    
+                    $userId = Auth::user()["id"];
+                    $historyPhc["type_menu"] = "Personal Homecare";
+                    $historyPhc["method"] = "Reschedule";
+                    $historyPhc["meta"] = json_encode(
+                        [
+                            "user" => $userId,
+                            "createdAt" => date("Y-m-d H:i:s"),
+                            "dataChange" => $phcNya->getChanges(),
+                        ],
+                        JSON_THROW_ON_ERROR
+                    );
+                    $historyPhc["user_id"] = $userId;
+                    $historyPhc["menu_id"] = $val->id;
+                    HistoryUpdate::create($historyPhc);
+    
+                    DB::commit();
+    
+                    $this->accNotif($phcNya, "acc_reschedule_".$request->status);
+                }
 
                 return redirect()
-                    ->route("detail_personal_homecare", ["id" => $request->id])
+                    ->route("dashboard")
                     ->with("success", "Acc for Reschedule Personal Homecare Success !");
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json(["error" => $e->getMessage()], 500);
             }
+        } else {
 
-
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json(["error" => $e->getMessage()], 500);
+            DB::beginTransaction();
+    
+            try {
+                if(!isset($request['status'])){
+                    $phcNya = PersonalHomecare::find($request->id);
+                    $phcNya->reschedule_date = $request->reschedule_date;
+                    $phcNya->reschedule_reason = $request->reschedule_reason;
+                    $phcNya->save();
+    
+                    $userId = Auth::user()["id"];
+                    $historyPhc["type_menu"] = "Personal Homecare";
+                    $historyPhc["method"] = "Reschedule Ask ACC";
+                    $historyPhc["meta"] = json_encode(
+                        [
+                            "user" => $userId,
+                            "createdAt" => date("Y-m-d H:i:s"),
+                            "dataChange" => $phcNya->getChanges(),
+                        ],
+                        JSON_THROW_ON_ERROR
+                    );
+                    $historyPhc["user_id"] = $userId;
+                    $historyPhc["menu_id"] = $request->id;
+                    HistoryUpdate::create($historyPhc);
+    
+                    DB::commit();
+    
+                    $this->accNotif($phcNya, "acc_reschedule");
+    
+                    return redirect()
+                        ->route("detail_personal_homecare", ["id" => $request->id])
+                        ->with("success", "Acc for Reschedule Personal Homecare Success !");
+                } else{
+                    $phcNya = PersonalHomecare::find($request->id);
+                    if($request->status == "acceptance"){
+                        $phcNya->schedule = $phcNya->reschedule_date;
+                        $phcNya->status = 'approve_out_res';
+                        $phcNya->reschedule_date = null;
+                        $phcNya->save();
+    
+                        // homeservices
+                        $homeServiceRelation = DB::table('personal_homecares as ph')
+                                            ->join('home_services as hs', 'ph.id', '=', 'hs.personalhomecare_id')
+                                            ->select('hs.id')
+                                            ->where('hs.personalhomecare_id', $phcNya->id)
+                                            ->orderBy('ph.id', 'asc')
+                                            ->orderBy('hs.appointment', 'asc')
+                                            ->get();
+                        if ( count($homeServiceRelation) > 0 ) {
+                            foreach ( $homeServiceRelation as $index => $hs ) {
+                                $hsData = HomeService::find($hs->id);
+                                // reschedule appointment date
+                                // get appointment time 
+                                $appointmentDate = new DateTime($hsData->appointment);
+                                $time = $appointmentDate->format('H:i:s');
+                                $newAppointmentDate = date('Y-m-d', strtotime($phcNya->schedule . "+$index day"));
+                                $hsData->appointment = $newAppointmentDate." ".$time;
+                                $hsData->update();
+                            }
+                        }
+                    }
+                    elseif($request->status == "rejected"){
+                        $phcNya->reschedule_date = null;
+                        $phcNya->save();
+                    }elseif($request->status == "pending_reschedule"){
+                        $phcNya->reschedule_date = null;
+                        $phcNya->reschedule_reason = null;
+                        $phcNya->save();
+    
+                        //send notif to cso-branch
+                        $userNya = [$phcNya->cso->user];
+                        foreach ($phcNya->branch->cso as $perCso) {
+                            if($perCso->user != null && !in_array($perCso->user, $userNya)){
+                                array_push($userNya, $perCso->user);
+                            }
+                        }
+    
+                        // $userNya = User::where('users.fmc_token', '!=', null)
+                        //         ->whereIn('role_users.role_id', [1,2,5,6,7])
+                        //         ->leftjoin('role_users', 'users.id', '=', 'role_users.user_id')
+                        //         ->get();
+                        //dd($userNya);
+    
+                        $titleNya = "PENDING! - ACC Reschedule [Personal Homecare]";
+                        $messageNya = "Please try again to reschedule ".$phcNya->branch['code']."-".$phcNya->cso['name']." for ".$phcNya->name." [".$phcNya->personalHomecareProduct['code']." - ".$phcNya->personalHomecareProduct->product['name']."] ";
+                        $urlNya = URL::to(route('list_all_phc', ['id_phc'=>$phcNya['id'], 'pending_reschedule' => true]));
+                        $this->NotifTo($userNya, $messageNya, $titleNya, $urlNya);
+                        //end send notif to cso-branch
+                    }   
+    
+                    $userId = Auth::user()["id"];
+                    $historyPhc["type_menu"] = "Personal Homecare";
+                    $historyPhc["method"] = "Reschedule";
+                    $historyPhc["meta"] = json_encode(
+                        [
+                            "user" => $userId,
+                            "createdAt" => date("Y-m-d H:i:s"),
+                            "dataChange" => $phcNya->getChanges(),
+                        ],
+                        JSON_THROW_ON_ERROR
+                    );
+                    $historyPhc["user_id"] = $userId;
+                    $historyPhc["menu_id"] = $request->id;
+                    HistoryUpdate::create($historyPhc);
+    
+                    DB::commit();
+    
+                    $this->accNotif($phcNya, "acc_reschedule_".$request->status);
+    
+                    return redirect()
+                        ->route("detail_personal_homecare", ["id" => $request->id])
+                        ->with("success", "Acc for Reschedule Personal Homecare Success !");
+                }
+    
+    
+            } catch (Exception $e) {
+                DB::rollBack();
+                return response()->json(["error" => $e->getMessage()], 500);
+            }
         }
     }
 

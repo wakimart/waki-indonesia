@@ -130,12 +130,31 @@
                                     <div class="d-flex flex-wrap mt-4" style="align-items: center;">
                                         <p>Terpilih : <span id="checkedPH" class="checkedPH"></span></p>
                                         <div style="margin-left: auto;">
-                                            <form id="" method="POST" action="">
+                                            @if($keyNya == "reschedule_acc")                                            
+                                                <form id="formSelectAllReschedule" method="POST" action="{{ route('reschedule_personal_homecare') }}">
+                                            @elseif($keyNya == "extend_acc")
+                                                <form id="formSelectAllExtend" method="POST" action="{{ route('update_personal_homecare_status') }}">
+                                            @elseif($keyNya == "cancel_acc")
+                                                <form id="formSelectAllCancel" method="POST" action="{{ route('delete_personal_homecare') }}">
+                                            @else
+                                                <form id="" method="POST" action="">
+                                            @endif
                                                 @csrf
                                                 <div class="form-group">
                                                     <div class="d-flex flex-wrap" style="justify-content: right;">
-                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status_acc" value="true">Approved All</button>
-                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status_acc" value="false">Reject All</button>
+                                                    @if($keyNya == "reschedule_acc")
+                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="acceptance">Approved All</button>
+                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="rejected">Reject All</button>
+                                                    @elseif($keyNya == "extend_acc")
+                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="process_extend">Approved All</button>
+                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="process_extend_reject">Reject All</button>
+                                                    @elseif($keyNya == "cancel_acc")
+                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="cancel_approved">Approved All</button>
+                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="cancel_rejected">Reject All</button>
+                                                    @else
+                                                        <button type="button" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="acceptance">Approved All</button>
+                                                        <button type="button" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="rejected">Reject All</button>
+                                                    @endif
                                                     </div>
                                                 </div>
                                             </form>
@@ -192,7 +211,15 @@
                                                         <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['code'] }}</td>
                                                         <td style="text-align: center;">
                                                           @if(Auth::user()->inRole("head-admin"))
-                                                          <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                                                            @if(!empty($personalHomecare->reschedule_date))
+                                                                <form method="POST" action="{{ route('reschedule_personal_homecare') }}" style="margin: auto;">
+                                                            @elseif($personalHomecare->is_extend)
+                                                                <form method="POST" action="{{ route('update_personal_homecare_status') }}" style="margin: auto;">
+                                                            @elseif($personalHomecare->is_cancel)
+                                                                <form method="POST" action="{{ route('delete_personal_homecare') }}" style="margin: auto;">
+                                                            @else
+                                                                <form id="formUpdateStatusHS" method="POST" action="" style="margin: auto;">
+                                                            @endif
                                                               @csrf
                                                               <div class="form-group">
 
@@ -204,8 +231,19 @@
                                                                   </div>
 
                                                                   <div style="text-align: center;">
-                                                                      <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
-                                                                      <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                                                                  @if(!empty($personalHomecare->reschedule_date))
+                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="acceptance">Yes</button>
+                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
+                                                                  @elseif($personalHomecare->is_extend)
+                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="process_extend">Yes</button>
+                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="process_extend_reject">No</button>
+                                                                  @elseif($personalHomecare->is_cancel)
+                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="cancel_approved">Yes</button>
+                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="cancel_rejected">No</button>
+                                                                  @else
+                                                                    <button type="button" class="btn btn-gradient-primary" name="status" value="acceptance">Yes</button>
+                                                                    <button type="button" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
+                                                                  @endif
                                                                   </div>
                                                               </div>
                                                           </form>
@@ -244,7 +282,7 @@
                         <div class="d-flex flex-wrap mt-4" style="align-items: center;">
                             <p>Terpilih : <span id="terpilih"></span></p>
                             <div style="margin-left: auto;">
-                                <form id="" method="POST" action="{{ route('update_homeService') }}">
+                                <form id="formSelectAllHomeService" method="POST" action="{{ route('update_homeService') }}">
                                     @csrf
                                     <div class="form-group">
                                         <div class="d-flex flex-wrap" style="justify-content: right;">
@@ -715,7 +753,19 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#CancelPH-' + tabs_id).prop('disabled', lengthchecked < 2);
         });
         checkboxes.change();
+
+        $('#formSelectAllReschedule, #formSelectAllExtend, #formSelectAllCancel').submit(function(eventObj) {
+            var personalHomecareID =[]
+            $('.checkBoxPH:checked').each(function(i){
+                personalHomecareID[i] = $(this).val();
+            });
+            $(this).append(`<input type="hidden" name="phcData" value="${personalHomecareID}" /> `);
+            return true;
+        });
     });
+
+
+
 </script>
 
 {{-- checkbox untuk HS --}}
@@ -749,6 +799,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         $('.tableHS .checkBoxes').change();
 
+        $('#formSelectAllHomeService').submit(function(eventObj) {
+            var homeServiceID =[]
+            $('.checkHS:checked').each(function(i){
+                homeServiceID[i] = $(this).val();
+            });
+            $(this).append(`<input type="hidden" name="homeServiceData" value="${homeServiceID}" /> `);
+            return true;
+        });
     });
 </script>
 @endsection

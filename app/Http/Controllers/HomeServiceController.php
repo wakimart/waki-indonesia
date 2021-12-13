@@ -1094,7 +1094,38 @@ class HomeServiceController extends Controller
 
     public function update(Request $request){
         $homeService = HomeService::find($request->id);
-        if($request->has('cancel')){
+        if ($request->has('homeServiceData')) { // reject all or approved all
+            if (substr($request->homeServiceData, 0, 4) == "true") {
+                $hsID = explode(",", substr($request->homeServiceData,5));
+            } else {
+                $hsID = explode(",", $request->homeServiceData);
+            }
+            $hSID = HomeService::whereIn('id', $hsID)->get();
+            foreach ($hSID as $val) {
+                $titleNya = "Rejected - ACC Cancel [Home Service]";
+                $messagesNya = "Acc Cancel Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Rejected";
+
+                if($request->status_acc == "true"){
+                    $titleNya = "Approved - ACC Cancel [Home Service]";
+                    $messagesNya = "Acc Cancel Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Approved";
+                    $val->active = false;
+                }
+                $val->is_acc = false;
+                $val->save();
+
+                $userNya = [$val->cso->user];
+                foreach ($val->branch->cso as $perCso) {
+                    if($perCso->user != null){
+                        array_push($userNya, $perCso->user);
+                    }
+                }
+                $this->NotifTo($userNya, $messagesNya, $titleNya);
+
+            }
+            return redirect()->route('dashboard')->with("success", "HomeService Acc telah diproses.");
+
+
+        }else if($request->has('cancel')){
 
             $titleNya = "Rejected - ACC Cancel [Home Service]";
             $messagesNya = "Acc Cancel Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Rejected";
