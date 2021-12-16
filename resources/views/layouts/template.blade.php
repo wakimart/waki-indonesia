@@ -106,7 +106,7 @@
 	          @endif
 
 						@if(Utils::$lang=='id' || Utils::$lang=='eng')
-	          <li class="drop-down"><a href="#product">Produk</a>
+	          <li class="drop-down"><a href="">Produk</a>
 	            <ul>
 								@foreach (App\CategoryProduct::all() as $categoryProduct)
 								<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
@@ -183,7 +183,7 @@
       	<div class="footer-top">
         	<div class="container">
           		<div class="row">
-					
+
             		<div class="col-lg-4">
 						<div class="row">
 						   <div class="col-sm-12">
@@ -205,7 +205,7 @@
 									Malaysia.</p>
 							  </div>
 
-							  
+
 							  <div class="social-links">
 								@if(Utils::$lang=='id')
 									  <h4>Ikuti Kami</h4>
