@@ -1036,7 +1036,7 @@ class PersonalHomecareController extends Controller
                 $phcDatas = PersonalHomecare::whereIn("id", $phcID)->get();
                 foreach ($phcDatas as $val){
                     $titleNya = "";
-                    if($request->has('cancel_approved')){
+                    if($request->status == 'cancel_approved'){
                         $phc = PersonalHomecare::where("id", $val->id)->first();
                         $phc->is_cancel = false;
                         $phc->cancel_desc = null;
@@ -1114,7 +1114,7 @@ class PersonalHomecareController extends Controller
 
             try {
                 $titleNya = "";
-                if($request->has('cancel_approved')){
+                if($request->status == 'cancel_approved'){
                     $phc = PersonalHomecare::where("id", $request->id)->first();
                     $phc->is_cancel = false;
                     $phc->cancel_desc = null;

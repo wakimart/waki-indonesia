@@ -194,17 +194,24 @@
                                                             <br class="break">
                                                             ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
 
-                                                            @if ($personalHomecare['is_extend'] && Gate::check('acc-extend-personalhomecare'))
+                                                            @if ($keyNya == "extend_acc" && $personalHomecare['is_extend'] && Gate::check('acc-extend-personalhomecare'))
                                                             <br class="break">
                                                             <div class="extendReason" style="font-weight:bold;">
                                                               <span>{{ $personalHomecare["extend_reason"] }}</span>
                                                             </div>
                                                             @endif
 
-                                                            @if ($personalHomecare['is_cancel'] && (Gate::check('acc-extend-personalhomecare') || Gate::check('acc-extend-personalhomecare')))
+                                                            @if ($keyNya == "cancel_acc" && $personalHomecare['is_cancel'] && Gate::check('acc-extend-personalhomecare'))
                                                             <br class="break">
                                                             <div class="extendReason" style="font-weight:bold;">
                                                               <span>{{ $personalHomecare["cancel_desc"] }}</span>
+                                                            </div>
+                                                            @endif
+
+                                                            @if ($keyNya == "reschedule_acc" && $personalHomecare['reschedule_date'] != null && Gate::check('acc-reschedule-personalhomecare'))
+                                                            <br class="break">
+                                                            <div class="extendReason" style="font-weight:bold;">
+                                                              <span>{{ $personalHomecare["reschedule_reason"] }}</span>
                                                             </div>
                                                             @endif
                                                         </td>
