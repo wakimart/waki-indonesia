@@ -644,15 +644,33 @@ class PersonalHomecareController extends Controller
                 $phcDatas = PersonalHomecare::whereIn("id", $phcID)->get();
                 foreach ($phcDatas as $val){
                     $phc = PersonalHomecare::find($val->id);
-                    if ($request->status == "process_extend"){
+                    if ($request->status == "verified") {
+                        $phc->status = $request->status;
+                        $phc->save();
+
+                        $this->accNotif($phc, "acc_ask");
+                    }elseif ($request->status == "approve_out") {
+                        $phc->status = $request->status;
+                        $phc->save();
+                    }elseif ($request->status == "rejected") {
+                        $phc->status = $request->status;
+                        $phc->save();
+                    }elseif($request->status == "done"){
+                        PersonalHomecareProduct::where("id", $val->personalHomecareProduct->id)
+                            ->update(["status" => "available"]);
+
+                        $phc->status = $request->status;
+                        $phc->save();
+                    }elseif($request->status == "pending_product"){
+                        $this->accNotif($phc, "waiting_in_rejected");
+                    }elseif ($request->status == "process_extend"){
                         $phc->status = $request->status;
                         $phc->is_extend = false;
                         $phc->save();
-                    }
-                    elseif($request->status == "process_extend_reject"){
+                    }elseif($request->status == "process_extend_reject"){
                         $phc->is_extend = false;
                         $phc->save();
-                    }else{
+                    }else{ //pending_extend
                         $phc->is_extend = false;
                         $phc->extend_reason = null;
                         $phc->save();

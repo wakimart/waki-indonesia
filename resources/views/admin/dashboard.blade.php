@@ -130,7 +130,13 @@
                                     <div class="d-flex flex-wrap mt-4" style="align-items: center;">
                                         <p>Terpilih : <span id="checkedPH" class="checkedPH"></span></p>
                                         <div style="margin-left: auto;">
-                                            @if($keyNya == "reschedule_acc")                                            
+                                            @if($keyNya == "new")
+                                                <form id="formSelectAllNew" method="POST" action="{{ route('update_personal_homecare_status') }}">
+                                            @elseif($keyNya == "verified")
+                                                <form id="formSelectAllVerified" method="POST" action="{{ route('update_personal_homecare_status') }}">
+                                            @elseif($keyNya == "waiting_in")
+                                                <form id="formSelectAllWaitingIn" method="POST" action="{{ route('update_personal_homecare_status') }}">
+                                            @elseif($keyNya == "reschedule_acc")                                            
                                                 <form id="formSelectAllReschedule" method="POST" action="{{ route('reschedule_personal_homecare') }}">
                                             @elseif($keyNya == "extend_acc")
                                                 <form id="formSelectAllExtend" method="POST" action="{{ route('update_personal_homecare_status') }}">
@@ -142,7 +148,16 @@
                                                 @csrf
                                                 <div class="form-group">
                                                     <div class="d-flex flex-wrap" style="justify-content: right;">
-                                                    @if($keyNya == "reschedule_acc")
+                                                    @if($keyNya == "new")
+                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="verified">Approved All</button>
+                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="rejected">Reject All</button>
+                                                    @elseif($keyNya == "verified")
+                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="approve_out">Approved All</button>
+                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="rejected">Reject All</button>
+                                                    @elseif($keyNya == "waiting_in")
+                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="done">Approved All</button>
+                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="pending_product">Reject All</button>
+                                                    @elseif($keyNya == "reschedule_acc")
                                                         <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="acceptance">Approved All</button>
                                                         <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="rejected">Reject All</button>
                                                     @elseif($keyNya == "extend_acc")
@@ -218,7 +233,14 @@
                                                         <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['code'] }}</td>
                                                         <td style="text-align: center;">
                                                           @if(Auth::user()->inRole("head-admin"))
-                                                            @if(!empty($personalHomecare->reschedule_date))
+                                                            @if($personalHomecare->status == "new")
+                                                                <form method="POST" action="{{ route('update_personal_homecare_status') }}" style="margin: auto;">
+                                                            @elseif($personalHomecare->status == "verified")
+                                                                <form method="POST" action="{{ route('update_personal_homecare_status') }}" style="margin: auto;">
+                                                            @elseif($personalHomecare->status == "waiting_in")
+                                                                <form method="POST" action="{{ route('update_personal_homecare_status') }}" style="margin: auto;">
+                                                                    <input type="hidden" name="id_product" value="{{$personalHomecare->personalHomecareProduct['id']}}">
+                                                            @elseif(!empty($personalHomecare->reschedule_date))
                                                                 <form method="POST" action="{{ route('reschedule_personal_homecare') }}" style="margin: auto;">
                                                             @elseif($personalHomecare->is_extend)
                                                                 <form method="POST" action="{{ route('update_personal_homecare_status') }}" style="margin: auto;">
@@ -238,7 +260,17 @@
                                                                   </div>
 
                                                                   <div style="text-align: center;">
-                                                                  @if(!empty($personalHomecare->reschedule_date))
+                                                                  
+                                                                  @if($personalHomecare->status == "new")
+                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="verified">Yes</button>
+                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
+                                                                  @elseif($personalHomecare->status == "verified")
+                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="approve_out">Yes</button>
+                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
+                                                                  @elseif($personalHomecare->status == "waiting_in")
+                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="done">Yes</button>
+                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="pending_product">No</button>
+                                                                  @elseif(!empty($personalHomecare->reschedule_date))
                                                                     <button type="submit" class="btn btn-gradient-primary" name="status" value="acceptance">Yes</button>
                                                                     <button type="submit" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
                                                                   @elseif($personalHomecare->is_extend)
@@ -761,7 +793,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         checkboxes.change();
 
-        $('#formSelectAllReschedule, #formSelectAllExtend, #formSelectAllCancel').submit(function(eventObj) {
+        $('#formSelectAllNew, #formSelectAllVerified, #formSelectAllWaitingIn, #formSelectAllReschedule, #formSelectAllExtend, #formSelectAllCancel').submit(function(eventObj) {
             var personalHomecareID =[]
             $('.checkBoxPH:checked').each(function(i){
                 personalHomecareID[i] = $(this).val();
