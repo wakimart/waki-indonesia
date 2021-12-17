@@ -120,7 +120,7 @@
                             @endforeach
                         </ul>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body wrapper">
                         <div class="tab-content" id="myTabContent">
                             @foreach($personalHomecares as $keyNya => $arrPP5H)
                                 <div class="tab-pane fade show {{ $keyNya == "new" ? 'active' : '' }} p-3" id="tabs-{{ $keyNya }}" role="tabpanel" aria-labelledby="{{ $keyNya }}-tab">
@@ -416,7 +416,7 @@
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body wrapper">
                         <div class="clearfix">
                             <h4 class="card-title float-left">
                                 Reference Souvenir to Acc (total : {{ sizeof($refSouvenirs) }})
