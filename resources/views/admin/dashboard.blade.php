@@ -24,9 +24,13 @@
         background: transparent !important;
     }
 
-    @media(max-width: 437px){
-        #AccHS{
-            margin-bottom: 1em;
+    .btn-action button{
+        margin-bottom: 0.6em;
+    }
+
+    @media(max-width: 468px){
+        .btn-action button{
+            margin-bottom: 0.6em;
         }
     }
 </style>
@@ -140,7 +144,7 @@
                                                 <form id="" method="POST" action="">
                                             @endif
                                                 @csrf
-                                                <div class="form-group">
+                                                <div class="form-group btn-action">
                                                     <div class="d-flex flex-wrap" style="justify-content: right;">
                                                     @if($keyNya == "reschedule_acc")
                                                         <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="acceptance">Approved All</button>
@@ -162,7 +166,7 @@
                                     </div>
                                     <div class="table-responsive table-PP5H"
                                         style="border: 1px solid #ebedf2;">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered table-wrap">
                                             <thead style="text-align: center; background-color: aliceblue;">
                                                 <tr>
                                                     <td class="text-center">
@@ -189,7 +193,7 @@
                                                                     style="position: relative; width: 16px; margin: auto;"/>
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td style="white-space: normal;">
                                                             {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
                                                             ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
@@ -197,26 +201,26 @@
                                                             @if ($keyNya == "extend_acc" && $personalHomecare['is_extend'] && Gate::check('acc-extend-personalhomecare'))
                                                             <br class="break">
                                                             <div class="extendReason" style="font-weight:bold;">
-                                                              <span>{{ $personalHomecare["extend_reason"] }}</span>
+                                                              <p>{{ $personalHomecare["extend_reason"] }}</p>
                                                             </div>
                                                             @endif
 
                                                             @if ($keyNya == "cancel_acc" && $personalHomecare['is_cancel'] && Gate::check('acc-extend-personalhomecare'))
                                                             <br class="break">
                                                             <div class="extendReason" style="font-weight:bold;">
-                                                              <span>{{ $personalHomecare["cancel_desc"] }}</span>
+                                                              <p>{{ $personalHomecare["cancel_desc"] }}</p>
                                                             </div>
                                                             @endif
 
                                                             @if ($keyNya == "reschedule_acc" && $personalHomecare['reschedule_date'] != null && Gate::check('acc-reschedule-personalhomecare'))
                                                             <br class="break">
                                                             <div class="extendReason" style="font-weight:bold;">
-                                                              <span>{{ $personalHomecare["reschedule_reason"] }}</span>
+                                                              <p>{{ $personalHomecare["reschedule_reason"] }}</p>
                                                             </div>
                                                             @endif
                                                         </td>
                                                         <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['code'] }}</td>
-                                                        <td style="text-align: center;">
+                                                        <td style="text-align: center; white-space: normal;">
                                                           @if(Auth::user()->inRole("head-admin"))
                                                             @if(!empty($personalHomecare->reschedule_date))
                                                                 <form method="POST" action="{{ route('reschedule_personal_homecare') }}" style="margin: auto;">
@@ -237,7 +241,7 @@
                                                                     <p>Do you approved it ?</p>
                                                                   </div>
 
-                                                                  <div style="text-align: center;">
+                                                                  <div class="btn-action" style="text-align: center;">
                                                                   @if(!empty($personalHomecare->reschedule_date))
                                                                     <button type="submit" class="btn btn-gradient-primary" name="status" value="acceptance">Yes</button>
                                                                     <button type="submit" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
@@ -291,7 +295,7 @@
                             <div style="margin-left: auto;">
                                 <form id="formSelectAllHomeService" method="POST" action="{{ route('update_homeService') }}">
                                     @csrf
-                                    <div class="form-group">
+                                    <div class="form-group btn-action">
                                         <div class="d-flex flex-wrap" style="justify-content: right;">
                                             <button type="submit" id="AccHS" class="btn btn-md btn-outline-success" name="status_acc" value="true">Approved All</button>
                                             <button type="submit" id="CancelHS" class="btn btn-md btn-outline-danger ml-2" name="status_acc" value="false">Reject All</button>
@@ -329,7 +333,7 @@
                                                 </div>
                                             </td>
                                             <td>{{ date_format(date_create($perHomeservice['appointment']), 'd/m/Y H:i') }}</td>
-                                            <td>
+                                            <td style="white-space: normal;">
                                               <div class="detailHs" style="border-bottom: 0.2px solid #2f2f2f">
                                                 Type HS : {{ $perHomeservice['type_homeservices'] }}
                                                 <br class="break">
@@ -341,11 +345,11 @@
 
                                               <br class="break">
                                               <div class="cancelReason" style="font-weight:bold;">
-                                                {{ $perHomeservice['cancel_desc'] }}
+                                                <p>{{ $perHomeservice['cancel_desc'] }}<p>
                                               </div>
                                             </td>
 
-                                            <td style="text-align: center;">
+                                            <td style="text-align: center; white-space: normal;">
                                               @if(Auth::user()->inRole("head-admin"))
                                               <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
                                                   @csrf
@@ -358,7 +362,7 @@
                                                         <p>Do you approved it ?</p>
                                                       </div>
 
-                                                      <div style="text-align: center;">
+                                                      <div class="btn-action" style="text-align: center;">
                                                           <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
                                                           <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
                                                       </div>
