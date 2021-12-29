@@ -453,7 +453,8 @@ $menu_item_second = "list_homeservice";
                                 $previousMonth = (int) $currentMonth - 1;
                                 $nextMonth = (int) $currentMonth + 1;
                                 $month = date("m");
-                                $year = date("Y");
+                                $nextYear = date("Y");
+                                $previousYear = date("Y");
 
                                 $currentMonth_text = date("F");
 
@@ -464,7 +465,8 @@ $menu_item_second = "list_homeservice";
                                     $previousMonth = (int) $currentMonth - 1;
                                     $nextMonth = (int) $currentMonth + 1;
                                     $month = date("m", $get_appointment);
-                                    $year = date("Y", $get_appointment);
+                                    $nextYear = date("Y", $get_appointment);
+                                    $previousYear = date("Y", $get_appointment);
 
                                     $currentMonth_text = date("F", $get_appointment);
                                 }
@@ -475,6 +477,16 @@ $menu_item_second = "list_homeservice";
                                 if ($nextMonth < 10) {
                                     $nextMonth = "0". $nextMonth;
                                 }
+
+                                if ($previousMonth < 1) {
+                                    $previousMonth = "12";
+                                    $previousYear--;
+                                }
+                                if ($nextMonth > 12) {
+                                    $nextMonth = "01";
+                                    $nextYear++;
+                                }
+
                                 ?>
                                 <div class="cjslib-month"
                                     style="background-color: rgb(255, 193, 7); color: rgb(255, 255, 255);">
@@ -482,7 +494,7 @@ $menu_item_second = "list_homeservice";
                                         <svg style="width: 24px; height: 24px;"
                                             viewBox="0 0 24 24"
                                             id="previous-month"
-                                            data-value="<?php echo $year . "-" . $previousMonth . "-01"; ?>"
+                                            data-value="<?php echo $previousYear . "-" . $previousMonth . "-01"; ?>"
                                             data-province="<?php echo $province; ?>"
                                             data-city="<?php echo $city; ?>"
                                             data-district="<?php echo $district ?>"
@@ -500,7 +512,7 @@ $menu_item_second = "list_homeservice";
                                         <svg style="width: 24px; height: 24px;"
                                             viewBox="0 0 24 24"
                                             id="next-month"
-                                            data-value="<?php echo $year . "-" . $nextMonth . "-01"; ?>"
+                                            data-value="<?php echo $nextYear . "-" . $nextMonth . "-01"; ?>"
                                             data-province="<?php echo $province; ?>"
                                             data-city="<?php echo $city; ?>"
                                             data-district="<?php echo $district ?>"
@@ -1686,6 +1698,7 @@ function changeMonth(click) {
     const convertDate = new Date(Date.parse(click.dataset.value));
     const currentYear = convertDate.getFullYear();
     const currentMonth = convertDate.getMonth();
+    console.log([click, convertDate, currentYear, currentMonth]);
 
     const monthWithZero = ("0" + (currentMonth + 1)).slice(-2);
     const dateWithZero = ("0" + (convertDate.getDate())).slice(-2);
