@@ -17,19 +17,16 @@
 @endif
 
 @if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'active': '' }}">
-  <a class="nav-link" data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'true': '' }}" aria-controls="deliveryorder-dd">
-    <span class="menu-title">Registration</span>
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'registerevent'? 'active': '' }}">
+  <a class="nav-link" data-toggle="collapse" href="#registerevent-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'registerevent'? 'true': '' }}" aria-controls="registerevent-dd">
+    <span class="menu-title">Registration Event</span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-calendar-text menu-icon"></i>
   </a>
-  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'show': '' }}" id="deliveryorder-dd">
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'registerevent'? 'show': '' }}" id="registerevent-dd">
     <ul class="nav flex-column sub-menu">
       @if(Gate::check('add-deliveryorder'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_deliveryorder'? 'active': '' }}" href="{{ route('add_deliveryorder')}}">Add Registration</a></li>
-      @endif
-      @if(Gate::check('browse-deliveryorder'))
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_deliveryorder'? 'active': '' }}" href="{{ route('list_deliveryorder') }}">List Registration</a></li>
       @endif
       @if(Auth::user()->roles[0]['slug'] == 'head-admin')
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_regispromo'? 'active': '' }}" href="{{ route('list_regispromo') }}">List Registration Promotion</a></li>
@@ -59,6 +56,26 @@
 </li>
 @endif
 
+@if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'active': '' }}">
+  <a class="nav-link" data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'true': '' }}" aria-controls="deliveryorder-dd">
+    <span class="menu-title">Registration</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-calendar-text menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'show': '' }}" id="deliveryorder-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-deliveryorder'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_deliveryorder'? 'active': '' }}" href="{{ route('add_deliveryorder')}}">Add Registration</a></li>
+      @endif
+      @if(Gate::check('browse-deliveryorder'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_deliveryorder'? 'active': '' }}" href="{{ route('list_deliveryorder') }}">List Registration</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
 @if(Gate::check('add-phc-product') || Gate::check('browse-phc-product') || Gate::check('add-personal-homecare') || Gate::check('browse-personal-homecare'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#personalhomecare-dd" aria-expanded="false" aria-controls="personalhomecare-dd">
@@ -69,40 +86,40 @@
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'show': '' }}" id="personalhomecare-dd">
     <ul class="nav flex-column sub-menu">
       @if(Gate::check('add-phc-product'))
-      <li class="nav-item"> 
-        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_phc_product'? 'active': '' }}" 
+      <li class="nav-item">
+        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_phc_product'? 'active': '' }}"
           href="{{ route('add_phc_product')}}">
           Add Product
         </a>
       </li>
       @endif
       @if(Gate::check('browse-phc-product'))
-      <li class="nav-item"> 
-        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_product'? 'active': '' }}" 
+      <li class="nav-item">
+        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_product'? 'active': '' }}"
           href="{{  route('list_phc_product') }}">
           List Product
         </a>
       </li>
       @endif
       @if(Gate::check('browse-personal-homecare'))
-      <li class="nav-item"> 
-        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_approved'? 'active': '' }}" 
+      <li class="nav-item">
+        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_approved'? 'active': '' }}"
           href="{{  route('list_approved_phc') }}">
           List Approve Out Product
         </a>
       </li>
       @endif
       @if(Gate::check('add-personal-homecare'))
-      <li class="nav-item"> 
-        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_personal_homecare'? 'active': '' }}" 
+      <li class="nav-item">
+        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_personal_homecare'? 'active': '' }}"
           href="{{  route('add_personal_homecare') }}">
           Add Personal Homecare
         </a>
       </li>
       @endif
       @if(Gate::check('browse-personal-homecare'))
-      <li class="nav-item"> 
-        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_all'? 'active': '' }}" 
+      <li class="nav-item">
+        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_all'? 'active': '' }}"
           href="{{  route('list_all_phc') }}">
           List All Personal Homecare
         </a>
