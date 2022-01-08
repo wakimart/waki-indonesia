@@ -26,7 +26,7 @@
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'registerevent'? 'show': '' }}" id="registerevent-dd">
     <ul class="nav flex-column sub-menu">
       @if(Gate::check('add-deliveryorder'))
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_deliveryorder'? 'active': '' }}" href="{{ route('add_deliveryorder')}}">Add Registration</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_deliveryorder'? 'active': '' }}" href="{{ route('add_regispromo')}}">Add Registration</a></li>
       @endif
       @if(Auth::user()->roles[0]['slug'] == 'head-admin')
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_regispromo'? 'active': '' }}" href="{{ route('list_regispromo') }}">List Registration Promotion</a></li>

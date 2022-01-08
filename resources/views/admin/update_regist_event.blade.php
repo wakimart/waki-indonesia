@@ -69,7 +69,7 @@ $menu_item_second = "add_deliveryorder";
 <div class="main-panel">
       <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Add Registration WAKi Di Rumah Aja</h3>
+            <h3 class="page-title">Edit Registration WAKi Di Rumah Aja</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -81,7 +81,7 @@ $menu_item_second = "add_deliveryorder";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Add Registration
+                        Edit Registration
                     </li>
                 </ol>
             </nav>
@@ -90,7 +90,7 @@ $menu_item_second = "add_deliveryorder";
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('store_regispromo') }}" method="POST">
+                        <form action="{{ route('update_regispromo', $registration_promotion->id) }}" method="POST">
                             {{csrf_field()}}
                             {{method_field('PUT')}}
                             @if ($errors->any())
@@ -115,7 +115,7 @@ $menu_item_second = "add_deliveryorder";
                                             id="first_name"
                                             name="first_name"
                                             placeholder="First Name"
-                                            required value="{{old('first_name')}}"/>
+                                            required value="{{ $registration_promotion->first_name }}"/>
                                         <div class="validation"></div>
                                     </div>
                                     <div class="col-6">
@@ -125,7 +125,7 @@ $menu_item_second = "add_deliveryorder";
                                             id="last_name"
                                             name="last_name"
                                             placeholder="Last Name"
-                                            required value="{{old('last_name')}}"/>
+                                            required value="{{ $registration_promotion->last_name }}"/>
                                         <div class="validation"></div>
                                     </div>
                                 </div>
@@ -137,7 +137,7 @@ $menu_item_second = "add_deliveryorder";
                                     id="address"
                                     name="address"
                                     rows="4"
-                                    placeholder="Full Address">{{old('address')}}</textarea>
+                                    placeholder="Full Address">{{ $registration_promotion->address }}</textarea>
                                 <div class="validation"></div>
                             </div>
                             <div class="form-group">
@@ -200,7 +200,7 @@ $menu_item_second = "add_deliveryorder";
                                     id="phone"
                                     name="phone"
                                     placeholder="Phone Number"
-                                    required value="{{old('phone')}}"/>
+                                    required value="{{ $registration_promotion->phone }}"/>
                                 <div class="validation"></div>
                             </div>
 
@@ -211,13 +211,13 @@ $menu_item_second = "add_deliveryorder";
                                     id="email"
                                     name="email"
                                     placeholder="Email Address"
-                                    required value="{{old('email')}}"/>
+                                    required value="{{ $registration_promotion->email }}"/>
                                 <div class="validation"></div>
                             </div>
 
                             <div id="errormessage"></div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+                                <button type="submit" class="btn btn-gradient-primary mr-2">Update</button>
                                 <button class="btn btn-light" onclick="location.href=`{{route('list_regispromo')}}`" type="button">Cancel</button>
                             </div>
                         </form>

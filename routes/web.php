@@ -317,9 +317,28 @@ Route::group(['prefix' => 'cms-admin'], function () {
 	    	->name('delete_deliveryorder');
 
 	    //WAKi Di Rumah Aja
-	    Route::get('/list_regispromo', 'RegistrationPromotionController@admin_ListRegistrationPromo')
+        Route::get('/list_regispromo', 'RegistrationPromotionController@admin_ListRegistrationPromo')
 	    	->name('list_regispromo')
 	    	->middleware('can:browse-deliveryorder');
+        Route::get('/add_regispromo', 'RegistrationPromotionController@admin_AddRegistrationPromo')
+	    	->name('add_regispromo')
+	    	->middleware('can:add-deliveryorder');
+        Route::match(['put', 'patch'],'/store_regispromo', 'RegistrationPromotionController@admin_StoreRegistrationPromo')
+            ->name('store_regispromo')
+            ->middleware('can:add-deliveryorder');
+        Route::get('/detail_regispromo/{id}', 'RegistrationPromotionController@admin_DetailRegistrationPromo')
+            ->name('detail_regispromo')
+            ->middleware('can:edit-deliveryorder');
+        Route::get('/edit_regispromo/{id}/edit', 'RegistrationPromotionController@admin_EditRegistrationPromo')
+            ->name('edit_regispromo')
+            ->middleware('can:edit-deliveryorder');
+        Route::match(['put', 'patch'],'/update_regispromo/{id}', 'RegistrationPromotionController@admin_UpdateRegistrationPromo')
+            ->name('update_regispromo')
+            ->middleware('can:edit-deliveryorder');
+        Route::delete('/delete_regispromo/{id}', 'RegistrationPromotionController@admin_DeleteRegistrationPromo')
+            ->name('delete_regispromo')
+            ->middleware('can:delete-deliveryorder');
+        	    
     });
 
     Route::group(['prefix' => 'order', 'middleware' => 'auth'], function() {

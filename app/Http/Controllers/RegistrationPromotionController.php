@@ -82,6 +82,55 @@ class RegistrationPromotionController extends Controller
         
     }
 
+    /**
+     * add promo registration in admin
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function admin_AddRegistrationPromo()
+    {
+        return view('admin.add_regist_event');
+    }
+    
+    /**
+     * store promo registration in admin
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function admin_StoreRegistrationPromo(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'address' => 'required',
+            'email' => 'required',
+            'phone' => 'required|min:7',
+        ]);
+        
+        DB::beginTransaction();
+        try {
+            $data = $request->all();
+            $registrationPromotions = RegistrationPromotion::create($data);    
+            $request->session()->put('success_registration', "1");
+            DB::commit();
+            
+            return redirect()->route('list_regispromo')->with("success", "Successfully added.");
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return redirect()->route("add_regispromo")->with("error", $ex);
+        }
+        
+        
+    }
+    
     public function admin_ListRegistrationPromo(Request $request){
         $promotions = RegistrationPromotion::where('active', true);
         $countPromotions = RegistrationPromotion::where('active', true)->count();
@@ -108,6 +157,21 @@ class RegistrationPromotionController extends Controller
     }
 
     /**
+     * detail promo registration in admin
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function admin_DetailRegistrationPromo($id)
+    {
+        $registration_promotion = RegistrationPromotion::find($id);
+        return view('admin.detail_regist_event', compact('registration_promotion'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -116,6 +180,21 @@ class RegistrationPromotionController extends Controller
     public function edit($id)
     {
         //
+    }
+
+    /**
+     * edit promo registration in admin
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function admin_EditRegistrationPromo($id)
+    {
+        $registration_promotion = RegistrationPromotion::find($id);
+        return view('admin.update_regist_event', compact('registration_promotion'));
     }
 
     /**
@@ -131,6 +210,45 @@ class RegistrationPromotionController extends Controller
     }
 
     /**
+     * update promo registration in admin
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function admin_UpdateRegistrationPromo(Request $request, $id)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'address' => 'required',
+            'email' => 'required',
+            'phone' => 'required|min:7',
+        ]);
+        
+        DB::beginTransaction();
+        try {
+            $registrationPromotions = RegistrationPromotion::find($id);   
+            $registrationPromotions->first_name = $request->first_name; 
+            $registrationPromotions->last_name = $request->last_name; 
+            $registrationPromotions->address = $request->address; 
+            $registrationPromotions->email = $request->email; 
+            $registrationPromotions->phone = $request->phone; 
+            $registrationPromotions->update();
+            $request->session()->put('success_registration', "1");
+            DB::commit();
+            
+            return redirect()->route('list_regispromo')->with("success", "Successfully updated.");
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return redirect()->route("update_regispromo")->with("error", $ex);
+        }
+        
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -139,5 +257,38 @@ class RegistrationPromotionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * delete promo registration in admin
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function admin_DeleteRegistrationPromo($id)
+    {
+        DB::beginTransaction();
+
+        if (!empty($id)) {
+            try {
+                $registration_promotion = RegistrationPromotion::find($id);
+                $registration_promotion->active = false;
+                $registration_promotion->update();
+
+                DB::commit();
+
+                return redirect()
+                    ->route("list_regispromo")
+                    ->with("success", "Successfully deleted!");
+            } catch (Exception $e) {
+                DB::rollback();
+                return redirect()->route("list_regispromo")->with("error", "Something wrong, please contact IT");
+            }
+        }
+
+        return response()->json(["result" => "Data not found."], 400);
     }
 }
