@@ -89,7 +89,7 @@
 	      <div class="logo float-left">
 	        <!-- Uncomment below if you prefer to use an image logo -->
 	        <!-- <h1 class="text-light"><a href="#intro" class="scrollto"><span>WAKi</span></a></h1> -->
-	        <a href="#header" class="scrollto"><img src="{{asset('sources/Logo Since.png')}}" alt="" class="img-fluid" style="margin-right: 4em;"></a>
+	        <a href="{{route('index')}}" class="scrollto"><img src="{{asset('sources/Logo Since.png')}}" alt="" class="img-fluid" style="margin-right: 4em;"></a>
 	      </div>
 	      <nav class="main-nav float-left d-none d-lg-block scrollto">
 	        <ul>

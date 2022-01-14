@@ -189,7 +189,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
 
           <div class="owl-carousel product-carousel">
-              <div class="card white-bg mb-3 item">
+              <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 5)}}`">
                 <div class="container product-img">
                   <img src="{{ asset ('sources/thumbnail-massager.png')}}" class="card-img-top img-fluid" />
                 </div>
@@ -213,7 +213,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card white-bg mb-3 item">
+              <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 2)}}`">
                 <div class="container product-img">
                   <img src="{{ asset ('sources/thumbnail-hpt.png') }}" class="card-img-top img-fluid" alt="" />
                 </div>
@@ -238,7 +238,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card white-bg mb-3 item">
+              <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 4)}}`">
                 <div class="container product-img">
                   <img src="{{ asset ('sources/thumbnail-bio.png') }}" class="card-img-top img-fluid" alt="" />
                 </div>
@@ -263,7 +263,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card white-bg mb-3 item">
+              <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 3)}}`">
                 <div class="container product-img">
                   <img src="{{ asset ('sources/thumbnail-humidifier.png') }}" class="card-img-top img-fluid" alt="" />
                 </div>
@@ -288,7 +288,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card white-bg mb-3 item">
+              <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 6)}}`">
                 <div class="container product-img">
                   <img src="{{ asset ('sources/thumbnail-household.png') }}" class="card-img-top img-fluid" alt="" />
                 </div>
