@@ -135,6 +135,25 @@ $menu_item_second = "list_regispromo";
                             </div>
                             
                             <div class="form-group">
+                                <label for="province">Province</label>
+                                <select class="form-control" disabled style="color: black">
+                                    <option selected>{{ !empty($registration_promotion->province) ? $registration_promotion->province->province : "-"}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="district">District</label>
+                                <select class="form-control" disabled style="color: black">
+                                    <option selected>{{ !empty($registration_promotion->district) ? $registration_promotion->district->type ." ". $registration_promotion->district->city_name : "-"}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="province">Sub District</label>
+                                <select class="form-control" disabled style="color: black">
+                                    <option selected>{{ !empty($registration_promotion->subdistrict) ? $registration_promotion->subdistrict->subdistrict_name : "-" }}</option>
+                                </select>
+                            </div>
+                                                        
+                            <div class="form-group">
                                 <label for="phone">Phone Number</label>
                                 <input type="number"
                                     class="form-control"

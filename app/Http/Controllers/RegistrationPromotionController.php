@@ -233,7 +233,10 @@ class RegistrationPromotionController extends Controller
             $registrationPromotions = RegistrationPromotion::find($id);   
             $registrationPromotions->first_name = $request->first_name; 
             $registrationPromotions->last_name = $request->last_name; 
-            $registrationPromotions->address = $request->address; 
+            $registrationPromotions->address = $request->address;
+            $registrationPromotions->province_id = $request->province_id;
+            $registrationPromotions->district_id = $request->district_id;
+            $registrationPromotions->subdistrict_id = $request->subdistrict_id;
             $registrationPromotions->email = $request->email; 
             $registrationPromotions->phone = $request->phone; 
             $registrationPromotions->update();

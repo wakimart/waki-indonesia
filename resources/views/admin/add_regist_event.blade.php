@@ -170,7 +170,7 @@ $menu_item_second = "add_deliveryorder";
                                 <label for="city">City</label>
                                 <select class="form-control"
                                     id="city"
-                                    name="city"
+                                    name="district_id"
                                     data-msg="Mohon Pilih Kota"
                                     required>
                                     <option selected disabled value="">
@@ -183,7 +183,7 @@ $menu_item_second = "add_deliveryorder";
                                 <label for="subDistrict">Sub District</label>
                                 <select class="form-control"
                                     id="subDistrict"
-                                    name="distric"
+                                    name="subdistrict_id"
                                     data-msg="Mohon Pilih Kecamatan"
                                     required>
                                     <option selected disabled value="">

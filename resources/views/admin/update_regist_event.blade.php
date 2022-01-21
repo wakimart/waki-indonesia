@@ -142,7 +142,7 @@ $menu_item_second = "add_deliveryorder";
                             </div>
                             <div class="form-group">
                                 <label for="province">Province</label>
-                                <select class="form-control"
+                                <select class="form-control" style="color: black"
                                     id="province"
                                     name="province_id"
                                     data-msg="Mohon Pilih Provinsi"
@@ -154,10 +154,15 @@ $menu_item_second = "add_deliveryorder";
                                     <?php
                                     $result = RajaOngkir::FetchProvince();
                                     $result = $result['rajaongkir']['results'];
-
                                     if (sizeof($result) > 0) {
                                         foreach ($result as $value) {
-                                            echo '<option value="' . $value['province_id'] . '">'
+                                            if ( $value->province_id == $registration_promotion->province_id ) {
+                                                $selected = "selected";
+                                            } else {
+                                                $selected = "";
+                                            }
+
+                                            echo '<option value="' . $value['province_id'] . '"'.$selected.'>'
                                                 . $value['province']
                                                 . "</option>";
                                         }
@@ -168,26 +173,26 @@ $menu_item_second = "add_deliveryorder";
                             </div>
                             <div class="form-group">
                                 <label for="city">City</label>
-                                <select class="form-control"
+                                <select class="form-control" style="color: black"
                                     id="city"
-                                    name="city"
+                                    name="district_id"
                                     data-msg="Mohon Pilih Kota"
                                     required>
                                     <option selected disabled value="">
-                                        Pilihan Kota
+                                        {{ !empty($registration_promotion->district) ? $registration_promotion->district->type ." ". $registration_promotion->district->city_name : "Pilihan Kota" }}
                                     </option>
                                 </select>
                                 <div class="validation"></div>
                             </div>
                             <div class="form-group">
                                 <label for="subDistrict">Sub District</label>
-                                <select class="form-control"
+                                <select class="form-control" style="color:black"
                                     id="subDistrict"
-                                    name="distric"
+                                    name="subdistrict_id"
                                     data-msg="Mohon Pilih Kecamatan"
                                     required>
                                     <option selected disabled value="">
-                                        Pilihan Kecamatan
+                                        {{ !empty($registration_promotion->subdistrict) ? $registration_promotion->subdistrict->subdistrict_name : "Pilihan Kecamatan" }}
                                     </option>
                                 </select>
                                 <div class="validation"></div>
