@@ -231,7 +231,7 @@ if (
                                                 <td>Province</td>
                                                 <td>City</td>
                                                 <td>Link HS</td>
-                                                {{-- <td>Order</td> --}}
+                                                <td>Order</td>
                                                 <td>Souvenir</td>
                                                 <td>Status</td>
                                                 <td>Deliv. Status</td>
@@ -312,20 +312,20 @@ if (
                                                         @endif
                                                     </td>
                                                     
-                                                    {{-- <td class="text-center"
+                                                    <td class="text-center"
                                                         id="order_{{ $key }}"
                                                         data-order="{{ $reference->order_id }}"
-                                                        style="overflow-x:auto; display: none;">
+                                                        style="overflow-x:auto;">
                                                         @php
                                                         if (!empty($reference->order_id)) {
                                                             $order = Order::select("id", "code")
                                                                 ->where("id", $reference->order_id)
                                                                 ->first();
 
-                                                            echo $order->code;
+                                                            echo '<a href="'.route("detail_order", ["code" => $order->code]).'">'.$order->code.'</a>';
                                                         }
                                                         @endphp
-                                                    </td> --}}
+                                                    </td>
                                                     <td id="souvenir_{{ $key }}"
                                                         class="text-center"
                                                         data-permission="{{ $specialPermission }}"
@@ -672,7 +672,7 @@ if (
                         </button>
                         <input type="hidden" id="hs-row-count" value="0" />
                     </div>
-                    {{-- <div class="form-group">
+                    <div class="form-group">
                         <label for="edit-order">Order</label>
                         <input type="hidden"
                             id="edit-order"
@@ -687,7 +687,7 @@ if (
                             data-target="#choose-order">
                             Choose Order
                         </button>
-                    </div> --}}
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -1678,7 +1678,7 @@ $(document).ready(function () {
     $('#order-filter-name_phone').on('input', function (e) {
         let submission_id = "{{ $submission->id }}";
         let filter = $(this).val();
-        getOrderSubmission(filter, submission_id);
+        getOrderSubmission(filter, submission_id, "btn_choose_order");
     });
 
     function getOrderSubmission(filter, submission_id, originButton) {
