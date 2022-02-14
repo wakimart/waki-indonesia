@@ -253,6 +253,7 @@ if (
                                                     name="id"
                                                     form="edit-form_{{ $key }}"
                                                     value="{{ $reference->id }}" />
+                                                <input type="hidden" id="wakimart_link_{{ $key }}" value="{{$reference->wakimart_link}}">
                                                 <tr>
                                                     <td id="name_{{ $key }}">
                                                         {{ $reference->name }}
@@ -685,8 +686,16 @@ if (
                             data-originbutton="btn_choose_order"
                             data-toggle="modal"
                             data-target="#choose-order">
-                            Choose Order
+                            Choose Waki Order
                         </button>
+                    </div>
+                    <div class="form-group">
+                        <input type="text"
+                            class="form-control"
+                            id="edit-wakimart-link"
+                            name="wakimart_link"
+                            value=""
+                            placeholder="Wakimart Link"/>
                     </div>
                 </form>
             </div>
@@ -1353,6 +1362,7 @@ function clearModal() {
     document.getElementById("edit-name").value = "";
     document.getElementById("edit-age").value = "";
     document.getElementById("edit-phone").value = "";
+    document.getElementById("edit-wakimart-link").value = "";
     document.getElementById("edit-province").selectedIndex = 0;
     document.getElementById("edit-city").value = "";
     document.getElementById("edit-souvenir").selectedIndex = 0;
@@ -1385,6 +1395,7 @@ function clickEdit(e) {
     const name = document.getElementById("name_" + refSeq).innerHTML.trim();
     const age = document.getElementById("age_" + refSeq).innerHTML.trim();
     const phone = document.getElementById("phone_" + refSeq).innerHTML.trim();
+    const wakimart_link = document.getElementById("wakimart_link_" + refSeq).value;
     const province = document.getElementById("province_" + refSeq).getAttribute("data-province");
     const city = document.getElementById("city_" + refSeq).getAttribute("data-city");
     const souvenir = document.getElementById("souvenir_" + refSeq).getAttribute("data-souvenir");
@@ -1425,6 +1436,7 @@ function clickEdit(e) {
     document.getElementById("edit-name").value = name;
     document.getElementById("edit-age").value = age;
     document.getElementById("edit-phone").value = phone;
+    document.getElementById("edit-wakimart-link").value = wakimart_link;
     document.getElementById("edit-province").value = province;
     setCityAdd(document.getElementById("edit-province"));
     setTimeout(function () {
@@ -1462,7 +1474,7 @@ function clickEdit(e) {
     document.getElementById("edit-link-hs").value = hsArray.join(", ");
 
     // document.getElementById("edit-order").value = orderId();
-    document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Order";
+    document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Waki Order";
 }
 
 function validateForm(refSeq) {

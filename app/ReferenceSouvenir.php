@@ -19,6 +19,7 @@ class ReferenceSouvenir extends Model
         "delivery_status_prize",
         "is_acc",
         "final_status",
+        "wakimart_link"
     ];
 
     public function reference()
