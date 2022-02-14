@@ -232,6 +232,7 @@ if (
                                                 <td>City</td>
                                                 <td>Link HS</td>
                                                 <td>Order</td>
+                                                <td>Wakimart Link</td>
                                                 <td>Souvenir</td>
                                                 <td>Status</td>
                                                 <td>Deliv. Status</td>
@@ -326,6 +327,9 @@ if (
                                                             echo '<a href="'.route("detail_order", ["code" => $order->code]).'">'.$order->code.'</a>';
                                                         }
                                                         @endphp
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{{ $reference->wakimart_link }}" target="_blank">{{ $reference->wakimart_link }}</a>                                                        
                                                     </td>
                                                     <td id="souvenir_{{ $key }}"
                                                         class="text-center"
