@@ -328,6 +328,20 @@ if (
                                                         }
                                                         @endphp
                                                     </td>
+                                                    <td class="text-center"
+                                                        id="order_white_{{ $key }}"
+                                                        data-order="{{ $reference->order_id }}"
+                                                        style="overflow-x:auto; display: none;">
+                                                        @php
+                                                        if (!empty($reference->order_id)) {
+                                                            $order = Order::select("id", "code")
+                                                                ->where("id", $reference->order_id)
+                                                                ->first();
+
+                                                            echo '<a href="'.route("detail_order", ["code" => $order->code]).'" style="color:white">'.$order->code.'</a>';
+                                                        }
+                                                        @endphp
+                                                    </td>
                                                     <td class="text-center">
                                                         <a href="{{ $reference->wakimart_link }}" target="_blank">{{ $reference->wakimart_link }}</a>                                                        
                                                     </td>
@@ -1373,7 +1387,7 @@ function clearModal() {
     // document.getElementById("edit-prize").selectedIndex = 0;
     document.getElementById("edit-link-hs").value = "";
     document.getElementById("link-hs-container").innerHTML = "";
-    // document.getElementById("edit-order").value = "";
+    document.getElementById("edit-order").value = "";
     // document.getElementById("btn_choose_order").innerHTML = "Choose Order";
 }
 
@@ -1427,7 +1441,8 @@ function clickEdit(e) {
 
     function orderCode() {
         try {
-            return document.getElementById("order_" + refSeq).innerHTML.trim();
+            // return document.getElementById("order_" + refSeq).innerHTML.trim();
+            return document.getElementById("order_white_" + refSeq).innerHTML.trim();
         } catch (error) {
             delete error;
             return "";
@@ -1477,7 +1492,7 @@ function clickEdit(e) {
     });
     document.getElementById("edit-link-hs").value = hsArray.join(", ");
 
-    // document.getElementById("edit-order").value = orderId();
+    document.getElementById("edit-order").value = orderId();
     document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Waki Order";
 }
 

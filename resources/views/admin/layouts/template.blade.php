@@ -85,6 +85,15 @@
                         });
                     </script>
                     @endif
+                    <!-- wakimart link alert -->
+                    @if($errors->any())
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("#modal-Notification").modal("show");
+                                $("#txt-notification").html("<div class=\"alert alert-danger\">{{ $errors }}</div>");
+                            });
+                        </script>
+                    @endif
 
                     <ul class="navbar-nav navbar-nav-right">
                         <li class="nav-item nav-profile dropdown">

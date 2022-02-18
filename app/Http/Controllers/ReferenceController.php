@@ -218,7 +218,7 @@ class ReferenceController extends Controller
     {
         $validator = \Validator::make($request->all(), [
             'wakimart_link' => [
-                Rule::unique('reference_souvenirs')->ignore($request->id, 'reference_id'),
+                'nullable',Rule::unique('reference_souvenirs')->ignore($request->id, 'reference_id'),
             ],
         ]);
 
@@ -229,7 +229,7 @@ class ReferenceController extends Controller
             for ($i = 0; $i < count($arr_Keys); $i++) {
                 $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
             }
-            return response()->json(['errors' => $arr_Hasil]);
+            return redirect($request->url)->withErrors($arr_Hasil['wakimart_link']);
         }else{        
             DB::beginTransaction();
     
