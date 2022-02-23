@@ -438,8 +438,7 @@ $menu_item_second = "list_homeservice";
                         }
                         ?>
 
-                        <div class="col-xs-12 col-sm-12 col-md-12 table-responsive"
-                            id="calendar-container">
+                        <div class="col-xs-12 col-sm-12 col-md-12 table-responsive p-0" id="calendar-container">
                             <div class="cjslib-calendar cjslib-size-small">
                                 <div class="cjslib-year"
                                     style="background-color: rgb(255, 160, 0); color: rgb(255, 236, 179);">
@@ -1017,7 +1016,7 @@ $menu_item_second = "list_homeservice";
                             Cancel
                         </button>
                     @endif
-                    
+
                 </div>
             </div>
         </div>
@@ -1305,7 +1304,7 @@ $menu_item_second = "list_homeservice";
             </div>
         </div>
     </div>
-    <!-- End Modal Edit -->   
+    <!-- End Modal Edit -->
 
     <!-- Modal Delete -->
     <div class="modal fade"
@@ -1329,7 +1328,7 @@ $menu_item_second = "list_homeservice";
                     </h5>
 
                     <textarea class="form-control mt-3"
-                        form="frmCancel" 
+                        form="frmCancel"
                         name="cancel_desc"
                         id="cancel_desc"
                         rows="5"
