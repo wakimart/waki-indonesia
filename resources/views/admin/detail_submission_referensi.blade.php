@@ -847,7 +847,7 @@ if (
 
             <div class="modal-body">
                 <div id="div_detailhs" class="form-group d-none">
-                    <table id="table-detail-hs" style="margin: 1em 0em;">
+                    <table id="table-detail-hs" style="margin: 1em 0em; width:100%">
                         <thead>
                             <td>Tanggal & Jam</td>
                             <td>Link HS</td>
@@ -861,7 +861,7 @@ if (
                 </div>
                 <div id="div_detailorder" class="form-group d-none">
                     <label>Detail Order</label>
-                    <table id="table-detail-order" style="margin: 1em 0em;">
+                    <table id="table-detail-order" style="margin: 1em 0em; width: 100%">
                         <thead>
                             <td>Code</td>
                             <td>Member</td>
@@ -874,9 +874,20 @@ if (
                     </table>
                 </div>
 
+                <div id="div_wakimartlink" class="form-group d-none">
+                    <table style="margin: 1em 0em; width:100%">
+                        <thead>
+                            <td>Wakimart Link</td>
+                        </thead>
+                        <tbody id="append_tbody_wakimart_link">
+
+                        </tbody>
+                    </table>
+                </div>
+
                 <form id="formUpdateStatus" method="POST" action="{{ route('update_reference') }}">
                     {{ csrf_field() }}
-                    <div class="form-group">
+                    <div class="form-group text-center">
                         <label>Other Detail</label>
                         <table id="table-detail-other" style="margin: 1em 0em;">
                             <thead>
@@ -1194,8 +1205,12 @@ function loadDataPerRef(ref_id) {
     $.get('{{ route("fetchDetailPerReference", ['reference' => ""]) }}/' + ref_id )
     .done(function( result ) {
         // Empty data
+        $('#div_detailhs').addClass('d-none');
+        $('#div_detailorder').addClass('d-none');
+        $('#div_wakimartlink').addClass('d-none');
         $('#append_tbody_hs').empty();
         $('#append_tbody_order').empty();
+        $('#append_tbody_wakimart_link').empty();
         $('#append_tbody_other').empty();
 
         if(result.length > 0){
@@ -1207,7 +1222,6 @@ function loadDataPerRef(ref_id) {
             var data_souvenir = data['data_souvenir'];
             // var data_prize = data['data_prize'];
             var detail_product = data['detail_product'];
-
             // Detail HS
             if (data_hs != null) {
                 $('#div_detailhs').removeClass('d-none');
@@ -1247,9 +1261,9 @@ function loadDataPerRef(ref_id) {
             }
 
             //detail Order
-            if(data_order != null && false){
+            if(data_order != null){
                 $('#div_detailorder').removeClass('d-none');
-
+                
                 var rowspan = detail_product.length;
                 for (var o = 0; o < detail_product.length; o++) {
                     $('#append_tbody_order').append('\
@@ -1287,6 +1301,15 @@ function loadDataPerRef(ref_id) {
                 ');
             }
 
+            // data wakimart_link
+            if ( data_refs[0]['wakimart_link'] != null ) {
+                $('#div_wakimartlink').removeClass('d-none');
+                $('#append_tbody_wakimart_link').append('\
+                    <tr>\
+                        <td><a href="'+data_refs[0]['wakimart_link']+'" target="_blank">'+data_refs[0]['wakimart_link']+'</a></td>\
+                    </tr>\
+                ');
+            }
             if (data_souvenir != null) {
                 for (var a = 0; a < data_souvenir.length; a++) {
                     $('#append_tbody_other').append('\
