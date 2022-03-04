@@ -1299,6 +1299,8 @@ function loadDataPerRef(ref_id) {
                         <td colspan="2" style="text-align: right;">'+fix_totalpayment+'</td>\
                     </tr>\
                 ');
+                $('#refs_order').val(data_refs[0]['order_id']);
+
             }
 
             // data wakimart_link

@@ -229,7 +229,11 @@ class ReferenceController extends Controller
             for ($i = 0; $i < count($arr_Keys); $i++) {
                 $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
             }
-            return redirect($request->url)->withErrors($arr_Hasil['wakimart_link']);
+            if ( !empty($request->url) ) {
+                return redirect($request->url)->withErrors($arr_Hasil['wakimart_link']);
+            } else {
+                return response()->json('errors', $arr_Hasil['wakimart_link']);
+            }
         }else{        
             DB::beginTransaction();
     
@@ -287,8 +291,11 @@ class ReferenceController extends Controller
                 }
     
                 DB::commit();
-                return redirect($request->url)->with("success", "Data referensi berhasil dimasukkan.");
-    
+                if ( !empty($request->url) ) {
+                    return redirect($request->url)->with("success", "Data referensi berhasil dimasukkan.");
+                } else {
+                    return response()->json('success');
+                }
                 // return response()->json([
                 //     "result" => 1,
                 //     "data" => $reference,
