@@ -1117,6 +1117,7 @@ function clearModal() {
 function clickEdit(e) {
     clearModal();
     const refSeq = e.dataset.edit.split("_")[1];
+    console.log(document.getElementById("order_" + refSeq).getElementsByTagName("a")[0].innerHTML.trim());
 
     const actionUpdate = '{{ route("update_reference_mgm") }}';
     const id = document.getElementById("edit-id_" + refSeq).value;
@@ -1138,7 +1139,8 @@ function clickEdit(e) {
 
     function orderCode() {
         try {
-            return document.getElementById("order_" + refSeq).innerHTML.trim();
+            // return document.getElementById("order_" + refSeq).innerHTML.trim();
+            return document.getElementById("order_" + refSeq).getElementsByTagName("a")[0].innerHTML.trim();
         } catch (error) {
             delete error;
             return "";
