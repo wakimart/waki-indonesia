@@ -73,7 +73,7 @@
         @elseif(Utils::$lang=='eng')
         <h3>Our Awards</h3>
         @endif --}}
-        <img src="{{asset('sources/awards-black.png')}}" alt="" class="img-fluid">
+        <img src="{{asset('sources/awards-update.png')}}" alt="" class="img-fluid">
       </header>
 
     </div>
@@ -259,7 +259,7 @@
                       <a href="/product_category/4" class="btn-link"><span>Lihat Semua </span></a>
                     @elseif(Utils::$lang=='eng')
                       <a href="/product_category/4" class="btn-link"><span>View All </span></a>
-                    @endif        
+                    @endif
                   </div>
                 </div>
               </div>
@@ -284,7 +284,7 @@
                       <a href="/product_category/3" class="btn-link"><span>Lihat Semua </span></a>
                     @elseif(Utils::$lang=='eng')
                       <a href="/product_category/3" class="btn-link"><span>View All </span></a>
-                    @endif  
+                    @endif
                   </div>
                 </div>
               </div>
@@ -309,7 +309,7 @@
                       <a href="/product_category/6" class="btn-link"><span>Lihat Semua </span></a>
                     @elseif(Utils::$lang=='eng')
                       <a href="/product_category/6" class="btn-link"><span>View All </span></a>
-                    @endif  
+                    @endif
                   </div>
                 </div>
               </div>
@@ -464,7 +464,7 @@
         <h2 class="section-title">Our Gallery</h2>
         @endif
       </header>
-      
+
       <section class="Grid">
         <div class="Grid-row">
           @foreach($albums as $key => $album)
@@ -675,4 +675,3 @@ function closeAll() {
 
 </script>
 @endsection
-
