@@ -95,6 +95,7 @@ class ReferenceController extends Controller
                 "status",
                 "order_id",
                 "prize_id",
+                "wakimart_link",
             ));
             $referenceSouvenir->link_hs = json_encode(
                 explode(", ", $request->link_hs),
