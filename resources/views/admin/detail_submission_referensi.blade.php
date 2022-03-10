@@ -28,7 +28,7 @@ if (
         font-size: 14px;
     }
 
-    .table-responsive table {
+    /* .table-responsive table {
         table-layout:fixed;
         width: 98%;
     }
@@ -38,7 +38,7 @@ if (
         min-width: 160px;
         max-width: 160px;
         white-space:normal
-    }
+    } */
 
     .table-responsive table .form-control {
         height: 32px;
@@ -125,10 +125,10 @@ if (
                                     style="margin-right: 0.5em;">
                                     <table class="table">
                                         <thead>
-                                            <td class="right">Submission Date</td>
+                                            <td>Submission Date</td>
                                         </thead>
                                         <tr>
-                                            <td class="right">
+                                            <td class="text-center">
                                                 {{ date("d/m/Y H:i:s", strtotime($submission->created_at)) }}
                                             </td>
                                         </tr>
@@ -311,7 +311,7 @@ if (
                                                             @endforeach
                                                         @endif
                                                     </td>
-                                                    
+
                                                     {{-- <td class="text-center"
                                                         id="order_{{ $key }}"
                                                         data-order="{{ $reference->order_id }}"
@@ -1326,7 +1326,7 @@ function loadDataPerRef(ref_id) {
                     $('#select_edit-delivery-status-prize_'+p).val(data_refs[p]['delivery_status_prize']);
                 }
             }
-            
+
             // || data_prize != null
             if (data_souvenir != null) {
                 $('#ref_id').val(data_ref['id']);

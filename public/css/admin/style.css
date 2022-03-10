@@ -10836,7 +10836,7 @@ code {
       content: "";
       margin-top: 15px;
     }
-    
+
   /* br.break{
     display: none;
   }
@@ -13395,5 +13395,10 @@ dl {
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1; }
+
+@media (max-width: 576px) {
+  .content-wrapper {
+    padding: 0.8rem !important;
+    flex-grow: 1; } }
 
 /*# sourceMappingURL=style.css.map */
