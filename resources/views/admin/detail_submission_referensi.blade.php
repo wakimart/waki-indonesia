@@ -231,7 +231,8 @@ if (
                                                 <td>Province</td>
                                                 <td>City</td>
                                                 <td>Link HS</td>
-                                                {{-- <td>Order</td> --}}
+                                                <td>Order</td>
+                                                <td>Wakimart Link</td>
                                                 <td>Souvenir</td>
                                                 <td>Status</td>
                                                 <td>Deliv. Status</td>
@@ -253,6 +254,7 @@ if (
                                                     name="id"
                                                     form="edit-form_{{ $key }}"
                                                     value="{{ $reference->id }}" />
+                                                <input type="hidden" id="wakimart_link_{{ $key }}" value="{{$reference->wakimart_link}}">
                                                 <tr>
                                                     <td id="name_{{ $key }}">
                                                         {{ $reference->name }}
@@ -312,8 +314,22 @@ if (
                                                         @endif
                                                     </td>
 
-                                                    {{-- <td class="text-center"
+                                                    <td class="text-center"
                                                         id="order_{{ $key }}"
+                                                        data-order="{{ $reference->order_id }}"
+                                                        style="overflow-x:auto;">
+                                                        @php
+                                                        if (!empty($reference->order_id)) {
+                                                            $order = Order::select("id", "code")
+                                                                ->where("id", $reference->order_id)
+                                                                ->first();
+
+                                                            echo '<a href="'.route("detail_order", ["code" => $order->code]).'">'.$order->code.'</a>';
+                                                        }
+                                                        @endphp
+                                                    </td>
+                                                    <td class="text-center"
+                                                        id="order_white_{{ $key }}"
                                                         data-order="{{ $reference->order_id }}"
                                                         style="overflow-x:auto; display: none;">
                                                         @php
@@ -322,10 +338,13 @@ if (
                                                                 ->where("id", $reference->order_id)
                                                                 ->first();
 
-                                                            echo $order->code;
+                                                            echo '<a href="'.route("detail_order", ["code" => $order->code]).'" style="color:white">'.$order->code.'</a>';
                                                         }
                                                         @endphp
-                                                    </td> --}}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{{ $reference->wakimart_link }}" target="_blank">{{ $reference->wakimart_link }}</a>
+                                                    </td>
                                                     <td id="souvenir_{{ $key }}"
                                                         class="text-center"
                                                         data-permission="{{ $specialPermission }}"
@@ -672,7 +691,7 @@ if (
                         </button>
                         <input type="hidden" id="hs-row-count" value="0" />
                     </div>
-                    {{-- <div class="form-group">
+                    <div class="form-group">
                         <label for="edit-order">Order</label>
                         <input type="hidden"
                             id="edit-order"
@@ -685,9 +704,17 @@ if (
                             data-originbutton="btn_choose_order"
                             data-toggle="modal"
                             data-target="#choose-order">
-                            Choose Order
+                            Choose Waki Order
                         </button>
-                    </div> --}}
+                    </div>
+                    <div class="form-group">
+                        <input type="text"
+                            class="form-control"
+                            id="edit-wakimart-link"
+                            name="wakimart_link"
+                            value=""
+                            placeholder="Wakimart Link"/>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -820,7 +847,7 @@ if (
 
             <div class="modal-body">
                 <div id="div_detailhs" class="form-group d-none">
-                    <table id="table-detail-hs" style="margin: 1em 0em;">
+                    <table id="table-detail-hs" style="margin: 1em 0em; width:100%">
                         <thead>
                             <td>Tanggal & Jam</td>
                             <td>Link HS</td>
@@ -834,7 +861,7 @@ if (
                 </div>
                 <div id="div_detailorder" class="form-group d-none">
                     <label>Detail Order</label>
-                    <table id="table-detail-order" style="margin: 1em 0em;">
+                    <table id="table-detail-order" style="margin: 1em 0em; width: 100%">
                         <thead>
                             <td>Code</td>
                             <td>Member</td>
@@ -847,9 +874,20 @@ if (
                     </table>
                 </div>
 
+                <div id="div_wakimartlink" class="form-group d-none">
+                    <table style="margin: 1em 0em; width:100%">
+                        <thead>
+                            <td>Wakimart Link</td>
+                        </thead>
+                        <tbody id="append_tbody_wakimart_link">
+
+                        </tbody>
+                    </table>
+                </div>
+
                 <form id="formUpdateStatus" method="POST" action="{{ route('update_reference') }}">
                     {{ csrf_field() }}
-                    <div class="form-group">
+                    <div class="form-group text-center">
                         <label>Other Detail</label>
                         <table id="table-detail-other" style="margin: 1em 0em;">
                             <thead>
@@ -1167,8 +1205,12 @@ function loadDataPerRef(ref_id) {
     $.get('{{ route("fetchDetailPerReference", ['reference' => ""]) }}/' + ref_id )
     .done(function( result ) {
         // Empty data
+        $('#div_detailhs').addClass('d-none');
+        $('#div_detailorder').addClass('d-none');
+        $('#div_wakimartlink').addClass('d-none');
         $('#append_tbody_hs').empty();
         $('#append_tbody_order').empty();
+        $('#append_tbody_wakimart_link').empty();
         $('#append_tbody_other').empty();
 
         if(result.length > 0){
@@ -1180,7 +1222,6 @@ function loadDataPerRef(ref_id) {
             var data_souvenir = data['data_souvenir'];
             // var data_prize = data['data_prize'];
             var detail_product = data['detail_product'];
-
             // Detail HS
             if (data_hs != null) {
                 $('#div_detailhs').removeClass('d-none');
@@ -1220,7 +1261,7 @@ function loadDataPerRef(ref_id) {
             }
 
             //detail Order
-            if(data_order != null && false){
+            if(data_order != null){
                 $('#div_detailorder').removeClass('d-none');
 
                 var rowspan = detail_product.length;
@@ -1258,8 +1299,19 @@ function loadDataPerRef(ref_id) {
                         <td colspan="2" style="text-align: right;">'+fix_totalpayment+'</td>\
                     </tr>\
                 ');
+                $('#refs_order').val(data_refs[0]['order_id']);
+
             }
 
+            // data wakimart_link
+            if ( data_refs[0]['wakimart_link'] != null ) {
+                $('#div_wakimartlink').removeClass('d-none');
+                $('#append_tbody_wakimart_link').append('\
+                    <tr>\
+                        <td><a href="'+data_refs[0]['wakimart_link']+'" target="_blank">'+data_refs[0]['wakimart_link']+'</a></td>\
+                    </tr>\
+                ');
+            }
             if (data_souvenir != null) {
                 for (var a = 0; a < data_souvenir.length; a++) {
                     $('#append_tbody_other').append('\
@@ -1353,13 +1405,14 @@ function clearModal() {
     document.getElementById("edit-name").value = "";
     document.getElementById("edit-age").value = "";
     document.getElementById("edit-phone").value = "";
+    document.getElementById("edit-wakimart-link").value = "";
     document.getElementById("edit-province").selectedIndex = 0;
     document.getElementById("edit-city").value = "";
     document.getElementById("edit-souvenir").selectedIndex = 0;
     // document.getElementById("edit-prize").selectedIndex = 0;
     document.getElementById("edit-link-hs").value = "";
     document.getElementById("link-hs-container").innerHTML = "";
-    // document.getElementById("edit-order").value = "";
+    document.getElementById("edit-order").value = "";
     // document.getElementById("btn_choose_order").innerHTML = "Choose Order";
 }
 
@@ -1385,6 +1438,7 @@ function clickEdit(e) {
     const name = document.getElementById("name_" + refSeq).innerHTML.trim();
     const age = document.getElementById("age_" + refSeq).innerHTML.trim();
     const phone = document.getElementById("phone_" + refSeq).innerHTML.trim();
+    const wakimart_link = document.getElementById("wakimart_link_" + refSeq).value;
     const province = document.getElementById("province_" + refSeq).getAttribute("data-province");
     const city = document.getElementById("city_" + refSeq).getAttribute("data-city");
     const souvenir = document.getElementById("souvenir_" + refSeq).getAttribute("data-souvenir");
@@ -1412,7 +1466,8 @@ function clickEdit(e) {
 
     function orderCode() {
         try {
-            return document.getElementById("order_" + refSeq).innerHTML.trim();
+            // return document.getElementById("order_" + refSeq).innerHTML.trim();
+            return document.getElementById("order_white_" + refSeq).innerHTML.trim();
         } catch (error) {
             delete error;
             return "";
@@ -1425,6 +1480,7 @@ function clickEdit(e) {
     document.getElementById("edit-name").value = name;
     document.getElementById("edit-age").value = age;
     document.getElementById("edit-phone").value = phone;
+    document.getElementById("edit-wakimart-link").value = wakimart_link;
     document.getElementById("edit-province").value = province;
     setCityAdd(document.getElementById("edit-province"));
     setTimeout(function () {
@@ -1461,8 +1517,8 @@ function clickEdit(e) {
     });
     document.getElementById("edit-link-hs").value = hsArray.join(", ");
 
-    // document.getElementById("edit-order").value = orderId();
-    document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Order";
+    document.getElementById("edit-order").value = orderId();
+    document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Waki Order";
 }
 
 function validateForm(refSeq) {
@@ -1678,7 +1734,7 @@ $(document).ready(function () {
     $('#order-filter-name_phone').on('input', function (e) {
         let submission_id = "{{ $submission->id }}";
         let filter = $(this).val();
-        getOrderSubmission(filter, submission_id);
+        getOrderSubmission(filter, submission_id, "btn_choose_order");
     });
 
     function getOrderSubmission(filter, submission_id, originButton) {

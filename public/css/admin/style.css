@@ -3080,7 +3080,7 @@ pre {
   color: #212529; }
   .table th,
   .table td {
-    padding: 0.9375rem;
+    padding: 0.5375rem;
     vertical-align: top;
     border-top: 1px solid #ebedf2; }
   .table thead th {
@@ -10342,7 +10342,7 @@ code {
 
 /* Utilities */
 .grid-margin, .purchase-popup {
-  margin-bottom: 2.5rem; }
+  margin-bottom: 1.2rem; }
 
 @media (min-width: 576px) {
   .grid-margin-sm-0 {
@@ -12236,9 +12236,6 @@ code {
       color: #1bb1dc; }
 
 /* Forms */
-.form-group {
-  margin-bottom: 1.5rem; }
-
 .input-group-append,
 .input-group-prepend {
   color: #c9c8c8;
@@ -13089,7 +13086,7 @@ dl {
         -ms-flex-align: center;
         align-items: center;
         white-space: nowrap;
-        padding: 1.125rem 0 1.125rem 0;
+        padding: 1rem 0 1rem 0;
         color: #3e4b5b;
         -webkit-transition-duration: 0.45s;
         transition-duration: 0.45s;
@@ -13390,7 +13387,7 @@ dl {
 
 .content-wrapper {
   background: #f2edf3;
-  padding: 2.75rem 2.25rem;
+  padding: 2rem 2rem;
   width: 100%;
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
