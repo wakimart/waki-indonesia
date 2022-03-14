@@ -1207,13 +1207,21 @@ $(document).ready(function () {
                 $('#table-order').html("");
                 if (result.orders.length > 0) {
                     let orderNya = result.orders;
+                    let productDb = result.productDb;
 
                     $.each(orderNya, function (key, value) {
-                        let isiNya = "<tr><td>" + value.orderDate + "</td><td>" +
+                        let productNya = JSON.parse(value.product);
+                        if(!isNaN(productNya[0].id)){
+                            productNya[0].id = productDb[productNya[0].id];
+                        }
+
+                        let isiNya = "<tr><td>" + value.orderDate + 
+                        "<br><br><a target=\"_blank\" href=\"{{route("detail_order", ["code" => ""])}}"+ value.code +"\">Link</a><br><br>" +
+                        "</td><td>" +
                         "<b>Name</b>: " + value.name + "<br>" +
                         "<b>Phone</b>: " + value.phone + "<br>" +
                         "<b>Address</b>: " + value.address + "<br>" +
-                        "<b>Product</b>: " + value.product + "<br>";
+                        "<b>Product</b>: " + productNya[0].id+"("+productNya[0].qty+"x)" + "<br>";
 
                         if (originButton === "btn_choose_order") {
                             isiNya += "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya(" + value.id + ", \"" + value.code + "\")'>Choose This</button></td></tr>";

@@ -12,6 +12,7 @@ use App\User;
 use App\RajaOngkir_City;
 use App\HistoryUpdate;
 use App\Promo;
+use App\Product;
 use App\Utils;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -589,7 +590,21 @@ class OrderController extends Controller
             }
             $orders = $orders->orderBy('id', 'DESC')->take(20)->get();
 
-            $data = ['orders' => $orders];
+            $promos = Promo::all();
+            $productDb = [];
+
+            forEach($promos as $productNya){
+                $namaNya = "";
+                forEach($productNya->productName() as $idxNya => $perName){
+                    $namaNya .= $perName;
+                    if($idxNya < sizeof($productNya->productName())-1){
+                        $namaNya .= " & ";
+                    }
+                }
+                $productDb[$productNya->id] = $namaNya;
+            }
+
+            $data = ['orders' => $orders, 'productDb' => $productDb];
             return response()->json($data, 200);
         }
         catch (Exception $e) {
