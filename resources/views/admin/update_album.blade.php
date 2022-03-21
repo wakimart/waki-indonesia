@@ -203,22 +203,43 @@ $menu_item_page = "frontendcms";
                                                 allowfullscreen></iframe>
                                         </div>
 
-                                        <input type="hidden"
-                                                name="sequence"
-                                                value="{{ $x }}" />
-                                        <input type="text"
-                                            id="video-title-{{ $x }}"
-                                            class="form-control"
-                                            placeholder="Video Title"
-                                            value="{{ $titleVideo }}"
-                                            name="title_{{ $x }}" />
-                                        <input type="url"
-                                            id="video-url-{{ $x }}"
-                                            class="form-control mt-3"
-                                            placeholder="Video URL"
-                                            pattern="https://.*"
-                                            value="{{ $urlVideo }}"
-                                            name="url_{{ $x }}" />
+                                        <form method="POST"
+                                            id="update-video-{{ $x }}"
+                                            enctype="multipart/form-data"
+                                            action="{{ route("update_frontendcms_video") }}">
+                                            @csrf
+
+                                            <input type="hidden"
+                                                name="event_id"
+                                                value="{{ $albums['event_id'] }}" />
+                                            <input type="hidden"
+                                                    name="sequence"
+                                                    value="{{ $x }}" />
+                                            <input type="text"
+                                                id="video-title-{{ $x }}"
+                                                class="form-control"
+                                                placeholder="Video Title"
+                                                value="{{ $titleVideo }}"
+                                                name="title" />
+                                            <input type="url"
+                                                id="video-url-{{ $x }}"
+                                                class="form-control mt-3"
+                                                placeholder="Video URL"
+                                                pattern="https://.*"
+                                                value="{{ $urlVideo }}"
+                                                name="url" />
+                                        </form>
+                                        <input type="submit"
+                                            form="update-video-{{ $x }}"
+                                            value="Update"
+                                            class="btn btn-gradient-primary" />
+                                        <button class="btn btn-gradient-danger"
+                                            onclick="clickDeleteImage(this)"
+                                            data-sequence="{{ $x }}"
+                                            data-toggle="modal"
+                                            data-target="#delete-modal">
+                                            Delete
+                                        </button>
                                 </div>
                                 @endfor
                                 <div class="validation"></div>

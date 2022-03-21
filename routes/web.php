@@ -233,7 +233,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         ->name("edit_album");
     Route::post("/frontend-cms/update/image", "AlbumController@updateImageGallery")
         ->name("update_frontendcms_image");
-    Route::post("frontend-cms/update/video", "FrontendCmsController@updateVideoGallery")
+    Route::post("frontend-cms/update/video", "AlbumController@updateVideoGallery")
         ->name("update_frontendcms_video");
     // Delete Frontend CMS
     Route::post("frontend-cms/delete/image", "FrontendCmsController@destroyImage")
