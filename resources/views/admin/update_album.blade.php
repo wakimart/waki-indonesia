@@ -143,6 +143,9 @@ $menu_item_page = "frontendcms";
                                         action="{{ route("update_frontendcms_image") }}">
                                         @csrf
                                         <input type="hidden"
+                                            name="event_id"
+                                            value="{{ $albums['event_id'] }}" />
+                                        <input type="hidden"
                                             name="sequence"
                                             value="{{ $x }}" />
                                         <div class="custom-file">

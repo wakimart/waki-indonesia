@@ -11,4 +11,9 @@ class Event extends Model
         "name",
         "active",
     ];
+
+    public function album()
+    {
+        return $this->hasMany('App\Album');
+    }
 }

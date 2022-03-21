@@ -136,26 +136,26 @@ class AlbumController extends Controller
         DB::beginTransaction();
 
         try {
-            $imageGallery = null;
-            dd($request->all());
-            $imageArray = json_decode($imageGallery->photo, JSON_THROW_ON_ERROR);
+            $imageGallery = Album::where('event_id', $request->get('event_id'))->first();
+            $imageArray = $imageGallery->arr_photo;
 
             $oldFile = "sources/portfolio/" . $imageArray[(int)$request->sequence];
             if (File::exists($oldFile)) {
                 File::delete($oldFile);
             }
 
-            $fileName = $request->file("photo")->getClientOriginalName();
-            $request->file("photo")->move("sources/portfolio/", $fileName);
+            $string = str_replace(' ', '', $imageGallery->event['name']);
+            $fileName = $string . "_" . str_replace([' ', ':'], '', time()). ((int)$request->sequence+1) . "." . $request->file("photo")->getClientOriginalExtension();
+            $request->file("photo")->move("sources/album/" . strtolower($string), $fileName);
             $imageArray[(int)$request->sequence] = $fileName;
 
-            $imageGallery->photo = json_encode($imageArray, JSON_THROW_ON_ERROR);
+            $imageGallery->arr_photo = $imageArray;
             $imageGallery->save();
 
             DB::commit();
 
             return redirect()
-                ->route("edit_album", ['id' => 1])
+                ->route("edit_album", ['id' => $request->get('event_id')])
                 ->with("success", "Image #" . ((int)$request->sequence + 1) . " successfully updated.");
         } catch (Exception $e) {
             DB::rollBack();
