@@ -173,7 +173,53 @@ $menu_item_page = "frontendcms";
                             @endfor
                             <div id="tambahan_photo"></div>
                         </div>
+
                         <div class="clearfix"></div>
+
+                        <div class="form-group">
+                                <label for="">Link Video</label>
+                                <br>
+                                @for($x = 0; $x < 3; $x++)
+                                    @php
+                                        $urlVideo = "";
+                                        $titleVideo = "";
+                                        if(isset($albums['url_video'][$x])){
+                                            $urlVideo = $albums['url_video'][$x]['url'];
+                                            $titleVideo = $albums['url_video'][$x]['title'];
+                                        }
+                                    @endphp
+
+                                    <div id="video_{{ $x }}"
+                                        class="col-xs-12 col-sm-6 col-md-4"
+                                        style="padding: 15px; float: left;">
+                                        <label>Video {{ $x + 1 }}</label>
+
+                                        <div class="imagePreview embed-responsive embed-responsive-16by9">
+                                            <iframe class="embed-responsive-item"
+                                                src="{{ $urlVideo }}"
+                                                allowfullscreen></iframe>
+                                        </div>
+
+                                        <input type="hidden"
+                                                name="sequence"
+                                                value="{{ $x }}" />
+                                        <input type="text"
+                                            id="video-title-{{ $x }}"
+                                            class="form-control"
+                                            placeholder="Video Title"
+                                            value="{{ $titleVideo }}"
+                                            name="title_{{ $x }}" />
+                                        <input type="url"
+                                            id="video-url-{{ $x }}"
+                                            class="form-control mt-3"
+                                            placeholder="Video URL"
+                                            pattern="https://.*"
+                                            value="{{ $urlVideo }}"
+                                            name="url_{{ $x }}" />
+                                </div>
+                                @endfor
+                                <div class="validation"></div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -332,5 +378,16 @@ function clickDeleteVideo(e) {
     document.getElementById("delete-form").setAttribute("action", DELETE_URL);
     document.getElementById("delete-sequence").setAttribute("value", e.dataset.sequence);
 }
+
+
+    $(document).ready(function(){
+        $(".custom-file-input").on("change", function(e){
+            let imgPreview = e.target.parentNode.parentNode.parentNode.getElementsByClassName("imagePreview")[0];
+            imgPreview.style.backgroundImage = "url('"+ URL.createObjectURL(e.target.files[0]) +"')"
+            let fileName = e.target.files[0].name;
+            let nextSibling = e.target.nextElementSibling
+            nextSibling.innerText = fileName;
+        });
+    });
 </script>
 @endsection

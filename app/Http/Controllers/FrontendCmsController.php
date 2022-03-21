@@ -311,6 +311,7 @@ class FrontendCmsController extends Controller
 
         try {
             $imageGallery = OurGallery::where("id", 1)->first();
+            dd($request->all());
             $imageArray = json_decode($imageGallery->photo, JSON_THROW_ON_ERROR);
 
             $oldFile = "sources/portfolio/" . $imageArray[(int)$request->sequence];
@@ -328,7 +329,7 @@ class FrontendCmsController extends Controller
             DB::commit();
 
             return redirect()
-                ->route("index_frontendcms")
+                ->route("edit_album", ['id' => 1])
                 ->with("success", "Image #" . ((int)$request->sequence + 1) . " successfully updated.");
         } catch (Exception $e) {
             DB::rollBack();

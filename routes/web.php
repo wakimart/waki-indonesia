@@ -231,7 +231,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
     // Update Frontend CMS
     Route::get("/frontend-cms/edit/album", "AlbumController@edit")
         ->name("edit_album");
-    Route::post("/frontend-cms/update/image", "FrontendCmsController@updateImageGallery")
+    Route::post("/frontend-cms/update/image", "AlbumController@updateImageGallery")
         ->name("update_frontendcms_image");
     Route::post("frontend-cms/update/video", "FrontendCmsController@updateVideoGallery")
         ->name("update_frontendcms_video");

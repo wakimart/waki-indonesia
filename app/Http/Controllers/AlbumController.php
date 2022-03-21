@@ -131,27 +131,42 @@ class AlbumController extends Controller
      * @param  \App\Models\Album  $album
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function updateImageGallery(Request $request)
     {
         DB::beginTransaction();
+
         try {
-            $data = $request->all();
-            $albums = Album::find($request->get('id'));    
+            $imageGallery = null;
+            dd($request->all());
+            $imageArray = json_decode($imageGallery->photo, JSON_THROW_ON_ERROR);
 
-            $data['arr_photo'] = [];
-            $event = Event::find($album['event_id']);
-            $string = str_replace(' ', '', $album->event['name']);
-            $codePath = strtolower($string);
-            $path = "sources/album/" . $codePath;
+            $oldFile = "sources/portfolio/" . $imageArray[(int)$request->sequence];
+            if (File::exists($oldFile)) {
+                File::delete($oldFile);
+            }
 
+            $fileName = $request->file("photo")->getClientOriginalName();
+            $request->file("photo")->move("sources/portfolio/", $fileName);
+            $imageArray[(int)$request->sequence] = $fileName;
 
+            $imageGallery->photo = json_encode($imageArray, JSON_THROW_ON_ERROR);
+            $imageGallery->save();
 
-        } catch (\Exception $ex) {
-            
+            DB::commit();
+
+            return redirect()
+                ->route("edit_album", ['id' => 1])
+                ->with("success", "Image #" . ((int)$request->sequence + 1) . " successfully updated.");
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+                "error line" => $e->getLine(),
+                "error file" => $e->getFile(),
+            ]);
         }
-        
-
-
     }
 
     /**
