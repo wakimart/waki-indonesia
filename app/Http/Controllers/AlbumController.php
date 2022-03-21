@@ -179,7 +179,12 @@ class AlbumController extends Controller
             $sequence = (int)$request->sequence;
 
             if(isset($videoArray[$sequence])){
-
+                $data = [];
+                $data['title'] = $request->get('title');
+                $data['url'] = $request->get('url');
+                $videoArray[$sequence] = $data;
+                $videoGallery->url_video = $videoArray;
+                $videoGallery->save();
             }
             else{
                 $data = [];
