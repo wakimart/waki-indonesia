@@ -3,29 +3,7 @@
 @section('content')
 <!--==========================Intro Section============================-->
 <section id="hero" class="clearfix">
-	{{--<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-	  <div class="carousel-inner">
-	    <div class="carousel-item active">
-	      <img class="d-block w-100" src="{{asset('sources/waki-carousel1.jpg')}}" alt="First slide">
-	    </div>
-	    <div class="carousel-item">
-	      <img class="d-block w-100" src="{{asset('sources/waki-carousel2.jpg')}}" alt="Second slide">
-	    </div>
-	    <div class="carousel-item">
-	      <img class="d-block w-100" src="{{asset('sources/waki-carousel3.jpg')}}" alt="Third slide">
-	    </div>
-	  </div>
 
-	  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-	    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-	    <span class="sr-only">Previous</span>
-	  </a>
-
-	  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-	    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-	    <span class="sr-only">Next</span>
-	  </a>
-	</div>--}}
 	<div class="container d-flex h-100">
     <div class="row justify-content-center align-self-center" data-aos="fade-up">
       <div class="col-md-6 hero-info order-md-first order-last" data-aos="zoom-in" data-aos-delay="100">
@@ -41,12 +19,6 @@
         <div class="text-right" style="position: relative; top: 50%; transform: translateY(-50%);" data-toggle="modal" data-target="#video2">
           <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
         </div>
-
-        {{-- <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
-          <video muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
-            <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
-          </video>
-        </div> --}}
       </div>
 
       <div id="video2" class="modal fade videoModal" role="dialog">
@@ -129,9 +101,9 @@
 
         					<div class="col-sm-12 col-md-12 col-lg-12 wow fadeInRight prodpd" data-wow-duration="1.4s" style="margin-top: 1em;">
               					<div class="titleprd">
-                          <div>
+                          <!-- <div>
                             {!! $product->description !!}
-                          </div>
+                          </div> -->
 
                 					<div class="descvid">
                   					<iframe width="100%" height="250px" position="relative" src="{{ $product->video }}" frameborder="0" allowfullscreen=""></iframe>
