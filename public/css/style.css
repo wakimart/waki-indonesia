@@ -1766,14 +1766,14 @@ CORE
   transform: scale(2.1) translate(-29%, -80%);
 }
 .Gallery {
-  display: block;
+  display: none;
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background: #f5f5f5;
   opacity: 0;
+  background: #f5f5f5;
   transform: scale(1.2);
   transition: none;
   padding: 5rem 0;
@@ -1848,6 +1848,7 @@ CORE
   background-color: #673ab7;
 }
 .Gallery--active {
+  display: block;
   z-index: 100;
   background: #f1faf2;
   transform: scale(1);
