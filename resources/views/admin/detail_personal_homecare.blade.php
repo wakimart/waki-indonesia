@@ -789,7 +789,7 @@ $menu_item_page = "personal_homecare";
                             @endphp
                             <form class="forms-sample"
                                 method="GET"
-                                action="https://wa.me/"
+                                action="https://api.whatsapp.com/send"
                                 target="_blank">
                                 <div class="form-group row justify-content-center mt-3">
                                     <button id="upgradeProcess"

@@ -414,7 +414,7 @@ $menu_item_second = "list_acceptance_form";
                             </div>
                             <form class="forms-sample"
                                 method="GET"
-                                action="https://wa.me/">
+                                action="https://api.whatsapp.com/send">
                                 <div class="form-group row justify-content-center">
                                     @php
                                     $txtWA = "Request Acc";

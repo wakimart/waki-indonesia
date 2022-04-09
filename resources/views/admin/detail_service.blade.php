@@ -805,7 +805,7 @@ $menu_item_second = "detail_service";
                         </div>
                         <form class="forms-sample"
                             method="GET"
-                            action="https://wa.me/">
+                            action="https://api.whatsapp.com/send">
                             <div class="form-group row justify-content-center">
                                 <button id="upgradeProcess"
                                     type="submit"

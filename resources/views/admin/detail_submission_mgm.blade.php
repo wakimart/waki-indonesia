@@ -344,7 +344,7 @@ if (
                 </div>
                 <form class="forms-sample"
                     method="GET"
-                    action="https://wa.me/">
+                    action="https://api.whatsapp.com/send">
                     <div class="form-group row justify-content-center">
                         <button type="submit"
                             class="btn btn-gradient-primary mr-2 my-2"
