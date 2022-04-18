@@ -127,15 +127,17 @@
               					</div>
             				</div>
 
+							@if ($product->flipbook_url)
 							<div class="col-sm-12 col-md-12 col-lg-12 wow fadeInRight prodpd" data-wow-duration="1.4s" style="margin-top: 1em;">
 								<iframe width="100%" height="750px" position="relative" src="{{ $product->flipbook_url }}" frameborder="0" allowfullscreen=""></iframe>
 							</div>
+							@endif
 
         					<div class="col-sm-12 col-md-12 col-lg-12 wow fadeInRight prodpd" data-wow-duration="1.4s" style="margin-top: 1em;">
               					<div class="titleprd">
-									<div>
+									{{-- <div>
 										{!! $product->description !!}
-									</div>
+									</div> --}}
 
                 					<div class="descvid">
                   					<iframe width="100%" height="250px" position="relative" src="{{ $product->video }}" frameborder="0" allowfullscreen=""></iframe>
