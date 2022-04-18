@@ -118,20 +118,24 @@
             				<div class="col-sm-12 col-md-6 col-lg-6 wow fadeInRight prodpd" data-wow-duration="1.4s">
               					<div class="titleprd">
                 					<h4>{{ $product->code }} – {{ $product->name }}</h4>
-            						  <p class="titleprodcat">
+            						<p class="titleprodcat">
                   					{!! $product->quick_desc !!}
-                          </p>
+                          			</p>
                 					<p class="titleprodcat">
                   					Category : <a href="#">{{ $product->category['name'] }}</a>
-                          </p>
+                          			</p>
               					</div>
             				</div>
 
+							<div class="col-sm-12 col-md-12 col-lg-12 wow fadeInRight prodpd" data-wow-duration="1.4s" style="margin-top: 1em;">
+								<iframe width="100%" height="750px" position="relative" src="{{ $product->flipbook_url }}" frameborder="0" allowfullscreen=""></iframe>
+							</div>
+
         					<div class="col-sm-12 col-md-12 col-lg-12 wow fadeInRight prodpd" data-wow-duration="1.4s" style="margin-top: 1em;">
               					<div class="titleprd">
-                          <div>
-                            {!! $product->description !!}
-                          </div>
+									<div>
+										{!! $product->description !!}
+									</div>
 
                 					<div class="descvid">
                   					<iframe width="100%" height="250px" position="relative" src="{{ $product->video }}" frameborder="0" allowfullscreen=""></iframe>

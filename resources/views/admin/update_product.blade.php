@@ -190,6 +190,14 @@ $menu_item_page = "product";
                                     name="video"
                                     required />
                             </div>
+                            <div class="form-group">
+                                <label for="flipbook_url">Flipbook URL</label>
+                                <input type="text"
+                                    class="form-control"
+                                    id="flipbook_url"
+                                    value="{{ $products['flipbook_url'] }}"
+                                    name="flipbook_url" />
+                            </div>
 
                             <div class="form-group">
                                 <label for="edit_quickdescription">
@@ -203,7 +211,7 @@ $menu_item_page = "product";
                                     required>{{ $products['quick_desc'] }}</textarea>
                             </div>
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="edit_description">
                                     Description
                                 </label>
@@ -213,7 +221,7 @@ $menu_item_page = "product";
                                     rows="4"
                                     value="{{ $products['description'] }}"
                                     required>{{ $products['description'] }}</textarea>
-                            </div>
+                            </div> --}}
 
                             <input type="hidden"
                                 name="idProduct"
@@ -238,9 +246,9 @@ $menu_item_page = "product";
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.ckeditor.com/4.5.6/standard/ckeditor.js"></script>
 <script type="application/javascript">
-    $(document).ready(function () {
-        CKEDITOR.replace('edit_description');
-    });
+    // $(document).ready(function () {
+    //     CKEDITOR.replace('edit_description');
+    // });
 
     $(document).ready(function () {
         CKEDITOR.replace('edit_quickdescription');
@@ -258,7 +266,7 @@ $menu_item_page = "product";
             frmUpdate = _("actionUpdate");
             frmUpdate = new FormData(document.getElementById("actionUpdate"));
             frmUpdate.enctype = "multipart/form-data";
-            frmUpdate.append('description', CKEDITOR.instances.edit_description.getData());
+            // frmUpdate.append('description', CKEDITOR.instances.edit_description.getData());
             frmUpdate.append('quick_description', CKEDITOR.instances.edit_quickdescription.getData());
 
             for (let i = 0; i < 3; i++) {

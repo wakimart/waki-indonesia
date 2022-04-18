@@ -142,6 +142,7 @@ class ProductController extends Controller
         $products->name = $request->input('name');
         $products->price = $request->input('price');
         $products->video = $request->input('video');
+        $products->flipbook_url = $request->input('flipbook_url');
         $products->category_id = $request->input('category_id');
         $products->description = $request->description;
         $products->quick_desc = $request->quick_description;
