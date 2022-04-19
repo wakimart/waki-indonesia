@@ -129,7 +129,7 @@
 
 							@if ($product->flipbook_url)
 							<div class="col-sm-12 col-md-12 col-lg-12 wow fadeInRight prodpd" data-wow-duration="1.4s" style="margin-top: 1em;">
-								<iframe width="100%" height="750px" position="relative" src="{{ $product->flipbook_url }}" frameborder="0" allowfullscreen=""></iframe>
+								<iframe id="flipbook" width="100%" height="" position="relative" src="{{ $product->flipbook_url }}" frameborder="0" allowfullscreen=""></iframe>
 							</div>
 							@endif
 
@@ -139,9 +139,11 @@
 										{!! $product->description !!}
 									</div> --}}
 
+									@if($product->video)
                 					<div class="descvid">
                   					<iframe width="100%" height="250px" position="relative" src="{{ $product->video }}" frameborder="0" allowfullscreen=""></iframe>
                 					</div>
+									@endif
               					</div>
             				</div>
           				</div><!-- row -->
@@ -150,60 +152,60 @@
     		</div><!-- row -->
   		</div>
 
+		@if (!empty($relatedProducts))
   		<div class="col-lg-12 col-md-12" style="margin-top: 2em;padding:0;">
 		    <div class="intro-content">
 		      <br>
 		      <h2>Produk Terkait</h2>
 		    </div>
     		<div class="col-lg-12 col-md-12">
-    			<div class="row">
+				<div class="row">
+					@foreach ($relatedProducts as $relatedProduct)
       				<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
+						@php
+							$img = json_decode($relatedProduct->image);
+							$defaultImg = asset('sources/product_images/').'/'.strtolower($relatedProduct['code']).'/'.$img[0];
+						@endphp
 				        <div class="boxprd">
-				          <img src="https://waki.asia/wp-content/uploads/2019/05/wkt2080-1-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
+				          <img src="{{ $defaultImg }}" style="background: center top no-repeat; background-size: contain; width: 100%;">
 				        </div>
 				        <div class="titleprd">
-				          <p class="titleprodcat">WKT2080 – WAKi Multi Functional Electro Massager Equipment</p>
+				          <p class="titleprodcat">{{ $relatedProduct->code }} – {{ $relatedProduct->name }}</p>
 				        </div>
 				        <div class="buttonprd">
-				          <a href="single_product.html" class="button">Lihat Semua</a>
+				          <a href="{{ route('single_product', $relatedProduct->id) }}" class="button">Lihat Semua</a>
 				        </div>
       				</div>
-      			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-			        <div class="boxprd">
-			          <img src="https://waki.asia/wp-content/uploads/2017/08/WAKi-High-Potential-Therapeutic-Equipment-wk2079-edit-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-			        </div>
-			        <div class="titleprd">
-			          <p class="titleprodcat">WK2079 – WAKi High Potential Therapeutic Equipment</p>
-			        </div>
-			        <div class="buttonprd">
-			          <a href="#" class="button">Lihat Semua</a>
-			        </div>
-      			</div>
-      			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-			        <div class="boxprd">
-			          <img src="https://waki.asia/wp-content/uploads/2017/07/wk2076i-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-			        </div>
-			        <div class="titleprd">
-			          <p class="titleprodcat">WK2076i – WAKi Multi Functional Ultra Potential Therapy Healthcare Device</p>
-			        </div>
-			        <div class="buttonprd">
-			          <a href="single_product.html" class="button">Lihat Semua</a>
-			        </div>
-      			</div>
-      			<div class="col-sm-6 col-md-3 col-lg-3 wow fadeInUp prodpd" data-wow-duration="1.4s">
-			        <div class="boxprd">
-			          <img src="https://waki.asia/wp-content/uploads/2017/07/WAKi-Multi-Functional-High-Potential-Therapeutic-Equipment-wk2076h-300x300.jpg" style="background: center top no-repeat; background-size: contain; width: 100%;">
-			        </div>
-			        <div class="titleprd">
-			          <p class="titleprodcat">WK2076H – Waki Multi Functional High Potential Therapeutic Equipment</p>
-			        </div>
-			        <div class="buttonprd">
-			          <a href="#" class="button">Lihat Semua</a>
-			        </div>
+					@endforeach
       			</div>
     		</div><!-- row -->
     	</div>
+		@endif
   	</div>
 	</div><!-- container -->
 </section>
+@endsection
+@section('script')
+<script>
+	$(document).ready(function () {
+		resizeFlipbook();
+		$(window).resize(function() {
+			resizeFlipbook();
+		});
+	});
+	function resizeFlipbook() {
+		var $containerWidth = $(window).width();
+		var flipbookHeight = 750;
+		if ($containerWidth >= 992) {
+			flipbookHeight = 750;
+		} else if ($containerWidth >= 768) {
+			flipbookHeight = 450;
+		} else if ($containerWidth >= 576) {
+			flipbookHeight = 450;
+		} else if ($containerWidth < 576) {
+			flipbookHeight = 350;
+		}
+		$('#flipbook').css('height', flipbookHeight);
+	}
+</script>
 @endsection

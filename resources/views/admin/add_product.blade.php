@@ -168,8 +168,7 @@ $menu_item_second = "add_product";
                                     class="form-control"
                                     id="url-video"
                                     placeholder="URL"
-                                    name="video"
-                                    required />
+                                    name="video" />
                             </div>
                             <div class="form-group">
                                 <label for="flipbook_url">Flipbook URL</label>

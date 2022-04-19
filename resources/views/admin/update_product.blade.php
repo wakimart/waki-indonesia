@@ -187,8 +187,7 @@ $menu_item_page = "product";
                                     class="form-control"
                                     id="url-video"
                                     value="{{ $products['video'] }}"
-                                    name="video"
-                                    required />
+                                    name="video" />
                             </div>
                             <div class="form-group">
                                 <label for="flipbook_url">Flipbook URL</label>
@@ -326,6 +325,9 @@ $menu_item_page = "product";
                 }
 
                 alert("Input error!");
+            } else {
+                alert("Input success!");
+                window.location.reload();
             }
 
             document.getElementById("updateProduct").innerHTML = "SAVE";
