@@ -168,8 +168,15 @@ $menu_item_second = "add_product";
                                     class="form-control"
                                     id="url-video"
                                     placeholder="URL"
-                                    name="video"
-                                    required />
+                                    name="video" />
+                            </div>
+                            <div class="form-group">
+                                <label for="flipbook_url">Flipbook URL</label>
+                                <input type="text"
+                                    class="form-control"
+                                    id="flipbook_url"
+                                    placeholder="Flipbook URL"
+                                    name="flipbook_url" />
                             </div>
 
                             <div class="form-group">
@@ -184,7 +191,7 @@ $menu_item_second = "add_product";
                                     required></textarea>
                             </div>
 
-                            <div class="form-group">
+                            {{-- <div class="form-group">
                                 <label for="edit_description">
                                     Description
                                 </label>
@@ -194,7 +201,7 @@ $menu_item_second = "add_product";
                                     rows="6"
                                     placeholder="Description"
                                     required></textarea>
-                            </div>
+                            </div> --}}
 
                             <button id="addProduct"
                                 type="submit"
@@ -227,7 +234,7 @@ $menu_item_second = "add_product";
 <script type="application/javascript">
     $(document).ready(function () {
         CKEDITOR.replace('edit_quickdescription');
-        CKEDITOR.replace('edit_description');
+        // CKEDITOR.replace('edit_description');
 
         let frmAdd;
 
@@ -236,7 +243,7 @@ $menu_item_second = "add_product";
             frmAdd = new FormData(document.getElementById("actionAdd"));
             frmAdd.enctype = "multipart/form-data";
             frmAdd.append('quick_desc', CKEDITOR.instances.edit_quickdescription.getData());
-            frmAdd.append('description', CKEDITOR.instances.edit_description.getData());
+            // frmAdd.append('description', CKEDITOR.instances.edit_description.getData());
 
             const URLNya = $("#actionAdd").attr('action');
 
