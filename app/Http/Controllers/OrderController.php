@@ -369,6 +369,23 @@ class OrderController extends Controller
             $orders['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
             $orders['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
 
+            $orders['no_member'] = $data['no_member'];
+            $orders['name'] = $data['name'];
+            $orders['address'] = $data['address'];
+            $orders['cash_upgrade'] = $data['cash_upgrade'];
+            $orders['prize'] = $data['prize'];
+            $orders['payment_type'] = $data['payment_type'];
+            $orders['total_payment'] = $data['total_payment'];
+            $orders['down_payment'] = $data['down_payment'];
+            $orders['remaining_payment'] = $data['remaining_payment'];
+            $orders['customer_type'] = $data['customer_type'];
+            $orders['description'] = $data['description'];
+            $orders['phone'] = $data['phone'];
+            $orders['know_from'] = $data['know_from'];
+            $orders['province'] = $data['province_id'];
+            $orders['city'] = $data['city'];
+            $orders['distric'] = $data['distric'];
+
             //pembentukan array product
             $index = 0;
             $data['arr_product'] = [];
