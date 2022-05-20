@@ -26,12 +26,20 @@ class DashboardController extends Controller
     {
         try {
             // Update role user yg baru
-            $role = Role::where('slug', Auth::user()->roles[0]['slug'])->get();
+            $role = Role::where('slug', Auth::user()->roles[0]['slug'])->first();
             $users = User::find(Auth::user()->id);
-            $check_permission = Str::contains($users->permissions, 'add-technician_schedule');
 
-            if (!$check_permission) {
-                $users->permissions = $role[0]['permissions'];
+            $arr_role = (array) json_decode($role->permissions);
+            $arr_user_role = (array) json_decode($users->permissions);
+            $role_key = array_keys($arr_role);
+            $user_role_key = array_keys($arr_user_role);
+
+            $check_permission = array_diff($role_key, $user_role_key);
+            if (count($check_permission) > 0) {
+                foreach ($check_permission as $key => $val) {
+                    $arr_user_role[$val] = $arr_role[$val];
+                }
+                $users->permissions = json_encode($arr_user_role);
                 $users->save();
             }
         } catch (Exception $e) {
