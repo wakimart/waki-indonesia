@@ -997,6 +997,56 @@ $menu_item_page = "user";
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">TECHNICIAN SCHEDULE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-technician_schedule">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-technician_schedule" />
+                                            Add Technician Schedule
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-technician_schedule">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-technician_schedule" />
+                                            Browse Technician Schedule
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-technician_schedule">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-technician_schedule" />
+                                            Detail Technician Schedule
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-technician_schedule">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-technician_schedule" />
+                                            Edit Technician Schedule
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="delete-technician_schedule">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-technician_schedule" />
+                                            Delete Technician Schedule
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="form-group" id="group-product">
                                 <span style="display: block;">SPAREPART</span>

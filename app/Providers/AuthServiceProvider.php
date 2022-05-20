@@ -312,6 +312,28 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(["delete-service"]);
         });
 
+        //-- Technician Schedule --//
+        // Add Technician Schedule
+        Gate::define("add-technician_schedule", function ($user) {
+            return $user->hasAccess(["add-technician_schedule"]);
+        });
+        // Browse Technician Schedule
+        Gate::define("browse-technician_schedule", function ($user) {
+            return $user->hasAccess(["browse-technician_schedule"]);
+        });
+        // View detail Technician Schedule
+        Gate::define("detail-technician_schedule", function ($user) {
+            return $user->hasAccess(["detail-technician_schedule"]);
+        });
+        // Edit Technician Schedule
+        Gate::define("edit-technician_schedule", function ($user) {
+            return $user->hasAccess(["edit-technician_schedule"]);
+        });
+        // Delete Technician Schedule
+        Gate::define("delete-technician_schedule", function ($user) {
+            return $user->hasAccess(["delete-technician_schedule"]);
+        });
+
         //-- SUBMISSION --//
         // Add submission
         Gate::define("add-submission", function ($user) {

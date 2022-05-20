@@ -60,4 +60,9 @@ class HomeService extends Model
     {
         return $this->belongsTo('App\PersonalHomecare');
     }
+
+    public function technicianSchedule()
+    {
+        return $this->hasMany('App\TechnicianSchedule');
+    }
 }

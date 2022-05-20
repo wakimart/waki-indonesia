@@ -54,4 +54,9 @@ class Cso extends Model
     {
         return $this->hasOne('App\User');
     }
+
+    public function technicianSchedule()
+    {
+        return $this->hasMany('App\TechnicianSchedule', 'technician_id');
+    }
 }

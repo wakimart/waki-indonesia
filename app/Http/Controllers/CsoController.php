@@ -227,8 +227,9 @@ class CsoController extends Controller
 
     public function fetchCso(Request $request){
         $csos = Cso::where('code', $request->cso_code)
-                        ->where('active', '=', 1)
-                        ->get();
+                        ->where('active', '=', 1);
+        if ($request->has('branch_id')) $csos->where('branch_id', $request->branch_id);
+        $csos = $csos->get();
         if(count($csos) > 0) {
             return [
                 'result' =>'true',

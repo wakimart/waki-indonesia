@@ -120,6 +120,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => true,
                 "delete-service" => true,
 
+                // Technician Schedule (Head Admin)
+                "add-technician_schedule" => true,
+                "browse-technician_schedule" => true,
+                "detail-technician_schedule" => true,
+                "edit-technician_schedule" => true,
+                "delete-technician_schedule" => true,
+
                 // Submission (Head Admin)
                 "add-submission" => true,
                 "browse-submission" => true,
@@ -266,6 +273,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => false,
                 "delete-service" => false,
 
+                // Technician Schedule (Admin)
+                "add-technician_schedule" => true,
+                "browse-technician_schedule" => true,
+                "detail-technician_schedule" => true,
+                "edit-technician_schedule" => true,
+                "delete-technician_schedule" => true,
+
                 // Submission (Admin)
                 "add-submission" => false,
                 "browse-submission" => true,
@@ -405,6 +419,13 @@ class RolesSeeder extends Seeder
                 "change-status-delivery-service" => false,
                 "change-status-complete-service" => false,
                 "delete-service" => false,
+
+                // Technician Schedule (CSO)
+                "add-technician_schedule" => false,
+                "browse-technician_schedule" => false,
+                "detail-technician_schedule" => false,
+                "edit-technician_schedule" => false,
+                "delete-technician_schedule" => false,
 
                 // Submission (CSO)
                 "add-submission" => true,
@@ -546,6 +567,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => false,
                 "delete-service" => false,
 
+                // Technician Schedule (Branch)
+                "add-technician_schedule" => false,
+                "browse-technician_schedule" => false,
+                "detail-technician_schedule" => false,
+                "edit-technician_schedule" => false,
+                "delete-technician_schedule" => false,
+
                 // Submission (Branch)
                 "add-submission" => true,
                 "browse-submission" => true,
@@ -686,6 +714,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => false,
                 "delete-service" => false,
 
+                // Technician Schedule (Area Manager)
+                "add-technician_schedule" => false,
+                "browse-technician_schedule" => false,
+                "detail-technician_schedule" => false,
+                "edit-technician_schedule" => false,
+                "delete-technician_schedule" => false,
+
                 // Submission (Area Manager)
                 "add-submission" => false,
                 "browse-submission" => true,
@@ -825,6 +860,13 @@ class RolesSeeder extends Seeder
                 "change-status-delivery-service" => false,
                 "change-status-complete-service" => false,
                 "delete-service" => false,
+
+                // Technician Schedule (Head Manager)
+                "add-technician_schedule" => false,
+                "browse-technician_schedule" => false,
+                "detail-technician_schedule" => false,
+                "edit-technician_schedule" => false,
+                "delete-technician_schedule" => false,
 
                 // Submission (Head Manager)
                 "add-submission" => false,
@@ -971,6 +1013,13 @@ class RolesSeeder extends Seeder
                 "change-status-delivery-service" => true,
                 "change-status-complete-service" => true,
                 "delete-service" => true,
+
+                // Technician Schedule (Admin Management)
+                "add-technician_schedule" => true,
+                "browse-technician_schedule" => true,
+                "detail-technician_schedule" => true,
+                "edit-technician_schedule" => true,
+                "delete-technician_schedule" => true,
 
                 // Submission (Admin Management)
                 "add-submission" => false,

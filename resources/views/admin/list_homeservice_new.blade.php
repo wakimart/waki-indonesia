@@ -997,6 +997,14 @@ $menu_item_second = "list_homeservice";
                             </div>
                         </form>
                     @else
+                        <a id="create_technician_schedule"
+                            href="">
+                            <button id="btn-share"
+                                type="button"
+                                class="btn btn-gradient-primary mr-2">
+                                Add Schedule
+                            </button>
+                        </a>
                         <a id="url_share"
                             href=""
                             data-action="share/whatsapp/share"
@@ -1885,6 +1893,7 @@ function clickView(btn) {
         document.getElementById("view-cso2").innerHTML = result.cso2_code_name;
         document.getElementById("view-date").innerHTML = dateString;
         document.getElementById("view-time").innerHTML = timeString;
+        document.getElementById("create_technician_schedule").setAttribute('href', "{{route('add_technician_schedule')}}?hs_id=" + result.id)
 
         @if(isset($_GET['id_hs']))
             $("#input_id_hs_hidden").val(id_hs);

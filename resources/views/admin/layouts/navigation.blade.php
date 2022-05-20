@@ -196,7 +196,7 @@
 @endif
 
 
-@if(Gate::check('add-service') || Gate::check('browse-service'))
+@if(Gate::check('add-service') || Gate::check('browse-service') || Gate::check('add-technician_schedule') || Gate::check('browse-technician_schedule'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'technician'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">
     <span class="menu-title">Technician</span>
@@ -207,6 +207,12 @@
     <ul class="nav flex-column sub-menu">
       @if(Gate::check('add-service'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_task'? 'active': '' }}" href="{{ route('list_taskservice')}}">List Product Service/Upgrade </a></li>
+      @endif
+      @if(Gate::check('add-technician_schedule'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_technician_schedule'? 'active': '' }}" href="{{ route('add_technician_schedule')}}">Add Schedule </a></li>
+      @endif
+      @if(Gate::check('browse-technician_schedule'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_technician_schedule'? 'active': '' }}" href="{{ route('list_technician_schedule')}}">List Schedule </a></li>
       @endif
     </ul>
   </div>

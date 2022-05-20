@@ -79,6 +79,7 @@ Route::get('/fetchDistrict/{city}', function ($city) {
 })->name('fetchDistrict');
 Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSouvenir");
 Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
+Route::get("/fetchProductService", "ProductServiceController@fetchProductService")->name("fetchProductService");
 
 Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
 
@@ -507,6 +508,47 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("/update/failrepair", "ProductServiceController@updateFailRepair")
             ->name("update_fail_repair")
             ->middleware("can:edit-service");
+    });
+    
+    Route::group(['prefix' => 'technician_schedule', 'middleware' => 'auth'], function() {
+        //Add Technician Schedule
+        Route::get('/', 'TechnicianScheduleController@create')
+            ->name('add_technician_schedule')
+            ->middleware('can:add-technician_schedule');
+        //Store Technician Schedule
+        Route::post('/', 'TechnicianScheduleController@store')
+            ->name('store_technician_schedule')
+            ->middleware('can:add-technician_schedule');
+        // List Technician Schedule
+        Route::get('/list', 'TechnicianScheduleController@index')
+            ->name('list_technician_schedule')
+            ->middleware('can:browse-technician_schedule');
+        // Print Technician Schedule daily data count per month
+        Route::post("/technicianschedule_print_data_count", "TechnicianScheduleController@printAppointmentCount")
+        ->name("technicianschedule_print_data_count");
+        // Print Technician Schedule data detail on a selected day
+        Route::post("/technicianschedule_print_appointment", "TechnicianScheduleController@printDayData")
+            ->name("technicianschedule_print_appointment");
+        //Detail Technician Schedule
+        Route::get("/detail/", "TechnicianScheduleController@show")
+            ->name("detail_technician_schedule")
+            ->middleware('can:detail-technician_schedule');
+        //Edit Technician Schedule
+        Route::get('/edit/', 'TechnicianScheduleController@edit')
+            ->name('edit_technician_schedule')
+            ->middleware('can:edit-technician_schedule');
+        //Update Technician Schedule
+        Route::post('/update/', 'TechnicianScheduleController@update')
+            ->name('update_technician_schedule')
+            ->middleware('can:edit-technician_schedule');
+        // Delete Technician Schedule
+        Route::post("/delete", "TechnicianScheduleController@destroy")
+            ->name("delete_technician_schedule")
+            ->middleware('can:delete-technician_schedule');
+
+        //Export to XLS
+        Route::get('/export-to-xls', 'TechnicianScheduleController@export_to_xls')
+            ->name('technician_schedule_export-to-xls');
     });
 
     Route::group(['prefix' => 'sparepart', 'middleware' => 'auth'], function() {

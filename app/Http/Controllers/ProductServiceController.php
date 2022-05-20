@@ -270,4 +270,21 @@ class ProductServiceController extends Controller
     {
         //
     }
+
+    public function fetchProductService(Request $request)
+    {
+        $productServices = ProductService::where('service_id', $request->service_id)
+            ->where('active', 1)->get();
+        if(count($productServices) > 0) {
+            return [
+                'result' =>'true',
+                'data' => $productServices
+            ];
+        }
+
+        return [
+            'result' =>'false',
+            'data' => $productServices
+        ];
+    }
 }
