@@ -683,11 +683,10 @@ $menu_item_second = "list_technician";
                                                                     ?>
                                                                     <br>
                                                                     <?php
-                                                                        echo 'Created at: ' . $dayData->created_at;
-                                                                    ?>
-                                                                    <br>
-                                                                    <?php
-                                                                        echo 'Last update: ' . $dayData->updated_at;
+                                                                        echo '<strong>Data Product Service: </strong><br>';
+                                                                        foreach ($dayData->product_technician_schedule_withProduct as $key => $product_ts) {
+                                                                            echo $product_ts->product['name'] ?? $product_ts->other_product . '<br>';
+                                                                        }
                                                                     ?>
                                                                 </p>
                                                             </td>
@@ -700,7 +699,7 @@ $menu_item_second = "list_technician";
                                                                     . 'data-toggle="modal" '
                                                                     . 'data-target="#viewTechnicianScheduleModal" '
                                                                     . 'onclick="clickView(this)" '
-                                                                    . 'value="' . $dayData->ts_id . '">'
+                                                                    . 'value="' . $dayData->id . '">'
                                                                     . '</button>';
                                                                 }
                                                                 ?>
@@ -710,7 +709,7 @@ $menu_item_second = "list_technician";
                                                                 if (Gate::check('edit-technician_schedule')) {
                                                                     echo "<a "
                                                                         . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit"'
-                                                                        . "href='" . route('edit_technician_schedule', ['id' => $dayData->ts_id]) 
+                                                                        . "href='" . route('edit_technician_schedule', ['id' => $dayData->id]) 
                                                                         . "'></a>";
                                                                 }
                                                                 ?>
@@ -726,7 +725,7 @@ $menu_item_second = "list_technician";
                                                                         . 'data-toggle="modal" '
                                                                         . 'data-target="#deleteTechnicianScheduleModal" '
                                                                         . 'onclick="clickCancel(this)" '
-                                                                        . 'value="' . $dayData->ts_id . '">'
+                                                                        . 'value="' . $dayData->id . '">'
                                                                         . '</button>';
                                                                 }
                                                                 ?>
@@ -765,7 +764,7 @@ $menu_item_second = "list_technician";
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="max-height: 450px; overflow-y:scroll;">
                     <table style="width: 90%; margin: auto;">
                         <tr>
                             <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Home Service Code: </td>
@@ -825,55 +824,36 @@ $menu_item_second = "list_technician";
                             <td id="view-time" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                         </tr>
                     </table>
+                    <div class="mt-3" id="view-technician-schedule-product">
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button
-                        type="button"
-                        class="btn btn-gradient-primary mr-2"
-                        data-dismiss="modal"
-                        data-toggle="modal"
-                        data-target="#viewTechnicianScheduleProductModal" >
-                        Product Detail
-                    </button>
+                    <a id="create_service"
+                        href="">
+                        <button id="btn-share"
+                            type="button"
+                            class="btn btn-gradient-primary mr-2">
+                            Add Service
+                        </button>
+                    </a>
                     <a id="url_share"
-                            href=""
-                            data-action="share/whatsapp/share"
-                            target="_blank">
-                            <button id="btn-share"
-                                type="button"
-                                class="btn btn-gradient-primary mr-2 d-none">
-                                <span class="mdi mdi-whatsapp"
-                                    style="font-size: 18px;">
-                                </span>
-                                Share
-                            </button>
-                        </a>
+                        href=""
+                        data-action="share/whatsapp/share"
+                        target="_blank">
+                        <button id="btn-share"
+                            type="button"
+                            class="btn btn-gradient-primary mr-2 d-none">
+                            <span class="mdi mdi-whatsapp"
+                                style="font-size: 18px;">
+                            </span>
+                            Share
+                        </button>
+                    </a>
                     <button class="btn btn-light"
                         data-dismiss="modal"
                         aria-label="Close">
                         Cancel
                     </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade"
-        id="viewTechnicianScheduleProductModal"
-        tabindex="-1"
-        role="dialog"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Technician Schedule Product</h5>
-                    <button type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="view-technician-schedule-product">
                 </div>
             </div>
         </div>
@@ -1211,8 +1191,11 @@ function clickView(btn) {
             + result.id_service + "'"
             + "target='_blank'>" + result.code_service
             + "</a>";
+            document.getElementById("create_service").style.display = 'none';
         } else {
             document.getElementById("view_code_service").innerHTML = "-";
+            document.getElementById("create_service").style.display = 'inline-block';
+            document.getElementById("create_service").setAttribute('href', "{{route('add_service')}}?ts_id=" + result.id)
         }
         document.getElementById("view-name").innerHTML = result.name;
         document.getElementById("view-phone").innerHTML = (result.phone).toString();
@@ -1270,32 +1253,12 @@ function clickView(btn) {
                         issues[1].desc +`
                     </td>
                 </tr>
-                <tr>
-                    <td class="col-4">Due Date:</td>
-                    <td class="col-8">` +
-                        convertPhpDatetime(product_ts.due_date)[0] + `
-                    </td>
-                </tr>
             </table>`;
         });
         $('#view-technician-schedule-product').html(temp_product_ts);
     }).catch(function (error) {
         console.error(error);
     });
-}
-
-function convertPhpDatetime(appointment) {
-    const appointmentDate = new Date(appointment);
-    const dateString = appointmentDate.getFullYear()
-        + "-"
-        + ("0" + (appointmentDate.getMonth() + 1)).slice(-2)
-        + "-"
-        + ("0" + (appointmentDate.getDate())).slice(-2);
-    const timeString = ("0" + (appointmentDate.getHours())).slice(-2)
-        + ":"
-        + ("0" + (appointmentDate.getMinutes())).slice(-2);
-
-    return [dateString, timeString];
 }
 
 {{-- Cancel appointment --}}

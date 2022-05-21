@@ -1893,7 +1893,12 @@ function clickView(btn) {
         document.getElementById("view-cso2").innerHTML = result.cso2_code_name;
         document.getElementById("view-date").innerHTML = dateString;
         document.getElementById("view-time").innerHTML = timeString;
-        document.getElementById("create_technician_schedule").setAttribute('href', "{{route('add_technician_schedule')}}?hs_id=" + result.id)
+        if (result.technician_schedule) {
+            document.getElementById("create_technician_schedule").style.display = 'none';
+        } else {
+            document.getElementById("create_technician_schedule").style.display = 'inline-block';
+            document.getElementById("create_technician_schedule").setAttribute('href', "{{route('add_technician_schedule')}}?hs_id=" + result.id)
+        }
 
         @if(isset($_GET['id_hs']))
             $("#input_id_hs_hidden").val(id_hs);

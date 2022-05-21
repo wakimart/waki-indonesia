@@ -26,7 +26,7 @@ class CreateTechnicianSchedulesTable extends Migration
             $table->foreign("technician_id")->references("id")->on("csos");
             $table->unsignedInteger("home_service_id")->nullable();
             $table->foreign("home_service_id")->references("id")->on("home_services");
-            $table->string("d_o");
+            $table->string("d_o")->nullable();
             $table->boolean("active")->default(true);
             $table->timestamps();
         });

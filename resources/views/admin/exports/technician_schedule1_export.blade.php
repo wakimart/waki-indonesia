@@ -60,7 +60,7 @@
                 @endif
                 
                 <td>{{ $product_ts->product['name'] ?? $product_ts->other_product }}</td>
-                <td>{{ implode(",", $issues[0]->issues)}} <br> {{ $issues[1]->desc }}</td>
+                <td>{{ implode(",", $issues[0]->issues)}} {{ $issues[1]->desc ? '('. $issues[1]->desc .')' : '' }}</td>
 
                 @if ($key == 0)
                 <td rowspan="{{ $countProduct }}">{{ $ts->d_o }}</td>

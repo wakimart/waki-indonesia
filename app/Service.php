@@ -18,6 +18,7 @@ class Service extends Model
         'history_status',
         'active',
         "fail_repair_description",
+        'technician_schedule_id',
     ];
 
     public function product_services()

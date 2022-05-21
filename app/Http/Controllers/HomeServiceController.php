@@ -1079,7 +1079,7 @@ class HomeServiceController extends Controller
     public function edit(Request $request)
     {
         if($request->has('id')){
-            $data = HomeService::find($request->id);
+            $data = HomeService::with('technicianSchedule')->where('id', $request->id)->first();
             $data['province_name'] = $data->provinceObj['province'];
             $data['city_name'] = $data->cityObj['type'].' '.$data->cityObj['city_name'];
             $data['district_name'] = $data->districObj['subdistrict_name'];

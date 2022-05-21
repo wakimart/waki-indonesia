@@ -15,7 +15,6 @@ class CreateProductTechnicianSchedulesTable extends Migration
     {
         Schema::create('product_technician_schedules', function (Blueprint $table) {
             $table->increments('id');
-            $table->dateTime('due_date', 0);
             $table->string('issues')->nullable();
             $table->string('other_product')->nullable();
             $table->unsignedInteger('product_id')->nullable();

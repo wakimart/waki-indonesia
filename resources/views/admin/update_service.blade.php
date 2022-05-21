@@ -233,6 +233,7 @@
 
 	              			<div id="errormessage"></div>
 
+							<input type="hidden" id="technician_schedule_id" name="technician_schedule_id" value="{{ $services['technician_schedule_id'] }}">
 	              			@php $total_productservice = count($product_services); @endphp
 	              			<input type="hidden" id="total_productservice" value="{{$total_productservice}}">
 	              			

@@ -5,6 +5,8 @@
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+<link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
     #intro {
         padding-top: 2em;
@@ -122,7 +124,7 @@
                     </div>
                     <div class="form-group">
                         <label for="">D/O</label>
-                        <input type="text" class="form-control" id="d_o" name="d_o" placeholder="D/O" value="{{ $autofill->d_o }}" required>
+                        <input type="text" class="form-control" id="d_o" name="d_o" placeholder="D/O" value="{{ $autofill->d_o }}">
                         <span class="invalid-feedback">
                             <strong></strong>
                         </span>
@@ -172,34 +174,19 @@
                     <div class="form-group">
                         <label for=""><h2>Data Teknisi</h2></label><br/>
                         <label for="">Kode CSO Teknisi</label>
-                        <input type="text" class="form-control" name="cso_id" id="cso" value="{{ $autofill->cso->code }}" placeholder="Kode CSO Teknisi" required data-msg="Mohon Isi Kode CSO Teknisi" style="text-transform:uppercase" />
-                        <div class="validation" id="validation_cso"></div>
-                        <span class="invalid-feedback">
-                            <strong></strong>
-                        </span>
-                        <div class="validation"></div>
-                    </div>
-                    <div class="form-group d-none">
-                        <label for="">No Telepon CSO</label>
-                        <input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" data-msg="Mohon Isi Nomor Telepon" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
-                        <div class="validation"></div>
-                        <span class="invalid-feedback">
-                            <strong></strong>
-                        </span>
-                        <div class="validation"></div>
-                    </div>
-                    <br>
-                    <div class="form-group">
-                        <label for="sertivces">Service (Optional)</label>
-                        <select class="form-control" id="service_id" name="service_id" data-msg="Pilih Service">
-                            <option selected disabled value="">Pilihan Service</option>
-                            @foreach($services as $service)
-                                <option value="{{ $service['id'] }}" @if($service['id'] == $autofill->service['id']) selected @endif>{{ $service['code'] }}</option>
+                        <select id="cso" name="cso" class="form-control pilihan-product" data-msg="Mohon Pilih Promo" required>
+                            <option value="">Choose CSO Teknisi</option>
+                            @foreach ($csos as $cso)
+                                <option value="{{ $cso->id }}" @if($cso->id == $autofill['technician_id']) selected @endif>
+                                    {{ $cso->code }} - {{ $cso->name }}
+                                </option>
                             @endforeach
-                        </select>
+                        </select>                        <div class="validation" id="validation_cso"></div>
+                        <span class="invalid-feedback">
+                            <strong></strong>
+                        </span>
                         <div class="validation"></div>
                     </div>
-                    <br>
                     <label for="">PRODUCT SERVICE</label>
                     <div class="text-center" style="display: inline-block;background: #4caf3ab3;float: right;margin-bottom: 20px;">
                         <button class="btn btn-gradient-primary mr-2" id="tambah_productservice" type="button">Add Product Service</button>
@@ -264,16 +251,6 @@
                                 <textarea class="form-control" id="issues-{{$key}}" rows="5" data-msg="Mohon Isi Issues" placeholder="Description" required="">{{$issues[1]->desc}}</textarea>
                                 <div class="validation"></div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="">Due Date</label>
-                                <input type="date" class="form-control" id="due_date-{{$key}}" placeholder="Tanggal Order" required data-msg="Mohon Isi Tanggal" value="{{$due_date}}"/>
-                                <div class="validation"></div>
-                                <span class="invalid-feedback">
-                                    <strong></strong>
-                                </span>
-                            </div>
-                            <br>
                             
                             {{-- ++++++++++++++ ======== ++++++++++++++ --}}			                    
                         </div>
@@ -281,7 +258,6 @@
                     @endforeach
                         
                     <div id="tambahan_productservice"></div>
-                    <input type="hidden" id="service_id_old" name="service_id_old" value="{{$product_ts->service['id']}}">
                     <input type="hidden" id="ts_id" name="ts_id" value="{{ $autofill['id'] ?? '' }}">
 
                     @php $total_product_ts = count($product_tss); @endphp
@@ -300,6 +276,7 @@
 @endsection
 
 @section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script>
     function setMinAppointmentTime(e) {
         // Tanggal & waktu dari inputan
@@ -330,24 +307,11 @@
         }
     }
 
-    $(document).ready(function(){
-        $("#cso").on("input", function(){
-            var txtCso = $(this).val();
-            var obj = $('#validation_cso');
-            $.get( '{{route("fetchCso")}}', { cso_code: txtCso, branch_id: "{{$branch->id}}" })
-            .done(function( result ) {
-                if (result['result'] == 'true' && result['data'].length > 0){
-                    obj.html('Kode CSO Teknisi Benar');
-                    obj.css('color', 'green');
-					$('#submit').removeAttr('disabled');
-					// $('#cso_phone').val(result.data[0].phone);
-                }
-                else{
-                    obj.html('Kode CSO Teknisi Salah');
-                    obj.css('color', 'red');
-                    $('#submit').attr('disabled',"");
-                }
-            });
+    $(document).ready(function(){        
+        $('#date').trigger('change');
+        $("#cso").select2({
+            theme: "bootstrap4",
+            placeholder: "Choose CSO Teknisi"
         });
 
         var temp_city = "{{ $autofill['city'] ?? null }}";
@@ -461,14 +425,6 @@
 							<textarea class="form-control" id="issues-'+detailProductService+'" rows="5" data-msg="Mohon Isi Issues" placeholder="Issues" required></textarea>\
 							<div class="validation"></div>\
 						</div>\
-						<div class="form-group">\
-							<label for="">Due Date</label>\
-							<input type="date" class="form-control" id="due_date-'+detailProductService+'" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />\
-							<div class="validation"></div>\
-							<span class="invalid-feedback">\
-							<strong></strong>\
-							</span>\
-						</div><br>\
 					</div>\
 				');
 			}else{
@@ -498,73 +454,6 @@
             });
         @endif
 
-        function convertPhpDatetime(appointment) {
-            const appointmentDate = new Date(appointment);
-            const dateString = appointmentDate.getFullYear()
-                + "-"
-                + ("0" + (appointmentDate.getMonth() + 1)).slice(-2)
-                + "-"
-                + ("0" + (appointmentDate.getDate())).slice(-2);
-            const timeString = ("0" + (appointmentDate.getHours())).slice(-2)
-                + ":"
-                + ("0" + (appointmentDate.getMinutes())).slice(-2);
-
-            return [dateString, timeString];
-        }
-
-        $('#service_id').on('change', function() {
-            var service_id = $(this).val();
-            $.get( '{{route("fetchProductService")}}', { service_id: service_id })
-            .done(function( result ) {
-                if (result['result'] == 'true' && result['data'].length > 0){
-                    var result0 = result['data'][0];
-                    if (result0['product_id'] != null) {
-                        $('#product_service-0').val(result0['product_id']).change();
-                    } else {
-                        $('#product_service-0').val("other").change();
-                        $('#productservice_other_0').val(result0['other_product']);
-                    }
-                    var issues = JSON.parse(result0['issues']);
-                    var cbx_issues = issues[0].issues;
-                    $('#issues-0').val(issues[1].desc);
-                    $("input[name='cbx_issue-0']").prop('checked', false);
-                    $.each(cbx_issues, function(i, val){
-                        $("input[name='cbx_issue-0'][value='" + val + "']").prop('checked', true);
-                    });
-                    $('#due_date-0').val(convertPhpDatetime(result0['due_date'])[0]);
-                    addProductServiceFromServer(result['data'])
-                }
-                else{
-                    console.log("error: " + result);
-                }
-            });
-        });
-
-        // Tambah Product Service dari Server
-        function addProductServiceFromServer(product_services) {
-            if (product_services.length > 0) {
-                $.each(product_services, function (i, product_service) {
-                    if (i != 0) {
-                        $('#tambah_productservice').trigger('click');
-                        if (product_service['product_id'] != null) {
-                            $('#product_service-' + detailProductService).val(product_service['product_id']).change();
-                        } else {
-                            $('#product_service-' + detailProductService).val("other").change();
-                            $('#productservice_other_' + detailProductService).val(product_service['other_product']);
-                        }
-                        var issues = JSON.parse(product_service['issues']);
-                        var cbx_issues = issues[0].issues;
-                        $('#issues-' + detailProductService).val(issues[1].desc);
-                        $("input[name='cbx_issue-" + detailProductService +"']").prop('checked', false);
-                        $.each(cbx_issues, function(i, val){
-                            $("input[name='cbx_issue-" + detailProductService + "'][value='" + val + "']").prop('checked', true);
-                        });
-                        $('#due_date-' + detailProductService).val(convertPhpDatetime(product_service['due_date'])[0]);
-                    }
-                });
-            }
-        }
-
 		var frmAdd;
 	    $("#actionAdd").on("submit", function (e) {
             var arr_productService = [];
@@ -583,7 +472,6 @@
 	        		other = $("#productservice_other_" + i).val();
 	        	}
 	        	var issues = $("#issues-" + i).val();
-	        	var due_date = $("#due_date-" + i).val();
                 var active = $("#productservice_active-"+i).val();
 
 	        	var arr_issues = [];
@@ -592,11 +480,9 @@
 				});
 
 	        	//arr_productService.push([product, arr_sparepart, arr_issues, issues, due_date]);
-	        	arr_productService.push([id_product_ts, product, arr_issues, issues, due_date, other, active]);
+	        	arr_productService.push([id_product_ts, product, arr_issues, issues, other, active]);
                 arr_id_productts.push(id_product_ts);
 	        }
-            console.log(arr_productService);
-
 	        var arr_jsonproductservice = JSON.stringify(arr_productService);
             var arr_jsonidproductts = JSON.stringify(arr_id_productts);
 
@@ -617,7 +503,6 @@
 	    }
 	    function completeHandler(event){
 	        var hasil = JSON.parse(event.target.responseText);
-	        console.log(hasil);
 
 	        for (var key of frmAdd.keys()) {
 	            $("#actionAdd").find("input[name="+key.name+"]").removeClass("is-invalid");

@@ -7,8 +7,10 @@ use App\Cso;
 use App\HomeService;
 use App\Product;
 use App\ProductService;
+use App\ProductTechnicianSchedule;
 use App\Service;
 use App\Sparepart;
+use App\TechnicianSchedule;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,10 +62,18 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $products = Product::all();
         $spareparts = Sparepart::where('active', true)->get();
+        if ($request->has('ts_id')) {
+            $autofill = TechnicianSchedule::find($request->ts_id);
+            $product_tss = ProductTechnicianSchedule::where([
+                ['active', '=', 1],
+                ['technician_schedule_id', '=', $request->ts_id]
+            ])->get();
+            return view('admin.add_service', compact('products', 'spareparts', 'autofill', 'product_tss'));
+        }
         return view('admin.add_service', compact('products', 'spareparts'));
     }
 
@@ -77,7 +87,7 @@ class ServiceController extends Controller
     {
         DB::beginTransaction();
         try {
-            $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date');
+            $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date', 'technician_schedule_id');
             $data['status'] = 'New';
             $temp_id = DB::select("SHOW TABLE STATUS LIKE 'services'");
             $data['code'] = "SERVICE/".$temp_id[0]->Auto_increment."/".date("Ymd");
@@ -173,13 +183,14 @@ class ServiceController extends Controller
             $get_allProductService = json_decode($request->productservices);
             $get_oldProductService = ProductService::where('service_id', $get_allProductService[0][0])->get();
 
-            $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date');
+            $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date', 'technician_schedule_id');
             $service = Service::find($get_allProductService[0][0]);
             $service->no_mpc = $data['no_mpc'];
             $service->name = $data['name'];
             $service->address = $data['address'];
             $service->phone = $data['phone'];
             $service->service_date = $data['service_date'];
+            $service->technician_schedule_id = $data['technician_schedule_id'];
             $service->save();
 
             foreach ($get_allProductService as $key => $value) {

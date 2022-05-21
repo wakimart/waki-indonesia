@@ -63,6 +63,6 @@ class HomeService extends Model
 
     public function technicianSchedule()
     {
-        return $this->hasMany('App\TechnicianSchedule');
+        return $this->hasOne('App\TechnicianSchedule');
     }
 }

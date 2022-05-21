@@ -300,8 +300,8 @@ class TechnicianScheduleController extends Controller
     ) {
         $todayDate = date("Y-m-d", strtotime($requestedDate));
 
-        $currentDayData = TechnicianSchedule::select(
-            "t.id AS ts_id",
+        $currentDayData = TechnicianSchedule::with('product_technician_schedule_withProduct')->select(
+            "t.id",
             "t.name AS customer_name",
             "t.phone AS customer_phone",
             "t.appointment AS appointment",
@@ -507,7 +507,7 @@ class TechnicianScheduleController extends Controller
                         . 'data-toggle="modal" '
                         . 'data-target="#viewTechnicianScheduleModal" '
                         . 'onclick="clickView(this)" '
-                        . 'value="' . $dayData->ts_id . '">'
+                        . 'value="' . $dayData->id . '">'
                         . '</button>'
                         . '</td>'
                         . '<td style="text-align: center">';
@@ -520,7 +520,7 @@ class TechnicianScheduleController extends Controller
                 if(Auth::user()->hasPermission('edit-technician_schedule')){
                     $result .= "<a "
                         . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit"'
-                        . "href='" . route('edit_technician_schedule', ['id' => $dayData->ts_id]) 
+                        . "href='" . route('edit_technician_schedule', ['id' => $dayData->id]) 
                         . "'></a>"
                         . '</td>'
                         . '<td style="text-align: center">';
@@ -539,7 +539,7 @@ class TechnicianScheduleController extends Controller
                         . 'data-toggle="modal" '
                         . 'data-target="#deleteTechnicianScheduleModal" '
                         . 'onclick="clickCancel(this)" '
-                        . 'value="' . $dayData->ts_id . '">'
+                        . 'value="' . $dayData->id . '">'
                         . '</button>'
                         . '</td>';
                 }
@@ -558,13 +558,14 @@ class TechnicianScheduleController extends Controller
     public function create(Request $request)
     {
         $branch = Branch::where('code', 'F00')->first();
+        $csos = Cso::where('branch_id', $branch->id)->get();
         $products = Product::all();
         $services = Service::where('active', 1)->orderby('created_at', 'desc')->get();
         if ($request->has('hs_id')) {
             $autofill = HomeService::find($request->hs_id);
-            return view('admin.add_technicianschedule', compact('branch', 'products', 'services', 'autofill'));
+            return view('admin.add_technicianschedule', compact('csos', 'products', 'services', 'autofill'));
         }
-        return view('admin.add_technicianschedule', compact('branch', 'products', 'services'));
+        return view('admin.add_technicianschedule', compact('csos', 'products', 'services'));
     }
 
     public function store(Request $request)
@@ -586,7 +587,7 @@ class TechnicianScheduleController extends Controller
                 $data = $request->all();
                 $inputAppointment = $data['date']." ".$data['time'];
                 
-                $getIdCso = Cso::where('code', $data['cso_id'])->first()['id'];
+                $getIdCso = $data['cso'];
                 $getTechnicianSchedules = TechnicianSchedule::where([
                     ['technician_id', '=', $getIdCso],
                     ['appointment', '=', $inputAppointment], // ['active', '=', true],
@@ -605,12 +606,6 @@ class TechnicianScheduleController extends Controller
                 $data['district'] = $data['subDistrict'];
 
                 $technician_schedule = TechnicianSchedule::create($data);
-                
-                if ($request->service_id) {
-                    Service::where('id', $request->service_id)->update([
-                        'technician_schedule_id' => $technician_schedule['id']
-                    ]);
-                }
 
                 $get_allProductTs= json_decode($request->productservices);
 
@@ -621,7 +616,7 @@ class TechnicianScheduleController extends Controller
                     if($value[0] != "other"){
                         $data['product_id'] = $value[0];
                     }else{
-                        $data['other_product'] = $value[4];
+                        $data['other_product'] = $value[3];
                     }
 
                     $data['arr_issues'] = [];
@@ -629,7 +624,6 @@ class TechnicianScheduleController extends Controller
                     $data['arr_issues'][1]['desc'] = $value[2];
 
                     $data['issues'] = json_encode($data['arr_issues']);
-                    $data['due_date'] = $value[3];
 
                     $product_services = ProductTechnicianSchedule::create($data);
                 }
@@ -665,6 +659,7 @@ class TechnicianScheduleController extends Controller
     {
         if ($request->has('id')) {
             $branch = Branch::where('code', 'F00')->first();
+            $csos = Cso::where('branch_id', $branch->id)->get();
             $products = Product::all();
             $services = Service::where('active', 1)->orderby('created_at', 'desc')->get();
             $autofill = TechnicianSchedule::with('service')->where('id', $request->id)->first();
@@ -672,7 +667,7 @@ class TechnicianScheduleController extends Controller
                 ['active', '=', 1],
                 ['technician_schedule_id', '=', $request->id]
             ])->get();
-            return view('admin.update_technicianschedule', compact('branch', 'products', 'services', 'autofill', 'product_tss'));
+            return view('admin.update_technicianschedule', compact('csos', 'products', 'services', 'autofill', 'product_tss'));
         }
     }
 
@@ -684,7 +679,7 @@ class TechnicianScheduleController extends Controller
             $data = $request->all();
             $inputAppointment = $data['date']." ".$data['time'];
             
-            $getIdCso = Cso::where('code', $data['cso_id'])->first()['id'];
+            $getIdCso = $data['cso'];
             $getTechnicianSchedules = TechnicianSchedule::where([
                 ['technician_id', '=', $getIdCso],
                 ['appointment', '=', $inputAppointment],
@@ -707,15 +702,6 @@ class TechnicianScheduleController extends Controller
             $technician_schedule->d_o = $data['d_o'];
             $technician_schedule->save();
 
-            if ($request->service_id != $request->service_id_old) {
-                Service::where('id', $request->service_id_old)->update([
-                    'technician_schedule_id' => null
-                ]);
-                Service::where('id', $request->service_id)->update([
-                    'technician_schedule_id' => $data['ts_id']
-                ]);
-            }
-
             $get_allProductTs = json_decode($request->productservices);
             $get_oldProductTs = ProductTechnicianSchedule::where('technician_schedule_id', $data['ts_id'])->get();
 
@@ -732,7 +718,7 @@ class TechnicianScheduleController extends Controller
                     $product_ts->product_id = $value[1];
                 } else {
                     $product_ts->product_id = null;
-                    $product_ts->other_product = $value[5];
+                    $product_ts->other_product = $value[4];
                 }
 
                 $data['arr_issues'] = [];
@@ -740,8 +726,7 @@ class TechnicianScheduleController extends Controller
                 $data['arr_issues'][1]['desc'] = $value[3];
                 $product_ts->issues = json_encode($data['arr_issues']);
 
-                $product_ts->due_date = $value[4];
-                if ($value[6] == "0") {
+                if ($value[5] == "0") {
                     $product_ts->active = false;
                 }
                 $product_ts->save();

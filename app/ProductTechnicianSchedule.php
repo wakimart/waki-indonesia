@@ -8,7 +8,7 @@ class ProductTechnicianSchedule extends Model
 {
     protected $table = "product_technician_schedules";
     protected $fillable = [
-        'due_date', 'issues', 'other_product', 'product_id', 'technician_schedule_id', 'active',
+        'issues', 'other_product', 'product_id', 'technician_schedule_id', 'active',
     ];
 
     public function technician_schedule()
