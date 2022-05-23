@@ -2,6 +2,26 @@
 @extends('layouts.template')
 
 @section('content')
+<div id="video2" class="modal fade videoModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
+          <video id="video-2" onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
+            <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
+          </video>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!--==========================Hero Section============================-->
 <section id="hero" class="clearfix">
@@ -35,27 +55,6 @@
             <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
           </video>
         </div> --}}
-      </div>
-
-      <div id="video2" class="modal fade videoModal" role="dialog">
-        <div class="modal-dialog">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <div class="modal-body">
-              <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
-                <video id="video-2" muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
-                  <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
-                </video>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
       </div>
     </div>
 
@@ -594,9 +593,9 @@
                   <div class="row justify-content-center align-self-center">
                     <div>
                       @if(Utils::$lang=='id')
-                        <a href="https://wakishop.asia/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
+                        <a href="https://wakishop.id/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
                       @elseif(Utils::$lang=='eng')
-                        <a href="https://wakishop.asia/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">View</a>
+                        <a href="https://wakishop.id/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">View</a>
                       @endif
                     </div>
                   </div>
