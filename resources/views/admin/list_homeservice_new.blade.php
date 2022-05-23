@@ -997,14 +997,16 @@ $menu_item_second = "list_homeservice";
                             </div>
                         </form>
                     @else
-                        <a id="create_technician_schedule"
-                            href="">
-                            <button id="btn-share"
-                                type="button"
-                                class="btn btn-gradient-primary mr-2">
-                                Add Schedule
-                            </button>
-                        </a>
+                        @if(Gate::check('add-service'))
+                            <a id="create_technician_schedule"
+                                href="">
+                                <button id="btn-share"
+                                    type="button"
+                                    class="btn btn-gradient-primary mr-2">
+                                    Add Schedule
+                                </button>
+                            </a>
+                        @endif
                         <a id="url_share"
                             href=""
                             data-action="share/whatsapp/share"
@@ -1893,12 +1895,15 @@ function clickView(btn) {
         document.getElementById("view-cso2").innerHTML = result.cso2_code_name;
         document.getElementById("view-date").innerHTML = dateString;
         document.getElementById("view-time").innerHTML = timeString;
-        if (result.technician_schedule) {
-            document.getElementById("create_technician_schedule").style.display = 'none';
-        } else {
-            document.getElementById("create_technician_schedule").style.display = 'inline-block';
-            document.getElementById("create_technician_schedule").setAttribute('href', "{{route('add_technician_schedule')}}?hs_id=" + result.id)
-        }
+        
+        @if(Gate::check('add-service'))
+            if (result.technician_schedule) {
+                document.getElementById("create_technician_schedule").style.display = 'none';
+            } else {
+                document.getElementById("create_technician_schedule").style.display = 'inline-block';
+                document.getElementById("create_technician_schedule").setAttribute('href', "{{route('add_technician_schedule')}}?hs_id=" + result.id)
+            }
+        @endif
 
         @if(isset($_GET['id_hs']))
             $("#input_id_hs_hidden").val(id_hs);
