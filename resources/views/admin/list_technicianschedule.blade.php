@@ -348,6 +348,7 @@ $menu_item_second = "list_technician";
 
                                 <?php
                                 $currentMonth = date("n");
+                                $currentYear = date("Y");
                                 $previousMonth = (int) $currentMonth - 1;
                                 $nextMonth = (int) $currentMonth + 1;
                                 $month = date("m");
@@ -983,19 +984,12 @@ function submitApplyFilter() {
     window.location.href = "<?php echo route('list_technician_schedule'); ?>" + "?" + urlParamStr;
 }
 
+var currentDate = "<?php echo $currentYear . "-" . $currentMonth . "-01"?>";
+
 {{-- Export XLS --}}
 function submitExportXLS() {
     let urlParamStr = buildParam();
-
-    const selectedDate = new Date(Date.parse(document.getElementById("organizer-container-date").innerHTML));
-
-    const year = selectedDate.getFullYear();
-    const month = ("0" + (selectedDate.getMonth() + 1)).slice(-2);
-    const date = ("0" + (selectedDate.getDate())).slice(-2);
-
-    const fullDate = year + "-" + month + "-" + date;
-
-    window.location.href = "<?php echo route('technician_schedule_export-to-xls'); ?>" + "?date=" + fullDate + "&" + urlParamStr;
+    window.location.href = "<?php echo route('technician_schedule_export-to-xls'); ?>" + "?date=" + currentDate + "&" + urlParamStr;
 }
 
 {{-- Ganti bulan --}}
@@ -1004,6 +998,8 @@ function changeMonth(click) {
     const currentYear = convertDate.getFullYear();
     const currentMonth = convertDate.getMonth();
     console.log([click, convertDate, currentYear, currentMonth]);
+
+    currentDate = currentYear + "-" + (currentMonth + 1) + "-01";
 
     const monthWithZero = ("0" + (currentMonth + 1)).slice(-2);
     const dateWithZero = ("0" + (convertDate.getDate())).slice(-2);

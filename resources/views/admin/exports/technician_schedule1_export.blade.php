@@ -9,10 +9,7 @@
     $index = 1;
     $stillGet = true;
     $arrTechnicianSchedules = current((array) $technician_schedules);
-    $tglSekarang = null;
-    if($arrTechnicianSchedules != null){
-        $tglSekarang = new DateTime($arrTechnicianSchedules[0]['appointment']);
-    }
+    $tglSekarang = new DateTime($date);
 @endphp
 
 <table>
@@ -33,7 +30,7 @@
             <th>D/O</th>
         </tr>
         @php 
-            $old_ts_id = $technician_schedules[0]->technician_id;
+            $old_ts_id = $technician_schedules[0]->technician_id ?? null;
             $i = 0;
         @endphp
         @foreach ($technician_schedules as $ts)  

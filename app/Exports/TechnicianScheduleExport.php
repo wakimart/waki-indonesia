@@ -45,6 +45,7 @@ class TechnicianScheduleExport implements FromView, ShouldAutoSize, WithColumnWi
             ->orderBy('appointment', 'ASC')->get();
 
         return view('admin.exports.technician_schedule1_export', [
+            'date' => date('Y-m-d', $this->date),
             'technician_schedules' => $technician_schedules
         ]);
     }

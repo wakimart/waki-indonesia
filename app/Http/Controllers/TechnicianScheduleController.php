@@ -560,12 +560,11 @@ class TechnicianScheduleController extends Controller
         $branch = Branch::where('code', 'F00')->first();
         $csos = Cso::where('branch_id', $branch->id)->get();
         $products = Product::all();
-        $services = Service::where('active', 1)->orderby('created_at', 'desc')->get();
         if ($request->has('hs_id')) {
             $autofill = HomeService::find($request->hs_id);
-            return view('admin.add_technicianschedule', compact('csos', 'products', 'services', 'autofill'));
+            return view('admin.add_technicianschedule', compact('csos', 'products','autofill'));
         }
-        return view('admin.add_technicianschedule', compact('csos', 'products', 'services'));
+        return view('admin.add_technicianschedule', compact('csos', 'products'));
     }
 
     public function store(Request $request)
@@ -661,13 +660,12 @@ class TechnicianScheduleController extends Controller
             $branch = Branch::where('code', 'F00')->first();
             $csos = Cso::where('branch_id', $branch->id)->get();
             $products = Product::all();
-            $services = Service::where('active', 1)->orderby('created_at', 'desc')->get();
             $autofill = TechnicianSchedule::with('service')->where('id', $request->id)->first();
             $product_tss = ProductTechnicianSchedule::where([
                 ['active', '=', 1],
                 ['technician_schedule_id', '=', $request->id]
             ])->get();
-            return view('admin.update_technicianschedule', compact('csos', 'products', 'services', 'autofill', 'product_tss'));
+            return view('admin.update_technicianschedule', compact('csos', 'products', 'autofill', 'product_tss'));
         }
     }
 
