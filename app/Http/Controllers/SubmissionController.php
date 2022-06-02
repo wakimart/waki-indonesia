@@ -473,7 +473,7 @@ class SubmissionController extends Controller
             DB::commit();
 
             return redirect()
-                ->route("add_submission_takeaway")
+                ->route("detail_submission_form", ["id" => $submission, "type" => "takeaway"])
                 ->with('success', 'Data berhasil dimasukkan.');
         } catch (Exception $e) {
             DB::rollBack();
