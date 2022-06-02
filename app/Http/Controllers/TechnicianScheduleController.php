@@ -559,7 +559,7 @@ class TechnicianScheduleController extends Controller
     {
         $branch = Branch::where('code', 'F00')->first();
         $csos = Cso::where('branch_id', $branch->id)->get();
-        $products = Product::all();
+        $products = Product::where('active', true)->get();
         if ($request->has('hs_id')) {
             $autofill = HomeService::find($request->hs_id);
             return view('admin.add_technicianschedule', compact('csos', 'products','autofill'));
@@ -659,12 +659,13 @@ class TechnicianScheduleController extends Controller
         if ($request->has('id')) {
             $branch = Branch::where('code', 'F00')->first();
             $csos = Cso::where('branch_id', $branch->id)->get();
-            $products = Product::all();
             $autofill = TechnicianSchedule::with('service')->where('id', $request->id)->first();
             $product_tss = ProductTechnicianSchedule::where([
                 ['active', '=', 1],
                 ['technician_schedule_id', '=', $request->id]
-            ])->get();
+                ])->get();
+            $products = Product::where('active', true)
+                ->orWhereIn('id', $product_tss->pluck('product_id'))->get();
             return view('admin.update_technicianschedule', compact('csos', 'products', 'autofill', 'product_tss'));
         }
     }

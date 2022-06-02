@@ -65,7 +65,7 @@ $menu_item_second = "add_product";
                                 <label for="">Show/Hide</label>
                                 <select class="form-control"
                                     id="show-hide"
-                                    name="active"
+                                    name="show"
                                     onchange="isImageRequired(this)"
                                     required>
                                     <option value="1">Show</option>

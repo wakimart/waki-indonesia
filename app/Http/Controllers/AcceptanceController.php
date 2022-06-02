@@ -27,7 +27,7 @@ class AcceptanceController extends Controller
 {
     public function create()
     {
-        $products = Product::all();
+        $products = Product::where('active', true)->get();
         $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
     	return view('admin.add_acceptance', compact('products', 'branches', 'csos'));
@@ -137,7 +137,12 @@ class AcceptanceController extends Controller
 
     public function edit($id){
         $acceptance = Acceptance::find($id);
-        $products = Product::all();
+        $products = Product::where('active', true)
+            ->orWhereIn('id', [
+                $acceptance->newproduct_id,
+                $acceptance->product_addons_id,
+                $acceptance->oldproduct_id,
+            ])->get();
         $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         // dd(date_format(date_create($acceptance['upgrade_date']), 'm-d-Y'));

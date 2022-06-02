@@ -143,11 +143,10 @@
 				                    <div class="form-group">
 				                        <select class="form-control pilihan-productservice" id="product_service-{{$key}}" data-msg="Mohon Pilih Product" required>
 				                            <option selected disabled value="">Choose PRODUCT SERVICE</option>
+											<option value="other" @if($product_service['product_id'] == null) selected @endif>OTHER</option>
 				                            @foreach($products as $product)
 				                            	@if($product_service['product_id'] == $product['id'])
 				                                	<option value="{{ $product['id'] }}" selected>{{ $product['code'] }} - {{ $product['name'] }}</option>
-				                                @elseif($product_service['product_id'] == null)
-				                                	<option value="other" selected>OTHER</option>
 				                                @else
 				                                	<option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
 				                                @endif

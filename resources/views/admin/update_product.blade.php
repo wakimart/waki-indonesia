@@ -65,14 +65,14 @@ $menu_item_page = "product";
                                 <label for="">Show/Hide</label>
                                 <select class="form-control"
                                     id="show-hide"
-                                    name="active"
+                                    name="show"
                                     required>
                                     <option value="1"
-                                        {{ (int) $products["active"] === 1 ? "selected" : "" }}>
+                                        {{ (int) $products["show"] === 1 ? "selected" : "" }}>
                                         Show
                                     </option>
                                     <option value="0"
-                                        {{ (int) $products["active"] === 0 ? "selected" : "" }}>
+                                        {{ (int) $products["show"] === 0 ? "selected" : "" }}>
                                         Hide
                                     </option>
                                 </select>

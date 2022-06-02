@@ -64,7 +64,7 @@ class ServiceController extends Controller
      */
     public function create(Request $request)
     {
-        $products = Product::all();
+        $products = Product::where('active', true);
         $spareparts = Sparepart::where('active', true)->get();
         if ($request->has('ts_id')) {
             $autofill = TechnicianSchedule::find($request->ts_id);
@@ -72,8 +72,10 @@ class ServiceController extends Controller
                 ['active', '=', 1],
                 ['technician_schedule_id', '=', $request->ts_id]
             ])->get();
+            $products = $products->orWhereIn('id', $product_tss->pluck('product_id'))->get();
             return view('admin.add_service', compact('products', 'spareparts', 'autofill', 'product_tss'));
         }
+        $products = $products->get();
         return view('admin.add_service', compact('products', 'spareparts'));
     }
 
@@ -159,12 +161,14 @@ class ServiceController extends Controller
     {
         if($request->has('id')){
             $services = Service::find($request->get('id'));
-            $products = Product::all();
-            $spareparts = Sparepart::where('active', true)->get();
             $product_services = ProductService::where([
                     ['active', '=', 1],
                     ['service_id', '=', $request->get('id')]
                 ])->get();
+            $products = Product::where('active', true)
+                ->orWhereIn('id', $product_services->pluck('product_id'))->get();
+            $spareparts = Sparepart::where('active', true)->get();
+            
             return view('admin.update_service', compact('services','products', 'spareparts', 'product_services'));
         }
     }

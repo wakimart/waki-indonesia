@@ -17,6 +17,6 @@ class CategoryProduct extends Model
 
     public function productIndex()
     {
-        return $this->hasMany('App\Product', 'category_id', 'id')->where('active', true);
+        return $this->hasMany('App\Product', 'category_id', 'id')->where('active', true)->where('show', true);
     }
 }

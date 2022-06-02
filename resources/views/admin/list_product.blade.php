@@ -78,6 +78,7 @@ $menu_item_second = "list_product";
                                         <th>Name</th>
                                         <th class="center">Price</th>
                                         <th>Category</th>
+                                        <th>Show</th>
                                         <th class="center">Edit</th>
                                         <th class="center">Delete</th>
                                     </tr>
@@ -120,6 +121,13 @@ $menu_item_second = "list_product";
                                             </td>
                                             <td>
                                                 {{ $product->category['name'] }}
+                                            </td>
+                                            <td>
+                                                @if ($product->show == true)
+                                                <span class="badge badge-primary">Show</span>
+                                                @else
+                                                <span class="badge badge-secondary">Hide</span>
+                                                @endif
                                             </td>
                                             <td class="center">
                                                 <a href="{{ route('edit_product', ['id' => $product['id']]) }}">

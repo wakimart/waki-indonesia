@@ -20,9 +20,10 @@ class ProductController extends Controller
      */
     public function index($id)
     {
-        $product = Product::where(['id' => $id, 'active' => true])->first() ?? abort(404);
+        $product = Product::where(['id' => $id, 'active' => true, 'show' => true])->first() ?? abort(404);
         $categoryProducts = CategoryProduct::all();
         $relatedProducts = Product::where([
+            ['show', true],
             ['active', true],
             ['id', '!=', $product->id],
             ['category_id', '=', $product->category_id],
@@ -85,10 +86,10 @@ class ProductController extends Controller
     {
         $url = $request->all();
 
-        $products = Product::all();
+        $products = Product::where('active', true);
 
         if ($request->has('search')) {
-            $products = Product::where('name', 'LIKE', '%' . $request->search . '%')
+            $products->where('name', 'LIKE', '%' . $request->search . '%')
                 ->orWhere('code', 'LIKE', '%' . $request->search . '%');
         }
 
@@ -143,7 +144,7 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $products = Product::find($request->input('idProduct'));
-        $products->active = $request->input("active");
+        $products->show = $request->input("show");
         $products->name = $request->input('name');
         $products->price = $request->input('price');
         $products->video = $request->input('video');

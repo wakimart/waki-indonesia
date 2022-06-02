@@ -18,7 +18,7 @@ class PromoController extends Controller
     public function index()
     {
         $promos = Promo::all();
-        $products = Product::all();
+        $products = Product::where('active', true)->get();
         return view('admin.list_promo', compact('promos', 'products'));
     }
 
@@ -29,7 +29,7 @@ class PromoController extends Controller
      */
     public function create()
     {
-        $products = Product::all();
+        $products = Product::where('active', true)->get();
         return view('admin.add_promo', compact('products'));
     }
 
@@ -115,7 +115,9 @@ class PromoController extends Controller
     {
         if($request->has('id')){
             $promos = Promo::find($request->get('id'));
-            $products = Product::all();
+            $products = Product::where('active', true)
+                ->orWhereIn('id', collect($promos->product_list())->pluck('id'))
+                ->get();
             return view('admin.update_promo', compact('promos','products'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
