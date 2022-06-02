@@ -20,7 +20,7 @@ class ProductController extends Controller
      */
     public function index($id)
     {
-        $product = Product::find($id);
+        $product = Product::where(['id' => $id, 'active' => true])->first() ?? abort(404);
         $categoryProducts = CategoryProduct::all();
         $relatedProducts = Product::where([
             ['active', true],
@@ -234,7 +234,8 @@ class ProductController extends Controller
         if (!empty($request->id)) {
             try {
                 $product = Product::where("id", $request->id)->first();
-                $product->delete();
+                $product->active = false;
+                $product->save();
 
                 $user = Auth::user();
                 $historyDeleteProduct["type_menu"] = "Product";
