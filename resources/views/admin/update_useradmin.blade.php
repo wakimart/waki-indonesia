@@ -1302,6 +1302,90 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">TYPE CUSTOMER</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-type_customer">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-type_customer" />
+                                            Add Type Customer
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-type_customer">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-type_customer" />
+                                            Browse Type Customer
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-type_customer">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-type_customer" />
+                                            Edit Type Customer
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-type_customer">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-type_customer" />
+                                            Delete Type Customer
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">DATA SOURCING</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-data_sourcing">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-data_sourcing" />
+                                            Add Data Sourcing
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-data_sourcing">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-data_sourcing" />
+                                            Browse Data Sourcing
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-data_sourcing">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-data_sourcing" />
+                                            Edit Data Sourcing
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-data_sourcing">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-data_sourcing" />
+                                            Delete Data Sourcing
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <input type="hidden"
                                 name="idUserAdmin"
                                 id="idUserAdmin"

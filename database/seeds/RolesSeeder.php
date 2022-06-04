@@ -162,6 +162,18 @@ class RolesSeeder extends Seeder
                 "acc-reschedule-personalhomecare" => true,
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => true,
+
+                //Type Customer (Head Admin)
+        		'add-type_customer' => true,
+                'browse-type_customer' => true,
+        		'edit-type_customer' => true,
+                'delete-type_customer' => true,
+
+                //Data Sourcing (Head Admin)
+                'add-data_sourcing' => true,
+                'browse-data_sourcing' => true,
+                'edit-data_sourcing' => true,
+                'delete-data_sourcing' => true,
             ]),
         ]);
 
@@ -315,6 +327,18 @@ class RolesSeeder extends Seeder
                 "acc-reschedule-personalhomecare" => false,
                 "acc-extend-personalhomecare" => false,
                 "change-status-product-personalhomecare" => false,
+
+                //Type Customer (Admin)
+        		'add-type_customer' => true,
+                'browse-type_customer' => true,
+        		'edit-type_customer' => true,
+                'delete-type_customer' => true,
+
+                //Data Sourcing (Admin)
+                'add-data_sourcing' => true,
+                'browse-data_sourcing' => true,
+                'edit-data_sourcing' => true,
+                'delete-data_sourcing' => true,
         	]),
         ]);
 
@@ -462,6 +486,18 @@ class RolesSeeder extends Seeder
                 "acc-reschedule-personalhomecare" => false,
                 "acc-extend-personalhomecare" => false,
                 "change-status-product-personalhomecare" => false,
+
+                //Type Customer (CSO)
+        		'add-type_customer' => false,
+                'browse-type_customer' => false,
+        		'edit-type_customer' => false,
+                'delete-type_customer' => false,
+
+                //Data Sourcing (CSO)
+                'add-data_sourcing' => false,
+                'browse-data_sourcing' => false,
+                'edit-data_sourcing' => false,
+                'delete-data_sourcing' => false,
             ]),
         ]);
 
@@ -609,6 +645,18 @@ class RolesSeeder extends Seeder
                 "acc-reschedule-personalhomecare" => false,
                 "acc-extend-personalhomecare" => false,
                 "change-status-product-personalhomecare" => false,
+
+                //Type Customer (Branch)
+        		'add-type_customer' => false,
+                'browse-type_customer' => false,
+        		'edit-type_customer' => false,
+                'delete-type_customer' => false,
+
+                //Data Sourcing (Branch)
+                'add-data_sourcing' => false,
+                'browse-data_sourcing' => false,
+                'edit-data_sourcing' => false,
+                'delete-data_sourcing' => false,
             ]),
         ]);
 
@@ -756,6 +804,18 @@ class RolesSeeder extends Seeder
                 "acc-reschedule-personalhomecare" => true,
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => false,
+
+                //Type Customer (Area Manager)
+        		'add-type_customer' => false,
+                'browse-type_customer' => false,
+        		'edit-type_customer' => false,
+                'delete-type_customer' => false,
+
+                //Data Sourcing (Area Manager)
+                'add-data_sourcing' => false,
+                'browse-data_sourcing' => false,
+                'edit-data_sourcing' => false,
+                'delete-data_sourcing' => false,
             ]),
         ]);
 
@@ -903,6 +963,18 @@ class RolesSeeder extends Seeder
                 "acc-reschedule-personalhomecare" => true,
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => false,
+
+                //Type Customer (Head Manager)
+        		'add-type_customer' => false,
+                'browse-type_customer' => false,
+        		'edit-type_customer' => false,
+                'delete-type_customer' => false,
+
+                //Data Sourcing (Head Manager)
+                'add-data_sourcing' => false,
+                'browse-data_sourcing' => false,
+                'edit-data_sourcing' => false,
+                'delete-data_sourcing' => false,
             ]),
         ]);
 
@@ -1056,6 +1128,18 @@ class RolesSeeder extends Seeder
                 "acc-reschedule-personalhomecare" => true,
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => false,
+
+                //Type Customer (Admin Management)
+        		'add-type_customer' => false,
+                'browse-type_customer' => false,
+        		'edit-type_customer' => false,
+                'delete-type_customer' => false,
+
+                //Data Sourcing (Admin Management)
+                'add-data_sourcing' => false,
+                'browse-data_sourcing' => false,
+                'edit-data_sourcing' => false,
+                'delete-data_sourcing' => false,
             ]),
         ]);
     }

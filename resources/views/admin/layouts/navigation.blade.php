@@ -444,6 +444,46 @@
 </li>
 @endif
 
+@if(Gate::check('add-type_customer') || Gate::check('browse-type_customer'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'type_customer'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#type_customer-dd" aria-expanded="false" aria-controls="type_customer-dd">
+    <span class="menu-title">Type Customer</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-package menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'type_customer'? 'show': '' }}" id="type_customer-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-type_customer'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_type_customer'? 'active': '' }}" href="{{route('add_type_customer')}}">Add Type Customer</a></li>
+      @endif
+      @if(Gate::check('browse-type_customer'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_type_customer'? 'active': '' }}" href="{{route('list_type_customer')}}">List Type Customer</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
+@if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#data_sourcing-dd" aria-expanded="false" aria-controls="data_sourcing-dd">
+    <span class="menu-title">Data Sourcing</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-package menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_sourcing'? 'show': '' }}" id="data_sourcing-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-data_sourcing'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_data_sourcing'? 'active': '' }}" href="{{route('add_data_sourcing')}}">Add Data Sourcing</a></li>
+      @endif
+      @if(Gate::check('browse-data_sourcing'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_data_sourcing'? 'active': '' }}" href="{{route('list_data_sourcing')}}">List Data Sourcing</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
 @if(Auth::user()->roles[0]['slug'] == 'head-admin')
 <li class="{{isset($menu_item_page) && $menu_item_page == 'souvenir'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#souvenir-dd" aria-expanded="false" aria-controls="souvenir-dd">

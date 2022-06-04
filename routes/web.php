@@ -756,6 +756,70 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("fetch_promo_dropdown");
     });
 
+    Route::group(['prefix' => 'type_customer', 'middleware' => 'auth'], function() {
+        //Add Form Product
+        Route::get('/', 'TypeCustomerController@create')
+            ->name('add_type_customer')
+            ->middleware('can:add-type_customer');
+
+        //Create Product
+        Route::post('/', 'TypeCustomerController@store')
+            ->name('store_type_customer')
+            ->middleware('can:add-type_customer');
+
+        //List Product
+        Route::get('/list', 'TypeCustomerController@index')
+            ->name('list_type_customer')
+            ->middleware('can:browse-type_customer');
+
+        //Edit Product
+        Route::get('/edit/', 'TypeCustomerController@edit')
+            ->name('edit_type_customer')
+            ->middleware('can:edit-type_customer');
+
+        //Update Product
+        Route::post('/update/', 'TypeCustomerController@update')
+            ->name('update_type_customer')
+            ->middleware('can:edit-type_customer');
+
+        //Delete Product
+        Route::post('/delete', 'TypeCustomerController@destroy')
+            ->name('delete_type_customer')
+            ->middleware('can:delete-type_customer');
+    });
+
+    Route::group(['prefix' => 'data_sourcing', 'middleware' => 'auth'], function() {
+        //Add Form Product
+        Route::get('/', 'DataSourcingController@create')
+            ->name('add_data_sourcing')
+            ->middleware('can:add-data_sourcing');
+
+        //Create Product
+        Route::post('/', 'DataSourcingController@store')
+            ->name('store_data_sourcing')
+            ->middleware('can:add-data_sourcing');
+
+        //List Product
+        Route::get('/list', 'DataSourcingController@index')
+            ->name('list_data_sourcing')
+            ->middleware('can:browse-data_sourcing');
+
+        //Edit Product
+        Route::get('/edit/', 'DataSourcingController@edit')
+            ->name('edit_data_sourcing')
+            ->middleware('can:edit-data_sourcing');
+
+        //Update Product
+        Route::post('/update/', 'DataSourcingController@update')
+            ->name('update_data_sourcing')
+            ->middleware('can:edit-data_sourcing');
+
+        //Delete Product
+        Route::post('/delete', 'DataSourcingController@destroy')
+            ->name('delete_data_sourcing')
+            ->middleware('can:delete-data_sourcing');
+    });
+
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
         // Convert Link_HS in ReferenceSouvenirs to JSON
         Route::get("/converths", "SubmissionController@convertHsToForeign")

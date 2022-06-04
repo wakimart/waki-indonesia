@@ -162,6 +162,33 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-promo']);
         });
 
+        //-- TYPE CUSTOMER --//
+        Gate::define('add-type_customer', function ($user) {
+            return $user->hasAccess(['add-type_customer']);
+        });
+        Gate::define('browse-type_customer', function ($user) {
+            return $user->hasAccess(['browse-type_customer']);
+        });
+        Gate::define('edit-type_customer', function ($user) {
+            return $user->hasAccess(['edit-type_customer']);
+        });
+        Gate::define('delete-type_customer', function ($user) {
+            return $user->hasAccess(['delete-type_customer']);
+        });
+
+        //-- DATA SOURCING --//
+        Gate::define('add-data_sourcing', function ($user) {
+            return $user->hasAccess(['add-data_sourcing']);
+        });
+        Gate::define('browse-data_sourcing', function ($user) {
+            return $user->hasAccess(['browse-data_sourcing']);
+        });
+        Gate::define('edit-data_sourcing', function ($user) {
+            return $user->hasAccess(['edit-data_sourcing']);
+        });
+        Gate::define('delete-data_sourcing', function ($user) {
+            return $user->hasAccess(['delete-data_sourcing']);
+        });
 
         //-- REPORT --//
 

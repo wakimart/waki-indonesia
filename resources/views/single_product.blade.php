@@ -2,6 +2,27 @@
 
 @section('content')
 <!--==========================Intro Section============================-->
+<div id="video2" class="modal fade videoModal" role="dialog">
+	<div class="modal-dialog">
+	  <div class="modal-content">
+
+		<div class="modal-header">
+		  <button type="button" class="close" data-dismiss="modal">&times;</button>
+		</div>
+
+		<div class="modal-body">
+		  <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
+			<video id="video-2" onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
+			  <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
+			</video>
+		  </div>
+
+		</div>
+
+	  </div>
+	</div>
+</div>
+
 <section id="hero" class="clearfix">
 
 	<div class="container d-flex h-100">
@@ -21,26 +42,6 @@
         </div>
       </div>
 
-      <div id="video2" class="modal fade videoModal" role="dialog">
-        <div class="modal-dialog">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <div class="modal-body">
-              <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
-                <video id="video-2" muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
-                  <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
-                </video>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-      </div>
     </div>
 
   </div>
