@@ -98,7 +98,12 @@ $menu_item_second = "list_data_sourcing";
                                             <td>{{ $data_sourcing['c_name'] }}</td>
                                             <td>{{ $data_sourcing['phone'] }}</td>
                                             <td>{{ $data_sourcing['address'] }}</td>
-                                            <td>{{ $data_sourcing['tc_name'] }}</td>
+                                            <td>
+                                                {{ $data_sourcing['tc_name'] }}
+                                                @if ($data_sourcing['created_at'] == null && $data_sourcing['updated_at'] == null)
+                                                (old data)
+                                                @endif
+                                            </td>
                                             @can('edit-data_sourcing')
                                             <td class="center">
                                                 <a href="{{ route('edit_data_sourcing', ['id' => $data_sourcing['id']]) }}">

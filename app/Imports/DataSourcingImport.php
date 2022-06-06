@@ -32,7 +32,7 @@ class DataSourcingImport implements ToModel, WithHeadingRow
             'created_at' => $row['created_at'],
             'updated_at' => $row['updated_at'],
             'branch_id' => $row['branch_id'],
-            'cso_id' => $this->csso[$row['cso_id']] ?? null,
+            'cso_id' => $this->csos[$row['cso_id']]['id'] ?? null,
             'type_customer_id' => $row['type_customer_id'],
             'user_id' => Auth::user()['id'],
         ]);

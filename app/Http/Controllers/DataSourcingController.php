@@ -31,9 +31,9 @@ class DataSourcingController extends Controller
                 'c.code as c_code',
                 'c.name as c_name',
                 'tc.name as tc_name')
-            ->join('branches as b', 'b.id', 'ds.branch_id')
-            ->join('csos as c', 'c.id', 'ds.cso_id')
-            ->join('type_customers as tc', 'tc.id', 'ds.type_customer_id')
+            ->leftJoin('branches as b', 'b.id', 'ds.branch_id')
+            ->leftJoin('csos as c', 'c.id', 'ds.cso_id')
+            ->leftJoin('type_customers as tc', 'tc.id', 'ds.type_customer_id')
             ->where('ds.active', true);
 
         if ($request->has('search')) {
