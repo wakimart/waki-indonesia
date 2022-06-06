@@ -6,10 +6,13 @@ use App\Branch;
 use App\Cso;
 use App\DataSourcing;
 use App\HistoryUpdate;
+use App\Imports\DataSourcingImport;
+use App\Imports\TypeCustomerImport;
 use App\TypeCustomer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DataSourcingController extends Controller
 {
@@ -229,5 +232,48 @@ class DataSourcingController extends Controller
         }
 
         return response()->json(["result" => "Data tidak ditemukan."], 400);
+    }
+
+    public function importDataSourcing(Request $request)
+    {
+        return view('admin.import_datasourcing');
+    }
+
+    public function storeImportDataSourcing(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            'importmenu' => 'required',
+            'file' => 'required|mimes:csv,txt',
+        ]);
+        if($validator->fails()){
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json(['errors' => $arr_Hasil]);
+        } else {
+            DB::beginTransaction();            
+            try {
+                $importmenu = $request->importmenu;
+                $file = $request->file('file');
+                
+                if ($importmenu == "data_sourcing") {
+                    Excel::import(new DataSourcingImport, $file);
+                } else if ($importmenu == "type_customer") {
+                    Excel::import(new TypeCustomerImport, $file);
+                }
+                DB::commit();
+
+                return response()->json(['success' => 'Berhasil']);
+            } catch (Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    "error" => $e,
+                ], 500);                
+            }
+        }
     }
 }

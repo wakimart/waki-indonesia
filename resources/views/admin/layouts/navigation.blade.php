@@ -479,6 +479,9 @@
       @if(Gate::check('browse-data_sourcing'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_data_sourcing'? 'active': '' }}" href="{{route('list_data_sourcing')}}">List Data Sourcing</a></li>
       @endif
+      @if(Auth::user()->roles[0]['slug'] == 'head-admin')
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'import_data_sourcing'? 'active': '' }}" href="{{route('import_data_sourcing')}}">Import Data</a></li>
+      @endif
     </ul>
   </div>
 </li>

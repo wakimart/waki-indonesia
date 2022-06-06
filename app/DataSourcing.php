@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DataSourcing extends Model
 {
     protected $fillable = [
-        'name', 'branch_id', 'cso_id', 'phone', 'address', 'type_customer_id', 'user_id', 'active'
+        'name', 'branch_id', 'cso_id', 'phone', 'address', 'type_customer_id', 'user_id', 'active', 'created_at', 'updated_at'
     ];
 
     public function branch()

@@ -818,6 +818,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'DataSourcingController@destroy')
             ->name('delete_data_sourcing')
             ->middleware('can:delete-data_sourcing');
+
+        Route::get('/import_data_sourcing', 'DataSourcingController@importDataSourcing')
+            ->name('import_data_sourcing')
+            ->middleware('can:add-data_sourcing');
+        
+        Route::post('/import_data_sourcing', 'DataSourcingController@storeImportDataSourcing')
+            ->name('store_import_data_sourcing')
+            ->middleware('can:add-data_sourcing');
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
