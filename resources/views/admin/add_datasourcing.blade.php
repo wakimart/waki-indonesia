@@ -85,7 +85,7 @@ $menu_item_second = "add_data_sourcing";
                             </div>
 
                             <div class="form-group">
-                                <label for="exampleTextarea1">Alamat</label>
+                                <label for="exampleTextarea1">Alamat (Optional)</label>
                                 <textarea class="form-control" id="address" name="address" rows="5" data-msg="Mohon Isi Alamat" placeholder="Alamat"></textarea>
                                 <span class="invalid-feedback">
                                     <strong></strong>
@@ -95,7 +95,7 @@ $menu_item_second = "add_data_sourcing";
                             <div class="form-group">
 				                <label for="">Type Customer</label>
 				                <select class="form-control" id="typecustomer" name="type_customer_id" required data-msg="Mohon Pilih Type Customer" >
-				                  	<option selected disabled value="">Choose Type Customer</option>
+				                  	<option value="">Choose Type Customer</option>
 			                        @foreach($type_customers as $type_customer)
 			                            <option value="{{ $type_customer['id'] }}">{{ $type_customer['name'] }}</option>
 			                        @endforeach
@@ -159,6 +159,11 @@ $menu_item_second = "add_data_sourcing";
         $("#cso").select2({
             theme: "bootstrap4",
             placeholder: "Choose CSO"
+        });
+
+        $("#typecustomer").select2({
+            theme: "bootstrap4",
+            placeholder: "Choose Type Customer"
         });
 
         var frmAdd;
