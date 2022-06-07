@@ -14,4 +14,9 @@ class TypeCustomer extends Model
     {
         return $this->hasMany('App\DataSourcing');
     }
+
+    public function data_therapy()
+    {
+        return $this->hasMany('App\DataTherapy');
+    }
 }

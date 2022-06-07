@@ -1386,6 +1386,57 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">DATA THERAPY</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-data_therapy">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-data_therapy" />
+                                            Add Data Therapy
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-data_therapy">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-data_therapy" />
+                                            Browse Data Therapy
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-data_therapy">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-data_therapy" />
+                                            Detail Data Therapy
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-data_therapy">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-data_therapy" />
+                                            Edit Data Therapy
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-data_therapy">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-data_therapy" />
+                                            Delete Data Therapy
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <input type="hidden"
                                 name="idUserAdmin"
                                 id="idUserAdmin"

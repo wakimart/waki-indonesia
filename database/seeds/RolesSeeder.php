@@ -174,6 +174,13 @@ class RolesSeeder extends Seeder
                 'browse-data_sourcing' => true,
                 'edit-data_sourcing' => true,
                 'delete-data_sourcing' => true,
+
+                //Data Therapy (Head Admin)
+                'add-data_therapy' => true,
+                'browse-data_therapy' => true,
+                'detail-data_therapy' => true,
+                'edit-data_therapy' => true,
+                'delete-data_therapy' => true,
             ]),
         ]);
 
@@ -339,6 +346,13 @@ class RolesSeeder extends Seeder
                 'browse-data_sourcing' => true,
                 'edit-data_sourcing' => true,
                 'delete-data_sourcing' => true,
+
+                //Data Therapy (Admin)
+                'add-data_therapy' => true,
+                'detail-data_therapy' => true,
+                'browse-data_therapy' => true,
+                'edit-data_therapy' => true,
+                'delete-data_therapy' => true,
         	]),
         ]);
 
@@ -498,6 +512,13 @@ class RolesSeeder extends Seeder
                 'browse-data_sourcing' => false,
                 'edit-data_sourcing' => false,
                 'delete-data_sourcing' => false,
+
+                //Data Therapy (CSO)
+                'add-data_therapy' => false,
+                'browse-data_therapy' => false,
+                'detail-data_therapy' => false,
+                'edit-data_therapy' => false,
+                'delete-data_therapy' => false,
             ]),
         ]);
 
@@ -657,6 +678,13 @@ class RolesSeeder extends Seeder
                 'browse-data_sourcing' => false,
                 'edit-data_sourcing' => false,
                 'delete-data_sourcing' => false,
+
+                //Data Therapy (Branch)
+                'add-data_therapy' => false,
+                'browse-data_therapy' => false,
+                'detail-data_therapy' => false,
+                'edit-data_therapy' => false,
+                'delete-data_therapy' => false,
             ]),
         ]);
 
@@ -816,6 +844,13 @@ class RolesSeeder extends Seeder
                 'browse-data_sourcing' => false,
                 'edit-data_sourcing' => false,
                 'delete-data_sourcing' => false,
+
+                //Data Therapy (Area Manager)
+                'add-data_therapy' => false,
+                'browse-data_therapy' => false,
+                'detail-data_therapy' => false,
+                'edit-data_therapy' => false,
+                'delete-data_therapy' => false,
             ]),
         ]);
 
@@ -975,6 +1010,13 @@ class RolesSeeder extends Seeder
                 'browse-data_sourcing' => false,
                 'edit-data_sourcing' => false,
                 'delete-data_sourcing' => false,
+
+                //Data Therapy (Head Manager)
+                'add-data_therapy' => false,
+                'browse-data_therapy' => false,
+                'detail-data_therapy' => false,
+                'edit-data_therapy' => false,
+                'delete-data_therapy' => false,
             ]),
         ]);
 
@@ -1140,6 +1182,13 @@ class RolesSeeder extends Seeder
                 'browse-data_sourcing' => false,
                 'edit-data_sourcing' => false,
                 'delete-data_sourcing' => false,
+
+                //Data Therapy (Admin Management)
+                'add-data_therapy' => false,
+                'browse-data_therapy' => false,
+                'detail-data_therapy' => false,
+                'edit-data_therapy' => false,
+                'delete-data_therapy' => false,
             ]),
         ]);
     }

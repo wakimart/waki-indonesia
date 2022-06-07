@@ -4,18 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Branch;
 use App\Cso;
-use App\DataSourcing;
+use App\DataTherapy;
 use App\HistoryUpdate;
-use App\Imports\DataSourcingImport;
-use App\Imports\DataTherapyImport;
-use App\Imports\TypeCustomerImport;
 use App\TypeCustomer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\File;
 
-class DataSourcingController extends Controller
+class DataTherapyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,37 +23,39 @@ class DataSourcingController extends Controller
     {
         $url = $request->all();
 
-        $data_sourcings = DataSourcing::from('data_sourcings as ds')
-            ->select('ds.*', 
+        $data_therapies = DataTherapy::from('data_therapies as dt')
+            ->select('dt.*', 
                 'b.code as b_code', 
                 'c.code as c_code',
                 'c.name as c_name',
                 'tc.name as tc_name')
-            ->leftJoin('branches as b', 'b.id', 'ds.branch_id')
-            ->leftJoin('csos as c', 'c.id', 'ds.cso_id')
-            ->leftJoin('type_customers as tc', 'tc.id', 'ds.type_customer_id')
-            ->where('ds.active', true);
+            ->leftJoin('branches as b', 'b.id', 'dt.branch_id')
+            ->leftJoin('csos as c', 'c.id', 'dt.cso_id')
+            ->leftJoin('type_customers as tc', 'tc.id', 'dt.type_customer_id')
+            ->where('dt.active', true);
 
         if ($request->has('search')) {
-            $data_sourcings->where('ds.name', 'LIKE', '%' . $request->search . '%');
-            $data_sourcings->orWhere('b.code', 'LIKE', '%' . $request->search . '%');
-            $data_sourcings->orWhere('c.code', 'LIKE', '%' . $request->search . '%');
-            $data_sourcings->orWhere('c.name', 'LIKE', '%' . $request->search . '%');
-            $data_sourcings->orWhere('tc.name', 'LIKE', '%' . $request->search . '%');
+            $data_therapies->where('dt.name', 'LIKE', '%' . $request->search . '%');
+            $data_therapies->orWhere('dt.no_ktp', 'LIKE', '%' . $request->search . '%');
+            $data_therapies->orWhere('b.code', 'LIKE', '%' . $request->search . '%');
+            $data_therapies->orWhere('c.code', 'LIKE', '%' . $request->search . '%');
+            $data_therapies->orWhere('c.name', 'LIKE', '%' . $request->search . '%');
+            $data_therapies->orWhere('tc.name', 'LIKE', '%' . $request->search . '%');
         }
 
-        $countDataSourcings = $data_sourcings->count();
-        $data_sourcings = $data_sourcings->paginate(10);
+        $countDataTherapies = $data_therapies->count();
+        $data_therapies = $data_therapies->paginate(10);
 
         return view(
-            "admin.list_datasourcing",
+            "admin.list_datatherapy",
             compact(
-                "countDataSourcings",
-                "data_sourcings",
+                "countDataTherapies",
+                "data_therapies",
                 "url"
             )
         )
-            ->with("i", (request()->input("page", 1) - 1) * 10 + 1);;    }
+            ->with("i", (request()->input("page", 1) - 1) * 10 + 1);;
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -68,9 +67,8 @@ class DataSourcingController extends Controller
         $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::where('active', true)->orderBy('code', 'asc')->get();
         $type_customers = TypeCustomer::where('active', true)->get();
-        return view('admin.add_datasourcing', compact('branches', 'csos', 'type_customers'));
+        return view('admin.add_datatherapy', compact('branches', 'csos', 'type_customers'));
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -90,10 +88,12 @@ class DataSourcingController extends Controller
         );
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
+            'no_ktp' => 'required',
             'phone' => 'required',
             'branch_id' => ['required', 'exists:branches,id'],
             'cso_id' => ['required', 'exists:csos,id'],
             'type_customer_id' => ['required', 'exists:type_customers,id'],
+            'image' => 'required|mimes:jpg,jpeg,png',
         ], $messages);
         if($validator->fails()){
             $arr_Errors = $validator->errors()->all();
@@ -106,7 +106,15 @@ class DataSourcingController extends Controller
         }else {
             $data = $request->all();
             $data['user_id'] = Auth::user()['id'];
-            DataSourcing::create($data);
+
+            if ($request->hasFile('image')) {
+                $image = $request->file("image");
+                $imageName = $request->no_ktp . "." . $image->getClientOriginalExtension();
+                $image->move("sources/therapy_images", $imageName);
+                $data['img_ktp'] = $imageName;
+            }
+
+            DataTherapy::create($data);
 
             return response()->json(['success' => 'Berhasil']);
         }
@@ -117,9 +125,14 @@ class DataSourcingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show(Request $request)
     {
-        //
+        if($request->has('id')){
+            $data_therapy = DataTherapy::find($request->get('id'));
+            return view('admin.detail_datatherapy', compact('data_therapy'));
+        }else{
+            return response()->json(['result' => 'Gagal!!']);
+        }
     }
 
     /**
@@ -133,8 +146,8 @@ class DataSourcingController extends Controller
             $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
             $csos = Cso::where('active', true)->orderBy('code', 'asc')->get();
             $type_customers = TypeCustomer::where('active', true)->get();    
-            $data_sourcings = DataSourcing::find($request->get('id'));
-            return view('admin.update_datasourcing', compact('branches', 'csos', 'type_customers', 'data_sourcings'));
+            $data_therapy = DataTherapy::find($request->get('id'));
+            return view('admin.update_datatherapy', compact('branches', 'csos', 'type_customers', 'data_therapy'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -158,6 +171,7 @@ class DataSourcingController extends Controller
         );
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
+            'no_ktp' => 'required',
             'phone' => 'required',
             'branch_id' => ['required', 'exists:branches,id'],
             'cso_id' => ['required', 'exists:csos,id'],
@@ -173,15 +187,27 @@ class DataSourcingController extends Controller
             return response()->json(['errors' => $arr_Hasil]);
         }else {
             $data = $request->all();
-            $data_sourcing = DataSourcing::find($request->input('idDataSourcing'));
-            $data_sourcing->name = $data['name'];
-            $data_sourcing->phone = $data['phone'];
-            $data_sourcing->address = $data['address'];
-            $data_sourcing->branch_id = $data['branch_id'];
-            $data_sourcing->cso_id = $data['cso_id'];
-            $data_sourcing->type_customer_id = $data['type_customer_id'];
-            $data_sourcing->user_id = Auth::user()['id'];
-            $data_sourcing->save();
+            $data_therapy = DataTherapy::find($request->input('idDataTherapy'));
+            $data_therapy->name = $data['name'];
+            $data_therapy->phone = $data['phone'];
+            $data_therapy->address = $data['address'];
+            $data_therapy->branch_id = $data['branch_id'];
+            $data_therapy->cso_id = $data['cso_id'];
+            $data_therapy->type_customer_id = $data['type_customer_id'];
+            $data_therapy->user_id = Auth::user()['id'];
+
+            if ($request->hasFile('image')) {
+                if (File::exists("sources/therapy_images/" . $data_therapy->img_ktp)) {
+                    File::delete("sources/therapy_images/" . $data_therapy->img_ktp);
+                }
+
+                $image = $request->file("image");
+                $imageName = $request->no_ktp . "." . $image->getClientOriginalExtension();
+                $image->move("sources/therapy_images", $imageName);
+                $data_therapy->img_ktp = $imageName;
+            }
+
+            $data_therapy->save();
 
             return response()->json(['success' => 'Berhasil']);
         }
@@ -198,30 +224,30 @@ class DataSourcingController extends Controller
 
         if (!empty($request->id)) {
             try {
-                $data_sourcing = DataSourcing::find($request->id);
-                $data_sourcing->active = false;
-                $data_sourcing->save();
+                $data_therapy = DataTherapy::find($request->id);
+                $data_therapy->active = false;
+                $data_therapy->save();
 
                 $user = Auth::user();
-                $historyDeleteDataSourcing["type_menu"] = "Data Sourcing";
-                $historyDeleteDataSourcing["method"] = "Delete";
-                $historyDeleteDataSourcing["meta"] = json_encode(
+                $historyDeleteDataTherapy["type_menu"] = "Data Therapy";
+                $historyDeleteDataTherapy["method"] = "Delete";
+                $historyDeleteDataTherapy["meta"] = json_encode(
                     [
                         "user" => $user["id"],
                         "createdAt" => date("Y-m-d H:i:s"),
-                        "dataChange" => $data_sourcing->getChanges(),
+                        "dataChange" => $data_therapy->getChanges(),
                     ],
                     JSON_THROW_ON_ERROR
                 );
 
-                $historyDeleteDataSourcing["user_id"] = $user["id"];
-                $historyDeleteDataSourcing["menu_id"] = $request->id;
-                HistoryUpdate::create($historyDeleteDataSourcing);
+                $historyDeleteDataTherapy["user_id"] = $user["id"];
+                $historyDeleteDataTherapy["menu_id"] = $request->id;
+                HistoryUpdate::create($historyDeleteDataTherapy);
 
                 DB::commit();
 
                 return redirect()
-                    ->route("list_data_sourcing")
+                    ->route("list_data_therapy")
                     ->with("success", "Data berhasil dihapus!");
             } catch (Exception $e) {
                 DB::rollback();
@@ -233,50 +259,5 @@ class DataSourcingController extends Controller
         }
 
         return response()->json(["result" => "Data tidak ditemukan."], 400);
-    }
-
-    public function importDataSourcing(Request $request)
-    {
-        return view('admin.import_datasourcing');
-    }
-
-    public function storeImportDataSourcing(Request $request)
-    {
-        $validator = \Validator::make($request->all(), [
-            'importmenu' => 'required',
-            'file' => 'required|mimes:csv,txt',
-        ]);
-        if($validator->fails()){
-            $arr_Errors = $validator->errors()->all();
-            $arr_Keys = $validator->errors()->keys();
-            $arr_Hasil = [];
-            for ($i = 0; $i < count($arr_Keys); $i++) {
-                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
-            }
-            return response()->json(['errors' => $arr_Hasil]);
-        } else {
-            DB::beginTransaction();            
-            try {
-                $importmenu = $request->importmenu;
-                $file = $request->file('file');
-                
-                if ($importmenu == "data_sourcing") {
-                    Excel::import(new DataSourcingImport, $file);
-                } else if ($importmenu == "data_therapy") {
-                    Excel::import(new DataTherapyImport, $file);
-                } else if ($importmenu == "type_customer") {
-                    Excel::import(new TypeCustomerImport, $file);
-                }
-                DB::commit();
-
-                return response()->json(['success' => 'Berhasil']);
-            } catch (Exception $e) {
-                DB::rollback();
-
-                return response()->json([
-                    "error" => $e,
-                ], 500);                
-            }
-        }
     }
 }
