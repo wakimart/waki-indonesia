@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Branch;
 use App\Cso;
 use App\DataSourcing;
 use Illuminate\Support\Facades\Auth;
@@ -10,13 +11,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class DataSourcingImport implements ToModel, WithHeadingRow
 {
-    protected $csos;
-
-    public function __construct()
-    {
-        $this->csos = Cso::get(['id'])->keyBy('id');
-    }
-
     /**
     * @param array $row
     *
@@ -24,6 +18,14 @@ class DataSourcingImport implements ToModel, WithHeadingRow
     */
     public function model(array $row)
     {
+        if ($row['branch_id'] != null) {
+            $row['branch_id'] = Branch::where('code', $row['b_code'])->value('id');
+        }
+
+        if ($row['cso_id'] != null) {
+            $row['cso_id'] = Cso::where('code', $row['c_code'])->value('id');
+        }
+
         return new DataSourcing([
             'name' => $row['name'],
             'phone' => $this->Decr($row['phone']),
@@ -32,7 +34,7 @@ class DataSourcingImport implements ToModel, WithHeadingRow
             'created_at' => $row['created_at'],
             'updated_at' => $row['updated_at'],
             'branch_id' => $row['branch_id'],
-            'cso_id' => $this->csos[$row['cso_id']]['id'] ?? null,
+            'cso_id' => $row['cso_id'],
             'type_customer_id' => $row['type_customer_id'],
             'user_id' => Auth::user()['id'],
         ]);
