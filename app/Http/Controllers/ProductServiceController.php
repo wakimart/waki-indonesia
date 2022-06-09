@@ -19,15 +19,38 @@ class ProductServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $url = $request->all();
+
         $services = Service::where('active', true)
-            ->orderBy("service_date", "desc")
-            ->get();
-        $upgrades = Upgrade::where('active', true)->get();
+            ->orderBy("service_date", "desc");
+        $upgrades = Upgrade::where('active', true)
+            ->orderBy("created_at", "desc");
+        
+        if ($request->has('search')) {
+            $services->where('status', 'LIKE', '%' . $request->search . '%');
+
+            $upgrades->where('status', 'LIKE', '%' . $request->search . '%');
+        }
+
         $countServices = $services->count();
         $countUpgrades = $upgrades->count();
-        return view('admin.list_taskservice', compact('countServices', 'services', 'upgrades', 'countUpgrades'));
+
+        $services = $services->paginate(10, ['*'], 'services');
+        $upgrades = $upgrades->paginate(10, ['*'], 'upgrades');
+
+        return view(
+            'admin.list_taskservice', 
+            compact(
+                'countServices', 
+                'services', 
+                'upgrades', 
+                'countUpgrades',
+                'url'
+            )
+        )->with("i_services", (request()->input("services", 1) - 1) * 10 + 1)
+        ->with("i_upgrades", (request()->input("upgrades", 1) - 1) * 10 + 1);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Branch;
+use App\Cso;
 use App\HistoryUpdate;
 use App\ProductService;
 use App\Upgrade;
@@ -21,15 +23,55 @@ class UpgradeController extends Controller
     public function indexNew(Request $request)
     {
         $url = $request->all();
-        $upgrades = Upgrade::where([['active', true], ['status', 'new']])->paginate(10);
-        return view('admin.list_upgrade_new', compact('upgrades', 'url'));
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
+        $csos = Cso::where('active', true)->orderBy('code', 'asc')->get();
+        $upgrades = Upgrade::where([['upgrades.active', true], ['upgrades.status', 'new']])
+            ->leftJoin('acceptances as ac', 'ac.id', 'upgrades.acceptance_id')
+            ->leftJoin('csos as c', 'c.id', 'ac.cso_id');
+            
+        if ($request->has('filter_branch')) {
+            $upgrades->where('ac.branch_id', $request->filter_branch);
+        }
+        if ($request->has('filter_cso') && $request->filter_cso != "All CSO") {
+            $upgrades->where('c.code', explode('-', $request->filter_cso)[0]);
+        }
+
+        $countUpgrades = $upgrades->count();
+        $upgrades = $upgrades->orderBy("ac.upgrade_date", 'desc')->paginate(10);
+        
+        return view(
+            'admin.list_upgrade_new', 
+            compact(
+                'branches', 'csos', 'countUpgrades', 'upgrades', 'url'
+            )
+        )->with("i", (request()->input("page", 1) - 1) * 10 + 1);
     }
 
     public function list(Request $request)
     {
         $url = $request->all();
-        $upgrades = Upgrade::where([['active', true], ['status', '!=', 'new']])->orderBy("created_at", 'desc')->paginate(10);
-        return view('admin.list_upgrade', compact('upgrades', 'url'));
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
+        $csos = Cso::where('active', true)->orderBy('code', 'asc')->get();
+        $upgrades = Upgrade::where([['upgrades.active', true], ['upgrades.status', '!=', 'new']])
+            ->leftJoin('acceptances as ac', 'ac.id', 'upgrades.acceptance_id')
+            ->leftJoin('csos as c', 'c.id', 'ac.cso_id');
+        
+        if ($request->has('filter_branch')) {
+            $upgrades->where('ac.branch_id', $request->filter_branch);
+        }
+        if ($request->has('filter_cso') && $request->filter_cso != "All CSO") {
+            $upgrades->where('c.code', explode('-', $request->filter_cso)[0]);
+        }
+
+        $countUpgrades = $upgrades->count();
+        $upgrades = $upgrades->orderBy("ac.upgrade_date", 'desc')->paginate(10);
+
+        return view(
+            'admin.list_upgrade', 
+            compact(
+                'branches', 'csos', 'countUpgrades', 'upgrades', 'url'
+            )
+        )->with("i", (request()->input("page", 1) - 1) * 10 + 1);
     }
 
     /**

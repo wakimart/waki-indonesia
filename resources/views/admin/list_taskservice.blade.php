@@ -176,7 +176,7 @@
 				<div class="col-12 grid-margin stretch-card">
 					<div class="col-xs-12">
 						<div class="form-group">
-							<label for="">Search By Name, Code, and Phone</label>
+							<label for="">Search By Status</label>
 							<input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
 							<div class="validation"></div>
 						</div>
@@ -197,7 +197,7 @@
 				<div class="col-12 grid-margin stretch-card">
 					<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
 						<div class="form-group">
-							<label for="">Search By Name, Code, and Phone</label>
+							<label for="">Search By Status</label>
 							<input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
 							<div class="validation"></div>
 						</div>
@@ -217,12 +217,13 @@
 
 		<div class="form-group">
             <ul class="nav nav-tabs" style="width: 100%;">
-                <li class="nav-pt active"><a data-toggle="tab" href="#tab_services">Services</a></li>
-                <li class="nav-pt"><a data-toggle="tab" href="#tab_upgrades">Upgrades</a></li>
+				@php $tabActive = request()->query('tabActive') ?? 'services' @endphp
+                <li class="nav-pt @if ($tabActive == 'services') active @endif"><a data-toggle="tab" href="#tab_services">Services</a></li>
+                <li class="nav-pt @if ($tabActive == 'upgrades') active @endif"><a data-toggle="tab" href="#tab_upgrades">Upgrades</a></li>
             </ul>
 
             <div class="tab-content" name="list_tab">
-            	<div id="tab_services" class="tab-pane fade in active show" style="overflow-x:auto;">
+            	<div id="tab_services" class="tab-pane fade in @if ($tabActive == 'services') active show @endif" style="overflow-x:auto;">
             		<div class="col-12 grid-margin stretch-card" style="padding: 0;">
 						<div class="card">
 				  			<div class="card-body">
@@ -252,7 +253,7 @@
 													$count_productservices = count($service->product_services);
 												@endphp
 												<tr>
-													<td rowspan="{{$count_productservices}}">{{$key+1}}</td>
+													<td rowspan="{{$count_productservices}}">{{$i_services}}</td>
 													<td rowspan="{{$count_productservices}}">Service</td>
 													@foreach($service->product_services as $product_service)
 														@php
@@ -275,7 +276,9 @@
 													@endforeach
 													<td rowspan="{{$count_productservices}}">{{$service['status']}}</td>
 													@can('edit-service')
-							                            <td rowspan="{{$count_productservices}}" style="text-align: center;"><a href="{{ route('edit_taskservice', ['id' => $service['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+							                            <td rowspan="{{$count_productservices}}" style="text-align: center;">
+															<a href="{{ route('edit_taskservice', ['id' => $service['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a>
+														</td>
 						                            @endcan
 												</tr>
 												@php $first = true; @endphp
@@ -301,17 +304,19 @@
 						                                <td>{{$due_date_sec}}</td>
 						                            </tr>
 						                        @endfor
+												<?php $i_services++; ?>
 											@endforeach
 										</tbody>
 									</table>
 									<br>
+									<?php echo $services->appends($url)->appends(['tabActive' => 'services'])->links(); ?>
 				    			</div>
 				  			</div>
 						 </div>
 					</div>
             	</div>
 
-            	<div id="tab_upgrades" class="tab-pane fade" style="overflow-x:auto;">
+            	<div id="tab_upgrades" class="tab-pane fade @if ($tabActive == 'upgrades') active show @endif" style="overflow-x:auto;">
             		<div class="col-12 grid-margin stretch-card" style="padding: 0;">
 						<div class="card">
 				  			<div class="card-body">
@@ -342,7 +347,7 @@
 													$due_date = $due_date[0];
 												@endphp
 												<tr>
-													<td>{{$key+1}}</td>
+													<td>{{$i_upgrades}}</td>
 													<td>Upgrade</td>
 
 													@if($upgrade->acceptance['oldproduct_id'] != null)
@@ -356,13 +361,19 @@
 													<td>{{$due_date}}</td>
 													<td>{{$upgrade['status']}}</td>
 													@can('edit-service')
-							                            <td style="text-align: center;"><a href="{{ route('edit_taskupgrade', ['id' => $upgrade['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+													<td style="text-align: center;">
+														@if ($upgrade['status'] != "New")
+															<a href="{{ route('edit_taskupgrade', ['id' => $upgrade['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a>
+														@endif
+													</td>
 						                            @endcan
 												</tr>
+												<?php $i_upgrades++; ?>
 											@endforeach
 										</tbody>
 									</table>
 									<br>
+									<?php echo $upgrades->appends($url)->appends(['tabActive' => 'upgrades'])->links(); ?>
 				    			</div>
 				  			</div>
 						 </div>
@@ -386,5 +397,22 @@
 	    });
 	});
 
+	$(document).ready(function (e) {
+		$("#btn-filter").click(function (e) {
+			var urlParamArray = new Array();
+			var urlParamStr = "";
+			if($('#search').val() != ""){
+				urlParamArray.push("search=" + $('#search').val());
+			}
+			for (var i = 0; i < urlParamArray.length; i++) {
+				if (i === 0) {
+					urlParamStr += "?" + urlParamArray[i]
+				} else {
+					urlParamStr += "&" + urlParamArray[i]
+				}
+			}
+			window.location.href = "{{route('list_taskservice')}}" + urlParamStr;
+		});
+	}); 
 </script>
 @endsection
