@@ -173,7 +173,7 @@ class UpgradeController extends Controller
                         ['active', true],
                         ['other_product', 'like' , "%{$getOtherProduct}%"],
                         ['type_warehouse', "Display"]
-                    ])->get();
+                    ])->get()[0];
                     $stock['quantity'] = $stock['quantity'] + 1;
                     $stock->save();
 
