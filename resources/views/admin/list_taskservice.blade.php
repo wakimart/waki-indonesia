@@ -355,7 +355,7 @@
 													<td>{{$upgrade_date}}</td>
 													<td>{{$due_date}}</td>
 													<td>{{$upgrade['status']}}</td>
-													@can('edit-order')
+													@can('edit-service')
 							                            <td style="text-align: center;"><a href="{{ route('edit_taskupgrade', ['id' => $upgrade['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
 						                            @endcan
 												</tr>
