@@ -757,75 +757,114 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(['prefix' => 'type_customer', 'middleware' => 'auth'], function() {
-        //Add Form Product
+        //Add Form Type Customer
         Route::get('/', 'TypeCustomerController@create')
             ->name('add_type_customer')
             ->middleware('can:add-type_customer');
 
-        //Create Product
+        //Create Type Customer
         Route::post('/', 'TypeCustomerController@store')
             ->name('store_type_customer')
             ->middleware('can:add-type_customer');
 
-        //List Product
+        //List Type Customer
         Route::get('/list', 'TypeCustomerController@index')
             ->name('list_type_customer')
             ->middleware('can:browse-type_customer');
 
-        //Edit Product
+        //Edit Type Customer
         Route::get('/edit/', 'TypeCustomerController@edit')
             ->name('edit_type_customer')
             ->middleware('can:edit-type_customer');
 
-        //Update Product
+        //Update Type Customer
         Route::post('/update/', 'TypeCustomerController@update')
             ->name('update_type_customer')
             ->middleware('can:edit-type_customer');
 
-        //Delete Product
+        //Delete Type Customer
         Route::post('/delete', 'TypeCustomerController@destroy')
             ->name('delete_type_customer')
             ->middleware('can:delete-type_customer');
     });
 
     Route::group(['prefix' => 'data_sourcing', 'middleware' => 'auth'], function() {
-        //Add Form Product
+        //Add Form Data Sourcing
         Route::get('/', 'DataSourcingController@create')
             ->name('add_data_sourcing')
             ->middleware('can:add-data_sourcing');
 
-        //Create Product
+        //Create Data Sourcing
         Route::post('/', 'DataSourcingController@store')
             ->name('store_data_sourcing')
             ->middleware('can:add-data_sourcing');
 
-        //List Product
+        //List Data Sourcing
         Route::get('/list', 'DataSourcingController@index')
             ->name('list_data_sourcing')
             ->middleware('can:browse-data_sourcing');
 
-        //Edit Product
+        //Edit Data Sourcing
         Route::get('/edit/', 'DataSourcingController@edit')
             ->name('edit_data_sourcing')
             ->middleware('can:edit-data_sourcing');
 
-        //Update Product
+        //Update Data Sourcing
         Route::post('/update/', 'DataSourcingController@update')
             ->name('update_data_sourcing')
             ->middleware('can:edit-data_sourcing');
 
-        //Delete Product
+        //Delete Data Sourcing
         Route::post('/delete', 'DataSourcingController@destroy')
             ->name('delete_data_sourcing')
             ->middleware('can:delete-data_sourcing');
 
+        // Form Import Data Sourcing
         Route::get('/import_data_sourcing', 'DataSourcingController@importDataSourcing')
             ->name('import_data_sourcing')
             ->middleware('can:add-data_sourcing');
         
+        // Create Import Data Sourcing
         Route::post('/import_data_sourcing', 'DataSourcingController@storeImportDataSourcing')
             ->name('store_import_data_sourcing')
             ->middleware('can:add-data_sourcing');
+    });
+
+    Route::group(['prefix' => 'data_therapy', 'middleware' => 'auth'], function() {
+        //Add Form Data Therapy
+        Route::get('/', 'DataTherapyController@create')
+            ->name('add_data_therapy')
+            ->middleware('can:add-data_therapy');
+
+        //Create Data Therapy
+        Route::post('/', 'DataTherapyController@store')
+            ->name('store_data_therapy')
+            ->middleware('can:add-data_therapy');
+
+        //List Data Therapy
+        Route::get('/list', 'DataTherapyController@index')
+            ->name('list_data_therapy')
+            ->middleware('can:browse-data_therapy');
+        
+        //Detail Data Therapy
+        Route::get('/detail', 'DataTherapyController@show')
+            ->name('detail_data_therapy')
+            ->middleware('can:detail-data_therapy');
+
+        //Edit Data Therapy
+        Route::get('/edit/', 'DataTherapyController@edit')
+            ->name('edit_data_therapy')
+            ->middleware('can:edit-data_therapy');
+
+        //Update Data Therapy
+        Route::post('/update/', 'DataTherapyController@update')
+            ->name('update_data_therapy')
+            ->middleware('can:edit-data_therapy');
+
+        //Delete Data Therapy
+        Route::post('/delete', 'DataTherapyController@destroy')
+            ->name('delete_data_therapy')
+            ->middleware('can:delete-data_therapy');
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {

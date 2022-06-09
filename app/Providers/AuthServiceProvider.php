@@ -190,6 +190,23 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-data_sourcing']);
         });
 
+        //-- DATA Therapy --//
+        Gate::define('add-data_therapy', function ($user) {
+            return $user->hasAccess(['add-data_therapy']);
+        });
+        Gate::define('browse-data_therapy', function ($user) {
+            return $user->hasAccess(['browse-data_therapy']);
+        });
+        Gate::define('detail-data_therapy', function ($user) {
+            return $user->hasAccess(['detail-data_therapy']);
+        });
+        Gate::define('edit-data_therapy', function ($user) {
+            return $user->hasAccess(['edit-data_therapy']);
+        });
+        Gate::define('delete-data_therapy', function ($user) {
+            return $user->hasAccess(['delete-data_therapy']);
+        });
+
         //-- REPORT --//
 
         //-- USER ADMIN --//

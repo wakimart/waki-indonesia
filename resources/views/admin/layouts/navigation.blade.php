@@ -487,6 +487,26 @@
 </li>
 @endif
 
+@if(Gate::check('add-data_therapy') || Gate::check('browse-data_therapy'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'data_therapy'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#data_therapy-dd" aria-expanded="false" aria-controls="data_therapy-dd">
+    <span class="menu-title">Data Therapy</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-package menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_therapy'? 'show': '' }}" id="data_therapy-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-data_therapy'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_data_therapy'? 'active': '' }}" href="{{route('add_data_therapy')}}">Add Data Therapy</a></li>
+      @endif
+      @if(Gate::check('browse-data_therapy'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_data_therapy'? 'active': '' }}" href="{{route('list_data_therapy')}}">List Data Therapy</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
 @if(Auth::user()->roles[0]['slug'] == 'head-admin')
 <li class="{{isset($menu_item_page) && $menu_item_page == 'souvenir'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#souvenir-dd" aria-expanded="false" aria-controls="souvenir-dd">

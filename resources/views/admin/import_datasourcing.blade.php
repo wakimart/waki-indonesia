@@ -67,6 +67,7 @@ $menu_item_second = "import_data_sourcing";
 				                <select class="form-control" id="importmenu" name="importmenu"  data-msg="Mohon Pilih Menu Import" >
 				                  	<option value="">Choose Import Menu</option>
                                     <option value="data_sourcing">Data Sourcing</option>
+                                    <option value="data_therapy">Data Therapy</option>
                                     <option value="type_customer">Type Customer</option>
 	                			</select>
                                 <span class="invalid-feedback">
