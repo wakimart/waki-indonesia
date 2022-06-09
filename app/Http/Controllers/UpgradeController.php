@@ -28,7 +28,7 @@ class UpgradeController extends Controller
     public function list(Request $request)
     {
         $url = $request->all();
-        $upgrades = Upgrade::where([['active', true], ['status', '!=', 'new']])->paginate(10);
+        $upgrades = Upgrade::where([['active', true], ['status', '!=', 'new']])->orderBy("created_at", 'desc')->paginate(10);
         return view('admin.list_upgrade', compact('upgrades', 'url'));
     }
 
@@ -82,6 +82,7 @@ class UpgradeController extends Controller
             }
             
             $stocks = Stock::where('active', true)->select('stocks.product_id', 'stocks.other_product')->get();
+            // dd($stocks);
 
             //pembuatan array isinya all product_id dan other_product yg ada
             $arr_stockId = [];
@@ -135,7 +136,7 @@ class UpgradeController extends Controller
                         ['active', true],
                         ['product_id', $getProductId],
                         ['type_warehouse', "Display"]
-                    ])->get();
+                    ])->get()[0];
 
                     $stock['quantity'] = $stock['quantity'] + 1;
                     $stock->save();
@@ -188,7 +189,7 @@ class UpgradeController extends Controller
             return redirect()->route("detail_upgrade_form", ["id" => $upgrade->id]);
         } catch (\Exception $e) {
             DB::rollback();
-
+            dd($e);
             return response()->json([
                 "error" => $e
             ]);
