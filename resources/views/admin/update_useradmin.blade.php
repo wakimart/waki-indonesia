@@ -861,6 +861,16 @@ $menu_item_page = "user";
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label"
+                                            for="change-status-repaired-upgrade">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-repaired-upgrade"
+                                                value="change-status-repaired-upgrade" />
+                                            Change Status Repaired Upgrade
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
                                             for="change-status-complete-upgrade">
                                             <input type="checkbox"
                                                 class="form-check-input"
