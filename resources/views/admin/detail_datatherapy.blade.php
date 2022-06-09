@@ -135,8 +135,11 @@ $menu_item_page = "data_therapy";
                                         <label>Photo KTP</label>
                                         @if ($data_therapy->img_ktp)
                                         @php $defaultImg = asset('sources/therapy_images/'); @endphp
-                                            <div class="imagePreview"
-                                                style="background-image: url({{ $defaultImg . '/' . $data_therapy->img_ktp }})"></div>
+                                            <a href="{{ $defaultImg . '/' . $data_therapy->img_ktp }}" target="_blank">
+                                                <div class="imagePreview"
+                                                    style="background-image: url({{ $defaultImg . '/' . $data_therapy->img_ktp }})">
+                                                </div>
+                                            </a>
                                         @else
                                             <div class="imagePreview"
                                                 style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});"></div>
