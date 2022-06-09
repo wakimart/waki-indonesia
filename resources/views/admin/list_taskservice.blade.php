@@ -238,7 +238,7 @@
 								              	<th> Service Date </th>
 								              	<th> Due Date </th>
 								              	<th> Status </th>
-								              	@if(Gate::check('edit-order'))
+								              	@if(Gate::check('edit-service'))
 									              	<th colspan="2"> Edit </th>
 									            @endif
 							            	</tr>
@@ -327,7 +327,7 @@
 								              	<th> Upgrade Date </th>
 								              	<th> Due Date </th>
 								              	<th> Status </th>
-								              	@if(Gate::check('edit-order'))
+								              	@if(Gate::check('edit-service'))
 									              	<th colspan="2"> Edit </th>
 									            @endif
 							            	</tr>
