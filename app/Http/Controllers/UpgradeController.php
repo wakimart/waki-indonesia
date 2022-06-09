@@ -37,7 +37,7 @@ class UpgradeController extends Controller
         }
 
         $countUpgrades = $upgrades->count();
-        $upgrades = $upgrades->orderBy("ac.upgrade_date", 'desc')->paginate(10);
+        $upgrades = $upgrades->select('upgrades.*')->orderBy("ac.upgrade_date", 'desc')->paginate(10);
         
         return view(
             'admin.list_upgrade_new', 
@@ -64,7 +64,7 @@ class UpgradeController extends Controller
         }
 
         $countUpgrades = $upgrades->count();
-        $upgrades = $upgrades->orderBy("ac.upgrade_date", 'desc')->paginate(10);
+        $upgrades = $upgrades->select('upgrades.*')->orderBy("ac.upgrade_date", 'desc')->paginate(10);
 
         return view(
             'admin.list_upgrade', 
