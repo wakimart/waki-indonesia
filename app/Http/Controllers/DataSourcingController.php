@@ -46,7 +46,8 @@ class DataSourcingController extends Controller
         }
 
         $countDataSourcings = $data_sourcings->count();
-        $data_sourcings = $data_sourcings->paginate(10);
+        $data_sourcings = $data_sourcings->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')->paginate(10);
 
         return view(
             "admin.list_datasourcing",

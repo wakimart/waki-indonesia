@@ -44,7 +44,8 @@ class DataTherapyController extends Controller
         }
 
         $countDataTherapies = $data_therapies->count();
-        $data_therapies = $data_therapies->paginate(10);
+        $data_therapies = $data_therapies->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')->paginate(10);
 
         return view(
             "admin.list_datatherapy",
