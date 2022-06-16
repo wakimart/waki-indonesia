@@ -659,7 +659,7 @@ class OrderController extends Controller
             ->where('active', true)->orderBy('code')->get();
         $countOrderReports = $order_reports->count();
 
-        return view('admin.list_orderreport', compact('order_reports', 'countOrderReports'));
+        return view('admin.list_orderreport', compact('startDate', 'endDate', 'order_reports', 'countOrderReports'));
     }
 
     public function admin_ListOrderReportBranch(Request $request)
@@ -703,7 +703,7 @@ class OrderController extends Controller
             ->get();
         $countOrderReports = $order_reports->count();
 
-        return view('admin.list_orderreport_branch', compact('branches', 'currentBranch', 'order_reports', 'countOrderReports'));
+        return view('admin.list_orderreport_branch', compact('startDate', 'endDate', 'branches', 'currentBranch', 'order_reports', 'countOrderReports'));
     }
 
     public function admin_ListOrderReportCso(Request $request)
@@ -737,7 +737,7 @@ class OrderController extends Controller
         $order_reports = $order_reports->orderBy('orderDate', 'desc')->get();
         $countOrderReports = $order_reports->count();
 
-        return view('admin.list_orderreport_cso', compact('branches', 'csos', 'currentBranch', 'currentCso', 'order_reports', 'countOrderReports'));
+        return view('admin.list_orderreport_cso', compact('startDate', 'endDate', 'branches', 'csos', 'currentBranch', 'currentCso', 'order_reports', 'countOrderReports'));
     }
 
     public function fetchDetailPromo($promo_id)
