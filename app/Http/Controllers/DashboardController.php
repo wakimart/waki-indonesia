@@ -48,15 +48,15 @@ class DashboardController extends Controller
         }
 
         // Bulan ini
-        $startMonth = date("Y-m-01 00:00:00");
-        $endMonth = date("Y-m-t 23:59:59");
+        $startMonth = date("Y-m-01");
+        $endMonth = date("Y-m-t");
 
         // Hari ini
         $startToday = date("Y-m-d 00:00:00");
         $endToday = date("Y-m-d 23:59:59");
 
         $order = Order::select(DB::raw("SUM(total_payment) AS total_payment"))
-        ->whereBetween("created_at", [$startMonth, $endMonth])
+        ->whereBetween("orderDate", [$startMonth, $endMonth])
         ->where("active", true)
         ->first();
 
