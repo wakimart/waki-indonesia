@@ -214,9 +214,9 @@ class RolesSeeder extends Seeder
                 'delete-order' => true,
 
                 //Order Report
-                'browse-order_report' => true,
-                'browse-order_report_branch' => true,
-                'browse-order_report_cso' => true,
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
 
                 //Home Service
                 'add-home_service' => true,
