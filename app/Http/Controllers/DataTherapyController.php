@@ -89,8 +89,8 @@ class DataTherapyController extends Controller
         );
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
-            'no_ktp' => 'required',
-            'phone' => 'required',
+            'no_ktp' => ['required', 'numeric'],
+            'phone' => ['required', 'numeric', 'unique:data_therapies,phone'],
             'branch_id' => ['required', 'exists:branches,id'],
             'cso_id' => ['required', 'exists:csos,id'],
             'type_customer_id' => ['required', 'exists:type_customers,id'],
@@ -172,8 +172,8 @@ class DataTherapyController extends Controller
         );
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
-            'no_ktp' => 'required',
-            'phone' => 'required',
+            'no_ktp' => ['required', 'numeric'],
+            'phone' => ['required', 'numeric', 'unique:data_therapies,phone,' . $request->idDataTherapy . ',id'],
             'branch_id' => ['required', 'exists:branches,id'],
             'cso_id' => ['required', 'exists:csos,id'],
             'type_customer_id' => ['required', 'exists:type_customers,id'],
