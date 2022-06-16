@@ -107,6 +107,7 @@ $menu_item_second_sub = "list_order_report";
         <div class="col-12 grid-margin stretch-card" style="padding: 0;">
             <div class="card">
                 <div class="card-body">
+                    <h5>Date: {{ date("d/m/Y", strtotime($startDate)) }} - {{ date("d/m/Y", strtotime($endDate)) }}</h5>
                     <h5 style="margin-bottom: 0.5em;">
                         Total : {{ $countOrderReports }} data
                     </h5>

@@ -175,6 +175,7 @@ $menu_item_second_sub = "list_order_report_cso";
                         <h4>Branch : {{ $currentBranch ? $currentBranch['code'] . " - " . $currentBranch['name'] : "All Branch" }}</h4>
                         <h4>Cso : {{ $currentCso ? $currentCso['code'] . " - " . $currentCso['name'] : "All Cso" }}</h4>
                     </div>
+                    <h5>Date: {{ date("d/m/Y", strtotime($startDate)) }} - {{ date("d/m/Y", strtotime($endDate)) }}</h5>
                     <h5 style="margin-bottom: 0.5em;">
                         Total : {{ $countOrderReports }} data
                     </h5>
