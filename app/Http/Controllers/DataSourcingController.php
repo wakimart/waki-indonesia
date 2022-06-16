@@ -91,7 +91,7 @@ class DataSourcingController extends Controller
         );
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
-            'phone' => 'required',
+            'phone' => ['required', 'numeric', 'unique:data_sourcings,phone'],
             'branch_id' => ['required', 'exists:branches,id'],
             'cso_id' => ['required', 'exists:csos,id'],
             'type_customer_id' => ['required', 'exists:type_customers,id'],
@@ -159,7 +159,7 @@ class DataSourcingController extends Controller
         );
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
-            'phone' => 'required',
+            'phone' => ['required', 'numeric', 'unique:data_sourcings,phone,' . $request->idDataSourcing . ',id'],
             'branch_id' => ['required', 'exists:branches,id'],
             'cso_id' => ['required', 'exists:csos,id'],
             'type_customer_id' => ['required', 'exists:type_customers,id'],
