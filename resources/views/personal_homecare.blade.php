@@ -351,7 +351,7 @@
                     <img style="margin-right: 15px; width: 120px;" src="{{asset('sources/ph-form.png')}}"> 
                     <span>
                     <p style="margin-top: 2em; margin-bottom: 0.7em; font-weight: bold;">TUJUAN :</p>
-                    <p>Visi WAKi adalah Sehat Bersama WAKi menuju kehidupan yang lebih baik. Dengan kondisi seperti ini, program ini dibuat khusus untuk meminimalisirkan adanya kontak fisik secara langsung. </p>
+                    <p>Visi WAKi adalah Happy With WAKi menuju kehidupan yang lebih baik. Dengan kondisi seperti ini, program ini dibuat khusus untuk meminimalisirkan adanya kontak fisik secara langsung. </p>
                     </span>
                 </div>
             </div>

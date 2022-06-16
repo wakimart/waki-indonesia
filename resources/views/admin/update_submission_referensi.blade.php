@@ -97,7 +97,7 @@ $menu_item_second = "add_submission_takeaway";
 <div class="main-panel">
       <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Edit Submission - Referensi Sehat Bersama WAKi</h3>
+            <h3 class="page-title">Edit Submission - Referensi Happy With WAKi</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -109,7 +109,7 @@ $menu_item_second = "add_submission_takeaway";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Edit Submission - Referensi Sehat Bersama WAKi
+                        Edit Submission - Referensi Happy With WAKi
                     </li>
                 </ol>
             </nav>
@@ -137,7 +137,7 @@ $menu_item_second = "add_submission_takeaway";
                                 <input type="text"
                                     readonly
                                     disabled
-                                    value="Referensi Sehat Bersama WAKi" />
+                                    value="Referensi Happy With WAKi" />
                             </div>
 
                             <div class="form-group">
