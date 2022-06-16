@@ -804,6 +804,12 @@ class HomeServiceController extends Controller
                     $result .= 'Created at: ' . $dayData->created_at
                         . '<br>'
                         . 'Last update: ' . $dayData->updated_at;
+
+                    $before = HistoryUpdate::where([['type_menu', 'Home Service'], ['menu_id', $dayData['hs_id']]])->orderBy('id', 'DESC')->first();
+                    if(isset($before['meta']['appointmentBefore'])){
+                        $result .= '<br>'
+                                . "<p style='color:red'>Appointment Before : " . $before['meta']['appointmentBefore'];
+                    }
                 }
 
                 $result .= '</p>'
