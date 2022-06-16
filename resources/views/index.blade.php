@@ -106,7 +106,7 @@
                 <p>"Metrowealth International Group" telah didirikan pada tahun 1995. Sejak saat itu, perusahaan telah berkembang pesat di kawasan Asia Pasifik dan negara-negara Eropa.</p>
                 <p>Pada tahun 2008, untuk menyusun strategi pemasaran global, perusahaan memutuskan untuk mengubah nama menjadi "WAKi". Oleh karena itu, perusahaan ini terdaftar sebagai "WAKi International Group".
                 </p>
-                <p>"Visi kami Towards a Better Life. Sehat bersama WAKi menuju kehidupan yang lebih baik."</p>
+                <p>"Visi kami Towards a Better Life. Happy With WAKi menuju kehidupan yang lebih baik."</p>
                 <p style="font-style: italic;">Bukan Janji, Tapi Pasti!</p>
               @elseif(Utils::$lang=='eng')
 

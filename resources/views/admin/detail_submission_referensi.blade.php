@@ -445,7 +445,7 @@ if (
                                 <button class="btn btn-gradient-primary mt-2"
                                     id="btnAddReference"
                                     onclick="checkAddReference()">
-                                    <span>Add Reference - Sehat Bersama WAKi</span>
+                                    <span>Add Reference - Happy With WAKi</span>
                                 </button>
                             </div>
 
@@ -463,8 +463,8 @@ if (
                                         <button type="submit"
                                             class="btn btn-gradient-primary mr-2 my-2"
                                             name="text"
-                                            value="Terima Kasih telah mengikuti program *Sehat Bersama WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">
-                                            Share Sehat bersama Waki
+                                            value="Terima Kasih telah mengikuti program *Happy With WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">
+                                            Share Happy With WAKi
                                         </button>
                                         {{-- <button type="submit"
                                             class="btn btn-gradient-primary mr-2 my-2"
