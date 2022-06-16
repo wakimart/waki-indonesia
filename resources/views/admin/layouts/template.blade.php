@@ -237,13 +237,11 @@
     <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.min.js"></script>
     <script src="https://github.com/niklasvh/html2canvas/releases/download/v1.0.0-alpha.12/html2canvas.min.js"></script>
     <script src="{{ asset('css/vendors/js/vendor.bundle.base.js') }}"></script>
-    {{-- <script src="{{ asset('css/vendors/chart.js/Chart.min.js') }}"></script> --}}
 
     <script src="{{ asset('js/off-canvas.js') }}"></script>
     <script src="{{ asset('js/hoverable-collapse.js') }}"></script>
     <script src="{{ asset('js/misc.js') }}"></script>
 
-    {{-- <script src="{{ asset('js/dashboard.js') }}"></script> --}}
     <script src="{{ asset('js/todolist.js') }}"></script>
 
     <script src="{{asset('js/file-upload.js')}}"></script>

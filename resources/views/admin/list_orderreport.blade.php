@@ -1,5 +1,4 @@
 <?php
-$menu_item_page = "order";
 $menu_item_page_sub = "order_report";
 $menu_item_second_sub = "list_order_report";
 ?>
@@ -33,10 +32,10 @@ $menu_item_second_sub = "list_order_report";
                 <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
                     <div class="form-group">
                         <label for="">Start Date</label>
-                        <input type="date" 
-                            class="form-control" 
-                            id="filter_start_date" 
-                            name="filter_start_date" 
+                        <input type="date"
+                            class="form-control"
+                            id="filter_start_date"
+                            name="filter_start_date"
                             value="{{ isset($_GET['filter_start_date']) ? $_GET['filter_start_date'] : '' }}">
                         <div class="validation"></div>
                     </div>
@@ -44,10 +43,10 @@ $menu_item_second_sub = "list_order_report";
                 <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
                     <div class="form-group">
                         <label for="">End Date</label>
-                        <input type="date" 
-                            class="form-control" 
-                            id="filter_end_date" 
-                            name="filter_end_date" 
+                        <input type="date"
+                            class="form-control"
+                            id="filter_end_date"
+                            name="filter_end_date"
                             value="{{ isset($_GET['filter_end_date']) ? $_GET['filter_end_date'] : '' }}">
                         <div class="validation"></div>
                     </div>
@@ -124,10 +123,10 @@ $menu_item_second_sub = "list_order_report";
                                 </tr>
                             </thead>
                             <tbody>
-                                @php 
+                                @php
                                     $total_sale_untilYesterday = 0;
                                     $total_sale_today = 0;
-                                    $totalSales = 0; 
+                                    $totalSales = 0;
                                 @endphp
                                 @foreach ($order_reports as $key => $order_report)
                                 <tr>
@@ -149,7 +148,7 @@ $menu_item_second_sub = "list_order_report";
                                 @php
                                     $total_sale_untilYesterday += $order_report['total_sale_untilYesterday'];
                                     $total_sale_today += $order_report['total_sale_today'];
-                                    // $totalSales += ($order_report['total_sale_untilYesterday'] + $order_report['total_sale_today']); 
+                                    // $totalSales += ($order_report['total_sale_untilYesterday'] + $order_report['total_sale_today']);
                                 @endphp
                                 @endforeach
                                 <tr class="text-right">
