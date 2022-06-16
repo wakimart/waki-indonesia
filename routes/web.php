@@ -381,6 +381,20 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Fetch Customer Data By MPC Number
         Route::get("/fetch-customer", "OrderController@fetchCustomer")
             ->name("fetch_customer_by_mpc");
+
+        // Order Report //
+        //List Order Report
+        Route::get('/list_order_report', 'OrderController@admin_ListOrderReport')
+            ->name('admin_list_order_report')
+            ->middleware('can:browse-order_report');
+        //List Order Report By Branch
+        Route::get('/list_order_report_branch', 'OrderController@admin_ListOrderReportBranch')
+            ->name('admin_list_order_report_branch')
+            ->middleware('can:browse-order_report_branch');
+        //List Order Report By CSO
+        Route::get('/list_order_report_cso', 'OrderController@admin_ListOrderReportCso')
+            ->name('admin_list_order_report_cso')
+            ->middleware('can:browse-order_report_cso');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {

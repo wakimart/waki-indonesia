@@ -36,7 +36,8 @@
 </li>
 @endif
 
-@if(Gate::check('add-order') || Gate::check('browse-order'))
+@if(Gate::check('add-order') || Gate::check('browse-order')
+  || Gate::check('browse-order_report') || Gate::check('browse-order_report_branch') || Gate::check('browse-order_report_cso'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'order'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#order-dd" aria-expanded="false" aria-controls="order-dd">
     <span class="menu-title">Order</span>
@@ -50,6 +51,28 @@
       @endif
       @if(Gate::check('browse-order'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_order'? 'active': '' }}" href="{{  route('admin_list_order') }}">List Order</a></li>
+      @endif
+      @if(Gate::check('browse-order_report') || Gate::check('browse-order_report_branch') || Gate::check('browse-order_report_cso'))
+      <li class="{{isset($menu_item_page_sub) && $menu_item_page_sub == 'order_report'? 'active': '' }} nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#order-dd" aria-expanded="false" aria-controls="order-dd">
+          <span class="menu-title">Order Report</span>
+          <i class="menu-arrow"></i>
+          <i class="mdi mdi-calendar-text menu-icon"></i>
+        </a>
+        <div class="collapse {{isset($menu_item_page_sub) && $menu_item_page_sub == 'order_report'? 'show': '' }}" id="order-dd">
+          <ul class="nav flex-column sub-menu">
+            @if(Gate::check('browse-order_report'))
+            <li class="nav-item"> <a class="nav-link {{isset($menu_item_second_sub) && $menu_item_second_sub == 'list_order_report'? 'active': '' }}" href="{{  route('admin_list_order_report') }}">List Order Report</a></li>
+            @endif
+            @if(Gate::check('browse-order_report_branch'))
+            <li class="nav-item"> <a class="nav-link {{isset($menu_item_second_sub) && $menu_item_second_sub == 'list_order_report_branch'? 'active': '' }}" href="{{  route('admin_list_order_report_branch') }}">List Order Report By Branch</a></li>
+            @endif
+            @if(Gate::check('browse-order_report_cso'))
+            <li class="nav-item"> <a class="nav-link {{isset($menu_item_second_sub) && $menu_item_second_sub == 'list_order_report_cso'? 'active': '' }}" href="{{  route('admin_list_order_report_cso') }}">List Order Report By CSO</a></li>
+            @endif
+          </ul>
+        </div>
+      </li>
       @endif
     </ul>
   </div>

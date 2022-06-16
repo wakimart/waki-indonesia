@@ -419,6 +419,39 @@ $menu_item_page = "user";
                             </div>
 
                             <div class="form-group" id="group-product">
+                                <span style="display:block;">ORDER REPORT</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-order_report">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-order_report" />
+                                            Browse Order Report
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-order_report_branch">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-order_report_branch" />
+                                            Browse Order Report By Branch
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-order_report_cso">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-order_report_cso" />
+                                            Browse Order Report By CSO
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
                                 <span style="display:block;">HOME SERVICE</span>
                                 <div class="div-CheckboxGroup">
                                     <div class="form-check form-check-inline">

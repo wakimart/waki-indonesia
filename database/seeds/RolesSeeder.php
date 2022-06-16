@@ -36,6 +36,11 @@ class RolesSeeder extends Seeder
         		'edit-order' => true,
                 'delete-order' => true,
 
+                //Order Report
+                'browse-order_report' => true,
+                'browse-order_report_branch' => true,
+                'browse-order_report_cso' => true,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -207,6 +212,11 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
         		'edit-order' => true,
                 'delete-order' => true,
+
+                //Order Report
+                'browse-order_report' => true,
+                'browse-order_report_branch' => true,
+                'browse-order_report_cso' => true,
 
                 //Home Service
                 'add-home_service' => true,
@@ -380,6 +390,11 @@ class RolesSeeder extends Seeder
                 'edit-order' => true,
                 'delete-order' => true,
 
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -545,6 +560,11 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => true,
                 'delete-order' => true,
+
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
 
                 //Home Service
                 'add-home_service' => true,
@@ -712,6 +732,11 @@ class RolesSeeder extends Seeder
                 'edit-order' => false,
                 'delete-order' => false,
 
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
+
                 //Home Service
                 'add-home_service' => false,
                 'browse-home_service' => true,
@@ -878,6 +903,11 @@ class RolesSeeder extends Seeder
                 'edit-order' => false,
                 'delete-order' => false,
 
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
+
                 //Home Service
                 'add-home_service' => false,
                 'browse-home_service' => true,
@@ -1043,6 +1073,11 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => false,
                 'delete-order' => false,
+
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
 
                 //Home Service
                 'add-home_service' => false,
