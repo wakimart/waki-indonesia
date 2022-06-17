@@ -73,9 +73,18 @@ class LoginController extends Controller
         if ($this->guard()->validate($this->credentials($request))) {
             $user = $this->guard()->getLastAttempted();
 
-            if($this->attemptLogin($request)){
+            // Make sure the user is active
+            if ($user->active && $this->attemptLogin($request)) {
                 // Send the normal successful login response
                 return $this->sendLoginResponse($request);
+            } else {
+                // Increment the failed login attempts and redirect back to the
+                // login form with an error message.
+                $this->incrementLoginAttempts($request);
+                return redirect()
+                    ->back()
+                    ->withInput($request->only($this->username(), 'remember'))
+                    ->withErrors(['username' => 'You must be active to login.']);
             }
         }
 
@@ -109,21 +118,29 @@ class LoginController extends Controller
             $user->roles;
             $user->cso;
         
-            if(Hash::check($request->password, $user->password)){   
-                //update FMC token
-                $token = array();
-                if ($user->fmc_token == null){
-                    $user->fmc_token = array();
+            if(Hash::check($request->password, $user->password)){
+                if ($user->active) {
+                    //update FMC token
+                    $token = array();
+                    if ($user->fmc_token == null){
+                        $user->fmc_token = array();
+                    }
+                    $token = $user->fmc_token;
+                    array_push($token, $request->fcm_token);
+                    $user->fmc_token = $token;
+                    $user->save();           
+                    $user['list_branches'] = $user->listBranches();
+                    $data = ['result' => 1,
+                            'data' => $user
+                            ];
+                    return response()->json($data,200);
+                } else {
+                    $err = ['username' => ["You must be active to login."]];
+                    $data = ['result' => 0,
+                            'data' => $err
+                            ];
+                    return response()->json($data,401);
                 }
-                $token = $user->fmc_token;
-                array_push($token, $request->fcm_token);
-                $user->fmc_token = $token;
-                $user->save();           
-                $user['list_branches'] = $user->listBranches();
-                $data = ['result' => 1,
-                         'data' => $user
-                        ];
-                return response()->json($data,200);
             }
             
             $err = ['password' => ["The password is invalid."]];
@@ -179,23 +196,32 @@ class LoginController extends Controller
     
     public function loginQRApi(Request $request){
         $user = User::where('qrcode', $request['hash'])->first();
-        $user->roles;
-        $user->cso;
-        $token = array();
-        if ($user->fmc_token == null){
-            $user->fmc_token = array();
-        }
-        $token = $user->fmc_token;
-        array_push($token, $request->fcm_token);
-        $user->fmc_token = $token;
-        $user->save();           
-        $user['list_branches'] = $user->listBranches();
+        if ($user->active) {
+            $user->roles;
+            $user->cso;
+            $token = array();
+            
+            if ($user->fmc_token == null){
+                $user->fmc_token = array();
+            }
+            $token = $user->fmc_token;
+            array_push($token, $request->fcm_token);
+            $user->fmc_token = $token;
+            $user->save();           
+            $user['list_branches'] = $user->listBranches();
 
-        if($user != null){
-            $data = ['result' => 1,
-                     'data' => $user
+            if($user != null){
+                $data = ['result' => 1,
+                        'data' => $user
+                        ];
+                return response()->json($data,200);
+            }
+        } else {
+            $err = ['username' => ["You must be active to login."]];
+            $data = ['result' => 0,
+                    'data' => $err
                     ];
-            return response()->json($data,200);
+            return response()->json($data,401);
         }
     }
 }

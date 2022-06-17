@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Branch;
 use App\Cso;
+use App\HistoryUpdate;
 use App\Role;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -285,6 +286,26 @@ class UserAdminController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $user = User::find($id);
+            $user['active'] = false;
+            $user->save();
+
+            $historyUpdate['type_menu'] = "User Admin";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate["meta"] = json_encode(["dataChange" => $user->getChanges()]);
+            $historyUpdate['user_id'] = Auth::user()['id'];
+            $historyUpdate['menu_id'] = $user->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+
+            DB::commit();
+            return redirect()->route('list_useradmin');
+        }
+        catch (Exception $e) {
+            DB::rollback();
+            return redirect()->route('list_useradmin');
+        }
     }
 }
