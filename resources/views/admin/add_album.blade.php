@@ -151,7 +151,7 @@ $menu_item_page = "index_frontendcms";
                             </div>
 
                             <button type="submit" class="btn btn-gradient-primary">Save</button>
-                        </form>                       
+                        </form>
 
                         <br>
                         <br>
@@ -185,7 +185,7 @@ $menu_item_page = "index_frontendcms";
                                 </tbody>
                             </table>
                         </div>
-                        @endif                        
+                        @endif
                     </div>
                 </div>
             </div>
@@ -340,7 +340,7 @@ $menu_item_page = "index_frontendcms";
 
 @section("script")
 <script type="application/javascript">
-function loadFile() 
+function loadFile()
 {
     var total_file=document.getElementById("arr_photo").files.length;
     for(var i=0;i<total_file;i++)
