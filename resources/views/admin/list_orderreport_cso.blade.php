@@ -154,6 +154,26 @@ $menu_item_second_sub = "list_order_report_cso";
                             <span class="mdi mdi-filter"></span> Reset Filter
                         </a>
                     </div>
+                    <div class="form-group">
+                        @php 
+                            $exportParameter = request()->input(); 
+                            $exportParameter['export_type'] = "print";
+                        @endphp
+                        <a href="{{ route('admin_export_order_report_cso', $exportParameter) }}"
+                            target="_blank"
+                            class="btn btn-gradient-info m-1">
+                            <span class="mdi mdi-file-document"></span>
+                            Print Order Report
+                        </a>
+                        @php 
+                            $exportParameter['export_type'] = "xls";
+                        @endphp
+                        <a href="{{ route('admin_export_order_report_cso', $exportParameter) }}"
+                            class="btn btn-gradient-info m-1">
+                            <span class="mdi mdi-file-document"></span>
+                            Export Order Report
+                        </a>
+                    </div>
                 </div>
             </div>
 

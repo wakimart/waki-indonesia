@@ -395,6 +395,17 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/list_order_report_cso', 'OrderController@admin_ListOrderReportCso')
             ->name('admin_list_order_report_cso')
             ->middleware('can:browse-order_report_cso');
+
+        // Export Order Report
+        Route::get('/export_order_report', 'OrderController@admin_ExportOrderReport')
+            ->name('admin_export_order_report')
+            ->middleware('can:browse-order_report');
+        Route::get('/export_order_report_branch', 'OrderController@admin_ExportOrderReportBranch')
+            ->name('admin_export_order_report_branch')
+            ->middleware('can:browse-order_report_branch');
+        Route::get('/export_order_report_cso', 'OrderController@admin_ExportOrderReportCso')
+            ->name('admin_export_order_report_cso')
+            ->middleware('can:browse-order_report_cso');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {

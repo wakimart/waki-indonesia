@@ -8,6 +8,9 @@ use App\Order;
 use App\Branch;
 use App\Cso;
 use App\CategoryProduct;
+use App\Exports\OrderReportBranchExport;
+use App\Exports\OrderReportCsoExport;
+use App\Exports\OrderReportExport;
 use App\User;
 use App\RajaOngkir_City;
 use App\HistoryUpdate;
@@ -738,6 +741,124 @@ class OrderController extends Controller
         $countOrderReports = $order_reports->count();
 
         return view('admin.list_orderreport_cso', compact('startDate', 'endDate', 'branches', 'csos', 'currentBranch', 'currentCso', 'order_reports', 'countOrderReports'));
+    }
+
+    // Export or Print Order Report
+    public function admin_ExportOrderReport(Request $request)
+    {
+        $startDate = date('Y-m-01');
+        if ($request->has('filter_start_date')) {
+            $startDate = date('Y-m-d', strtotime($request->filter_start_date));
+        }
+        $endDate = date('Y-m-d');
+        if ($request->has('filter_end_date')) {
+            $endDate = date('Y-m-d', strtotime($request->filter_end_date));
+        }
+        $yesterdayDate = date('Y-m-d', strtotime("-1 days", strtotime($endDate)));
+
+        $query_total_sale_untilYesterday = "SELECT SUM(o.total_payment) 
+            FROM orders as o
+            WHERE o.branch_id = b.id
+            AND o.orderDate >= '$startDate'
+            AND o.orderDate <= '$yesterdayDate'";
+        $query_total_sale_today = "SELECT SUM(o.total_payment) 
+            FROM orders as o
+            WHERE o.branch_id = b.id
+            AND o.orderDate = '$endDate'";
+
+        $order_reports = Branch::from('branches as b')
+            ->select('b.*')
+            ->selectRaw("($query_total_sale_untilYesterday) as total_sale_untilYesterday")
+            ->selectRaw("($query_total_sale_today) as total_sale_today")
+            ->where('active', true)->orderBy('code')->get();
+        $countOrderReports = $order_reports->count();
+
+        if ($request->export_type == "print") {
+            return view('admin.list_orderreportPdf', compact('startDate', 'endDate', 'order_reports', 'countOrderReports'));
+        } else if ($request->export_type == "xls") {
+            return Excel::download(new OrderReportExport($startDate, $endDate, $order_reports, $countOrderReports), 'Order Report.xlsx');
+        }
+    }
+
+    public function admin_ExportOrderReportBranch(Request $request)
+    {
+        $startDate = date('Y-m-01');
+        if ($request->has('filter_start_date')) {
+            $startDate = date('Y-m-d', strtotime($request->filter_start_date));
+        }
+        $endDate = date('Y-m-d');
+        if ($request->has('filter_end_date')) {
+            $endDate = date('Y-m-d', strtotime($request->filter_end_date));
+        }
+        $yesterdayDate = date('Y-m-d', strtotime("-1 days", strtotime($endDate)));
+
+        $query_total_sale_untilYesterday = "SELECT SUM(o.total_payment) 
+            FROM orders as o
+            WHERE o.cso_id = c.id
+            AND o.orderDate >= '$startDate'
+            AND o.orderDate <= '$yesterdayDate'";
+        $query_total_sale_today = "SELECT SUM(o.total_payment) 
+            FROM orders as o
+            WHERE o.cso_id = c.id
+            AND o.orderDate = '$endDate'";
+
+        $currentBranch = null;
+        if ($request->has('filter_branch')) {
+            $currentBranch = Branch::find($request->filter_branch);
+            $query_total_sale_untilYesterday .= " AND o.branch_id = " . $currentBranch['id'];
+            $query_total_sale_today .= " AND o.branch_id = " . $currentBranch['id'];
+        } 
+
+        $order_reports = Cso::from('csos as c')
+            ->select('c.*')
+            ->selectRaw("($query_total_sale_untilYesterday) as total_sale_untilYesterday")
+            ->selectRaw("($query_total_sale_today) as total_sale_today")
+            ->where('active', true)->orderBy('code')
+            ->having("total_sale_untilYesterday", ">", 0)
+            ->orHaving("total_sale_today", ">", 0)
+            ->get();
+        $countOrderReports = $order_reports->count();
+
+        if ($request->export_type == "print") {
+            return view('admin.list_orderreport_branchPdf', compact('startDate', 'endDate', 'currentBranch', 'order_reports', 'countOrderReports'));
+        } else if ($request->export_type == "xls") {
+            return Excel::download(new OrderReportBranchExport($startDate, $endDate, $order_reports, $countOrderReports, $currentBranch), 'Order Report Branch.xlsx');
+        }
+    }
+
+    public function admin_ExportOrderReportCso(Request $request)
+    {
+        $startDate = date('Y-m-01');
+        if ($request->has('filter_start_date')) {
+            $startDate = date('Y-m-d', strtotime($request->filter_start_date));
+        }
+        $endDate = date('Y-m-d');
+        if ($request->has('filter_end_date')) {
+            $endDate = date('Y-m-d', strtotime($request->filter_end_date));
+        }
+        
+        $order_reports = Order::where('orderDate', '>=', $startDate)
+            ->where('orderDate', '<=', $endDate);
+
+        $currentBranch = null;
+        if ($request->has('filter_branch')) {
+            $currentBranch = Branch::find($request->filter_branch);
+            $order_reports->where('branch_id', $currentBranch['id']);
+        }
+        $currentCso = null;
+        if ($request->has('filter_cso')) {
+            $currentCso = Cso::where("code", $request->filter_cso)->first();
+            $order_reports->where('cso_id', $currentCso['id']);
+        }
+
+        $order_reports = $order_reports->orderBy('orderDate', 'desc')->get();
+        $countOrderReports = $order_reports->count();
+
+        if ($request->export_type == "print") {
+            return view('admin.list_orderreport_csoPdf', compact('startDate', 'endDate', 'currentBranch', 'currentCso', 'order_reports', 'countOrderReports'));
+        } else if ($request->export_type == "xls") {
+            return Excel::download(new OrderReportCsoExport($startDate, $endDate, $order_reports, $countOrderReports, $currentBranch, $currentCso), 'Order Report Cso.xlsx');
+        }
     }
 
     public function fetchDetailPromo($promo_id)
