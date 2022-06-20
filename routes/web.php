@@ -401,6 +401,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //notif acc cancel hs
         Route::post("/accNotifHomeservice", "HomeServiceController@accNotif")
             ->name("acc_cancel_notif_homeservice");
+        //notif acc Reschedule hs
+        Route::post("/accRescNotifHomeservice", "HomeServiceController@accRescheduleNotif")
+            ->name("acc_reschedule_notif_homeservice");
 
         //Add Form home service
         Route::get('/', 'HomeServiceController@indexAdmin')

@@ -799,6 +799,30 @@ $menu_item_second = "list_homeservice";
                                                                     if (!$isAdminManagement) {
                                                                         echo 'Last update: ' . $dayData->updated_at;
                                                                     }
+
+                                                                    if (!$isAdminManagement) {
+                                                                        $befores = \App\HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
+                                                                        echo "<p style='color:red'>";
+                                                                        foreach ($befores as $key => $before) {
+                                                                            if(isset($before['meta']['appointmentBefore'])){
+                                                                                echo "Appointment Before : " . $before['meta']['appointmentBefore'] . "<br>";
+                                                                            }
+                                                                        }
+                                                                        echo "</p>";
+                                                                        
+                                                                        if ($dayData['resc_acc'] != null) {
+                                                                            echo "<p ";
+                                                                            $statusResc = "Wait to Approve";
+                                                                            if ($dayData['resc_acc'] == $dayData['appointment'] && $dayData['is_acc_resc'] == false) {
+                                                                                echo 'style="color:green"';
+                                                                                $statusResc = "Approved";
+                                                                            } else if ($dayData['is_acc_resc'] == false) {
+                                                                                echo 'style="color:red"';
+                                                                                $statusResc = "Rejected";
+                                                                            }
+                                                                            echo ">Reschedule Appointment : " . $dayData['resc_acc'] . " (" . $statusResc .") </p>";
+                                                                        }
+                                                                    }
                                                                     ?>
                                                                 </p>
                                                             </td>
@@ -1273,32 +1297,17 @@ $menu_item_second = "list_homeservice";
                                 style="text-transform: uppercase;" />
                             <div class="validation" id="validation_cso2"></div>
                         </div>
-
-                        <br>
-
-                        <h5>Waktu Home Service</h5>
-                        <div class="form-group">
-                            <input type="date"
-                                class="form-control"
-                                name="date"
-                                id="edit-date"
-                                placeholder="Tanggal Janjian"
-                                required
-                                data-msg="Mohon Isi Tanggal" />
-                            <div class="validation"></div>
-                        </div>
-                        <div class="form-group">
-                            <input type="time"
-                                class="form-control"
-                                name="time"
-                                id="edit-time"
-                                placeholder="Jam Janjian"
-                                required
-                                data-msg="Mohon Isi Jam" />
-                            <div class="validation"></div>
-                        </div>
                     </div>
                     <div class="modal-footer">
+                        <button type="button"
+                            id="edit-reschedule"
+                            class="btn btn-gradient-info mr-2"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                            data-toggle="modal"
+                            data-target="#rescheduleHomeServiceModal">
+                            Reschedule
+                        </button>
                         <button id="btn-edit"
                             type="submit"
                             class="btn btn-gradient-primary mr-2">
@@ -1315,6 +1324,86 @@ $menu_item_second = "list_homeservice";
         </div>
     </div>
     <!-- End Modal Edit -->
+
+    <!-- Modal Reschedule -->
+    <div class="modal fade"
+        id="rescheduleHomeServiceModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 style="text-align: center;">
+                        Are you sure to Share Acc to Reschedule this appointment?
+                    </h5>
+                    <br>
+                    <h5>Waktu Home Service</h5>
+                    <div class="form-group">
+                        <input type="hidden" id="edit-date-old" value="">
+                        <input type="date"
+                            class="form-control"
+                            form="frmReschedule"
+                            name="date"
+                            id="edit-date"
+                            placeholder="Tanggal Janjian"
+                            required
+                            data-msg="Mohon Isi Tanggal" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" id="edit-time-old" value="">
+                        <input type="time"
+                            class="form-control"
+                            form="frmReschedule"
+                            name="time"
+                            id="edit-time"
+                            placeholder="Jam Janjian"
+                            required
+                            data-msg="Mohon Isi Jam" />
+                        <div class="validation"></div>
+                    </div>
+
+                    <textarea class="form-control mt-3"
+                        form="frmReschedule"
+                        name="reschedule_desc"
+                        id="reschedule_desc"
+                        rows="5"
+                        required
+                        placeholder="Reschedule Description (Alasan Reschedule)"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <form id="frmReschedule"
+                        method="post"
+                        action="{{ route("acc_reschedule_notif_homeservice") }}">
+                        @csrf
+                        <input type="hidden" name="id" id="acc-reschedule-homeservice-id" value="-" />
+                        <input type="hidden"
+                            name="url"
+                            value="{{ url()->full() }}" />
+                        <button type="submit"
+                            class="btn btn-gradient-success mr-2">
+                            Yes
+                        </button>
+                    </form>
+                    <button type="button"
+                        data-dismiss="modal"
+                        class="btn btn-light">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Reschedule -->
 
     <!-- Modal Delete -->
     <div class="modal fade"
@@ -1590,6 +1679,13 @@ $(document).ready(function(){
         clickView({{$_GET['id_detail_hs']}});
     @endif
     //end load modal Acc Cancel HS
+
+    $('#frmReschedule').on('submit', function(event){
+        if ($("#edit-date-old").val() == $("#edit-date").val() && $("#edit-time-old").val() == $("#edit-time").val()) {
+            event.preventDefault();
+            alert("Please change reschedule date and time");
+        }
+    });
 });
 
 {{-- Mendapatkan CSRF Token --}}
@@ -1947,6 +2043,7 @@ function clickEdit(btn) {
         const result = response.result;
 
         document.getElementById("edit-id").value = btn.value;
+        document.getElementById("acc-reschedule-homeservice-id").value = btn.value;
 
         const editTypeCustomer = document.getElementById("type_customer");
         for (let i = 0; i < editTypeCustomer.options.length; i++) {
@@ -2107,11 +2204,13 @@ function clickEdit(btn) {
             + "-"
             + ("0" + (appointmentDate.getDate())).slice(-2);
         document.getElementById("edit-date").value = dateString;
+        document.getElementById("edit-date-old").value = dateString;
 
         const timeString = ("0" + (appointmentDate.getHours())).slice(-2)
             + ":"
             + ("0" + (appointmentDate.getMinutes())).slice(-2);
         document.getElementById("edit-time").value = timeString;
+        document.getElementById("edit-time-old").value = timeString;
     }).catch(function (error) {
         console.error(error);
     });

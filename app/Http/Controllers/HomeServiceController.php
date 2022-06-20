@@ -561,6 +561,8 @@ class HomeServiceController extends Controller
             "h.name AS customer_name",
             "h.phone AS customer_phone",
             "h.appointment AS appointment",
+            "h.is_acc_resc As is_acc_resc",
+            "h.resc_acc AS resc_acc",
             "b.code AS branch_code",
             "b.name AS branch_name",
             "c.name AS cso_name",
@@ -805,11 +807,28 @@ class HomeServiceController extends Controller
                         . '<br>'
                         . 'Last update: ' . $dayData->updated_at;
 
-                    $before = HistoryUpdate::where([['type_menu', 'Home Service'], ['menu_id', $dayData['hs_id']]])->orderBy('id', 'DESC')->first();
-                    if(isset($before['meta']['appointmentBefore'])){
-                        $result .= '<br>'
-                                . "<p style='color:red'>Appointment Before : " . $before['meta']['appointmentBefore'];
-                    }
+                        $befores = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
+                        $result .= "<p style='color:red'>";
+                        foreach ($befores as $key => $before) {
+                            if(isset($before['meta']['appointmentBefore'])){
+                                $result .= "Appointment Before : " . $before['meta']['appointmentBefore'] . "<br>";
+                            }
+                        }
+                        $result .= "</p>";
+
+                        
+                        if ($dayData['resc_acc'] != null) {
+                            $result .= "<p ";
+                            $statusResc = "Wait to Approve";
+                            if ($dayData['resc_acc'] == $dayData['appointment'] && $dayData['is_acc_resc'] == false) {
+                                $result .= 'style="color:green";';
+                                $statusResc = "Approved";
+                            } else if ($dayData['is_acc_resc'] == false) {
+                                $result .= 'style="color:red";';
+                                $statusResc = "Rejected";
+                            }
+                            $result .= ">Reschedule Appointment : " . $dayData['resc_acc'] . " (" . $statusResc .") </p>";
+                        }
                 }
 
                 $result .= '</p>'
@@ -1107,17 +1126,31 @@ class HomeServiceController extends Controller
                 $hsID = explode(",", $request->homeServiceData);
             }
             $hSID = HomeService::whereIn('id', $hsID)->get();
+            $acc_hs_type = $request->acc_hs_type;
             foreach ($hSID as $val) {
-                $titleNya = "Rejected - ACC Cancel [Home Service]";
-                $messagesNya = "Acc Cancel Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Rejected";
-
-                if($request->status_acc == "true"){
-                    $titleNya = "Approved - ACC Cancel [Home Service]";
-                    $messagesNya = "Acc Cancel Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Approved";
-                    $val->active = false;
+                if ($acc_hs_type == "cancelhs") {
+                    $titleNya = "Rejected - ACC Cancel [Home Service]";
+                    $messagesNya = "Acc Cancel Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Rejected";
+    
+                    if($request->status_acc == "true"){
+                        $titleNya = "Approved - ACC Cancel [Home Service]";
+                        $messagesNya = "Acc Cancel Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Approved";
+                        $val->active = false;
+                    }
+                    $val->is_acc = false;
+                    $val->save();
+                } else if ($acc_hs_type == "reschedulehs") {
+                    $titleNya = "Rejected - ACC Reschedule [Home Service]";
+                    $messagesNya = "Acc Reschedule Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Rejected";
+    
+                    if($request->status_acc == "true"){
+                        $titleNya = "Approved - ACC Reschedule [Home Service]";
+                        $messagesNya = "Acc Reschedule Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Approved";
+                        $val->appointment = $val->resc_acc;
+                    }
+                    $val->is_acc_resc = false;
+                    $val->save();
                 }
-                $val->is_acc = false;
-                $val->save();
 
                 $userNya = [$val->cso->user];
                 foreach ($val->branch->cso as $perCso) {
@@ -1132,17 +1165,30 @@ class HomeServiceController extends Controller
 
 
         }else if($request->has('cancel')){
+            $acc_hs_type = $request->acc_hs_type;
+            if ($acc_hs_type == "cancelhs") {
+                $titleNya = "Rejected - ACC Cancel [Home Service]";
+                $messagesNya = "Acc Cancel Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Rejected";
 
-            $titleNya = "Rejected - ACC Cancel [Home Service]";
-            $messagesNya = "Acc Cancel Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Rejected";
+                if($request->status_acc == "true"){
+                    $titleNya = "Approved - ACC Cancel [Home Service]";
+                    $messagesNya = "Acc Cancel Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Approved";
+                    $homeService->active = false;
+                }
+                $homeService->is_acc = false;
+                $homeService->save();
+            } else if ($acc_hs_type == "reschedulehs") {
+                $titleNya = "Rejected - ACC Reschedule [Home Service]";
+                $messagesNya = "Acc Reschedule Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Rejected";
 
-            if($request->status_acc == "true"){
-                $titleNya = "Approved - ACC Cancel [Home Service]";
-                $messagesNya = "Acc Cancel Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Approved";
-                $homeService->active = false;
+                if($request->status_acc == "true"){
+                    $titleNya = "Approved - ACC Reschedule [Home Service]";
+                    $messagesNya = "Acc Reschedule Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Approved";
+                    $homeService->appointment = $homeService->resc_acc;
+                }
+                $homeService->is_acc_resc = false;
+                $homeService->save();
             }
-            $homeService->is_acc = false;
-            $homeService->save();
 
             $userNya = [$homeService->cso->user];
             foreach ($homeService->branch->cso as $perCso) {
@@ -1440,6 +1486,40 @@ class HomeServiceController extends Controller
             $this->sendFCM(json_encode($body));
         }
         return redirect($request->url)->with("success", "Permintaan Acc telah dikirim.");
+    }
+
+    public function accRescheduleNotif(Request $request)
+    {
+        $resc_acc = $request->date." ".$request->time;
+
+        $homeserviceNya = HomeService::find($request->id);
+        $appointmentBefore = $homeserviceNya->appointment;
+
+        $homeserviceNya->is_acc_resc = true;
+        $homeserviceNya->resc_desc = $request->reschedule_desc;
+        $homeserviceNya->resc_acc = $resc_acc;
+        $homeserviceNya->save();
+
+        $user = Auth::user();
+        $historyUpdate= [];
+        $historyUpdate['type_menu'] = "Home Service Reschedule";
+        $historyUpdate['method'] = "Update";
+        $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $homeserviceNya, 'appointmentBefore'=>$appointmentBefore];
+        $historyUpdate['user_id'] = $user['id'];
+        $historyUpdate['menu_id'] = $homeserviceNya->id;
+
+        $createData = HistoryUpdate::create($historyUpdate);
+
+        $titleNya = "Home Service Reschedule";
+        $messagesNya = "Acc Rescheule Home Service for ".$homeserviceNya->type_homeservices." from customer ".$homeserviceNya->name.". By ".$homeserviceNya->branch['code']."-".$homeserviceNya->cso['name'];
+
+        $userNya = User::where('users.fmc_token', '!=', null)
+            ->whereIn('role_users.role_id', [1,2,7])
+            ->leftjoin('role_users', 'users.id', '=',  'role_users.user_id')
+            ->get();
+        
+        $this->NotifTo($userNya, $messagesNya, $titleNya);
+        return redirect($request->url)->with("success", "Permintaan Acc Reschedule telah dikirim.");
     }
 
     public function NotifTo($userNya, $messagesNya, $titleNya)
