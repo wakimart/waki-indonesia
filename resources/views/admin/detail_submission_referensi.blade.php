@@ -21,10 +21,20 @@ if (
 <style type="text/css">
     #intro {padding-top: 2em;}
     .signature-pad {
-      width:400px;
-      height:200px;
+      width: 320px;
+      height: 200px;
       background-color: white;
       margin-bottom: 0.5em;
+    }
+    @media (max-width:400px){
+      .signature-pad {
+        width: 255px !important;
+      }
+    }
+    @media (min-width:768px){
+      .signature-pad {
+        width: 500px !important;
+      }
     }
     table {
         margin: 1em;
@@ -454,15 +464,15 @@ if (
                                 </form>
                              </div>
 
-                            <div class="col-md-12 text-center d-none">
+                            <div class="col-md-12 text-center p-0 d-none">
                               <div class="wrapper">
                                 <canvas id="signature-pad" class="signature-pad" width=400 height=200 style="border: 2px solid black"></canvas>
                               </div>
 
-                              <button class="btn-gradient-primary" id="save-png">Save as PNG</button>
-                              <button class="btn-gradient-primary" id="save-jpeg">Save as JPEG</button>
-                              <button class="btn-gradient-primary" id="save-svg">Save as SVG</button>
-                              <button class="btn-gradient-primary" id="clear">Clear</button>
+                              <button class="btn-gradient-primary m-1 p-1" id="save-png">Save as PNG</button>
+                              <button class="btn-gradient-primary m-1 p-1" id="save-jpeg">Save as JPEG</button>
+                              <button class="btn-gradient-primary m-1 p-1" id="save-svg">Save as SVG</button>
+                              <button class="btn-gradient-primary m-1 p-1" id="clear">Clear</button>
                             </div>
 
                             @if ($historySubmission->isNotEmpty())
