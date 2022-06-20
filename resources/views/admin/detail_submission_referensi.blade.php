@@ -454,7 +454,7 @@ if (
                                 </form>
                              </div>
 
-                            <div class="col-md-12 text-center">
+                            <div class="col-md-12 text-center d-none">
                               <div class="wrapper">
                                 <canvas id="signature-pad" class="signature-pad" width=400 height=200 style="border: 2px solid black"></canvas>
                               </div>
