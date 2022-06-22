@@ -464,17 +464,6 @@ if (
                                 </form>
                              </div>
 
-                            <div class="col-md-12 text-center p-0">
-                              <div class="wrapper">
-                                <canvas id="signature-pad" class="signature-pad" width=400 height=200 style="border: 2px solid black"></canvas>
-                              </div>
-
-                              <button class="btn-gradient-primary m-1 p-1" id="save-png">Save as PNG</button>
-                              <button class="btn-gradient-primary m-1 p-1" id="save-jpeg">Save as JPEG</button>
-                              <button class="btn-gradient-primary m-1 p-1" id="save-svg">Save as SVG</button>
-                              <button class="btn-gradient-primary m-1 p-1" id="clear">Clear</button>
-                            </div>
-
                             @if ($historySubmission->isNotEmpty())
                                 <div class="row justify-content-center"
                                     style="margin-top: 2em;">
@@ -828,7 +817,7 @@ if (
     tabindex="-1"
     role="dialog"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="padding-bottom: 0;">
                 <h5 class="text-center">
@@ -884,11 +873,22 @@ if (
                     </table>
                 </div>
 
+                <div class="col-md-12 text-center p-0">
+                  <div class="wrapper">
+                    <canvas id="signature-pad" class="signature-pad" width=400 height=200 style="border: 2px solid black"></canvas>
+                  </div>
+
+                  <button class="btn-gradient-primary m-1 p-1" id="save-png">Save as PNG</button>
+                  <button class="btn-gradient-primary m-1 p-1" id="save-jpeg">Save as JPEG</button>
+                  <button class="btn-gradient-primary m-1 p-1" id="save-svg">Save as SVG</button>
+                  <button class="btn-gradient-primary m-1 p-1" id="clear">Clear</button>
+                </div>
+
                 <form id="formUpdateStatus" method="POST" action="{{ route('update_reference') }}">
                     {{ csrf_field() }}
-                    <div class="form-group text-center">
+                    <div class="form-group text-center mt-4">
                         <label>Other Detail</label>
-                        <table id="table-detail-other" style="margin: 1em 0em;">
+                        <table id="table-detail-other" style="margin: 1em 0em;width:100%">
                             <thead>
                                 <td>Item</td>
                                 <td>Name</td>
