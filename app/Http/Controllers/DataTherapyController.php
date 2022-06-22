@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Branch;
 use App\Cso;
 use App\DataTherapy;
+use App\Exports\DataTherapyExport;
 use App\HistoryUpdate;
 use App\TypeCustomer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DataTherapyController extends Controller
 {
@@ -37,6 +39,7 @@ class DataTherapyController extends Controller
         if ($request->has('search')) {
             $data_therapies->where('dt.name', 'LIKE', '%' . $request->search . '%');
             $data_therapies->orWhere('dt.no_ktp', 'LIKE', '%' . $request->search . '%');
+            $data_therapies->orWhere('dt.phone', 'LIKE', '%' . $request->search . '%');
             $data_therapies->orWhere('b.code', 'LIKE', '%' . $request->search . '%');
             $data_therapies->orWhere('c.code', 'LIKE', '%' . $request->search . '%');
             $data_therapies->orWhere('c.name', 'LIKE', '%' . $request->search . '%');
@@ -260,5 +263,11 @@ class DataTherapyController extends Controller
         }
 
         return response()->json(["result" => "Data tidak ditemukan."], 400);
+    }
+
+    public function export_to_xls(Request $request)
+    {
+        $search = $request->search ?? null;
+        return Excel::download(new DataTherapyExport($search), 'Data Therapy.xlsx');
     }
 }

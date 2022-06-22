@@ -844,6 +844,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('delete_data_sourcing')
             ->middleware('can:delete-data_sourcing');
 
+        //Export XLS Data Sourcing
+        Route::get('/export_to_xls', 'DataSourcingController@export_to_xls')
+            ->name('export_data_sourcing')
+            ->middleware('can:browse-data_sourcing');
+
         // Form Import Data Sourcing
         Route::get('/import_data_sourcing', 'DataSourcingController@importDataSourcing')
             ->name('import_data_sourcing')
@@ -890,6 +895,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'DataTherapyController@destroy')
             ->name('delete_data_therapy')
             ->middleware('can:delete-data_therapy');
+        
+        //Export XLS Data Therapy
+        Route::get('/export_to_xls', 'DataTherapyController@export_to_xls')
+            ->name('export_data_therapy')
+            ->middleware('can:browse-data_therapy');
+
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
