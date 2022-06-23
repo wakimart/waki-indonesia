@@ -4,6 +4,7 @@
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <style type="text/css">
     #intro {
         padding-top: 2em;
@@ -34,6 +35,13 @@
     .pInTable{
         margin-bottom: 6pt !important;
         font-size: 10pt;
+    }
+    input, select, textarea{
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        border: 1px solid #dce1ec !important;
+        font-size: 14px !important;
+        width: 100% !important;
     }
 </style>
 @endsection
@@ -213,6 +221,67 @@
                         </tr>
                     </table>
                 @endif
+                
+                <table class="col-md-12">
+                    <thead>
+                        <td>Status Order</td>
+                    </thead>
+                    <tr>
+                        <td class="text-center">
+                            @if ($order['status'] == \App\Order::$status['1'])
+                                <span class="badge badge-secondary">New</span>
+                            @elseif ($order['status'] == \App\Order::$status['2'])
+                                <span class="badge badge-primary">Process</span>
+                            @elseif ($order['status'] == \App\Order::$status['3'])
+                                <span class="badge badge-warning">Delivery</span>
+                            @elseif ($order['status'] == \App\Order::$status['4'])
+                                <span class="badge badge-success">Success</span>
+                            @elseif ($order['status'] == \App\Order::$status['5'])
+                                <span class="badge badge-danger">Reject</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @if (count($csoDeliveryOrders) > 0)
+                    <tr>
+                        <td>Cso Delivery Order : </td>
+                    </tr>
+                    @foreach ($csoDeliveryOrders as $csoDeliveryOrder)
+                        <tr>
+                            <td>{{ $csoDeliveryOrder['code'] }} - {{ $csoDeliveryOrder['name'] }}</td>
+                        </tr>    
+                    @endforeach
+                    @endif
+                    @if (Gate::check('change-status_order'))
+                        <tr>
+                            <td>
+                                <div class="form-group row justify-content-center">
+                                    @if ($order['status'] == \App\Order::$status['1'] && Gate::check('change-status_order_process'))
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['2']}}" 
+                                        class="btn btn-gradient-success mr-2 btn-lg btn-change-status-order">
+                                        Process Order
+                                    </button>
+                                    @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_delivery'))
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}" 
+                                        class="btn btn-gradient-warning mr-2 btn-lg btn-change-status-order">
+                                        Delivery Order
+                                    </button>
+                                    @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_success'))
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['4']}}" 
+                                        class="btn btn-gradient-primary mr-2 btn-lg btn-change-status-order">
+                                        Success Order
+                                    </button>
+                                    @endif
+                                    @if (($order['status'] == \App\Order::$status['1'] || $order['status'] == \App\Order::$status['2']) && Gate::check('change-status_order_reject'))
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['5']}}" 
+                                        class="btn btn-gradient-danger mr-2 btn-lg btn-change-status-order">
+                                        Reject Order
+                                    </button>
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    @endif
+                </table>
                 <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share"
                 class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
             </div>
@@ -251,13 +320,133 @@
                   @endif
               </table>
             </div>
-                @else
-                <div class="row justify-content-center">
-                    <h2>CANNOT FIND ORDER</h2>
+            
+            <!-- Modal Change Status Order -->
+            <div class="modal fade"
+                id="modal-change-status"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form id="actionAdd"
+                            class="forms-sample"
+                            method="POST"
+                            action="{{ route('update_status_order') }}">
+                            @csrf
+                            <div class="modal-header">
+                                <button type="button"
+                                    class="close"
+                                    data-dismiss="modal"
+                                    aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 id="modal-change-status-question" class="modal-title text-center">Process This Order?</h5>
+                                <hr>
+                                {{-- Pilih CSO Untuk Delivery --}}
+                                @if ($order['status'] == \App\Order::$status['2'])
+                                {{-- Select2 --}}
+                                {{-- <div id="delivery-cso" class="form-group mb-0">
+                                    <label>Select CSO Delivery</label>
+                                    <select id="delivery-cso-id" class="form-control" name="delivery_cso_id[]" style="width: 100%" multiple>
+                                        <option value="">Choose CSO Delivery</option>
+                                        @foreach ($csos as $cso)
+                                        <option value="{{ $cso['id'] }}">{{ $cso['code'] }} - {{ $cso['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div> --}}
+                                {{-- Checkbox --}}
+                                <table id="delivery-cso" class="table table-bordered table-hover m-0" style="font-size: 1em;">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Code</th>
+                                            <th>Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="checkbox-group required">
+                                        @foreach($csos as $cso)
+                                        <tr class="">
+                                            <td>
+                                                <input type="checkbox" name="delivery_cso_id[]" value="{{ $cso['id'] }}">
+                                            </td>
+                                            <td>{{$cso['code']}}</td>
+                                            <td>{{$cso['name']}}</td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="clearfix"></div>
+                                @endif
+                            </div>
+                            <div class="modal-footer">
+                                <input id="order-id" name="orderId" hidden="hidden" value="{{ $order['id'] }}">
+                                <input id="status-order" name="status_order" hidden="hidden">
+                                <button id="btn-edit-status-order"
+                                    type="submit"
+                                    class="btn btn-gradient-primary mr-2">
+                                    Yes
+                                </button>
+                                <button class="btn btn-light"
+                                    data-dismiss="modal"
+                                    aria-label="Close">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                @endif
+            </div>
+            <!-- End Modal View -->
+
+            @else
+            <div class="row justify-content-center">
+                <h2>CANNOT FIND ORDER</h2>
+            </div>
+            @endif
         </div>
 
     </section>
 
+@endsection
+
+@section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
+<script>
+    $(document).ready(function() {
+        // $("#delivery-cso-id").select2({
+        //     theme: "bootstrap4",
+        //     placeholder: "Choose CSO Delivery"
+        // });
+        var statusOrder = "{{ $order['status'] }}";
+        $(".btn-change-status-order").click(function(){
+            statusOrder = $(this).attr('status-order');
+            $('#delivery-cso').hide();
+            // $('#delivery-cso-id').prop('disabled', false);
+            $('#status-order').val(statusOrder);
+            if (statusOrder == "{{\App\Order::$status['2']}}") {
+                $("#modal-change-status-question").html('Process This Order?');
+            } else if (statusOrder == "{{\App\Order::$status['3']}}") {
+                $('#delivery-cso').show();
+                // $('#delivery-cso-id').prop('disabled', true);
+                $("#modal-change-status-question").html('Delivery This Order? \n Choose CSO');
+            } else if (statusOrder == "{{\App\Order::$status['4']}}") {
+                $("#modal-change-status-question").html('Success This Order?');
+            } else if (statusOrder == "{{\App\Order::$status['5']}}") {
+                $("#modal-change-status-question").html('Reject This Order?');
+            }
+        });
+        $('#actionAdd').on('submit', function(event) {
+            if (statusOrder == "{{\App\Order::$status['3']}}") {
+                if ($('.checkbox-group.required :checkbox:checked').length == 0) {
+                    event.preventDefault();
+                    alert("You must check at least one CSO.");
+                }
+            }
+        });
+    });
+    
+</script>
 @endsection

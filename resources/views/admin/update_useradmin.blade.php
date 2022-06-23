@@ -419,6 +419,57 @@ $menu_item_page = "user";
                             </div>
 
                             <div class="form-group" id="group-product">
+                                <span style="display:block;">CHANGE STATUS ORDER</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status_order">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order" />
+                                            Change Status Order
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-primary"
+                                            for="change-status_order_process">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_process" />
+                                            Change Status Order Process
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-warning"
+                                            for="change-status_order_delivery">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_delivery" />
+                                            Change Status Order Delivery
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-success"
+                                            for="change-status_order_success">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_success" />
+                                            Change Status Order Success
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-danger"
+                                            for="change-status_order_reject">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_reject" />
+                                            Change Status Order Reject
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
                                 <span style="display:block;">ORDER REPORT</span>
                                 <div class="div-CheckboxGroup">
                                     <div class="form-check form-check-inline">

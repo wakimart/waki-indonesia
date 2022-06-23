@@ -310,6 +310,34 @@ $menu_item_second = "list_order";
                             <div class="validation"></div>
                         </div>
                     </div>
+
+                    <div class="col-xs-6 col-sm-4"
+                        style="padding: 0; display: inline-block;">
+                        <div class="form-group">
+                            <label for="">Filter By Status</label>
+                            <select class="form-control"
+                                id="filter_status"
+                                name="filter_status">
+                                <option value="" selected="">All Status</option>
+                                @foreach(\App\Order::$status as $status)
+                                    @php
+                                    $selected = "";
+                                    if (isset($_GET['filter_status'])) {
+                                        if ($_GET['filter_status'] == $status) {
+                                            $selected = "selected=\"\"";
+                                        }
+                                    }
+                                    @endphp
+
+                                    <option {{ $selected }}
+                                        value="{{ $status }}">
+                                        {{ $status }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="validation"></div>
+                        </div>
+                    </div>
                 </div>
             @endif
 
@@ -365,13 +393,14 @@ $menu_item_second = "list_order";
                                     <th> No. </th>
                                     <th> Order Code </th>
                                     <th> @sortablelink('orderDate', 'Order Date') </th>
-                                    <th> Branch </th>
                                     <th> Member Name </th>
-                                    <th colspan="2"> Product </th>
-                                    <th> CSO </th>
                                     <th> Type Customer </th>
-                                    @if (Gate::check('edit-order') || Gate::check('delete-order'))
-                                        <th colspan="2"> Edit / Delete </th>
+                                    <th> Branch & CSO</th>
+                                    <th> Total Payment </th>
+                                    <th> Status </th>
+                                    {{-- <th colspan="2"> Product </th> --}}
+                                    @if (Gate::check('detail-order') || Gate::check('edit-order') || Gate::check('delete-order'))
+                                        <th colspan="3"> View / Edit / Delete </th>
                                     @endif
                                 </tr>
                             </thead>
@@ -379,28 +408,46 @@ $menu_item_second = "list_order";
                                 @foreach ($orders as $key => $order)
                                     @php
                                     $ProductPromos = json_decode($order['product'], true);
-                                    $totalProduct = count($ProductPromos);
+                                    // $totalProduct = count($ProductPromos);
                                     @endphp
                                     <tr>
-                                        <td rowspan="{{ $totalProduct }}">
+                                        <td {{-- rowspan="{{ $totalProduct }}" --}} >
                                             {{ $key + 1 }}
                                         </td>
-                                        <td rowspan="{{ $totalProduct }}">
+                                        <td  {{-- rowspan="{{ $totalProduct }}" --}} >
                                             <a href="{{ route('detail_order') }}?code={{ $order['code'] }}">
                                                 {{ $order['code'] }}
                                             </a>
                                         </td>
-                                        <td rowspan="{{ $totalProduct }}">
+                                        <td {{-- rowspan="{{ $totalProduct }}" --}}>
                                             {{ date("d/m/Y", strtotime($order['orderDate'])) }}
                                         </td>
-                                        <td rowspan="{{ $totalProduct }}">
-                                            {{ $order->branch['code'] }} - {{ $order->branch['name'] }}
-                                        </td>
-                                        <td rowspan="{{ $totalProduct }}">
+                                        <td {{-- rowspan="{{ $totalProduct }}"  --}}>
                                             {{ $order['name'] }}
                                         </td>
-
-                                        @foreach($ProductPromos as $ProductPromo)
+                                        <td {{-- rowspan="{{ $totalProduct }}" --}}>
+                                            {{ $order['customer_type'] }}
+                                        </td>
+                                        <td {{-- rowspan="{{ $totalProduct }}" --}}>
+                                            {{ $order->branch['code'] }} - {{ $order->branch['name'] }}
+                                            <br>
+                                            {{ $order->cso['code'] }} - {{ $order->cso['name'] }}
+                                        </td>
+                                        <td>Rp. {{ number_format($order['total_payment']) }}</td>
+                                        <td class="text-center">
+                                            @if ($order['status'] == \App\Order::$status['1'])
+                                                <span class="badge badge-secondary">New</span>
+                                            @elseif ($order['status'] == \App\Order::$status['2'])
+                                                <span class="badge badge-primary">Process</span>
+                                            @elseif ($order['status'] == \App\Order::$status['3'])
+                                                <span class="badge badge-warning">Delivery</span>
+                                            @elseif ($order['status'] == \App\Order::$status['4'])
+                                                <span class="badge badge-success">Success</span>
+                                            @elseif ($order['status'] == \App\Order::$status['5'])
+                                                <span class="badge badge-danger">Reject</span>
+                                            @endif
+                                        </td>
+                                        {{-- @foreach($ProductPromos as $ProductPromo)
                                             @if (isset(App\DeliveryOrder::$Promo[$ProductPromo['id']]))
                                                 <td>
                                                     {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['code'] }} - {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['name'] }} ( {{ App\DeliveryOrder::$Promo[$ProductPromo['id']]['harga'] }} )
@@ -412,15 +459,17 @@ $menu_item_second = "list_order";
                                             @endif
                                             <td>{{ $ProductPromo['qty'] }}</td>
                                             @php break; @endphp
-                                        @endforeach
-                                        <td rowspan="{{ $totalProduct }}">
-                                            {{ $order->cso['code'] }} - {{ $order->cso['name'] }}
-                                        </td>
-                                        <td rowspan="{{ $totalProduct }}">
-                                            {{ $order['customer_type'] }}
-                                        </td>
+                                        @endforeach --}}
+                                        @can('detail-order')
+                                            <td {{-- rowspan="{{ $totalProduct }}" --}}
+                                                style="text-align: center;">
+                                                <a href="{{ route('detail_order') }}?code={{ $order['code'] }}">
+                                                    <i class="mdi mdi-eye" style="font-size: 24px; color:#33b5e5;"></i>
+                                                </a>
+                                            </td>
+                                        @endcan
                                         @can('edit-order')
-                                            <td rowspan="{{ $totalProduct }}"
+                                            <td {{-- rowspan="{{ $totalProduct }}" --}}
                                                 style="text-align: center;">
                                                 <a href="{{ route('edit_order', ['id' => $order['id']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
@@ -439,7 +488,7 @@ $menu_item_second = "list_order";
                                         @endcan
                                     </tr>
                                     @php $first = true; @endphp
-                                    @foreach ($ProductPromos as $ProductPromo)
+                                    {{-- @foreach ($ProductPromos as $ProductPromo)
                                         @php
                                         if ($first) {
                                             $first = false;
@@ -459,7 +508,7 @@ $menu_item_second = "list_order";
 
                                             <td>{{ $ProductPromo['qty'] }}</td>
                                         </tr>
-                                    @endforeach
+                                    @endforeach --}}
                                 @endforeach
                             </tbody>
                         </table>
@@ -945,6 +994,10 @@ $(document).on("click", "#btn-filter", function (e) {
     
     if ($('#filter_promo').val() != "") {
         urlParamArray.push("filter_promo=" + $('#filter_promo').val());
+    }
+
+    if ($('#filter_status').val() != "") {
+        urlParamArray.push("filter_status=" + $('#filter_status').val());
     }
 
     for (var i = 0; i < urlParamArray.length; i++) {

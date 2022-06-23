@@ -367,6 +367,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update/', 'OrderController@update')
             ->name('update_order')
             ->middleware('can:edit-order');
+        //Update Order Status
+        Route::post('/update_status_order', 'OrderController@updateStatusOrder')
+            ->name('update_status_order')
+            ->middleware('can:change-status_order');
         //Delete Order
         Route::post('/{OrderNya}', 'OrderController@delete')
             ->name('delete_order');
