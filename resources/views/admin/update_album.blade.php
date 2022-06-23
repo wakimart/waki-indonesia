@@ -318,6 +318,7 @@ $menu_item_page = "frontendcms";
                     enctype="multipart/form-data"
                     action="{{ route("store_frontendcms_image") }}">
                     @csrf
+                    <input type="text" name="id_eventNya" class="d-none" value="{{ $albums['event_id'] }}">
                     <div class="custom-file">
                         <input type="file"
                             class="custom-file-input"

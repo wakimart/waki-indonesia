@@ -225,7 +225,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
     // Add Frontend CMS
     Route::post("/frontend-cms/store/album", "AlbumController@store")
         ->name("store_frontendcms_album");
-    Route::post("/frontend-cms/add/image", "FrontendCmsController@storeImageGallery")
+    Route::post("/frontend-cms/add/image", "AlbumController@addNewImageGallery")
         ->name("store_frontendcms_image");
     Route::post("/frontend-cms/add/video", "FrontendCmsController@storeVideoGallery")
         ->name("store_frontendcms_video");
@@ -394,6 +394,17 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //List Order Report By CSO
         Route::get('/list_order_report_cso', 'OrderController@admin_ListOrderReportCso')
             ->name('admin_list_order_report_cso')
+            ->middleware('can:browse-order_report_cso');
+
+        // Export Order Report
+        Route::get('/export_order_report', 'OrderController@admin_ExportOrderReport')
+            ->name('admin_export_order_report')
+            ->middleware('can:browse-order_report');
+        Route::get('/export_order_report_branch', 'OrderController@admin_ExportOrderReportBranch')
+            ->name('admin_export_order_report_branch')
+            ->middleware('can:browse-order_report_branch');
+        Route::get('/export_order_report_cso', 'OrderController@admin_ExportOrderReportCso')
+            ->name('admin_export_order_report_cso')
             ->middleware('can:browse-order_report_cso');
     });
 
@@ -836,6 +847,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('delete_data_sourcing')
             ->middleware('can:delete-data_sourcing');
 
+        //Export XLS Data Sourcing
+        Route::get('/export_to_xls', 'DataSourcingController@export_to_xls')
+            ->name('export_data_sourcing')
+            ->middleware('can:browse-data_sourcing');
+
         // Form Import Data Sourcing
         Route::get('/import_data_sourcing', 'DataSourcingController@importDataSourcing')
             ->name('import_data_sourcing')
@@ -882,6 +898,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'DataTherapyController@destroy')
             ->name('delete_data_therapy')
             ->middleware('can:delete-data_therapy');
+        
+        //Export XLS Data Therapy
+        Route::get('/export_to_xls', 'DataTherapyController@export_to_xls')
+            ->name('export_data_therapy')
+            ->middleware('can:browse-data_therapy');
+
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {

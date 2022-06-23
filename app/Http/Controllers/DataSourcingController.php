@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Branch;
 use App\Cso;
 use App\DataSourcing;
+use App\Exports\DataSourcingExport;
 use App\HistoryUpdate;
 use App\Imports\DataSourcingImport;
 use App\Imports\DataTherapyImport;
@@ -39,6 +40,7 @@ class DataSourcingController extends Controller
 
         if ($request->has('search')) {
             $data_sourcings->where('ds.name', 'LIKE', '%' . $request->search . '%');
+            $data_sourcings->orWhere('ds.phone', 'LIKE', '%' . $request->search . '%');
             $data_sourcings->orWhere('b.code', 'LIKE', '%' . $request->search . '%');
             $data_sourcings->orWhere('c.code', 'LIKE', '%' . $request->search . '%');
             $data_sourcings->orWhere('c.name', 'LIKE', '%' . $request->search . '%');
@@ -234,6 +236,12 @@ class DataSourcingController extends Controller
         }
 
         return response()->json(["result" => "Data tidak ditemukan."], 400);
+    }
+
+    public function export_to_xls(Request $request)
+    {
+        $search = $request->search ?? null;
+        return Excel::download(new DataSourcingExport($search), 'Data Sourcing.xlsx');
     }
 
     public function importDataSourcing(Request $request)

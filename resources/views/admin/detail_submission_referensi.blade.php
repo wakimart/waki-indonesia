@@ -19,27 +19,17 @@ if (
 
 @section('style')
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
+    #intro {padding-top: 2em;}
+    .signature-pad {
+      width:400px;
+      height:200px;
+      background-color: white;
+      margin-bottom: 0.5em;
     }
-
     table {
         margin: 1em;
         font-size: 14px;
     }
-
-    /* .table-responsive table {
-        table-layout:fixed;
-        width: 98%;
-    }
-
-    .table-responsive table td {
-        word-wrap:break-word;
-        min-width: 160px;
-        max-width: 160px;
-        white-space:normal
-    } */
-
     .table-responsive table .form-control {
         height: 32px;
         line-height: 32px;
@@ -47,58 +37,46 @@ if (
         border-radius: 2px;
         margin-bottom: 0;
     }
-
     .table-responsive table .form-control.error {
         border-color: #f50000;
         border: 1px solid red;
     }
-
     .table-responsive table td .save {
         display: none;
     }
-
     table thead {
         background-color: #8080801a;
         text-align: center;
     }
-
     table td {
         border: 0.5px #8080801a solid;
         padding: 0.5em;
-
     }
-
     .right {
         text-align: right;
         padding-right: 1em;
     }
-
     .pInTable {
         margin-bottom: 6pt !important;
         font-size: 10pt;
     }
-
     select.form-control {
         color: black !important;
     }
-
     .modal {
         overflow-y: auto !important;
     }
-
     .btn {
         width: 100%;
         min-width: 50px;
         max-width: 400px;
     }
-
     @media (max-width: 480px) {
 		.btn span {
             font-size: 2.5vw;
             padding: 0 !important;
         }
 	}
-
     @media (max-width: 1187px) {
 		.btn {
             margin-bottom: 3em;
@@ -475,6 +453,17 @@ if (
                                     </div>
                                 </form>
                              </div>
+
+                            <div class="col-md-12 text-center d-none">
+                              <div class="wrapper">
+                                <canvas id="signature-pad" class="signature-pad" width=400 height=200 style="border: 2px solid black"></canvas>
+                              </div>
+
+                              <button class="btn-gradient-primary" id="save-png">Save as PNG</button>
+                              <button class="btn-gradient-primary" id="save-jpeg">Save as JPEG</button>
+                              <button class="btn-gradient-primary" id="save-svg">Save as SVG</button>
+                              <button class="btn-gradient-primary" id="clear">Clear</button>
+                            </div>
 
                             @if ($historySubmission->isNotEmpty())
                                 <div class="row justify-content-center"
@@ -959,6 +948,58 @@ if (
 @endsection
 
 @section('script')
+<script type="text/javascript">
+  var canvas = document.getElementById('signature-pad');
+
+  function resizeCanvas() {
+      var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+      canvas.width = canvas.offsetWidth * ratio;
+      canvas.height = canvas.offsetHeight * ratio;
+      canvas.getContext("2d").scale(ratio, ratio);
+  }
+
+  window.onresize = resizeCanvas;
+  resizeCanvas();
+
+  var signaturePad = new SignaturePad(canvas, {
+    backgroundColor: 'rgb(255, 255, 255)' // necessary for saving image as JPEG; can be removed is only saving as PNG or SVG
+  });
+
+  document.getElementById('save-png').addEventListener('click', function () {
+    if (signaturePad.isEmpty()) {
+      return alert("Please provide a signature first.");
+    }
+
+    var data = signaturePad.toDataURL('image/png');
+    console.log(data);
+    window.open(data);
+  });
+
+  document.getElementById('save-jpeg').addEventListener('click', function () {
+    if (signaturePad.isEmpty()) {
+      return alert("Please provide a signature first.");
+    }
+
+    var data = signaturePad.toDataURL('image/jpeg');
+    console.log(data);
+    window.open(data);
+  });
+
+  document.getElementById('save-svg').addEventListener('click', function () {
+    if (signaturePad.isEmpty()) {
+      return alert("Please provide a signature first.");
+    }
+
+    var data = signaturePad.toDataURL('image/svg+xml');
+    console.log(data);
+    console.log(atob(data.split(',')[1]));
+    window.open(data);
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    signaturePad.clear();
+  });
+</script>
 <script type="application/javascript">
 let provinceOption = "";
 let souvenirOptionAll = `<option disabled selected value="">Choose Souvenir</option>`;

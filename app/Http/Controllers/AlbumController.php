@@ -169,6 +169,38 @@ class AlbumController extends Controller
         }
     }
 
+    public function addNewImageGallery(Request $request){
+        DB::beginTransaction();
+
+        try{
+            $imageGallery = Album::where('event_id', $request->get('id_eventNya'))->first();
+            $imageArray = $imageGallery->arr_photo;
+
+            $string = str_replace(' ', '', $imageGallery->event['name']);
+            $fileName = $string . "_" . str_replace([' ', ':'], '', time()). ((int)$request->sequence+1) . "." . $request->file("photo")->getClientOriginalExtension();
+            $request->file("photo")->move("sources/album/" . strtolower($string), $fileName);
+            array_push($imageArray, $fileName);
+
+            $imageGallery->arr_photo = $imageArray;
+            $imageGallery->save();
+            DB::commit();
+
+            return redirect()
+                ->route("edit_album", ['id' => $request->get('id_eventNya')])
+                ->with("success", "Image #" . ((int)$request->sequence + 1) . " successfully updated.");
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+                "error line" => $e->getLine(),
+                "error file" => $e->getFile(),
+            ]);
+        }
+    }
+
 
     public function updateVideoGallery(Request $request){
         DB::beginTransaction();
