@@ -593,7 +593,7 @@ p.titleprodcat{
   float: left;
 }
 
-.main-nav a {
+.main-nav a, .main-nav span.mm {
   display: block;
   position: relative;
   color: #000;
@@ -605,9 +605,11 @@ p.titleprodcat{
   font-weight: 600;
 }
 
+
 .main-nav a:hover,
 .main-nav .active > a,
-.main-nav li:hover > a {
+.main-nav li:hover > a,
+.main-nav .mm:hover {
   color: #1bc554;
   text-decoration: none;
 }
@@ -703,32 +705,60 @@ p.titleprodcat{
   list-style: none;
 }
 
-.mobile-nav a {
+.mobile-nav a, .mobile-nav span.mm {
   display: block;
   position: relative;
   color: #fff;
   padding: 10px 20px;
   font-weight: 500;
 }
+.mobile-nav span.arrow{
+  display: block;
+  position: relative;
+  color: #fff;
+  padding: 0px 20px;
+  font-weight: 500;
+}
+.mobile-nav span i {
+  position: absolute;
+  right: 15px;
+  font-size: 1.5em;
+  z-index: 999;
+  cursor: pointer;
+}
+.mobile-nav span i.dd{
+  top: -1.4em;
+}
+.mobile-nav .active.drop-down > span i{
+}
+.mobile-nav span i {
+  position: absolute;
+  right: 15px;
+  font-size: 1.5em;
+  z-index: 999;
+  cursor: pointer;
+}
+
 
 .mobile-nav a:hover,
 .mobile-nav .active > a,
-.mobile-nav li:hover > a {
+.mobile-nav li:hover > a,
+.mobile-nav span i:hover {
   color: #1bc554;
   text-decoration: none;
 }
 
-.mobile-nav .drop-down > a:after {
+/* .mobile-nav .drop-down > a:after {
   content: "\f078";
   font-family: FontAwesome;
   padding-left: 10px;
   position: absolute;
   right: 15px;
-}
+} */
 
-.mobile-nav .active.drop-down > a:after {
+/* .mobile-nav .active.drop-down > a:after {
   content: "\f077";
-}
+} */
 
 .mobile-nav .drop-down > a {
   padding-right: 35px;
