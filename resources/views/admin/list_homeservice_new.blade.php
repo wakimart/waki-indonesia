@@ -7,22 +7,27 @@ $menu_item_second = "list_homeservice";
 @section('style')
 <link rel="stylesheet" href="{{ asset('css/admin/calendarorganizer.css?v=' . filemtime('css/admin/calendarorganizer.css')) }}">
 <style>
+    .hs-filter a {
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+    .hs-filter a.active {
+      background-color: #ffc107 !important;
+      color: white !important;
+    }
     .cjslib-day-indicator {
         color: #ffc107 !important;
         background-color: #1bcfb4 !important;
     }
-
     .cjslib-calendar.cjslib-size-small .cjslib-day > .cjslib-day-indicator {
         width: 24px;
         height: 24px;
     }
-
     .cjslib-calendar.cjslib-size-small .cjslib-day > .cjslib-indicator-type-numeric {
         font-size: 12px;
         font-weight: bolder;
         color: #ffffff !important;
     }
-
     .btnappoint {
         display: inline-block;
         font-weight: 400;
@@ -36,36 +41,28 @@ $menu_item_second = "list_homeservice";
         -ms-user-select: none;
         user-select: none;
     }
-
     .titleAppoin {
         font-weight: bolder;
     }
-
     .timeContainerDiv{
         flex: 1 !important;
     }
-
     .paragrapContainerDiv{
         flex-direction: column;
         align-items: normal !important;
     }
-
     .iconContainerDiv{
         flex: 1 !important;
     }
-
     .cjslib-day-indicator {
         olor: #ffa000; background-color: #ffa000;
     }
-
     .cjslib-indicator-type-numeric {
         color: #ffffff;
     }
-
     .cjslib-day.cjslib-day-today > .cjslib-day-num {
         border-color: #ffa000 !important;
     }
-
     .table-bordered th, .table-bordered td {
         border: 1px solid darkgray !important;
     }
@@ -674,6 +671,17 @@ $menu_item_second = "list_homeservice";
 
                         <br>
 
+                        <div class="hs-filter">
+                          <ul class="nav nav-tabs">
+                            <li class="nav-item filter-hs-all">
+                              <a class="nav-link active" href="#">All</a>
+                            </li>
+                            <li class="nav-item filter-hs-res">
+                              <a class="nav-link" href="#">Reschedule</a>
+                            </li>
+                          </ul>
+                        </div>
+
                         <div class="col-xs-12 col-sm-12 col-md-12"
                             id="organizerContainer"
                             style="padding: 0; float: left;">
@@ -809,7 +817,7 @@ $menu_item_second = "list_homeservice";
                                                                             }
                                                                         }
                                                                         echo "</p>";
-                                                                        
+
                                                                         if ($dayData['resc_acc'] != null) {
                                                                             echo "<p ";
                                                                             $statusResc = "Wait to Approve";
@@ -1670,6 +1678,13 @@ $menu_item_second = "list_homeservice";
 
 @section('script')
 <script type="application/javascript">
+$(document).ready(function(){
+   $('.hs-filter a').on("click", function(event) {
+      event.preventDefault();
+      $('.nav-link.active').not(this).removeClass('active');
+      $(this).toggleClass('active');
+   });
+});
 
 $(document).ready(function(){
     //load modal Acc Cancel HS
@@ -1991,7 +2006,7 @@ function clickView(btn) {
         document.getElementById("view-cso2").innerHTML = result.cso2_code_name;
         document.getElementById("view-date").innerHTML = dateString;
         document.getElementById("view-time").innerHTML = timeString;
-        
+
         @if(Gate::check('add-service'))
             if (result.technician_schedule) {
                 document.getElementById("create_technician_schedule").style.display = 'none';
