@@ -225,7 +225,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
     // Add Frontend CMS
     Route::post("/frontend-cms/store/album", "AlbumController@store")
         ->name("store_frontendcms_album");
-    Route::post("/frontend-cms/add/image", "FrontendCmsController@storeImageGallery")
+    Route::post("/frontend-cms/add/image", "AlbumController@addNewImageGallery")
         ->name("store_frontendcms_image");
     Route::post("/frontend-cms/add/video", "FrontendCmsController@storeVideoGallery")
         ->name("store_frontendcms_video");
