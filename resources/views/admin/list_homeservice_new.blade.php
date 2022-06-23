@@ -674,10 +674,10 @@ $menu_item_second = "list_homeservice";
                         <div class="hs-filter">
                           <ul class="nav nav-tabs">
                             <li class="nav-item filter-hs-all">
-                              <a class="nav-link active" href="#">All</a>
+                              <a class="nav-link active" href="#" data-id="all">All (<span id="data-all-count">0</span>)</a>
                             </li>
                             <li class="nav-item filter-hs-res">
-                              <a class="nav-link" href="#">Reschedule</a>
+                              <a class="nav-link" href="#" data-id="reschedule">Reschedule (<span id="data-reschedule-count">0</span>)</a>
                             </li>
                           </ul>
                         </div>
@@ -692,229 +692,29 @@ $menu_item_second = "list_homeservice";
                                     </span>
                                 </div>
                                 <div class="cjslib-rows" id="organizerContainer-list-container">
-                                    <?php if (!$currentMonthDataCount): ?>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="text-align: center;">
-                                                            No.
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            Appointment
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            Detail
-                                                        </th>
-                                                        <th colspan="4" style="text-align: center;">
-                                                            Action
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="appointment-data">
-                                                    <ol class="cjslib-list"
-                                                        id="organizerContainer-list">
-                                                        <div class="cjslib-list-placeholder">
-                                                            <li style="text-align:center; margin-top: 1em;">
-                                                                No appointments on this day.
-                                                            </li>
-                                                        </div>
-                                                    </ol>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    <?php else: ?>
-                                        <?php
-                                        if (Auth::user()->roles[0]["slug"] === "admin-management") {
-                                            $isAdminManagement = true;
-                                        } else {
-                                            $isAdminManagement = false;
-                                        }
-                                        ?>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="text-align: center;">
-                                                            No.
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            Appointment
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            Detail
-                                                        </th>
-                                                        <th colspan="4"
-                                                            style="text-align: center;">
-                                                            Action
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="appointment-data">
-                                                    <?php $i = 1; ?>
-                                                    <?php foreach ($currentDayData as $dayData): ?>
-                                                        <tr>
-                                                            <td style="text-align: center">
-                                                                <?php echo $i; ?>
-                                                            </td>
-                                                            <td style="text-align: center">
-                                                                <?php
-                                                                $time = new DateTime($dayData->appointment);
-                                                                echo $time->format("H:i");
-                                                                ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php if (!$isAdminManagement): ?>
-                                                                    <p class="titleAppoin">
-                                                                        <?php
-                                                                        echo '<a href="'
-                                                                            . route('homeServices_success')
-                                                                            . '?code='
-                                                                            . $dayData->hs_code
-                                                                            . '" target="_blank">';
-                                                                        echo $dayData->hs_code;
-                                                                        echo '</a>';
-                                                                        ?>
-                                                                    </p>
-                                                                <?php endif; ?>
-                                                                <p class="descAppoin">
-                                                                    <?php
-                                                                    if (!$isAdminManagement) {
-                                                                        echo $dayData->customer_name
-                                                                            . ' - '
-                                                                            . $dayData->customer_phone;
-                                                                    }
-                                                                    ?>
-                                                                    <br>
-                                                                    <?php
-                                                                    echo 'Branch: '
-                                                                        . $dayData->branch_code
-                                                                        . ' - '
-                                                                        . $dayData->branch_name;
-                                                                    ?>
-                                                                    <br>
-                                                                    <?php
-                                                                    echo 'CSO: ' . $dayData->cso_name;
-                                                                    ?>
-                                                                    <br>
-                                                                    <?php
-                                                                    if (!$isAdminManagement) {
-                                                                        echo 'Created at: ' . $dayData->created_at;
-                                                                    }
-                                                                    ?>
-                                                                    <br>
-                                                                    <?php
-                                                                    if (!$isAdminManagement) {
-                                                                        echo 'Last update: ' . $dayData->updated_at;
-                                                                    }
-
-                                                                    if (!$isAdminManagement) {
-                                                                        $befores = \App\HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
-                                                                        echo "<p style='color:red'>";
-                                                                        foreach ($befores as $key => $before) {
-                                                                            if(isset($before['meta']['appointmentBefore'])){
-                                                                                echo "Appointment Before : " . $before['meta']['appointmentBefore'] . "<br>";
-                                                                            }
-                                                                        }
-                                                                        echo "</p>";
-
-                                                                        if ($dayData['resc_acc'] != null) {
-                                                                            echo "<p ";
-                                                                            $statusResc = "Wait to Approve";
-                                                                            if ($dayData['resc_acc'] == $dayData['appointment'] && $dayData['is_acc_resc'] == false) {
-                                                                                echo 'style="color:green"';
-                                                                                $statusResc = "Approved";
-                                                                            } else if ($dayData['is_acc_resc'] == false) {
-                                                                                echo 'style="color:red"';
-                                                                                $statusResc = "Rejected";
-                                                                            }
-                                                                            echo ">Reschedule Appointment : " . $dayData['resc_acc'] . " (" . $statusResc .") </p>";
-                                                                        }
-                                                                    }
-                                                                    ?>
-                                                                </p>
-                                                            </td>
-                                                            <?php if (!$isAdminManagement): ?>
-                                                                <td style="text-align: center">
-                                                                    <?php
-                                                                    if (Gate::check('detail-home_service')) {
-                                                                        echo '<button '
-                                                                        . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
-                                                                        . 'type="button" '
-                                                                        . 'data-toggle="modal" '
-                                                                        . 'data-target="#viewHomeServiceModal" '
-                                                                        . 'onclick="clickView(this)" '
-                                                                        . 'value="' . $dayData->hs_id . '">'
-                                                                        . '</button>';
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                                <td style="text-align: center">
-                                                                    <?php
-                                                                    if (Gate::check('edit-home_service')) {
-                                                                        echo '<button '
-                                                                            . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
-                                                                            . 'type="button" '
-                                                                            . 'data-toggle="modal" '
-                                                                            . 'data-target="#cashHomeServiceModal" '
-                                                                            . 'onclick="clickCash(this)" '
-                                                                            . 'value="' . $dayData->hs_id . '">'
-                                                                            . '</button>';
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                                <td style="text-align: center">
-                                                                    <?php
-                                                                    if (Gate::check('edit-home_service')) {
-                                                                        echo '<button '
-                                                                            . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
-                                                                            . 'type="button" '
-                                                                            . 'data-toggle="modal" '
-                                                                            . 'data-target="#editHomeServiceModal" ';
-
-                                                                        if (Auth::user()->roles[0]["slug"] === "cso") {
-                                                                            echo 'data-cso="true" ';
-                                                                        } else {
-                                                                            echo 'data-cso="false" ';
-                                                                        }
-
-                                                                        echo 'onclick="clickEdit(this)" '
-                                                                            . 'value="' . $dayData->hs_id . '">'
-                                                                            . '</button>';
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                                <td style="text-align: center">
-                                                                    <?php
-                                                                    if (
-                                                                        Gate::check('delete-home_service')
-                                                                        && $dayData->role_slug !== "admin"
-                                                                        && $dayData->role_slug !== "head-admin"
-                                                                    ) {
-                                                                        echo '<button '
-                                                                            . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
-                                                                            . 'type="button" '
-                                                                            . 'data-toggle="modal" '
-                                                                            . 'data-target="#deleteHomeServiceModal" '
-                                                                            . 'onclick="clickCancel(this)" '
-                                                                            . 'value="' . $dayData->hs_id . '">'
-                                                                            . '</button>';
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                            <?php else: ?>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                            <?php endif; ?>
-                                                        </tr>
-                                                        <?php $i++; ?>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    <?php endif; ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align: center;">
+                                                        No.
+                                                    </th>
+                                                    <th style="text-align: center;">
+                                                        Appointment
+                                                    </th>
+                                                    <th style="text-align: center;">
+                                                        Detail
+                                                    </th>
+                                                    <th colspan="4"
+                                                        style="text-align: center;">
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="appointment-data-all"></tbody>
+                                            <tbody id="appointment-data-reschedule" style="display: none;"></tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1683,6 +1483,14 @@ $(document).ready(function(){
       event.preventDefault();
       $('.nav-link.active').not(this).removeClass('active');
       $(this).toggleClass('active');
+      var dataId = $(this).attr('data-id');
+      if (dataId == "all") {
+        $("#appointment-data-reschedule").hide();
+        $("#appointment-data-all").show();
+      } else if (dataId == 'reschedule') {
+        $("#appointment-data-all").hide();
+        console.log($("#appointment-data-reschedule").show());
+      }
    });
 });
 
@@ -1701,6 +1509,9 @@ $(document).ready(function(){
             alert("Please change reschedule date and time");
         }
     });
+
+    console.log("{{ date('j') }}")
+    $("#calendarContainer-day-radio-" + "{{date('j')}}").trigger('click');
 });
 
 {{-- Mendapatkan CSRF Token --}}
@@ -1922,9 +1733,12 @@ function changeDate(click) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        return response.text();
+        return response.json();
     }).then(function (response) {
-        document.getElementById("appointment-data").innerHTML = response;
+        document.getElementById("data-all-count").innerHTML = response['msg']['all']['count'];
+        document.getElementById("appointment-data-all").innerHTML = response['msg']['all']['data'];
+        document.getElementById("data-reschedule-count").innerHTML = response['msg']['reschedule']['count'];
+        document.getElementById("appointment-data-reschedule").innerHTML = response['msg']['reschedule']['data'];
 
         const getDate = new Date(
             Date.parse(

@@ -551,7 +551,8 @@ class HomeServiceController extends Controller
         $filterBranch = null,
         $filterCSO = null,
         $filterSearch = null,
-        $isAdminManagement = false
+        $isAdminManagement = false,
+        $display_tab_hs = null
     ) {
         $todayDate = date("Y-m-d", strtotime($requestedDate));
 
@@ -680,6 +681,11 @@ class HomeServiceController extends Controller
             );
         }
 
+        if ($display_tab_hs == "reschedule") {
+            $currentDayData = $currentDayData->whereRaw('h.resc_acc = h.appointment')
+                ->where('h.is_acc_resc', false);
+        }
+
         $currentDayData = $currentDayData->whereBetween(
             "h.appointment",
             [
@@ -736,187 +742,197 @@ class HomeServiceController extends Controller
             $isAdminManagement = true;
         }
 
-        $currentDayData = $this->getDayData(
-            $request->date,
-            $request->filter_province,
-            $request->filter_city,
-            $request->filter_district,
-            $arrBranches,
-            $request->filter_cso,
-            $request->filter_search,
-            $isAdminManagement
-        );
+        $display_tab_hss = ["all", "reschedule"];
+        $result_tab_hss = [];    
+        foreach ($display_tab_hss as $display_tab_hs) {
+            $currentDayData = $this->getDayData(
+                $request->date,
+                $request->filter_province,
+                $request->filter_city,
+                $request->filter_district,
+                $arrBranches,
+                $request->filter_cso,
+                $request->filter_search,
+                $isAdminManagement,
+                $display_tab_hs
+            );
 
-        $result = "";
-        if ($currentDayData->isEmpty()) {
-            $result .= '<tr>';
-            $result .= '<td colspan="7">'
-                . '<div class="cjslib-rows" id="organizerContainer-list-container">'
-                . '<ol class="cjslib-list" id="organizerContainer-list">'
-                . '<div class="cjslib-list-placeholder">'
-                . '<li style="text-align:center; margin-top: 1em;">'
-                . 'No appointments on this day.'
-                . '</li>'
-                . '</div>'
-                . '</ol>'
-                . '</div>'
-                . '</td>';
-            $result .= '</tr>';
-        } else {
-            $i = 1;
-            foreach ($currentDayData as $dayData) {
-                $result .= '<tr>'
-                    . '<td style="text-align: center">'
-                    . $i
-                    . '</td>'
-                    . '<td style="text-align: center">';
-
-                $time = new DateTime($dayData->appointment);
-                $result .= $time->format("H:i");
-
-                $result .= '</td>'
-                    . '<td>';
-
-                if (!$isAdminManagement) {
-                    $result .= '<p class="titleAppoin">'
-                    . '<a href="'
-                    . route('homeServices_success')
-                    . '?code='
-                    . $dayData->hs_code
-                    . '" target="_blank">'
-                    . $dayData->hs_code
-                    . '</a>'
-                    . '</p>';
-                }
-
-                $result .= '<p class="descAppoin">';
-
-                if (!$isAdminManagement) {
-                    $result .= $dayData->customer_name . ' - ' . $dayData->customer_phone
-                        . '<br>';
-                }
-
-                $result .= 'Branch: '
-                    . $dayData->branch_code . ' - ' . $dayData->branch_name
-                    . '<br>'
-                    . 'CSO: ' . $dayData->cso_name
-                    . '<br>';
-
-                if (!$isAdminManagement) {
-                    $result .= 'Created at: ' . $dayData->created_at
-                        . '<br>'
-                        . 'Last update: ' . $dayData->updated_at;
-
-                        $befores = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
-                        $result .= "<p style='color:red'>";
-                        foreach ($befores as $key => $before) {
-                            if(isset($before['meta']['appointmentBefore'])){
-                                $result .= "Appointment Before : " . $before['meta']['appointmentBefore'] . "<br>";
-                            }
-                        }
-                        $result .= "</p>";
-
-                        
-                        if ($dayData['resc_acc'] != null) {
-                            $result .= "<p ";
-                            $statusResc = "Wait to Approve";
-                            if ($dayData['resc_acc'] == $dayData['appointment'] && $dayData['is_acc_resc'] == false) {
-                                $result .= 'style="color:green";';
-                                $statusResc = "Approved";
-                            } else if ($dayData['is_acc_resc'] == false) {
-                                $result .= 'style="color:red";';
-                                $statusResc = "Rejected";
-                            }
-                            $result .= ">Reschedule Appointment : " . $dayData['resc_acc'] . " (" . $statusResc .") </p>";
-                        }
-                }
-
-                $result .= '</p>'
+            $result = "";
+            if ($currentDayData->isEmpty()) {
+                $result .= '<tr>';
+                $result .= '<td colspan="7">'
+                    . '<div class="cjslib-rows" id="organizerContainer-list-container">'
+                    . '<ol class="cjslib-list" id="organizerContainer-list">'
+                    . '<div class="cjslib-list-placeholder">'
+                    . '<li style="text-align:center; margin-top: 1em;">'
+                    . 'No appointments on this day.'
+                    . '</li>'
+                    . '</div>'
+                    . '</ol>'
+                    . '</div>'
                     . '</td>';
+                $result .= '</tr>';
+            } else {
+                $i = 1;
+                foreach ($currentDayData as $dayData) {
+                    $result .= '<tr>'
+                        . '<td style="text-align: center">'
+                        . $i
+                        . '</td>'
+                        . '<td style="text-align: center">';
 
+                    $time = new DateTime($dayData->appointment);
+                    $result .= $time->format("H:i");
 
-                if (!$isAdminManagement) {
-                    $result .= '<td style="text-align: center">';
+                    $result .= '</td>'
+                        . '<td>';
 
-                    if(Auth::user()->hasPermission('detail-home_service')){
-                        $result .= '<button '
-                            . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
-                            . 'type="button" '
-                            . 'data-toggle="modal" '
-                            . 'data-target="#viewHomeServiceModal" '
-                            . 'onclick="clickView(this)" '
-                            . 'value="' . $dayData->hs_id . '">'
-                            . '</button>'
-                            . '</td>'
-                            . '<td style="text-align: center">';
+                    if (!$isAdminManagement) {
+                        $result .= '<p class="titleAppoin">'
+                        . '<a href="'
+                        . route('homeServices_success')
+                        . '?code='
+                        . $dayData->hs_code
+                        . '" target="_blank">'
+                        . $dayData->hs_code
+                        . '</a>'
+                        . '</p>';
                     }
-                    else{
-                        $result .= '</td>'
-                            . '<td style="text-align: center">';
+
+                    $result .= '<p class="descAppoin">';
+
+                    if (!$isAdminManagement) {
+                        $result .= $dayData->customer_name . ' - ' . $dayData->customer_phone
+                            . '<br>';
                     }
 
-                    if(Auth::user()->hasPermission('edit-home_service')){
-                        $result .= '<button '
-                            . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
-                            . 'type="button" '
-                            . 'data-toggle="modal" '
-                            . 'data-target="#cashHomeServiceModal" '
-                            . 'onclick=clickCash(this) '
-                            . 'value="' . $dayData->hs_id . '">'
-                            . '</button>'
-                            . '</td>'
-                            . '<td style="text-align: center">';
+                    $result .= 'Branch: '
+                        . $dayData->branch_code . ' - ' . $dayData->branch_name
+                        . '<br>'
+                        . 'CSO: ' . $dayData->cso_name
+                        . '<br>';
 
-                        $result .= '<button '
-                            . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
-                            . 'type="button" '
-                            . 'data-toggle="modal" '
-                            . 'data-target="#editHomeServiceModal" ';
+                    if (!$isAdminManagement) {
+                        $result .= 'Created at: ' . $dayData->created_at
+                            . '<br>'
+                            . 'Last update: ' . $dayData->updated_at;
 
-                        if (Auth::user()->roles[0]["slug"] === "cso") {
-                            $result .= 'data-cso="true" ';
-                        } else {
-                            $result .= 'data-cso="false" ';
+                            $befores = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
+                            $result .= "<p style='color:red'>";
+                            foreach ($befores as $key => $before) {
+                                if(isset($before['meta']['appointmentBefore'])){
+                                    $result .= "Appointment Before : " . $before['meta']['appointmentBefore'] . "<br>";
+                                }
+                            }
+                            $result .= "</p>";
+
+                            
+                            if ($dayData['resc_acc'] != null) {
+                                $result .= "<p ";
+                                $statusResc = "Wait to Approve";
+                                if ($dayData['resc_acc'] == $dayData['appointment'] && $dayData['is_acc_resc'] == false) {
+                                    $result .= 'style="color:green";';
+                                    $statusResc = "Approved";
+                                } else if ($dayData['is_acc_resc'] == false) {
+                                    $result .= 'style="color:red";';
+                                    $statusResc = "Rejected";
+                                }
+                                $result .= ">Reschedule Appointment : " . $dayData['resc_acc'] . " (" . $statusResc .") </p>";
+                            }
+                    }
+
+                    $result .= '</p>'
+                        . '</td>';
+
+
+                    if (!$isAdminManagement) {
+                        $result .= '<td style="text-align: center">';
+
+                        if(Auth::user()->hasPermission('detail-home_service')){
+                            $result .= '<button '
+                                . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                                . 'type="button" '
+                                . 'data-toggle="modal" '
+                                . 'data-target="#viewHomeServiceModal" '
+                                . 'onclick="clickView(this)" '
+                                . 'value="' . $dayData->hs_id . '">'
+                                . '</button>'
+                                . '</td>'
+                                . '<td style="text-align: center">';
+                        }
+                        else{
+                            $result .= '</td>'
+                                . '<td style="text-align: center">';
                         }
 
-                        $result .= 'onclick="clickEdit(this)" '
-                            . 'value="' . $dayData->hs_id . '">'
-                            . '</button>'
-                            . '</td>'
-                            . '<td style="text-align: center">';
-                    }
-                    else{
-                        $result .= '</td>'
-                            . '<td style="text-align: center">'
-                            . '</td>'
-                            . '<td style="text-align: center">';
+                        if(Auth::user()->hasPermission('edit-home_service')){
+                            $result .= '<button '
+                                . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
+                                . 'type="button" '
+                                . 'data-toggle="modal" '
+                                . 'data-target="#cashHomeServiceModal" '
+                                . 'onclick=clickCash(this) '
+                                . 'value="' . $dayData->hs_id . '">'
+                                . '</button>'
+                                . '</td>'
+                                . '<td style="text-align: center">';
+
+                            $result .= '<button '
+                                . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
+                                . 'type="button" '
+                                . 'data-toggle="modal" '
+                                . 'data-target="#editHomeServiceModal" ';
+
+                            if (Auth::user()->roles[0]["slug"] === "cso") {
+                                $result .= 'data-cso="true" ';
+                            } else {
+                                $result .= 'data-cso="false" ';
+                            }
+
+                            $result .= 'onclick="clickEdit(this)" '
+                                . 'value="' . $dayData->hs_id . '">'
+                                . '</button>'
+                                . '</td>'
+                                . '<td style="text-align: center">';
+                        }
+                        else{
+                            $result .= '</td>'
+                                . '<td style="text-align: center">'
+                                . '</td>'
+                                . '<td style="text-align: center">';
+                        }
+
+                        if(Auth::user()->hasPermission('delete-home_service')){
+                            $result .= '<button '
+                                . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
+                                . 'type="button" '
+                                . 'data-toggle="modal" '
+                                . 'data-target="#deleteHomeServiceModal" '
+                                . 'onclick="clickCancel(this)" '
+                                . 'value="' . $dayData->hs_id . '">'
+                                . '</button>'
+                                . '</td>';
+                        }
+                        else{
+                            $result .= '</td>';
+                        }
+                    } else {
+                        $result .= '<td></td><td></td><td></td><td></td>';
                     }
 
-                    if(Auth::user()->hasPermission('delete-home_service')){
-                        $result .= '<button '
-                            . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
-                            . 'type="button" '
-                            . 'data-toggle="modal" '
-                            . 'data-target="#deleteHomeServiceModal" '
-                            . 'onclick="clickCancel(this)" '
-                            . 'value="' . $dayData->hs_id . '">'
-                            . '</button>'
-                            . '</td>';
-                    }
-                    else{
-                         $result .= '</td>';
-                    }
-                } else {
-                    $result .= '<td></td><td></td><td></td><td></td>';
+                    $result .= '</tr>';
+
+                    $i++;
                 }
-
-                $result .= '</tr>';
-
-                $i++;
             }
+            $result_tab_hss[$display_tab_hs]['data'] = $result;
+            $result_tab_hss[$display_tab_hs]['count'] = count($currentDayData);
         }
 
-        return response($result, 200)->header("Content-Type", "text/plain");
+        return response()->json(array(
+            'status'=>'oke',
+            'msg'=> $result_tab_hss
+        ),200);
     }
 
     public function admin_fetchHomeService(Request $request){
