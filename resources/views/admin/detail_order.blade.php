@@ -347,17 +347,6 @@
                                 <hr>
                                 {{-- Pilih CSO Untuk Delivery --}}
                                 @if ($order['status'] == \App\Order::$status['2'])
-                                {{-- Select2 --}}
-                                {{-- <div id="delivery-cso" class="form-group mb-0">
-                                    <label>Select CSO Delivery</label>
-                                    <select id="delivery-cso-id" class="form-control" name="delivery_cso_id[]" style="width: 100%" multiple>
-                                        <option value="">Choose CSO Delivery</option>
-                                        @foreach ($csos as $cso)
-                                        <option value="{{ $cso['id'] }}">{{ $cso['code'] }} - {{ $cso['name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                </div> --}}
-                                {{-- Checkbox --}}
                                 <table id="delivery-cso" class="table table-bordered table-hover m-0" style="font-size: 1em;">
                                     <thead>
                                         <tr>
@@ -416,21 +405,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script>
     $(document).ready(function() {
-        // $("#delivery-cso-id").select2({
-        //     theme: "bootstrap4",
-        //     placeholder: "Choose CSO Delivery"
-        // });
         var statusOrder = "{{ $order['status'] }}";
         $(".btn-change-status-order").click(function(){
             statusOrder = $(this).attr('status-order');
             $('#delivery-cso').hide();
-            // $('#delivery-cso-id').prop('disabled', false);
             $('#status-order').val(statusOrder);
             if (statusOrder == "{{\App\Order::$status['2']}}") {
                 $("#modal-change-status-question").html('Process This Order?');
             } else if (statusOrder == "{{\App\Order::$status['3']}}") {
                 $('#delivery-cso').show();
-                // $('#delivery-cso-id').prop('disabled', true);
                 $("#modal-change-status-question").html('Delivery This Order? \n Choose CSO');
             } else if (statusOrder == "{{\App\Order::$status['4']}}") {
                 $("#modal-change-status-question").html('Success This Order?');

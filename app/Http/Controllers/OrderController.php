@@ -673,13 +673,15 @@ class OrderController extends Controller
             WHERE o.branch_id = b.id
             AND o.orderDate >= '$startDate'
             AND o.orderDate <= '$yesterdayDate'
-            AND (o.status = '" . Order::$status['3'] . "' 
+            AND (o.status = '" . Order::$status['2'] . "'
+            OR o.status = '" . Order::$status['3'] . "' 
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(o.total_payment) 
             FROM orders as o
             WHERE o.branch_id = b.id
             AND o.orderDate = '$endDate'
-            AND (o.status = '" . Order::$status['3'] . "' 
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         $order_reports = Branch::from('branches as b')
@@ -711,13 +713,15 @@ class OrderController extends Controller
             WHERE o.cso_id = c.id
             AND o.orderDate >= '$startDate'
             AND o.orderDate <= '$yesterdayDate'
-            AND (o.status = '" . Order::$status['3'] . "' 
+            AND (o.status = '" . Order::$status['2'] . "'
+            OR o.status = '" . Order::$status['3'] . "' 
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(o.total_payment) 
             FROM orders as o
             WHERE o.cso_id = c.id
             AND o.orderDate = '$endDate'
-            AND (o.status = '" . Order::$status['3'] . "' 
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         $currentBranch = null;
@@ -769,7 +773,8 @@ class OrderController extends Controller
         }
 
         $order_reports = $order_reports->where(function($query) {
-                $query->where('status', Order::$status['3'])
+                $query->where('status', Order::$status['2'])
+                    ->orWhere('status', Order::$status['3'])
                     ->orWhere('status', Order::$status['4']);
             })
             ->orderBy('orderDate', 'desc')->get();
@@ -796,13 +801,15 @@ class OrderController extends Controller
             WHERE o.branch_id = b.id
             AND o.orderDate >= '$startDate'
             AND o.orderDate <= '$yesterdayDate'
-            AND (o.status = '" . Order::$status['3'] . "' 
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(o.total_payment) 
             FROM orders as o
             WHERE o.branch_id = b.id
             AND o.orderDate = '$endDate'
-            AND (o.status = '" . Order::$status['3'] . "' 
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         $order_reports = Branch::from('branches as b')
@@ -836,13 +843,15 @@ class OrderController extends Controller
             WHERE o.cso_id = c.id
             AND o.orderDate >= '$startDate'
             AND o.orderDate <= '$yesterdayDate'
-            AND (o.status = '" . Order::$status['3'] . "' 
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(o.total_payment) 
             FROM orders as o
             WHERE o.cso_id = c.id
             AND o.orderDate = '$endDate'
-            AND (o.status = '" . Order::$status['3'] . "' 
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         $currentBranch = null;
@@ -895,7 +904,8 @@ class OrderController extends Controller
         }
 
         $order_reports = $order_reports->where(function($query) {
-                $query->where('status', Order::$status['3'])
+                $query->where('status', Order::$status['2'])
+                    ->orWhere('status', Order::$status['3'])
                     ->orWhere('status', Order::$status['4']);
             })
             ->orderBy('orderDate', 'desc')->get();
