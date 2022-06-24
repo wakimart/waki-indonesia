@@ -239,16 +239,18 @@ class HomeServiceController extends Controller
         // Inisialisasi variabel $todayDate dan mengisi dengan tanggal hari ini
         $todayDate = date("Y-m-d");
 
-        $currentDayData = $this->getDayData(
-            $todayDate,
-            $request->filter_province,
-            $request->filter_city,
-            $request->filter_district,
-            $arrBranches,
-            $request->filter_cso,
-            $request->filter_search,
-            $isAdminManagement
-        );
+        // $currentDayData = $this->getDayData(
+        //     $todayDate,
+        //     $request->filter_province,
+        //     $request->filter_city,
+        //     $request->filter_district,
+        //     $arrBranches,
+        //     $request->filter_cso,
+        //     $request->filter_search,
+        //     $isAdminManagement
+        // );
+        $currentDayData = $this->printDayData(new \Illuminate\Http\Request);
+        $currentDayData = json_decode($currentDayData->getContent(), true)['msg'];
 
         return view(
             "admin.list_homeservice_new",
@@ -554,7 +556,7 @@ class HomeServiceController extends Controller
         $isAdminManagement = false,
         $display_tab_hs = null
     ) {
-        $todayDate = date("Y-m-d", strtotime($requestedDate));
+        $todayDate = date("Y-m-d", strtotime($requestedDate ?? "now"));
 
         $currentDayData = HomeService::select(
             "h.id AS hs_id",
@@ -817,28 +819,41 @@ class HomeServiceController extends Controller
                             . '<br>'
                             . 'Last update: ' . $dayData->updated_at;
 
-                            $befores = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
-                            $result .= "<p style='color:red'>";
-                            foreach ($befores as $key => $before) {
-                                if(isset($before['meta']['appointmentBefore'])){
-                                    $result .= "Appointment Before : " . $before['meta']['appointmentBefore'] . "<br>";
-                                }
-                            }
-                            $result .= "</p>";
+                        $befores = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
+                        $totalBefores = count($befores) - 1;
+                        $result .= "<p style='color:red'>";
+                        $currentRescheduleAppointment = "";
+                        foreach ($befores as $key => $before) {
+                            if (isset($before['meta']['appointmentBefore'])) {
+                                $statusResc = ($key == $totalBefores) ? "Wait to Approve" : "";
+                                $statusRescColor = "";
 
-                            
-                            if ($dayData['resc_acc'] != null) {
-                                $result .= "<p ";
-                                $statusResc = "Wait to Approve";
-                                if ($dayData['resc_acc'] == $dayData['appointment'] && $dayData['is_acc_resc'] == false) {
-                                    $result .= 'style="color:green";';
-                                    $statusResc = "Approved";
-                                } else if ($dayData['is_acc_resc'] == false) {
-                                    $result .= 'style="color:red";';
-                                    $statusResc = "Rejected";
+                                if (isset($before['meta']['acc_by'])) {
+                                    if ($before['meta']['status_acc'] == "true") {
+                                        $statusRescColor = "style='color:green;'";
+                                        $statusResc = "Approved";
+                                    } else if ($before['meta']['status_acc'] == "false") {
+                                        $statusRescColor = "style='color:red;'";   
+                                        $statusResc = "Rejected";
+                                    }
+                                    $rescAccBy = User::where('id', $before['meta']['acc_by'])->value('name');
+                                    $statusResc .= " by " . $rescAccBy;
+                                }                                
+
+                                $temp_resc = "Reschedule Appointment : " . $before['meta']['dateChange']['resc_acc'];
+                                if ($statusResc) $temp_resc .= "<span $statusRescColor> (" .  $statusResc . ")</span>";
+
+                                if ($key < $totalBefores){
+                                    $result .= $temp_resc;
+                                } else {
+                                    $result .= "Appointment Before : " . $before['meta']['appointmentBefore'];
+                                    $currentRescheduleAppointment = "<p $statusRescColor>" . $temp_resc . "</p>";
                                 }
-                                $result .= ">Reschedule Appointment : " . $dayData['resc_acc'] . " (" . $statusResc .") </p>";
+                                $result .= "<br>";
                             }
+                        }
+                        $result .= "</p>";
+                        $result .= $currentRescheduleAppointment;
                     }
 
                     $result .= '</p>'
@@ -1166,6 +1181,13 @@ class HomeServiceController extends Controller
                     }
                     $val->is_acc_resc = false;
                     $val->save();
+
+                    $before = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $val->id]])->orderBy('id', 'desc')->first();
+                    $before_meta = $before['meta'];
+                    $before_meta['acc_by'] = Auth::user()['id'];
+                    $before_meta['status_acc'] = $request->status_acc;
+                    $before->meta = $before_meta;
+                    $before->save();
                 }
 
                 $userNya = [$val->cso->user];
@@ -1204,6 +1226,13 @@ class HomeServiceController extends Controller
                 }
                 $homeService->is_acc_resc = false;
                 $homeService->save();
+
+                $before = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $homeService->id]])->orderBy('id', 'desc')->first();
+                $before_meta = $before['meta'];
+                $before_meta['acc_by'] = Auth::user()['id'];
+                $before_meta['status_acc'] = $request->status_acc;
+                $before->meta = $before_meta;
+                $before->save();
             }
 
             $userNya = [$homeService->cso->user];
@@ -1509,33 +1538,37 @@ class HomeServiceController extends Controller
         $resc_acc = $request->date." ".$request->time;
 
         $homeserviceNya = HomeService::find($request->id);
-        $appointmentBefore = $homeserviceNya->appointment;
+        if ($homeserviceNya && $homeserviceNya->is_acc_resc != true) {        
+            $appointmentBefore = $homeserviceNya->appointment;
 
-        $homeserviceNya->is_acc_resc = true;
-        $homeserviceNya->resc_desc = $request->reschedule_desc;
-        $homeserviceNya->resc_acc = $resc_acc;
-        $homeserviceNya->save();
+            $homeserviceNya->is_acc_resc = true;
+            $homeserviceNya->resc_desc = $request->reschedule_desc;
+            $homeserviceNya->resc_acc = $resc_acc;
+            $homeserviceNya->save();
 
-        $user = Auth::user();
-        $historyUpdate= [];
-        $historyUpdate['type_menu'] = "Home Service Reschedule";
-        $historyUpdate['method'] = "Update";
-        $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $homeserviceNya, 'appointmentBefore'=>$appointmentBefore];
-        $historyUpdate['user_id'] = $user['id'];
-        $historyUpdate['menu_id'] = $homeserviceNya->id;
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Home Service Reschedule";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $homeserviceNya, 'appointmentBefore'=>$appointmentBefore];
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $homeserviceNya->id;
 
-        $createData = HistoryUpdate::create($historyUpdate);
+            $createData = HistoryUpdate::create($historyUpdate);
 
-        $titleNya = "Home Service Reschedule";
-        $messagesNya = "Acc Rescheule Home Service for ".$homeserviceNya->type_homeservices." from customer ".$homeserviceNya->name.". By ".$homeserviceNya->branch['code']."-".$homeserviceNya->cso['name'];
+            $titleNya = "Home Service Reschedule";
+            $messagesNya = "Acc Rescheule Home Service for ".$homeserviceNya->type_homeservices." from customer ".$homeserviceNya->name.". By ".$homeserviceNya->branch['code']."-".$homeserviceNya->cso['name'];
 
-        $userNya = User::where('users.fmc_token', '!=', null)
-            ->whereIn('role_users.role_id', [1,2,7])
-            ->leftjoin('role_users', 'users.id', '=',  'role_users.user_id')
-            ->get();
-        
-        $this->NotifTo($userNya, $messagesNya, $titleNya);
-        return redirect($request->url)->with("success", "Permintaan Acc Reschedule telah dikirim.");
+            $userNya = User::where('users.fmc_token', '!=', null)
+                ->whereIn('role_users.role_id', [1,2,7])
+                ->leftjoin('role_users', 'users.id', '=',  'role_users.user_id')
+                ->get();
+            
+            $this->NotifTo($userNya, $messagesNya, $titleNya);
+            return redirect($request->url)->with("success", "Permintaan Acc Reschedule telah dikirim.");
+        } else {
+            return redirect($request->url)->with("error", "Permintaan Acc Reschedule sudah ada.");
+        }
     }
 
     public function NotifTo($userNya, $messagesNya, $titleNya)

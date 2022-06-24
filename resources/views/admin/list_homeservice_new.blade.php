@@ -674,10 +674,10 @@ $menu_item_second = "list_homeservice";
                         <div class="hs-filter">
                           <ul class="nav nav-tabs">
                             <li class="nav-item filter-hs-all">
-                              <a class="nav-link active" href="#" data-id="all">All (<span id="data-all-count">0</span>)</a>
+                              <a class="nav-link active" href="#" data-id="all">All (<span id="data-all-count">{{ $currentDayData['all']['count'] }}</span>)</a>
                             </li>
                             <li class="nav-item filter-hs-res">
-                              <a class="nav-link" href="#" data-id="reschedule">Reschedule (<span id="data-reschedule-count">0</span>)</a>
+                              <a class="nav-link" href="#" data-id="reschedule">Reschedule (<span id="data-reschedule-count">{{ $currentDayData['reschedule']['count'] }}</span>)</a>
                             </li>
                           </ul>
                         </div>
@@ -711,8 +711,8 @@ $menu_item_second = "list_homeservice";
                                                     </th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="appointment-data-all"></tbody>
-                                            <tbody id="appointment-data-reschedule" style="display: none;"></tbody>
+                                            <tbody id="appointment-data-all"><?php echo $currentDayData['all']['data'] ?></tbody>
+                                            <tbody id="appointment-data-reschedule" style="display: none;"><?php echo $currentDayData['reschedule']['data'] ?></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -1489,7 +1489,7 @@ $(document).ready(function(){
         $("#appointment-data-all").show();
       } else if (dataId == 'reschedule') {
         $("#appointment-data-all").hide();
-        console.log($("#appointment-data-reschedule").show());
+        $("#appointment-data-reschedule").show();
       }
    });
 });
@@ -1509,9 +1509,6 @@ $(document).ready(function(){
             alert("Please change reschedule date and time");
         }
     });
-
-    console.log("{{ date('j') }}")
-    $("#calendarContainer-day-radio-" + "{{date('j')}}").trigger('click');
 });
 
 {{-- Mendapatkan CSRF Token --}}
@@ -1851,6 +1848,8 @@ function clickView(btn) {
 
 {{-- Edit detail home service --}}
 function clickEdit(btn) {
+    document.getElementById("edit-reschedule").style.display = "none";
+
     const URL = "<?php echo route('edit_homeService'); ?>";
 
     fetch(
@@ -1872,7 +1871,13 @@ function clickEdit(btn) {
         const result = response.result;
 
         document.getElementById("edit-id").value = btn.value;
-        document.getElementById("acc-reschedule-homeservice-id").value = btn.value;
+        if (result.is_acc_resc == true) {
+            document.getElementById("acc-reschedule-homeservice-id").value = null;
+            document.getElementById("edit-reschedule").style.display = "none";
+        } else {
+            document.getElementById("acc-reschedule-homeservice-id").value = btn.value;
+            document.getElementById("edit-reschedule").style.display = "inline-block";
+        }
 
         const editTypeCustomer = document.getElementById("type_customer");
         for (let i = 0; i < editTypeCustomer.options.length; i++) {
