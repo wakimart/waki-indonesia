@@ -57,7 +57,7 @@ class CsoController extends Controller
      */
     public function create()
     {
-        $branches = Branch::all()->sortBy("code");
+        $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
         $banks = Order::$Banks;
         return view('admin.add_cso', compact('branches', 'banks'));
     }
@@ -142,7 +142,7 @@ class CsoController extends Controller
     {
         if($request->has('id')){
             $csos = Cso::find($request->get('id'));
-            $branches = Branch::all()->sortBy("code");
+            $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
             $banks = Order::$Banks;
             return view('admin.update_cso', compact('branches', 'banks', 'csos'));
         }else{
