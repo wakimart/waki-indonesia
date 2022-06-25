@@ -800,6 +800,251 @@
                 </div>
             </div>
         @endif
+
+        @if(Auth::user()->roles[0]["slug"] !== "area-manager")
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-header" style="background: none;">
+                        <h4 style="margin-bottom: 1em;">
+                            Homeservice ACC
+                        </h4>
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active"
+                                    style="font-weight: 500; font-size: 1em;"
+                                    id="reschedulehs-tab"
+                                    data-toggle="tab"
+                                    href="#tabs-reschedulehs"
+                                    role="tab"
+                                    aria-controls="reschedulehs"
+                                    aria-selected="true">
+                                    Reschedule Acc ({{ sizeof($accRescheduleHS) }})
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                    style="font-weight: 500; font-size: 1em;"
+                                    id="cancelhs-tab"
+                                    data-toggle="tab"
+                                    href="#tabs-cancelhs"
+                                    role="tab"
+                                    aria-controls="cancelhs"
+                                    aria-selected="true">
+                                    Cancel Acc ({{ sizeof($accDeleteHS) }})
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body wrapper">
+                        <div class="tab-content" id="myTabContentHS">
+                            <div class="tab-pane fade show active p-3" id="tabs-reschedulehs" role="tabpane2" aria-labelledby="reschedulehs-tab">
+                                <h5 class="mb-3">
+                                    Homeservice Data | Status Reschedule Acc (Total: {{ sizeof($accRescheduleHS) }})
+                                </h5>
+                                <div class="d-flex flex-wrap mt-4" style="align-items: center;">
+                                    <p>Terpilih : <span id="checkedPH" class="checkedPH"></span></p>
+                                    <div style="margin-left: auto;">
+                                        <form id="formSelectAllHomeServiceReschedule" method="POST" action="{{ route('update_homeService') }}">
+                                            @csrf
+                                            <div class="form-group btn-action">
+                                                <div class="d-flex flex-wrap" style="justify-content: right;">
+                                                    <input type="hidden" name="acc_hs_type" value="reschedulehs">
+                                                    <button type="submit" id="AccPH-reschedulehs" class="btn btn-md btn-outline-success" name="status_acc" value="true">Approved All</button>
+                                                    <button type="submit" id="CancelPH-reschedulehs" class="btn btn-md btn-outline-danger ml-2" name="status_acc" value="false">Reject All</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="table-responsive tableHS wrapper" style="border: 1px solid #ebedf2; padding-top: 0;">
+                                    <table class="table table-bordered">
+                                        <thead style="text-align: center; background-color: aliceblue;">
+                                            <tr>
+                                                <td class="text-center">
+                                                    <div class="form-group mb-0">
+                                                        <input type="checkbox" id="reschedulehs" name="" value="true"
+                                                            class="form-control SelectAll_Dynamic checkBoxPH"
+                                                            style="position: relative; width: 16px; margin: auto;"/>
+                                                    </div>
+                                                </td>
+                                                <td>Schedule</td>
+                                                <td>Detail & Reschedule Reason Home Service</td>
+                                                <td>Acc/Reject</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($accRescheduleHS as $perHomeservice)
+                                                <tr>
+                                                    <td class="text-center" rowspan="2">
+                                                        <div class="form-group">
+                                                            <input type="checkbox" name=""
+                                                                class="form-control checkBoxPH checkBoxHS"
+                                                                id="reschedulehs"
+                                                                value="{{$perHomeservice['id']}}"
+                                                                style="position: relative; width: 16px; margin: auto;"/>
+                                                        </div>
+                                                    </td>
+                                                    <td style="border-bottom: 0.2px solid #2f2f2f; background-color: #E0DECA">
+                                                        Old
+                                                        <br class="break">
+                                                        {{ date_format(date_create($perHomeservice['appointment']), 'd/m/Y H:i') }}
+                                                    </td>
+                                                    <td style="white-space: normal; border-bottom: 0.2px solid #2f2f2f;">
+                                                      <div class="detailHs">
+                                                        Type HS : {{ $perHomeservice['type_homeservices'] }}
+                                                        <br class="break">
+                                                        {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }}
+                                                        <br class="break">
+                                                        ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }})
+                                                        <br class="break">
+                                                      </div>
+                                                    </td>
+        
+                                                    <td style="text-align: center; white-space: normal;" rowspan="2">
+                                                      @if(Auth::user()->inRole("head-admin"))
+                                                      <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                                                          @csrf
+                                                          <div class="form-group">
+                                                              <input type="hidden" name="acc_hs_type" value="reschedulehs">
+                                                              <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                                                              <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $perHomeservice->id }}" />
+        
+                                                              <div style="text-align: center;">
+                                                                <p>Do you approved it ?</p>
+                                                              </div>
+        
+                                                              <div class="btn-action" style="text-align: center;">
+                                                                  <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                                                  <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                                                              </div>
+                                                          </div>
+                                                      </form>
+                                                      @else
+                                                        <a href="{{ route('admin_list_homeService', ["id_hs"=>$perHomeservice['id']]) }}">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                        </a>
+                                                      @endif
+                                                    </td>
+                                                </tr>
+                                                <tr style="border-bottom: 2px solid #000">
+                                                    <td style="background-color: #E3FCBF">
+                                                        New
+                                                        <br class="break">
+                                                        {{ date_format(date_create($perHomeservice['resc_acc']), 'd/m/Y H:i') }}
+                                                    </td>
+                                                    <td>
+                                                      <div class="cancelReason" style="font-weight:bold;">
+                                                        <p>{{ $perHomeservice['resc_desc'] }}<p>
+                                                      </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade show p-3" id="tabs-cancelhs" role="tabpane2" aria-labelledby="cancelhs-tab">
+                                <h5 class="mb-3">
+                                    Homeservice Data | Status Cancel Acc (Total: {{ sizeof($accDeleteHS) }})
+                                </h5>
+                                <div class="d-flex flex-wrap mt-4" style="align-items: center;">
+                                    <p>Terpilih : <span id="checkedPH" class="checkedPH"></span></p>
+                                    <div style="margin-left: auto;">
+                                        <form id="formSelectAllHomeServiceCancel" method="POST" action="{{ route('update_homeService') }}">
+                                            @csrf
+                                            <div class="form-group btn-action">
+                                                <div class="d-flex flex-wrap" style="justify-content: right;">
+                                                    <input type="hidden" name="acc_hs_type" value="cancelhs">
+                                                    <button type="submit" id="AccPH-cancelhs" class="btn btn-md btn-outline-success" name="status_acc" value="true">Approved All</button>
+                                                    <button type="submit" id="CancelPH-cancelhs" class="btn btn-md btn-outline-danger ml-2" name="status_acc" value="false">Reject All</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="table-responsive tableHS wrapper" style="border: 1px solid #ebedf2; padding-top: 0;">
+                                    <table class="table table-bordered">
+                                        <thead style="text-align: center; background-color: aliceblue;">
+                                            <tr>
+                                                <td class="text-center">
+                                                    <div class="form-group mb-0">
+                                                        <input type="checkbox" id="cancelhs" name="" value="true"
+                                                            class="form-control SelectAll_Dynamic checkBoxPH"
+                                                            style="position: relative; width: 16px; margin: auto;"/>
+                                                    </div>
+                                                </td>
+                                                <td>Schedule</td>
+                                                <td>Detail & Cancel Reason Home Service</td>
+                                                <td>Acc/Reject</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($accDeleteHS as $perHomeservice)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <div class="form-group">
+                                                            <input type="checkbox" name=""
+                                                                class="form-control checkBoxPH checkBoxHS"
+                                                                id="cancelhs"
+                                                                value="{{$perHomeservice['id']}}"
+                                                                style="position: relative; width: 16px; margin: auto;"/>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ date_format(date_create($perHomeservice['appointment']), 'd/m/Y H:i') }}</td>
+                                                    <td style="white-space: normal;">
+                                                      <div class="detailHs" style="border-bottom: 0.2px solid #2f2f2f">
+                                                        Type HS : {{ $perHomeservice['type_homeservices'] }}
+                                                        <br class="break">
+                                                        {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }}
+                                                        <br class="break">
+                                                        ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }})
+                                                        <br class="break">
+                                                      </div>
+        
+                                                      <br class="break">
+                                                      <div class="cancelReason" style="font-weight:bold;">
+                                                        <p>{{ $perHomeservice['cancel_desc'] }}<p>
+                                                      </div>
+                                                    </td>
+        
+                                                    <td style="text-align: center; white-space: normal;">
+                                                      @if(Auth::user()->inRole("head-admin"))
+                                                      <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                                                          @csrf
+                                                          <div class="form-group">
+                                                              <input type="hidden" name="acc_hs_type" value="cancelhs">
+                                                              <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                                                              <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $perHomeservice->id }}" />
+        
+                                                              <div style="text-align: center;">
+                                                                <p>Do you approved it ?</p>
+                                                              </div>
+        
+                                                              <div class="btn-action" style="text-align: center;">
+                                                                  <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                                                  <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                                                              </div>
+                                                          </div>
+                                                      </form>
+                                                      @else
+                                                        <a href="{{ route('admin_list_homeService', ["id_hs"=>$perHomeservice['id']]) }}">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                        </a>
+                                                      @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
 </div>
 @endcan
