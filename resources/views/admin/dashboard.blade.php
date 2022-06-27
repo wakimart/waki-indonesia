@@ -801,7 +801,7 @@
             </div>
         @endif
 
-        @if(Auth::user()->roles[0]["slug"] !== "area-manager")
+        @if(Gate::check('acc-view-home_service') == true)
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
@@ -842,6 +842,8 @@
                                 <h5 class="mb-3">
                                     Homeservice Data | Status Reschedule Acc (Total: {{ sizeof($accRescheduleHS) }})
                                 </h5>
+
+                                @if(Gate::check('acc-reschedule-home_service') == true)
                                 <div class="d-flex flex-wrap mt-4" style="align-items: center;">
                                     <p>Terpilih : <span id="checkedPH" class="checkedPH"></span></p>
                                     <div style="margin-left: auto;">
@@ -857,6 +859,8 @@
                                         </form>
                                     </div>
                                 </div>
+                                @endif
+
                                 <div class="table-responsive tableHS wrapper" style="border: 1px solid #ebedf2; padding-top: 0;">
                                     <table class="table table-bordered">
                                         <thead style="text-align: center; background-color: aliceblue;">
@@ -902,7 +906,7 @@
                                                     </td>
         
                                                     <td style="text-align: center; white-space: normal;" rowspan="2">
-                                                      @if(Auth::user()->inRole("head-admin"))
+                                                      @if(Gate::check('acc-reschedule-home_service') == true)
                                                       <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
                                                           @csrf
                                                           <div class="form-group">
@@ -948,6 +952,7 @@
                                 <h5 class="mb-3">
                                     Homeservice Data | Status Cancel Acc (Total: {{ sizeof($accDeleteHS) }})
                                 </h5>
+                                @if(Gate::check('acc-cancel-home_service') == true)
                                 <div class="d-flex flex-wrap mt-4" style="align-items: center;">
                                     <p>Terpilih : <span id="checkedPH" class="checkedPH"></span></p>
                                     <div style="margin-left: auto;">
@@ -963,6 +968,7 @@
                                         </form>
                                     </div>
                                 </div>
+                                @endif
                                 <div class="table-responsive tableHS wrapper" style="border: 1px solid #ebedf2; padding-top: 0;">
                                     <table class="table table-bordered">
                                         <thead style="text-align: center; background-color: aliceblue;">
@@ -1009,7 +1015,7 @@
                                                     </td>
         
                                                     <td style="text-align: center; white-space: normal;">
-                                                      @if(Auth::user()->inRole("head-admin"))
+                                                      @if(Gate::check('acc-cancel-home_service') == true)
                                                       <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
                                                           @csrf
                                                           <div class="form-group">

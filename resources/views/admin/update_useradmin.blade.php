@@ -498,6 +498,30 @@ $menu_item_page = "user";
                                             Delete Home Service
                                         </label>
                                     </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-view-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-view-home_service" />
+                                            View Acc Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-reschedule-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-reschedule-home_service" />
+                                            Reschedule Acc Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-cancel-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-cancel-home_service" />
+                                            Cancel Acc Home Service
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 

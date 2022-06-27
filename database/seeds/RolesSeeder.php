@@ -47,6 +47,7 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
 
@@ -226,6 +227,7 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
 
@@ -405,6 +407,7 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
 
@@ -578,6 +581,7 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
 
@@ -751,6 +755,7 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => false,
                 'delete-home_service' => false,
+                'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
 
@@ -924,6 +929,7 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => false,
                 'delete-home_service' => false,
+                'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
 
@@ -1097,6 +1103,7 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => false,
                 'delete-home_service' => false,
+                'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
 
