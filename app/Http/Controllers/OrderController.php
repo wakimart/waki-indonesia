@@ -323,8 +323,7 @@ class OrderController extends Controller
 
     public function admin_DetailOrder(Request $request)
     {
-        $branch = Branch::where('code', 'F00')->first();
-        $csos = Cso::where('branch_id', $branch->id)->orderBy('code')->get();
+        $csos = Cso::where('active', true)->orderBy('code')->get();
         $order = Order::where('code', $request['code'])->first();
         $csoDeliveryOrders = Cso::whereIn('id', json_decode($order['delivery_cso_id']) ?? [])->get();
         $order['district'] = $order->getDistrict();
@@ -540,6 +539,7 @@ class OrderController extends Controller
     public function updateStatusOrder(Request $request)
     {
         $order = Order::find($request->input('orderId'));
+        $dataBefore = Order::find($request->input('orderId'));
         $last_status_order = $order->status;
         $order->status = $request->input('status_order');
         
@@ -548,6 +548,22 @@ class OrderController extends Controller
             $order->delivery_cso_id = json_encode($request->delivery_cso_id);
         }        
         $order->save();
+
+        $order['image'] = json_encode($order['image']);
+        $dataBefore['image'] = json_encode($dataBefore['image']);
+
+        $user = Auth::user();
+        $historyUpdate['type_menu'] = "Order";
+        $historyUpdate['method'] = "Update Status";
+        $historyUpdate['meta'] = json_encode([
+            'user'=>$user['id'],
+            'createdAt' => date("Y-m-d h:i:s"),
+            'dataChange'=> array_diff(json_decode($order, true), json_decode($dataBefore,true))
+        ]);
+
+        $historyUpdate['user_id'] = $user['id'];
+        $historyUpdate['menu_id'] = $order->id;
+        $createData = HistoryUpdate::create($historyUpdate);
         
         return redirect()->back()->with('success', 'Status Order Berhasil Di Ubah');
     }

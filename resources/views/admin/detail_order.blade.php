@@ -4,6 +4,7 @@
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <style type="text/css">
     #intro {
@@ -347,27 +348,28 @@
                                 <hr>
                                 {{-- Pilih CSO Untuk Delivery --}}
                                 @if ($order['status'] == \App\Order::$status['2'])
-                                <table id="delivery-cso" class="table table-bordered table-hover m-0" style="font-size: 1em;">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Code</th>
-                                            <th>Name</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="checkbox-group required">
-                                        @foreach($csos as $cso)
-                                        <tr class="">
-                                            <td>
-                                                <input type="checkbox" name="delivery_cso_id[]" value="{{ $cso['id'] }}">
-                                            </td>
-                                            <td>{{$cso['code']}}</td>
-                                            <td>{{$cso['name']}}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                <div class="clearfix"></div>
+                                <div id="delivery-cso">
+                                    <div id="form-cso" class="row">
+                                        <div class="form-group mb-3 col-10">
+                                            <label>Select CSO Delivery</label>
+                                            <select id="delivery-cso-id" class="form-control delivery-cso-id" name="delivery_cso_id[]" style="width: 100%" required>
+                                                <option value="">Choose CSO Delivery</option>
+                                                @foreach ($csos as $cso)
+                                                <option value="{{ $cso['id'] }}">{{ $cso['code'] }} - {{ $cso['name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="text-center"
+                                            style="display: inline-block; float: right;">
+                                            <button id="tambah_cso"
+                                                title="Add Cso"
+                                                style="padding: 0.4em 0.7em;">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="tambahan_cso"></div>
+                                </div>
                                 @endif
                             </div>
                             <div class="modal-footer">
@@ -405,15 +407,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script>
     $(document).ready(function() {
+        $(".delivery-cso-id").select2({
+            theme: "bootstrap4",
+            placeholder: "Choose CSO Delivery"
+        });
         var statusOrder = "{{ $order['status'] }}";
         $(".btn-change-status-order").click(function(){
             statusOrder = $(this).attr('status-order');
             $('#delivery-cso').hide();
+            $('.delivery-cso-id').attr('disabled', true);
             $('#status-order').val(statusOrder);
             if (statusOrder == "{{\App\Order::$status['2']}}") {
                 $("#modal-change-status-question").html('Process This Order?');
             } else if (statusOrder == "{{\App\Order::$status['3']}}") {
                 $('#delivery-cso').show();
+                $('.delivery-cso-id').attr('disabled', false);
                 $("#modal-change-status-question").html('Delivery This Order? \n Choose CSO');
             } else if (statusOrder == "{{\App\Order::$status['4']}}") {
                 $("#modal-change-status-question").html('Success This Order?');
@@ -421,13 +429,39 @@
                 $("#modal-change-status-question").html('Reject This Order?');
             }
         });
-        $('#actionAdd').on('submit', function(event) {
-            if (statusOrder == "{{\App\Order::$status['3']}}") {
-                if ($('.checkbox-group.required :checkbox:checked').length == 0) {
-                    event.preventDefault();
-                    alert("You must check at least one CSO.");
-                }
-            }
+
+        $('#tambah_cso').click(function(e){
+            e.preventDefault();
+            strIsi = `
+                <div class="row form-cso">
+                    <div class="form-group mb-3 col-10">
+                        <label>Select CSO Delivery</label>
+                        <select class="form-control delivery-cso-id" name="delivery_cso_id[]" style="width: 100%" required>
+                            <option value="">Choose CSO Delivery</option>
+                            @foreach ($csos as $cso)
+                            <option value="{{ $cso['id'] }}">{{ $cso['code'] }} - {{ $cso['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="text-center"
+                        style="display: inline-block; float: right;">
+                        <button class="hapus_cso"
+                            title="Hapus CSO"
+                            style="padding: 0.4em 0.7em; background-color: red;">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>`;
+            $('#tambahan_cso').append(strIsi);
+            $(".delivery-cso-id").select2({
+                theme: "bootstrap4",
+                placeholder: "Choose CSO Delivery"
+            });
+        });
+
+        $(document).on("click", ".hapus_cso", function (e) {
+            e.preventDefault();
+            $(this).parents(".form-cso")[0].remove();
         });
     });
     
