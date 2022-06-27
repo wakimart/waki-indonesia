@@ -40,9 +40,11 @@ class CsoController extends Controller
         }
 
         if ($request->has('search')) {
-            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')
-                ->orWhere('code','LIKE', '%'.$request->search.'%')
-                ->orWhere('phone','LIKE', '%'.$request->search.'%');
+            $csos = $csos->where(function($query) use ($request) {
+                $query->where('name','LIKE', '%'.$request->search.'%')
+                    ->orWhere('code','LIKE', '%'.$request->search.'%')
+                    ->orWhere('phone','LIKE', '%'.$request->search.'%');
+            });
         }
 
         $csos = $csos->paginate(10);

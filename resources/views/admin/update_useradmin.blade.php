@@ -201,6 +201,9 @@ $menu_item_page = "user";
                                                 @endforeach
                                             </select>
                                             <div class="validation"></div>
+                                            <span class="invalid-feedback">
+                                                <strong></strong>
+                                            </span>
                                         </div>
 
                                         @if ($i == 0)
@@ -1630,7 +1633,7 @@ $menu_item_page = "user";
                         $("#actionUpdate").find("textarea[name=" + key + "]").addClass("is-invalid");
 
                         $("#actionUpdate").find("input[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
-                        $("#actionUpdate").find("select[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionUpdate").find("select[name=" + key + "]").siblings().find("strong").text(hasil['errors'][key]);
                         $("#actionUpdate").find("textarea[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
                     }
                 }
