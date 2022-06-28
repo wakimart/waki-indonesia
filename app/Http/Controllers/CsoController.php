@@ -40,9 +40,11 @@ class CsoController extends Controller
         }
 
         if ($request->has('search')) {
-            $csos = $csos->where('name','LIKE', '%'.$request->search.'%')
-                ->orWhere('code','LIKE', '%'.$request->search.'%')
-                ->orWhere('phone','LIKE', '%'.$request->search.'%');
+            $csos = $csos->where(function($query) use ($request) {
+                $query->where('name','LIKE', '%'.$request->search.'%')
+                    ->orWhere('code','LIKE', '%'.$request->search.'%')
+                    ->orWhere('phone','LIKE', '%'.$request->search.'%');
+            });
         }
 
         $csos = $csos->paginate(10);
@@ -57,7 +59,7 @@ class CsoController extends Controller
      */
     public function create()
     {
-        $branches = Branch::all()->sortBy("code");
+        $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
         $banks = Order::$Banks;
         return view('admin.add_cso', compact('branches', 'banks'));
     }
@@ -142,7 +144,7 @@ class CsoController extends Controller
     {
         if($request->has('id')){
             $csos = Cso::find($request->get('id'));
-            $branches = Branch::all()->sortBy("code");
+            $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
             $banks = Order::$Banks;
             return view('admin.update_cso', compact('branches', 'banks', 'csos'));
         }else{

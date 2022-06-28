@@ -201,6 +201,9 @@ $menu_item_page = "user";
                                                 @endforeach
                                             </select>
                                             <div class="validation"></div>
+                                            <span class="invalid-feedback">
+                                                <strong></strong>
+                                            </span>
                                         </div>
 
                                         @if ($i == 0)
@@ -547,6 +550,30 @@ $menu_item_page = "user";
                                                 type="checkbox"
                                                 id="delete-home_service" />
                                             Delete Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-view-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-view-home_service" />
+                                            View Acc Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-reschedule-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-reschedule-home_service" />
+                                            Reschedule Acc Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-cancel-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-cancel-home_service" />
+                                            Cancel Acc Home Service
                                         </label>
                                     </div>
                                 </div>
@@ -1657,7 +1684,7 @@ $menu_item_page = "user";
                         $("#actionUpdate").find("textarea[name=" + key + "]").addClass("is-invalid");
 
                         $("#actionUpdate").find("input[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
-                        $("#actionUpdate").find("select[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionUpdate").find("select[name=" + key + "]").siblings().find("strong").text(hasil['errors'][key]);
                         $("#actionUpdate").find("textarea[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
                     }
                 }

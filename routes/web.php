@@ -225,7 +225,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
     // Add Frontend CMS
     Route::post("/frontend-cms/store/album", "AlbumController@store")
         ->name("store_frontendcms_album");
-    Route::post("/frontend-cms/add/image", "FrontendCmsController@storeImageGallery")
+    Route::post("/frontend-cms/add/image", "AlbumController@addNewImageGallery")
         ->name("store_frontendcms_image");
     Route::post("/frontend-cms/add/video", "FrontendCmsController@storeVideoGallery")
         ->name("store_frontendcms_video");
@@ -416,6 +416,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //notif acc cancel hs
         Route::post("/accNotifHomeservice", "HomeServiceController@accNotif")
             ->name("acc_cancel_notif_homeservice");
+        //notif acc Reschedule hs
+        Route::post("/accRescNotifHomeservice", "HomeServiceController@accRescheduleNotif")
+            ->name("acc_reschedule_notif_homeservice");
 
         //Add Form home service
         Route::get('/', 'HomeServiceController@indexAdmin')
@@ -848,6 +851,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('delete_data_sourcing')
             ->middleware('can:delete-data_sourcing');
 
+        //Export XLS Data Sourcing
+        Route::get('/export_to_xls', 'DataSourcingController@export_to_xls')
+            ->name('export_data_sourcing')
+            ->middleware('can:browse-data_sourcing');
+
         // Form Import Data Sourcing
         Route::get('/import_data_sourcing', 'DataSourcingController@importDataSourcing')
             ->name('import_data_sourcing')
@@ -894,6 +902,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'DataTherapyController@destroy')
             ->name('delete_data_therapy')
             ->middleware('can:delete-data_therapy');
+        
+        //Export XLS Data Therapy
+        Route::get('/export_to_xls', 'DataTherapyController@export_to_xls')
+            ->name('export_data_therapy')
+            ->middleware('can:browse-data_therapy');
+
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {

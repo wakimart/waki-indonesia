@@ -7,22 +7,27 @@ $menu_item_second = "list_homeservice";
 @section('style')
 <link rel="stylesheet" href="{{ asset('css/admin/calendarorganizer.css?v=' . filemtime('css/admin/calendarorganizer.css')) }}">
 <style>
+    .hs-filter a {
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+    .hs-filter a.active {
+      background-color: #ffc107 !important;
+      color: white !important;
+    }
     .cjslib-day-indicator {
         color: #ffc107 !important;
         background-color: #1bcfb4 !important;
     }
-
     .cjslib-calendar.cjslib-size-small .cjslib-day > .cjslib-day-indicator {
         width: 24px;
         height: 24px;
     }
-
     .cjslib-calendar.cjslib-size-small .cjslib-day > .cjslib-indicator-type-numeric {
         font-size: 12px;
         font-weight: bolder;
         color: #ffffff !important;
     }
-
     .btnappoint {
         display: inline-block;
         font-weight: 400;
@@ -36,36 +41,28 @@ $menu_item_second = "list_homeservice";
         -ms-user-select: none;
         user-select: none;
     }
-
     .titleAppoin {
         font-weight: bolder;
     }
-
     .timeContainerDiv{
         flex: 1 !important;
     }
-
     .paragrapContainerDiv{
         flex-direction: column;
         align-items: normal !important;
     }
-
     .iconContainerDiv{
         flex: 1 !important;
     }
-
     .cjslib-day-indicator {
         olor: #ffa000; background-color: #ffa000;
     }
-
     .cjslib-indicator-type-numeric {
         color: #ffffff;
     }
-
     .cjslib-day.cjslib-day-today > .cjslib-day-num {
         border-color: #ffa000 !important;
     }
-
     .table-bordered th, .table-bordered td {
         border: 1px solid darkgray !important;
     }
@@ -674,6 +671,17 @@ $menu_item_second = "list_homeservice";
 
                         <br>
 
+                        <div class="hs-filter">
+                          <ul class="nav nav-tabs">
+                            <li class="nav-item filter-hs-all">
+                              <a class="nav-link active" href="#" data-id="all">All (<span id="data-all-count">{{ $currentDayData['all']['count'] }}</span>)</a>
+                            </li>
+                            <li class="nav-item filter-hs-res">
+                              <a class="nav-link" href="#" data-id="reschedule">Reschedule (<span id="data-reschedule-count">{{ $currentDayData['reschedule']['count'] }}</span>)</a>
+                            </li>
+                          </ul>
+                        </div>
+
                         <div class="col-xs-12 col-sm-12 col-md-12"
                             id="organizerContainer"
                             style="padding: 0; float: left;">
@@ -684,205 +692,29 @@ $menu_item_second = "list_homeservice";
                                     </span>
                                 </div>
                                 <div class="cjslib-rows" id="organizerContainer-list-container">
-                                    <?php if (!$currentMonthDataCount): ?>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="text-align: center;">
-                                                            No.
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            Appointment
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            Detail
-                                                        </th>
-                                                        <th colspan="4" style="text-align: center;">
-                                                            Action
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="appointment-data">
-                                                    <ol class="cjslib-list"
-                                                        id="organizerContainer-list">
-                                                        <div class="cjslib-list-placeholder">
-                                                            <li style="text-align:center; margin-top: 1em;">
-                                                                No appointments on this day.
-                                                            </li>
-                                                        </div>
-                                                    </ol>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    <?php else: ?>
-                                        <?php
-                                        if (Auth::user()->roles[0]["slug"] === "admin-management") {
-                                            $isAdminManagement = true;
-                                        } else {
-                                            $isAdminManagement = false;
-                                        }
-                                        ?>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="text-align: center;">
-                                                            No.
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            Appointment
-                                                        </th>
-                                                        <th style="text-align: center;">
-                                                            Detail
-                                                        </th>
-                                                        <th colspan="4"
-                                                            style="text-align: center;">
-                                                            Action
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="appointment-data">
-                                                    <?php $i = 1; ?>
-                                                    <?php foreach ($currentDayData as $dayData): ?>
-                                                        <tr>
-                                                            <td style="text-align: center">
-                                                                <?php echo $i; ?>
-                                                            </td>
-                                                            <td style="text-align: center">
-                                                                <?php
-                                                                $time = new DateTime($dayData->appointment);
-                                                                echo $time->format("H:i");
-                                                                ?>
-                                                            </td>
-                                                            <td>
-                                                                <?php if (!$isAdminManagement): ?>
-                                                                    <p class="titleAppoin">
-                                                                        <?php
-                                                                        echo '<a href="'
-                                                                            . route('homeServices_success')
-                                                                            . '?code='
-                                                                            . $dayData->hs_code
-                                                                            . '" target="_blank">';
-                                                                        echo $dayData->hs_code;
-                                                                        echo '</a>';
-                                                                        ?>
-                                                                    </p>
-                                                                <?php endif; ?>
-                                                                <p class="descAppoin">
-                                                                    <?php
-                                                                    if (!$isAdminManagement) {
-                                                                        echo $dayData->customer_name
-                                                                            . ' - '
-                                                                            . $dayData->customer_phone;
-                                                                    }
-                                                                    ?>
-                                                                    <br>
-                                                                    <?php
-                                                                    echo 'Branch: '
-                                                                        . $dayData->branch_code
-                                                                        . ' - '
-                                                                        . $dayData->branch_name;
-                                                                    ?>
-                                                                    <br>
-                                                                    <?php
-                                                                    echo 'CSO: ' . $dayData->cso_name;
-                                                                    ?>
-                                                                    <br>
-                                                                    <?php
-                                                                    if (!$isAdminManagement) {
-                                                                        echo 'Created at: ' . $dayData->created_at;
-                                                                    }
-                                                                    ?>
-                                                                    <br>
-                                                                    <?php
-                                                                    if (!$isAdminManagement) {
-                                                                        echo 'Last update: ' . $dayData->updated_at;
-                                                                    }
-                                                                    ?>
-                                                                </p>
-                                                            </td>
-                                                            <?php if (!$isAdminManagement): ?>
-                                                                <td style="text-align: center">
-                                                                    <?php
-                                                                    if (Gate::check('detail-home_service')) {
-                                                                        echo '<button '
-                                                                        . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
-                                                                        . 'type="button" '
-                                                                        . 'data-toggle="modal" '
-                                                                        . 'data-target="#viewHomeServiceModal" '
-                                                                        . 'onclick="clickView(this)" '
-                                                                        . 'value="' . $dayData->hs_id . '">'
-                                                                        . '</button>';
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                                <td style="text-align: center">
-                                                                    <?php
-                                                                    if (Gate::check('edit-home_service')) {
-                                                                        echo '<button '
-                                                                            . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
-                                                                            . 'type="button" '
-                                                                            . 'data-toggle="modal" '
-                                                                            . 'data-target="#cashHomeServiceModal" '
-                                                                            . 'onclick="clickCash(this)" '
-                                                                            . 'value="' . $dayData->hs_id . '">'
-                                                                            . '</button>';
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                                <td style="text-align: center">
-                                                                    <?php
-                                                                    if (Gate::check('edit-home_service')) {
-                                                                        echo '<button '
-                                                                            . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
-                                                                            . 'type="button" '
-                                                                            . 'data-toggle="modal" '
-                                                                            . 'data-target="#editHomeServiceModal" ';
-
-                                                                        if (Auth::user()->roles[0]["slug"] === "cso") {
-                                                                            echo 'data-cso="true" ';
-                                                                        } else {
-                                                                            echo 'data-cso="false" ';
-                                                                        }
-
-                                                                        echo 'onclick="clickEdit(this)" '
-                                                                            . 'value="' . $dayData->hs_id . '">'
-                                                                            . '</button>';
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                                <td style="text-align: center">
-                                                                    <?php
-                                                                    if (
-                                                                        Gate::check('delete-home_service')
-                                                                        && $dayData->role_slug !== "admin"
-                                                                        && $dayData->role_slug !== "head-admin"
-                                                                    ) {
-                                                                        echo '<button '
-                                                                            . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
-                                                                            . 'type="button" '
-                                                                            . 'data-toggle="modal" '
-                                                                            . 'data-target="#deleteHomeServiceModal" '
-                                                                            . 'onclick="clickCancel(this)" '
-                                                                            . 'value="' . $dayData->hs_id . '">'
-                                                                            . '</button>';
-                                                                    }
-                                                                    ?>
-                                                                </td>
-                                                            <?php else: ?>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                            <?php endif; ?>
-                                                        </tr>
-                                                        <?php $i++; ?>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    <?php endif; ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align: center;">
+                                                        No.
+                                                    </th>
+                                                    <th style="text-align: center;">
+                                                        Appointment
+                                                    </th>
+                                                    <th style="text-align: center;">
+                                                        Detail
+                                                    </th>
+                                                    <th colspan="4"
+                                                        style="text-align: center;">
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="appointment-data-all"><?php echo $currentDayData['all']['data'] ?></tbody>
+                                            <tbody id="appointment-data-reschedule" style="display: none;"><?php echo $currentDayData['reschedule']['data'] ?></tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1273,32 +1105,17 @@ $menu_item_second = "list_homeservice";
                                 style="text-transform: uppercase;" />
                             <div class="validation" id="validation_cso2"></div>
                         </div>
-
-                        <br>
-
-                        <h5>Waktu Home Service</h5>
-                        <div class="form-group">
-                            <input type="date"
-                                class="form-control"
-                                name="date"
-                                id="edit-date"
-                                placeholder="Tanggal Janjian"
-                                required
-                                data-msg="Mohon Isi Tanggal" />
-                            <div class="validation"></div>
-                        </div>
-                        <div class="form-group">
-                            <input type="time"
-                                class="form-control"
-                                name="time"
-                                id="edit-time"
-                                placeholder="Jam Janjian"
-                                required
-                                data-msg="Mohon Isi Jam" />
-                            <div class="validation"></div>
-                        </div>
                     </div>
                     <div class="modal-footer">
+                        <button type="button"
+                            id="edit-reschedule"
+                            class="btn btn-gradient-info mr-2"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                            data-toggle="modal"
+                            data-target="#rescheduleHomeServiceModal">
+                            Reschedule
+                        </button>
                         <button id="btn-edit"
                             type="submit"
                             class="btn btn-gradient-primary mr-2">
@@ -1315,6 +1132,86 @@ $menu_item_second = "list_homeservice";
         </div>
     </div>
     <!-- End Modal Edit -->
+
+    <!-- Modal Reschedule -->
+    <div class="modal fade"
+        id="rescheduleHomeServiceModal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5 style="text-align: center;">
+                        Are you sure to Share Acc to Reschedule this appointment?
+                    </h5>
+                    <br>
+                    <h5>Waktu Home Service</h5>
+                    <div class="form-group">
+                        <input type="hidden" id="edit-date-old" value="">
+                        <input type="date"
+                            class="form-control"
+                            form="frmReschedule"
+                            name="date"
+                            id="edit-date"
+                            placeholder="Tanggal Janjian"
+                            required
+                            data-msg="Mohon Isi Tanggal" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" id="edit-time-old" value="">
+                        <input type="time"
+                            class="form-control"
+                            form="frmReschedule"
+                            name="time"
+                            id="edit-time"
+                            placeholder="Jam Janjian"
+                            required
+                            data-msg="Mohon Isi Jam" />
+                        <div class="validation"></div>
+                    </div>
+
+                    <textarea class="form-control mt-3"
+                        form="frmReschedule"
+                        name="reschedule_desc"
+                        id="reschedule_desc"
+                        rows="5"
+                        required
+                        placeholder="Reschedule Description (Alasan Reschedule)"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <form id="frmReschedule"
+                        method="post"
+                        action="{{ route("acc_reschedule_notif_homeservice") }}">
+                        @csrf
+                        <input type="hidden" name="id" id="acc-reschedule-homeservice-id" value="-" />
+                        <input type="hidden"
+                            name="url"
+                            value="{{ url()->full() }}" />
+                        <button type="submit"
+                            class="btn btn-gradient-success mr-2">
+                            Yes
+                        </button>
+                    </form>
+                    <button type="button"
+                        data-dismiss="modal"
+                        class="btn btn-light">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Reschedule -->
 
     <!-- Modal Delete -->
     <div class="modal fade"
@@ -1581,6 +1478,21 @@ $menu_item_second = "list_homeservice";
 
 @section('script')
 <script type="application/javascript">
+$(document).ready(function(){
+   $('.hs-filter a').on("click", function(event) {
+      event.preventDefault();
+      $('.nav-link.active').not(this).removeClass('active');
+      $(this).toggleClass('active');
+      var dataId = $(this).attr('data-id');
+      if (dataId == "all") {
+        $("#appointment-data-reschedule").hide();
+        $("#appointment-data-all").show();
+      } else if (dataId == 'reschedule') {
+        $("#appointment-data-all").hide();
+        $("#appointment-data-reschedule").show();
+      }
+   });
+});
 
 $(document).ready(function(){
     //load modal Acc Cancel HS
@@ -1590,6 +1502,13 @@ $(document).ready(function(){
         clickView({{$_GET['id_detail_hs']}});
     @endif
     //end load modal Acc Cancel HS
+
+    $('#frmReschedule').on('submit', function(event){
+        if ($("#edit-date-old").val() == $("#edit-date").val() && $("#edit-time-old").val() == $("#edit-time").val()) {
+            event.preventDefault();
+            alert("Please change reschedule date and time");
+        }
+    });
 });
 
 {{-- Mendapatkan CSRF Token --}}
@@ -1811,9 +1730,12 @@ function changeDate(click) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        return response.text();
+        return response.json();
     }).then(function (response) {
-        document.getElementById("appointment-data").innerHTML = response;
+        document.getElementById("data-all-count").innerHTML = response['msg']['all']['count'];
+        document.getElementById("appointment-data-all").innerHTML = response['msg']['all']['data'];
+        document.getElementById("data-reschedule-count").innerHTML = response['msg']['reschedule']['count'];
+        document.getElementById("appointment-data-reschedule").innerHTML = response['msg']['reschedule']['data'];
 
         const getDate = new Date(
             Date.parse(
@@ -1895,7 +1817,7 @@ function clickView(btn) {
         document.getElementById("view-cso2").innerHTML = result.cso2_code_name;
         document.getElementById("view-date").innerHTML = dateString;
         document.getElementById("view-time").innerHTML = timeString;
-        
+
         @if(Gate::check('add-service'))
             if (result.technician_schedule) {
                 document.getElementById("create_technician_schedule").style.display = 'none';
@@ -1926,6 +1848,8 @@ function clickView(btn) {
 
 {{-- Edit detail home service --}}
 function clickEdit(btn) {
+    document.getElementById("edit-reschedule").style.display = "none";
+
     const URL = "<?php echo route('edit_homeService'); ?>";
 
     fetch(
@@ -1947,6 +1871,13 @@ function clickEdit(btn) {
         const result = response.result;
 
         document.getElementById("edit-id").value = btn.value;
+        if (result.is_acc_resc == true) {
+            document.getElementById("acc-reschedule-homeservice-id").value = null;
+            document.getElementById("edit-reschedule").style.display = "none";
+        } else {
+            document.getElementById("acc-reschedule-homeservice-id").value = btn.value;
+            document.getElementById("edit-reschedule").style.display = "inline-block";
+        }
 
         const editTypeCustomer = document.getElementById("type_customer");
         for (let i = 0; i < editTypeCustomer.options.length; i++) {
@@ -2107,11 +2038,13 @@ function clickEdit(btn) {
             + "-"
             + ("0" + (appointmentDate.getDate())).slice(-2);
         document.getElementById("edit-date").value = dateString;
+        document.getElementById("edit-date-old").value = dateString;
 
         const timeString = ("0" + (appointmentDate.getHours())).slice(-2)
             + ":"
             + ("0" + (appointmentDate.getMinutes())).slice(-2);
         document.getElementById("edit-time").value = timeString;
+        document.getElementById("edit-time-old").value = timeString;
     }).catch(function (error) {
         console.error(error);
     });

@@ -120,7 +120,8 @@ class DashboardController extends Controller
         //                 ->orderBy("updated_at", "desc")
         //                 ->get();
 
-        //khusus untuk acc delete HS
+        //khusus untuk acc reschedule & delete HS
+        $accRescheduleHS = HomeService::where([['active', true], ['is_acc_resc', true]])->orderBy("updated_at", "desc")->get();
         $accDeleteHS = HomeService::where([['active', true], ['is_acc', true]])->orderBy("updated_at", "desc")->get();
 
         return view(
@@ -132,6 +133,7 @@ class DashboardController extends Controller
                 "references",
                 "refSouvenirs",
                 "personalHomecares",
+                "accRescheduleHS",
                 "accDeleteHS"
             )
         );

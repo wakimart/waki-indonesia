@@ -54,7 +54,10 @@ class UserAdminController extends Controller
     public function create()
     {
         $roles = Role::all();
-        $csos = Cso::all();
+        $csos = Cso::from('csos as cs')
+            ->select('cs.*')
+            ->leftJoin('users as u', 'cs.id', 'u.cso_id')
+            ->whereNull('u.id')->get();
         $branches = Branch::all();
         return view('admin.add_useradmin', compact('roles', 'csos', 'branches'));
     }
@@ -75,6 +78,16 @@ class UserAdminController extends Controller
             ],
             'password' => 'required|string|min:6|confirmed',
             'role' => 'required|exists:roles,id',
+            'cso_id' => 'nullable|unique:users,cso_id',
+            'branch_0' => ['sometimes', function ($attribute, $value, $fail) use ($request){
+                if ($request->has('total_branch') && $request->total_branch === "1") {
+                    $branch_idCheck = User::where('branches_id', json_encode((array) $value))
+                        ->orWhere('branches_id', "[$value]")->first();         
+                    if ($branch_idCheck) {
+                        return $fail('The branches id has already been taken.');
+                    }
+                }
+            }]
         ]);
 
         if ($validator->fails()) {
@@ -164,7 +177,11 @@ class UserAdminController extends Controller
                             ->where('user_id', $request->get('id'))
                             ->get();
             $roles = Role::all();
-            $csos = Cso::all();
+            $csos = Cso::from('csos as cs')
+                ->select('cs.*')
+                ->leftJoin('users as u', 'cs.id', 'u.cso_id')
+                ->whereNull('u.id')
+                ->orWhere('cs.id', $users->cso_id)->get();
             $branches = Branch::all();
             return view('admin.update_useradmin', compact('users', 'roles', 'role_users', 'csos', 'branches'));
         }else{
@@ -187,6 +204,18 @@ class UserAdminController extends Controller
                 'required',
                 Rule::unique('users')->whereNot('id', $request->get('id'))->where('active', 1),
             ],
+            'cso_id' => 'nullable|unique:users,cso_id,'.$request->id,
+            'branch_0' => ['sometimes', function ($attribute, $value, $fail) use ($request){
+                if ($request->has('total_branch') && $request->total_branch === "1") {
+                    $branch_idCheck = User::where(function($query) use ($value) {
+                            $query->where('branches_id', json_encode((array) $value))
+                                ->orWhere('branches_id', "[$value]");
+                        })->where('id', '!=', $request->id)->first();         
+                    if ($branch_idCheck) {
+                        return $fail('The branches id has already been taken.');
+                    }
+                }
+            }]
         ]);
 
         if ($validator->fails()) {
@@ -196,7 +225,7 @@ class UserAdminController extends Controller
             for ($i = 0; $i < count($arr_Keys); $i++) {
                 $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
             }
-            return response()->json(['errors' => $arr_Errors]);
+            return response()->json(['errors' => $arr_Hasil]);
         }else{
             $data = $request->only('name', 'username');
             $data['name'] = strtoupper($data['name']);

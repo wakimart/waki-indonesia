@@ -119,6 +119,15 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-home_service', function ($user) {
             return $user->hasAccess(['delete-home_service']);
         });
+        Gate::define('acc-view-home_service', function ($user) {
+            return $user->hasAccess(['acc-view-home_service']);
+        });
+        Gate::define('acc-reschedule-home_service', function ($user) {
+            return $user->hasAccess(['acc-reschedule-home_service']);
+        });
+        Gate::define('acc-cancel-home_service', function ($user) {
+            return $user->hasAccess(['acc-cancel-home_service']);
+        });
 
         //-- CSO --//
         Gate::define('add-cso', function ($user) {

@@ -8,7 +8,6 @@
     <meta name="keywords" content="waki, waki indonesia, waki indo, waki-indo, waki-indonesia, waki asia, waki ecommerce, waki shop" />
 		<meta name="description" content="Waki Indonesia WAKi International Group, Bukan Janji tapi Pasti!">
 
-
 	  <!--justicon-->
 	  <link rel="apple-touch-icon" sizes="57x57" href="{{asset('sources/icon/apple-icon-57x57.png')}}">
 	  <link rel="apple-touch-icon" sizes="60x60" href="{{asset('sources/icon/apple-icon-60x60.png')}}">
@@ -74,16 +73,6 @@
 	<!-- End Google Tag Manager (noscript) -->
 	<!--==========================Header============================-->
 	<header id="header" class="fixed-top header-transparent">
-	  <!-- <div id="topbar">
-	    <div class="container">
-	      <div class="social-links">
-	        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-	        <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
-	        <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
-	        <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
-	      </div>
-	    </div>
-	  </div> -->
 	  <div class="container">
 
 	      <div class="logo float-left">
@@ -106,18 +95,19 @@
 	          @endif
 
 						@if(Utils::$lang=='id' || Utils::$lang=='eng')
-	          <li class="drop-down"><a href="">Produk</a>
+	          <li class="drop-down"><span class="mm">Produk<i class="fa fa-angle-down"></i></span>
 	            <ul>
 								@foreach (App\CategoryProduct::all() as $categoryProduct)
 								<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
 									@if( ! $categoryProduct->product->isEmpty())
+										<span class="arrow text-white"><i class="fa fa-angle-down dd"></i></span>
 										<ul>
 											@foreach($categoryProduct->productIndex as $product)
 												<li><a href="{{route('single_product',['id'=>$product->id])}}">{{ $product->code }}</a></li>
 											@endforeach
 										</ul>
 									@endif
-								  </li>
+								</li>
 								@endforeach
 	            </ul>
 	          </li>
@@ -338,8 +328,7 @@
 
   	<!-- JavaScript Libraries -->
   	<script src="{{asset('css/lib/jquery/jquery.min.js')}}"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-	{{-- <script src="{{asset('css/lib/owlcarousel/owl.carousel.min.js')}}"></script> --}}
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
   	<script src="{{asset('css/lib/jquery/jquery-migrate.min.js')}}"></script>
   	<script src="{{asset('css/lib/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
   	<script src="{{asset('css/lib/easing/easing.min.js')}}"></script>
