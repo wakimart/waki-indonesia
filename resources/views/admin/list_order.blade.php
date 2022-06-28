@@ -469,22 +469,26 @@ $menu_item_second = "list_order";
                                             </td>
                                         @endcan
                                         @can('edit-order')
-                                            <td {{-- rowspan="{{ $totalProduct }}" --}}
-                                                style="text-align: center;">
-                                                <a href="{{ route('edit_order', ['id' => $order['id']]) }}">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
-                                                </a>
-                                            </td>
+                                            @if($order['status'] == 'new' || Auth::user()->inRole("head-admin"))
+                                                <td {{-- rowspan="{{ $totalProduct }}" --}}
+                                                    style="text-align: center;">
+                                                    <a href="{{ route('edit_order', ['id' => $order['id']]) }}">
+                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                                                    </a>
+                                                </td>
+                                            @endif
                                         @endcan
                                         @can('delete-order')
-                                            <td style="text-align: center;">
-                                                <button value="{{ route('delete_order', ['id' => $order['id']])}}"
-                                                    data-toggle="modal"
-                                                    data-target="#deleteDoModal"
-                                                    class="btn-delete">
-                                                    <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
-                                                </button>
-                                            </td>
+                                            @if($order['status'] == 'new' || Auth::user()->inRole("head-admin"))
+                                                <td style="text-align: center;">
+                                                    <button value="{{ route('delete_order', ['id' => $order['id']])}}"
+                                                        data-toggle="modal"
+                                                        data-target="#deleteDoModal"
+                                                        class="btn-delete">
+                                                        <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
+                                                    </button>
+                                                </td>
+                                            @endif
                                         @endcan
                                     </tr>
                                     @php $first = true; @endphp
