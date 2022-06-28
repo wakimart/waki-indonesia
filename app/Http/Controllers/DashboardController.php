@@ -58,6 +58,7 @@ class DashboardController extends Controller
         $order = Order::select(DB::raw("SUM(total_payment) AS total_payment"))
         ->whereBetween("orderDate", [$startMonth, $endMonth])
         ->where("active", true)
+        ->whereIn('status', ['process', 'delivery', 'success'])
         ->first();
 
         $homeServiceToday = HomeService::select(DB::raw("COUNT(id) AS count"))
