@@ -44,6 +44,10 @@
         font-size: 14px !important;
         width: 100% !important;
     }
+    .select2-results__options{
+        max-height: 15em;
+        overflow-y: auto;
+    }
 </style>
 @endsection
 
@@ -98,7 +102,7 @@
                         <td>Product Name</td>
                         <td>Quantity</td>
                     </thead>
-                    
+
                     @foreach(json_decode($order['product'], true) as $ProductPromo)
                         <tr>
                             @if(is_numeric($ProductPromo['id']) && $ProductPromo['id'] < 8)
@@ -106,11 +110,11 @@
                             @else
                                 <td>{{ $ProductPromo['id'] }}</td>
                             @endif
-                            
+
                             <td>{{ $ProductPromo['qty'] }}</td>
                         </tr>
                     @endforeach
-                    
+
                     @if($order['old_product'] != null)
                         <thead style="background-color: #80808012 !important">
                             <td colspan="2">Old Product</td>
@@ -222,7 +226,7 @@
                         </tr>
                     </table>
                 @endif
-                
+
                 <table class="col-md-12">
                     <thead>
                         <td>Status Order</td>
@@ -249,7 +253,7 @@
                     @foreach ($csoDeliveryOrders as $csoDeliveryOrder)
                         <tr>
                             <td>{{ $csoDeliveryOrder['code'] }} - {{ $csoDeliveryOrder['name'] }}</td>
-                        </tr>    
+                        </tr>
                     @endforeach
                     @endif
                     @if (Gate::check('change-status_order'))
@@ -257,23 +261,23 @@
                             <td>
                                 <div class="form-group row justify-content-center">
                                     @if ($order['status'] == \App\Order::$status['1'] && Gate::check('change-status_order_process'))
-                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['2']}}" 
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['2']}}"
                                         class="btn btn-gradient-success mr-2 btn-lg btn-change-status-order">
                                         Process Order
                                     </button>
                                     @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_delivery'))
-                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}" 
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}"
                                         class="btn btn-gradient-warning mr-2 btn-lg btn-change-status-order">
                                         Delivery Order
                                     </button>
                                     @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_success'))
-                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['4']}}" 
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['4']}}"
                                         class="btn btn-gradient-primary mr-2 btn-lg btn-change-status-order">
                                         Success Order
                                     </button>
                                     @endif
                                     @if (($order['status'] == \App\Order::$status['1'] || $order['status'] == \App\Order::$status['2']) && Gate::check('change-status_order_reject'))
-                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['5']}}" 
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['5']}}"
                                         class="btn btn-gradient-danger mr-2 btn-lg btn-change-status-order">
                                         Reject Order
                                     </button>
@@ -321,7 +325,7 @@
                   @endif
               </table>
             </div>
-            
+
             <!-- Modal Change Status Order -->
             <div class="modal fade"
                 id="modal-change-status"
@@ -409,7 +413,8 @@
     $(document).ready(function() {
         $(".delivery-cso-id").select2({
             theme: "bootstrap4",
-            placeholder: "Choose CSO Delivery"
+            placeholder: "Choose CSO Delivery",
+            dropdownParent: $('#modal-change-status .modal-body')
         });
         var statusOrder = "{{ $order['status'] }}";
         $(".btn-change-status-order").click(function(){
@@ -455,7 +460,8 @@
             $('#tambahan_cso').append(strIsi);
             $(".delivery-cso-id").select2({
                 theme: "bootstrap4",
-                placeholder: "Choose CSO Delivery"
+                placeholder: "Choose CSO Delivery",
+                dropdownParent: $('#modal-change-status .modal-body')
             });
         });
 
@@ -464,6 +470,6 @@
             $(this).parents(".form-cso")[0].remove();
         });
     });
-    
+
 </script>
 @endsection
