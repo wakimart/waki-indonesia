@@ -211,7 +211,7 @@
                                                         <td style="white-space: normal;">
                                                             {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
-                                                            ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
+                                                            ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }} - {{ $personalHomecare->cso['name'] }})
 
                                                             @if ($keyNya == "extend_acc" && $personalHomecare['is_extend'] && Gate::check('acc-extend-personalhomecare'))
                                                             <br class="break">
@@ -406,7 +406,7 @@
                                                         <br class="break">
                                                         {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }}
                                                         <br class="break">
-                                                        ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }})
+                                                        ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }} - {{ $perHomeservice->cso['name'] }})
                                                         <br class="break">
                                                       </div>
                                                     </td>
@@ -508,7 +508,7 @@
                                                         <br class="break">
                                                         {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }}
                                                         <br class="break">
-                                                        ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }})
+                                                        ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }}  - {{ $perHomeservice->cso['name'] }})
                                                         <br class="break">
                                                       </div>
         
@@ -779,7 +779,7 @@
                                                         <td>
                                                             {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
                                                             <br class="break">
-                                                            ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }})
+                                                            ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }} - {{ $personalHomecare->cso['name'] }})
                                                         </td>
                                                         <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['code'] }}</td>
                                                         <td style="text-align: center;">
@@ -900,7 +900,7 @@
                                                         <br class="break">
                                                         {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }}
                                                         <br class="break">
-                                                        ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }})
+                                                        ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }} - {{ $perHomeservice->cso['name'] }})
                                                         <br class="break">
                                                       </div>
                                                     </td>
@@ -1004,7 +1004,7 @@
                                                         <br class="break">
                                                         {{ $perHomeservice['name'] }} - {{ $perHomeservice['phone'] }}
                                                         <br class="break">
-                                                        ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }})
+                                                        ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }} - {{ $perHomeservice->cso['name'] }})
                                                         <br class="break">
                                                       </div>
         
