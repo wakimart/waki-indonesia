@@ -1180,6 +1180,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("reschedulePersonalHomecare", "PersonalHomecareController@reschedulePersonalHomecare")
             ->name("reschedule_personal_homecare");
     });
+
+    Route::view('faq_agreement', 'admin.faq_agreement')->name('faq_agreement');
 });
 
 Auth::routes();

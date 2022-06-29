@@ -467,7 +467,14 @@
                           <button id="nextAgreement" class="btn btn-block btn-gradient-primary btn-sm font-weight-medium auth-form-btn">
                               Setuju
                           </button>
-                          <button id="scndAgreement" type="submit" class="btn btn-block btn-gradient-primary btn-sm font-weight-medium auth-form-btn m-0" hidden>
+                          <form id="agreement-accept" method="post" action="{{ route('loginagreement') }}">
+                            @csrf
+                            <input type="hidden" name="userid" value="{{ $user->id }}">
+                            <input type="hidden" name="username" value="{{ $user->username }}">
+                            <input type="hidden" name="password" value="{{ $userInputPassword }}">
+                            <input type="hidden" name="agreement" value="1">
+                          </form>
+                          <button id="scndAgreement" type="submit" form="agreement-accept" class="btn btn-block btn-gradient-primary btn-sm font-weight-medium auth-form-btn m-0" hidden>
                               {{ __('LOGIN') }}
                           </button>
                         </div>
