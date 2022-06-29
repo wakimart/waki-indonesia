@@ -74,17 +74,15 @@ class LoginController extends Controller
             $user = $this->guard()->getLastAttempted();
 
             // Make sure the user is active
-            if ($user->active && $this->attemptLogin($request)) {
-
+            if ($user->active) {
                 // Make sure the user agreement is true
-
-
-
-
-
-
-                // Send the normal successful login response
-                return $this->sendLoginResponse($request);
+                if ($user->agreement && $this->attemptLogin($request)) {
+                    // Send the normal successful login response
+                    return $this->sendLoginResponse($request);
+                } else {
+                    $userInputPassword = $request->password;
+                    return view('auth.loginagreement', compact('user', 'userInputPassword'));
+                }
             } else {
                 // Increment the failed login attempts and redirect back to the
                 // login form with an error message.
@@ -103,6 +101,27 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
     
+    public function updateUserAgreement(Request $request)
+    {
+        if ($request->agreement) {
+            $user = User::find($request->userid);
+            $user->agreement = $request->agreement;
+            $user->save();
+    
+            // Send the normal successful login response
+            $this->attemptLogin($request);
+            return $this->sendLoginResponse($request);
+        } else {
+            // Increment the failed login attempts and redirect back to the
+            // login form with an error message.
+            $this->incrementLoginAttempts($request);
+            return redirect()
+                ->back()
+                ->withInput($request->only($this->username(), 'remember'))
+                ->withErrors(['username' => 'You must accept the agreement.']);
+        }
+    }
+
     //KHUSUS API REST
     public function loginApi(Request $request)
     {
