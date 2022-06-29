@@ -75,6 +75,14 @@ class LoginController extends Controller
 
             // Make sure the user is active
             if ($user->active && $this->attemptLogin($request)) {
+
+                // Make sure the user agreement is true
+
+
+
+
+
+
                 // Send the normal successful login response
                 return $this->sendLoginResponse($request);
             } else {
