@@ -212,6 +212,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
     //logout usernya
     Route::get('/logout', 'Auth\LoginController@logoutUser')->name('admin_logout');
     //show login agreement
+    Route::post('/loginagreement', 'Auth\LoginController@updateUserAgreement')->name('loginagreement');
     Route::view('/loginagreement', 'auth.loginagreement');
     //dashboard
     Route::get('/dashboard', 'DashboardController@index')
