@@ -360,32 +360,34 @@
                         </div>
 
                         <div id="secondAgreementContent" hidden>
-                          <div>
-                          </div>
                           <p style="line-height:150%"><b><span style="font-size:12.0pt;line-height:150%;font-family:
                           &quot;Times New Roman&quot;,serif">Peraturan Absen WAKi Reborn</span></b></p>
                           <p style="margin-left:18.0pt;text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif"><span>1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span>
                               </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Absen
                           <b>Pagi sebelum jam 10.00</b>,dengan
                           ketentuan sbb:</span></p>
-                          <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
-                              </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Harus
+                          <blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">
+                              <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
+                                  </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Harus
                           ada photo dan Voice Note dengan seluruh team lengkap</span></p>
-                          <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
-                              </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Apabila
+                              <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
+                                  </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Apabila
                           ada anggota team yang sudah dalam perjalanan tugas/kerja, maka mereka
                           photo+voice note sendiri dengan disertai keterangan</span></p>
+                          </blockquote>
                           <p style="margin-left:18.0pt;text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif"><span>2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span>
                               </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Absen
                           <b>Malam jam 21.00/sesuai dengan jam kerja
                           terkini</b>, dengan ketentuan sbb :</span></p>
-                          <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
-                              </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Harus
+                          <blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">
+                              <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
+                                  </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Harus
                           ada foto Team lengkap dan Voice Note</span></p>
-                          <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
-                              </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Apabila
+                              <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
+                                  </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Apabila
                           ada anggota team yang masih dirumah customer/dalam perjalanan pulang dari rumah
                           customer, maka mereka photo+voice note sendiri dengan disertai keterangan</span></p>
+                          </blockquote>
                           <p style="margin-left:18.0pt;text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif"><span>3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span>
                               </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Setiap
                           hari sebelum Photo Absensi, wajib post ulang jadwal kerja / Off bulanan</span></p>
@@ -413,19 +415,23 @@
                           line-height:107%;font-family:&quot;Times New Roman&quot;,serif">SANKSI CUTI/OFF DAY TANPA
                           ACC DARI ( <span style="color:red">PERUSAHAAN </span>) : </span>
                           </p>
-                          <blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"></blockquote>
-                          <ul style="list-style: square;">
-                              <li><span style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;">KOORDINATOR </span><b style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;">(Rp
-                          	2juta perhari) .</b></li>
-                              <li><span style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;">SUPERVISOR/WAKIL/senior lebih 3 bulan </span><b style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;">(Rp 1juta perhari)</b></li>
-                              <li><span style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;">Junior dibawah 3 bulan </span><b style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;">(Rp 500ribu perhari).</b></li>
-                              <li><span style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;">Pengajuan cuti adalah 1 (satu) bulan</span><b style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;"> sebelumnya.</b></li>
-                              <li><span style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;">Pergantian </span><b style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;">OFF
-                          	DAY</b><span style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;"> harus diajukan </span><b style="font-family: &quot;Times New Roman&quot;, serif; font-size: 12pt;">3 hari sebelumnya.</b></li>
-                          </ul>
-                          <blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"></blockquote>
-                          <blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"></blockquote>
-                          <blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"></blockquote>
+                          <blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">
+                              <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
+                                  </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">KOORDINATOR
+                          <b>(Rp 2juta perhari) .</b></span></p>
+                              <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
+                                  </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">SUPERVISOR/WAKIL/senior
+                          lebih 3 bulan <b>(Rp 1juta perhari)</b></span></p>
+                              <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
+                                  </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Junior
+                          dibawah 3 bulan <b>(Rp 500ribu perhari).</b></span></p>
+                              <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
+                                  </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Pengajuan
+                          cuti adalah 1 (satu) bulan<b> sebelumnya.</b></span></p>
+                              <p style="text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:Wingdings"><span>§<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp; </span></span>
+                                  </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Pergantian
+                          <b>OFF DAY</b> harus diajukan <b>3 hari sebelumnya.</b></span></p>
+                          </blockquote>
                           <p style="margin-left:18.0pt;text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif"><span>9.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span>
                               </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">Surat cuti harus ada tanda tangan<span>&nbsp; </span>Spv dan Koordinator, dan di ajukan 1 bulan
                               <span>&nbsp;&nbsp; </span>sebelumnya </span><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif">.</span></p>
