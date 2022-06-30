@@ -186,7 +186,7 @@
                     </thead>
                     <tr>
                         <td style="width:50%; text-align: center">{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
-                        <td style="width:50%; text-align: center">{{ $order->cso['code'] }}</td>
+                        <td style="width:50%; text-align: center">{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
                     </tr>
                 </table>
                 @if($order['customer_type'] != null)
