@@ -464,7 +464,7 @@
                           </a>
                         </div>
                         <div class="col-6 col-sm-3 col-md-2 p-1">
-                          <button id="nextAgreement" class="btn btn-block btn-gradient-primary btn-sm font-weight-medium auth-form-btn">
+                          <button id="nextAgreement" class="btn btn-block btn-gradient-primary btn-sm font-weight-medium auth-form-btn" disabled="">
                               Setuju
                           </button>
                           <form id="agreement-accept" method="post" action="{{ route('loginagreement') }}">
@@ -474,7 +474,7 @@
                             <input type="hidden" name="password" value="{{ $userInputPassword }}">
                             <input type="hidden" name="agreement" value="1">
                           </form>
-                          <button id="scndAgreement" type="submit" form="agreement-accept" class="btn btn-block btn-gradient-primary btn-sm font-weight-medium auth-form-btn m-0" hidden>
+                          <button id="scndAgreement" type="submit" form="agreement-accept" class="btn btn-block btn-gradient-primary btn-sm font-weight-medium auth-form-btn m-0" hidden disabled="">
                               {{ __('LOGIN') }}
                           </button>
                         </div>
@@ -493,10 +493,21 @@
     $('#nextAgreement').click(function(){
       $('#firstAgreementContent').attr("hidden",true);
       $('#secondAgreementContent').removeAttr('hidden');
-        $('#nextAgreement').attr("hidden",true);
-        $('#scndAgreement').removeAttr('hidden');
+      $('#nextAgreement').attr("hidden",true);
+      $('#scndAgreement').removeAttr('hidden');
+      $('.agreementContent').scrollTop(0);
     });
 
+    $('.agreementContent').scroll(function () {
+      if ($(this).scrollTop() > ($(this)[0].scrollHeight - $(this).height())*3/4) {            
+        if($('#secondAgreementContent').attr("hidden") == "hidden"){
+          $('#nextAgreement').removeAttr("disabled");
+        }
+        else{
+          $('#scndAgreement').removeAttr("disabled");
+        }
+      }
+    });
   });
 
 </script>
