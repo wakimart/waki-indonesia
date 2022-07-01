@@ -14,6 +14,7 @@ class Reference extends Model
         "province",
         "city",
         "active",
+        'online_signature'
     ];
 
     public function submission()

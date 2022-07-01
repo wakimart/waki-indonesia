@@ -1659,6 +1659,7 @@ class SubmissionController extends Controller
             "references.province AS province_id",
             "raja_ongkir__cities.province AS province",
             "references.city AS city_id",
+            "references.online_signature",
             DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city")
         )
         ->leftJoin(
