@@ -955,6 +955,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("/update/referensi", "SubmissionController@updateReferensi")
             ->name("update_submission_referensi");
 
+        Route::post("/update/status-referensi", "SubmissionController@updateStatusReferensi")
+            ->name("update_submission_status_referensi");
+
         Route::post("/update/takeaway", "SubmissionController@updateTakeaway")
             ->name("update_submission_takeaway");
 
