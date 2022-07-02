@@ -962,4 +962,21 @@ class AcceptanceController extends Controller
             }
         }
     }
+
+    /**
+     * add bill do
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function addBillOrder(Request $request, $id)
+    {
+        $acceptance = Acceptance::find($id);
+        $acceptance->bill_do = $request->bill_do;
+        $acceptance->update();
+        return redirect()->route('detail_acceptance_form', $id)->with('success', 'Bill DO successfully added');
+    }
 }

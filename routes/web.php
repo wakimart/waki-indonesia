@@ -1023,6 +1023,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/export-acceptance-to-xls-by-date', 'AcceptanceController@export_to_xls_byDate')
                 ->name('acceptance_export-to-xls-by-date');
 
+        // add bill do
+        Route::post("/bill_do/{id}", "AcceptanceController@addBillOrder")
+            ->name("add_bill_do");
+
     });
 
     Route::group(["prefix" => "upgrade", "middleware" => "auth"], function () {
