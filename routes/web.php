@@ -211,6 +211,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::post('/login', 'Auth\LoginController@login')->name('admin_login');
     //logout usernya
     Route::get('/logout', 'Auth\LoginController@logoutUser')->name('admin_logout');
+    //show login agreement
+    Route::post('/loginagreement', 'Auth\LoginController@updateUserAgreement')->name('loginagreement');
     //dashboard
     Route::get('/dashboard', 'DashboardController@index')
         ->name('dashboard');
@@ -953,6 +955,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("/update/referensi", "SubmissionController@updateReferensi")
             ->name("update_submission_referensi");
 
+        Route::post("/update/status-referensi", "SubmissionController@updateStatusReferensi")
+            ->name("update_submission_status_referensi");
+
         Route::post("/update/takeaway", "SubmissionController@updateTakeaway")
             ->name("update_submission_takeaway");
 
@@ -1181,6 +1186,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("reschedulePersonalHomecare", "PersonalHomecareController@reschedulePersonalHomecare")
             ->name("reschedule_personal_homecare");
     });
+
+    Route::view('faq_agreement', 'admin.faq_agreement')->name('faq_agreement');
 });
 
 Auth::routes();

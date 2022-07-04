@@ -191,6 +191,14 @@ if (isset($_GET["filter_type"])) {
                                                 }
                                             }
                                         }
+                                        elseif(strtoupper($submission->type) == "REFERENSI"){
+                                            if($submission->status == "new"){
+                                                $submission_done = "background-color: #cdedf7;";
+                                            }
+                                            elseif($submission->status == "rejected"){
+                                                $submission_done = "background-color: #ffdbdb;";
+                                            }
+                                        }
                                     @endphp
 
                                     <tr style="{{ $submission_done }}">
