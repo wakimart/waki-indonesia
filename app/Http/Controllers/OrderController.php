@@ -684,7 +684,7 @@ class OrderController extends Controller
         }
         $yesterdayDate = date('Y-m-d', strtotime("-1 days", strtotime($endDate)));
 
-        $query_total_sale_untilYesterday = "SELECT SUM(o.total_payment) 
+        $query_total_sale_untilYesterday = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.branch_id = b.id
             AND o.orderDate >= '$startDate'
@@ -692,7 +692,7 @@ class OrderController extends Controller
             AND (o.status = '" . Order::$status['2'] . "'
             OR o.status = '" . Order::$status['3'] . "' 
             OR o.status = '" . Order::$status['4'] . "')";
-        $query_total_sale_today = "SELECT SUM(o.total_payment) 
+        $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.branch_id = b.id
             AND o.orderDate = '$endDate'
@@ -724,7 +724,7 @@ class OrderController extends Controller
         }
         $yesterdayDate = date('Y-m-d', strtotime("-1 days", strtotime($endDate)));
 
-        $query_total_sale_untilYesterday = "SELECT SUM(o.total_payment) 
+        $query_total_sale_untilYesterday = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.cso_id = c.id
             AND o.orderDate >= '$startDate'
@@ -732,7 +732,7 @@ class OrderController extends Controller
             AND (o.status = '" . Order::$status['2'] . "'
             OR o.status = '" . Order::$status['3'] . "' 
             OR o.status = '" . Order::$status['4'] . "')";
-        $query_total_sale_today = "SELECT SUM(o.total_payment) 
+        $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.cso_id = c.id
             AND o.orderDate = '$endDate'
@@ -812,7 +812,7 @@ class OrderController extends Controller
         }
         $yesterdayDate = date('Y-m-d', strtotime("-1 days", strtotime($endDate)));
 
-        $query_total_sale_untilYesterday = "SELECT SUM(o.total_payment) 
+        $query_total_sale_untilYesterday = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.branch_id = b.id
             AND o.orderDate >= '$startDate'
@@ -820,7 +820,7 @@ class OrderController extends Controller
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
-        $query_total_sale_today = "SELECT SUM(o.total_payment) 
+        $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.branch_id = b.id
             AND o.orderDate = '$endDate'
@@ -854,7 +854,7 @@ class OrderController extends Controller
         }
         $yesterdayDate = date('Y-m-d', strtotime("-1 days", strtotime($endDate)));
 
-        $query_total_sale_untilYesterday = "SELECT SUM(o.total_payment) 
+        $query_total_sale_untilYesterday = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.cso_id = c.id
             AND o.orderDate >= '$startDate'
@@ -862,7 +862,7 @@ class OrderController extends Controller
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
-        $query_total_sale_today = "SELECT SUM(o.total_payment) 
+        $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.cso_id = c.id
             AND o.orderDate = '$endDate'
