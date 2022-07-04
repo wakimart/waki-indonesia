@@ -411,7 +411,7 @@ $menu_item_second = "list_acceptance_form";
                 </div>
             </div>
         @else
-            @if($acceptance->bill_do == "")
+            @if($acceptance->bill_do == "" && strtolower($acceptance['status']) != "rejected")
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">

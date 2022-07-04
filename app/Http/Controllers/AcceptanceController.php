@@ -977,6 +977,22 @@ class AcceptanceController extends Controller
         $acceptance = Acceptance::find($id);
         $acceptance->bill_do = $request->bill_do;
         $acceptance->update();
+
+        $historyAcceptance = [];
+        $user_id = Auth::user()["id"];
+        $historyAcceptance["type_menu"] = "Acceptance";
+        $historyAcceptance["method"] = "Update";
+        $historyAcceptance["meta"] = json_encode(
+            [
+                "user" => $user_id,
+                "createdAt" => date("Y-m-d H:i:s"),
+                "dataChange" => $acceptance->getChanges(),
+            ]
+        );
+        $historyAcceptance["user_id"] = $user_id;
+        $historyAcceptance["menu_id"] = $id;
+        HistoryUpdate::create($historyAcceptance);
+
         return redirect()->route('detail_acceptance_form', $id)->with('success', 'Bill DO successfully added');
     }
 }
