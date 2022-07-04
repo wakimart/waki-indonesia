@@ -222,7 +222,7 @@ if (
                                     <table class="table"
                                         style="table-layout: auto;">
                                         <thead>
-                                            <td colspan="14">Reference</td>
+                                            <td colspan="15">Reference</td>
                                         </thead>
                                         <thead style="background-color: #80808012 !important;">
                                             <tr>
@@ -402,7 +402,7 @@ if (
                                                         </button>
                                                     </td>
                                                     <td class="text-center">
-                                                        @if($reference->reference_souvenir->status == 'success' && $reference->reference_souvenir->delivery_status_souvenir == 'delivered' && $reference->online_signature == '')
+                                                        @if($reference->reference_souvenir->status == 'success' &&  $reference->online_signature == '')
                                                             <button class="btn" style="padding: 0" onclick="createSignature({{ $reference->id }})">
                                                                 <i class="mdi mdi-pencil-box-outline" style="font-size: 24px; color: #32a852;"></i>                                                
                                                             </button>

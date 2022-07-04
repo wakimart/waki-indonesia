@@ -810,7 +810,7 @@ class ReferenceController extends Controller
         DB::beginTransaction();
 
         try {
-            $reference = Reference::find($request->ref_id);            
+            $reference = Reference::find($request->ref_id);
             $filename = $request->ref_id . "-signature.png";
             $data_uri = explode(',', $request->online_signature);
             $encoded_image = $data_uri[1];
@@ -820,7 +820,27 @@ class ReferenceController extends Controller
             }
             file_put_contents('sources/online_signature/' . $filename, $decoded_image);
             $reference->online_signature = $filename;
+            $reference->reference_souvenir->delivery_status_souvenir = "delivered";
             $reference->save();
+
+            $reference_souvenir = $reference->reference_souvenir;
+            $reference_souvenir->delivery_status_souvenir = "delivered";
+            $reference_souvenir->save();
+
+            //history change
+            $user = Auth::user();
+            $historyUpdateSubmission = [];
+            $historyUpdateSubmission["type_menu"] = "Submission";
+            $historyUpdateSubmission["method"] = "Signature Reference";
+            $historyUpdateSubmission["meta"] = json_encode([
+                "user" => $user["id"],
+                "updatedAt" => date("Y-m-d H:i:s"),
+                "dataChange" => ["Delivery Status" => "delivered"],
+            ], JSON_THROW_ON_ERROR);
+
+            $historyUpdateSubmission["user_id"] = $user["id"];
+            $historyUpdateSubmission["menu_id"] = $reference->submission['id'];
+            HistoryUpdate::create($historyUpdateSubmission);
 
             DB::commit();
             return redirect($request->url)->with("success", "signature added successfully.");           
