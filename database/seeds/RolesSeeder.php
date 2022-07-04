@@ -36,6 +36,13 @@ class RolesSeeder extends Seeder
         		'edit-order' => true,
                 'delete-order' => true,
 
+                //Update Order Status
+                'change-status_order'=> true,
+                'change-status_order_process'=> true,
+                'change-status_order_delivery' => true,
+                'change-status_order_success' => true,
+                'change-status_order_reject' => true,
+
                 //Order Report
                 'browse-order_report' => true,
                 'browse-order_report_branch' => true,
@@ -47,6 +54,9 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => true,
+                'acc-reschedule-home_service' => true,
+                'acc-cancel-home_service' => true,
 
                 //CSO
                 'add-cso' => true,
@@ -213,6 +223,13 @@ class RolesSeeder extends Seeder
         		'edit-order' => true,
                 'delete-order' => true,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -224,6 +241,9 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => true,
+                'acc-reschedule-home_service' => false,
+                'acc-cancel-home_service' => false,
 
                 //CSO
                 'add-cso' => true,
@@ -390,6 +410,13 @@ class RolesSeeder extends Seeder
                 'edit-order' => true,
                 'delete-order' => true,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -401,6 +428,9 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => false,
+                'acc-reschedule-home_service' => false,
+                'acc-cancel-home_service' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -561,6 +591,13 @@ class RolesSeeder extends Seeder
                 'edit-order' => true,
                 'delete-order' => true,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+                
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -572,6 +609,9 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => false,
+                'acc-reschedule-home_service' => false,
+                'acc-cancel-home_service' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -732,6 +772,13 @@ class RolesSeeder extends Seeder
                 'edit-order' => false,
                 'delete-order' => false,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -743,6 +790,9 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => false,
                 'delete-home_service' => false,
+                'acc-view-home_service' => true,
+                'acc-reschedule-home_service' => true,
+                'acc-cancel-home_service' => true,
 
                 //CSO
                 'add-cso' => false,
@@ -903,6 +953,13 @@ class RolesSeeder extends Seeder
                 'edit-order' => false,
                 'delete-order' => false,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -914,6 +971,9 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => false,
                 'delete-home_service' => false,
+                'acc-view-home_service' => true,
+                'acc-reschedule-home_service' => false,
+                'acc-cancel-home_service' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -1074,6 +1134,13 @@ class RolesSeeder extends Seeder
                 'edit-order' => false,
                 'delete-order' => false,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -1085,6 +1152,9 @@ class RolesSeeder extends Seeder
                 'detail-home_service' => true,
                 'edit-home_service' => false,
                 'delete-home_service' => false,
+                'acc-view-home_service' => true,
+                'acc-reschedule-home_service' => false,
+                'acc-cancel-home_service' => false,
 
                 //CSO
                 'add-cso' => false,

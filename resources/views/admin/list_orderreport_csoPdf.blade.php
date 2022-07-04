@@ -54,10 +54,10 @@
                                 <td style="text-align:center;">{{ $key + 1 }}</td>
                                 <td>{{ date("d/m/Y", strtotime($order_report['orderDate'])) }}</td>
                                 <td>{{ $order_report['name'] }}</td>
-                                <td style="text-align:right;">Rp. {{ number_format($order_report['total_payment']) }}</td>
+                                <td style="text-align:right;">Rp. {{ number_format($order_report['down_payment']) }}</td>
                             </tr>
                             @php
-                                $totalPayment += $order_report['total_payment'];
+                                $totalPayment += $order_report['down_payment'];
                             @endphp
                         @endforeach
                         <tr class="text-right">

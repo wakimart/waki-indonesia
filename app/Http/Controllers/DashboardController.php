@@ -55,9 +55,10 @@ class DashboardController extends Controller
         $startToday = date("Y-m-d 00:00:00");
         $endToday = date("Y-m-d 23:59:59");
 
-        $order = Order::select(DB::raw("SUM(total_payment) AS total_payment"))
+        $order = Order::select(DB::raw("SUM(down_payment) AS total_payment"))
         ->whereBetween("orderDate", [$startMonth, $endMonth])
         ->where("active", true)
+        ->whereIn('status', ['process', 'delivery', 'success'])
         ->first();
 
         $homeServiceToday = HomeService::select(DB::raw("COUNT(id) AS count"))
@@ -119,7 +120,8 @@ class DashboardController extends Controller
         //                 ->orderBy("updated_at", "desc")
         //                 ->get();
 
-        //khusus untuk acc delete HS
+        //khusus untuk acc reschedule & delete HS
+        $accRescheduleHS = HomeService::where([['active', true], ['is_acc_resc', true]])->orderBy("updated_at", "desc")->get();
         $accDeleteHS = HomeService::where([['active', true], ['is_acc', true]])->orderBy("updated_at", "desc")->get();
 
         return view(
@@ -131,6 +133,7 @@ class DashboardController extends Controller
                 "references",
                 "refSouvenirs",
                 "personalHomecares",
+                "accRescheduleHS",
                 "accDeleteHS"
             )
         );

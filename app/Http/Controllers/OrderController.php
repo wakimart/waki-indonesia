@@ -210,6 +210,7 @@ class OrderController extends Controller
                     $idxImg++;
                 }
             }
+            $data['status'] = "new";
 
             $order = Order::create($data);
             DB::commit();
@@ -285,6 +286,10 @@ class OrderController extends Controller
             $orders = $orders->where('product', 'like', '%"id":"'.$request->filter_promo.'"%');
         }
 
+        if ($request->has('filter_status')) {
+            $orders = $orders->where('status', $request->filter_status);
+        }
+
         if ($request->has("filter_string")) {
             $filterString = $request->filter_string;
             $orders = $orders->where(
@@ -318,12 +323,14 @@ class OrderController extends Controller
 
     public function admin_DetailOrder(Request $request)
     {
+        $csos = Cso::where('active', true)->orderBy('code')->get();
         $order = Order::where('code', $request['code'])->first();
+        $csoDeliveryOrders = Cso::whereIn('id', json_decode($order['delivery_cso_id']) ?? [])->get();
         $order['district'] = $order->getDistrict();
         $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
         ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
-        return view('admin.detail_order', compact('order', 'historyUpdateOrder'));
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'csoDeliveryOrders'));
     }
 
     /**
@@ -529,6 +536,38 @@ class OrderController extends Controller
 
     }
 
+    public function updateStatusOrder(Request $request)
+    {
+        $order = Order::find($request->input('orderId'));
+        $dataBefore = Order::find($request->input('orderId'));
+        $last_status_order = $order->status;
+        $order->status = $request->input('status_order');
+        
+        // Save Delivery CSO
+        if ($order->status == Order::$status['3']) {
+            $order->delivery_cso_id = json_encode($request->delivery_cso_id);
+        }        
+        $order->save();
+
+        $order['image'] = json_encode($order['image']);
+        $dataBefore['image'] = json_encode($dataBefore['image']);
+
+        $user = Auth::user();
+        $historyUpdate['type_menu'] = "Order";
+        $historyUpdate['method'] = "Update Status";
+        $historyUpdate['meta'] = json_encode([
+            'user'=>$user['id'],
+            'createdAt' => date("Y-m-d h:i:s"),
+            'dataChange'=> array_diff(json_decode($order, true), json_decode($dataBefore,true))
+        ]);
+
+        $historyUpdate['user_id'] = $user['id'];
+        $historyUpdate['menu_id'] = $order->id;
+        $createData = HistoryUpdate::create($historyUpdate);
+        
+        return redirect()->back()->with('success', 'Status Order Berhasil Di Ubah');
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -645,15 +684,21 @@ class OrderController extends Controller
         }
         $yesterdayDate = date('Y-m-d', strtotime("-1 days", strtotime($endDate)));
 
-        $query_total_sale_untilYesterday = "SELECT SUM(o.total_payment) 
+        $query_total_sale_untilYesterday = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.branch_id = b.id
             AND o.orderDate >= '$startDate'
-            AND o.orderDate <= '$yesterdayDate'";
-        $query_total_sale_today = "SELECT SUM(o.total_payment) 
+            AND o.orderDate <= '$yesterdayDate'
+            AND (o.status = '" . Order::$status['2'] . "'
+            OR o.status = '" . Order::$status['3'] . "' 
+            OR o.status = '" . Order::$status['4'] . "')";
+        $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.branch_id = b.id
-            AND o.orderDate = '$endDate'";
+            AND o.orderDate = '$endDate'
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['4'] . "')";
 
         $order_reports = Branch::from('branches as b')
             ->select('b.*')
@@ -679,15 +724,21 @@ class OrderController extends Controller
         }
         $yesterdayDate = date('Y-m-d', strtotime("-1 days", strtotime($endDate)));
 
-        $query_total_sale_untilYesterday = "SELECT SUM(o.total_payment) 
+        $query_total_sale_untilYesterday = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.cso_id = c.id
             AND o.orderDate >= '$startDate'
-            AND o.orderDate <= '$yesterdayDate'";
-        $query_total_sale_today = "SELECT SUM(o.total_payment) 
+            AND o.orderDate <= '$yesterdayDate'
+            AND (o.status = '" . Order::$status['2'] . "'
+            OR o.status = '" . Order::$status['3'] . "' 
+            OR o.status = '" . Order::$status['4'] . "')";
+        $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.cso_id = c.id
-            AND o.orderDate = '$endDate'";
+            AND o.orderDate = '$endDate'
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['4'] . "')";
 
         $currentBranch = null;
         if ($request->has('filter_branch')) {
@@ -737,7 +788,12 @@ class OrderController extends Controller
             $order_reports->where('cso_id', $currentCso['id']);
         }
 
-        $order_reports = $order_reports->orderBy('orderDate', 'desc')->get();
+        $order_reports = $order_reports->where(function($query) {
+                $query->where('status', Order::$status['2'])
+                    ->orWhere('status', Order::$status['3'])
+                    ->orWhere('status', Order::$status['4']);
+            })
+            ->orderBy('orderDate', 'desc')->get();
         $countOrderReports = $order_reports->count();
 
         return view('admin.list_orderreport_cso', compact('startDate', 'endDate', 'branches', 'csos', 'currentBranch', 'currentCso', 'order_reports', 'countOrderReports'));
@@ -756,15 +812,21 @@ class OrderController extends Controller
         }
         $yesterdayDate = date('Y-m-d', strtotime("-1 days", strtotime($endDate)));
 
-        $query_total_sale_untilYesterday = "SELECT SUM(o.total_payment) 
+        $query_total_sale_untilYesterday = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.branch_id = b.id
             AND o.orderDate >= '$startDate'
-            AND o.orderDate <= '$yesterdayDate'";
-        $query_total_sale_today = "SELECT SUM(o.total_payment) 
+            AND o.orderDate <= '$yesterdayDate'
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['4'] . "')";
+        $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.branch_id = b.id
-            AND o.orderDate = '$endDate'";
+            AND o.orderDate = '$endDate'
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['4'] . "')";
 
         $order_reports = Branch::from('branches as b')
             ->select('b.*')
@@ -792,15 +854,21 @@ class OrderController extends Controller
         }
         $yesterdayDate = date('Y-m-d', strtotime("-1 days", strtotime($endDate)));
 
-        $query_total_sale_untilYesterday = "SELECT SUM(o.total_payment) 
+        $query_total_sale_untilYesterday = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.cso_id = c.id
             AND o.orderDate >= '$startDate'
-            AND o.orderDate <= '$yesterdayDate'";
-        $query_total_sale_today = "SELECT SUM(o.total_payment) 
+            AND o.orderDate <= '$yesterdayDate'
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['4'] . "')";
+        $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
             WHERE o.cso_id = c.id
-            AND o.orderDate = '$endDate'";
+            AND o.orderDate = '$endDate'
+            AND (o.status = '" . Order::$status['2'] . "' 
+            OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['4'] . "')";
 
         $currentBranch = null;
         if ($request->has('filter_branch')) {
@@ -851,7 +919,12 @@ class OrderController extends Controller
             $order_reports->where('cso_id', $currentCso['id']);
         }
 
-        $order_reports = $order_reports->orderBy('orderDate', 'desc')->get();
+        $order_reports = $order_reports->where(function($query) {
+                $query->where('status', Order::$status['2'])
+                    ->orWhere('status', Order::$status['3'])
+                    ->orWhere('status', Order::$status['4']);
+            })
+            ->orderBy('orderDate', 'desc')->get();
         $countOrderReports = $order_reports->count();
 
         if ($request->export_type == "print") {

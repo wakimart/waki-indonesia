@@ -19,6 +19,7 @@ class Submission extends Model
         "district",
         "type",
         "active",
+        "status",
     ];
 
     public function branch()

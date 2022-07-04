@@ -620,3 +620,11 @@
   </div>
 </li>
 @endif
+
+<li class="{{isset($menu_item_page) && $menu_item_page == 'faq_agreement'? 'active': '' }} nav-item">
+  <a class="nav-link" href="{{ route('faq_agreement') }}" >
+    <span class="menu-title">FaQ</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-account menu-icon"></i>
+  </a>
+</li>

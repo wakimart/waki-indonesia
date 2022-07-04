@@ -128,6 +128,10 @@ $menu_item_second = "list_acceptance_form";
         img {
             height: 150px;
         }
+
+        .billOrderButton {
+            margin-top: 0 !important;
+        }
     }
 
     @media (min-width: 768px) {
@@ -207,6 +211,7 @@ $menu_item_second = "list_acceptance_form";
                                         <td>Status</td>
                                         <td>Acceptance Code</td>
                                         <td>Input Date</td>
+                                        <td>Bill DO</td>
                                     </thead>
                                     <tr>
                                         <td style="text-align: center;">
@@ -222,6 +227,7 @@ $menu_item_second = "list_acceptance_form";
                                         <td>
                                             {{ date("d/m/Y", strtotime($acceptance['created_at'])) }}
                                         </td>
+                                        <td>{{ $acceptance->bill_do }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -405,6 +411,30 @@ $menu_item_second = "list_acceptance_form";
                 </div>
             </div>
         @else
+            @if($acceptance->bill_do == "" && strtolower($acceptance['status']) != "rejected")
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                          <div class="card-body">
+                            <div class="row justify-content-center">
+                                <h2>Bill Order Number</h2>
+                            </div>
+                            <form action="{{route('add_bill_do', $acceptance->id)}}" method="post">
+                                {{ csrf_field() }}
+                                <div class="row align-items-center justify-content-center">
+                                    <div class="col-6 pr-0">
+                                        <input type="text" name="bill_do" class="form-control ml-auto" style="width: 200px">
+                                    </div>
+                                    <div class="col-6 pl-0">
+                                        <button type="submit" class="btn btn-gradient-primary mr-2 btn-lg billOrderButton">Add Bill Order</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">

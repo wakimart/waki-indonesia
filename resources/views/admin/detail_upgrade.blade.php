@@ -129,6 +129,7 @@ $menu_item_second = "detail_upgrade_form";
 										<td>Status</td>
 										<td>Acc Code</td>
 										<td>Upgrade Date</td>
+										<td>Bill DO</td>
 									</thead>
 									<tr>
 										<td class="center">
@@ -159,6 +160,9 @@ $menu_item_second = "detail_upgrade_form";
 										</td>
 										<td class="center">
 											{{ date("d/m/Y", strtotime($upgrade->acceptance['upgrade_date'])) }}
+										</td>
+										<td class="center">
+											{{ $upgrade->acceptance->bill_do }}
 										</td>
 									</tr>
 								</table>

@@ -331,7 +331,7 @@ $menu_item_second = "list_approved";
                 title : '{{ $personalhomecare->personalHomecareProduct->code }}', 
                 description : '{{ $personalhomecare['name'] }}',
                 branch : '{{ $personalhomecare->branch->code }}',
-                cso : '{{ $personalhomecare->cso->code }}',
+                cso : '{{ $personalhomecare->cso->code }} - {{ $personalhomecare->cso->name }}',
                 status : '{{ strtoupper($personalhomecare->status) }}',
                 start : '{{ $personalhomecare['schedule'] }}',
                 end : '{{ $personalhomecare->status == "process_extend" ? date("Y-m-d", strtotime($personalhomecare->schedule . "T23.59.00" . "+8 days")) : date("Y-m-d", strtotime($personalhomecare->schedule . "T23.59.00" . "+5 days")) }}',

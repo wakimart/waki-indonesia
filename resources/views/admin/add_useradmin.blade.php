@@ -162,6 +162,9 @@ $menu_item_second = "add_user";
                                         @endforeach
                                     </select>
                                     <div class="validation"></div>
+                                    <span class="invalid-feedback">
+                                        <strong></strong>
+                                    </span>
                                 </div>
                                 <div class="text-center"
                                     style="display: inline-block; float: right;">
@@ -375,7 +378,7 @@ $menu_item_second = "add_user";
                 $("#actionAdd").find("textarea[name=" + key + "]").removeClass("is-invalid");
 
                 $("#actionAdd").find("input[name=" + key + "]").next().find("strong").text("");
-                $("#actionAdd").find("select[name=" + key + "]").next().find("strong").text("");
+                $("#actionAdd").find("select[name=" + key + "]").siblings().find("strong").text("");
                 $("#actionAdd").find("textarea[name=" + key + "]").next().find("strong").text("");
             }
 
@@ -389,7 +392,7 @@ $menu_item_second = "add_user";
                         $("#actionAdd").find("textarea[name=" + key + "]").addClass("is-invalid");
 
                         $("#actionAdd").find("input[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
-                        $("#actionAdd").find("select[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionAdd").find("select[name=" + key + "]").siblings().find("strong").text(hasil['errors'][key]);
                         $("#actionAdd").find("textarea[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
                     }
                 }

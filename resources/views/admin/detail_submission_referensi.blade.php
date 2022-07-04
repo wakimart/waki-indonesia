@@ -108,7 +108,16 @@ if (
                     <div class="card">
                         <div class="card-body">
                             <div class="row justify-content-center">
-                                <h2>SUBMISSION SUCCESS</h2>
+                                @php
+                                    $style_h = "";
+                                    if($submission->status_reference == "new"){
+                                        $style_h = "color: #4c94ff;";
+                                    }
+                                    elseif($submission->status_reference == "rejected"){
+                                        $style_h = "color: #ff4c4c;";
+                                    }
+                                @endphp
+                                <h2 style="{{ $style_h }}">SUBMISSION {{ strtoupper($submission->status_reference) }}</h2>
                             </div>
 
                             <div class="row justify-content-center">
@@ -523,6 +532,46 @@ if (
                     </div>
                 </div>
             </div>
+
+            @if($specialPermission && ($submission->status_reference != "approved" && $submission->status_reference != "rejected"))
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center mb-2">
+                                <h2>Status Reference</h2>
+                            </div>
+                            <form id="actionAdd"
+                                class="forms-sample"
+                                method="POST"
+                                action="{{ route('update_submission_status_referensi') }}">
+                                {{ csrf_field() }}
+                                <input type="text"
+                                    name="id"
+                                    value="{{ $submission['id'] }}"
+                                    hidden />
+                                <div class="form-group row justify-content-center">
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-primary m-3 btn-lg"
+                                        name="status"
+                                        value="approved">
+                                        Approved
+                                    </button>
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-danger m-3 btn-lg"
+                                        name="status"
+                                        value="rejected">
+                                        Reject
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 @else

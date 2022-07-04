@@ -211,6 +211,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::post('/login', 'Auth\LoginController@login')->name('admin_login');
     //logout usernya
     Route::get('/logout', 'Auth\LoginController@logoutUser')->name('admin_logout');
+    //show login agreement
+    Route::post('/loginagreement', 'Auth\LoginController@updateUserAgreement')->name('loginagreement');
     //dashboard
     Route::get('/dashboard', 'DashboardController@index')
         ->name('dashboard');
@@ -225,7 +227,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
     // Add Frontend CMS
     Route::post("/frontend-cms/store/album", "AlbumController@store")
         ->name("store_frontendcms_album");
-    Route::post("/frontend-cms/add/image", "FrontendCmsController@storeImageGallery")
+    Route::post("/frontend-cms/add/image", "AlbumController@addNewImageGallery")
         ->name("store_frontendcms_image");
     Route::post("/frontend-cms/add/video", "FrontendCmsController@storeVideoGallery")
         ->name("store_frontendcms_video");
@@ -367,6 +369,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update/', 'OrderController@update')
             ->name('update_order')
             ->middleware('can:edit-order');
+        //Update Order Status
+        Route::post('/update_status_order', 'OrderController@updateStatusOrder')
+            ->name('update_status_order')
+            ->middleware('can:change-status_order');
         //Delete Order
         Route::post('/{OrderNya}', 'OrderController@delete')
             ->name('delete_order');
@@ -412,6 +418,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //notif acc cancel hs
         Route::post("/accNotifHomeservice", "HomeServiceController@accNotif")
             ->name("acc_cancel_notif_homeservice");
+        //notif acc Reschedule hs
+        Route::post("/accRescNotifHomeservice", "HomeServiceController@accRescheduleNotif")
+            ->name("acc_reschedule_notif_homeservice");
 
         //Add Form home service
         Route::get('/', 'HomeServiceController@indexAdmin')
@@ -844,6 +853,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('delete_data_sourcing')
             ->middleware('can:delete-data_sourcing');
 
+        //Export XLS Data Sourcing
+        Route::get('/export_to_xls', 'DataSourcingController@export_to_xls')
+            ->name('export_data_sourcing')
+            ->middleware('can:browse-data_sourcing');
+
         // Form Import Data Sourcing
         Route::get('/import_data_sourcing', 'DataSourcingController@importDataSourcing')
             ->name('import_data_sourcing')
@@ -890,6 +904,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'DataTherapyController@destroy')
             ->name('delete_data_therapy')
             ->middleware('can:delete-data_therapy');
+        
+        //Export XLS Data Therapy
+        Route::get('/export_to_xls', 'DataTherapyController@export_to_xls')
+            ->name('export_data_therapy')
+            ->middleware('can:browse-data_therapy');
+
     });
 
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
@@ -934,6 +954,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::post("/update/referensi", "SubmissionController@updateReferensi")
             ->name("update_submission_referensi");
+
+        Route::post("/update/status-referensi", "SubmissionController@updateStatusReferensi")
+            ->name("update_submission_status_referensi");
 
         Route::post("/update/takeaway", "SubmissionController@updateTakeaway")
             ->name("update_submission_takeaway");
@@ -1008,6 +1031,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //export xls
         Route::get('/export-acceptance-to-xls-by-date', 'AcceptanceController@export_to_xls_byDate')
                 ->name('acceptance_export-to-xls-by-date');
+
+        // add bill do
+        Route::post("/bill_do/{id}", "AcceptanceController@addBillOrder")
+            ->name("add_bill_do");
 
     });
 
@@ -1163,6 +1190,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("reschedulePersonalHomecare", "PersonalHomecareController@reschedulePersonalHomecare")
             ->name("reschedule_personal_homecare");
     });
+
+    Route::view('faq_agreement', 'admin.faq_agreement')->name('faq_agreement');
 });
 
 Auth::routes();
