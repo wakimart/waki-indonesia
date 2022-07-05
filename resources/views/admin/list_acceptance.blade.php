@@ -7,23 +7,12 @@ $menu_item_second = "list_acceptance_form";
 <style type="text/css">
     /*-- mobile --*/
     @media (max-width: 768px){
-        #desktop {
-            display: none;
-        }
-
-        #mobile {
-            display: block;
-        }
+        #desktop {display: none;}
+        #mobile {display: block;}
     }
-
     @media (min-width: 768px){
-        #desktop {
-            display: block;
-        }
-
-        #mobile {
-            display: none;
-        }
+        #desktop {display: block;}
+        #mobile {display: none; }
     }
 </style>
 @endsection

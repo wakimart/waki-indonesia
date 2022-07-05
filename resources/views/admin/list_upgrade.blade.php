@@ -5,28 +5,14 @@ $menu_item_second = "list_upgrade_form";
 @extends('admin.layouts.template')
 @section('style')
 <style type="text/css">
-
     /*-- mobile --*/
-	@media (max-width: 768px){
-
-        #desktop{
-            display: none;
-        }
-
-        #mobile{
-            display: block;
-        }
-        
+		@media (max-width: 768px){
+        #desktop{display: none;}
+        #mobile{display: block;}
     }
-
-        @media (min-width: 768px) { 
-        #desktop{
-            display: block;
-        }
-
-        #mobile{
-            display: none;
-        }
+    @media (min-width: 768px) {
+        #desktop{display: block;}
+        #mobile{display: none;}
     }
 </style>
 @endsection
@@ -292,6 +278,6 @@ $(document).ready(function (e) {
         }
         window.location.href = "{{route('list_upgrade_form')}}" + urlParamStr;
     });
-}); 
+});
 </script>
 @endsection

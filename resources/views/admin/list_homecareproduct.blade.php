@@ -14,25 +14,20 @@ $menu_item_second = "list_product";
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
-
     .select2-container--default
     .select2-selection--single
     .select2-selection__arrow {
         top: 10px;
     }
-
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link {
         color: #111 !important;
     }
-
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
         color: #36cd7a !important;
     }
-
     .nav-tabs .nav-link {
         padding-left: 1.75em;
         padding-right: 1.75em;

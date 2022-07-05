@@ -3786,7 +3786,8 @@ textarea.form-control {
   user-select: none;
   background-color: transparent;
   border: 1px solid transparent;
-  padding: 0.875rem 2.5rem;
+  padding: 0.875rem 1rem;
+  margin-bottom: 0.5em;
   font-size: 0.875rem;
   line-height: 1;
   border-radius: 0.1875rem;
@@ -3807,6 +3808,15 @@ textarea.form-control {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); }
   .btn.disabled, .btn:disabled {
     opacity: 0.65; }
+  .btn-delete{
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+  }
 
 a.btn.disabled,
 fieldset:disabled a.btn {
@@ -6557,7 +6567,8 @@ a.close.disabled {
   align-items: center;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
-  justify-content: flex-end;
+  justify-content: center;
+  flex-wrap: wrap;
   padding: 15px;
   border-top: 1px solid #ebedf2;
   border-bottom-right-radius: 0.3rem;

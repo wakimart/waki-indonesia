@@ -48,16 +48,11 @@ use App\Product;
     input.invalid {
         background-color: #ffdddd;
     }
-
     .invalid {
         border: 1px solid red !important;
     }
-
     /* Hide all steps by default: */
-    .tab {
-        display: none;
-    }
-
+    .tab {display: none;}
     /* Make circles that indicate the steps of the form: */
     .step {
         height: 15px;
@@ -69,20 +64,11 @@ use App\Product;
         display: inline-block;
         opacity: 0.5;
     }
-
     /* Mark the active step: */
-    .step.active {
-        opacity: 1;
-    }
-
+    .step.active {opacity: 1;}
     /* Mark the steps that are finished and valid: */
-    .step.finish {
-        background-color: #4CAF50;
-    }
-
-    select {
-        color: black !important;
-    }
+    .step.finish {background-color: #4CAF50;}
+    select {color: black !important;}
 </style>
 @endsection
 

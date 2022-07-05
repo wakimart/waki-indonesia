@@ -67,42 +67,20 @@
       top: auto;
       left: auto;
     }
-    .nav-tabs li a:hover {
-      background: #fff;
-    }
-    .nav-tabs li.active a {
-      color: #30a5ff;
-    }
-    .nav-tabs li a {
-      color: #999;
-    }
+    .nav-tabs li a:hover {background: #fff;}
+    .nav-tabs li.active a {color: #30a5ff;}
+    .nav-tabs li a {color: #999;}
 
 	/*-- mobile --*/
 	@media (max-width: 768px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
-
-		#page-title-desk{
-			display: none;
-		}
-
-		#mobile .filter{
-			padding-top: 15px;
-		}
-
-		.page-header h5{
-			font-size: 1rem;
-		}
+		#desktop{display: none;}
+		#mobile{display: block;}
+		#page-title-desk{display: none;}
+		.page-header h5{font-size: 1rem;}
 		.breadcrumb {
 			padding: 0.56rem 0.7rem;
 			text-align: right;
 		}
-
 		.breadcrumb-item + .breadcrumb-item {
 			padding-left: 0.5rem;
 		}
@@ -413,6 +391,6 @@
 			}
 			window.location.href = "{{route('list_taskservice')}}" + urlParamStr;
 		});
-	}); 
+	});
 </script>
 @endsection

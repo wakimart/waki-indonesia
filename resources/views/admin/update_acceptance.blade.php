@@ -27,15 +27,13 @@ $menu_item_second = "list_acceptance_form";
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     #regForm {
-	  background-color: #ffffff;
-	  margin: 100px auto;
-	  padding: 40px;
-	  width: 70%;
-	  min-width: 300px;
-	}
-
+  	  background-color: #ffffff;
+  	  margin: 100px auto;
+  	  padding: 40px;
+  	  width: 70%;
+  	  min-width: 300px;
+  	}
 	/* Style the input fields */
 	/*input {
 	  padding: 10px;
@@ -44,17 +42,10 @@ $menu_item_second = "list_acceptance_form";
 	  font-family: Raleway;
 	  border: 1px solid #aaaaaa;
 	}*/
-
 	/* Mark input boxes that gets an error on validation: */
-	input.invalid {
-	  background-color: #ffdddd;
-	}
-
+	input.invalid {background-color: #ffdddd;}
 	/* Hide all steps by default: */
-	.tab {
-	  display: none;
-	}
-
+	.tab {display: none;}
 	/* Make circles that indicate the steps of the form: */
 	.step {
 	  height: 15px;
@@ -68,14 +59,10 @@ $menu_item_second = "list_acceptance_form";
 	}
 
 	/* Mark the active step: */
-	.step.active {
-	  opacity: 1;
-	}
+	.step.active { opacity: 1;}
 
 	/* Mark the steps that are finished and valid: */
-	.step.finish {
-	  background-color: #4CAF50;
-	}
+	.step.finish {background-color: #4CAF50;}
 
    .div-CheckboxGroup {
 	  border:solid 1px rgba(128, 128, 128, 0.32941);
@@ -89,29 +76,15 @@ $menu_item_second = "list_acceptance_form";
 
 	/*-- mobile --*/
 	@media (max-width: 768px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
-		img{
-			height: 150px;
-		}
+		#desktop{display: none;}
+		#mobile{display: block;	}
+		img{height: 150px;}
 	}
-
 
 	@media (min-width: 768px) {
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
+		#desktop{display: block;}
+		#mobile{display: none;}
 	}
-
 </style>
 @endsection
 
