@@ -613,6 +613,56 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("delete_sparepart");
     });
 
+    Route::group(['prefix' => 'absent_off', 'middleware' => 'auth'], function() {
+        //Add Absent Off
+        Route::get('/', 'AbsentOffController@create')
+            ->name('add_absent_off')
+            ->middleware('can:add-absent_off');
+        //Store Absent Off
+        Route::post('/', 'AbsentOffController@store')
+            ->name('store_absent_off')
+            ->middleware('can:add-absent_off');
+        //List Absent Off
+        Route::get('/list', 'AbsentOffController@index')
+            ->name('list_absent_off')
+            ->middleware('can:browse-absent_off');
+        //Print Absent Off daily data count per month
+        Route::post("/absentoff_print_data_count", "AbsentOffController@printAppointmentCount")
+            ->name("absentoff_print_data_count");
+        //Print Absent Off data detail on a selected day
+        Route::post("/absentoff_print_appointment", "AbsentOffController@printDayData")
+            ->name("absentoff_print_appointment");
+        //Detail Absent Off
+        Route::get("/detail/", "AbsentOffController@show")
+            ->name("detail_absent_off")
+            ->middleware('can:detail-absent_off');
+        Route::post("/detail_response", "AbsentOffController@detailResponse")
+            ->name("detail_response_absent_off")
+            ->middleware('can:detail-absent_off');
+        //Edit Absent Off
+        Route::get('/edit/', 'AbsentOffController@edit')
+            ->name('edit_absent_off')
+            ->middleware('can:edit-absent_off');
+        //Update Absent Off
+        Route::post('/update/', 'AbsentOffController@update')
+            ->name('update_absent_off')
+            ->middleware('can:edit-absent_off');
+        //Delete Absent Off
+        Route::post("/delete", "AbsentOffController@destroy")
+            ->name("delete_absent_off")
+            ->middleware('can:delete-absent_off');
+
+        //List Acc Absent Off
+        Route::get('/list_acc', 'AbsentOffController@indexAcc')
+            ->name('list_acc_absent_off')
+            ->middleware('can:browse-acc_absent_off');
+        //Update Acc Absent Of
+        Route::post("/update_acc", "AbsentOffController@updateAcc")
+            ->name("update_acc_absent_off")
+            ->middleware('can:acc-absent_off');
+    });
+
+
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function() {
         //Add Form CSO
         Route::get('/', 'CsoController@create')

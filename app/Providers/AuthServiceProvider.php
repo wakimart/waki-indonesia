@@ -129,6 +129,47 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['acc-cancel-home_service']);
         });
 
+        //-- Absent Off --//
+        Gate::define('add-absent_off', function ($user) {
+            return $user->hasAccess(['add-absent_off']);
+        });
+        Gate::define('browse-absent_off', function ($user) {
+            return $user->hasAccess(['browse-absent_off']);
+        });
+        Gate::define('detail-absent_off', function ($user) {
+            return $user->hasAccess(['detail-absent_off']);
+        });
+        Gate::define('edit-absent_off', function ($user) {
+            return $user->hasAccess(['edit-absent_off']);
+        });
+        Gate::define('delete-absent_off', function ($user) {
+            return $user->hasAccess(['delete-absent_off']);
+        });
+        Gate::define('browse-acc_absent_off', function ($user) {
+            return $user->hasAccess(['browse-acc_absent_off']);
+        });
+        Gate::define('acc-view-spv_absent_off', function ($user) {
+            return $user->hasAccess(['acc-view-spv_absent_off']);
+        });
+        Gate::define('acc-view-coor_absent_off', function ($user) {
+            return $user->hasAccess(['acc-view-coor_absent_off']);
+        });
+        Gate::define('acc-absent_off', function ($user) {
+            return $user->hasAccess(['acc-absent_off']);
+        });
+        Gate::define('acc-spv_absent_off', function ($user) {
+            return $user->hasAccess(['acc-spv_absent_off']);
+        });
+        Gate::define('acc-reject_spv_absent_off', function ($user) {
+            return $user->hasAccess(['acc-reject_spv_absent_off']);
+        });
+        Gate::define('acc-coor_absent_off', function ($user) {
+            return $user->hasAccess(['acc-coor_absent_off']);
+        });
+        Gate::define('acc-reject_coor_absent_off', function ($user) {
+            return $user->hasAccess(['acc-reject_coor_absent_off']);
+        });
+
         //-- CSO --//
         Gate::define('add-cso', function ($user) {
             return $user->hasAccess(['add-cso']);

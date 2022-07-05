@@ -580,6 +580,126 @@ $menu_item_page = "user";
                             </div>
 
                             <div class="form-group" id="group-product">
+                                <span style="display:block;">Cuti</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-absent_off" />
+                                            Add Form Ijin Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-absent_off" />
+                                            Browse Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-absent_off" />
+                                            Detail Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-absent_off" />
+                                            Edit Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" 
+                                            for="delete-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-absent_off" />
+                                            Delete Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="browse-acc_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-acc_absent_off" />
+                                            Browse Acc Cuti
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">Acc Cuti</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-view-spv_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-view-spv_absent_off" />
+                                            Acc View Supervisor Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-view-coor_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-view-coor_absent_off" />
+                                            Acc View Coordinator Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-absent_off" />
+                                            Acc Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-spv_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-spv_absent_off" />
+                                            Acc Supervisor Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-reject_spv_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-reject_spv_absent_off" />
+                                            Acc Reject Supervisor Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-coor_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-coor_absent_off" />
+                                            Acc Coordinator Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-reject_coor_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-reject_coor_absent_off" />
+                                            Acc Reject Coordinator Cuti
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
                                 <span style="display:block;">CSO</span>
                                 <div class="div-CheckboxGroup">
                                     <div class="form-check form-check-inline">

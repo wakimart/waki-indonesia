@@ -243,6 +243,29 @@
 </li>
 @endif
 
+@if(Gate::check('add-absent_off') || Gate::check('browse-absent_off') || Gate::check('browse-acc_absent_off'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'absent_off'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#absent_off-dd" aria-expanded="false" aria-controls="absent_off-dd">
+    <span class="menu-title">Cuti</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-calendar-text menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'absent_off'? 'show': '' }}" id="absent_off-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-absent_off'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_absent_off'? 'active': '' }}" href="{{ route('add_absent_off')}}">Form Ijin Cuti </a></li>
+      @endif
+      @if(Gate::check('browse-absent_off'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_absent_off'? 'active': '' }}" href="{{ route('list_absent_off')}}">List Cuti </a></li>
+      @endif
+      @if(Gate::check('browse-acc_absent_off'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_acc_absent_off'? 'active': '' }}" href="{{ route('list_acc_absent_off')}}">List Acc Cuti </a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
 @if (Gate::check('add-submission') || Gate::check('browse-submission') || Gate::check('browse-reference'))
 <li class="nav-item {{ isset($menu_item_page) && $menu_item_page == 'submission' ? 'active': '' }}">
     <a class="nav-link"

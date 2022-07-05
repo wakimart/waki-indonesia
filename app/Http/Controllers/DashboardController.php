@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AbsentOff;
 use App\HomeService;
 use App\Order;
 use App\RegistrationPromotion;
@@ -124,6 +125,11 @@ class DashboardController extends Controller
         $accRescheduleHS = HomeService::where([['active', true], ['is_acc_resc', true]])->orderBy("updated_at", "desc")->get();
         $accDeleteHS = HomeService::where([['active', true], ['is_acc', true]])->orderBy("updated_at", "desc")->get();
 
+        $absentOffs["supervisor"] = AbsentOff::where('status', AbsentOff::$status['1'])
+            ->whereNull('supervisor_id')->orderBy('created_at', 'desc')->get();
+        $absentOffs["coordinator"] = AbsentOff::where('status', AbsentOff::$status['1'])
+            ->whereNull('coordinator_id')->orderBy('created_at', 'desc')->get();
+
         return view(
             "admin.dashboard",
             compact(
@@ -134,7 +140,8 @@ class DashboardController extends Controller
                 "refSouvenirs",
                 "personalHomecares",
                 "accRescheduleHS",
-                "accDeleteHS"
+                "accDeleteHS",
+                "absentOffs"
             )
         );
     }

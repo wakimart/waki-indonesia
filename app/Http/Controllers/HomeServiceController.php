@@ -249,7 +249,7 @@ class HomeServiceController extends Controller
         //     $request->filter_search,
         //     $isAdminManagement
         // );
-        $currentDayData = $this->printDayData(new \Illuminate\Http\Request);
+        $currentDayData = $this->printDayData($request);
         $currentDayData = json_decode($currentDayData->getContent(), true)['msg'];
 
         return view(

@@ -58,6 +58,21 @@ class RolesSeeder extends Seeder
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
 
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => true,
+                'acc-view-coor_absent_off' => true,
+                'acc-absent_off' => true,
+                'acc-spv_absent_off' => true,
+                'acc-reject_spv_absent_off' => true,
+                'acc-coor_absent_off' => true,
+                'acc-reject_coor_absent_off' => true,
+
                 //CSO
                 'add-cso' => true,
                 'browse-cso' => true,
@@ -244,6 +259,21 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => true,
@@ -432,6 +462,21 @@ class RolesSeeder extends Seeder
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
 
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
+
                 //CSO
                 'add-cso' => false,
                 'browse-cso' => false,
@@ -612,6 +657,21 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -794,6 +854,21 @@ class RolesSeeder extends Seeder
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
 
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
+
                 //CSO
                 'add-cso' => false,
                 'browse-cso' => false,
@@ -975,6 +1050,21 @@ class RolesSeeder extends Seeder
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
 
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
+
                 //CSO
                 'add-cso' => false,
                 'browse-cso' => false,
@@ -1155,6 +1245,21 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
