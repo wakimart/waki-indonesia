@@ -160,6 +160,7 @@
                             <strong></strong>
                         </span>
                         <div class="validation"></div>
+                        <div id="warning" style="    font-size: small;color: red;font-weight: bold;"></div>
                     </div>
 
                     <div class="form-group">
@@ -192,6 +193,23 @@
             })
             if (found_cso) {
                 $("#name").val(found_cso.name);
+            }
+        });
+
+        $("#start_date").on("change", function(e){
+            let setDate = new Date(this.value);
+            setDate.setHours(0,0,0,0)
+
+            let currentDate = new Date();
+            currentDate.setHours(0,0,0,0)
+            currentDate.setDate(currentDate.getDate() + 30);
+
+            console.log([currentDate, setDate, currentDate.getTime() > setDate.getTime()]);
+            if(currentDate.getTime() > setDate.getTime()){
+                $("#warning").html("*Peringatan, Ada kemungkinan Form Cuti anda tidak di ACC dikarenakan pengajuan form cuti minimal 30 hari sebelum hari cuti.");
+            }
+            else{
+                $("#warning").html("");
             }
         });
 
