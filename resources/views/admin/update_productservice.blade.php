@@ -32,75 +32,48 @@
 		width: 72%;
 		display: inline-block;
 	}
-
 	.qty{
 		width: 16%;
 		display: inline-block;
 	}
-
 	.btn-minus{
 		display: inline-block;
 		float: right;
 	}
-
 	.btn-plus{
 		display: inline-block;
 		float: right;
 	}
-
-	.issue label{
-		width: 25em;
-	}
+	.issue label{width: 25em;}
 
 		/*-- mobile --*/
 	@media (max-width: 768px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
+		#desktop{display: none;}
+		#mobile{display: block;}
 		.select-sparepart{
 			width: 100%;
 			display: block;
 		}
-
 		.qty{
 			width: 100%;
 			display: block;
 		}
-
 		.btn-minus{
 			display: block;
 			margin-bottom: 1em;
 		}
-
 		.btn-plus{
 			display: block;
 			margin-bottom: 1em;
 		}
-
-		.issue{
-			padding-top: 2em;
-		}
-
-		.btn-save{
-			margin-bottom: 1em;
-		}
+		.issue{padding-top: 2em;}
+		.btn-save{margin-bottom: 1em;}
 	}
 
 	@media (min-width: 768px){
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
+		#desktop{display: block;}
+		#mobile{display: none;}
 	}
-
-
 </style>
 @endsection
 

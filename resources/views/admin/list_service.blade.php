@@ -9,41 +9,18 @@ $menu_item_second = "list_service";
 <style type="text/css">
     /*-- mobile --*/
 	@media (max-width: 768px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
-
-		#mobile .filter{
-			padding-top: 15px;
-		}
+		#desktop{display: none;}
+		#mobile{display: block;}
 	}
-
 	@media (min-width: 768px){
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
+		#desktop{display: block;}
+		#mobile{display: none;}
 	}
 
 	@media (min-width: 410px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
-
-		#mobile .filter{
-			padding-top: 0;
-		}
+		#desktop{display: none;}
+		#mobile{display: block;}
+		#mobile .filter{padding-top: 0;}
 	}
 </style>
 @endsection

@@ -993,6 +993,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::post("/accNotif", "ReferenceController@accNotif")
             ->name("acc_notif_reference");
+
+        // add online signature
+        Route::post("/online_signature", "ReferenceController@addOnlineSignature")
+            ->name("online_signature.add");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {

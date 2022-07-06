@@ -29,23 +29,12 @@ $menu_item_page = "service";
     }
 
     @media (min-width: 768px){
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
+		#desktop{display: block;}
+		#mobile{display: none;}
 	}
-
     @media (max-width: 768px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
+		#desktop{display: none;}
+		#mobile{display: block;}
 	}
 </style>
 @endsection

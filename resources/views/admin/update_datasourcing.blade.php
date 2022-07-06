@@ -16,7 +16,6 @@ $menu_item_page = "data_sourcing";
         background-repeat: no-repeat;
         display: inline-block;
     }
-
     .del {
         position: absolute;
         top: 0px;
@@ -121,7 +120,7 @@ $menu_item_page = "data_sourcing";
                                     <strong></strong>
                                 </span>
 	              			</div>
-                              
+
 	              			<div class="form-group">
 	                			<label for="">CSO</label>
                                 <select id="cso" name="cso_id" class="form-control pilihan-product" data-msg="Mohon Pilih CSO" required>

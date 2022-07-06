@@ -17,7 +17,6 @@ $menu_item_page = "order";
 	    background-repeat: no-repeat;
 	    display: inline-block;
 	}
-
   	.del {
         position: absolute;
         top: 0px;
@@ -29,16 +28,11 @@ $menu_item_page = "order";
         background-color: rgba(255,255,255,0.6);
         cursor: pointer;
   	}
-
-  	#intro {
-        padding-top: 2em;
-    }
-
+  	#intro {padding-top: 2em;}
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     button {
         background: #1bb1dc;
         border: 0;
@@ -47,18 +41,15 @@ $menu_item_page = "order";
         color: #fff;
         transition: 0.3s;
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
@@ -250,7 +241,7 @@ $menu_item_page = "order";
                                                     data-sequence="{{ $total_product }}"
                                                     required>
                                                     <option disabled value="">
-                                                        Choose Product 
+                                                        Choose Product
                                                     </option>
                                                     <?php
                                                     $isPromoIdNumeric = false;
@@ -292,7 +283,7 @@ $menu_item_page = "order";
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <select class="form-control"
-                                                	id="qty_{{ $total_product }}" 
+                                                	id="qty_{{ $total_product }}"
                                                     name="qty_{{ $total_product }}"
                                                     data-msg="Mohon Pilih Jumlah"
                                                     onchange="selectQty(this)"
@@ -365,7 +356,7 @@ $menu_item_page = "order";
 		                                    <div class="validation"></div>
 		                                </div>
                                     @endif
-                                    
+
 			                    @endforeach
 			                    <div id="tambahan_product"></div>
 			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
@@ -548,7 +539,7 @@ $menu_item_page = "order";
 			                    <input type="text" class="form-control" name="customer_type" id="customer_type" value="{{$orders['customer_type']}}" required data-msg="Mohon Isi Tipe Customer" />
 			                    <div class="validation"></div>
 			                </div>
-			                
+
 			                <div class="form-group">
                                 <div class="col-xs-12">
                                     <label>Bukti Pembayaran</label>
@@ -580,7 +571,7 @@ $menu_item_page = "order";
                                     </div>
                                 @endfor
                             </div>
-			                
+
 
 			                <div class="form-group">
 			                	<label for="">Description</label>
@@ -832,6 +823,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
     	console.log(total_price);
+
         for (let i = 0; i < total_product; i++) {
             $("#product_" + i).select2({
                 theme: "bootstrap4",
@@ -1034,7 +1026,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $("#container-Cabang").show();
         });
     });
-	
+
 	function checkProductArray(array, index){
         for (var i = 0; i < array.length; i++) {
             if(array[i][0] === index){
@@ -1043,7 +1035,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         return false;
     }
-    
+
     function selectOther(e) {
         const sequence = e.dataset.sequence;
 
@@ -1062,7 +1054,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	            if(result.length > 0){
 	                var data = JSON.parse(result);
 	                var price = parseInt(data['price']);
-	                
+
 	                if(arr_index_temp.length == 0){
 	                    arr_index_temp.push([sequence, promo_id, price, get_qty]);
 	                    total_price = total_price + (price * get_qty);

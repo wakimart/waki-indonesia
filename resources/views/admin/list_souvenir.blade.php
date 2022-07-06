@@ -6,13 +6,8 @@ $menu_item_second = "list_souvenir";
 
 @section("style")
 <style type="text/css">
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
+    .center {text-align: center;}
+    .right {text-align: right;}
 </style>
 @endsection
 
