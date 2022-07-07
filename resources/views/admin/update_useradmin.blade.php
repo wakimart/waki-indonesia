@@ -16,13 +16,11 @@ $menu_item_page = "user";
         background-repeat: no-repeat;
         display: inline-block;
     }
-
     .div-CheckboxGroup {
         border:solid 1px rgba(128, 128, 128, 0.32941);
         padding:10px;
         border-radius:3px;
     }
-
     .del {
         position: absolute;
         top: 0px;
@@ -34,11 +32,9 @@ $menu_item_page = "user";
         background-color: rgba(255,255,255,0.6);
         cursor: pointer;
     }
-
     #intro {
         padding-top: 2em;
     }
-
     button{
         background: #1bb1dc;
         border: 0;
@@ -47,19 +43,16 @@ $menu_item_page = "user";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation{
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea{
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     .select2-selection__rendered {
         line-height: 40px !important;
     }
@@ -1238,7 +1231,7 @@ $menu_item_page = "user";
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group" id="group-product">
                                 <span style="display:block;">TECHNICIAN SCHEDULE</span>
                                 <div class="div-CheckboxGroup">

@@ -36,6 +36,7 @@ $menu_item_page = "faq_agreement";
                           <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="firstAgreement" role="tabpanel" aria-labelledby="firstAgreement-tab">
                                 <div id="firstAgreementContent">
+                                    <br />
                                     <p align="center" style="text-align:center"><span style="font-size:14.0pt">TATA TERTIB PERATURAN PERUSAHAAN</span></p>
                                     <br />
                                     <p style=""><b><span><span>1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span></b><b><u><span>HARUS BERDISIPLIN,
@@ -382,6 +383,7 @@ $menu_item_page = "faq_agreement";
                             </div>
                             <div class="tab-pane fade" id="secondAgreement" role="tabpanel" aria-labelledby="secondAgreement-tab">
                                 <div id="secondAgreementContent">
+                                    <br />
                                     <p style="line-height:150%"><b><span style="font-size:12.0pt;line-height:150%;font-family:
                                     &quot;Times New Roman&quot;,serif">Peraturan Absen WAKi Reborn</span></b></p>
                                     <p style="margin-left:18.0pt;text-indent:-18.0pt"><span style="font-size:12.0pt;line-height:107%;font-family:&quot;Times New Roman&quot;,serif"><span>1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span>
@@ -469,12 +471,22 @@ $menu_item_page = "faq_agreement";
                                     &quot;Times New Roman&quot;,serif"><span>1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;
                                     </span></span>
                                         </span><span style="font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif">Apabila
-                                    Absensi tanpa Photo dan Voice Note dianggap Tanpa Keterangan (Absen)</span></p>
+                                    Absensi tanpa Photo dan Voice Note dianggap Tanpa Keterangan (Absen).</span></p>
                                     <p style="margin-left:18.0pt;text-indent:-18.0pt"><span style="font-size:12.0pt;font-family:
                                     &quot;Times New Roman&quot;,serif"><span>2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;
                                     </span></span>
+                                  </span><span style="font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif">Dengan
+                                    ini juga termasuk memberi ijin untuk penggunaan foto dan video untuk digunakan pada buku, video dan brosur WAKi jika diperlukan.</span></p>
+                                    <p style="margin-left:18.0pt;text-indent:-18.0pt"><span style="font-size:12.0pt;font-family:
+                                    &quot;Times New Roman&quot;,serif"><span>3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </span></span>
                                         </span><span style="font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif">Mulai
-                                    berlaku pada tanggal 10 september 2020</span></p>
+                                    berlaku pada tanggal 10 september 2020.</span></p>
+                                    <p style="margin-left:18.0pt;text-indent:-18.0pt"><span style="font-size:12.0pt;font-family:
+                                    &quot;Times New Roman&quot;,serif"><span>4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </span></span>
+                                  </span><span style="font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif">Demikian
+                                    persetujuan ini, dibuat dengan sadar dan tanpa tekanan dari pihak lain, Semoga Tuhan yang Maha Esa memberkati kita semua.</span></p>
                                 </div>
                             </div>
                           </div>

@@ -6,34 +6,16 @@ $menu_item_second = "list_sparepart";
 
 @section("style")
 <style type="text/css">
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
+    .center {text-align: center;}
+    .right {text-align: right;}
     @media (max-width: 768px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
+		#desktop{display: none;}
+		#mobile{display: block;}
 	}
-
 	@media (min-width: 768px){
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
+		#desktop{display: block;}
+		#mobile{display: none;}
 	}
-    
 </style>
 @endsection
 

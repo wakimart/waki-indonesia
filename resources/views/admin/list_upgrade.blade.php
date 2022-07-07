@@ -5,28 +5,14 @@ $menu_item_second = "list_upgrade_form";
 @extends('admin.layouts.template')
 @section('style')
 <style type="text/css">
-
     /*-- mobile --*/
-	@media (max-width: 768px){
-
-        #desktop{
-            display: none;
-        }
-
-        #mobile{
-            display: block;
-        }
-        
+		@media (max-width: 768px){
+        #desktop{display: none;}
+        #mobile{display: block;}
     }
-
-        @media (min-width: 768px) { 
-        #desktop{
-            display: block;
-        }
-
-        #mobile{
-            display: none;
-        }
+    @media (min-width: 768px) {
+        #desktop{display: block;}
+        #mobile{display: none;}
     }
 </style>
 @endsection
@@ -175,7 +161,7 @@ $menu_item_second = "list_upgrade_form";
                                                 {{ $upgrade->acceptance['other_product'] == null ? $upgrade->acceptance->oldproduct['code'] : $upgrade->acceptance['other_product'] }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ $upgrade->acceptance->newproduct['code'] }}
                                             </td>
                                             <td>
-                                                {{ $upgrade->acceptance->branch->code }} - {{ $upgrade->acceptance->cso->code }}
+                                                {{ $upgrade->acceptance->branch->code }} <br> {{ $upgrade->acceptance->cso->code }} - {{ $upgrade->acceptance->cso->name }}
                                             </td>
                                             <td>
                                                 @if(strtolower($upgrade['status']) == "new")
@@ -292,6 +278,6 @@ $(document).ready(function (e) {
         }
         window.location.href = "{{route('list_upgrade_form')}}" + urlParamStr;
     });
-}); 
+});
 </script>
 @endsection

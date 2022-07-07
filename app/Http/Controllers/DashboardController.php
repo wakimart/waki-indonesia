@@ -56,7 +56,7 @@ class DashboardController extends Controller
         $startToday = date("Y-m-d 00:00:00");
         $endToday = date("Y-m-d 23:59:59");
 
-        $order = Order::select(DB::raw("SUM(total_payment) AS total_payment"))
+        $order = Order::select(DB::raw("SUM(down_payment) AS total_payment"))
         ->whereBetween("orderDate", [$startMonth, $endMonth])
         ->where("active", true)
         ->whereIn('status', ['process', 'delivery', 'success'])

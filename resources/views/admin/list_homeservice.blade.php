@@ -92,7 +92,7 @@
                                         if($_GET['filter_province'] == $value['province_id']){
                                           $terpilihNya = "selected";
                                         }
-                                      }  
+                                      }
                                       echo "<option value=\"". $value['province_id']."\"".$terpilihNya.">".$value['province']."</option>";
                                     }
                                 }
@@ -283,88 +283,88 @@
 
   <!-- Modal View -->
   <div class="modal fade" id="viewHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">View Appointment</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                <table style="width: 90%; margin: auto;">
-                  <tr>
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Customer : </td>
-                    <td id="view_type_customer" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                  <tr>
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Home Service : </td>
-                    <td id="view_type_homeservices" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-
-                  <tr><td style="padding-top: 1em;"></td></tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Member : </td>
-                    <td id="view-no_member" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Nama : </td>
-                    <td id="view-name" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Telp : </td>
-                    <td id="view-phone" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Provinsi : </td>
-                    <td id="view-province" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kota/Kabupaten : </td>
-                    <td id="view-city" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kecamatan : </td>
-                    <td id="view-distric" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Alamat : </td>
-                    <td id="view-address" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-
-                  <tr><td style="padding-top: 1em;"></td></tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Cabang : </td>
-                    <td id="view-branch" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode CSO : </td>
-                    <td id="view-cso" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode Partner CSO : </td>
-                    <td id="view-cso2" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-
-                  <tr><td style="padding-top: 1em;"></td></tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Tanggal : </td>
-                    <td id="view-date" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                  <tr style="margin-top: 0.5em">
-                    <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Jam : </td>
-                    <td id="view-time" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                  </tr>
-                </table>
-              </div>
-              <div class="modal-footer">
-                <a id="url_share" href="" data-action="share/whatsapp/share" target="_blank"><button id="btn-share" type="button" class="btn btn-gradient-primary mr-2"><span class="mdi mdi-whatsapp" style="font-size: 18px;"></span> Share</button></a>
-                <button class="btn btn-light" data-dismiss="modal" aria-label="Close">Cancel</button>
-              </div>
-            </div>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">View Appointment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
         </div>
+        <div class="modal-body">
+          <table style="width: 90%; margin: auto;">
+            <tr>
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Customer : </td>
+              <td id="view_type_customer" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+            <tr>
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Home Service : </td>
+              <td id="view_type_homeservices" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+
+            <tr><td style="padding-top: 1em;"></td></tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Member : </td>
+              <td id="view-no_member" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Nama : </td>
+              <td id="view-name" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Telp : </td>
+              <td id="view-phone" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Provinsi : </td>
+              <td id="view-province" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kota/Kabupaten : </td>
+              <td id="view-city" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kecamatan : </td>
+              <td id="view-distric" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Alamat : </td>
+              <td id="view-address" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+
+            <tr><td style="padding-top: 1em;"></td></tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Cabang : </td>
+              <td id="view-branch" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode CSO : </td>
+              <td id="view-cso" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode Partner CSO : </td>
+              <td id="view-cso2" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+
+            <tr><td style="padding-top: 1em;"></td></tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Tanggal : </td>
+              <td id="view-date" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+            <tr style="margin-top: 0.5em">
+              <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Jam : </td>
+              <td id="view-time" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+            </tr>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <a id="url_share" href="" data-action="share/whatsapp/share" target="_blank"><button id="btn-share" type="button" class="btn btn-gradient-primary mr-2"><span class="mdi mdi-whatsapp"></span> Share</button></a>
+          <button class="btn btn-light" data-dismiss="modal" aria-label="Close">Cancel</button>
+        </div>
+      </div>
     </div>
-    <!-- End Modal View -->
+  </div>
+  <!-- End Modal View -->
 
 	<!-- Modal Edit -->
 	<div class="modal fade" id="editHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -572,7 +572,7 @@
             <input type="date" class="form-control" name="date" id="filter_endDate" placeholder="Akhir Tanggal" required data-msg="Mohon Isi Tanggal" onload="getDate()"/>
             <div class="validation"></div>
         </div>
-              
+
           </div>
         <div class="modal-footer">
                 {{csrf_field()}}
@@ -599,7 +599,7 @@
               <input type="date" class="form-control" name="date" id="filter_inputByDate" placeholder="Awal Tanggal" required data-msg="Mohon Isi Tanggal" onload="getDate()" />
               <div class="validation"></div>
           </div>
-              
+
           </div>
         <div class="modal-footer">
                 {{csrf_field()}}
@@ -633,12 +633,12 @@ window.onload = function() {
         $bulan = $AppointmentNya->format('n');
         $hari = $AppointmentNya->format('j');
         $jam = $AppointmentNya->format('H:i');
-        
+
         $appointmentBefore = $dataNya->historyUpdate()['meta'];
         $before = "-";
         if($appointmentBefore != null){
           if (isset($appointmentBefore['appointmentBefore'])){
-            
+
             $before = $appointmentBefore['appointmentBefore'];
           }
         }
@@ -893,7 +893,7 @@ window.onload = function() {
 
     $("#filter_province, #edit-province").on("change", function(){
       var id = $(this).val();
-      var domCity = $( "#filter_city" );      
+      var domCity = $( "#filter_city" );
       if(this.id == "edit-province"){
         domCity = $( "#edit-city" );
         $( domCity ).html("");
@@ -926,7 +926,7 @@ window.onload = function() {
     });
     $("#filter_city, #edit-city").on("change", function(){
       var id = $(this).val();
-      var domDistrict = $( "#filter_district" );      
+      var domDistrict = $( "#filter_district" );
       if(this.id == "edit-city"){
         domDistrict = $( "#edit-distric" );
         $( domDistrict ).html("");
@@ -943,7 +943,7 @@ window.onload = function() {
           var arrdistrict = "";
           if(result.length > 0){
               $.each( result, function( key, value ) {
-                arrdistrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";  
+                arrdistrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
               });
               $( domDistrict ).append(arrdistrict);
             }
@@ -978,7 +978,7 @@ window.onload = function() {
           urlParamStr += "&" + urlParamArray[i]
         }
       }
-      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}" + urlParamStr;   
+      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}" + urlParamStr;
     });
     $("#btn-export").on("click", function(){
       var urlParamArray = new Array();
@@ -1006,12 +1006,12 @@ window.onload = function() {
       var hari = tgl.getDate();if(hari < 9)  hari="0" +hari;
       var bulan = tgl.getMonth()+1;if(bulan < 9)  bulan="0" +bulan;
       tgl = tahun+"-"+bulan+"-"+hari;
-      window.location.href = "{{route('homeservice_export-to-xls')}}?date=" + tgl + urlParamStr;   
+      window.location.href = "{{route('homeservice_export-to-xls')}}?date=" + tgl + urlParamStr;
     });
 
     $("#btn-exportByInputDate").on("click", function(){
       var inputDate = $('#filter_inputByDate').val();
-      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}?inputDate=" + inputDate;   
+      window.location.href = "{{route('homeservice_export-to-xls-by-date')}}?inputDate=" + inputDate;
     });
 
   });
@@ -1119,7 +1119,7 @@ $(document).on("click", ".btn-homeservice-edit", function(e){
               var terpilih = ""
               if(value['subdistrict_id'] == result['distric']){
                 terpilih = "selected";
-              }                         
+              }
               arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\""+terpilih+">"+value['subdistrict_name']+"</option>";
             });
             $( "#edit-distric" ).append(arrSubDistsrict);

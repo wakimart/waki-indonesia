@@ -29,72 +29,50 @@
     }
 
 	.select-sparepart{
-		width: 72%; 
+		width: 72%;
 		display: inline-block;
 	}
-
 	.qty{
-		width: 16%; 
+		width: 16%;
 		display: inline-block;
 	}
-
 	.btn-minus{
-		display: inline-block; 
+		display: inline-block;
 		float: right;
 	}
-
 	.btn-plus{
-		display: inline-block; 
+		display: inline-block;
 		float: right;
 	}
 
 	/*-- mobile --*/
 	@media (max-width: 768px){
-
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
+		#desktop{display: none;}
+		#mobile{display: block;}
 		.select-sparepart{
-			width: 100%; 
+			width: 100%;
 			display: block;
 		}
-
 		.qty{
 			width: 100%;
 			display: block;
 		}
-
 		.btn-minus{
 			display: block;
-			margin-bottom: 1em; 
+			margin-bottom: 1em;
 		}
-
 		.btn-plus{
 			display: block;
-			margin-bottom: 1em; 
-		}
-
-		.task{
-			padding-top: 2em;
-		}
-
-		.btn-save{
 			margin-bottom: 1em;
+		}
+		.task{padding-top: 2em;}
+		.btn-save{margin-bottom: 1em;
 		}
 	}
 
 	@media (min-width: 768px){
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
+		#desktop{display: block;}
+		#mobile{display: none;}
 	}
 
 </style>
@@ -198,7 +176,7 @@
 					                    @if($index > 0)
 					                    	<div class='text-center btn-minus'><button class='remove_sparepart btn btn-gradient-danger mr-2' type='button' title='Remove Sparepart' style='padding: 0.4em 0.7em;'><i class='mdi mdi-minus'></i></button></div>
 					                    @else
-					                    	<div class="text-center btn-plus"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>	
+					                    	<div class="text-center btn-plus"><button class="add_sparepart btn btn-gradient-primary mr-2" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
 					                    @endif
 
 					                    <div class="form-group d-none" style="width: 72%; display: inline-block;">
@@ -209,7 +187,7 @@
 				                            <input type="number" class="form-control" id="price_other-{{$index}}-{{$key}}" placeholder="Price (Rp.)" data-msg="Please fill in the product"/>
 				                            <div class="validation"></div>
 				                        </div>
-					                    
+
 			                    	</div>
 			                    	@endforeach
 			                    </div>
@@ -245,7 +223,7 @@
 			                    	</div>
 			                    </div>
 			                    @endif
-			                    
+
 
 			                    @php
 			                    	$due_date = explode(' ',$product_service->upgrade['due_date']);
@@ -268,7 +246,7 @@
 										<strong></strong>
 									</span>
 								</div>
-								<hr>			                    
+								<hr>
 			                </div>
 
 			                <input type="hidden" id="id_productservice-{{$key}}" name="id_productservice" value="{{$product_service['id']}}">
@@ -346,7 +324,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		var idService = $('#total_productservice').val();		
+		var idService = $('#total_productservice').val();
 
 		var idSparepart = $('#lastIdSparepart').val();
 		var idQtySparepart = $('#lastIdSparepart').val();
@@ -404,7 +382,7 @@
 	        e.preventDefault();
 	        frmAdd = _("actionAdd");
 	        frmAdd = new FormData(document.getElementById("actionAdd"));
-	        frmAdd.enctype = "multipart/form-data";       
+	        frmAdd.enctype = "multipart/form-data";
 
 	        var arr_productservice = [];
 	        for (var i = 0; i < idService; i++) {
@@ -477,7 +455,7 @@
 	            }
 	            alert(hasil['errors']);
 	        }
-	        else{ 
+	        else{
 	            alert("Input Success !!!");
 	            window.location.reload()
 	        }
@@ -488,7 +466,7 @@
 	        document.getElementById("updateUpgrade").innerHTML = "SAVE";
 	    }
 	});
-	
+
 
 </script>
 @endsection

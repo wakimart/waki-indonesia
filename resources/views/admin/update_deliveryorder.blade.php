@@ -10,7 +10,6 @@ $menu_item_page = "deliveryorder";
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container {
         height: 45px !important;
         width: auto !important;

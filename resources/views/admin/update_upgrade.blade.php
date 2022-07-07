@@ -9,7 +9,6 @@ $menu_item_second = "edit_upgrade_form";
     #intro {
         padding-top: 2em;
     }
-
     button {
         background: #1bb1dc;
         border: 0;
@@ -18,12 +17,10 @@ $menu_item_second = "edit_upgrade_form";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
@@ -32,70 +29,38 @@ $menu_item_second = "edit_upgrade_form";
     }
 
 	/* Mark input boxes that gets an error on validation: */
-	input.invalid {
-	  background-color: #ffdddd;
-	}
-
+	input.invalid {background-color: #ffdddd;}
 	/* Mark the steps that are finished and valid: */
-	.step.finish {
-	  background-color: #4CAF50;
-	}
-
+	.step.finish {background-color: #4CAF50;}
 	input[type='checkbox'], input[type='radio'] {
 		margin-left: 0px !important;
 	}
-
 	table {
-        margin: 1em;
-        font-size: 14px;
-    }
-
-    table thead {
-        background-color: #8080801a;
-        text-align: center;
-    }
-
-    table td {
-        border: 0.5px #8080801a solid;
-        padding: 0.5em;
-    }
-
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
-    .justify-content-center {
-    	padding: 0em 1em;
-    }
-
+    margin: 1em;
+    font-size: 14px;
+  }
+  table thead {
+      background-color: #8080801a;
+      text-align: center;
+  }
+  table td {
+      border: 0.5px #8080801a solid;
+      padding: 0.5em;
+  }
+  .center {text-align: center;}
+  .right {text-align: right;}
+  .justify-content-center {
+  	padding: 0em 1em;
+  }
     /*-- mobile --*/
 	@media (max-width: 768px){
-
-        #desktop{
-            display: none;
-        }
-
-        #mobile{
-            display: block;
-        }
-
-        img{
-            height: 150px;
-        }
+        #desktop{display: none;}
+        #mobile{display: block;}
+        img{height: 150px;}
     }
-
-        @media (min-width: 768px) { 
-        #desktop{
-            display: block;
-        }
-
-        #mobile{
-            display: none;
-        }
+        @media (min-width: 768px) {
+        #desktop{display: block;}
+        #mobile{display: none;}
         .table-responsive::-webkit-scrollbar {
             display: none;
         }
@@ -120,7 +85,7 @@ $menu_item_second = "edit_upgrade_form";
 	  	</div>
 
 		<!-- header desktop -->
-		<div id="desktop">  
+		<div id="desktop">
             <div class="page-header">
                 <h3 class="page-title">Add Upgrade</h3>
                 <nav aria-label="breadcrumb">

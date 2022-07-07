@@ -55,7 +55,7 @@ $menu_item_second = "list_homeservice";
         flex: 1 !important;
     }
     .cjslib-day-indicator {
-        olor: #ffa000; background-color: #ffa000;
+        color: #ffa000; background-color: #ffa000;
     }
     .cjslib-indicator-type-numeric {
         color: #ffffff;
@@ -726,142 +726,137 @@ $menu_item_second = "list_homeservice";
     <!-- partial -->
 
     <!-- Modal View -->
-    <div class="modal fade"
-        id="viewHomeServiceModal"
-        tabindex="-1"
-        role="dialog"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">View Appointment</h5>
-                    <button type="button"
-                        class="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <table style="width: 90%; margin: auto;">
-                        <tr>
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Customer: </td>
-                            <td id="view_type_customer" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                        <tr>
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Home Service: </td>
-                            <td id="view_type_homeservices" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
+    <div class="modal fade" id="viewHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">View Appointment</h5>
+            <button type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <table style="margin: auto;">
+                  <tr>
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Customer: </td>
+                      <td id="view_type_customer" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr>
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Home Service: </td>
+                      <td id="view_type_homeservices" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
 
-                        <tr><td style="padding-top: 1em;"></td></tr>
+                  <tr><td style="padding-top: 1em;"></td></tr>
 
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Member: </td>
-                            <td id="view-no_member" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Nama: </td>
-                            <td id="view-name" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Telp: </td>
-                            <td id="view-phone" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Provinsi: </td>
-                            <td id="view-province" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kota/Kabupaten: </td>
-                            <td id="view-city" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kecamatan: </td>
-                            <td id="view-distric" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Alamat: </td>
-                            <td id="view-address" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Member: </td>
+                      <td id="view-no_member" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Nama: </td>
+                      <td id="view-name" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Telp: </td>
+                      <td id="view-phone" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Provinsi: </td>
+                      <td id="view-province" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kota/Kabupaten: </td>
+                      <td id="view-city" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kecamatan: </td>
+                      <td id="view-distric" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Alamat: </td>
+                      <td id="view-address" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
 
-                        <tr><td style="padding-top: 1em;"></td></tr>
+                  <tr><td style="padding-top: 1em;"></td></tr>
 
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Cabang: </td>
-                            <td id="view-branch" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode CSO: </td>
-                            <td id="view-cso" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode Partner CSO: </td>
-                            <td id="view-cso2" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Cabang: </td>
+                      <td id="view-branch" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode CSO: </td>
+                      <td id="view-cso" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Kode Partner CSO: </td>
+                      <td id="view-cso2" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
 
-                        <tr><td style="padding-top: 1em;"></td></tr>
+                  <tr><td style="padding-top: 1em;"></td></tr>
 
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Tanggal: </td>
-                            <td id="view-date" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                        <tr style="margin-top: 0.5em">
-                            <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Jam: </td>
-                            <td id="view-time" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    @if(isset($_GET['id_hs']) && Auth::user()->inRole("head-admin"))
-                        <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
-                            @csrf
-                            <div class="form-group">
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Tanggal: </td>
+                      <td id="view-date" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+                  <tr style="margin-top: 0.5em">
+                      <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Jam: </td>
+                      <td id="view-time" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
+                  </tr>
+              </table>
+          </div>
+          <div class="modal-footer">
+              @if(isset($_GET['id_hs']) && Auth::user()->inRole("head-admin"))
+                  <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                      @csrf
+                      <div class="form-group">
 
-                                <input type="hidden" id="hiddenInput" name="cancel" value="1" />
-                                <input type="hidden" id="input_id_hs_hidden" name="id" value="-" />
+                          <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                          <input type="hidden" id="input_id_hs_hidden" name="id" value="-" />
 
-                                <div style="text-align: center;">
-                                    <h5>Are you sure want to cancel this Home Service?</h5>
-                                    <p id="cancel_desc_view"></p>
-                                    <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
-                                    <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
-                                </div>
-                            </div>
-                        </form>
-                    @else
-                        @if(Gate::check('add-service'))
-                            <a id="create_technician_schedule"
-                                href="">
-                                <button id="btn-share"
-                                    type="button"
-                                    class="btn btn-gradient-primary mr-2">
-                                    Add Schedule
-                                </button>
-                            </a>
-                        @endif
-                        <a id="url_share"
-                            href=""
-                            data-action="share/whatsapp/share"
-                            target="_blank">
-                            <button id="btn-share"
-                                type="button"
-                                class="btn btn-gradient-primary mr-2">
-                                <span class="mdi mdi-whatsapp"
-                                    style="font-size: 18px;">
-                                </span>
-                                Share
-                            </button>
-                        </a>
-                        <button class="btn btn-light"
-                            data-dismiss="modal"
-                            aria-label="Close">
-                            Cancel
-                        </button>
-                    @endif
+                          <div style="text-align: center;">
+                              <h5>Are you sure want to cancel this Home Service?</h5>
+                              <p id="cancel_desc_view"></p>
+                              <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                              <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                          </div>
+                      </div>
+                  </form>
+              @else
+                  @if(Gate::check('add-service'))
+                      <a id="create_technician_schedule"
+                          href="">
+                          <button id="btn-share"
+                              type="button"
+                              class="btn btn-gradient-primary mr-2">
+                              Add Schedule
+                          </button>
+                      </a>
+                  @endif
+                  <a id="url_share"
+                      href=""
+                      data-action="share/whatsapp/share"
+                      target="_blank">
+                      <button id="btn-share"
+                          type="button"
+                          class="btn btn-gradient-primary mr-2">
+                          <span class="mdi mdi-whatsapp">
+                          </span>
+                          Share
+                      </button>
+                  </a>
+                  <button class="btn btn-light"
+                      data-dismiss="modal"
+                      aria-label="Close">
+                      Cancel
+                  </button>
+              @endif
 
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
     </div>
     <!-- End Modal View -->
 

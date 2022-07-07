@@ -21,10 +21,20 @@ if (
 <style type="text/css">
     #intro {padding-top: 2em;}
     .signature-pad {
-      width:400px;
-      height:200px;
+      width: 320px;
+      height: 200px;
       background-color: white;
       margin-bottom: 0.5em;
+    }
+    @media (max-width:400px){
+      .signature-pad {
+        width: 255px !important;
+      }
+    }
+    @media (min-width:768px){
+      .signature-pad {
+        width: 500px !important;
+      }
     }
     table {
         margin: 1em;
@@ -82,6 +92,10 @@ if (
             margin-bottom: 3em;
         }
 	}
+
+    .decrease-width {
+        width: 100px !important
+    }
 </style>
 @endsection
 
@@ -94,7 +108,16 @@ if (
                     <div class="card">
                         <div class="card-body">
                             <div class="row justify-content-center">
-                                <h2>SUBMISSION SUCCESS</h2>
+                                @php
+                                    $style_h = "";
+                                    if($submission->status_reference == "new"){
+                                        $style_h = "color: #4c94ff;";
+                                    }
+                                    elseif($submission->status_reference == "rejected"){
+                                        $style_h = "color: #ff4c4c;";
+                                    }
+                                @endphp
+                                <h2 style="{{ $style_h }}">SUBMISSION {{ strtoupper($submission->status_reference) }}</h2>
                             </div>
 
                             <div class="row justify-content-center">
@@ -199,7 +222,7 @@ if (
                                     <table class="table"
                                         style="table-layout: auto;">
                                         <thead>
-                                            <td colspan="14">Reference</td>
+                                            <td colspan="15">Reference</td>
                                         </thead>
                                         <thead style="background-color: #80808012 !important;">
                                             <tr>
@@ -219,6 +242,7 @@ if (
                                                 @endif
                                                 <td>Edit</td>
                                                 <td>Delete</td>
+                                                <td>Signature</td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -377,6 +401,13 @@ if (
                                                             <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                         </button>
                                                     </td>
+                                                    <td class="text-center">
+                                                        @if($reference->reference_souvenir->status == 'success' &&  $reference->online_signature == '')
+                                                            <button class="btn" style="padding: 0" onclick="createSignature({{ $reference->id }})">
+                                                                <i class="mdi mdi-pencil-box-outline" style="font-size: 24px; color: #32a852;"></i>                                                
+                                                            </button>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                                 {{-- <tr>
                                                     <td class="text-center"
@@ -454,17 +485,6 @@ if (
                                 </form>
                              </div>
 
-                            <div class="col-md-12 text-center d-none">
-                              <div class="wrapper">
-                                <canvas id="signature-pad" class="signature-pad" width=400 height=200 style="border: 2px solid black"></canvas>
-                              </div>
-
-                              <button class="btn-gradient-primary" id="save-png">Save as PNG</button>
-                              <button class="btn-gradient-primary" id="save-jpeg">Save as JPEG</button>
-                              <button class="btn-gradient-primary" id="save-svg">Save as SVG</button>
-                              <button class="btn-gradient-primary" id="clear">Clear</button>
-                            </div>
-
                             @if ($historySubmission->isNotEmpty())
                                 <div class="row justify-content-center"
                                     style="margin-top: 2em;">
@@ -512,6 +532,46 @@ if (
                     </div>
                 </div>
             </div>
+
+            @if($specialPermission && ($submission->status_reference != "approved" && $submission->status_reference != "rejected"))
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center mb-2">
+                                <h2>Status Reference</h2>
+                            </div>
+                            <form id="actionAdd"
+                                class="forms-sample"
+                                method="POST"
+                                action="{{ route('update_submission_status_referensi') }}">
+                                {{ csrf_field() }}
+                                <input type="text"
+                                    name="id"
+                                    value="{{ $submission['id'] }}"
+                                    hidden />
+                                <div class="form-group row justify-content-center">
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-primary m-3 btn-lg"
+                                        name="status"
+                                        value="approved">
+                                        Approved
+                                    </button>
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-danger m-3 btn-lg"
+                                        name="status"
+                                        value="rejected">
+                                        Reject
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 @else
@@ -818,7 +878,7 @@ if (
     tabindex="-1"
     role="dialog"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="padding-bottom: 0;">
                 <h5 class="text-center">
@@ -874,11 +934,12 @@ if (
                     </table>
                 </div>
 
+                
                 <form id="formUpdateStatus" method="POST" action="{{ route('update_reference') }}">
-                    {{ csrf_field() }}
-                    <div class="form-group text-center">
+                    {{ csrf_field() }}                    
+                    <div class="form-group text-center mt-4">
                         <label>Other Detail</label>
-                        <table id="table-detail-other" style="margin: 1em 0em;">
+                        <table id="table-detail-other" style="margin: 1em 0em;width:100%">
                             <thead>
                                 <td>Item</td>
                                 <td>Name</td>
@@ -902,6 +963,8 @@ if (
                     </div>
                 </form>
 
+                <!-- display signature -->
+                <div id="displaySignature" class="mt-4 text-center"></div>
             </div>
 
         </div>
@@ -945,60 +1008,65 @@ if (
         </div>
     </div>
 </div>
+
+<!-- SIGNATURE MODAL -->
+<div class="modal fade"
+    id="createSignatureModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-bottom: 0;">
+                <h5 class="text-center">
+                    Add Signature
+                </h5>
+                <button type="button"
+                    class="close"
+                    id="modal-ref-close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+
+            <div class="modal-body">
+                <form action="{{route('online_signature.add')}}" method="POST" enctype="multipart/form-data" id="signatureForm">
+                    @csrf
+                    <div class="col-md-12 text-center p-0">
+                        <div class="wrapper">
+                            <input type="hidden" name="ref_id" id="ref-id">
+                            <input type="hidden" name="online_signature" id="signature-data">
+                            <input type="hidden" name="url" value="{{ url()->full() }}" />
+                            @foreach($references as $refForCanvas)
+                                <canvas id="signature-pad-{{$refForCanvas->id}}" class="signature-pad d-none" width=500 height=200 style="border: 2px solid black"></canvas>
+                                <div class="d-none div-d-none" id="button-canvas-{{$refForCanvas->id}}">
+                                    <button type="button" class="btn btn-secondary btn-sm decrease-width" id="clear-canvas-{{$refForCanvas->id}}">Clear</button>
+                                    <button type="button" class="btn btn-primary btn-sm decrease-width" id="save-canvas-{{$refForCanvas->id}}">Save</button>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END SIGNATURE MODAL -->
 @endsection
 
 @section('script')
 <script type="text/javascript">
-  var canvas = document.getElementById('signature-pad');
-
-  function resizeCanvas() {
-      var ratio =  Math.max(window.devicePixelRatio || 1, 1);
-      canvas.width = canvas.offsetWidth * ratio;
-      canvas.height = canvas.offsetHeight * ratio;
-      canvas.getContext("2d").scale(ratio, ratio);
-  }
-
-  window.onresize = resizeCanvas;
-  resizeCanvas();
-
-  var signaturePad = new SignaturePad(canvas, {
-    backgroundColor: 'rgb(255, 255, 255)' // necessary for saving image as JPEG; can be removed is only saving as PNG or SVG
-  });
-
-  document.getElementById('save-png').addEventListener('click', function () {
-    if (signaturePad.isEmpty()) {
-      return alert("Please provide a signature first.");
-    }
-
-    var data = signaturePad.toDataURL('image/png');
-    console.log(data);
-    window.open(data);
-  });
-
-  document.getElementById('save-jpeg').addEventListener('click', function () {
-    if (signaturePad.isEmpty()) {
-      return alert("Please provide a signature first.");
-    }
-
-    var data = signaturePad.toDataURL('image/jpeg');
-    console.log(data);
-    window.open(data);
-  });
-
-  document.getElementById('save-svg').addEventListener('click', function () {
-    if (signaturePad.isEmpty()) {
-      return alert("Please provide a signature first.");
-    }
-
-    var data = signaturePad.toDataURL('image/svg+xml');
-    console.log(data);
-    console.log(atob(data.split(',')[1]));
-    window.open(data);
-  });
-
-  document.getElementById('clear').addEventListener('click', function () {
-    signaturePad.clear();
-  });
+    // signature pad
+    var signature_pad = []
+    <?php foreach($references as $refForCanvas) { ?>
+        this["canvas_{{$refForCanvas->id}}"] = $("#signature-pad-{{$refForCanvas->id}}")[0];
+        if(window.devicePixelRatio >= 2){
+            this["canvas_{{$refForCanvas->id}}"].width = 255
+        }
+        signature_pad['{{$refForCanvas->id}}'] = new SignaturePad(this["canvas_{{$refForCanvas->id}}"], {});
+    <?php } ?>
 </script>
 <script type="application/javascript">
 let provinceOption = "";
@@ -1432,6 +1500,15 @@ function loadDataPerRef(ref_id) {
                 // $('#refs_prize').val(data_refs[0]['prize_id']);
                 // $('#refs_order').val(data_refs[0]['order_id']);
             }
+
+            var displaySignature = ''
+            if(data_ref.online_signature){
+                displaySignature = `
+                    <img src="{{asset('sources/online_signature/${data_ref.online_signature}')}}">
+                `
+            }
+            $('#displaySignature').html(displaySignature)
+            console.log(data)
 
             $("#modal-per-reference").modal("show");
         }
@@ -1962,6 +2039,26 @@ function selectOrderForEdit(id, code, origin) {
 
 function deleteReference(e) {
     document.getElementById("delete-reference-id").value = e.dataset.id;
+}
+
+function createSignature(id) {
+    $(".div-d-none").addClass('d-none')
+    $('.signature-pad').addClass('d-none')
+    $("#signature-pad-"+id).removeClass('d-none')
+    $('#createSignatureModal').modal('show');
+    $('#button-canvas-'+id).removeClass('d-none')
+    document.getElementById('clear-canvas-'+id).addEventListener('click', function () {
+        signature_pad[id].clear();
+    });
+    document.getElementById('save-canvas-'+id).addEventListener('click', function () {
+        if (signature_pad[id].isEmpty()) {
+            return alert("Please provide a signature first.");
+        } else {
+            $('#ref-id').val(id)
+            $('#signature-data').val(signature_pad[id].toDataURL("image/png"))
+            $('#signatureForm').submit()
+        }
+    });
 }
 </script>
 @endsection

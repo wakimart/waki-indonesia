@@ -119,16 +119,26 @@
                         <thead style="background-color: #80808012 !important">
                             <td colspan="2">Old Product</td>
                         </thead>
+                        <thead style="background-color: #80808012 !important">
+                            <td>Product Name</td>
+                            <td>Quantity</td>
+                        </thead>
                         <tr>
-                            <td colspan="2">{{$order['old_product']}}</td>
+                            <td>{{json_decode($order['old_product'], true)['name']}}</td>
+                            <td>{{json_decode($order['old_product'], true)['qty']}}</td>
                         </tr>
                     @endif
                     @if($order['prize'] != null)
                         <thead style="background-color: #80808012 !important">
                             <td colspan="2">Prize Product</td>
                         </thead>
+                        <thead style="background-color: #80808012 !important">
+                            <td>Prize Product Name</td>
+                            <td>Quantity</td>
+                        </thead>
                         <tr>
-                            <td colspan="2">{{$order['prize']}}</td>
+                            <td>{{json_decode($order['prize'], true)['name']}}</td>
+                            <td>{{json_decode($order['prize'], true)['qty']}}</td>
                         </tr>
                     @endif
 
@@ -139,11 +149,11 @@
                         <td colspan="2">Payment Detail</td>
                     </thead>
                     <tr>
-                        <td>Total Payment : </td>
+                        <td>Total Price : </td>
                         <td>Rp. {{ number_format($order['total_payment']) }}</td>
                     </tr>
                     <tr>
-                        <td>Down Payment : </td>
+                        <td>Total Payment : </td>
                         <td>Rp. {{ number_format($order['down_payment']) }} (PAID OFF)</td>
                     </tr>
                     <tr>
@@ -154,7 +164,7 @@
                         <td>Bank : </td>
                         <td>
                             @foreach(json_decode($order['bank']) as $key=>$bank)
-                                {{ $bank->id }} ({{ $bank->cicilan }}X)
+                                {{ App\Order::$Banks["$bank->id"] }} ({{ $bank->cicilan }}X)
                                 @if(sizeof(json_decode($order['bank'], true)) > $key+1) +  @endif
                             @endforeach
                         </td>
@@ -186,7 +196,7 @@
                     </thead>
                     <tr>
                         <td style="width:50%; text-align: center">{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
-                        <td style="width:50%; text-align: center">{{ $order->cso['code'] }}</td>
+                        <td style="width:50%; text-align: center">{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
                     </tr>
                 </table>
                 @if($order['customer_type'] != null)

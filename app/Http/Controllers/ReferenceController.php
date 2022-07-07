@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\File;
 use Validator;
 
 class ReferenceController extends Controller
@@ -792,6 +793,61 @@ class ReferenceController extends Controller
                 "error" => $e,
                 "error message" => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    /**
+     * add online signature in reference
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function addOnlineSignature(Request $request)
+    {    
+        DB::beginTransaction();
+
+        try {
+            $reference = Reference::find($request->ref_id);
+            $filename = $request->ref_id . "-signature.png";
+            $data_uri = explode(',', $request->online_signature);
+            $encoded_image = $data_uri[1];
+            $decoded_image = base64_decode($encoded_image);
+            if (!is_dir("sources/online_signature")) {
+                File::makeDirectory("sources/online_signature", 0777, true, true);
+            }
+            file_put_contents('sources/online_signature/' . $filename, $decoded_image);
+            $reference->online_signature = $filename;
+            $reference->reference_souvenir->delivery_status_souvenir = "delivered";
+            $reference->save();
+
+            $reference_souvenir = $reference->reference_souvenir;
+            $reference_souvenir->delivery_status_souvenir = "delivered";
+            $reference_souvenir->save();
+
+            //history change
+            $user = Auth::user();
+            $historyUpdateSubmission = [];
+            $historyUpdateSubmission["type_menu"] = "Submission";
+            $historyUpdateSubmission["method"] = "Signature Reference";
+            $historyUpdateSubmission["meta"] = json_encode([
+                "user" => $user["id"],
+                "updatedAt" => date("Y-m-d H:i:s"),
+                "dataChange" => ["Delivery Status" => "delivered"],
+            ], JSON_THROW_ON_ERROR);
+
+            $historyUpdateSubmission["user_id"] = $user["id"];
+            $historyUpdateSubmission["menu_id"] = $reference->submission['id'];
+            HistoryUpdate::create($historyUpdateSubmission);
+
+            DB::commit();
+            return redirect($request->url)->with("success", "signature added successfully.");           
+        } catch (Exception $e) {
+            DB::rollback();
+            File::deleteDirectory(public_path('sources/online_signature/' . $filename));        
+            return redirect($request->url)->with("error", $e->getMessage());           
         }
     }
 }

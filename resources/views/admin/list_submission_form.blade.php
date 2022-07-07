@@ -18,11 +18,9 @@ if (isset($_GET["filter_type"])) {
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
-
     .select2-container--default
     .select2-selection--single
     .select2-selection__arrow {
@@ -189,6 +187,14 @@ if (isset($_GET["filter_type"])) {
                                                     $submission_done = "background-color: #beffc9;";
                                                     break;
                                                 }
+                                            }
+                                        }
+                                        elseif(strtoupper($submission->type) == "REFERENSI"){
+                                            if($submission->status == "new"){
+                                                $submission_done = "background-color: #cdedf7;";
+                                            }
+                                            elseif($submission->status == "rejected"){
+                                                $submission_done = "background-color: #ffdbdb;";
                                             }
                                         }
                                     @endphp

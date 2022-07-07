@@ -42,8 +42,8 @@ Route::get('/register-success', 'DeliveryOrderController@successorder')->name('s
 Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
 //Order
-Route::get('/order', 'OrderController@index')->name('add_order');
-Route::post('/order', 'OrderController@store')->name('store_order');
+// Route::get('/order', 'OrderController@index')->name('add_order');
+// Route::post('/order', 'OrderController@store')->name('store_order');
 Route::get('/order-success', 'OrderController@successorder')->name('order_success');
 //Route::get('/templistorderwaki1995', 'OrderController@listOrder')->name('list_order');
 
@@ -1005,6 +1005,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("/update/referensi", "SubmissionController@updateReferensi")
             ->name("update_submission_referensi");
 
+        Route::post("/update/status-referensi", "SubmissionController@updateStatusReferensi")
+            ->name("update_submission_status_referensi");
+
         Route::post("/update/takeaway", "SubmissionController@updateTakeaway")
             ->name("update_submission_takeaway");
 
@@ -1040,6 +1043,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::post("/accNotif", "ReferenceController@accNotif")
             ->name("acc_notif_reference");
+
+        // add online signature
+        Route::post("/online_signature", "ReferenceController@addOnlineSignature")
+            ->name("online_signature.add");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {
@@ -1074,6 +1081,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //export xls
         Route::get('/export-acceptance-to-xls-by-date', 'AcceptanceController@export_to_xls_byDate')
                 ->name('acceptance_export-to-xls-by-date');
+
+        // add bill do
+        Route::post("/bill_do/{id}", "AcceptanceController@addBillOrder")
+            ->name("add_bill_do");
 
     });
 
