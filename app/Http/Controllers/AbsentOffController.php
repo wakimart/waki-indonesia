@@ -860,13 +860,15 @@ class AbsentOffController extends Controller
     
                 $createData = HistoryUpdate::create($historyUpdate);
 
-                $userNya = [$absentOff->cso->user];
-                foreach ($absentOff->branch->cso as $perCso) {
-                    if($perCso->user != null){
-                        array_push($userNya, $perCso->user);
+                if ($absentOff->status == "approved" || $absentOff->status == "rejected") {
+                    $userNya = [$absentOff->cso->user];
+                    foreach ($absentOff->branch->cso as $perCso) {
+                        if($perCso->user != null){
+                            array_push($userNya, $perCso->user);
+                        }
                     }
+                    $this->NotifTo($userNya, $messagesNya, $titleNya);
                 }
-                $this->NotifTo($userNya, $messagesNya, $titleNya);    
             }
 
             return back()->with("success", "Acc Cuti berhasil diproses.");
@@ -904,13 +906,15 @@ class AbsentOffController extends Controller
 
             $createData = HistoryUpdate::create($historyUpdate);
 
-            $userNya = [$absentOff->cso->user];
-            foreach ($absentOff->branch->cso as $perCso) {
-                if($perCso->user != null){
-                    array_push($userNya, $perCso->user);
+            if ($absentOff->status == "approved" || $absentOff->status == "rejected") {
+                $userNya = [$absentOff->cso->user];
+                foreach ($absentOff->branch->cso as $perCso) {
+                    if($perCso->user != null){
+                        array_push($userNya, $perCso->user);
+                    }
                 }
+                $this->NotifTo($userNya, $messagesNya, $titleNya);
             }
-            $this->NotifTo($userNya, $messagesNya, $titleNya);
 
             return back()->with("success", "Acc Cuti berhasil diproses.");
         } else {
