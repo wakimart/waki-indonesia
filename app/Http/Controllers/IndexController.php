@@ -119,4 +119,24 @@ class IndexController extends Controller
         ];
         return response()->json($result, 200);
     }
+
+    public function sendContactForm(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|min:4',
+            'email' => 'required',
+            'subject' => 'required',
+            'message' => 'required',
+        ]);
+
+        $content="From: ".$request->name." \nEmail: <".$request->email."> \nMessage: ".$request->message;
+        $recipient = env("MAIL_CONTACTUS");
+        $mailheader = "From: <".$request->email."> \r\n";
+        
+        mail($recipient, $request->subject, $content, $mailheader) or die("Error!");
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Mail successfully send.'
+        ], 200);
+    }
 }

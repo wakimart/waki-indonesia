@@ -256,55 +256,53 @@
 		              	<div class="form">
 		              	@if(Utils::$lang=='id')
 		              		<h4>Kirim Pesan</h4>
-			                <form action="" method="post" role="form" class="contactForm">
+			                <form action="" method="post" role="form" class="contactForm" id="contactForm">
 			                  	<div class="form-group">
-			                    	<input type="text" name="name" class="form-control" id="name" placeholder="Nama Lengkap" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+			                    	<input type="text" name="name" class="form-control" id="name" required minlength="4" placeholder="Nama Lengkap" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<input type="email" class="form-control" name="email" id="email" placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
+			                    	<input type="email" class="form-control" name="email" id="email" required placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<input type="text" class="form-control" name="subject" id="subject" placeholder="Subyek" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+			                    	<input type="text" class="form-control" name="subject" id="subject" required minlength="4" placeholder="Subyek" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Pesan"></textarea>
+			                    	<textarea class="form-control" name="message" rows="5" required data-rule="required" data-msg="Please write something for us" placeholder="Pesan"></textarea>
 			                    	<div class="validation"></div>
 			                  	</div>
-
-			                  	<div id="sendmessage">Pesan Anda telah terkirim. Thank you!</div>
-			                  	<div id="errormessage"></div>
-
-			                  	<div class="text-center"><button type="submit" title="Send Message">Kirim Pesan</button></div>
+								  
+			                  	<div class="text-center"><button type="submit" id="sendMessageContactForm" title="Send Message">Kirim Pesan</button></div>
 			                </form>
+							<div id="sendmessage">Pesan Anda telah terkirim. Thank you!</div>
+							<div id="errormessage">Error! Pesan gagal terkirim.</div>
 		              	@elseif(Utils::$lang=='eng')
 		              		<h4>Send us a message</h4>
-			                <form action="" method="post" role="form" class="contactForm">
+			                <form action="" method="post" role="form" class="contactForm" id="contactForm">
 			                  	<div class="form-group">
-			                    	<input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+			                    	<input type="text" name="name" class="form-control" id="name" required minlength="4" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+			                    	<input type="email" class="form-control" name="email" id="email" required placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+			                    	<input type="text" class="form-control" name="subject" id="subject" required minlength="4" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+			                    	<textarea class="form-control" name="message" rows="5" required data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
 			                    	<div class="validation"></div>
 			                  	</div>
 
-			                  	<div id="sendmessage">Your message has been sent. Thank you!</div>
-			                  	<div id="errormessage"></div>
-
-			                  	<div class="text-center"><button type="submit" title="Send Message">Send Message</button></div>
+			                  	<div class="text-center"><button type="submit" id="sendMessageContactForm" title="Send Message">Send Message</button></div>
 			                </form>
-		              	@endif
+							<div id="sendmessage">Your message has been sent. Thank you!</div>
+							<div id="errormessage">Error! Message failed to send.</div>
+						@endif
 		              </div>
 		            </div>
           		</div>
@@ -367,6 +365,34 @@
 		  $('#video2').on('hidden.bs.modal', function (event) {
 		    $('#video-2')[0].pause();
 		  });
+		});
+
+		$("#contactForm").on("submit", function(e) {
+			e.preventDefault();
+			formData = {
+				"_token": "{{ csrf_token() }}",
+				'name'     : $('#contactForm input[name=name]').val(),
+				'email'    : $('#contactForm input[name=email]').val(),
+				'subject'  : $('#contactForm input[name=subject]').val(),
+				'message'  : $('#contactForm textarea[name=message]').val()
+			},
+
+			$("#sendMessageContactForm").attr('disabled', true);
+			$("#sendMessageContactForm").html("{{ (Utils::$lang=='id') ? 'Mengirim . . .' : 'Sending . . .' }}");
+			$.ajax({
+				url : "{{ route('send_contactForm') }}",
+				type: "POST",
+				dataType: 'JSON',
+				data : formData,
+				success: function(data) {
+					$('#contactForm').hide();
+					$('#contactForm').siblings("#sendmessage").show();
+				},
+				error: function (data) {
+					$('#contactForm').hide();
+					$('#contactForm').siblings("#errormessage").show();
+				}
+			});
 		});
 	</script>
 	@yield('script')

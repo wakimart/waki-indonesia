@@ -27,6 +27,9 @@ Route::get('/product_category/{id}', 'CategoryProductController@index')->name('p
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
 Route::get('/firebase','FirebaseController@index');
 
+// Send Contact Us Form
+Route::post('/sendcontactform', 'IndexController@sendContactForm')->name('send_contactForm');
+
 //Personal Homecare
 Route::get('/personal-homecare/{id}', 'PersonalHomecareController@phForm')->name('personal_homecare');
 Route::get('/thankyou-personal-homecare/{id}', 'PersonalHomecareController@thankyouForm')->name('thankyou_ph');
