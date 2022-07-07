@@ -497,7 +497,7 @@ $menu_item_second = "add_order";
                                         class="form-control"
                                         name="total_payment"
                                         id="total_payment"
-                                        placeholder="Total Payment"
+                                        placeholder="Total Price"
                                         required
                                         data-type="currency"
                                         data-msg="Mohon Isi Total Harga"
@@ -509,10 +509,10 @@ $menu_item_second = "add_order";
                                         class="form-control"
                                         name="down_payment"
                                         id="down_payment"
-                                        placeholder="Down Payment(DP)"
+                                        placeholder="Total Payment"
                                         required
                                         data-type="currency"
-                                        data-msg="Mohon Isi Down Payment(DP)"
+                                        data-msg="Mohon Isi Total Pembayaran"
                                         style="text-transform: uppercase;" />
                                     <div class="validation"></div>
                                 </div>
@@ -1111,7 +1111,7 @@ document.addEventListener("DOMContentLoaded", function () {
          if (down_payment > total_payment) {
             down_payment = total_payment;
             $("#down_payment").val(numberWithCommas(total_payment));
-            alert("Down Payment cant be higher than the total payment");
+            alert("Total Payment cant be higher than the Total Price");
         }
         var remaining_payment = total_payment - down_payment;
         $("#remaining_payment").val(numberWithCommas(remaining_payment));

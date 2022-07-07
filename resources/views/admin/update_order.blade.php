@@ -482,7 +482,7 @@ $menu_item_page = "order";
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
-			                        <input type="text" class="form-control" name="down_payment" id="down_payment" value="{{number_format($orders['down_payment'])}}" required data-type="currency" data-msg="Mohon Isi Down Payment(DP)" style="text-transform:uppercase"/>
+			                        <input type="text" class="form-control" name="down_payment" id="down_payment" value="{{number_format($orders['down_payment'])}}" required data-type="currency" data-msg="Mohon Isi Total Pembayaran" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
@@ -1131,7 +1131,7 @@ document.addEventListener("DOMContentLoaded", function () {
          if (down_payment > total_payment) {
             down_payment = total_payment;
             $("#down_payment").val(numberWithCommas(total_payment));
-            alert("Down Payment cant be higher than the total payment");
+            alert("Total Payment cant be higher than the Total Price");
         }
         var remaining_payment = total_payment - down_payment;
         $("#remaining_payment").val(numberWithCommas(remaining_payment));

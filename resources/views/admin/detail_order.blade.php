@@ -149,11 +149,11 @@
                         <td colspan="2">Payment Detail</td>
                     </thead>
                     <tr>
-                        <td>Total Payment : </td>
+                        <td>Total Price : </td>
                         <td>Rp. {{ number_format($order['total_payment']) }}</td>
                     </tr>
                     <tr>
-                        <td>Down Payment : </td>
+                        <td>Total Payment : </td>
                         <td>Rp. {{ number_format($order['down_payment']) }} (PAID OFF)</td>
                     </tr>
                     <tr>
