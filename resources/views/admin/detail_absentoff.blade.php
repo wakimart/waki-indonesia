@@ -163,6 +163,8 @@ $menu_item_page = "absent_off";
                                     </tr>
                                 </table>
                             </div>
+                            <a href="whatsapp://send?text={{ route('detail_absent_off') }}?id={{ $absentOff['id'] }}" data-action="share/whatsapp/share"
+                                class="btn btn-gradient-primary mr-2 mt-3">Share to Whatsapp</a>
                         </div>
                     </div>
                 </div>
