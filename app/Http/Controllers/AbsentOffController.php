@@ -6,6 +6,7 @@ use App\AbsentOff;
 use App\Branch;
 use App\Cso;
 use App\HistoryUpdate;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -600,6 +601,15 @@ class AbsentOffController extends Controller
             $absentOff->user_id = Auth::user()->id;
             $absentOff->save();
 
+            $titleNya = "Ijin Cuti";
+            $messagesNya = "Acc Ijin Cuti for ". $absentOff->cso['name'] . ' (' . $absentOff->cso['code'] .") from ".$absentOff->start_date." to " . $absentOff->end_date .". Branch ".$absentOff->branch['code'];
+
+            $userNya = User::where('users.fmc_token', '!=', null)
+                ->whereIn('role_users.role_id', [1,2,7])
+                ->leftjoin('role_users', 'users.id', '=',  'role_users.user_id')
+                ->get();
+            $this->NotifTo($userNya, $messagesNya, $titleNya);
+
             return response()->json(['success' => "Berhasil"]);
         }
     }
@@ -824,7 +834,12 @@ class AbsentOffController extends Controller
                     $absentOff->coordinator_id = $user['id'];
                 }
 
+                $titleNya = "Approved - ACC [Ijin Cuti]";
+                $messagesNya = "Acc Ijin Cuti for ". $absentOff->cso['name'] . ' (' . $absentOff->cso['code'] .") from ".$absentOff->start_date." to " . $absentOff->end_date .". Branch ".$absentOff->branch['code'].". Approved by ". ucwords($acc_cuti_type);    
+
                 if ($request->status_acc == "false") {
+                    $titleNya = "Rejected - ACC [Ijin Cuti]";
+                    $messagesNya = "Acc Ijin Cuti for ". $absentOff->cso['name'] . ' (' . $absentOff->cso['code'] .") from ".$absentOff->start_date." to " . $absentOff->end_date .". Branch ".$absentOff->branch['code'].". Rejected by ". ucwords($acc_cuti_type);    
                     $absentOff->status = "rejected";
                 } else if ($absentOff->supervisor_id && $absentOff->coordinator_id) {
                     $before = HistoryUpdate::where([['type_menu', 'Absent Off Acc'], ['menu_id', $absentOff->id]])->orderBy('id', 'desc')->first();
@@ -844,6 +859,14 @@ class AbsentOffController extends Controller
                 $historyUpdate['menu_id'] = $absentOff->id;
     
                 $createData = HistoryUpdate::create($historyUpdate);
+
+                $userNya = [$absentOff->cso->user];
+                foreach ($absentOff->branch->cso as $perCso) {
+                    if($perCso->user != null){
+                        array_push($userNya, $perCso->user);
+                    }
+                }
+                $this->NotifTo($userNya, $messagesNya, $titleNya);    
             }
 
             return back()->with("success", "Acc Cuti berhasil diproses.");
@@ -855,7 +878,12 @@ class AbsentOffController extends Controller
                 $absentOff->coordinator_id = $user['id'];
             }
 
+            $titleNya = "Approved - ACC [Ijin Cuti]";
+            $messagesNya = "Acc Ijin Cuti for ". $absentOff->cso['name'] . ' (' . $absentOff->cso['code'] .") from ".$absentOff->start_date." to " . $absentOff->end_date .". Branch ".$absentOff->branch['code'].". Approved by ". ucwords($acc_cuti_type);
+
             if ($request->status_acc == "false") {
+                $titleNya = "Rejected - ACC [Ijin Cuti]";
+                $messagesNya = "Acc Ijin Cuti for ". $absentOff->cso['name'] . ' (' . $absentOff->cso['code'] .") from ".$absentOff->start_date." to " . $absentOff->end_date .". Branch ".$absentOff->branch['code'].". Rejected by ". ucwords($acc_cuti_type);
                 $absentOff->status = "rejected";
             }  else if ($absentOff->supervisor_id && $absentOff->coordinator_id) {
                 $before = HistoryUpdate::where([['type_menu', 'Absent Off Acc'], ['menu_id', $absentOff->id]])->orderBy('id', 'desc')->first();
@@ -876,9 +904,69 @@ class AbsentOffController extends Controller
 
             $createData = HistoryUpdate::create($historyUpdate);
 
+            $userNya = [$absentOff->cso->user];
+            foreach ($absentOff->branch->cso as $perCso) {
+                if($perCso->user != null){
+                    array_push($userNya, $perCso->user);
+                }
+            }
+            $this->NotifTo($userNya, $messagesNya, $titleNya);
+
             return back()->with("success", "Acc Cuti berhasil diproses.");
         } else {
             return back()->with("error", "Acc Cuti gagal diproses.");
+        }
+    }
+
+    function sendFCM($body){
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Authorization: key=AAAAfcgwZss:APA91bGg7XK9XjDvLLqR36mKsC-HwEx_l5FPGXDE3bKiysfZ2yzUKczNcAuKED6VCQ619Q8l55yVh4VQyyH2yyzwIJoVajaK4t3TJV-x-4f_a9WUzIcnOYzixPIUB5DeuWRIAh1v8Yld',
+            'Content-Type: application/json'
+        ));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+
+        $result = curl_exec($curl);
+        if ($result === FALSE) {
+            die('Oops! FCM Send Error: ' . curl_error($curl));
+            $this->info(curl_error($curl));
+        }
+        curl_close($curl);
+        // return $result;
+    }
+
+    public function NotifTo($userNya, $messagesNya, $titleNya)
+    {
+        $fcm_tokenNya = [];
+        foreach ($userNya as $value) {
+            if($value['fmc_token'] != null){
+                foreach ($value['fmc_token'] as $fcmSatuan) {
+                    if($fcmSatuan != null){
+                        array_push($fcm_tokenNya, $fcmSatuan);
+                    }
+                }
+            }
+        }
+
+        $body = ['registration_ids'=>$fcm_tokenNya,
+            'collapse_key'=>"type_a",
+            "content_available" => true,
+            "priority" => "high",
+            "notification" => [
+                "body" => $messagesNya,
+                "title" => $titleNya,
+                "icon" => "ic_launcher"
+            ]];
+
+        if(sizeof($fcm_tokenNya) > 0)
+        {
+            $this->sendFCM(json_encode($body));
         }
     }
 }
