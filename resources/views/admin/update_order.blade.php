@@ -191,7 +191,7 @@ $menu_item_page = "order";
 	              			<br>
 
 	              			<div class="form-group">
-	              				<label for="">CASH/UPGRADE</label>
+                                <h5 class="text-center"><strong>CASH/UPGRADE</strong></h5>
 			                    <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Mohon Pilih Tipe" required>
 			                        <option selected disabled value="">Choose CASH/UPGRADE</option>
 
@@ -365,6 +365,7 @@ $menu_item_page = "order";
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group">
+                                            <label for="">Old Product</label>
                                             <input type="text" 
                                                 class="form-control" 
                                                 name="old_product" 
@@ -378,6 +379,7 @@ $menu_item_page = "order";
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
+                                            <label for="">Qty Old Product</label>
                                             <input type="number"
                                                 class="form-control"
                                                 name="old_product_qty"
@@ -394,6 +396,7 @@ $menu_item_page = "order";
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group">
+                                            <label for="">Prize Product</label>
                                             <input type="text" 
                                                 class="form-control" 
                                                 name="prize" 
@@ -407,6 +410,7 @@ $menu_item_page = "order";
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
+                                            <label for="">Qty Prize Product</label>
                                             <input type="number"
                                                 class="form-control"
                                                 name="prize_qty"
@@ -423,7 +427,7 @@ $menu_item_page = "order";
 			                <br>
 
 			                <div class="form-group">
-			                	<label for="">Payment Method</label>
+                                <h5 class="text-center"><strong>Payment Method</strong></h5>
 			                    <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe" required>
 			                        <option selected disabled value="">Choose Payment Method</option>
 
@@ -478,14 +482,17 @@ $menu_item_page = "order";
 			                    <div id="tambahan_bank"></div>
 			                    {{-- ++++++++ ==== ++++++++ --}}
 			                    <div class="form-group">
+                                    <label for="">Total Price</label>
 			                        <input type="text" class="form-control" name="total_payment" id="total_payment" value="{{number_format($orders['total_payment'], 2)}}" required data-type="currency" data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
+                                    <label for="">Total Payment</label>
 			                        <input type="text" class="form-control" name="down_payment" id="down_payment" value="{{number_format($orders['down_payment'])}}" required data-type="currency" data-msg="Mohon Isi Total Pembayaran" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
+                                    <label for="">Remaining Payment</label>
 			                        <input type="text" class="form-control" name="remaining_payment" id="remaining_payment" value="{{number_format($orders['remaining_payment'])}}" required readonly data-type="currency" data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
