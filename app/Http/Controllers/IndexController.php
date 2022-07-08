@@ -9,6 +9,8 @@ use App\CategoryProduct;
 use App\Album;
 use App\Product;
 use App\Version;
+use Illuminate\Support\Facades\Mail;
+
 class IndexController extends Controller
 {
     /**
@@ -131,9 +133,15 @@ class IndexController extends Controller
 
         $content="From: ".$request->name." \nEmail: <".$request->email."> \nMessage: ".$request->message;
         $recipient = env("MAIL_CONTACTUS");
-        $mailheader = "From: <".$request->email."> \r\n";
+        // $mailheader = "From: <".$request->email."> \r\n";
         
-        mail($recipient, $request->subject, $content, $mailheader) or die("Error!");
+        Mail::send([], [], function ($message) use ($recipient, $request, $content) {
+            $message->to($recipient)
+              ->from($request->email)
+              ->subject($request->subject)
+              ->setBody($content); // assuming text/plain
+        });
+
         return response()->json([
             'status' => 'success',
             'message' => 'Mail successfully send.'
