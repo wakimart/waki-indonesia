@@ -271,7 +271,7 @@ $menu_item_second = "add_order";
                             </div>
                             <br>
                             <div class="form-group">
-                                <label for="">CASH/UPGRADE</label>
+                                <h5 class="text-center"><strong>CASH/UPGRADE</strong></h5>
                                 <select class="form-control"
                                     id="cash_upgarde"
                                     name="cash_upgrade"
@@ -377,6 +377,7 @@ $menu_item_second = "add_order";
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group" style="display: none;">
+                                            <label for="">Old Product</label>
                                             <input type="text"
                                                 class="form-control"
                                                 name="old_product"
@@ -389,6 +390,7 @@ $menu_item_second = "add_order";
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group" style="display: none;">
+                                            <label for="">Qty Old Product</label>
                                             <input type="number"
                                                 class="form-control"
                                                 name="old_product_qty"
@@ -402,6 +404,7 @@ $menu_item_second = "add_order";
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group">
+                                            <label for="">Prize Product</label>
                                             <input type="text"
                                                 class="form-control"
                                                 name="prize"
@@ -414,6 +417,7 @@ $menu_item_second = "add_order";
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
+                                            <label for="">Qty Prize Product</label>
                                             <input type="number"
                                                 class="form-control"
                                                 name="prize_qty"
@@ -428,7 +432,7 @@ $menu_item_second = "add_order";
                             <br>
 
                             <div class="form-group">
-                                <label for="payment_type">Payment Method</label>
+                                <h5 class="text-center"><strong>Payment Method</strong></h5>
                                 <select class="form-control"
                                     id="payment_type"
                                     name="payment_type"
@@ -493,6 +497,7 @@ $menu_item_second = "add_order";
                                 <div id="tambahan_bank"></div>
                                 {{-- ++++++++ ==== ++++++++ --}}
                                 <div class="form-group">
+                                    <label for="">Total Price</label>
                                     <input type="text"
                                         class="form-control"
                                         name="total_payment"
@@ -505,6 +510,7 @@ $menu_item_second = "add_order";
                                     <div class="validation"></div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="">Total Payment</label>
                                     <input type="text"
                                         class="form-control"
                                         name="down_payment"
@@ -517,6 +523,7 @@ $menu_item_second = "add_order";
                                     <div class="validation"></div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="">Remaining Payment</label>
                                     <input type="text"
                                         class="form-control"
                                         name="remaining_payment"
