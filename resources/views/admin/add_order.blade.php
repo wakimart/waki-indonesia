@@ -482,6 +482,10 @@ $menu_item_second = "add_order";
                                                 {{ $i }}X
                                             </option>
                                         @endfor
+                                        <option class="other_valCicilan"
+                                            value="24">
+                                            24X
+                                        </option>
                                     </select>
                                     <div class="validation"></div>
                                 </div>

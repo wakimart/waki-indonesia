@@ -473,6 +473,12 @@ $menu_item_page = "order";
 			                                	<option class="other_valCicilan" value="{{ $i }}">{{ $i }}X</option>
 			                                @endif
 			                            @endfor
+
+                                        @if($payment['cicilan'] == 24)
+                                            <option class="other_valCicilan" value="24" selected="true">24X</option>
+                                        @else
+                                            <option class="other_valCicilan" value="24">24X</option>
+                                        @endif
 			                        </select>
 			                        <div class="validation"></div>
 			                    </div>
