@@ -191,7 +191,7 @@ $menu_item_page = "order";
 	              			<br>
 
 	              			<div class="form-group">
-	              				<label for="">CASH/UPGRADE</label>
+                                <h5 class="text-center"><strong>CASH/UPGRADE</strong></h5>
 			                    <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Mohon Pilih Tipe" required>
 			                        <option selected disabled value="">Choose CASH/UPGRADE</option>
 
@@ -362,22 +362,72 @@ $menu_item_page = "order";
 			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 
 			                    @if($orders['cash_upgrade'] == 2)
-			                    <div class="form-group">
-			                        <input type="text" class="form-control" name="old_product" id="old_product" placeholder="Old Product" value="{{$orders['old_product']}}" data-msg="Mohon Isi Produk Lama" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <label for="">Old Product</label>
+                                            <input type="text" 
+                                                class="form-control" 
+                                                name="old_product" 
+                                                id="old_product" 
+                                                placeholder="Old Product" 
+                                                value="{{ json_decode($orders['old_product'], true)['name'] ?? '' }}" 
+                                                data-msg="Mohon Isi Produk Lama" 
+                                                style="text-transform:uppercase"/>
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Qty Old Product</label>
+                                            <input type="number"
+                                                class="form-control"
+                                                name="old_product_qty"
+                                                id="old_product_qty"
+                                                placeholder="Qty"
+                                                value="{{ json_decode($orders['old_product'], true)['qty'] ?? '' }}"
+                                                data-msg="Mohon Isi Jumlah Old Product" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                </div>
 			                    @endif
 
-			                    <div class="form-group">
-			                        <input type="text" class="form-control" name="prize" id="prize" placeholder="Prize Product" value="{{$orders['prize']}}" data-msg="Mohon Isi Hadiah" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <label for="">Prize Product</label>
+                                            <input type="text" 
+                                                class="form-control" 
+                                                name="prize" 
+                                                id="prize" 
+                                                placeholder="Prize Product" 
+                                                value="{{ json_decode($orders['prize'], true)['name'] ?? '' }}" 
+                                                data-msg="Mohon Isi Hadiah" 
+                                                style="text-transform:uppercase"/>
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Qty Prize Product</label>
+                                            <input type="number"
+                                                class="form-control"
+                                                name="prize_qty"
+                                                id="prize_qty"
+                                                placeholder="Qty"
+                                                value="{{ json_decode($orders['prize'], true)['qty'] ?? '' }}"
+                                                data-msg="Mohon Isi Jumlah Prize" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                </div>
 			                </div>
 			                @endif
 			                <br>
 
 			                <div class="form-group">
-			                	<label for="">Payment Method</label>
+                                <h5 class="text-center"><strong>Payment Method</strong></h5>
 			                    <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe" required>
 			                        <option selected disabled value="">Choose Payment Method</option>
 
@@ -423,6 +473,12 @@ $menu_item_page = "order";
 			                                	<option class="other_valCicilan" value="{{ $i }}">{{ $i }}X</option>
 			                                @endif
 			                            @endfor
+
+                                        @if($payment['cicilan'] == 24)
+                                            <option class="other_valCicilan" value="24" selected="true">24X</option>
+                                        @else
+                                            <option class="other_valCicilan" value="24">24X</option>
+                                        @endif
 			                        </select>
 			                        <div class="validation"></div>
 			                    </div>
@@ -432,15 +488,18 @@ $menu_item_page = "order";
 			                    <div id="tambahan_bank"></div>
 			                    {{-- ++++++++ ==== ++++++++ --}}
 			                    <div class="form-group">
-			                        <input type="number" class="form-control" name="total_payment" id="total_payment" value="{{$orders['total_payment']}}" required data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
+                                    <label for="">Total Price</label>
+			                        <input type="text" class="form-control" name="total_payment" id="total_payment" value="{{number_format($orders['total_payment'], 2)}}" required data-type="currency" data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
-			                        <input type="number" class="form-control" name="down_payment" id="down_payment" value="{{$orders['down_payment']}}" required data-msg="Mohon Isi Down Payment(DP)" style="text-transform:uppercase"/>
+                                    <label for="">Total Payment</label>
+			                        <input type="text" class="form-control" name="down_payment" id="down_payment" value="{{number_format($orders['down_payment'])}}" required data-type="currency" data-msg="Mohon Isi Total Pembayaran" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                    <div class="form-group">
-			                        <input type="number" class="form-control" name="remaining_payment" id="remaining_payment" value="{{$orders['remaining_payment']}}" required data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
+                                    <label for="">Remaining Payment</label>
+			                        <input type="text" class="form-control" name="remaining_payment" id="remaining_payment" value="{{number_format($orders['remaining_payment'])}}" required readonly data-type="currency" data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
 			                        <div class="validation"></div>
 			                    </div>
 			                </div>
@@ -618,6 +677,12 @@ document.addEventListener("DOMContentLoaded", function () {
             frmUpdate.append('total_images', 3);
             frmUpdate.append('dlt_img', deleted_img);
 
+            // Change numberWithComma before submit
+            $('input[data-type="currency"]').each(function() {
+                var frmName = $(this).attr('name');
+                frmUpdate.set(frmName, numberNoCommas(frmUpdate.get(frmName)));
+            });
+
 	        var URLNya = $("#actionUpdate").attr('action');
 	        var ajax = new XMLHttpRequest();
 	        ajax.upload.addEventListener("progress", progressHandler, false);
@@ -665,6 +730,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	        }
 	        else{
 	            alert("Input Success !!!");
+                var url = "{{ route('detail_order', ['code'=>$orders['code']])}}";
+                window.location.href = url;
 	            //window.location.reload()
 	        }
 
@@ -763,8 +830,13 @@ document.addEventListener("DOMContentLoaded", function () {
     var total_price = parseInt($('#fixed_payment').val());
     var arr_index_temp = [];
 
-    $(document).ready(function () {
+    $(document).ready(function () {  
+        $(document).on("input", 'input[data-type="currency"]', function() {
+            $(this).val(numberWithCommas($(this).val()));
+        });
+
     	console.log(total_price);
+
         for (let i = 0; i < total_product; i++) {
             $("#product_" + i).select2({
                 theme: "bootstrap4",
@@ -925,7 +997,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     var min_qty = parseInt(arr_index_temp[i][3]);
 
                     total_price = total_price - (min_price * min_qty);
-                    $("#total_payment").val(total_price);
+                    $("#total_payment").val(numberWithCommas(total_price));
                 }
             }
 
@@ -938,10 +1010,14 @@ document.addEventListener("DOMContentLoaded", function () {
             if($(this).val() == 2){
                 $("#old_product").parent().show();
                 $("#old_product").attr('required', "");
+                $("#old_product_qty").parent().show();
+                $("#old_product_qty").attr('required', "");
             }
             else{
                 $("#old_product").parent().hide();
                 $("#old_product").removeAttr('required');
+                $("#old_product_qty").parent().hide();
+                $("#old_product_qty").removeAttr('required');
             }
         });
 
@@ -1020,7 +1096,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	                console.log(arr_index_temp);
 	                console.log(total_price);
 
-	                $("#total_payment").val(total_price);
+	                $("#total_payment").val(numberWithCommas(total_price));
 	            }
 	        });
         }
@@ -1043,12 +1119,43 @@ document.addEventListener("DOMContentLoaded", function () {
             //update total price
             total_price = total_price + (old_price * get_qty);
             console.log(total_price);
-            $("#total_payment").val(total_price);
+            $("#total_payment").val(numberWithCommas(total_price));
         }
 
         console.log(arr_index_temp);
 
     }
+
+    function numberWithCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+    }
+
+    function numberNoCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\D/g, "");
+        return parts.join(".");
+    }
+
+    $(document).on("input", "#total_payment, #down_payment", function() {
+        var down_payment = parseFloat(numberNoCommas($("#down_payment").val()));
+        var total_payment = parseFloat(numberNoCommas($("#total_payment").val()));
+         if (down_payment > total_payment) {
+            down_payment = total_payment;
+            $("#down_payment").val(numberWithCommas(total_payment));
+            alert("Total Payment cant be higher than the Total Price");
+        }
+        var remaining_payment = total_payment - down_payment;
+        $("#remaining_payment").val(numberWithCommas(remaining_payment));
+    });
+    $(document).on("change", "#total_payment, #down_payment", function() {
+        var down_payment = parseFloat(numberNoCommas($(this).val()));
+        if (down_payment == 0) {
+            $(this).val("");
+            alert("Down Payment cant be 0");
+        }
+    });
 </script>
 <script type="application/javascript" src="{{ asset('js/tags-input.js') }}"></script>
 <script type="application/javascript">

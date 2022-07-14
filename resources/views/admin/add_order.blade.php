@@ -271,7 +271,7 @@ $menu_item_second = "add_order";
                             </div>
                             <br>
                             <div class="form-group">
-                                <label for="">CASH/UPGRADE</label>
+                                <h5 class="text-center"><strong>CASH/UPGRADE</strong></h5>
                                 <select class="form-control"
                                     id="cash_upgarde"
                                     name="cash_upgrade"
@@ -374,31 +374,65 @@ $menu_item_second = "add_order";
                                 <div id="tambahan_product"></div>
                                 {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 
-                                <div class="form-group" style="display: none;">
-                                    <input type="text"
-                                        class="form-control"
-                                        name="old_product"
-                                        id="old_product"
-                                        placeholder="Old Product"
-                                        data-msg="Mohon Isi Produk Lama"
-                                        style="text-transform:uppercase;" />
-                                    <div class="validation"></div>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="form-group" style="display: none;">
+                                            <label for="">Old Product</label>
+                                            <input type="text"
+                                                class="form-control"
+                                                name="old_product"
+                                                id="old_product"
+                                                placeholder="Old Product"
+                                                data-msg="Mohon Isi Produk Lama"
+                                                style="text-transform:uppercase;" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group" style="display: none;">
+                                            <label for="">Qty Old Product</label>
+                                            <input type="number"
+                                                class="form-control"
+                                                name="old_product_qty"
+                                                id="old_product_qty"
+                                                placeholder="Qty"
+                                                data-msg="Mohon Isi Jumlah Old Product" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <input type="text"
-                                        class="form-control"
-                                        name="prize"
-                                        id="prize"
-                                        placeholder="Prize Product"
-                                        data-msg="Mohon Isi Hadiah"
-                                        style="text-transform: uppercase;" />
-                                    <div class="validation"></div>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <label for="">Prize Product</label>
+                                            <input type="text"
+                                                class="form-control"
+                                                name="prize"
+                                                id="prize"
+                                                placeholder="Prize Product"
+                                                data-msg="Mohon Isi Hadiah"
+                                                style="text-transform: uppercase;" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Qty Prize Product</label>
+                                            <input type="number"
+                                                class="form-control"
+                                                name="prize_qty"
+                                                id="prize_qty"
+                                                placeholder="Qty"
+                                                data-msg="Mohon Isi Jumlah Prize" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <br>
 
                             <div class="form-group">
-                                <label for="payment_type">Payment Method</label>
+                                <h5 class="text-center"><strong>Payment Method</strong></h5>
                                 <select class="form-control"
                                     id="payment_type"
                                     name="payment_type"
@@ -448,6 +482,10 @@ $menu_item_second = "add_order";
                                                 {{ $i }}X
                                             </option>
                                         @endfor
+                                        <option class="other_valCicilan"
+                                            value="24">
+                                            24X
+                                        </option>
                                     </select>
                                     <div class="validation"></div>
                                 </div>
@@ -463,34 +501,40 @@ $menu_item_second = "add_order";
                                 <div id="tambahan_bank"></div>
                                 {{-- ++++++++ ==== ++++++++ --}}
                                 <div class="form-group">
-                                    <input type="number"
+                                    <label for="">Total Price</label>
+                                    <input type="text"
                                         class="form-control"
                                         name="total_payment"
                                         id="total_payment"
-                                        placeholder="Total Payment"
+                                        placeholder="Total Price"
                                         required
+                                        data-type="currency"
                                         data-msg="Mohon Isi Total Harga"
                                         style="text-transform: uppercase;" />
                                     <div class="validation"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="number"
+                                    <label for="">Total Payment</label>
+                                    <input type="text"
                                         class="form-control"
                                         name="down_payment"
                                         id="down_payment"
-                                        placeholder="Down Payment(DP)"
+                                        placeholder="Total Payment"
                                         required
-                                        data-msg="Mohon Isi Down Payment(DP)"
+                                        data-type="currency"
+                                        data-msg="Mohon Isi Total Pembayaran"
                                         style="text-transform: uppercase;" />
                                     <div class="validation"></div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="number"
+                                    <label for="">Remaining Payment</label>
+                                    <input type="text"
                                         class="form-control"
                                         name="remaining_payment"
                                         id="remaining_payment"
                                         placeholder="Remaining Payment"
-                                        required
+                                        required readonly
+                                        data-type="currency"
                                         data-msg="Mohon Isi Sisa Pembayaran"
                                         style="text-transform: uppercase;" />
                                     <div class="validation"></div>
@@ -740,7 +784,11 @@ document.addEventListener("DOMContentLoaded", function () {
     var total_product = 0;
     var arrBooleanCso = [ {{ Auth::user()->roles[0]['slug'] == 'cso' ? "true" : "false" }}, false, false ];
 
-    $(document).ready(function () {
+    $(document).ready(function () {       
+        $(document).on("input", 'input[data-type="currency"]', function() {
+            $(this).val(numberWithCommas($(this).val()));
+        });
+
         $(".cso").on("input", function () {
             var txtCso = $(this).val();
             var temp = $(this);
@@ -921,7 +969,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     var min_qty = parseInt(arr_index_temp[i][3]);
 
                     total_price = total_price - (min_price * min_qty);
-                    $("#total_payment").val(total_price);
+                    $("#total_payment").val(numberWithCommas(total_price));
                 }
             }
 
@@ -934,10 +982,14 @@ document.addEventListener("DOMContentLoaded", function () {
             if($(this).val() == 2){
                 $("#old_product").parent().show();
                 $("#old_product").attr('required', "");
+                $("#old_product_qty").parent().show();
+                $("#old_product_qty").attr('required', "");
             }
             else{
                 $("#old_product").parent().hide();
                 $("#old_product").removeAttr('required');
+                $("#old_product_qty").parent().hide();
+                $("#old_product_qty").removeAttr('required');
             }
         });
 
@@ -1026,7 +1078,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log(arr_index_temp);
                     console.log(total_price);
 
-                    $("#total_payment").val(total_price);
+                    $("#total_payment").val(numberWithCommas(total_price));
                 }
             });
         }
@@ -1048,10 +1100,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
             //update total price
             total_price = total_price + (old_price * get_qty);
-            $("#total_payment").val(total_price);
+            $("#total_payment").val(numberWithCommas(total_price));
         }
-
     }
+
+    function numberWithCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
+    }
+
+    function numberNoCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\D/g, "");
+        return parts.join(".");
+    }
+
+    $(document).on("input", "#total_payment, #down_payment", function() {
+        var down_payment = parseFloat(numberNoCommas($("#down_payment").val()));
+        var total_payment = parseFloat(numberNoCommas($("#total_payment").val()));
+         if (down_payment > total_payment) {
+            down_payment = total_payment;
+            $("#down_payment").val(numberWithCommas(total_payment));
+            alert("Total Payment cant be higher than the Total Price");
+        }
+        var remaining_payment = total_payment - down_payment;
+        $("#remaining_payment").val(numberWithCommas(remaining_payment));
+    });
+    $(document).on("change", "#total_payment, #down_payment", function() {
+        var down_payment = parseFloat(numberNoCommas($(this).val()));
+        if (down_payment == 0) {
+            $(this).val("");
+            alert("Down Payment cant be 0");
+        }
+    });
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -1070,7 +1152,12 @@ document.addEventListener("DOMContentLoaded", function () {
             frmAdd = new FormData(document.getElementById("actionAdd"));
             frmAdd.enctype = "multipart/form-data";
             var URLNya = $("#actionAdd").attr('action');
-            console.log(URLNya);
+
+            // Change numberWithComma before submit
+            $('input[data-type="currency"]').each(function() {
+              var frmName = $(this).attr('name');
+              frmAdd.set(frmName, numberNoCommas(frmAdd.get(frmName)));
+            });
 
             var ajax = new XMLHttpRequest();
             ajax.upload.addEventListener("progress", progressHandler, false);

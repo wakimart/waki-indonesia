@@ -555,6 +555,195 @@
             </div>
         </div>
 
+        @if (Gate::check('acc-view-spv_absent_off') || Gate::check('acc-view-coor_absent_off'))
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-header" style="background: none;">
+                        <h4 style="margin-bottom: 1em;">
+                            Cuti Acc
+                        </h4>
+                        @php $accCutiTypes = ["supervisor", "coordinator"]; 
+                            $keyActiveTabCuti = Gate::check('acc-view-spv_absent_off') ? 'supervisor' : 'coordinator' ; @endphp
+                        <ul class="nav nav-tabs card-header-tabs">
+                            @foreach ($accCutiTypes as $keyCutiType => $accCutiType)
+                                @if (
+                                    ($accCutiType == 'supervisor' && Gate::check('acc-view-spv_absent_off'))
+                                    || ($accCutiType == 'coordinator' && Gate::check('acc-view-coor_absent_off'))
+                                )
+                                <li class="nav-item">
+                                    <a class="nav-link @if($accCutiType == $keyActiveTabCuti) active @endif"
+                                        style="font-weight: 500; font-size: 1em;"
+                                        id="{{ $accCutiType }}-tab"
+                                        data-toggle="tab"
+                                        href="#tabs-{{ $accCutiType }}"
+                                        role="tab"
+                                        aria-controls="{{ $accCutiType }}"
+                                        aria-selected="true">
+                                        {{ ucwords($accCutiType) }} Acc ({{ sizeof($absentOffs[$accCutiType]) }})
+                                    </a>
+                                </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="card-body wrapper">
+                        <div class="tab-content" id="myTabContentHS">
+                            @foreach ($accCutiTypes as $keyCutiType => $accCutiType)
+                            @if (
+                                ($accCutiType == 'supervisor' && Gate::check('acc-view-spv_absent_off'))
+                                || ($accCutiType == 'coordinator' && Gate::check('acc-view-coor_absent_off'))
+                            )
+                                <div class="tab-pane fade show @if($accCutiType == $keyActiveTabCuti) active @endif p-3" id="tabs-{{ $accCutiType }}" role="tabpane2" aria-labelledby="{{ $accCutiType }}-tab">
+                                    <h5 class="mb-3">
+                                        Cuti Data | Status {{ ucwords($accCutiType) }} Acc (Total: {{ sizeof($absentOffs[$accCutiType]) }})
+                                    </h5>
+                                    @if (Gate::check('acc-absent_off'))
+                                    <div class="d-flex flex-wrap mt-4" style="align-items: center;">
+                                        <p>Terpilih : <span id="checkedPH" class="checkedPH"></span></p>
+                                        <div style="margin-left: auto;">
+                                            @if (
+                                                ($accCutiType == "supervisor" && (Gate::check('acc-spv_absent_off') || Gate::check('acc-reject_spv_absent_off')))
+                                                || ($accCutiType == "coordinator" && (Gate::check('acc-coor_absent_off') || Gate::check('acc-reject_coor_absent_off')))
+                                            )
+                                            <form id="formSelectAllCuti{{ $accCutiType }}" method="POST" action="{{ route('update_acc_absent_off') }}">
+                                                @csrf
+                                                <div class="form-group btn-action">
+                                                    <div class="d-flex flex-wrap" style="justify-content: right;">
+                                                        <input type="hidden" name="acc_cuti_type" value="{{ $accCutiType }}">
+                                                        @if (
+                                                            ($accCutiType == "supervisor" && Gate::check('acc-spv_absent_off'))
+                                                            || ($accCutiType == "coordinator" && Gate::check('acc-coor_absent_off'))
+                                                        )
+                                                        <button type="submit" id="AccPH-{{ $accCutiType }}" class="btn btn-md btn-outline-success" name="status_acc" value="true">Approved All</button>
+                                                        @endif
+                                                        @if (
+                                                            ($accCutiType == "supervisor" && Gate::check('acc-reject_spv_absent_off'))
+                                                            || ($accCutiType == "coordinator" && Gate::check('acc-reject_coor_absent_off'))
+                                                        )
+                                                        <button type="submit" id="CancelPH-{{ $accCutiType }}" class="btn btn-md btn-outline-danger ml-2" name="status_acc" value="false">Reject All</button>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @endif
+                                    <div class="table-responsive tableHS wrapper" style="border: 1px solid #ebedf2; padding-top: 0;">
+                                        <table class="table table-bordered">
+                                            <thead style="text-align: center; background-color: aliceblue;">
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <div class="form-group mb-0">
+                                                            <input type="checkbox" id="{{ $accCutiType }}" name="" value="true"
+                                                                class="form-control SelectAll_Dynamic checkBoxPH"
+                                                                style="position: relative; width: 16px; margin: auto;"/>
+                                                        </div>
+                                                    </td>
+                                                    <td>Duration</td>
+                                                    <td>Detail & Reason Cuti</td>
+                                                    <td>Acc/Reject</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($absentOffs[$accCutiType] as $absentOff)
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <div class="form-group">
+                                                                <input type="checkbox" name=""
+                                                                    class="form-control checkBoxPH checkBoxCuti"
+                                                                    id="{{ $accCutiType }}"
+                                                                    value="{{$absentOff['id']}}"
+                                                                    style="position: relative; width: 16px; margin: auto;"/>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            Duration : {{ $absentOff->duration_off }} days
+                                                            <br> {{ date('d F Y', strtotime($absentOff->start_date)) }} - {{ date('d F Y', strtotime($absentOff->end_date)) }}
+                                                        </td>
+                                                        <td style="white-space: normal;">
+                                                            <div class="detailHs" style="border-bottom: 0.2px solid #2f2f2f">
+                                                                Name : {{ $absentOff->cso->name }} - {{ $absentOff->cso->code }}
+                                                                <br class="break">
+                                                                Branch : {{ $absentOff->branch->code }} - {{ $absentOff->branch->name }}
+                                                                <br class="break">
+                                                                Created at : {{ $absentOff->created_at }} by ({{ $absentOff->user->name }})
+                                                                <br class="break">
+                                                                @foreach ($absentOff->historyUpdateAcc() as $historyUpdateAcc)
+                                                                    @if ($historyUpdateAcc['meta']['status_acc'] == "true")
+                                                                    <span style="color: green">
+                                                                        Approved : {{ $historyUpdateAcc['meta']['createdAt'] }} (Approved by {{ $historyUpdateAcc['u_name'] }})
+                                                                    </span>
+                                                                    @else
+                                                                    <span style="color: red">
+                                                                        Rejected : {{ $historyUpdateAcc['meta']['createdAt'] }} (Rejected by {{ $historyUpdateAcc['u_name'] }})
+                                                                    </span>
+                                                                    @endif
+                                                                    <br>
+                                                                @endforeach
+                                                                <br>
+                                                            </div>
+                                                            <br class="break">
+                                                            <div class="cancelReason" style="font-weight:bold;">
+                                                                <p>{{ $absentOff->desc }}<p>
+                                                            </div>
+                                                        </td>
+                                                        <td style="text-align: center; white-space: normal;">
+                                                            @if (Gate::check('acc-absent_off'))
+                                                                @if (
+                                                                    ($accCutiType == "supervisor" && (Gate::check('acc-spv_absent_off') || Gate::check('acc-reject_spv_absent_off')))
+                                                                    || ($accCutiType == "coordinator" && (Gate::check('acc-coor_absent_off') || Gate::check('acc-reject_coor_absent_off')))
+                                                                )
+                                                                <form id="formUpdateStatusCuti" method="POST" action="{{ route('update_acc_absent_off') }}" style="margin: auto;">
+                                                                    @csrf
+                                                                    <div class="form-group">
+                                                                        <input type="hidden" name="acc_cuti_type" value="{{ $accCutiType }}">
+                                                                        <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                                                                        <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $absentOff->id }}" />
+                    
+                                                                        <div style="text-align: center;">
+                                                                            <p>Do you approved it ?</p>
+                                                                        </div>
+                    
+                                                                        <div class="btn-action" style="text-align: center;">
+                                                                            @if (
+                                                                                ($accCutiType == "supervisor" && Gate::check('acc-spv_absent_off'))
+                                                                                || ($accCutiType == "coordinator" && Gate::check('acc-coor_absent_off'))
+                                                                            )
+                                                                            <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                                                            @endif
+                                                                            @if (
+                                                                                ($accCutiType == "supervisor" && Gate::check('acc-reject_spv_absent_off'))
+                                                                                || ($accCutiType == "coordinator" && Gate::check('acc-reject_coor_absent_off'))
+                                                                            )
+                                                                            <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                                @endif
+                                                            @else
+                                                                <a href="{{ route('detail_absent_off', ["id"=>$absentOff['id']]) }}">
+                                                                    <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                                </a>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
         @if(Auth::id() == 1)
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
@@ -1051,6 +1240,194 @@
             </div>
         </div>
         @endif
+
+        @if (Gate::check('acc-view-spv_absent_off') || Gate::check('acc-view-coor_absent_off'))
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-header" style="background: none;">
+                        <h4 style="margin-bottom: 1em;">
+                            Cuti Acc
+                        </h4>
+                        @php $accCutiTypes = ["supervisor", "coordinator"]; @endphp
+                        <ul class="nav nav-tabs card-header-tabs">
+                            @foreach ($accCutiTypes as $keyCutiType => $accCutiType)
+                                @if (
+                                    ($accCutiType == 'supervisor' && Gate::check('acc-view-spv_absent_off'))
+                                    || ($accCutiType == 'coordinator' && Gate::check('acc-view-coor_absent_off'))
+                                )
+                                <li class="nav-item">
+                                    <a class="nav-link @if($keyCutiType == 0) active @endif"
+                                        style="font-weight: 500; font-size: 1em;"
+                                        id="{{ $accCutiType }}-tab"
+                                        data-toggle="tab"
+                                        href="#tabs-{{ $accCutiType }}"
+                                        role="tab"
+                                        aria-controls="{{ $accCutiType }}"
+                                        aria-selected="true">
+                                        {{ ucwords($accCutiType) }} Acc ({{ sizeof($absentOffs[$accCutiType]) }})
+                                    </a>
+                                </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                    <div class="card-body wrapper">
+                        <div class="tab-content" id="myTabContentHS">
+                            @foreach ($accCutiTypes as $keyCutiType => $accCutiType)
+                            @if (
+                                ($accCutiType == 'supervisor' && Gate::check('acc-view-spv_absent_off'))
+                                || ($accCutiType == 'coordinator' && Gate::check('acc-view-coor_absent_off'))
+                            )
+                                <div class="tab-pane fade show @if($keyCutiType == 0) active @endif p-3" id="tabs-{{ $accCutiType }}" role="tabpane2" aria-labelledby="{{ $accCutiType }}-tab">
+                                    <h5 class="mb-3">
+                                        Cuti Data | Status {{ ucwords($accCutiType) }} Acc (Total: {{ sizeof($absentOffs[$accCutiType]) }})
+                                    </h5>
+                                    @if (Gate::check('acc-absent_off'))
+                                    <div class="d-flex flex-wrap mt-4" style="align-items: center;">
+                                        <p>Terpilih : <span id="checkedPH" class="checkedPH"></span></p>
+                                        <div style="margin-left: auto;">
+                                            @if (
+                                                ($accCutiType == "supervisor" && (Gate::check('acc-spv_absent_off') || Gate::check('acc-reject_spv_absent_off')))
+                                                || ($accCutiType == "coordinator" && (Gate::check('acc-coor_absent_off') || Gate::check('acc-reject_coor_absent_off')))
+                                            )
+                                            <form id="formSelectAllCuti{{ $accCutiType }}" method="POST" action="{{ route('update_acc_absent_off') }}">
+                                                @csrf
+                                                <div class="form-group btn-action">
+                                                    <div class="d-flex flex-wrap" style="justify-content: right;">
+                                                        <input type="hidden" name="acc_cuti_type" value="{{ $accCutiType }}">
+                                                        @if (
+                                                            ($accCutiType == "supervisor" && Gate::check('acc-spv_absent_off'))
+                                                            || ($accCutiType == "coordinator" && Gate::check('acc-coor_absent_off'))
+                                                        )
+                                                        <button type="submit" id="AccPH-{{ $accCutiType }}" class="btn btn-md btn-outline-success" name="status_acc" value="true">Approved All</button>
+                                                        @endif
+                                                        @if (
+                                                            ($accCutiType == "supervisor" && Gate::check('acc-reject_spv_absent_off'))
+                                                            || ($accCutiType == "coordinator" && Gate::check('acc-reject_coor_absent_off'))
+                                                        )
+                                                        <button type="submit" id="CancelPH-{{ $accCutiType }}" class="btn btn-md btn-outline-danger ml-2" name="status_acc" value="false">Reject All</button>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @endif
+                                    <div class="table-responsive tableHS wrapper" style="border: 1px solid #ebedf2; padding-top: 0;">
+                                        <table class="table table-bordered">
+                                            <thead style="text-align: center; background-color: aliceblue;">
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <div class="form-group mb-0">
+                                                            <input type="checkbox" id="{{ $accCutiType }}" name="" value="true"
+                                                                class="form-control SelectAll_Dynamic checkBoxPH"
+                                                                style="position: relative; width: 16px; margin: auto;"/>
+                                                        </div>
+                                                    </td>
+                                                    <td>Duration</td>
+                                                    <td>Detail & Reason Cuti</td>
+                                                    <td>Acc/Reject</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($absentOffs[$accCutiType] as $absentOff)
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <div class="form-group">
+                                                                <input type="checkbox" name=""
+                                                                    class="form-control checkBoxPH checkBoxCuti"
+                                                                    id="{{ $accCutiType }}"
+                                                                    value="{{$absentOff['id']}}"
+                                                                    style="position: relative; width: 16px; margin: auto;"/>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            Duration : {{ $absentOff->duration_off }} days
+                                                            <br> {{ date('d F Y', strtotime($absentOff->start_date)) }} - {{ date('d F Y', strtotime($absentOff->end_date)) }}
+                                                        </td>
+                                                        <td style="white-space: normal;">
+                                                            <div class="detailHs" style="border-bottom: 0.2px solid #2f2f2f">
+                                                                Name : {{ $absentOff->cso->name }} - {{ $absentOff->cso->code }}
+                                                                <br class="break">
+                                                                Branch : {{ $absentOff->branch->code }} - {{ $absentOff->branch->name }}
+                                                                <br class="break">
+                                                                Created at : {{ $absentOff->created_at }} by ({{ $absentOff->user->name }})
+                                                                <br class="break">
+                                                                @foreach ($absentOff->historyUpdateAcc() as $historyUpdateAcc)
+                                                                    @if ($historyUpdateAcc['meta']['status_acc'] == "true")
+                                                                    <span style="color: green">
+                                                                        Approved : {{ $historyUpdateAcc['meta']['createdAt'] }} (Approved by {{ $historyUpdateAcc['u_name'] }})
+                                                                    </span>
+                                                                    @else
+                                                                    <span style="color: red">
+                                                                        Rejected : {{ $historyUpdateAcc['meta']['createdAt'] }} (Rejected by {{ $historyUpdateAcc['u_name'] }})
+                                                                    </span>
+                                                                    @endif
+                                                                    <br>
+                                                                @endforeach
+                                                                <br>
+                                                            </div>
+                                                            <br class="break">
+                                                            <div class="cancelReason" style="font-weight:bold;">
+                                                                <p>{{ $absentOff->desc }}<p>
+                                                            </div>
+                                                        </td>
+                                                        <td style="text-align: center; white-space: normal;">
+                                                            @if (Gate::check('acc-absent_off'))
+                                                                @if (
+                                                                    ($accCutiType == "supervisor" && (Gate::check('acc-spv_absent_off') || Gate::check('acc-reject_spv_absent_off')))
+                                                                    || ($accCutiType == "coordinator" && (Gate::check('acc-coor_absent_off') || Gate::check('acc-reject_coor_absent_off')))
+                                                                )
+                                                                <form id="formUpdateStatusCuti" method="POST" action="{{ route('update_acc_absent_off') }}" style="margin: auto;">
+                                                                    @csrf
+                                                                    <div class="form-group">
+                                                                        <input type="hidden" name="acc_cuti_type" value="{{ $accCutiType }}">
+                                                                        <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                                                                        <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $absentOff->id }}" />
+                    
+                                                                        <div style="text-align: center;">
+                                                                            <p>Do you approved it ?</p>
+                                                                        </div>
+                    
+                                                                        <div class="btn-action" style="text-align: center;">
+                                                                            @if (
+                                                                                ($accCutiType == "supervisor" && Gate::check('acc-spv_absent_off'))
+                                                                                || ($accCutiType == "coordinator" && Gate::check('acc-coor_absent_off'))
+                                                                            )
+                                                                            <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                                                            @endif
+                                                                            @if (
+                                                                                ($accCutiType == "supervisor" && Gate::check('acc-reject_spv_absent_off'))
+                                                                                || ($accCutiType == "coordinator" && Gate::check('acc-reject_coor_absent_off'))
+                                                                            )
+                                                                            <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                                @endif
+                                                            @else
+                                                                <a href="{{ route('detail_absent_off', ["id"=>$absentOff['id']]) }}">
+                                                                    <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                                </a>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endif
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
 </div>
 @endcan
@@ -1238,6 +1615,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 homeServiceID[i] = $(this).val();
             });
             $(this).append(`<input type="hidden" name="homeServiceData" value="${homeServiceID}" /> `);
+            return true;
+        });
+        $('#formSelectAllCutisupervisor, #formSelectAllCuticoordinator').submit(function(eventObj) {
+            var absentOffID =[]
+            $(this).closest('div[id^="tabs-"]').find('.checkBoxCuti:checked').each(function(i){
+                absentOffID[i] = $(this).val();
+            });
+            $(this).append(`<input type="hidden" name="absentOffData" value="${absentOffID}" /> `);
             return true;
         });
     });

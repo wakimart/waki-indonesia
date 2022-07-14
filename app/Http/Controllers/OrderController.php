@@ -168,6 +168,22 @@ class OrderController extends Controller
 
             $data['product'] = json_encode($data['arr_product']);
 
+            //pembentukan array old_product
+            if ($data['old_product']) {
+                $data['old_product'] = json_encode([
+                    "name" => $data['old_product'],
+                    "qty" => $data['old_product_qty']
+                ]);
+            }
+
+            //pembentukan array prize
+            if ($data['prize']) {
+                $data['prize'] = json_encode([
+                    "name" => $data['prize'],
+                    "qty" => $data['prize_qty'] ?? 1
+                ]);
+            }
+
             //pembentukan array Bank
             $index = 0;
             $data['arr_bank'] = [];
@@ -383,6 +399,12 @@ class OrderController extends Controller
             $orders['name'] = $data['name'];
             $orders['address'] = $data['address'];
             $orders['cash_upgrade'] = $data['cash_upgrade'];
+            if ($data['prize']) {
+                $data['prize'] = json_encode([
+                    "name" => $data['prize'],
+                    "qty" => $data['prize_qty'] ?? 1
+                ]);
+            }
             $orders['prize'] = $data['prize'];
             $orders['payment_type'] = $data['payment_type'];
             $orders['total_payment'] = $data['total_payment'];
@@ -1059,6 +1081,20 @@ class OrderController extends Controller
                 }
             }
             $data['bank'] = json_encode($data['arr_bank']);
+            //pembentukan array old_product
+            if (isset($data['old_product']) && $data['old_product']) {
+                $data['old_product'] = json_encode([
+                    "name" => $data['old_product'],
+                    "qty" => $data['old_product_qty'] ?? 1
+                ]);
+            }
+            //pembentukan array prize
+            if (isset($data['prize']) && $data['prize']) {
+                $data['prize'] = json_encode([
+                    "name" => $data['prize'],
+                    "qty" => $data['prize_qty'] ?? 1
+                ]);
+            }
             $order = Order::create($data);
 
             if(isset($data['name_2'])){
@@ -1261,6 +1297,20 @@ class OrderController extends Controller
                 }
             }
             $data['bank'] = json_encode($data['arr_bank']);
+            //pembentukan array old_product
+            if (isset($data['old_product']) && $data['old_product']) {
+                $data['old_product'] = json_encode([
+                    "name" => $data['old_product'],
+                    "qty" => $data['old_product_qty'] ?? 1
+                ]);
+            }
+            //pembentukan array prize
+            if (isset($data['prize']) && $data['prize']) {
+                $data['prize'] = json_encode([
+                    "name" => $data['prize'],
+                    "qty" => $data['prize_qty'] ?? 1
+                ]);
+            }
             $order = Order::find($data['id']);
             $order->fill($data)->save();
 
