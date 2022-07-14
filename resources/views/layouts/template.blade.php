@@ -62,6 +62,7 @@
 	  {{-- <link href="{{asset('css/lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet"> --}}
 	  <link href="{{asset('css/lib/lightbox/css/lightbox.min.css')}}" rel="stylesheet">
 	  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+	  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
 
 	  <!-- Main Stylesheet File -->
 	  <link href="{{asset('css/style.css')}}" rel="stylesheet">
@@ -338,12 +339,13 @@
   	<script src="{{asset('css/lib/counterup/counterup.min.js')}}"></script>
   	<script src="{{asset('css/lib/isotope/isotope.pkgd.min.js')}}"></script>
   	<script src="{{asset('css/lib/lightbox/js/lightbox.min.js')}}"></script>
-  	<!-- Contact Form JavaScript File -->
-  	<script src="contactform/contactform.js"></script>
 
   	<!-- Template Main Javascript File -->
   	<script src="{{asset('js/main.js')}}"></script>
 		<script>
+	    const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+	    observer.observe();
+
 		$(document).ready(function() {
 		  $(".product-carousel").owlCarousel({
 		    items: 4,
@@ -360,7 +362,6 @@
 		      300: {items: 1}
 		    }
 		  });
-		  console.log("test");
 			$('#video2').on('shown.bs.modal', function (event) {
 		    $('#video-2')[0].play();
 		  });
