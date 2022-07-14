@@ -274,7 +274,7 @@
 			                    	<textarea class="form-control" name="message" rows="5" required data-rule="required" data-msg="Please write something for us" placeholder="Pesan"></textarea>
 			                    	<div class="validation"></div>
 			                  	</div>
-								  
+
 			                  	<div class="text-center"><button type="submit" id="sendMessageContactForm" title="Send Message">Kirim Pesan</button></div>
 			                </form>
 							<div id="sendmessage">Pesan Anda telah terkirim. Thank you!</div>
@@ -329,6 +329,7 @@
   	<script src="{{asset('css/lib/jquery/jquery.min.js')}}"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
   	<script src="{{asset('css/lib/jquery/jquery-migrate.min.js')}}"></script>
+  	<script src="{{asset('css/lib/lightbox/js/lightbox.min.js')}}"></script>
   	<script src="{{asset('css/lib/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
   	<script src="{{asset('css/lib/easing/easing.min.js')}}"></script>
   	<script src="{{asset('css/lib/mobile-nav/mobile-nav.js')}}"></script>
@@ -336,7 +337,6 @@
   	<script src="{{asset('css/lib/waypoints/waypoints.min.js')}}"></script>
   	<script src="{{asset('css/lib/counterup/counterup.min.js')}}"></script>
   	<script src="{{asset('css/lib/isotope/isotope.pkgd.min.js')}}"></script>
-  	<script src="{{asset('css/lib/lightbox/js/lightbox.min.js')}}"></script>
 
   	<!-- Template Main Javascript File -->
   	<script src="{{asset('js/main.js')}}"></script>

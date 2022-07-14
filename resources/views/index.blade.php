@@ -659,6 +659,13 @@
     const card = document.getElementById('card-'+id);
     gallery.classList.add('Gallery--active');
     card.classList.add('Card--active');
+    if (typeof(Event) === 'function') {
+      window.dispatchEvent(new Event('resize'));
+    } else {
+      var evt = window.document.createEvent('UIEvents');
+      evt.initUIEvent('resize', true, false, window, 0);
+      window.dispatchEvent(evt);
+    }
   }
 
 function closeAll() {
