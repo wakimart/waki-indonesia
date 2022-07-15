@@ -63,6 +63,10 @@ $menu_item_second = "add_order";
         background-color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
     }
+
+    .select2-container--bootstrap4 .select2-results__group {
+        color: black;
+    }
 </style>
 @endsection
 
@@ -87,15 +91,15 @@ $menu_item_second = "add_order";
                 </ol>
             </nav>
         </div>
-        <div class="row">
-              <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                      <div class="card-body">
-                        <form id="actionAdd"
-                            class="forms-sample"
-                            method="POST"
-                            action="{{ route('admin_store_order') }}">
-                            @csrf
+        <form id="actionAdd"
+            class="forms-sample"
+            method="POST"
+            action="{{ route('admin_store_order') }}">
+            @csrf
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
                             <div class="form-group">
                                 <label for="orderDate">Waktu Order</label>
                                 <input type="date"
@@ -110,6 +114,33 @@ $menu_item_second = "add_order";
                                 <span class="invalid-feedback">
                                     <strong></strong>
                                 </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <h4><strong>Data Customer</strong></h4>
+                                <label for="customer_type">Type Customer</label>
+                                <select id="customer_type"
+                                    style="margin-top: 0.5em; height: auto;"
+                                    class="form-control"
+                                    name="customer_type"
+                                    value=""
+                                    required>
+                                    <option value="VVIP (Type A)">
+                                        VVIP (Type A)
+                                    </option>
+                                    <option value="WAKi Customer (Type B)">
+                                        WAKi Customer (Type B)
+                                    </option>
+                                    <option value="New Customer (Type C)">
+                                        New Customer (Type C)
+                                    </option>
+                                </select>
+                                <div class="validation"></div>
                             </div>
                             <div class="form-group">
                                 <label for="no_member">
@@ -269,9 +300,15 @@ $menu_item_second = "add_order";
                                     Tambah Pembeli
                                 </button>
                             </div>
-                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
                             <div class="form-group">
-                                <h5 class="text-center"><strong>CASH/UPGRADE</strong></h5>
+                                <h4><strong>Product / Promo</strong></h4>
+                                <label for="">CASH/UPGRADE</label>
                                 <select class="form-control"
                                     id="cash_upgarde"
                                     name="cash_upgrade"
@@ -308,17 +345,29 @@ $menu_item_second = "add_order";
                                                     Choose Product
                                                 </option>
 
-                                                <?php foreach ($promos as $key => $promo): ?>
-                                                    <option value="<?php echo $promo["id"]; ?>">
-                                                        <?php
-                                                        echo $promo->code
-                                                            . " - ("
-                                                            . implode(", ", $promo->productName())
-                                                            . ") - Rp. "
-                                                            . number_format($promo->price);
-                                                        ?>
+                                                <optgroup label="Promo">
+                                                    <?php foreach ($promos as $key => $promo): ?>
+                                                        <option value="promo_<?php echo $promo["id"]; ?>">
+                                                            <?php
+                                                            echo $promo->code
+                                                                . " - ("
+                                                                . implode(", ", $promo->productName())
+                                                                . ") - Rp. "
+                                                                . number_format($promo->price);
+                                                            ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </optgroup>
+
+                                                <optgroup label="Product">
+                                                    @foreach($products as $product)
+                                                    <option value="product_{{ $product->id }}">
+                                                        {{ $product->code }} 
+                                                        - ({{ $product->name }}) 
+                                                        - Rp {{ number_format($product->price) }}
                                                     </option>
-                                                <?php endforeach; ?>
+                                                    @endforeach
+                                                </optgroup>
 
                                                 <option value="other">
                                                     OTHER
@@ -378,13 +427,26 @@ $menu_item_second = "add_order";
                                     <div class="col-md-9">
                                         <div class="form-group" style="display: none;">
                                             <label for="">Old Product</label>
-                                            <input type="text"
-                                                class="form-control"
-                                                name="old_product"
+                                            <select class="form-control"
                                                 id="old_product"
-                                                placeholder="Old Product"
-                                                data-msg="Mohon Isi Produk Lama"
-                                                style="text-transform:uppercase;" />
+                                                name="old_product"
+                                                data-msg="Mohon Pilih Produk Lama">
+                                                <option selected disabled value="">
+                                                    Choose Old Product
+                                                </option>
+
+                                                @foreach($products as $product)
+                                                <option value="{{ $product->id }}">
+                                                    {{ $product->code }} 
+                                                    - ({{ $product->name }}) 
+                                                    - Rp {{ number_format($product->price) }}
+                                                </option>
+                                                @endforeach
+
+                                                <option value="other">
+                                                    OTHER
+                                                </option>
+                                            </select>
                                             <div class="validation"></div>
                                         </div>
                                     </div>
@@ -400,18 +462,43 @@ $menu_item_second = "add_order";
                                             <div class="validation"></div>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="text" style="display: none;"
+                                                class="form-control"
+                                                name="old_product_other"
+                                                id="old_product_other"
+                                                placeholder="Old Product Name"
+                                                data-msg="Mohon Isi Produk Lama"
+                                                style="text-transform:uppercase;" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group">
                                             <label for="">Prize Product</label>
-                                            <input type="text"
-                                                class="form-control"
-                                                name="prize"
+                                            <select class="form-control"
                                                 id="prize"
-                                                placeholder="Prize Product"
-                                                data-msg="Mohon Isi Hadiah"
-                                                style="text-transform: uppercase;" />
+                                                name="prize"
+                                                data-msg="Mohon Pilih Prize Produk">
+                                                <option selected disabled value="">
+                                                    Choose Prize Product
+                                                </option>
+
+                                                @foreach($products as $product)
+                                                <option value="{{ $product->id }}">
+                                                    {{ $product->code }} 
+                                                    - ({{ $product->name }}) 
+                                                    - Rp {{ number_format($product->price) }}
+                                                </option>
+                                                @endforeach
+
+                                                <option value="other">
+                                                    OTHER
+                                                </option>
+                                            </select>
                                             <div class="validation"></div>
                                         </div>
                                     </div>
@@ -427,118 +514,28 @@ $menu_item_second = "add_order";
                                             <div class="validation"></div>
                                         </div>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="text" style="display: none"
+                                                class="form-control"
+                                                name="prize_other"
+                                                id="prize_other"
+                                                placeholder="Prize Product Name"
+                                                data-msg="Mohon Isi Hadiah"
+                                                style="text-transform: uppercase;" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <br>
-
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
                             <div class="form-group">
-                                <h5 class="text-center"><strong>Payment Method</strong></h5>
-                                <select class="form-control"
-                                    id="payment_type"
-                                    name="payment_type"
-                                    data-msg="Mohon Pilih Tipe"
-                                    required>
-                                    <option selected disabled value="">
-                                        Choose Payment Method
-                                    </option>
-
-                                    @foreach ($paymentTypes as $key => $paymentType)
-                                        <option value="{{ $key }}">
-                                            {{ strtoupper($paymentType) }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <div class="validation"></div>
-                            </div>
-                            <div id="container-jenispembayaran"
-                                style="display: none;">
-                                {{-- ++++++++ BANK ++++++++ --}}
-                                <div class="form-group bank_select"
-                                    style="width: 62%; display: inline-block;">
-                                    <select class="form-control bank_name"
-                                        name="bank_0"
-                                        data-msg="Mohon Pilih Bank">
-                                        <option selected disabled value="">
-                                            Choose Bank
-                                        </option>
-
-                                        @foreach ($banks as $key => $bank)
-                                            <option value="{{ $key }}">
-                                                {{ $bank }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="form-group bank_select"
-                                    style="width: 26%; display: inline-block;">
-                                    <select class="form-control bank_cicilan"
-                                        name="cicilan_0"
-                                        data-msg="Mohon Pilih Jumlah Cicilan">
-                                        <option selected value="1">1X</option>
-                                        @for ($i = 2; $i <= 12; $i += 2)
-                                            <option class="other_valCicilan"
-                                                value="{{ $i }}">
-                                                {{ $i }}X
-                                            </option>
-                                        @endfor
-                                    </select>
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="text-center"
-                                    style="display: inline-block; float: right;">
-                                    <button id="tambah_bank"
-                                        title="Tambah Bank"
-                                        style="padding: 0.4em 0.7em;">
-                                        <i class="mdi mdi-plus"></i>
-                                    </button>
-                                </div>
-
-                                <div id="tambahan_bank"></div>
-                                {{-- ++++++++ ==== ++++++++ --}}
-                                <div class="form-group">
-                                    <label for="">Total Price</label>
-                                    <input type="text"
-                                        class="form-control"
-                                        name="total_payment"
-                                        id="total_payment"
-                                        placeholder="Total Price"
-                                        required
-                                        data-type="currency"
-                                        data-msg="Mohon Isi Total Harga"
-                                        style="text-transform: uppercase;" />
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Total Payment</label>
-                                    <input type="text"
-                                        class="form-control"
-                                        name="down_payment"
-                                        id="down_payment"
-                                        placeholder="Total Payment"
-                                        required
-                                        data-type="currency"
-                                        data-msg="Mohon Isi Total Pembayaran"
-                                        style="text-transform: uppercase;" />
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Remaining Payment</label>
-                                    <input type="text"
-                                        class="form-control"
-                                        name="remaining_payment"
-                                        id="remaining_payment"
-                                        placeholder="Remaining Payment"
-                                        required readonly
-                                        data-type="currency"
-                                        data-msg="Mohon Isi Sisa Pembayaran"
-                                        style="text-transform: uppercase;" />
-                                    <div class="validation"></div>
-                                </div>
-                            </div>
-                            <br>
-
-                            <div class="form-group">
+                                <h4><strong>Branch & CSO</strong></h4>
                                 <label for="branch">Branch</label>
                                 <select class="form-control"
                                     id="branch"
@@ -595,54 +592,154 @@ $menu_item_second = "add_order";
                                     <div class="validation"></div>
                                 </div>
                             </div>
-                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
                             <div class="form-group">
-                                <label for="customer_type">Type Customer</label>
-                                <select id="customer_type"
-                                    style="margin-top: 0.5em; height: auto;"
+                                <h4><strong>Payment</strong></h4>
+                                <label for="">Total Price</label>
+                                <input type="text"
                                     class="form-control"
-                                    name="customer_type"
-                                    value=""
-                                    required>
-                                    <option value="VVIP (Type A)">
-                                        VVIP (Type A)
-                                    </option>
-                                    <option value="WAKi Customer (Type B)">
-                                        WAKi Customer (Type B)
-                                    </option>
-                                    <option value="New Customer (Type C)">
-                                        New Customer (Type C)
-                                    </option>
-                                </select>
+                                    name="total_payment"
+                                    id="total_payment"
+                                    placeholder="Total Price"
+                                    required
+                                    data-type="currency"
+                                    data-msg="Mohon Isi Total Harga"
+                                    style="text-transform: uppercase;" />
                                 <div class="validation"></div>
                             </div>
                             <div class="form-group">
-                                <div class="col-xs-12">
-                                    <label>Bukti Pembayaran</label>
-                                    <span style="float: right;">min. 1 picture</span>
-                                </div>
-                                @for ($i = 0; $i < 3; $i++)
-                                    <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
-                                        style="padding: 15px; float: left;">
-                                        <label>Image {{ $i + 1 }}</label>
-                                        <div class="imagePreview"
-                                            style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
-                                        </div>
-                                        <label class="file-upload-browse btn btn-gradient-primary"
-                                            style="margin-top: 15px;">
-                                            Upload
-                                            <input name="images{{ $i }}"
-                                                id="productimg-{{ $i }}"
-                                                type="file"
-                                                accept=".jpg,.jpeg,.png"
-                                                class="uploadFile img"
-                                                value="Upload Photo"
-                                                style="width: 0px; height: 0px; overflow: hidden;"
-                                                {{ $i === 0 ? "required" : "" }} />
-                                        </label>
-                                        <i class="mdi mdi-window-close del"></i>
+                                <label for="">Payment Method</label>
+                                <select class="form-control"
+                                    id="payment_type"
+                                    name="payment_type"
+                                    data-msg="Mohon Pilih Tipe"
+                                    required>
+                                    <option selected disabled value="">
+                                        Choose Payment Method
+                                    </option>
+
+                                    @foreach ($paymentTypes as $key => $paymentType)
+                                        <option value="{{ $key }}">
+                                            {{ strtoupper($paymentType) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="validation"></div>
+                            </div>
+
+                            {{-- ++++++++ BANK ++++++++ --}}
+                            <div id="container-jenispembayaran"
+                                style="display: none;">
+                                <div class="p-3 mb-2" style="border: 1px solid black">
+                                    <div class="form-group">
+                                        <label for="">Payment Type</label>
                                     </div>
-                                @endfor
+                                    <div class="row">
+                                        <div class="form-group col-md-8">
+                                            <select class="form-control bank_name"
+                                                name="bank_0"
+                                                data-msg="Mohon Pilih Bank">
+                                                <option selected disabled value="">
+                                                    Choose Bank
+                                                </option>
+
+                                                @foreach ($banks as $bank)
+                                                    <option value="{{ $bank->id }}">
+                                                        {{ $bank->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <div class="validation"></div>
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <select class="form-control bank_cicilan"
+                                                name="cicilan_0"
+                                                data-msg="Mohon Pilih Jumlah Cicilan">
+                                                <option selected value="1">1X</option>
+                                                @for ($i = 2; $i <= 12; $i += 2)
+                                                    <option class="other_valCicilan"
+                                                        value="{{ $i }}">
+                                                        {{ $i }}X
+                                                    </option>
+                                                @endfor
+                                                <option class="other_valCicilan"
+                                                    value="24">
+                                                    24X
+                                                </option>
+                                            </select>
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Total Payment</label>
+                                        <input type="text"
+                                            class="form-control downpayment"
+                                            name="downpayment_0"
+                                            placeholder="Total Payment"
+                                            required
+                                            data-type="currency"
+                                            data-msg="Mohon Isi Total Pembayaran"
+                                            style="text-transform: uppercase;" />
+                                        <div class="validation"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-xs-12">
+                                            <label>Bukti Pembayaran</label>
+                                            <span style="float: right;">min. 1 picture</span>
+                                        </div>
+                                        @for ($i = 0; $i < 3; $i++)
+                                            <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                                style="padding: 15px; float: left;">
+                                                <label>Image {{ $i + 1 }}</label>
+                                                <div class="imagePreview"
+                                                    style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
+                                                </div>
+                                                <label class="file-upload-browse btn btn-gradient-primary"
+                                                    style="margin-top: 15px;">
+                                                    Upload
+                                                    <input name="images_0_{{ $i }}"
+                                                        id="productimg-{{ $i }}"
+                                                        type="file"
+                                                        accept=".jpg,.jpeg,.png"
+                                                        class="uploadFile img"
+                                                        value="Upload Photo"
+                                                        style="width: 0px; height: 0px; overflow: hidden;"
+                                                        {{ $i === 0 ? "required" : "" }} />
+                                                </label>
+                                                <i class="mdi mdi-window-close del"></i>
+                                            </div>
+                                        @endfor
+                                        <div class="validation"></div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button id="tambah_bank"
+                                            title="Tambah Bank"
+                                            type="button">
+                                            <i class="mdi mdi-plus"></i> Add Payment Type
+                                        </button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div id="tambahan_bank"></div>
+                            </div>
+                            <br>
+                            
+                            <div class="form-group">
+                                <label for="">Remaining Payment</label>
+                                <input type="text"
+                                    class="form-control"
+                                    name="remaining_payment"
+                                    id="remaining_payment"
+                                    placeholder="Remaining Payment"
+                                    required readonly
+                                    data-type="currency"
+                                    data-msg="Mohon Isi Sisa Pembayaran"
+                                    style="text-transform: uppercase;" />
                                 <div class="validation"></div>
                             </div>
                             <div class="form-group">
@@ -666,11 +763,11 @@ $menu_item_second = "add_order";
                                 </button>
                                 <button class="btn btn-light">Cancel</button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -742,33 +839,48 @@ document.addEventListener("DOMContentLoaded", function () {
         theme: "bootstrap4",
     });
 
-    const URL = '<?php echo route("fetch_promo_dropdown"); ?>';
+    // Untuk Tambah Product
+    promoOption+=`<optgroup label="Promo">`;
+    @foreach ($promos as $promo)
+        promoOption += `<option value="promo_{{ $promo->id }}">{{ $promo->code . " - (" . implode(", ", $promo->productName()) . ") - Rp. " . number_format($promo->price) }}</option>`;
+    @endforeach
+    promoOption+=`</optgroup>`;
 
-    fetch(
-        URL,
-        {
-            method: "GET",
-            headers: {
-                "Accept": "application/json",
-            },
-        }
-    ).then(function (response) {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+    promoOption+=`<optgroup label="Product">`;
+    @foreach ($products as $product)
+        promoOption += `<option value="product_{{ $product->id }}">{{ $product->code . " - (" . $product->name . ") - Rp. " . number_format($product->price) }}</option>`;
+    @endforeach
+    promoOption+="</optgroup>";
 
-        return response.json();
-    }).then(function (response) {
-        const dataPromo = response.data;
+    promoOption += `<option value="other">OTHER</option>`;
 
-        for (const promo in dataPromo) {
-            promoOption += `<option value="${dataPromo[promo].id}">${dataPromo[promo].product}</option>`;
-        }
+    // const URL = '<?php echo route("fetch_promo_dropdown"); ?>';
 
-        promoOption += `<option value="other">OTHER</option>`;
-    }).catch(function (error) {
-        console.error(error);
-    });
+    // fetch(
+    //     URL,
+    //     {
+    //         method: "GET",
+    //         headers: {
+    //             "Accept": "application/json",
+    //         },
+    //     }
+    // ).then(function (response) {
+    //     if (!response.ok) {
+    //         throw new Error(`HTTP error! status: ${response.status}`);
+    //     }
+
+    //     return response.json();
+    // }).then(function (response) {
+    //     const dataPromo = response.data;
+
+    //     for (const promo in dataPromo) {
+    //         promoOption += `<option value="${dataPromo[promo].id}">${dataPromo[promo].product}</option>`;
+    //     }
+
+    //     promoOption += `<option value="other">OTHER</option>`;
+    // }).catch(function (error) {
+    //     console.error(error);
+    // });
 
     for (let i = 1; i <= 10; i++) {
         quantityOption += `<option value="${i}">${i}</option>`;
@@ -860,8 +972,100 @@ document.addEventListener("DOMContentLoaded", function () {
         $("#tambah_bank").click(function(e){
             e.preventDefault();
             total_bank++;
-            strIsi = "<div class=\"form-group bank_select\" style=\"width: 62%; display: inline-block;\" id=\"bank_"+total_bank+"\"><select class=\"form-control bank_name\" name=\"bank_"+total_bank+"\" data-msg=\"Mohon Pilih Bank\"><option selected disabled value=\"\">Pilihan Bank</option> @foreach($banks as $key=>$bank) <option value=\"{{ $key }}\">{{ $bank }}</option> @endforeach </select><div class=\"validation\"></div></div><div class=\"form-group bank_select\" style=\"width: 26%; display: inline-block;\" id=\"cicilan_"+total_bank+"\"><select class=\"form-control bank_cicilan\" name=\"cicilan_"+total_bank+"\" data-msg=\"Mohon Pilih Jumlah Cicilan\"><option selected value=\"1\">1X</option> @for($i=2; $i<=12;$i+=2) <option class=\"other_valCicilan\" value=\"{{ $i }}\">{{ $i }}X</option> @endfor </select><div class=\"validation\"></div></div><div class=\"text-center\" style=\"display: inline-block; float: right;\"><button class=\"hapus_bank\" value=\""+total_bank+"\" title=\"Hapus Bank\" style=\"padding: 0.4em 0.7em; background-color: red\"><i class=\"mdi mdi-minus\"></i></button></div>";
-            $('#tambahan_bank').html($('#tambahan_bank').html()+strIsi);
+            strIsi = `
+            <div class="p-3 mb-2" style="border: 1px solid black" id="bank_` + total_bank + `">
+                <div class="form-group">
+                    <label for="">Payment Type ` + (total_bank + 1) + `</label>
+                </div>                                            
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <select class="form-control bank_name"
+                            name="bank_` + total_bank + `"
+                            data-msg="Mohon Pilih Bank">
+                            <option selected disabled value="">
+                                Choose Bank
+                            </option>
+
+                            @foreach ($banks as $bank)
+                                <option value="{{ $bank->id }}">
+                                    {{ $bank->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <select class="form-control bank_cicilan"
+                            name="cicilan_` + total_bank + `"
+                            data-msg="Mohon Pilih Jumlah Cicilan">
+                            <option selected value="1">1X</option>
+                            @for ($i = 2; $i <= 12; $i += 2)
+                                <option class="other_valCicilan"
+                                    value="{{ $i }}">
+                                    {{ $i }}X
+                                </option>
+                            @endfor
+                            <option class="other_valCicilan"
+                                value="24">
+                                24X
+                            </option>
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="">Total Payment</label>
+                    <input type="text"
+                        class="form-control downpayment"
+                        name="downpayment_` + total_bank + `"
+                        placeholder="Total Payment"
+                        required
+                        data-type="currency"
+                        data-msg="Mohon Isi Total Pembayaran"
+                        style="text-transform: uppercase;" />
+                    <div class="validation"></div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <label>Bukti Pembayaran</label>
+                        <span style="float: right;">min. 1 picture</span>
+                    </div>
+                    @for ($i = 0; $i < 3; $i++)
+                        <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                            style="padding: 15px; float: left;">
+                            <label>Image {{ $i + 1 }}</label>
+                            <div class="imagePreview"
+                                style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
+                            </div>
+                            <label class="file-upload-browse btn btn-gradient-primary"
+                                style="margin-top: 15px;">
+                                Upload
+                                <input name="images_` + total_bank + `_{{ $i }}"
+                                    id="productimg-{{ $i }}"
+                                    type="file"
+                                    accept=".jpg,.jpeg,.png"
+                                    class="uploadFile img"
+                                    value="Upload Photo"
+                                    style="width: 0px; height: 0px; overflow: hidden;"
+                                    {{ $i === 0 ? "required" : "" }} />
+                            </label>
+                            <i class="mdi mdi-window-close del"></i>
+                        </div>
+                    @endfor
+                    <div class="validation"></div>
+                </div>
+                <div class="text-center">
+                    <button style="padding: 0.4em 0.7em; background-color: red"
+                        class="hapus_bank"
+                        title="Hapus Bank"
+                        value="` + total_bank + `"
+                        type="button">
+                        <i class="mdi mdi-minus"></i> Delete Payment Type
+                    </button>
+                </div>
+                <div class="clearfix"></div>
+            </div>`;
+            $('#tambahan_bank').append(strIsi);
 
 
             if ($("#payment_type").val() == 1) {
@@ -875,10 +1079,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         $(document).on("click", ".hapus_bank", function (e) {
             e.preventDefault();
-            total_bank--;
+            // total_bank--;
             $('#bank_'+$(this).val()).remove();
             $('#cicilan_'+$(this).val()).remove();
             $(this).remove();
+            checkRemainingPayment();
         });
 
         $("#tambah_product").click(function (e) {
@@ -937,10 +1142,19 @@ document.addEventListener("DOMContentLoaded", function () {
             newDivRemove.appendChild(newButtonRemove);
             newDivOther.appendChild(newInputOther);
 
-            document.getElementById("tambahan_product").appendChild(newDivProduct);
-            document.getElementById("tambahan_product").appendChild(newDivQty);
-            document.getElementById("tambahan_product").appendChild(newDivRemove);
-            document.getElementById("tambahan_product").appendChild(newDivOther);
+            const newDivParentProduct = document.createElement("div");
+            newDivParentProduct.id = `product_parent_${total_product}`;
+
+            newDivParentProduct.appendChild(newDivProduct);
+            newDivParentProduct.appendChild(newDivQty);
+            newDivParentProduct.appendChild(newDivRemove);
+            newDivParentProduct.appendChild(newDivOther);
+
+            // document.getElementById("tambahan_product").appendChild(newDivProduct);
+            // document.getElementById("tambahan_product").appendChild(newDivQty);
+            // document.getElementById("tambahan_product").appendChild(newDivRemove);
+            // document.getElementById("tambahan_product").appendChild(newDivOther);
+            document.getElementById("tambahan_product").appendChild(newDivParentProduct);
 
             $("#product_" + total_product).select2({
                 theme: "bootstrap4",
@@ -949,14 +1163,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         $(document).on("click", ".hapus_product", function(e){
             e.preventDefault();
-            total_product--;
+            // total_product--;
 
-            $('#product_'+$(this).val()).remove();
-            $('#qty_'+$(this).val()).remove();
-            $('#product_other_container_'+$(this).val()).remove();
-            $('#product_other_'+$(this).val()).remove();
-            $("#product_"+$(this).val()).select2('destroy'); 
-            $(this).remove();
+            $('#product_parent_'+$(this).val()).remove();
+            // $('#product_'+$(this).val()).remove();
+            // $('#qty_'+$(this).val()).remove();
+            // $('#product_other_container_'+$(this).val()).remove();
+            // $('#product_other_'+$(this).val()).remove();
+            // $("#product_"+$(this).val()).select2('destroy');
+            
+            // $(this).remove();
 
             //kurangi total price
             for (var i = 0; i < arr_index_temp.length; i++) {
@@ -966,6 +1182,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     total_price = total_price - (min_price * min_qty);
                     $("#total_payment").val(numberWithCommas(total_price));
+                    checkRemainingPayment();
                 }
             }
 
@@ -990,6 +1207,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         $(document).on("change", "#payment_type", function(e){
+            total_bank = 0;
             $("#container-jenispembayaran").show();
             $(".other_valCicilan").parent().val('1');
             $('#tambahan_bank').html("");
@@ -1013,6 +1231,17 @@ document.addEventListener("DOMContentLoaded", function () {
             $(".cust-2").attr('required', '');
             $(this).hide();
         });
+
+        $("#old_product, #prize").change(function() {
+            element = $(this);
+            if (element.val() == "other") {
+                $("#" + element.attr('id') + "_other").show();
+                $("#" + element.attr('id') + "_other").attr("required", "");
+            } else {
+                $("#" + element.attr('id') + "_other").hide();
+                $("#" + element.attr('id') + "_other").removeAttr("required");
+            }
+        });
     });
     
     
@@ -1033,6 +1262,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.value === "other") {
             document.getElementById("product_other_container_" + sequence).classList.remove("d-none");
             document.getElementById("product_other_" + sequence).setAttribute("required", "");
+            var get_qty = $('#qty_'+sequence).val();
+            arr_index_temp.push([sequence, null, 0, get_qty]);
         } else if (e.value !== "other") {
             document.getElementById("product_other_container_" + sequence).classList.add("d-none");
             document.getElementById("product_other_" + sequence).removeAttribute("required");
@@ -1075,6 +1306,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log(total_price);
 
                     $("#total_payment").val(numberWithCommas(total_price));
+                    checkRemainingPayment();
                 }
             });
         }
@@ -1097,6 +1329,7 @@ document.addEventListener("DOMContentLoaded", function () {
             //update total price
             total_price = total_price + (old_price * get_qty);
             $("#total_payment").val(numberWithCommas(total_price));
+            checkRemainingPayment();
         }
     }
 
@@ -1112,22 +1345,29 @@ document.addEventListener("DOMContentLoaded", function () {
         return parts.join(".");
     }
 
-    $(document).on("input", "#total_payment, #down_payment", function() {
-        var down_payment = parseFloat(numberNoCommas($("#down_payment").val()));
+    function checkRemainingPayment() {
+        var total_downpayment = 0;
+        $(".downpayment").each(function(i, obj) {
+            total_downpayment += parseFloat(numberNoCommas($(this).val()))
+        });
         var total_payment = parseFloat(numberNoCommas($("#total_payment").val()));
-         if (down_payment > total_payment) {
-            down_payment = total_payment;
-            $("#down_payment").val(numberWithCommas(total_payment));
+         if (total_downpayment > total_payment) {
+            total_downpayment = 0;
+            $(".downpayment").val('');
             alert("Total Payment cant be higher than the Total Price");
         }
-        var remaining_payment = total_payment - down_payment;
+        var remaining_payment = total_payment - total_downpayment;
         $("#remaining_payment").val(numberWithCommas(remaining_payment));
+    }
+
+    $(document).on("input", "#total_payment, .downpayment", function() {
+        checkRemainingPayment();
     });
-    $(document).on("change", "#total_payment, #down_payment", function() {
+    $(document).on("change", "#total_payment, .downpayment", function() {
         var down_payment = parseFloat(numberNoCommas($(this).val()));
         if (down_payment == 0) {
             $(this).val("");
-            alert("Down Payment cant be 0");
+            alert("Total Payment cant be 0");
         }
     });
 </script>

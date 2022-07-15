@@ -254,6 +254,20 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-type_customer']);
         });
 
+        //-- BANK --//
+        Gate::define('add-bank', function ($user) {
+            return $user->hasAccess(['add-bank']);
+        });
+        Gate::define('browse-bank', function ($user) {
+            return $user->hasAccess(['browse-bank']);
+        });
+        Gate::define('edit-bank', function ($user) {
+            return $user->hasAccess(['edit-bank']);
+        });
+        Gate::define('delete-bank', function ($user) {
+            return $user->hasAccess(['delete-bank']);
+        });
+
         //-- DATA SOURCING --//
         Gate::define('add-data_sourcing', function ($user) {
             return $user->hasAccess(['add-data_sourcing']);
