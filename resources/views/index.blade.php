@@ -660,11 +660,11 @@
     gallery.classList.add('Gallery--active');
     card.classList.add('Card--active');
     if (typeof(Event) === 'function') {
-      window.dispatchEvent(new Event('resize'));
+      setTimeout(function(){window.dispatchEvent(new Event('resize'))},3000);
     } else {
       var evt = window.document.createEvent('UIEvents');
       evt.initUIEvent('resize', true, false, window, 0);
-      window.dispatchEvent(evt);
+      setTimeout(function(){window.dispatchEvent(evt)},3000);
     }
   }
 
