@@ -326,27 +326,17 @@ $menu_item_page = "order";
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <select class="form-control"
-                                                	id="qty_{{ $total_product }}"
+                                                <input type="number"
+                                                    class="form-control"
                                                     name="qty_{{ $total_product }}"
-                                                    data-msg="Mohon Pilih Jumlah"
-                                                    onchange="selectQty(this)"
+                                                    id="qty_{{ $total_product }}"
                                                     data-sequence="{{ $total_product }}"
-                                                    required>
-                                                    <option selected value="1">
-                                                        1
-                                                    </option>
-
-                                                    @for ($i = 2; $i <= 10; $i++)
-                                                        @if ($orderDetail['qty'] == $i)
-                                                            <option value="{{ $i }}" selected="true">
-                                                                {{ $i }}
-                                                            </option>
-                                                        @else
-                                                            <option value="{{ $i }}">{{ $i }}</option>
-                                                        @endif
-                                                    @endfor
-                                                </select>
+                                                    placeholder="Qty"
+                                                    value="{{ $orderDetail['qty'] }}"
+                                                    required
+                                                    min="1"
+                                                    oninput="selectQty(this)"
+                                                    data-msg="Mohon Isi Jumlah Product" />
                                                 <div class="validation"></div>
                                             </div>
                                         </div>
@@ -1174,12 +1164,16 @@ document.addEventListener("DOMContentLoaded", function () {
             newDivQty.className = "form-group";
             // newDivQty.style = "width: 14%; float: right; display: inline-block;";
 
-            const newSelectQty = document.createElement("select");
+            const newSelectQty = document.createElement("input");
+            newSelectQty.type = "number";
             newSelectQty.className = "form-control";
             newSelectQty.id = `qty_${total_product}`;
             newSelectQty.name = `qty_${total_product}`;
-            newSelectQty.innerHTML = quantityOption;
-            newSelectQty.setAttribute("onchange", "selectQty(this)");
+            newSelectQty.required = true;
+            newSelectQty.value = "1";
+            newSelectQty.min = "1";
+            // newSelectQty.innerHTML = quantityOption;
+            newSelectQty.setAttribute("oninput", "selectQty(this)");
             newSelectQty.setAttribute("data-sequence", total_product);
 
             const newDivRemove = document.createElement("div");
@@ -1376,8 +1370,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function selectQty(e){
         const sequence = e.dataset.sequence; //index select nya
 
-        var get_qty = $('#qty_'+sequence).val();
+        var get_qty = parseInt($('#qty_'+sequence).val());
 
+        if (!get_qty) get_qty = 0;
         if(checkProductArray(arr_index_temp, sequence) == true){
             //kurangi price dengan harga lama
             var old_price = parseInt(arr_index_temp[sequence][2]);
