@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Artisan;
 
 class CreateBanksTable extends Migration
 {
@@ -19,6 +20,7 @@ class CreateBanksTable extends Migration
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
+        Artisan::call('db:seed', ['--class' => 'BanksSeeder']);
     }
 
     /**

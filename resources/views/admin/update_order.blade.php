@@ -92,7 +92,24 @@ $menu_item_page = "order";
                             <div class="form-group">
                                 <h4><strong>Data Customer</strong></h4>
 			                	<label for="">Customer Type</label>
-			                    <input type="text" class="form-control" name="customer_type" id="customer_type" value="{{$orders['customer_type']}}" required data-msg="Mohon Isi Tipe Customer" />
+                                @php $customer_types = ["VVIP (Type A)", "WAKi Customer (Type B)", "New Customer (Type C)"]; @endphp
+                                <select id="customer_type"
+                                    style="margin-top: 0.5em; height: auto;"
+                                    class="form-control"
+                                    name="customer_type"
+                                    required>
+                                    @foreach ($customer_types as $customer_type)
+                                    <option value="{{ $customer_type }}"
+                                        @if($customer_type == $orders['customer_type']) selected @endif>
+                                        {{ $customer_type }}
+                                    </option>
+                                    @endforeach
+                                    @if (!in_array($orders['customer_type'], $customer_types))
+                                    <option value="{{ $orders['customer_type'] }}" selected>
+                                        {{ $orders['customer_type'] }}
+                                    </option>
+                                    @endif
+                                </select>
 			                    <div class="validation"></div>
 			                </div>
 	              			<div class="form-group">
@@ -307,8 +324,7 @@ $menu_item_page = "order";
                                                 <div class="validation"></div>
 				                            </div>
                                         </div>
-                                        <div class="col-md-1"></div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <select class="form-control"
                                                 	id="qty_{{ $total_product }}"
@@ -592,7 +608,7 @@ $menu_item_page = "order";
                                 <div class="p-3 mb-2" style="border: 1px solid black" id="bank_{{ $indexPayment }}">
                                     <input type="hidden" name="orderpaymentold[]" value={{ $payment['id'] }}>
                                     <div class="form-group">
-                                        <label for="">Payment Type {{ ($indexPayment) != 0 ? $indexPayment : '' }}</label>
+                                        <label for="">Payment Type {{ ($indexPayment) != 0 ? ($indexPayment + 1) : '' }}</label>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-md-8">
@@ -732,6 +748,9 @@ let promoOption = `<option selected disabled value="">Choose Product</option>`;
 let quantityOption = "";
 
 document.addEventListener("DOMContentLoaded", function () {
+    $("#old_product, #prize").select2({
+        theme: "bootstrap4",
+    });
 
     // Untuk Tambah Product
     promoOption+=`<optgroup label="Promo">`;
@@ -1140,7 +1159,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const newDivProduct = document.createElement("div");
             newDivProduct.className = "form-group";
-            newDivProduct.style = "width: 74%; float: left; display: inline-block;";
+            // newDivProduct.style = "width: 74%; float: left; display: inline-block;";
 
             const newSelectProduct = document.createElement("select");
             newSelectProduct.id = `product_${total_product}`;
@@ -1153,7 +1172,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const newDivQty = document.createElement("div");
             newDivQty.className = "form-group";
-            newDivQty.style = "width: 14%; float: right; display: inline-block;";
+            // newDivQty.style = "width: 14%; float: right; display: inline-block;";
 
             const newSelectQty = document.createElement("select");
             newSelectQty.className = "form-control";
@@ -1164,7 +1183,7 @@ document.addEventListener("DOMContentLoaded", function () {
             newSelectQty.setAttribute("data-sequence", total_product);
 
             const newDivRemove = document.createElement("div");
-            newDivRemove.className = "col-md-12";
+            // newDivRemove.className = "col-md-12";
             newDivRemove.style = "margin-bottom: 1em; display:flex; justify-content: flex-end; padding: 0;";
 
             const newButtonRemove = document.createElement("button");
@@ -1176,7 +1195,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const newDivOther = document.createElement("div");
             newDivOther.id = `product_other_container_${total_product}`;
-            newDivOther.className = "form-group d-none";
+            newDivOther.className = "col-md-12 form-group d-none";
 
             const newInputOther = document.createElement("input");
             newInputOther.id = `product_other_${total_product}`;
@@ -1185,17 +1204,27 @@ document.addEventListener("DOMContentLoaded", function () {
             newInputOther.name = `product_other_${total_product}`;
             newInputOther.placeholder = "Product Name";
 
-            newDivProduct.appendChild(newSelectProduct);
-            newDivQty.appendChild(newSelectQty);
-            newDivRemove.appendChild(newButtonRemove);
+            const newDivCol9 = document.createElement("div");
+            newDivCol9.className = "col-md-9 form-group";
+
+            const newDivCol3 = document.createElement("div");
+            newDivCol3.className = "col-md-3 form-group";
+
+            const newDivCol12Qty = document.createElement("div");
+            newDivCol12Qty.className = "col-md-12 form-group text-right";
+
+            newDivCol9.appendChild(newDivProduct.appendChild(newSelectProduct));
+            newDivCol3.appendChild(newDivQty.appendChild(newSelectQty));
+            newDivCol12Qty.appendChild(newDivRemove.appendChild(newButtonRemove));
             newDivOther.appendChild(newInputOther);
             
             const newDivParentProduct = document.createElement("div");
+            newDivParentProduct.className = "row";
             newDivParentProduct.id = `product_parent_${total_product}`;
 
-            newDivParentProduct.appendChild(newDivProduct);
-            newDivParentProduct.appendChild(newDivQty);
-            newDivParentProduct.appendChild(newDivRemove);
+            newDivParentProduct.appendChild(newDivCol9);
+            newDivParentProduct.appendChild(newDivCol3);
+            newDivParentProduct.appendChild(newDivCol12Qty);
             newDivParentProduct.appendChild(newDivOther);
 
             // document.getElementById("tambahan_product").appendChild(newDivProduct);
