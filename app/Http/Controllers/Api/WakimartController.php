@@ -30,7 +30,7 @@ class WakimartController extends Controller
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri'  => 'http://localhost:8001/',
+            'base_uri'  => 'https://wakimart.co.id/',
             'headers'   => [
                 'api-key' => env('API_KEY')
             ]
@@ -113,7 +113,7 @@ class WakimartController extends Controller
      **/
     public function listMPCWaki(Request $request)
     {
-        $request->session()->forget(['success', 'error']);
+        $request->session()->forget(['success-api-waki', 'error-api-waki']);
         $wakimartMemberData = WakimartMember::orderBy('member_id', 'ASC')->get();
         $memberID = [];
         foreach ( $wakimartMemberData as $getMemberID ) {
@@ -154,13 +154,13 @@ class WakimartController extends Controller
                     'path' => $request->url(),
                     'query' => $request->query(),
                 ]);
-                $sessionStatus = $decoded->status;
+                $sessionStatus = 'success-api-waki';
                 $sessionMessage = $decoded->message;
             } else if ( $decoded->status == "error" ) {
-                $sessionStatus = $decoded->status;
+                $sessionStatus = 'error-api-waki';
                 $sessionMessage = $decoded->message;
             } else {
-                $sessionStatus = 'error';
+                $sessionStatus = 'error-api-waki';
                 $sessionMessage = $decoded->message;
             }
 
@@ -168,7 +168,7 @@ class WakimartController extends Controller
             return view('admin.list_mpc_waki', compact('MPCWakiData'));
         } catch (RequestException $e) {
             if (! $e->hasResponse()) {
-                Session::put('error', "No response from server. Assume the host is offline or server is overloaded.");
+                Session::put('error-api-waki', "No response from server. Assume the host is offline or server is overloaded.");
                 return view('admin.list_mpc_waki', compact('MPCWakiData'));
             }
         }

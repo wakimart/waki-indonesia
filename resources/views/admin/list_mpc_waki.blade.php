@@ -6,6 +6,16 @@
 @section('content')
 <div class="main-panel">
 	<div class="content-wrapper">
+		@if (session('success-api-waki'))
+			<div class="alert alert-success div-session">
+				{{ session('success-api-waki') }}
+			</div>
+		@endif
+		@if (session('error-api-waki'))
+			<div class="alert alert-danger div-session">
+				{{ session('error-api-waki') }}
+			</div>
+		@endif
 		<div class="page-header">
   			<h3 class="page-title">List MPC Waki</h3>
   			<nav aria-label="breadcrumb">
