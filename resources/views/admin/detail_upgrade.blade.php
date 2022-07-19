@@ -130,6 +130,7 @@ $menu_item_second = "detail_upgrade_form";
 										<td>Acc Code</td>
 										<td>Upgrade Date</td>
 										<td>Bill DO</td>
+										<td>Area</td>
 									</thead>
 									<tr>
 										<td class="center">
@@ -163,6 +164,9 @@ $menu_item_second = "detail_upgrade_form";
 										</td>
 										<td class="center">
 											{{ $upgrade->acceptance->bill_do }}
+										</td>
+										<td class="center">
+											{{ $upgrade->acceptance->area ?? "No Area" }}
 										</td>
 									</tr>
 								</table>

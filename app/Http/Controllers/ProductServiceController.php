@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Acceptance;
 use App\Product;
 use App\ProductService;
 use App\Service;
@@ -23,34 +24,49 @@ class ProductServiceController extends Controller
     {
         $url = $request->all();
 
-        $services = Service::where('active', true)
-            ->orderBy("service_date", "desc");
-        $upgrades = Upgrade::where('active', true)
-            ->orderBy("created_at", "desc");
-        
-        if ($request->has('search')) {
-            $services->where('status', 'LIKE', '%' . $request->search . '%');
+        $serviceAreas = [];
+        foreach (Service::$Area as $area) {
+            $serviceAreas[$area] = Service::where('active', true)
+                ->where('area', $area);
 
-            $upgrades->where('status', 'LIKE', '%' . $request->search . '%');
+            if ($request->has('search')) {
+                $serviceAreas[$area]->where('status', 'LIKE', '%' . $request->search . '%');
+            }
+
+            $serviceAreas[$area] = $serviceAreas[$area]
+                ->orderBy("service_date", "desc")
+                ->paginate(10, ['*'], "service_".$area);
         }
 
-        $countServices = $services->count();
-        $countUpgrades = $upgrades->count();
+        $upgradeAreas = [];
+        foreach (Acceptance::$Area as $area) {
+            $upgradeAreas[$area] = Upgrade::where('upgrades.active', true)
+                ->select('upgrades.*', 'ac.area')
+                ->leftJoin('acceptances as ac', 'ac.id', 'upgrades.acceptance_id');
+            
+            if ($request->has('search')) {    
+                $upgradeAreas[$area]->where('upgrades.status', 'LIKE', '%' . $request->search . '%');
+            }
 
-        $services = $services->paginate(10, ['*'], 'services');
-        $upgrades = $upgrades->paginate(10, ['*'], 'upgrades');
+            if ($area == 'null') {
+                $upgradeAreas[$area]->whereNull('ac.area');
+            } else {
+                $upgradeAreas[$area]->where('ac.area', $area);
+            }
+
+            $upgradeAreas[$area] = $upgradeAreas[$area]
+                ->orderBy("ac.created_at", 'desc')
+                ->paginate(10, ['*'], "upgrade_".$area);
+        }
 
         return view(
             'admin.list_taskservice', 
             compact(
-                'countServices', 
-                'services', 
-                'upgrades', 
-                'countUpgrades',
+                'serviceAreas', 
+                'upgradeAreas',
                 'url'
             )
-        )->with("i_services", (request()->input("services", 1) - 1) * 10 + 1)
-        ->with("i_upgrades", (request()->input("upgrades", 1) - 1) * 10 + 1);
+        );
     }
 
     /**
