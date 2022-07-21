@@ -26,7 +26,10 @@ class ServiceController extends Controller
     public function index(Request $request)
     {
         $url = $request->all();
-        $services = Service::select(
+
+        $serviceAreas = [];
+        foreach (Service::$Area as $area) {
+            $serviceAreas[$area] = Service::select(
                 "id",
                 "name",
                 "address",
@@ -35,20 +38,50 @@ class ServiceController extends Controller
                 "status"
             )
             ->where('active', true)
-            ->orderBy("service_date", "desc")
-            ->get();
-        $countServices = $services->count();
-        $services = $services->paginate(10);
-        return view('admin.list_service', compact('services', 'countServices', 'url'));
+            ->where('area', $area);
+
+            if ($request->has('search')) {
+                $serviceAreas[$area]->where(function($query) use ($request) {
+                    $query->where('code', 'LIKE', '%'.$request->search.'%')
+                        ->orWhere('name', 'LIKE', '%'.$request->search.'%')
+                        ->orWhere('phone', 'LIKE', '%'.$request->search.'%');
+                });
+            }
+
+            $serviceAreas[$area] = $serviceAreas[$area]
+                ->orderBy("service_date", "desc")
+                ->paginate(10, ['*'], $area);
+        }
+
+        return view('admin.list_service', compact('serviceAreas', 'url'));
     }
 
     public function indexUser(Request $request)
     {
         $url = $request->all();
-        $services = Service::where('active', true)->get();
-        $countServices = $services->count();
-        $services = $services->paginate(10);
-        return view('service', compact('services', 'countServices', 'url'));
+
+        $serviceAreas = [];
+        foreach (Service::$Area as $area) {
+            $serviceAreas[$area] = Service::select(
+                "id",
+                "name",
+                "address",
+                "phone",
+                DB::raw("DATE(service_date) AS service_date"),
+                "status"
+            )
+            ->where('active', true)
+            ->where('area', $area);
+
+            $serviceAreas[$area] = $serviceAreas[$area]
+                ->orderBy("service_date", "desc")
+                ->paginate(10, ['*'], $area);
+        }
+
+        // $services = Service::where('active', true)->get();
+        // $countServices = $services->count();
+        // $services = $services->paginate(10);
+        return view('service', compact('serviceAreas', 'url'));
     }
 
     public function trackService($id){
@@ -89,7 +122,7 @@ class ServiceController extends Controller
     {
         DB::beginTransaction();
         try {
-            $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date', 'technician_schedule_id');
+            $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date', 'technician_schedule_id', 'area');
             $data['status'] = 'New';
             $temp_id = DB::select("SHOW TABLE STATUS LIKE 'services'");
             $data['code'] = "SERVICE/".$temp_id[0]->Auto_increment."/".date("Ymd");
@@ -187,7 +220,7 @@ class ServiceController extends Controller
             $get_allProductService = json_decode($request->productservices);
             $get_oldProductService = ProductService::where('service_id', $get_allProductService[0][0])->get();
 
-            $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date', 'technician_schedule_id');
+            $data = $request->only('no_mpc', 'name', 'address', 'phone', 'service_date', 'technician_schedule_id', 'area');
             $service = Service::find($get_allProductService[0][0]);
             $service->no_mpc = $data['no_mpc'];
             $service->name = $data['name'];
@@ -195,6 +228,7 @@ class ServiceController extends Controller
             $service->phone = $data['phone'];
             $service->service_date = $data['service_date'];
             $service->technician_schedule_id = $data['technician_schedule_id'];
+            $service->area = $data['area'];
             $service->save();
 
             foreach ($get_allProductService as $key => $value) {

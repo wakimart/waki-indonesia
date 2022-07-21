@@ -9,15 +9,15 @@ $menu_item_page = "order";
 <link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
     .imagePreview {
-	    width: 100%;
-	    height: 150px;
-	    background-position: center center;
-	    background-color: #fff;
-	    background-size: cover;
-	    background-repeat: no-repeat;
-	    display: inline-block;
-	}
-  	.del {
+        width: 100%;
+        height: 150px;
+        background-position: center center;
+        background-color: #fff;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: inline-block;
+    }
+    .del {
         position: absolute;
         top: 0px;
         right: 10px;
@@ -27,8 +27,8 @@ $menu_item_page = "order";
         line-height: 30px;
         background-color: rgba(255,255,255,0.6);
         cursor: pointer;
-  	}
-  	#intro {padding-top: 2em;}
+    }
+    #intro {padding-top: 2em;}
     .validation {
         color: red;
         font-size: 9pt;
@@ -62,16 +62,16 @@ $menu_item_page = "order";
 
 @section('content')
 <div class="main-panel">
-  	<div class="content-wrapper">
-    	<div class="page-header">
-      		<h3 class="page-title">Edit Order</h3>
-      		<nav aria-label="breadcrumb">
-	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="false" aria-controls="deliveryorder-dd">Order</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Edit Order</li>
-	        	</ol>
-      		</nav>
-    	</div>
+    <div class="content-wrapper">
+        <div class="page-header">
+            <h3 class="page-title">Edit Order</h3>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="false" aria-controls="deliveryorder-dd">Order</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Order</li>
+                </ol>
+            </nav>
+        </div>
         <form id="actionUpdate" class="forms-sample" method="POST" action="{{ route('update_order') }}">
             {{ csrf_field() }}
             <div class="row">
@@ -91,7 +91,7 @@ $menu_item_page = "order";
                         <div class="card-body">
                             <div class="form-group">
                                 <h4><strong>Data Customer</strong></h4>
-			                	<label for="">Customer Type</label>
+                                <label for="">Customer Type</label>
                                 @php $customer_types = ["VVIP (Type A)", "WAKi Customer (Type B)", "New Customer (Type C)"]; @endphp
                                 <select id="customer_type"
                                     style="margin-top: 0.5em; height: auto;"
@@ -110,46 +110,46 @@ $menu_item_page = "order";
                                     </option>
                                     @endif
                                 </select>
-			                    <div class="validation"></div>
-			                </div>
-	              			<div class="form-group">
-	                			<label for="">No. Member (optional)</label>
-	                			<input type="number" class="form-control" id="no_member" name="no_member" value="{{ $orders['no_member'] }}">
-	                			<div class="validation"></div>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="">Name</label>
-				                <input type="text" class="form-control" id="name" name="name" value="{{ $orders['name'] }}">
-				                <div class="validation"></div>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="">Phone Number</label>
-				                <input type="number" class="form-control" id="phone" name="phone" value="{{ $orders['phone'] }}">
-				                <div class="validation"></div>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="">Province</label>
-								<select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
-									<option selected value="{{ $orders['district']['province_id'] }}">{{ $orders['district']['province'] }}</option>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">No. Member (optional)</label>
+                                <input type="number" class="form-control" id="no_member" name="no_member" value="{{ $orders['no_member'] }}">
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ $orders['name'] }}">
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Phone Number</label>
+                                <input type="number" class="form-control" id="phone" name="phone" value="{{ $orders['phone'] }}">
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Province</label>
+                                <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
+                                    <option selected value="{{ $orders['district']['province_id'] }}">{{ $orders['district']['province'] }}</option>
 
-									@php
-										$result = RajaOngkir::FetchProvince();
-										$result = $result['rajaongkir']['results'];
-										$arrProvince = [];
-										if(sizeof($result) > 0){
-											foreach ($result as $value) {
-												echo "<option value=\"" . $value['province_id'] . "\">" . $value['province'] . "</option>";
-											}
-										}
-									@endphp
-								</select>
-								<div class="validation"></div>
-							  </div>
-							<div class="form-group">
-				                <label for="">City</label>
-								<select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
-									@php
-		                                if (isset($orders['district']['province_id'])) {
+                                    @php
+                                        $result = RajaOngkir::FetchProvince();
+                                        $result = $result['rajaongkir']['results'];
+                                        $arrProvince = [];
+                                        if(sizeof($result) > 0){
+                                            foreach ($result as $value) {
+                                                echo "<option value=\"" . $value['province_id'] . "\">" . $value['province'] . "</option>";
+                                            }
+                                        }
+                                    @endphp
+                                </select>
+                                <div class="validation"></div>
+                              </div>
+                            <div class="form-group">
+                                <label for="">City</label>
+                                <select class="form-control" id="city" name="city" data-msg="Mohon Pilih Kota" required>
+                                    @php
+                                        if (isset($orders['district']['province_id'])) {
                                             $result = RajaOngkir::FetchCity($orders['district']['province_id']);
                                             $result = $result['rajaongkir']['results'];
                                             $arrCity = [];
@@ -173,101 +173,101 @@ $menu_item_page = "order";
                                                 echo $arrCity[0];
                                                 echo $arrCity[1];
                                             }
-		                                }
-		                            @endphp
-								</select>
-								<div class="validation"></div>
-							</div>
-							<div class="form-group">
-				                <label for="">Sub District</label>
-								<select class="form-control" id="subDistrict" name="distric" data-msg="Mohon Pilih Kecamatan" required>
-									<option selected value="{{$orders['district']['subdistrict_id']}}">{{$orders['district']['subdistrict_name']}}</option>
-									@php
-		                              if(isset($orders['district']['city_id'])){
-		                                $result = RajaOngkir::FetchDistrict($orders['district']['city_id']);
-		                                $result = $result['rajaongkir']['results'];
-		                                if(sizeof($result) > 0){
-		                                  foreach ($result as $value) {
-		                                    $terpilihNya = "";
-		                                    if(isset($orders['district']['subdistrict_id'])){
-		                                      if($orders['district']['subdistrict_id'] == $value['subdistrict_id']){
-		                                        $terpilihNya = "selected";
-		                                      }
-		                                    }
+                                        }
+                                    @endphp
+                                </select>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Sub District</label>
+                                <select class="form-control" id="subDistrict" name="distric" data-msg="Mohon Pilih Kecamatan" required>
+                                    <option selected value="{{$orders['district']['subdistrict_id']}}">{{$orders['district']['subdistrict_name']}}</option>
+                                    @php
+                                      if(isset($orders['district']['city_id'])){
+                                        $result = RajaOngkir::FetchDistrict($orders['district']['city_id']);
+                                        $result = $result['rajaongkir']['results'];
+                                        if(sizeof($result) > 0){
+                                          foreach ($result as $value) {
+                                            $terpilihNya = "";
+                                            if(isset($orders['district']['subdistrict_id'])){
+                                              if($orders['district']['subdistrict_id'] == $value['subdistrict_id']){
+                                                $terpilihNya = "selected";
+                                              }
+                                            }
 
-		                                    echo "<option value=\"".$value['subdistrict_id']."\"".$terpilihNya.">".$value['subdistrict_name']."</option>";
-		                                  }
-		                                }
-		                              }
-		                            @endphp
-								</select>
-								<div class="validation"></div>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="exampleTextarea1">Address</label>
-				                <textarea class="form-control" id="address" name="address" rows="4">{{$orders['address']}}</textarea>
-				                <div class="validation"></div>
-							</div>
-							<div class="form-group">
-				                <label for="">Know From</label>
-								<select class="form-control" id="know_from" name="know_from" data-msg="Mohon Pilih Kecamatan" required>
-									@foreach($from_know as $key=>$value)
-										@if($value == $orders['know_from'])
-											<option value="{{ $value }}" selected="true">{{ $value }}</option>
-										@else
-											<option value="{{ $value }}">{{ $value }}</option>
-										@endif
-									@endforeach
-								</select>
-								<div class="validation"></div>
-	              			</div>
+                                            echo "<option value=\"".$value['subdistrict_id']."\"".$terpilihNya.">".$value['subdistrict_name']."</option>";
+                                          }
+                                        }
+                                      }
+                                    @endphp
+                                </select>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleTextarea1">Address</label>
+                                <textarea class="form-control" id="address" name="address" rows="4">{{$orders['address']}}</textarea>
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Know From</label>
+                                <select class="form-control" id="know_from" name="know_from" data-msg="Mohon Pilih Kecamatan" required>
+                                    @foreach($from_know as $key=>$value)
+                                        @if($value == $orders['know_from'])
+                                            <option value="{{ $value }}" selected="true">{{ $value }}</option>
+                                        @else
+                                            <option value="{{ $value }}">{{ $value }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                <div class="validation"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-	              			<div class="form-group">
+                            <div class="form-group">
                                 <h4><strong>Product / Promo</strong></h4>
                                 <label for="">CASH/UPGRADE</label>
-			                    <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Mohon Pilih Tipe" required>
-			                        <option selected disabled value="">Choose CASH/UPGRADE</option>
+                                <select class="form-control" id="cash_upgarde" name="cash_upgrade" data-msg="Mohon Pilih Tipe" required>
+                                    <option selected disabled value="">Choose CASH/UPGRADE</option>
 
-			                        @foreach ($cashUpgrades as $key => $cashUpgrade)
-			                        	@if ($orders['cash_upgrade'] == $key)
-			                                <option value="{{ $key }}" selected>
+                                    @foreach ($cashUpgrades as $key => $cashUpgrade)
+                                        @if ($orders['cash_upgrade'] == $key)
+                                            <option value="{{ $key }}" selected>
                                                 {{ strtoupper($cashUpgrade) }}
                                             </option>
-			                            @else
-			                                <option value="{{ $key }}">
+                                        @else
+                                            <option value="{{ $key }}">
                                                 {{ strtoupper($cashUpgrade) }}
                                             </option>
-			                            @endif
-			                        @endforeach
-			                    </select>
-			                    <div class="validation"></div>
-			                </div>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                <div class="validation"></div>
+                            </div>
 
-			                @if ($orders['cash_upgrade'] == 1 || $orders['cash_upgrade'] == 2)
-			                <div id="container-cashupgrade">
-			                	<?php
+                            @if ($orders['cash_upgrade'] == 1 || $orders['cash_upgrade'] == 2)
+                            <div id="container-cashupgrade">
+                                <?php
                                 $ProductPromos = $orders->orderDetail;
                                 $totalProduct = count($ProductPromos);
 
                                 $total_product = -1;
-		                        ?>
+                                ?>
 
-			                	@foreach ($orders->orderDetail as $orderDetail)
+                                @foreach ($orders->orderDetail as $orderDetail)
                                 @if ($orderDetail->type == App\OrderDetail::$Type['1'])
-			                		<?php
+                                    <?php
                                     $total_product++;
-									?>
+                                    ?>
                                     <input type="hidden" name="productold_{{ $total_product }}" value="{{ $orderDetail['id'] }}">
                                     <input type="hidden" id="promoprice_{{$total_product}}" value="{{$orderDetail->product->price ?? $orderDetail->promo->price ?? 0 }}">
 
                                     <div id="product_parent_{{ $total_product }}">
-				                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
-				                    <div class="row">
+                                    {{-- ++++++++++++++ Product ++++++++++++++ --}}
+                                    <div class="row">
                                         <div class="col-md-9">
                                             <div class="form-group">
                                                 <input type="hidden" id="orderdetail_{{ $total_product }}" name="orderdetailold[]" value="{{ $orderDetail['id'] }}">
@@ -322,7 +322,7 @@ $menu_item_page = "order";
                                                     </option>
                                                 </select>
                                                 <div class="validation"></div>
-				                            </div>
+                                            </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
@@ -342,7 +342,7 @@ $menu_item_page = "order";
                                         </div>
                                     </div>
 
-				                    @if ($total_product == 0)
+                                    @if ($total_product == 0)
                                         <div class="row">
                                             <div class="col-md-12 text-right"
                                                 style="margin-bottom: 1em;">
@@ -353,7 +353,7 @@ $menu_item_page = "order";
                                                 </button>
                                             </div>
                                         </div>
-				                    @else
+                                    @else
                                         <div class="row">
                                             <div class="col-md-12 text-right"
                                                 style="margin-bottom: 1em;">
@@ -365,7 +365,7 @@ $menu_item_page = "order";
                                                 </button>
                                             </div>
                                         </div>
-				                    @endif
+                                    @endif
 
                                     @if ($orderDetail->other)
                                         <div class="form-group"
@@ -380,23 +380,23 @@ $menu_item_page = "order";
                                             <div class="validation"></div>
                                         </div>
                                     @else
-                                    	<div class="form-group d-none" id="product_other_container_{{ $total_product }}">
-		                                    <input type="text"
-		                                        class="form-control"
-		                                        id="product_other_{{ $total_product }}"
-		                                        name="product_other_{{ $total_product }}"
-		                                        placeholder="Product Name"
-		                                        data-msg="Please fill in the product" />
-		                                    <div class="validation"></div>
-		                                </div>
+                                        <div class="form-group d-none" id="product_other_container_{{ $total_product }}">
+                                            <input type="text"
+                                                class="form-control"
+                                                id="product_other_{{ $total_product }}"
+                                                name="product_other_{{ $total_product }}"
+                                                placeholder="Product Name"
+                                                data-msg="Please fill in the product" />
+                                            <div class="validation"></div>
+                                        </div>
                                     @endif
                                     </div>
                                 @endif
-			                    @endforeach
-			                    <div id="tambahan_product"></div>
-			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
+                                @endforeach
+                                <div id="tambahan_product"></div>
+                                {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 
-			                    @if($orders['cash_upgrade'] == 2)
+                                @if($orders['cash_upgrade'] == 2)
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group">
@@ -454,7 +454,7 @@ $menu_item_page = "order";
                                         </div>
                                     </div>
                                 </div>
-			                    @endif
+                                @endif
 
                                 <div class="row">
                                     <div class="col-md-9">
@@ -512,8 +512,8 @@ $menu_item_page = "order";
                                         </div>
                                     </div>
                                 </div>
-			                </div>
-			                @endif
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -522,78 +522,78 @@ $menu_item_page = "order";
                         <div class="card-body">
                             <div class="form-group">
                                 <h4><strong>Branch & CSO</strong></h4>
-			                	<label for="">Branch</label>
-			                    <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-			                        <option selected disabled value="">Choose Branch</option>
+                                <label for="">Branch</label>
+                                <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
+                                    <option selected disabled value="">Choose Branch</option>
 
-			                        @foreach($branches as $branch)
-			                        	@if($orders['branch_id'] == $branch['id'])
-			                            	<option value="{{ $branch['id'] }}" selected="true">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-			                            @else
-			                            	<option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-			                            @endif
-			                        @endforeach
-			                    </select>
-			                    <div class="validation"></div>
-			                </div>
+                                    @foreach($branches as $branch)
+                                        @if($orders['branch_id'] == $branch['id'])
+                                            <option value="{{ $branch['id'] }}" selected="true">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                                        @else
+                                            <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                <div class="validation"></div>
+                            </div>
 
-			                @if($orders['branch_id'] != null)
-			                <div id="container-Cabang">
-			                    <div class="form-group">
-			                    	<label for="">CSO Code</label>
-			                        <input type="text" class="form-control cso" name="cso_id" id="cso" value="{{$orders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
-									<input type="hidden" class="csoId" name="idCSO" value="">
-									<div class="validation"></div>
-			                    </div>
-			                    <div class="form-group">
-			                    	<label for="">CSO Code 30%</label>
-			                        <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" value="{{$orders->cso_id_30['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-									<input type="hidden" class="csoId" name="idCSO30" value="">
-									<div class="validation"></div>
-			                    </div>
-			                    <div class="form-group">
-			                    	<label for="">CSO Code 70%</label>
-			                        <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" value="{{$orders->cso_id_70['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
-									<input type="hidden" class="csoId" name="idCSO70" value="">
-									<div class="validation"></div>
-			                    </div>
-			                </div>
-			                @endif
+                            @if($orders['branch_id'] != null)
+                            <div id="container-Cabang">
+                                <div class="form-group">
+                                    <label for="">CSO Code</label>
+                                    <input type="text" class="form-control cso" name="cso_id" id="cso" value="{{$orders->cso['code']}}" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }} />
+                                    <input type="hidden" class="csoId" name="idCSO" value="">
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">CSO Code 30%</label>
+                                    <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" value="{{$orders->cso_id_30['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+                                    <input type="hidden" class="csoId" name="idCSO30" value="">
+                                    <div class="validation"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">CSO Code 70%</label>
+                                    <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" value="{{$orders->cso_id_70['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+                                    <input type="hidden" class="csoId" name="idCSO70" value="">
+                                    <div class="validation"></div>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-			                <div class="form-group">
+                            <div class="form-group">
                                 <div class="form-group">
                                     <h4><strong>Payment</strong></h4>
                                     <label for="">Total Price</label>
-			                        <input type="text" class="form-control" name="total_payment" id="total_payment" value="{{number_format($orders->total_payment,2)}}" required data-type="currency" data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
+                                    <input type="text" class="form-control" name="total_payment" id="total_payment" value="{{number_format($orders->total_payment,2)}}" required data-type="currency" data-msg="Mohon Isi Total Harga" style="text-transform:uppercase"/>
+                                    <div class="validation"></div>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="">Payment Method</label>
-			                    <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe" required>
-			                        <option selected disabled value="">Choose Payment Method</option>
+                                <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe" required>
+                                    <option selected disabled value="">Choose Payment Method</option>
 
-			                        @foreach($paymentTypes as $key=>$paymentType)
-			                        	@if($orders['payment_type'] == $key)
-			                            	<option value="{{ $key }}" selected="true">{{ strtoupper($paymentType) }}</option>
-			                            @else
-			                            	<option value="{{ $key }}">{{ strtoupper($paymentType) }}</option>
-			                            @endif
-			                        @endforeach
-			                    </select>
-			                    <div class="validation"></div>
-			                </div>
+                                    @foreach($paymentTypes as $key=>$paymentType)
+                                        @if($orders['payment_type'] == $key)
+                                            <option value="{{ $key }}" selected="true">{{ strtoupper($paymentType) }}</option>
+                                        @else
+                                            <option value="{{ $key }}">{{ strtoupper($paymentType) }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                                <div class="validation"></div>
+                            </div>
 
-			                @if($orders['payment_type'] == 1 || $orders['payment_type'] == 2)
-			                <div id="container-jenispembayaran">
-			                    {{-- ++++++++ BANK ++++++++ --}}
+                            @if($orders['payment_type'] == 1 || $orders['payment_type'] == 2)
+                            <div id="container-jenispembayaran">
+                                {{-- ++++++++ BANK ++++++++ --}}
                                 @php $indexPayment = 0; @endphp
-			                    @foreach($orders->orderPayment as $payment)
+                                @foreach($orders->orderPayment as $payment)
                                 <input type="hidden" name="bankold_{{ $indexPayment }}" value="{{ $payment['id'] }}">
                                 <div class="p-3 mb-2" style="border: 1px solid black" id="bank_{{ $indexPayment }}">
                                     <input type="hidden" name="orderpaymentold[]" value={{ $payment['id'] }}>
@@ -697,37 +697,37 @@ $menu_item_page = "order";
                                     <div class="clearfix"></div>
                                 </div>
                                 @php $indexPayment++; @endphp
-			                    @endforeach
+                                @endforeach
 
-			                    <div id="tambahan_bank"></div>
-			                    <div class="form-group">
+                                <div id="tambahan_bank"></div>
+                                <div class="form-group">
                                     <label for="">Remaining Payment</label>
-			                        <input type="text" class="form-control" name="remaining_payment" id="remaining_payment" value="{{number_format($orders['remaining_payment'])}}" required readonly data-type="currency" data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
-			                        <div class="validation"></div>
-			                    </div>
-			                </div>
-			                @endif
-			                <div class="form-group">
-			                	<label for="">Description</label>
-			                    <textarea class="form-control" name="description" rows="5" data-msg="Mohon Isi Keterangan">{{$orders['description']}}</textarea>
-			                    <div class="validation"></div>
-			                </div>
+                                    <input type="text" class="form-control" name="remaining_payment" id="remaining_payment" value="{{number_format($orders['remaining_payment'])}}" required readonly data-type="currency" data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
+                                    <div class="validation"></div>
+                                </div>
+                            </div>
+                            @endif
+                            <div class="form-group">
+                                <label for="">Description</label>
+                                <textarea class="form-control" name="description" rows="5" data-msg="Mohon Isi Keterangan">{{$orders['description']}}</textarea>
+                                <div class="validation"></div>
+                            </div>
 
-	              			<div id="errormessage"></div>
+                            <div id="errormessage"></div>
 
-	              			<div class="form-group">
-	              				<input type="hidden" id="fixed_payment" value="{{$orders['total_payment']}}">
-	              				<input type="hidden" name="idOrder" value="{{$orders['id']}}">
-	              				<input type="hidden" id="lastTotalProduct" value="{{$totalProduct}}">
-	              				<button id="updateOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
-	              				<button class="btn btn-light">Cancel</button>
-	              			</div>
-	            		</form>
-	          		</div>
-	        	</div>
-	      	</div>
-	    </div>
-	</div>
+                            <div class="form-group">
+                                <input type="hidden" id="fixed_payment" value="{{$orders['total_payment']}}">
+                                <input type="hidden" name="idOrder" value="{{$orders['id']}}">
+                                <input type="hidden" id="lastTotalProduct" value="{{$totalProduct}}">
+                                <button id="updateOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+                                <button class="btn btn-light">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -763,27 +763,27 @@ document.addEventListener("DOMContentLoaded", function () {
     //     URL,
     //     {
     //         method: "GET",
-	// 		headers: {
-	// 			"Accept": "application/json",
-	// 		},
+    //      headers: {
+    //          "Accept": "application/json",
+    //      },
     //     }
     // ).then(function (response) {
-	// 	if (!response.ok) {
-	// 		throw new Error(`HTTP error! status: ${response.status}`);
-	// 	}
+    //  if (!response.ok) {
+    //      throw new Error(`HTTP error! status: ${response.status}`);
+    //  }
 
-	// 	return response.json();
-	// }).then(function (response) {
-	// 	const dataPromo = response.data;
+    //  return response.json();
+    // }).then(function (response) {
+    //  const dataPromo = response.data;
 
     //     for (const promo in dataPromo) {
     //         promoOption += `<option value="${promo}">${dataPromo[promo].product}</option>`;
     //     }
 
     //     promoOption += `<option value="other">OTHER</option>`;
-	// }).catch(function (error) {
-	// 	console.error(error);
-	// });
+    // }).catch(function (error) {
+    //  console.error(error);
+    // });
 
     for (let i = 1; i <= 10; i++) {
         quantityOption += `<option value="${i}">${i}</option>`;
@@ -791,16 +791,16 @@ document.addEventListener("DOMContentLoaded", function () {
 }, false);
 </script>
 <script type="application/javascript">
-	const deleted_img = [];
-	$(document).ready(function() {
+    const deleted_img = [];
+    $(document).ready(function() {
         var frmUpdate;
 
-	    $("#actionUpdate").on("submit", function (e) {
-	        e.preventDefault();
+        $("#actionUpdate").on("submit", function (e) {
+            e.preventDefault();
 
-	        frmUpdate = _("actionUpdate");
-	        frmUpdate = new FormData(document.getElementById("actionUpdate"));
-	        frmUpdate.enctype = "multipart/form-data";
+            frmUpdate = _("actionUpdate");
+            frmUpdate = new FormData(document.getElementById("actionUpdate"));
+            frmUpdate.enctype = "multipart/form-data";
 
             // frmUpdate.append('total_images', 3);
             deleted_img.forEach((element) => {
@@ -813,78 +813,78 @@ document.addEventListener("DOMContentLoaded", function () {
                 frmUpdate.set(frmName, numberNoCommas(frmUpdate.get(frmName)));
             });
 
-	        var URLNya = $("#actionUpdate").attr('action');
-	        var ajax = new XMLHttpRequest();
-	        ajax.upload.addEventListener("progress", progressHandler, false);
-	        ajax.addEventListener("load", completeHandler, false);
-	        ajax.addEventListener("error", errorHandler, false);
-	        ajax.open("POST", URLNya);
-	        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
-	        ajax.send(frmUpdate);
-	    });
+            var URLNya = $("#actionUpdate").attr('action');
+            var ajax = new XMLHttpRequest();
+            ajax.upload.addEventListener("progress", progressHandler, false);
+            ajax.addEventListener("load", completeHandler, false);
+            ajax.addEventListener("error", errorHandler, false);
+            ajax.open("POST", URLNya);
+            ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+            ajax.send(frmUpdate);
+        });
 
-	    function progressHandler(event){
-	        document.getElementById("updateOrder").innerHTML = "UPLOADING...";
-	    }
+        function progressHandler(event){
+            document.getElementById("updateOrder").innerHTML = "UPLOADING...";
+        }
 
-	    function completeHandler(event){
-	        var hasil = JSON.parse(event.target.responseText);
-	        console.log(hasil);
+        function completeHandler(event){
+            var hasil = JSON.parse(event.target.responseText);
+            console.log(hasil);
 
-	        for (var key of frmUpdate.keys()) {
-	            $("#actionUpdate").find("input[name="+key.name+"]").removeClass("is-invalid");
-	            $("#actionUpdate").find("select[name="+key.name+"]").removeClass("is-invalid");
-	            $("#actionUpdate").find("textarea[name="+key.name+"]").removeClass("is-invalid");
+            for (var key of frmUpdate.keys()) {
+                $("#actionUpdate").find("input[name="+key.name+"]").removeClass("is-invalid");
+                $("#actionUpdate").find("select[name="+key.name+"]").removeClass("is-invalid");
+                $("#actionUpdate").find("textarea[name="+key.name+"]").removeClass("is-invalid");
 
-	            $("#actionUpdate").find("input[name="+key.name+"]").next().find("strong").text("");
-	            $("#actionUpdate").find("select[name="+key.name+"]").next().find("strong").text("");
-	            $("#actionUpdate").find("textarea[name="+key.name+"]").next().find("strong").text("");
-	        }
+                $("#actionUpdate").find("input[name="+key.name+"]").next().find("strong").text("");
+                $("#actionUpdate").find("select[name="+key.name+"]").next().find("strong").text("");
+                $("#actionUpdate").find("textarea[name="+key.name+"]").next().find("strong").text("");
+            }
 
-	        if(hasil['errors'] != null){
-	            for (var key of frmUpdate.keys()) {
-	                if(typeof hasil['errors'][key] === 'undefined') {
+            if(hasil['errors'] != null){
+                for (var key of frmUpdate.keys()) {
+                    if(typeof hasil['errors'][key] === 'undefined') {
 
-	                }
-	                else {
-	                    $("#actionUpdate").find("input[name="+key+"]").addClass("is-invalid");
-	                    $("#actionUpdate").find("select[name="+key+"]").addClass("is-invalid");
-	                    $("#actionUpdate").find("textarea[name="+key+"]").addClass("is-invalid");
+                    }
+                    else {
+                        $("#actionUpdate").find("input[name="+key+"]").addClass("is-invalid");
+                        $("#actionUpdate").find("select[name="+key+"]").addClass("is-invalid");
+                        $("#actionUpdate").find("textarea[name="+key+"]").addClass("is-invalid");
 
-	                    $("#actionUpdate").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                    $("#actionUpdate").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                    $("#actionUpdate").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
-	                }
-	            }
-	            alert("Input Error !!!");
-	        }
-	        else{
-	            alert("Input Success !!!");
+                        $("#actionUpdate").find("input[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionUpdate").find("select[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionUpdate").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
+                    }
+                }
+                alert("Input Error !!!");
+            }
+            else{
+                alert("Input Success !!!");
                 var url = "{{ route('detail_order', ['code'=>$orders['code']])}}";
                 window.location.href = url;
-	            //window.location.reload()
-	        }
+                //window.location.reload()
+            }
 
-	        document.getElementById("updateOrder").innerHTML = "SAVE";
-	    }
+            document.getElementById("updateOrder").innerHTML = "SAVE";
+        }
 
-	    function errorHandler(event){
-	        document.getElementById("updateOrder").innerHTML = "SAVE";
-	    }
+        function errorHandler(event){
+            document.getElementById("updateOrder").innerHTML = "SAVE";
+        }
 
-		$("#province").on("change", function(){
+        $("#province").on("change", function(){
             var id = $(this).val();
             $( "#city" ).html("");
-			$( "#subDistrict" ).html("");
-			$( "#subDistrict" ).html("<option selected disabled value=\"\">Pilihan Kecamatan</option>");
+            $( "#subDistrict" ).html("");
+            $( "#subDistrict" ).html("<option selected disabled value=\"\">Pilihan Kecamatan</option>");
             $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
             .done(function( result ) {
                 result = result['rajaongkir']['results'];
                 var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
-                    	if(value['type'] == "Kabupaten"){
-                        	arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
+                        if(value['type'] == "Kabupaten"){
+                            arrCity += "<option value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
                         }
 
                         if(value['type'] == "Kota"){
@@ -896,15 +896,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     $( "#city" ).append(arrCity);
                 }
             });
-		});
+        });
 
-		$("#city").on("change", function(){
+        $("#city").on("change", function(){
             var id = $(this).val();
-			$( "#subDistrict" ).html("");
+            $( "#subDistrict" ).html("");
             $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
             .done(function( result ) {
-				result = result['rajaongkir']['results'];
-				console.log(result);
+                result = result['rajaongkir']['results'];
+                console.log(result);
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
@@ -916,43 +916,43 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         $(document).on("click", "i.del", function () {
-	        $(this).closest(".imgUp").find('.imagePreview').css("background-image", "");
-	        $(this).closest(".imgUp").find('input[type=text]').removeAttr("required");
-	        $(this).closest(".imgUp").find('.btn').find('.img').val("");
-	        $(this).closest(".imgUp").find('.form-control').val("");
+            $(this).closest(".imgUp").find('.imagePreview').css("background-image", "");
+            $(this).closest(".imgUp").find('input[type=text]').removeAttr("required");
+            $(this).closest(".imgUp").find('.btn').find('.img').val("");
+            $(this).closest(".imgUp").find('.form-control').val("");
             const inputImage = $(this).closest(".imgUp").find(".img");
             if (inputImage.attr("id").split("-")[2] == "0") {
                 inputImage.attr("required", "");
             }
-	        deleted_img.push(inputImage.attr('id').substring(8));
-	    });
+            deleted_img.push(inputImage.attr('id').substring(8));
+        });
 
-	    $(function () {
-	        $(document).on("change", ".uploadFile", function () {
-	            const uploadFile = $(this);
-	            const files = this.files ? this.files : [];
+        $(function () {
+            $(document).on("change", ".uploadFile", function () {
+                const uploadFile = $(this);
+                const files = this.files ? this.files : [];
 
-	            // no file selected, or no FileReader support
-	            if (!files.length || !window.FileReader) {
-	                return;
-	            }
+                // no file selected, or no FileReader support
+                if (!files.length || !window.FileReader) {
+                    return;
+                }
 
-	            // only image file
-	            if (/^image/.test(files[0].type)) {
-	                // instance of the FileReader
-	                const reader = new FileReader();
-	                // read the local file
-	                reader.readAsDataURL(files[0]);
+                // only image file
+                if (/^image/.test(files[0].type)) {
+                    // instance of the FileReader
+                    const reader = new FileReader();
+                    // read the local file
+                    reader.readAsDataURL(files[0]);
 
-	                // set image data as background of div
-	                reader.onloadend = function () {
-	                    uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
-	                };
-	            }
+                    // set image data as background of div
+                    reader.onloadend = function () {
+                        uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+                    };
+                }
 
-	        });
-	    });
-	});
+            });
+        });
+    });
 </script>
 <script type="application/javascript">
     var total_bank = "{{ $indexPayment-1 }}";
@@ -969,7 +969,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $(this).val(numberWithCommas($(this).val()));
         });
 
-    	console.log(total_price);
+        console.log(total_price);
 
         for (let i = 0; i <= total_product; i++) {
             $("#product_" + i).select2({
@@ -978,11 +978,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             //isi array_product dgn product lama
             var t_index = i.toString();
-	   		var t_id_promo = $('#product_'+i).val();
-	   		var t_price = parseInt($('#promoprice_'+i).val());
-	   		var t_qty = $('#qty_'+i).val();
+            var t_id_promo = $('#product_'+i).val();
+            var t_price = parseInt($('#promoprice_'+i).val());
+            var t_qty = $('#qty_'+i).val();
 
-	   		arr_index_temp.push([t_index, t_id_promo, t_price, t_qty]);
+            arr_index_temp.push([t_index, t_id_promo, t_price, t_qty]);
         }
 
         console.log(arr_index_temp);
@@ -993,12 +993,12 @@ document.addEventListener("DOMContentLoaded", function () {
             $.get( '{{route("fetchCso")}}', { cso_code: txtCso })
             .done(function( result ) {
                 var bool = false;
-				console.log(result)
+                console.log(result)
                 if (result.result == 'true'){
                     $(temp).parent().children('.validation').html('Kode CSO Benar');
                     $(temp).parent().children('.validation').css('color', 'green');
                     bool = true;
-					$(temp).parent().children('.csoId').val(result.data[0].id);
+                    $(temp).parent().children('.csoId').val(result.data[0].id);
                 }
                 else{
                     $(temp).parent().children('.validation').html('Kode CSO Salah');
@@ -1302,7 +1302,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-	function checkProductArray(array, index){
+    function checkProductArray(array, index){
         for (var i = 0; i < array.length; i++) {
             if(array[i][0] === index){
                 return true;
@@ -1324,46 +1324,46 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("product_other_" + sequence).removeAttribute("required");
 
             //auto fill price and qty
-	        var promo_id = e.value;
-	        var get_qty = $('#qty_'+sequence).val();
-	        $.get( '{{ route("fetchDetailPromo", ['promo' => ""]) }}/'+promo_id )
-	        .done(function (result){
-	            if(result.length > 0){
-	                var data = JSON.parse(result);
-	                var price = parseInt(data['price']);
+            var promo_id = e.value;
+            var get_qty = $('#qty_'+sequence).val();
+            $.get( '{{ route("fetchDetailPromo", ['promo' => ""]) }}/'+promo_id )
+            .done(function (result){
+                if(result.length > 0){
+                    var data = JSON.parse(result);
+                    var price = parseInt(data['price']);
 
-	                if(arr_index_temp.length == 0){
-	                    arr_index_temp.push([sequence, promo_id, price, get_qty]);
-	                    total_price = total_price + (price * get_qty);
-	                }else{
-	                    if(checkProductArray(arr_index_temp, sequence) == true){
-	                        //kurangi total price dengan harga lama
-	                        var old_price = parseInt(arr_index_temp[sequence][2]);
-	                        var old_qty = parseInt(arr_index_temp[sequence][3]);
-	                        total_price = total_price - (old_price * old_qty);
+                    if(arr_index_temp.length == 0){
+                        arr_index_temp.push([sequence, promo_id, price, get_qty]);
+                        total_price = total_price + (price * get_qty);
+                    }else{
+                        if(checkProductArray(arr_index_temp, sequence) == true){
+                            //kurangi total price dengan harga lama
+                            var old_price = parseInt(arr_index_temp[sequence][2]);
+                            var old_qty = parseInt(arr_index_temp[sequence][3]);
+                            total_price = total_price - (old_price * old_qty);
 
-	                        //simpan promo id yg baru & harga
-	                        arr_index_temp[sequence][1] = promo_id;
-	                        arr_index_temp[sequence][2] = price;
-	                        arr_index_temp[sequence][3] = get_qty;
+                            //simpan promo id yg baru & harga
+                            arr_index_temp[sequence][1] = promo_id;
+                            arr_index_temp[sequence][2] = price;
+                            arr_index_temp[sequence][3] = get_qty;
 
-	                        //update total price yg baru
-	                        total_price = total_price + (price * get_qty);
-	                    }else{
-	                        //kalau ga exist, push ke array
-	                        arr_index_temp.push([sequence, promo_id, price, get_qty]);
+                            //update total price yg baru
+                            total_price = total_price + (price * get_qty);
+                        }else{
+                            //kalau ga exist, push ke array
+                            arr_index_temp.push([sequence, promo_id, price, get_qty]);
 
-	                        //update total price
-	                        total_price = total_price + (price * get_qty);
-	                    }
-	                }
-	                console.log(arr_index_temp);
-	                console.log(total_price);
+                            //update total price
+                            total_price = total_price + (price * get_qty);
+                        }
+                    }
+                    console.log(arr_index_temp);
+                    console.log(total_price);
 
-	                $("#total_payment").val(numberWithCommas(total_price));
+                    $("#total_payment").val(numberWithCommas(total_price));
                     checkRemainingPayment();
-	            }
-	        });
+                }
+            });
         }
     }
 

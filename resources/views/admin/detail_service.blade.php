@@ -103,6 +103,7 @@ $menu_item_second = "detail_service";
                                         <td>Status</td>
                                         <td>Service Code</td>
                                         <td>Service Date</td>
+                                        <td>Area</td>
                                     </thead>
                                     <tr>
                                         <td class="center">
@@ -145,6 +146,9 @@ $menu_item_second = "detail_service";
                                         </td>
                                         <td class="center">
                                             {{ date("d/m/Y", strtotime($services['service_date'])) }}
+                                        </td>
+                                        <td class="center">
+                                            {{ ucwords($services['area']) }}
                                         </td>
                                     </tr>
                                 </table>

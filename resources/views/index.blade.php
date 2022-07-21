@@ -47,7 +47,7 @@
 
       <div class="col-md-6" style="flex: none;">
         <div class="text-right" style="position: relative; top: 50%; transform: translateY(-50%);" data-toggle="modal" data-target="#video2">
-          <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
+          <img data-src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid lozad">
         </div>
 
         {{-- <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
@@ -72,7 +72,7 @@
         @elseif(Utils::$lang=='eng')
         <h3>Our Awards</h3>
         @endif --}}
-        <img src="{{asset('sources/awards-update.png')}}" alt="" class="img-fluid">
+        <img class="img-fluid lozad" data-src="{{asset('sources/awards-update.png')}}" alt="">
       </header>
 
     </div>
@@ -93,7 +93,7 @@
 
           <div class="col-lg-5 col-md-6">
             <div class="about-img wow fadeInLeft">
-              <img src="{{asset('sources/waki-building2.jpg')}}" alt="">
+              <img class="lozad" data-src="{{asset('sources/waki-building2.jpg')}}" alt="">
             </div>
           </div>
 
@@ -106,7 +106,7 @@
                 <p>"Metrowealth International Group" telah didirikan pada tahun 1995. Sejak saat itu, perusahaan telah berkembang pesat di kawasan Asia Pasifik dan negara-negara Eropa.</p>
                 <p>Pada tahun 2008, untuk menyusun strategi pemasaran global, perusahaan memutuskan untuk mengubah nama menjadi "WAKi". Oleh karena itu, perusahaan ini terdaftar sebagai "WAKi International Group".
                 </p>
-                <p>"Visi kami Towards a Better Life. Happy With WAKi menuju kehidupan yang lebih baik."</p>
+                <p>"Visi kami Towards a Better Life. Sehat bersama WAKi menuju kehidupan yang lebih baik."</p>
                 <p style="font-style: italic;">Bukan Janji, Tapi Pasti!</p>
               @elseif(Utils::$lang=='eng')
 
@@ -190,7 +190,7 @@
           <div class="owl-carousel product-carousel">
               <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 5)}}`">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/thumbnail-massager.png')}}" class="card-img-top img-fluid" />
+                  <img data-src="{{ asset ('sources/thumbnail-massager.png')}}" class="card-img-top img-fluid lozad" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
@@ -214,7 +214,7 @@
               </div>
               <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 2)}}`">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/thumbnail-hpt.png') }}" class="card-img-top img-fluid" alt="" />
+                  <img data-src="{{ asset ('sources/thumbnail-hpt.png') }}" class="card-img-top img-fluid lozad" alt="" />
                 </div>
                 <div class="card-body ">
                   <div data-equal-height="card" class="caption">
@@ -239,7 +239,7 @@
               </div>
               <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 4)}}`">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/thumbnail-bio.png') }}" class="card-img-top img-fluid" alt="" />
+                  <img data-src="{{ asset ('sources/thumbnail-bio.png') }}" class="card-img-top img-fluid lozad" alt="" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
@@ -264,7 +264,7 @@
               </div>
               <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 3)}}`">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/thumbnail-humidifier.png') }}" class="card-img-top img-fluid" alt="" />
+                  <img data-src="{{ asset ('sources/thumbnail-humidifier.png') }}" class="card-img-top img-fluid lozad" alt="" />
                 </div>
                 <div class="card-body ">
                   <div data-equal-height="card" class="caption">
@@ -289,7 +289,7 @@
               </div>
               <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 6)}}`">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/thumbnail-household.png') }}" class="card-img-top img-fluid" alt="" />
+                  <img data-src="{{ asset ('sources/thumbnail-household.png') }}" class="card-img-top img-fluid lozad" alt="" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
@@ -341,7 +341,7 @@
                 <h4 style="text-align: center;">"We bring WAKian and WAKi’s customers, towards a better life."<br>Not a Promise, but Sure!</h4>
               @endif
                <div class="text-center mt-2 mb-2">
-                <img src="{{ asset ('sources/testi-icon.png') }}" class="img-fluid" alt="" style="width: 60px; height: 60px;" />
+                <img data-src="{{ asset ('sources/testi-icon.png') }}" class="img-fluid lozad" alt="" style="width: 60px; height: 60px;" />
 
                </div>
             </header>
@@ -521,7 +521,7 @@
             @for($x = 0; $x < sizeof($album['arr_photo']); $x++)
             <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
               <div class="portfolio-wrap">
-                <img src="{{$photoPath.'/'.$album['arr_photo'][$x]}}" class="img-fluid" alt="">
+                <img data-src="{{$photoPath.'/'.$album['arr_photo'][$x]}}" class="img-fluid lozad" alt="">
                 <div class="portfolio-info">
                   @if(Utils::$lang=='id')
                   <h4><a href="#">Foto {{$x+1}}</a></h4>
@@ -567,7 +567,7 @@
             <div class="col-lg-3 col-md-3 col-sm-3">
               <div class="card-business mb-3">
                 <div class="card-img-top">
-                  <img src="{{ asset ('sources/wakimartlogo.png')}}" class="img-fluid" style="padding-top: 30px;" />
+                  <img data-src="{{ asset ('sources/wakimartlogo.png')}}" class="img-fluid lozad" style="padding-top: 30px;" />
                 </div>
                 <div class="card-body">
 
@@ -586,7 +586,7 @@
             <div class="col-lg-3 col-md-3 col-sm-3">
               <div class="card-business mb-3">
                 <div class="card-img-top">
-                  <img src="{{ asset ('sources/wakishop.png')}}" class="img-fluid" />
+                  <img data-src="{{ asset ('sources/wakishop.png')}}" class="img-fluid lozad" />
                 </div>
                 <div class="card-body">
 
@@ -605,7 +605,7 @@
             <div class="col-lg-3 col-md-3 col-sm-3">
               <div class="card-business mb-3">
                 <div class="card-img-top">
-                  <img src="{{ asset ('sources/wakifnb.png')}}" class="img-fluid" style="padding-top: 15px;"/>
+                  <img data-src="{{ asset ('sources/wakifnb.png')}}" class="img-fluid lozad" style="padding-top: 15px;"/>
                 </div>
                 <div class="card-body">
 
@@ -624,7 +624,7 @@
             <div class="col-lg-3 col-md-3 col-sm-3">
               <div class="card-business mb-3">
                 <div class="card-img-top">
-                  <img src="{{ asset ('sources/waki3dprinting.png')}}" class="img-fluid" />
+                  <img data-src="{{ asset ('sources/waki3dprinting.png')}}" class="img-fluid lozad" />
                 </div>
                 <div class="card-body">
 
@@ -659,6 +659,13 @@
     const card = document.getElementById('card-'+id);
     gallery.classList.add('Gallery--active');
     card.classList.add('Card--active');
+    if (typeof(Event) === 'function') {
+      setTimeout(function(){window.dispatchEvent(new Event('resize'))},3000);
+    } else {
+      var evt = window.document.createEvent('UIEvents');
+      evt.initUIEvent('resize', true, false, window, 0);
+      setTimeout(function(){window.dispatchEvent(evt)},3000);
+    }
   }
 
 function closeAll() {
