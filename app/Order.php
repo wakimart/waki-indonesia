@@ -63,6 +63,14 @@ class Order extends Model
         }
         return $district;
     }
+    public function orderPaymentSumCSO($startDate, $endDate)
+    {
+        $orderPaymentNya = $this->hasMany("App\OrderPayment")               
+            ->where('payment_date', '>=', $startDate)
+            ->where('payment_date', '<=', $endDate)
+            ->sum('total_payment');
+        return $orderPaymentNya;
+    }
 
     // Unused, column product udah di hapus
     // public function getPrice()

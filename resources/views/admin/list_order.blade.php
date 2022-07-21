@@ -396,7 +396,7 @@ $menu_item_second = "list_order";
                                     <th> Member Name </th>
                                     <th> Type Customer </th>
                                     <th> Branch & CSO</th>
-                                    <th> Total Payment </th>
+                                    <th> Total Price </th>
                                     <th> Status </th>
                                     {{-- <th colspan="2"> Product </th> --}}
                                     @if (Gate::check('detail-order') || Gate::check('edit-order') || Gate::check('delete-order'))
@@ -433,7 +433,7 @@ $menu_item_second = "list_order";
                                             <br>
                                             {{ $order->cso['code'] }} - {{ $order->cso['name'] }}
                                         </td>
-                                        <td>Rp. {{ number_format($order['down_payment']) }}</td>
+                                        <td>Rp. {{ number_format($order['total_payment']) }}</td>
                                         <td class="text-center">
                                             @if ($order['status'] == \App\Order::$status['1'])
                                                 <span class="badge badge-secondary">New</span>
