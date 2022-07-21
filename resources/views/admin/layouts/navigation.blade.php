@@ -178,6 +178,14 @@
             </a>
         </li>
       @endif
+      @if(Gate::check('browse-area_home_service'))
+        <li class="nav-item">
+            <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == "list_area_homeservice" ? "active" : "" }}"
+                href="{{  route("list_area_homeservice") }}">
+                Area Home Service
+            </a>
+        </li>
+      @endif
     </ul>
   </div>
 </li>
