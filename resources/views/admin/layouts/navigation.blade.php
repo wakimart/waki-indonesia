@@ -35,9 +35,9 @@
   </div>
 </li>
 @endif
-@if(false)
-{{-- @if(Gate::check('add-order') || Gate::check('browse-order')
-  || Gate::check('browse-order_report') || Gate::check('browse-order_report_branch') || Gate::check('browse-order_report_cso')) --}}
+
+@if(Gate::check('add-order') || Gate::check('browse-order')
+  || Gate::check('browse-order_report') || Gate::check('browse-order_report_branch') || Gate::check('browse-order_report_cso'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'order'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#order-dd" aria-expanded="false" aria-controls="order-dd">
     <span class="menu-title">Order</span>
