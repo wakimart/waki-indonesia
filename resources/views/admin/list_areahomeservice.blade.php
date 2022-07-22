@@ -67,7 +67,7 @@
 
 	<script src="{{asset('assets_leaflet/wicket/wicket.js')}}" type="text/javascript"></script>
     <script src="{{asset('assets_leaflet/wicket/wicket-leaflet.js')}}" type="text/javascript"></script>
-	
+
 	<link rel="stylesheet" href="{{asset('assets_leaflet/easy-button.css')}}" type="text/css">
 	<script src="{{asset('assets_leaflet/easy-button.js')}}" type="text/javascript"></script>
 	<link rel="stylesheet" href="{{asset('assets_leaflet/Control.FullScreen.css')}}">
@@ -175,7 +175,7 @@
 						<span class="invalid-feedback">
 							<strong></strong>
 						</span>
-	
+
 						<datalist id="data_cso">
 							<select class="form-control">
 								<option value="All CSO"></option>
@@ -187,7 +187,7 @@
 						<div class="validation"></div>
 					</div>
 				</div>
-		
+
 				<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
 				<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
 					<div class="form-group">
@@ -205,7 +205,7 @@
 					<div class="col-xs-12 col-sm-11 col-md-6 table-responsive" id="calendarContainer" style="padding: 0; float: left;"></div>
 					<div class="col-xs-12 col-sm-11 col-md-6" id="organizerContainer" style="padding: 0; float: left;"></div>
 				</div>
-			
+
 			</div>
   			<div class="col-12 mb-3">
     			<div class="card">
@@ -378,7 +378,7 @@
 		  urlParamStr += "&" + urlParamArray[i]
 		}
 	  }
-	
+
 	  window.location.href = "{{route('list_area_homeservice')}}" + urlParamStr;
 	});
 </script>
@@ -541,29 +541,30 @@
             foreach ($layers as $key => $layer) {
         ?>
 				var regionColor = '{{ $layer->rg_bg_color ?? "#000" }}'
-				var regionBgOpacity = "{{ ($layer->count_hs != 0) ? '0.5' : '0.2' }}"
-				var regionBorderOpacity = "{{ ($layer->count_hs != 0) ? '0.7' : '0.2' }}"
+        var colorBorder = "#63b2c5"
+				var regionBgOpacity = "{{ ($layer->count_hs != 0) ? '0.6' : '0.2' }}"
+				var regionBorderOpacity = "{{ ($layer->count_hs != 0) ? '0.3' : '0.3' }}"
 
                 var geom = "{{ $layer->geom }}";
                 wkt.read(geom);
 				var layer_<?php echo $layer->id + $nomer; ?> = wkt.toObject({
 					fillColor: regionColor,
 					fillOpacity: regionBgOpacity,
-					color: regionColor,
+					color: colorBorder,
 					opacity: regionBorderOpacity
 				});
 
 				@if ($layer->count_hs >= 0)
 					layer_<?php echo $layer->id + $nomer; ?>
 						.bindPopup("Kecamatan: {{ $layer->subdistrict_name }} <br> Total HS: {{ $layer->count_hs }}");
-				
+
 					layer_<?php echo $layer->id + $nomer; ?>.on({
 						mouseover: function() {
 							if (!isClicked) {
 								this.openPopup();
 							}
 						},
-						mouseout: function() { 
+						mouseout: function() {
 							if (!isClicked) {
 								this.closePopup()
 							}
@@ -580,13 +581,13 @@
 				layerGroupRegion_<?php echo $layer->rg_id; ?>.addLayer(layer_<?php echo $layer->id + $nomer; ?>).addTo(map);
         <?php
             }
-        } 
+        }
 	?>
 
 	var overlayMaps = {};
 
 	@foreach ($regions as $region)
-		overlayMaps["{{ $region->name }}"] = layerGroupRegion_<?php echo $region->id; ?>,	
+		overlayMaps["{{ $region->name }}"] = layerGroupRegion_<?php echo $region->id; ?>,
 	@endforeach
 	L.control.layers(baseMaps, overlayMaps).addTo(map);
 </script>
