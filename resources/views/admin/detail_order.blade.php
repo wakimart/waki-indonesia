@@ -129,13 +129,17 @@
                 </table>
                 <table class="col-md-12">
                     <thead>
-                        <td colspan="4">Payment Detail</td>
+                        <td colspan="7">Payment Detail</td>
                     </thead>
                     <thead style="background-color: #80808012 !important">
                         <td>Date</td>
                         <td>Bank</td>
                         <td>Total Payment</td>
                         <td>Image</td>
+                        <td>Status</td>
+                        @if (Gate::check('detail-order') || Gate::check('edit-order') || Gate::check('delete-order'))
+                            <td colspan="2">Edit/Delete</td>
+                        @endif
                     </thead>
                     @foreach ($order->orderPayment as $orderPayment)
                     <tr>
@@ -150,22 +154,51 @@
                             </a>
                             @endforeach
                         </td>
+                        <td class="text-center">
+                            @if ($orderPayment['status'] == "unverified")
+                                <span class="badge badge-warning">Unverified</span>
+                            @elseif ($orderPayment['status'] == "verified")
+                                <span class="badge badge-success">Verified</span>
+                            @elseif ($orderPayment['status'] == "rejected")
+                                <span class="badge badge-danger">Rejected</span>
+                            @endif
+                        </td>
+                        @can('edit-order')
+                            @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
+                                <td style="text-align: center;">
+                                    <button value="{{ route('delete_order', ['id' => $order['id']])}}"
+                                        data-toggle="modal"
+                                        data-target="#deleteDoModal"
+                                        class="btn-delete">
+                                        <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                                    </button>
+                                </td>
+                            @endif
+                            @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
+                                <td style="text-align: center;">
+                                    <button value="{{ route('delete_order', ['id' => $order['id']])}}"
+                                        data-toggle="modal"
+                                        data-target="#deleteDoModal"
+                                        class="btn-delete">
+                                        <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
+                                    </button>
+                                </td>
+                            @endif
+                        @endcan
                     </tr>
                     @endforeach
                     <tr>
                         <td colspan="2" class="text-right" style="background-color: #80808012 !important">Total Payment</td>
                         <td>Rp. {{ number_format($order->down_payment) }}</td>
-                        <td></td>
+                        <td colspan="4" style="background-color: #f2f2f2;" rowspan="3"></td>
                     </tr>
                     <tr>
                         <td colspan="2" class="text-right" style="background-color: #80808012 !important">Total Price</td>
                         <td>Rp. {{ number_format($order['total_payment']) }}</td>
-                        <td></td>
                     </tr>
                     <tr>
                         <td colspan="2" class="text-right" style="background-color: #80808012 !important">Remaining Payment</td>
                         <td>Rp. {{ number_format($order['remaining_payment']) }}</td>
-                        <td></td>
                     </tr>
                 </table>
 
