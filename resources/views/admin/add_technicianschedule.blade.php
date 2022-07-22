@@ -141,7 +141,7 @@
                                 id="date"
                                 placeholder="Jadwal Tanggal"
                                 value="<?php echo date("Y-m-d", strtotime($autofill['appointment'] ?? 'now')); ?>"
-                                min="<?php echo date("Y-m-d"); ?>"
+                                min="<?php echo date("Y-m-d", strtotime('-7 days')); ?>"
                                 onchange="setMinAppointmentTime(this)"
                                 onload="setMinAppointmentTime(this)"
                                 required

@@ -211,6 +211,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => true,
                 'edit-data_therapy' => true,
                 'delete-data_therapy' => true,
+
+                //Bank
+                'add-bank' => true,
+                'browse-bank' => true,
+        		'edit-bank' => true,
+                'delete-bank' => true,
             ]),
         ]);
 
@@ -413,6 +419,12 @@ class RolesSeeder extends Seeder
                 'browse-data_therapy' => true,
                 'edit-data_therapy' => true,
                 'delete-data_therapy' => true,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false,                
         	]),
         ]);
 
@@ -609,6 +621,13 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false,                
+                
             ]),
         ]);
 
@@ -805,6 +824,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -1001,6 +1026,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -1197,6 +1228,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -1399,6 +1436,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
     }
