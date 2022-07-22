@@ -1,5 +1,6 @@
 <?php
 
+use App\Acceptance;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -16,6 +17,7 @@ class AddAreaToAcceptancesTable extends Migration
         Schema::table('acceptances', function (Blueprint $table) {
             $table->enum('area', ['surabaya', 'jakarta'])->nullable()->default(null);
         });
+        Acceptance::query()->where('status', 'approved')->update(['area' => 'surabaya']);
     }
 
     /**

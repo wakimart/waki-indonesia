@@ -42,7 +42,8 @@ class ProductServiceController extends Controller
         foreach (Acceptance::$Area as $area) {
             $upgradeAreas[$area] = Upgrade::where('upgrades.active', true)
                 ->select('upgrades.*', 'ac.area')
-                ->leftJoin('acceptances as ac', 'ac.id', 'upgrades.acceptance_id');
+                ->leftJoin('acceptances as ac', 'ac.id', 'upgrades.acceptance_id')
+                ->where('upgrades.status', '!=','New');
             
             if ($request->has('search')) {    
                 $upgradeAreas[$area]->where('upgrades.status', 'LIKE', '%' . $request->search . '%');
@@ -53,7 +54,7 @@ class ProductServiceController extends Controller
             } else {
                 $upgradeAreas[$area]->where('ac.area', $area);
             }
-
+            
             $upgradeAreas[$area] = $upgradeAreas[$area]
                 ->orderBy("ac.created_at", 'desc')
                 ->paginate(10, ['*'], "upgrade_".$area);
