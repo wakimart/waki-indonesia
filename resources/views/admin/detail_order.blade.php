@@ -71,8 +71,22 @@
                 </table>
                 <table class="col-md-12">
                     <thead>
+                        <td>Sales Branch</td>
+                        <td>Sales Code</td>
+                    </thead>
+                    <tr class="text-center">
+                        <td>{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
+                        <td>{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
+                    </tr>
+                </table>
+                <table class="col-md-12">
+                    <thead>
                         <td colspan="2">Customer Data</td>
                     </thead>
+                    <tr>
+                        <td>Type Customer</td>
+                        <td>{{ $order['customer_type'] ?? '' }}</td>
+                    </tr>
                     <tr>
                         <td>Member Code : </td>
                         <td>{{ $order['no_member'] }}</td>
@@ -96,86 +110,62 @@
                 </table>
                 <table class="col-md-12">
                     <thead>
-                        <td colspan="2">Detail Order</td>
+                        <td colspan="4">Detail Order</td>
                     </thead>
                     <thead style="background-color: #80808012 !important">
+                        <td>Code</td>
                         <td>Product Name</td>
                         <td>Quantity</td>
+                        <td>Type</td>
                     </thead>
-
-                    @foreach(json_decode($order['product'], true) as $ProductPromo)
+                    @foreach ($order->orderDetail as $orderDetail)
                         <tr>
-                            @php $ProductPromoModel = App\Promo::find($ProductPromo['id']); @endphp
-                            <td>
-                                @if ($ProductPromoModel)
-                                <?php
-                                echo $ProductPromoModel->code
-                                    . " - ("
-                                    . implode(", ", $ProductPromoModel->productName())
-                                    . ") - Rp. "
-                                    . number_format($ProductPromoModel->price);
-                                ?>
-                                @else
-                                {{ $ProductPromo['id'] }}
-                                @endif
-                            </td>
-                            <td>{{ $ProductPromo['qty'] }}</td>
+                            <td>{{ $orderDetail->product['code'] ?? $orderDetail->promo['code'] ?? 'OTHER' }}</td>
+                            <td>{{ $orderDetail->product['name'] ?? (($orderDetail->promo) ? implode(", ", $orderDetail->promo->productName()) : $orderDetail->other) }}</td>
+                            <td>{{ $orderDetail->qty }}</td>
+                            <td>{{ ucwords($orderDetail->type) }}</td>
                         </tr>
                     @endforeach
-
-                    @if($order['old_product'] != null)
-                        <thead style="background-color: #80808012 !important">
-                            <td colspan="2">Old Product</td>
-                        </thead>
-                        <thead style="background-color: #80808012 !important">
-                            <td>Product Name</td>
-                            <td>Quantity</td>
-                        </thead>
-                        <tr>
-                            <td>{{json_decode($order['old_product'], true)['name']}}</td>
-                            <td>{{json_decode($order['old_product'], true)['qty']}}</td>
-                        </tr>
-                    @endif
-                    @if($order['prize'] != null)
-                        <thead style="background-color: #80808012 !important">
-                            <td colspan="2">Prize Product</td>
-                        </thead>
-                        <thead style="background-color: #80808012 !important">
-                            <td>Prize Product Name</td>
-                            <td>Quantity</td>
-                        </thead>
-                        <tr>
-                            <td>{{json_decode($order['prize'], true)['name']}}</td>
-                            <td>{{json_decode($order['prize'], true)['qty']}}</td>
-                        </tr>
-                    @endif
-
                 </table>
-
                 <table class="col-md-12">
                     <thead>
-                        <td colspan="2">Payment Detail</td>
+                        <td colspan="4">Payment Detail</td>
                     </thead>
+                    <thead style="background-color: #80808012 !important">
+                        <td>Date</td>
+                        <td>Bank</td>
+                        <td>Total Payment</td>
+                        <td>Image</td>
+                    </thead>
+                    @foreach ($order->orderPayment as $orderPayment)
                     <tr>
-                        <td>Total Price : </td>
-                        <td>Rp. {{ number_format($order['total_payment']) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Total Payment : </td>
-                        <td>Rp. {{ number_format($order['down_payment']) }} (PAID OFF)</td>
-                    </tr>
-                    <tr>
-                        <td>Remaining Payment : </td>
-                        <td>Rp. {{ number_format($order['remaining_payment']) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Bank : </td>
+                        <td>{{ $orderPayment->payment_date }}</td>
+                        <td>{{ $orderPayment->bank['name'] }} ({{ $orderPayment->cicilan }}x)</td>
+                        <td>Rp. {{ number_format($orderPayment->total_payment) }}</td>
                         <td>
-                            @foreach(json_decode($order['bank']) as $key=>$bank)
-                                {{ App\Order::$Banks["$bank->id"] }} ({{ $bank->cicilan }}X)
-                                @if(sizeof(json_decode($order['bank'], true)) > $key+1) +  @endif
+                            @foreach (json_decode($orderPayment->image, true) as $orderPaymentImage)
+                            <a href="{{ asset("sources/order/$orderPaymentImage") }}"
+                                target="_blank">
+                                <i class="mdi mdi-numeric-{{ $loop->iteration }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                            </a>
                             @endforeach
                         </td>
+                    </tr>
+                    @endforeach
+                    <tr>
+                        <td colspan="2" class="text-right" style="background-color: #80808012 !important">Total Payment</td>
+                        <td>Rp. {{ number_format($order->down_payment) }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="text-right" style="background-color: #80808012 !important">Total Price</td>
+                        <td>Rp. {{ number_format($order['total_payment']) }}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="text-right" style="background-color: #80808012 !important">Remaining Payment</td>
+                        <td>Rp. {{ number_format($order['remaining_payment']) }}</td>
+                        <td></td>
                     </tr>
                 </table>
 
@@ -196,27 +186,6 @@
                         </td>
                     </tr>
                 </table>
-
-                <table class="col-md-12">
-                    <thead>
-                        <td>Sales Branch</td>
-                        <td>Sales Code</td>
-                    </thead>
-                    <tr>
-                        <td style="width:50%; text-align: center">{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
-                        <td style="width:50%; text-align: center">{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
-                    </tr>
-                </table>
-                @if($order['customer_type'] != null)
-                    <table class="col-md-12">
-                        <thead>
-                            <td>Description</td>
-                        </thead>
-                        <tr>
-                            <td>{{ $order['customer_type'] }}</td>
-                        </tr>
-                    </table>
-                @endif
                 @if($order['description'] != null)
                     <table class="col-md-12">
                         <thead>
@@ -307,8 +276,13 @@
                 </table>
                 <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share"
                 class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
+                @if (Gate::check('edit-order') && $order->remaining_payment > 0)
+                <button type="button" data-toggle="modal" data-target="#addPaymentModal"
+                    class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash">
+                    Add Payment
+                </button>
+                @endif
             </div>
-
 
             <div class="row justify-content-center" style="margin-top: 2em;">
                 <h2>ORDER HISTORY LOG</h2>
@@ -334,7 +308,7 @@
                       <?php $dataChange = json_decode($historyUpdateOrder->meta, true);?>
                       <td>
                       @foreach ($dataChange['dataChange'] as $key=>$value)
-                          <b>{{$key}}</b>: {{$value}}<br/>
+                          <b>{{$key}}</b>: {{ is_array($value) ? json_encode($value) : $value }}<br/>
                       @endforeach
                       </td>
                       <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
@@ -414,6 +388,116 @@
             </div>
             <!-- End Modal View -->
 
+            @if (Gate::check('edit-order'))
+            <!-- Modal Add Payment -->
+            <div class="modal fade"
+                id="addPaymentModal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form id="frmAddPayment"
+                            method="post"
+                            action="{{ route('store_order_payment') }}"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="order_id" value="{{ $order['id'] }}">
+                            <div class="modal-header">
+                                <button type="button"
+                                    class="close"
+                                    data-dismiss="modal"
+                                    aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h5 style="text-align: center;">
+                                    Add Payment
+                                </h5>
+                                <br>
+                                <div class="form-group mb-1">
+                                    <label for="">Payment Date</label>
+                                    <input type="date" 
+                                        class="form-control" 
+                                        name="payment_date" 
+                                        value="{{ date('Y-m-d') }}"
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Bank</label>
+                                    <select class="form-control"
+                                        name="bank_id"
+                                        data-msg="Mohon Pilih Bank" required>
+                                        <option selected disabled value="">
+                                            Choose Bank
+                                        </option>
+
+                                        @foreach ($banks as $bank)
+                                            <option value="{{ $bank->id }}">
+                                                {{ $bank->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Cicilan</label>
+                                    <select class="form-control bank_cicilan"
+                                        name="cicilan"
+                                        data-msg="Mohon Pilih Jumlah Cicilan" required>
+                                        <option selected value="1">1X</option>
+                                        @for ($i = 2; $i <= 12; $i += 2)
+                                            <option class="other_valCicilan"
+                                                value="{{ $i }}">
+                                                {{ $i }}X
+                                            </option>
+                                        @endfor
+                                        <option class="other_valCicilan"
+                                            value="24">
+                                            24X
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Nominal Payment</label>
+                                    <input type="text"
+                                        class="form-control downpayment"
+                                        name="total_payment"
+                                        placeholder="Nominal Payment"
+                                        required
+                                        autocomplete="off"
+                                        data-type="currency"
+                                        data-msg="Mohon Isi Total Pembayaran" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Foto:</label>
+                                    <label style="float: right">(Min: 1) (Max: 3)</label>
+                                    <input type="file"
+                                        class="form-control"
+                                        id="imageAddPayment"
+                                        name="images[]"
+                                        accept="image/*"
+                                        placeholder="Bukti Foto"
+                                        multiple
+                                        required
+                                        data-msg="Mohon Sertakan Foto"
+                                        style="text-transform: uppercase;" />
+                                </div>
+                            </div>
+                            <div class="modal-footer footer-cash">
+                                <button type="submit"
+                                    id="submitFrmAddPayment"
+                                    class="btn btn-gradient-success mr-2">
+                                    Add
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Cash -->
+            @endif
+
             @else
             <div class="row justify-content-center">
                 <h2>CANNOT FIND ORDER</h2>
@@ -433,6 +517,9 @@
             theme: "bootstrap4",
             placeholder: "Choose CSO Delivery",
             dropdownParent: $('#modal-change-status .modal-body')
+        });
+        $(document).on("input", 'input[data-type="currency"]', function() {
+            $(this).val(numberWithCommas($(this).val()));
         });
         var statusOrder = "{{ $order['status'] }}";
         $(".btn-change-status-order").click(function(){
@@ -486,6 +573,34 @@
         $(document).on("click", ".hapus_cso", function (e) {
             e.preventDefault();
             $(this).parents(".form-cso")[0].remove();
+        });
+
+        function numberWithCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return parts.join(".");
+        }
+
+        function numberNoCommas(x) {
+            var parts = x.toString().split(".");
+            parts[0] = parts[0].replace(/\D/g, "");
+            return parts.join(".");
+        }
+
+        $("#submitFrmAddPayment").on("click", function(e) {
+            // Change numberWithComma before submit
+            $('input[data-type="currency"]').each(function() {
+                $(this).val(numberNoCommas($(this).val()));
+            });
+            $("#frmAddPayment").submit();
+        });
+
+        $("#imageAddPayment").on("change", function() {
+            if ($("#imageAddPayment")[0].files.length > 3) {
+                $("#imageAddPayment").val("")
+                $('.custom-file-label').html("Choose image");
+                alert("You can select only 3 images");
+            }
         });
     });
 

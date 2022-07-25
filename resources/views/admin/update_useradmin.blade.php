@@ -1594,6 +1594,48 @@ $menu_item_page = "user";
                             </div>
 
                             <div class="form-group" id="group-product">
+                                <span style="display:block;">BANK</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-bank" />
+                                            Add Bank
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-bank" />
+                                            Browse Bank
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-bank" />
+                                            Edit Bank
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-bank" />
+                                            Delete Bank
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
                                 <span style="display:block;">DATA SOURCING</span>
                                 <div class="div-CheckboxGroup">
                                     <div class="form-check form-check-inline">

@@ -519,6 +519,26 @@
 </li>
 @endif
 
+@if(Gate::check('add-bank') || Gate::check('browse-bank'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'bank'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#bank-dd" aria-expanded="false" aria-controls="bank-dd">
+    <span class="menu-title">Bank</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-package menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'bank'? 'show': '' }}" id="bank-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-bank'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_bank'? 'active': '' }}" href="{{route('add_bank')}}">Add Bank</a></li>
+      @endif
+      @if(Gate::check('browse-bank'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_bank'? 'active': '' }}" href="{{route('list_bank')}}">List Bank</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
 @if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#data_sourcing-dd" aria-expanded="false" aria-controls="data_sourcing-dd">

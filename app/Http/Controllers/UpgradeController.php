@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Acceptance;
 use App\Branch;
 use App\Cso;
 use App\HistoryUpdate;
@@ -52,26 +53,38 @@ class UpgradeController extends Controller
         $url = $request->all();
         $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
         $csos = Cso::where('active', true)->orderBy('code', 'asc')->get();
-        $upgrades = Upgrade::where([['upgrades.active', true], ['upgrades.status', '!=', 'new']])
-            ->leftJoin('acceptances as ac', 'ac.id', 'upgrades.acceptance_id')
-            ->leftJoin('csos as c', 'c.id', 'ac.cso_id');
-        
-        if ($request->has('filter_branch')) {
-            $upgrades->where('ac.branch_id', $request->filter_branch);
-        }
-        if ($request->has('filter_cso') && $request->filter_cso != "All CSO") {
-            $upgrades->where('c.code', explode('-', $request->filter_cso)[0]);
-        }
 
-        $countUpgrades = $upgrades->count();
-        $upgrades = $upgrades->select('upgrades.*')->orderBy("ac.upgrade_date", 'desc')->paginate(10);
+        $upgradeAreas = [];
+        foreach (Acceptance::$Area as $area) {
+            $upgradeAreas[$area] = Upgrade::where([['upgrades.active', true], ['upgrades.status', '!=', 'new']])
+                ->select('upgrades.*', 'ac.area')
+                ->leftJoin('acceptances as ac', 'ac.id', 'upgrades.acceptance_id')
+                ->leftJoin('csos as c', 'c.id', 'ac.cso_id');
+            
+            if ($request->has('filter_branch')) {
+                $upgradeAreas[$area]->where('ac.branch_id', $request->filter_branch);
+            }
+            if ($request->has('filter_cso') && $request->filter_cso != "All CSO") {
+                $upgradeAreas[$area]->where('c.code', explode('-', $request->filter_cso)[0]);
+            }
+
+            if ($area == 'null') {
+                $upgradeAreas[$area]->whereNull('ac.area');
+            } else {
+                $upgradeAreas[$area]->where('ac.area', $area);
+            }
+
+            $upgradeAreas[$area] = $upgradeAreas[$area]
+                ->orderBy("ac.upgrade_date", 'desc')
+                ->paginate(10, ['*'], $area);
+        }
 
         return view(
             'admin.list_upgrade', 
             compact(
-                'branches', 'csos', 'countUpgrades', 'upgrades', 'url'
+                'branches', 'csos', 'upgradeAreas', 'url'
             )
-        )->with("i", (request()->input("page", 1) - 1) * 10 + 1);
+        );
     }
 
     /**
@@ -113,6 +126,12 @@ class UpgradeController extends Controller
             $productService->upgrade_id = $upgrade->id;
             $productService->save();
 
+            //Update Acceptance Area
+            if ($data['area']) {
+                $acceptance = Acceptance::find($upgrade['acceptance_id']);
+                $acceptance->area = $data['area'];
+                $acceptance->save();
+            }
 
             //Pengecekan dan pembuatan stok
             $getProductId = null;
