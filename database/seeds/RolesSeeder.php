@@ -43,6 +43,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => true,
                 'change-status_order_reject' => true,
 
+                //Update Order Payment Status
+                'change-status_payment' => true,
+                'change-status_payment_verified' => true,
+                'change-status_payment_rejected' => true,
+
                 //Order Report
                 'browse-order_report' => true,
                 'browse-order_report_branch' => true,
@@ -250,6 +255,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
 
                 //Order Report
                 'browse-order_report' => false,
@@ -459,6 +469,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -662,6 +677,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
                 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+                
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -863,6 +883,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
 
                 //Order Report
                 'browse-order_report' => false,
@@ -1066,6 +1091,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -1267,6 +1297,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
 
                 //Order Report
                 'browse-order_report' => false,

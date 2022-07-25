@@ -48,6 +48,26 @@
         max-height: 15em;
         overflow-y: auto;
     }
+    .imagePreview {
+        width: 100%;
+        height: 150px;
+        background-position: center center;
+        background-color: #fff;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: inline-block;
+    }
+    .del {
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+    }
 </style>
 @endsection
 
@@ -164,25 +184,27 @@
                             @endif
                         </td>
                         @can('edit-order')
+                            @if ($order->status != 'new' || Auth::user()->inRole("head-admin"))
                             @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
                                 <td style="text-align: center;">
-                                    <button value="{{ route('delete_order', ['id' => $order['id']])}}"
+                                    <button value="{{ $orderPayment['id'] }}"
                                         data-toggle="modal"
-                                        data-target="#deleteDoModal"
-                                        class="btn-delete">
+                                        data-target="#editPaymentModal"
+                                        class="btn-delete btn-edit_order_payment">
                                         <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
                                     </button>
                                 </td>
                             @endif
                             @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
                                 <td style="text-align: center;">
-                                    <button value="{{ route('delete_order', ['id' => $order['id']])}}"
+                                    <button value="{{ route('delete_order_payment', ['id' => $orderPayment['id']])}}"
                                         data-toggle="modal"
                                         data-target="#deleteDoModal"
-                                        class="btn-delete">
+                                        class="btn-delete btn-delete_order_payment">
                                         <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
                                     </button>
                                 </td>
+                            @endif
                             @endif
                         @endcan
                     </tr>
@@ -528,7 +550,189 @@
                     </div>
                 </div>
             </div>
-            <!-- End Modal Cash -->
+            <!-- End Modal Add Payment -->
+            <!-- Modal Edit Payment -->
+            <div class="modal fade"
+                id="editPaymentModal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="frmEditPayment"
+                                method="post"
+                                action="{{ route('update_order_payment') }}"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" id="editPayment-order_id" name="order_id" value="{{ $order['id'] }}">
+                                <input type="hidden" id="editPayment-order_payment_id" name="order_payment_id" value="">
+                                <h5 style="text-align: center;">
+                                    Edit Payment
+                                </h5>
+                                <br>
+                                <div class="form-group mb-1">
+                                    <label for="">Payment Date</label>
+                                    <input type="date" 
+                                        id="editPayment-payment_date"
+                                        class="form-control" 
+                                        name="payment_date" 
+                                        value=""
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Bank</label>
+                                    <select class="form-control"
+                                        id="editPayment-bank_id"
+                                        name="bank_id"
+                                        data-msg="Mohon Pilih Bank" required>
+                                        <option selected disabled value="">
+                                            Choose Bank
+                                        </option>
+
+                                        @foreach ($banks as $bank)
+                                            <option value="{{ $bank->id }}">
+                                                {{ $bank->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Cicilan</label>
+                                    <select class="form-control bank_cicilan"
+                                        id="editPayment-cicilan"
+                                        name="cicilan"
+                                        data-msg="Mohon Pilih Jumlah Cicilan" required>
+                                        <option selected value="1">1X</option>
+                                        @for ($i = 2; $i <= 12; $i += 2)
+                                            <option class="other_valCicilan"
+                                                value="{{ $i }}">
+                                                {{ $i }}X
+                                            </option>
+                                        @endfor
+                                        <option class="other_valCicilan"
+                                            value="24">
+                                            24X
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Nominal Payment</label>
+                                    <input type="text"
+                                        id="editPayment-total_payment"
+                                        class="form-control downpayment"
+                                        name="total_payment"
+                                        placeholder="Nominal Payment"
+                                        required
+                                        autocomplete="off"
+                                        data-type="currency"
+                                        data-msg="Mohon Isi Total Pembayaran" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Bukti Pembayaran</label>
+                                    <label style="float: right">(Min: 1) (Max: 3)</label>
+                                    <div class="clearfix"></div>
+                                    @for ($i = 0; $i < 3; $i++)
+                                        <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                            style="padding: 15px; float: left;">
+                                            <label>Image {{ $i + 1 }}</label>
+                                            <div class="imagePreview"
+                                                style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
+                                            </div>
+                                            <label class="file-upload-browse btn btn-gradient-primary"
+                                                style="margin-top: 15px; padding: 10px">
+                                                Upload
+                                                <input name="images_{{ $i }}"
+                                                    id="editPayment-productimg-{{ $i }}"
+                                                    type="file"
+                                                    accept=".jpg,.jpeg,.png"
+                                                    class="uploadFile img"
+                                                    value="Upload Photo"
+                                                    style="width: 0px; height: 0px; overflow: hidden; border: none !important;" />
+                                            </label>
+                                            <i class="mdi mdi-window-close del"></i>
+                                        </div>
+                                    @endfor
+                                </div>
+                            </form>
+                            <div class="clearfix"></div>
+                            @if (Gate::check('change-status_payment'))
+                            <div id="divUpdateStatusPayment" class="text-center p-3" style="border: 1px solid black">
+                                <h5 class="mb-3">Status Payment</h5>
+                                <form id="frmUpdateStatusPayment"
+                                    method="post"
+                                    action="{{ route('update_status_order_payment') }}">
+                                    @csrf
+                                    <input type="hidden" id="updateStatusPayment-order_id" name="order_id" value="{{ $order['id'] }}">
+                                    <input type="hidden" id="updateStatusPayment-order_payment_id" name="order_payment_id" value="">
+                                    <div class="btn-action" style="text-align: center;">
+                                        @if (Gate::check('change-status_payment_verified'))
+                                        <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Verified</button>
+                                        @endif
+                                        @if (Gate::check('change-status_payment_rejected'))
+                                        <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">Rejected</button>
+                                        @endif
+                                    </div>
+                                </form>
+                            </div>
+                            @endif
+                        </div>
+                        <div class="modal-footer footer-cash">
+                            <button type="submit" form="frmEditPayment"
+                                id="submitFrmEditPayment"
+                                class="btn btn-gradient-success mr-2">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Edit Payment -->
+            <!-- Modal Delete Payment -->
+            <div class="modal fade"
+                id="deleteDoModal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h5 style="text-align: center;">
+                                Are You Sure to Delete this Payment?
+                            </h5>
+                        </div>
+                        <div class="modal-footer">
+                            <form id="frmDelete" method="post" action="">
+                                {{ csrf_field() }}
+                                <button type="submit"
+                                    class="btn btn-gradient-danger mr-2">
+                                    Yes
+                                </button>
+                            </form>
+                            <button class="btn btn-light" data-dismiss="modal">
+                                No
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Delete -->
             @endif
 
             @else
@@ -622,7 +826,7 @@
 
         $("#submitFrmAddPayment").on("click", function(e) {
             // Change numberWithComma before submit
-            $('input[data-type="currency"]').each(function() {
+            $("#frmAddPayment").find('input[data-type="currency"]').each(function() {
                 $(this).val(numberNoCommas($(this).val()));
             });
             $("#frmAddPayment").submit();
@@ -634,6 +838,107 @@
                 $('.custom-file-label').html("Choose image");
                 alert("You can select only 3 images");
             }
+        });
+
+        // Edit Order Payment
+        $(".btn-edit_order_payment").click(function() {
+            $("#submitFrmEditPayment").hide();
+            $("#divUpdateStatusPayment").hide();
+            var order_payment_id = $(this).val();
+            $.ajax({
+                method: "post",
+                url: "{{ route('edit_order_payment') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    order_id: "{{ $order['id'] }}",
+                    order_payment_id: order_payment_id
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        const result = data.result;
+                        $("#editPayment-order_payment_id").val(order_payment_id);
+                        $("#editPayment-payment_date").val(result.payment_date);
+                        $("#editPayment-bank_id").val(result.bank_id);
+                        $("#editPayment-cicilan").val(result.cicilan);
+                        $("#editPayment-total_payment").val(numberWithCommas(result.total_payment));
+                        
+                        const mainUrlImage = "{{ asset('sources/order') }}";
+                        $.each(JSON.parse(result.image), function(index, image) {
+                            $("#editPayment-productimg-" + index).closest(".imgUp").find(".imagePreview")
+                                .css('background-image', 'url(' + mainUrlImage + "/" +image + ')');
+                        });
+
+                        @if (Gate::check('change-status_payment'))
+                        if (result.status != "verified") {
+                            $("#updateStatusPayment-order_payment_id").val(order_payment_id);
+                            $("#divUpdateStatusPayment").show();
+                        }
+                        @endif
+                        
+                        $("#submitFrmEditPayment").show();
+                    } else {
+                        alert(data.result);
+                    }
+                },
+                error: function(data) {
+                    alert("Error!");
+                }
+            });
+        });
+
+        $("#submitFrmEditPayment").on("click", function(e) {
+            // Change numberWithComma before submit
+            $("#frmEditPayment").find('input[data-type="currency"]').each(function() {
+                $(this).val(numberNoCommas($(this).val()));
+            });
+            $("#frmEditPayment").submit();
+        });
+
+        $(".btn-delete_order_payment").click(function(e) {
+            $("#frmDelete").attr("action",  $(this).val());
+        });
+
+        $(document).on("click", "i.del", function () {
+            $(this).closest(".imgUp").find('.imagePreview').css("background-image", "");
+            $(this).closest(".imgUp").find('input[type=text]').removeAttr("required");
+            $(this).closest(".imgUp").find('.btn').find('.img').val("");
+            $(this).closest(".imgUp").find('.form-control').val("");
+            const inputImage = $(this).closest(".imgUp").find(".img");
+            const inputImageId = inputImage.attr("id").split("-")[2];
+            if (inputImageId == "0") {
+                inputImage.attr("required", "");
+            }
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'dltimg-' + inputImageId,
+                value: inputImageId
+            }).appendTo('#frmEditPayment');
+        });
+
+        $(function () {
+            $(document).on("change", ".uploadFile", function () {
+                const uploadFile = $(this);
+                const files = this.files ? this.files : [];
+
+                // no file selected, or no FileReader support
+                if (!files.length || !window.FileReader) {
+                    return;
+                }
+
+                // only image file
+                if (/^image/.test(files[0].type)) {
+                    // instance of the FileReader
+                    const reader = new FileReader();
+                    // read the local file
+                    reader.readAsDataURL(files[0]);
+
+                    // set image data as background of div
+                    reader.onloadend = function () {
+                        uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+                    };
+                }
+
+            });
         });
     });
 

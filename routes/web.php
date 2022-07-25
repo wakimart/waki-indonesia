@@ -380,6 +380,22 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/store_order_payment', 'OrderController@storeOrderPayment')
             ->name('store_order_payment')
             ->middleware('can:edit-order');
+        //Edit Order Payment
+        Route::post('/edit_order_payment', 'OrderController@editOrderPayment')
+            ->name('edit_order_payment')
+            ->middleware('can:edit-order');
+        //Update Order Payment
+        Route::post('/update_order_payment', 'OrderController@updateOrderPayment')
+            ->name('update_order_payment')
+            ->middleware('can:edit-order');
+        //Update Order Payment Status
+        Route::post('/update_status_order_payment', 'OrderController@updateStatusOrderPayment')
+            ->name('update_status_order_payment')
+            ->middleware('can:change-status_payment');
+        //Delete Order Payment
+        Route::post('/delete_order_payment', 'OrderController@deleteOrderPayment')
+            ->name('delete_order_payment')
+            ->middleware('can:edit-order');
         //Delete Order
         Route::post('/{OrderNya}', 'OrderController@delete')
             ->name('delete_order');

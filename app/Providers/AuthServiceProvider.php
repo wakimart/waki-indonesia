@@ -92,6 +92,17 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['change-status_order_reject']);
         });
 
+        //-- UPDATE ORDER STATUS --//
+        Gate::define('change-status_payment', function ($user) {
+            return $user->hasAccess(['change-status_payment']);
+        });
+        Gate::define('change-status_payment_verified', function ($user) {
+            return $user->hasAccess(['change-status_payment_verified']);
+        });
+        Gate::define('change-status_payment_rejected', function ($user) {
+            return $user->hasAccess(['change-status_payment_rejected']);
+        });
+
         //-- ORDER REPORT --//
         Gate::define('browse-order_report', function ($user) {
             return $user->hasAccess(['browse-order_report']);

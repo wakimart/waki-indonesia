@@ -548,14 +548,19 @@ class OrderController extends Controller
                 if($arrKey[0] == 'bank'){
                     if(isset($data['cicilan_'.$arrKey[1]])){
                         $isUpdateOrCreatePayment = true;
+                        // Update Order Payment Only total_payment
                         if (isset($data['orderpaymentold'][$arrKey[1]])) {
                             $orderPayment = OrderPayment::find($data['orderpaymentold'][$arrKey[1]]);
+                            $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
+                            $orderPayment->save();
                         } else {
                             if (isset($data['bankold_'.$arrKey[1]])) {
                                 $isUpdateOrCreatePayment = false;
                             }
                             $orderPayment = new OrderPayment;
                         }
+                        // Update Order Payment (Disabled)
+                        if (false) {
                         if ($isUpdateOrCreatePayment) {
                             $orderPayment->order_id = $orders['id'];
                             $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
@@ -611,11 +616,13 @@ class OrderController extends Controller
                             $orderPayment->save();
                             $index++;
                         }
+                        }
                     }
                 }
             }
 
-            // Hapus Old Order Payment
+            // Hapus Old Order Payment (Disabled)
+            if (false) {
             foreach ($orderPayments as $orderPayment) {
                 if (!in_array($orderPayment['id'], $data['orderpaymentold'])) {
                     $orderPaymentImages = json_decode($orderPayment->image, true);
@@ -627,6 +634,7 @@ class OrderController extends Controller
                     $orderPayment->delete();
                 }
             }            
+            }
 
             //update image
             // $arr_image_before = $orders['image'];
@@ -705,7 +713,7 @@ class OrderController extends Controller
             // $orders['image'] = $namaGambar;
 
             // Set Order Down Payment
-            $orders->down_payment = OrderPayment::where("order_id", $orders['id'])->sum('total_payment');
+            $orders->updateDownPayment();
             $orders->save();
 
             $dataChanges = array_diff(json_decode($orders, true), json_decode($dataBefore, true));
@@ -846,6 +854,205 @@ class OrderController extends Controller
             DB::commit();
 
             return redirect()->back()->with('success', 'Payment Berhasil Di Tambah');
+        }catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' =>  $ex->getMessage(), 500]);
+        }
+    }
+
+    public function editOrderPayment(Request $request)
+    {
+        if($request->has('order_id') && $request->has('order_payment_id')){
+            $orderPayment = OrderPayment::where('order_id', $request->get('order_id'))
+                ->where('id', $request->get('order_payment_id'))->first();
+
+            if ($orderPayment) {
+                return response()->json([
+                    'status' => 'success',
+                    'result' => $orderPayment
+                ]);
+            }
+        }
+        return response()->json(['result' => 'Gagal!!']);
+    }
+
+    public function updateOrderPayment(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            if ($request->has('order_id') && $request->has('order_payment_id')) {
+                $orderPayment = OrderPayment::where('order_id', $request->get('order_id'))
+                    ->where('id', $request->get('order_payment_id'))->first();
+                    
+                if ($orderPayment) {
+                    $orderPaymentOld = OrderPayment::where('order_id', $request->get('order_id'))
+                        ->where('id', $request->get('order_payment_id'))->first();
+
+                    $data = $request->all();
+                    $orderPayment->total_payment = $data['total_payment'];
+                    $orderPayment->payment_date = $data['payment_date'];
+                    $orderPayment->bank_id = $data['bank_id'];
+                    $orderPayment->cicilan = $data['cicilan'];
+
+                    // save image
+                    $arrImage = [];
+                    $idxImg = 1;
+                    for ($i = 0; $i < 3; $i++) {
+                        $orderPaymentImages = json_decode($orderPayment->image, true) ?? [];
+                        // Jika Hapus Gambar Lama
+                        if (isset($orderPaymentImages[$i]) && isset($data['dltimg-'.$i])) {
+                            if (File::exists("sources/order/" . $orderPaymentImages[$i])) {
+                                File::delete("sources/order/" . $orderPaymentImages[$i]);
+                            }
+                            unset($orderPaymentImages[$i]);
+                        }
+                        if ($request->hasFile('images_' . $i)) {
+                            $path = "sources/order";
+
+                            // Hapus Img Lama Jika Update Image
+                            if (isset($orderPaymentImages[$i])) {
+                                if (File::exists("sources/order/" . $orderPaymentImages[$i])) {
+                                    File::delete("sources/order/" . $orderPaymentImages[$i]);
+                                }
+                            }
+
+                            $file = $request->file('images_' . $i);
+                            $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $idxImg . "_order." . $file->getClientOriginalExtension();
+
+                            // Cek ada folder tidak
+                            if (!is_dir($path)) {
+                                File::makeDirectory($path, 0777, true, true);
+                            }
+
+                            //compressed img
+                            $compres = Image::make($file->getRealPath());
+                            $compres->resize(540, null, function ($constraint) {
+                                $constraint->aspectRatio();
+                            })->save($path.'/'.$fileName);
+
+                            //array_push($data['image'], $fileName);
+                            $arrImage[] = $fileName;
+                            $idxImg++;
+                        } else if (isset($orderPaymentImages[$i])) {
+                            $arrImage[] = $orderPaymentImages[$i];
+                            $idxImg++;
+                        }
+                    }
+                    $orderPayment->image = json_encode($arrImage);
+                    $orderPayment->save();
+
+                    // Set Order Down Payment
+                    $order = Order::find($data['order_id']);
+                    $order->updateDownPayment();
+                    $order->save();
+
+                    $user = Auth::user();
+                    $historyUpdate['type_menu'] = "Order";
+                    $historyUpdate['method'] = "Update";
+                    $historyUpdate['meta'] = json_encode([
+                        'user'=>$user['id'],
+                        'createdAt' => date("Y-m-d h:i:s"),
+                        'dataChange'=> ["Update Order Payment: " => [$orderPayment->id => array_diff(json_decode($orderPayment, true), json_decode($orderPaymentOld, true)) ]]
+                    ]);
+
+                    $historyUpdate['user_id'] = $user['id'];
+                    $historyUpdate['menu_id'] = $data['order_id'];
+                    $createData = HistoryUpdate::create($historyUpdate);
+                    DB::commit();
+
+                    return redirect()->back()->with('success', 'Order Payment Berhasil Di Ubah');
+                }
+            }
+            return response()->json(['result' => 'Gagal!!']);
+        }catch (\Exception $ex) {
+            DB::rollback();
+            return response()->json(['error' =>  $ex->getMessage(), 500]);
+        }
+    }
+
+    public function updateStatusOrderPayment(Request $request)
+    {
+        if ($request->has('order_id') && $request->has('order_payment_id')) {
+            $orderPayment = OrderPayment::where('order_id', $request->get('order_id'))
+                ->where('id', $request->get('order_payment_id'))->first();
+    
+            if ($orderPayment) {
+                $data = $request->all();
+                $orderPayment_status = $request->get('status_acc');
+                if ($orderPayment_status =='true') {
+                    $orderPayment->status = 'verified';
+                } else if($orderPayment_status == 'false') {
+                    $orderPayment->status = 'rejected';
+                }
+                $orderPayment->save();
+
+                // Set Order Down Payment
+                $order = Order::find($data['order_id']);
+                $order->updateDownPayment();
+                $order->save();
+
+                $user = Auth::user();
+                $historyUpdate['type_menu'] = "Order";
+                $historyUpdate['method'] = "Update";
+                $historyUpdate['meta'] = json_encode([
+                    'user'=>$user['id'],
+                    'createdAt' => date("Y-m-d h:i:s"),
+                    'dataChange'=> ["Update Status Order Payment: " => [$orderPayment->id => $orderPayment->status ]]
+                ]);
+
+                $historyUpdate['user_id'] = $user['id'];
+                $historyUpdate['menu_id'] = $data['order_id'];
+                $createData = HistoryUpdate::create($historyUpdate);
+
+                return redirect()->back()->with('success', 'Order Payment Berhasil Di Ubah');
+            }
+        }
+        return response()->json(['result' => 'Gagal!!']);
+    }
+
+    public function deleteOrderPayment(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            if($request->has('id')){
+                $orderPayment = OrderPayment::find($request->get('id'));
+
+                if ($orderPayment) {
+                    $data['order_id'] = $orderPayment->order_id;
+                    $orderPaymentOld = OrderPayment::find($request->get('id'));
+
+                    $orderPaymentImages = json_decode($orderPayment->image, true);
+                    foreach ($orderPaymentImages as $orderPaymentImage) {
+                        if (File::exists("sources/order/" . $orderPaymentImage)) {
+                            File::delete("sources/order/" . $orderPaymentImage);
+                        }
+                    }
+                    $orderPayment->delete();
+
+                    // Set Order Down Payment
+                    $order = Order::find($data['order_id']);
+                    $order->updateDownPayment();
+                    $order->save();
+
+                    $user = Auth::user();
+                    $historyUpdate['type_menu'] = "Order";
+                    $historyUpdate['method'] = "Update";
+                    $historyUpdate['meta'] = json_encode([
+                        'user'=>$user['id'],
+                        'createdAt' => date("Y-m-d h:i:s"),
+                        'dataChange'=> ["Deleted Order Payment" => $orderPaymentOld ]
+                    ]);
+
+                    $historyUpdate['user_id'] = $user['id'];
+                    $historyUpdate['menu_id'] = $data['order_id'];
+                    $createData = HistoryUpdate::create($historyUpdate);
+                    DB::commit();
+
+                    return redirect()->back()->with('success', 'Order Payment Berhasil Di Hapus');
+                }
+            }
+            
+            return response()->json(['result' => 'Gagal!!']);
         }catch (\Exception $ex) {
             DB::rollback();
             return response()->json(['error' =>  $ex->getMessage(), 500]);
