@@ -624,6 +624,10 @@ $menu_item_page = "order";
                                                     </option>
                                                 @endfor
                                                 <option class="other_valCicilan"
+                                                    value="18">
+                                                    18X
+                                                </option>
+                                                <option class="other_valCicilan"
                                                     value="24">
                                                     24X
                                                 </option>
@@ -1060,6 +1064,10 @@ document.addEventListener("DOMContentLoaded", function () {
                                     {{ $i }}X
                                 </option>
                             @endfor
+                            <option class="other_valCicilan"
+                                value="18">
+                                18X
+                            </option>
                             <option class="other_valCicilan"
                                 value="24">
                                 24X
