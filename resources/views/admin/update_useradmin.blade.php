@@ -606,6 +606,21 @@ $menu_item_page = "user";
                             </div>
 
                             <div class="form-group" id="group-product">
+                                <span style="display:block;">AREA HOME SERVICE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-area_home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-area_home_service" />
+                                            Browse Home Service
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
                                 <span style="display:block;">Cuti</span>
                                 <div class="div-CheckboxGroup">
                                     <div class="form-check form-check-inline">

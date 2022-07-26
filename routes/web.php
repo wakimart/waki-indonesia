@@ -503,6 +503,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::get("/fetch/presence", "UserGeolocationController@fetchPresenceImage")
             ->name("fetch_geolocation_presence");
+
+        // Area Home Service
+        Route::get('/list_area_homeservice', 'HomeServiceController@list_areaHomeService')
+            ->name('list_area_homeservice')
+            ->middleware('can:browse-area_home_service');
+        Route::post('/print_area_list_hs', 'HomeServiceController@printAreaListHs')
+            ->name('print_area_list_hs')
+            ->middleware('can:browse-area_home_service');
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
