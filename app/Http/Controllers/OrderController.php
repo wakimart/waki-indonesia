@@ -548,19 +548,16 @@ class OrderController extends Controller
                 if($arrKey[0] == 'bank'){
                     if(isset($data['cicilan_'.$arrKey[1]])){
                         $isUpdateOrCreatePayment = true;
-                        // Update Order Payment Only total_payment
+                        // Update Order Payment
                         if (isset($data['orderpaymentold'][$arrKey[1]])) {
                             $orderPayment = OrderPayment::find($data['orderpaymentold'][$arrKey[1]]);
-                            $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
-                            $orderPayment->save();
                         } else {
                             if (isset($data['bankold_'.$arrKey[1]])) {
                                 $isUpdateOrCreatePayment = false;
                             }
                             $orderPayment = new OrderPayment;
                         }
-                        // Update Order Payment (Disabled)
-                        if (false) {
+                        // Update Order Payment
                         if ($isUpdateOrCreatePayment) {
                             $orderPayment->order_id = $orders['id'];
                             $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
@@ -616,13 +613,11 @@ class OrderController extends Controller
                             $orderPayment->save();
                             $index++;
                         }
-                        }
                     }
                 }
             }
 
-            // Hapus Old Order Payment (Disabled)
-            if (false) {
+            // Hapus Old Order Payment
             foreach ($orderPayments as $orderPayment) {
                 if (!in_array($orderPayment['id'], $data['orderpaymentold'])) {
                     $orderPaymentImages = json_decode($orderPayment->image, true);
@@ -634,7 +629,6 @@ class OrderController extends Controller
                     $orderPayment->delete();
                 }
             }            
-            }
 
             //update image
             // $arr_image_before = $orders['image'];
