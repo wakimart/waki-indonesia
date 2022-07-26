@@ -602,9 +602,7 @@ $menu_item_page = "order";
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-md-8">
-                                            <label class="form-control">{{ $payment->bank['name'] }}</label>
-                                            <input type="hidden" name="bank_{{ $indexPayment }}" value="{{ $payment['bank_id'] }}">
-                                            {{-- <select class="form-control bank_name" name="bank_{{ $indexPayment }}" data-msg="Mohon Pilih Bank">
+                                            <select class="form-control bank_name" name="bank_{{ $indexPayment }}" data-msg="Mohon Pilih Bank">
                                                 <option selected disabled value="">Choose Bank</option>
 
                                                 @foreach($banks as $bank)
@@ -613,13 +611,11 @@ $menu_item_page = "order";
                                                         {{ $bank->name }}
                                                     </option>
                                                 @endforeach
-                                            </select> --}}
+                                            </select>
                                             <div class="validation"></div>
                                         </div>
                                         <div class="form-group col-md-4">
-                                            <label class="form-control">{{ $payment['cicilan'] }}X</label>
-                                            <input type="hidden" name="cicilan_{{ $indexPayment }}" value="{{ $payment['cicilan'] }}">
-                                            {{-- <select class="form-control bank_cicilan" name="cicilan_{{ $indexPayment }}" data-msg="Mohon Pilih Jumlah Cicilan">
+                                            <select class="form-control bank_cicilan" name="cicilan_{{ $indexPayment }}" data-msg="Mohon Pilih Jumlah Cicilan">
                                                 <option selected value="1">1X</option>
                                                 @for($i=2; $i<=12;$i+=2)
                                                     <option class="other_valCicilan" value="{{ $i }}" 
@@ -635,7 +631,7 @@ $menu_item_page = "order";
                                                     value="24">
                                                     24X
                                                 </option>
-                                            </select> --}}
+                                            </select>
                                             <div class="validation"></div>
                                         </div>
                                     </div>
@@ -669,7 +665,7 @@ $menu_item_page = "order";
                                                     <div class="imagePreview"
                                                         style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});"></div>
                                                 @endif
-                                                {{-- <label class="file-upload-browse btn btn-gradient-primary"
+                                                <label class="file-upload-browse btn btn-gradient-primary"
                                                     style="margin-top: 15px;">
                                                     Upload
                                                     <input name="images_{{ $indexPayment }}_{{ $i }}"
@@ -680,12 +676,12 @@ $menu_item_page = "order";
                                                         value="Upload Photo"
                                                         style="width: 0px; height: 0px; overflow: hidden;" />
                                                 </label>
-                                                <i class="mdi mdi-window-close del"></i> --}}
+                                                <i class="mdi mdi-window-close del"></i>
                                             </div>
                                         @endfor
                                         <div class="validation"></div>
                                     </div>
-                                    {{-- <div class="text-center">
+                                    <div class="text-center">
                                         @If ($indexPayment == 0)
                                         <button id="tambah_bank"
                                             title="Tambah Bank"
@@ -701,7 +697,7 @@ $menu_item_page = "order";
                                             <i class="mdi mdi-minus"></i> Delete Payment Type
                                         </button>
                                         @endif
-                                    </div> --}}
+                                    </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 @php $indexPayment++; @endphp
