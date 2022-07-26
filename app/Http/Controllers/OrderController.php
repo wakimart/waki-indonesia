@@ -835,8 +835,7 @@ class OrderController extends Controller
             $orderPayment->save();
 
             $order = Order::find($data['order_id']);
-            $order->down_payment = $order->down_payment + $data['total_payment'];
-            $order->remaining_payment = $order->remaining_payment - $data['total_payment'];
+            $order->updateDownPayment();
             $order->save();
 
             $user = Auth::user();
@@ -1182,6 +1181,7 @@ class OrderController extends Controller
             WHERE o.branch_id = b.id
             AND op.payment_date >= '$startDate'
             AND op.payment_date <= '$yesterdayDate'
+            AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "'
             OR o.status = '" . Order::$status['3'] . "' 
             OR o.status = '" . Order::$status['4'] . "')";
@@ -1191,6 +1191,7 @@ class OrderController extends Controller
             ON o.id = op.order_id
             WHERE o.branch_id = b.id
             AND op.payment_date = '$endDate'
+            AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
@@ -1242,6 +1243,7 @@ class OrderController extends Controller
             WHERE o.cso_id = c.id
             AND op.payment_date >= '$startDate'
             AND op.payment_date <= '$yesterdayDate'
+            AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "'
             OR o.status = '" . Order::$status['3'] . "' 
             OR o.status = '" . Order::$status['4'] . "')";
@@ -1251,6 +1253,7 @@ class OrderController extends Controller
             ON o.id = op.order_id
             WHERE o.cso_id = c.id
             AND op.payment_date = '$endDate'
+            AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
@@ -1309,6 +1312,7 @@ class OrderController extends Controller
                     ->orWhere('orders.status', Order::$status['3'])
                     ->orWhere('orders.status', Order::$status['4']);
             })
+            ->where('order_payments.status', 'verified')
             ->orderBy('order_payments.payment_date', 'desc')->select('orders.*', DB::raw('SUM(order_payments.total_payment) as totalPaymentNya'))->groupBy('orders.id')->get();
         $countOrderReports = $order_reports->count();
 

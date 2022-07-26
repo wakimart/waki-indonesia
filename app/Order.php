@@ -67,7 +67,7 @@ class Order extends Model
     public function updateDownPayment()
     {
         $this->down_payment = OrderPayment::where("order_id", $this->id)
-            ->where('status', '!=', 'rejected')
+            ->where('status', 'verified')
             ->sum('total_payment');
         $this->remaining_payment = $this->total_payment - $this->down_payment;
     }
