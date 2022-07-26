@@ -373,6 +373,9 @@ class ServiceController extends Controller
                 } elseif ($request->status === "Cancel") {
                     $service->status = str_replace('_', ' ', $request->status);
                     $arr_old_history = json_decode($service->history_status);
+                    if(empty($arr_old_history)){
+                        $arr_old_history = [];
+                    }
 
                     array_push(
                         $arr_old_history,
