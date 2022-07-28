@@ -1133,6 +1133,13 @@ class OrderController extends Controller
             }
             $orders = $orders->orderBy('id', 'DESC')->take(20)->get();
 
+            foreach ($orders as $order) {
+                $orderDetail = OrderDetail::where('type', OrderDetail::$Type['1'])
+                    ->where('order_id', $order->id)->first();
+                $order->product = $orderDetail->productNamenya();
+                $order->orderDetailQty = $orderDetail->qty;
+            }
+
             $promos = Promo::all();
             $productDb = [];
 
