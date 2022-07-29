@@ -371,12 +371,15 @@ class ReferenceController extends Controller
             DB::commit();
 
             if($request->has('status_acc') || $request->has('order_id')){
-                return redirect()
-                    ->route("detail_submission_form", [
-                        "id" => $reference->submission['id'],
-                        "type" => "mgm",
-                    ])
-                    ->with('success', 'Data berhasil dimasukkan.');
+                return response()->json([
+                    "success" => $reference,
+                ], 200);
+                // return redirect()
+                //     ->route("detail_submission_form", [
+                //         "id" => $reference->submission['id'],
+                //         "type" => "mgm",
+                //     ])
+                //     ->with('success', 'Data berhasil dimasukkan.');
             }
             else{
                 return response()->json([
