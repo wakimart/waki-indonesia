@@ -133,7 +133,11 @@
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
+                        @if ($startDate && $endDate)
                         <h5>{{ date('d F y', strtotime($startDate)) }} - {{ date('d F y', strtotime($endDate)) }}</h5>
+                        @else
+                        <h5>All Data</h5>
+                        @endif
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             @foreach ($statusAbsentOffs as $statusKey => $absentOffs)
                             <li class="nav-item">
