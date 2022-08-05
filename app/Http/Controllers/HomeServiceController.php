@@ -821,7 +821,10 @@ class HomeServiceController extends Controller
                         $result .= 'Created at: ' . $dayData->created_at
                             . '<br>'
                             . 'Last update: ' . $dayData->updated_at;
-
+                        // req reschedule info
+                        $lastHistoryUpdate = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id', 'desc')->get();
+                        $userHistoryUpdate = User::find($lastHistoryUpdate[0]['meta']['user']);
+                        $result .= '<br><br>Request Reschedule Date: '. $lastHistoryUpdate[0]['meta']['createdAt'] . '<br> Request by ' . $userHistoryUpdate->name;
                         $befores = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
                         $totalBefores = count($befores) - 1;
                         $result .= "<p style='color:red'>";

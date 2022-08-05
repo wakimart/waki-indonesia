@@ -1727,6 +1727,7 @@ function changeDate(click) {
 
         return response.json();
     }).then(function (response) {
+        console.log('detail hs', response)
         document.getElementById("data-all-count").innerHTML = response['msg']['all']['count'];
         document.getElementById("appointment-data-all").innerHTML = response['msg']['all']['data'];
         document.getElementById("data-reschedule-count").innerHTML = response['msg']['reschedule']['count'];
