@@ -1296,7 +1296,7 @@ class HomeServiceController extends Controller
                 // $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
                 $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
                 $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
-                $data['appointment'] = $data['date']." ".$data['time'];
+                // $data['appointment'] = $data['date']." ".$data['time'];
                 $homeService->fill($data)->save();
 
                 $user = Auth::user();
