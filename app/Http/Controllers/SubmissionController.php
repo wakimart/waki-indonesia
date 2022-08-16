@@ -10,6 +10,8 @@ use App\HomeService;
 use App\Prize;
 use App\Promo;
 use App\Order;
+use App\OrderDetail;
+use App\Product;
 use App\Reference;
 use App\ReferenceImage;
 use App\ReferencePromo;
@@ -321,6 +323,8 @@ class SubmissionController extends Controller
         try {
             $data['code'] = "SUB_M/" . strtotime(date("Y-m-d H:i:s")) . "/" . substr($data['phone'], -4);
             $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $data['status'] = "new";
+
             $submission = Submission::create($data);
 
             $user_id = Auth::user()["id"];
@@ -473,7 +477,7 @@ class SubmissionController extends Controller
             DB::commit();
 
             return redirect()
-                ->route("add_submission_takeaway")
+                ->route("detail_submission_form", ["id" => $submission, "type" => "takeaway"])
                 ->with('success', 'Data berhasil dimasukkan.');
         } catch (Exception $e) {
             DB::rollBack();
@@ -574,6 +578,24 @@ class SubmissionController extends Controller
             $submission->cso_id = $csoId;
             $submission->save();
 
+            //history change
+            $user = Auth::user();
+            $historyUpdateSubmission = [];
+            $historyUpdateSubmission["type_menu"] = "Submission";
+            $historyUpdateSubmission["method"] = "Update MGM Data";
+            $historyUpdateSubmission["meta"] = json_encode([
+                "user" => $user["id"],
+                "createdAt" => date("Y-m-d H:i:s"),
+                "dataChange" => $submission->getChanges(),
+            ], JSON_THROW_ON_ERROR);
+
+            $historyUpdateSubmission["user_id"] = $user["id"];
+            $historyUpdateSubmission["menu_id"] = $request->id;
+
+            HistoryUpdate::create($historyUpdateSubmission);
+
+            DB::commit();
+
             return redirect()
                 ->route("detail_submission_form", ["id" => $request->id, "type" => "mgm"])
                 ->with('success', 'Data berhasil diperbarui.');
@@ -629,9 +651,53 @@ class SubmissionController extends Controller
             }
             $submissionImage->save();
 
+            DB::commit();
+
             return redirect()
                 ->route("detail_submission_form", ["id" => $request->id, "type" => "referensi"])
                 ->with('success', 'Data berhasil diperbarui.');
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                "error" => $e,
+                "error message" => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function updateStatusReferensi(Request $request)
+    {
+        $submission = Submission::find($request->id);
+
+        DB::beginTransaction();
+
+        try {
+            $submission->fill($request->only(
+                "status",
+            ));
+            $submission->save();
+
+            //history change
+            $user = Auth::user();
+            $historyUpdateSubmission = [];
+            $historyUpdateSubmission["type_menu"] = "Submission";
+            $historyUpdateSubmission["method"] = "Status Reference";
+            $historyUpdateSubmission["meta"] = json_encode([
+                "user" => $user["id"],
+                "updatedAt" => date("Y-m-d H:i:s"),
+                "dataChange" => ["Status" => $submission->status],
+            ], JSON_THROW_ON_ERROR);
+
+            $historyUpdateSubmission["user_id"] = $user["id"];
+            $historyUpdateSubmission["menu_id"] = $submission->id;
+            HistoryUpdate::create($historyUpdateSubmission);
+
+            DB::commit();
+
+            return redirect()
+                ->route("detail_submission_form", ["id" => $request->id, "type" => "referensi"])
+                ->with('success', 'Status telah diperbarui.');
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -755,17 +821,13 @@ class SubmissionController extends Controller
 
         $arr_product = [];
         if ($get_order != null) {
-            foreach (json_decode($get_order[0]['product'], true) as $item) {
+            $get_order_details = OrderDetail::where('type', OrderDetail::$Type['1'])
+                ->where('order_id', $get_order[0]['id'])->get();
+            foreach ($get_order_details as $item) {
                 $temp = [];
-                if (is_numeric($item['id']) && $item['id'] != 8) {
-                    $temp['name'] = DeliveryOrder::$Promo[$item['id']]['name'];
-                    $temp['qty'] = $item['qty'];
-                    array_push($arr_product, $temp);
-                } else {
-                    $temp['name'] = $item['id'];
-                    $temp['qty'] = $item['qty'];
-                    array_push($arr_product, $temp);
-                }
+                $temp['name'] = $item->productNameNya();
+                $temp['qty'] = $item['qty'];
+                array_push($arr_product, $temp);
             }
         }
 
@@ -1543,7 +1605,8 @@ class SubmissionController extends Controller
             DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city"),
             "submissions.district AS district_id",
             "raja_ongkir__subdistricts.subdistrict_name AS district",
-            "submissions.created_at AS created_at"
+            "submissions.created_at AS created_at",
+            "submissions.status AS status_reference"
         )
         ->leftJoin("branches", "submissions.branch_id", "=", "branches.id")
         ->leftJoin("csos", "submissions.cso_id", "=", "csos.id")
@@ -1639,6 +1702,7 @@ class SubmissionController extends Controller
             "references.province AS province_id",
             "raja_ongkir__cities.province AS province",
             "references.city AS city_id",
+            "references.online_signature",
             DB::raw("CONCAT(raja_ongkir__cities.type, ' ', raja_ongkir__cities.city_name) AS city")
         )
         ->leftJoin(
@@ -1694,7 +1758,8 @@ class SubmissionController extends Controller
             "reference_souvenirs.order_id AS order_id",
             "reference_souvenirs.prize_id AS prize_id",
             "reference_souvenirs.status_prize AS status_prize",
-            "reference_souvenirs.delivery_status_prize AS delivery_status_prize"
+            "reference_souvenirs.delivery_status_prize AS delivery_status_prize",
+            "reference_souvenirs.wakimart_link"
         )
         ->leftJoin(
             "reference_souvenirs",

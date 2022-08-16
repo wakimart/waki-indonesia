@@ -75,6 +75,45 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-order']);
         });
 
+        //-- UPDATE ORDER STATUS --//
+        Gate::define('change-status_order', function ($user) {
+            return $user->hasAccess(['change-status_order']);
+        });
+        Gate::define('change-status_order_process', function ($user) {
+            return $user->hasAccess(['change-status_order_process']);
+        });
+        Gate::define('change-status_order_delivery', function ($user) {
+            return $user->hasAccess(['change-status_order_delivery']);
+        });
+        Gate::define('change-status_order_success', function ($user) {
+            return $user->hasAccess(['change-status_order_success']);
+        });
+        Gate::define('change-status_order_reject', function ($user) {
+            return $user->hasAccess(['change-status_order_reject']);
+        });
+
+        //-- UPDATE ORDER STATUS --//
+        Gate::define('change-status_payment', function ($user) {
+            return $user->hasAccess(['change-status_payment']);
+        });
+        Gate::define('change-status_payment_verified', function ($user) {
+            return $user->hasAccess(['change-status_payment_verified']);
+        });
+        Gate::define('change-status_payment_rejected', function ($user) {
+            return $user->hasAccess(['change-status_payment_rejected']);
+        });
+
+        //-- ORDER REPORT --//
+        Gate::define('browse-order_report', function ($user) {
+            return $user->hasAccess(['browse-order_report']);
+        });
+        Gate::define('browse-order_report_branch', function ($user) {
+            return $user->hasAccess(['browse-order_report_branch']);
+        });
+        Gate::define('browse-order_report_cso', function ($user) {
+            return $user->hasAccess(['browse-order_report_cso']);
+        });
+
         //-- HOME SERVICE --//
         Gate::define('add-home_service', function ($user) {
             return $user->hasAccess(['add-home_service']);
@@ -90,6 +129,61 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('delete-home_service', function ($user) {
             return $user->hasAccess(['delete-home_service']);
+        });
+        Gate::define('acc-view-home_service', function ($user) {
+            return $user->hasAccess(['acc-view-home_service']);
+        });
+        Gate::define('acc-reschedule-home_service', function ($user) {
+            return $user->hasAccess(['acc-reschedule-home_service']);
+        });
+        Gate::define('acc-cancel-home_service', function ($user) {
+            return $user->hasAccess(['acc-cancel-home_service']);
+        });
+
+        //-- AREA HOME SERVICE --//
+        Gate::define('browse-area_home_service', function ($user) {
+            return $user->hasAccess(['browse-area_home_service']);
+        });
+
+        //-- Absent Off --//
+        Gate::define('add-absent_off', function ($user) {
+            return $user->hasAccess(['add-absent_off']);
+        });
+        Gate::define('browse-absent_off', function ($user) {
+            return $user->hasAccess(['browse-absent_off']);
+        });
+        Gate::define('detail-absent_off', function ($user) {
+            return $user->hasAccess(['detail-absent_off']);
+        });
+        Gate::define('edit-absent_off', function ($user) {
+            return $user->hasAccess(['edit-absent_off']);
+        });
+        Gate::define('delete-absent_off', function ($user) {
+            return $user->hasAccess(['delete-absent_off']);
+        });
+        Gate::define('browse-acc_absent_off', function ($user) {
+            return $user->hasAccess(['browse-acc_absent_off']);
+        });
+        Gate::define('acc-view-spv_absent_off', function ($user) {
+            return $user->hasAccess(['acc-view-spv_absent_off']);
+        });
+        Gate::define('acc-view-coor_absent_off', function ($user) {
+            return $user->hasAccess(['acc-view-coor_absent_off']);
+        });
+        Gate::define('acc-absent_off', function ($user) {
+            return $user->hasAccess(['acc-absent_off']);
+        });
+        Gate::define('acc-spv_absent_off', function ($user) {
+            return $user->hasAccess(['acc-spv_absent_off']);
+        });
+        Gate::define('acc-reject_spv_absent_off', function ($user) {
+            return $user->hasAccess(['acc-reject_spv_absent_off']);
+        });
+        Gate::define('acc-coor_absent_off', function ($user) {
+            return $user->hasAccess(['acc-coor_absent_off']);
+        });
+        Gate::define('acc-reject_coor_absent_off', function ($user) {
+            return $user->hasAccess(['acc-reject_coor_absent_off']);
         });
 
         //-- CSO --//
@@ -162,6 +256,64 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-promo']);
         });
 
+        //-- TYPE CUSTOMER --//
+        Gate::define('add-type_customer', function ($user) {
+            return $user->hasAccess(['add-type_customer']);
+        });
+        Gate::define('browse-type_customer', function ($user) {
+            return $user->hasAccess(['browse-type_customer']);
+        });
+        Gate::define('edit-type_customer', function ($user) {
+            return $user->hasAccess(['edit-type_customer']);
+        });
+        Gate::define('delete-type_customer', function ($user) {
+            return $user->hasAccess(['delete-type_customer']);
+        });
+
+        //-- BANK --//
+        Gate::define('add-bank', function ($user) {
+            return $user->hasAccess(['add-bank']);
+        });
+        Gate::define('browse-bank', function ($user) {
+            return $user->hasAccess(['browse-bank']);
+        });
+        Gate::define('edit-bank', function ($user) {
+            return $user->hasAccess(['edit-bank']);
+        });
+        Gate::define('delete-bank', function ($user) {
+            return $user->hasAccess(['delete-bank']);
+        });
+
+        //-- DATA SOURCING --//
+        Gate::define('add-data_sourcing', function ($user) {
+            return $user->hasAccess(['add-data_sourcing']);
+        });
+        Gate::define('browse-data_sourcing', function ($user) {
+            return $user->hasAccess(['browse-data_sourcing']);
+        });
+        Gate::define('edit-data_sourcing', function ($user) {
+            return $user->hasAccess(['edit-data_sourcing']);
+        });
+        Gate::define('delete-data_sourcing', function ($user) {
+            return $user->hasAccess(['delete-data_sourcing']);
+        });
+
+        //-- DATA Therapy --//
+        Gate::define('add-data_therapy', function ($user) {
+            return $user->hasAccess(['add-data_therapy']);
+        });
+        Gate::define('browse-data_therapy', function ($user) {
+            return $user->hasAccess(['browse-data_therapy']);
+        });
+        Gate::define('detail-data_therapy', function ($user) {
+            return $user->hasAccess(['detail-data_therapy']);
+        });
+        Gate::define('edit-data_therapy', function ($user) {
+            return $user->hasAccess(['edit-data_therapy']);
+        });
+        Gate::define('delete-data_therapy', function ($user) {
+            return $user->hasAccess(['delete-data_therapy']);
+        });
 
         //-- REPORT --//
 
@@ -312,6 +464,28 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(["delete-service"]);
         });
 
+        //-- Technician Schedule --//
+        // Add Technician Schedule
+        Gate::define("add-technician_schedule", function ($user) {
+            return $user->hasAccess(["add-technician_schedule"]);
+        });
+        // Browse Technician Schedule
+        Gate::define("browse-technician_schedule", function ($user) {
+            return $user->hasAccess(["browse-technician_schedule"]);
+        });
+        // View detail Technician Schedule
+        Gate::define("detail-technician_schedule", function ($user) {
+            return $user->hasAccess(["detail-technician_schedule"]);
+        });
+        // Edit Technician Schedule
+        Gate::define("edit-technician_schedule", function ($user) {
+            return $user->hasAccess(["edit-technician_schedule"]);
+        });
+        // Delete Technician Schedule
+        Gate::define("delete-technician_schedule", function ($user) {
+            return $user->hasAccess(["delete-technician_schedule"]);
+        });
+
         //-- SUBMISSION --//
         // Add submission
         Gate::define("add-submission", function ($user) {
@@ -408,6 +582,22 @@ class AuthServiceProvider extends ServiceProvider
         // Reject status
         Gate::define("change-status-checkout-personalhomecare", function ($user) {
             return $user->hasAccess(["change-status-checkout-personalhomecare"]);
+        });
+        // Verified status
+        Gate::define("change-status-verified-personalhomecare", function ($user) {
+            return $user->hasAccess(["change-status-verified-personalhomecare"]);
+        });
+        // Reschedule status
+        Gate::define("acc-reschedule-personalhomecare", function ($user) {
+            return $user->hasAccess(["acc-reschedule-personalhomecare"]);
+        });
+        // Extend status
+        Gate::define("acc-extend-personalhomecare", function ($user) {
+            return $user->hasAccess(["acc-extend-personalhomecare"]);
+        });
+        // Product status
+        Gate::define("change-status-product-personalhomecare", function ($user) {
+            return $user->hasAccess(["change-status-product-personalhomecare"]);
         });
     }
 }

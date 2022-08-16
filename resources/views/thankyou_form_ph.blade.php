@@ -144,9 +144,11 @@
         <hr>
         
         <div class="row justify-content-center mt-5">
-            <h3 class="text-center" style="font-size: 78px; font-family: 'Poppins', sans-serif; font-weight: 500; color: #63a4ff;">
-                Terima Kasih!
-            </h3>
+            <h4 class="text-center" style="font-size: 48px; font-family: 'Poppins', sans-serif; font-weight: 500; color: #f0bc5e;">
+            <span><img class="img-fluid" style="margin-right: 15px; width: 60px; vertical-align: text-center;" src="{{asset('sources/confetti.png')}}"></span>
+                Terima Kasih Bpk/Ibu {{ $personalhomecare['name'] }}
+                <span><img class="img-fluid" style="margin-right: 15px; width: 60px; vertical-align: text-center;" src="{{asset('sources/confetti.png')}}"></span>
+            </h4>
         </div>
         <div class="row justify-content-center">
             <p class="text-center" style="font-size: 18px; color: #000; font-weight: 500;">
@@ -185,7 +187,7 @@
                     <img style="margin-right: 15px; width: 120px;" src="{{asset('sources/ph-form.png')}}"> 
                     <span>
                     <p style="margin-top: 2em; margin-bottom: 0.7em; font-weight: bold;">TUJUAN :</p>
-                    <p>Visi WAKi adalah Sehat Bersama WAKi menuju kehidupan yang lebih baik. Dengan kondisi seperti ini, program ini dibuat khusus untuk meminimalisirkan adanya kontak fisik secara langsung. </p>
+                    <p>Visi WAKi adalah Happy With WAKi menuju kehidupan yang lebih baik. Dengan kondisi seperti ini, program ini dibuat khusus untuk meminimalisirkan adanya kontak fisik secara langsung. </p>
                     </span>
                 </div>
             </div>
@@ -200,23 +202,23 @@
                     <tbody class="sk">
                         <tr>
                             <td>1.</td>
-                            <td>Program pinjamin produk 5 hari tidak dipungut biaya apapun</td>
+                            <td>Program pinjamin produk 5 hari (PP5H) tidak dipungut biaya apapun.</td>
                         </tr>
                         <tr>
                             <td>2.</td>
-                            <td>Sudah menjadi member WAKimart</td>
+                            <td>Sudah menjadi member WAKimart dan minimal berusia 35 tahun.</td>
                         </tr>
                         <tr>
                             <td>3.</td>
-                            <td>Minimal berusia 35 tahun</td>
+                            <td>Apabila ada kekurangan, kehilangan ataupun kerusakan pada produk saat pengembalian, berarti membeli barang dengan harga normal sesuai ketentuan yang ada.</td>
                         </tr>
                         <tr>
                             <td>4.</td>
-                            <td>Biaya akan dikenakan kepada konsumen jika ada sparepart ataupun kerusakan di luar persetujuan</td>
+                            <td>Kekurangan aksesoris produk harap dikembalikan paling lambat 7 hari setelah program PP5H berakhir.</td>
                         </tr>
                         <tr>
                             <td>5.</td>
-                            <td>Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya</td>
+                            <td>Syarat dan Ketentuan dapat berubah tanpa pemeberitahuan sebelumnya.</td>
                         </tr>
                         <tr>
                             <td>6.</td>

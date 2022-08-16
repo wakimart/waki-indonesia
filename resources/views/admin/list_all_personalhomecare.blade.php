@@ -5,17 +5,28 @@ $menu_item_second = "list_all";
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+    integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
 <style type="text/css">
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
+    .center {text-align: center;}
+    .right {text-align: right;}
 
     .table th img, .table td img {
         border-radius: 0% !important;
+    }
+    .select2-selection__rendered {
+        line-height: 45px !important;
+    }
+    .select2-container .select2-selection--single {
+        height: 45px !important;
+    }
+    .select2-container--default
+    .select2-selection--single
+    .select2-selection__arrow {
+        top: 10px;
     }
 
 </style>
@@ -62,6 +73,10 @@ $menu_item_second = "list_all";
                                 {!! $filter_status && $_GET["filter_status"] === "new" ? "selected" : "" !!}>
                                 New
                             </option>
+                            <option value="verified"
+                                {!! $filter_status && $_GET["filter_status"] === "verified" ? "selected" : "" !!}>
+                                Verified
+                            </option>
                             <option value="approve_out"
                                 {!! $filter_status && $_GET["filter_status"] === "approve_out" ? "selected" : "" !!}>
                                 Approve Out
@@ -69,6 +84,10 @@ $menu_item_second = "list_all";
                             <option value="process"
                                 {!! $filter_status && $_GET["filter_status"] === "process" ? "selected" : "" !!}>
                                 On Process
+                            </option>
+                            <option value="process_extend"
+                                {!! $filter_status && $_GET["filter_status"] === "process_extend" ? "selected" : "" !!}>
+                                On Process Extend
                             </option>
                             <option value="waiting_in"
                                 {!! $filter_status && $_GET["filter_status"] === "waiting_in" ? "selected" : "" !!}>
@@ -86,10 +105,15 @@ $menu_item_second = "list_all";
                         <div class="validation"></div>
                     </div>
                 </div>
+
                 <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
                     <div class="form-group">
-                        <label for="">Search By Name / Phone</label>
-                        <input class="form-control" id="filter_name_phone" name="filter_name_phone" placeholder="Search By Name / Phone" value="{{ isset($_GET['filter_name_phone']) ? $_GET['filter_name_phone'] : '' }}">
+                        <label for="">Search By Schedule</label>
+                        <input type="date"
+                            class="form-control"
+                            id="filter_schedule"
+                            name="filter_schedule"
+                            value="{{ isset($_GET['filter_schedule']) ? $_GET['filter_schedule'] : '' }}">
                         <div class="validation"></div>
                     </div>
                 </div>
@@ -134,23 +158,45 @@ $menu_item_second = "list_all";
                 <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
                     <div class="form-group">
                         <label for="">Search By Product Code</label>
-                        <input class="form-control" id="filter_product_code" name="filter_product_code" placeholder="Search By Product Code" value="{{ isset($_GET['filter_product_code']) ? $_GET['filter_product_code'] : '' }}">
+                        <input class="form-control"
+                            id="filter_product_code"
+                            name="filter_product_code"
+                            placeholder="Search By Product Code"
+                            value="{{ isset($_GET['filter_product_code']) ? $_GET['filter_product_code'] : '' }}">
                         <div class="validation"></div>
                     </div>
                 </div>
 
                 <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
                     <div class="form-group">
-                        <label for="">Search By Schedule</label>
-                        <input type="date" class="form-control" id="filter_schedule" name="filter_schedule" value="{{ isset($_GET['filter_schedule']) ? $_GET['filter_schedule'] : '' }}">
+                        <label for="">Search By Customer Name</label>
+                        <input class="form-control"
+                            id="filter_name"
+                            name="filter_name"
+                            placeholder="Search By Customer Name"
+                            value="{{ isset($_GET['filter_name']) ? $_GET['filter_name'] : '' }}">
                         <div class="validation"></div>
                     </div>
                 </div>
 
                 <div class="col-xs-6 col-sm-6" style="padding: 0; display: inline-block">
                     <div class="form-group">
-                        <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-                        <button id="btn-filter_reset" type="button" class="btn btn-gradient-danger m-1" name="filter_reset" value="-"><span class="mdi mdi-refresh"></span> Reset Filter</button>
+                        <button id="btn-filter"
+                            type="button"
+                            class="btn btn-gradient-primary m-1"
+                            name="filter"
+                            value="-">
+                            <span class="mdi mdi-filter"></span>
+                            Apply Filter
+                        </button>
+                        <button id="btn-filter_reset"
+                            type="button"
+                            class="btn btn-gradient-danger m-1"
+                            name="filter_reset"
+                            value="-">
+                            <span class="mdi mdi-refresh"></span>
+                            Reset Filter
+                        </button>
                     </div>
                 </div>
             </div>
@@ -166,36 +212,74 @@ $menu_item_second = "list_all";
                             <table class="table table-bordered" id="myTable">
                                 <thead>
                                     <tr>
+                                        <th>Created Date</th>
                                         <th>Schedule Date</th>
                                         <th>Customer Name</th>
                                         <th>Product Code</th>
                                         <th>Branch - CSO</th>
                                         <th>Status</th>
-                                        <th colspan="3" class="center">View/Edit/Delete</th>
+                                        <th colspan="4" class="center">View/Edit/Reschedule/Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($personalhomecares as $personalhomecare)
                                         <tr>
-                                            <td>{{ date("d/m/Y", strtotime($personalhomecare->schedule)) }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ date("d/m/Y", strtotime($personalhomecare->schedule . "+5 days")) }}</td>
-                                            <td>{{ $personalhomecare->name }}</td>
-                                            <td>{{ $personalhomecare->personalHomecareProduct->code }}</td>
-                                            <td>{{ $personalhomecare->branch->code }} - {{ $personalhomecare->cso->code }} ({{ $personalhomecare->cso->name }})</td>
-                                            <td>{{ strtoupper($personalhomecare->status) }}</td>
+                                            <td>
+                                                {{ date("d/m/Y H:m:i", strtotime($personalhomecare->created_at)) }}
+                                            </td>
+                                            <td>
+                                                {{ date("d/m/Y", strtotime($personalhomecare->schedule)) }}
+                                                <i class="mdi mdi-arrow-right-bold"
+                                                    style="font-size: 18px; color: #fed713;">
+                                                </i>
+                                                {{ $personalhomecare->status == "process_extend" ? date("d/m/Y",
+                                                    strtotime($personalhomecare->schedule . "+8 days")) : date("d/m/Y",
+                                                    strtotime($personalhomecare->schedule . "+5 days")) }}
+                                            </td>
+                                            <td>
+                                                {{ $personalhomecare->name }}
+                                            </td>
+                                            <td>
+                                                {{ $personalhomecare->personalHomecareProduct->code }}
+                                            </td>
+                                            <td>
+                                                {{ $personalhomecare->branch->code }}
+                                                -
+                                                {{ $personalhomecare->cso->code }}
+                                                ({{ $personalhomecare->cso->name }})
+                                            </td>
+                                            <td>
+                                                {{ strtoupper($personalhomecare->status) }}
+                                            </td>
                                             <td class="center">
                                                 <a href="{{ route('detail_personal_homecare', ['id' => $personalhomecare['id']]) }}">
-                                                    <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                    <i class="mdi mdi-eye"
+                                                        style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
                                             <td class="center">
                                                 @if($personalhomecare->status != "rejected" && $personalhomecare->status != "done")
                                                     <a href="{{ route('edit_personal_homecare', ['id' => $personalhomecare['id']]) }}">
-                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                        <i class="mdi mdi-border-color"
+                                                            style="font-size: 24px; color: #fed713;"></i>
                                                     </a>
                                                 @endif
                                             </td>
                                             <td class="center">
-                                                @if($personalhomecare->status == "rejected" || $personalhomecare->status == "new")
+                                                @if($personalhomecare->status == "approve_out")
+                                                    <a href="#modal-reschedule"
+                                                        data-toggle="modal"
+                                                        data-target="#modal-reschedule"
+                                                        onclick="submitReschedule(this)"
+                                                        data-id="{{ $personalhomecare->id }}"
+                                                        data-schedule="{{ $personalhomecare->schedule }}">
+                                                        <i class="mdi mdi-calendar-text menu-icon"
+                                                            style="font-size: 24px; color: #34cd7d;"></i>
+                                                    </a>
+                                                @endif
+                                            </td>
+                                            <td class="center">
+                                                @if($personalhomecare->status != "done")
                                                     <a class="btn-delete disabled"
                                                         data-toggle="modal"
                                                         href="#deleteDoModal"
@@ -210,7 +294,7 @@ $menu_item_second = "list_all";
                                 </tbody>
                             </table>
                             <br>
-                            {{ $personalhomecares->links() }}
+                            {{ $personalhomecares->appends($url)->links() }}
                         </div>
                     </div>
                 </div>
@@ -218,6 +302,7 @@ $menu_item_second = "list_all";
         </div>
     </div>
     <!-- partial -->
+
     <!-- Modal Delete -->
     <div class="modal fade"
         id="deleteDoModal"
@@ -236,13 +321,21 @@ $menu_item_second = "list_all";
                 </div>
                 <div class="modal-body">
                     <h5 style="text-align:center;">
-                        Are you sure to delete this product?
+                        Are you sure to Acc Cancel this Personal Homecare?
                     </h5>
+                    <textarea class="form-control mt-3"
+                        id="cancel_desc"
+                        name="cancel_desc"
+                        form="frmDelete"
+                        rows="4"
+                        placeholder="Cancel Description (Alasan Cancel)"
+                        required >
+                    </textarea>
                 </div>
                 <div class="modal-footer">
                     <form id="frmDelete"
                         method="post"
-                        action="{{ route('delete_personal_homecare') }}">
+                        action="{{ route('acc_cancel_personal_homecare') }}">
                         @csrf
                         <input type="hidden" name="id" id="id-delete" />
                         <button type="submit"
@@ -256,21 +349,108 @@ $menu_item_second = "list_all";
         </div>
     </div>
     <!-- End Modal Delete -->
+
+    <!-- Modal Reschedule -->
+    <div class="modal fade"
+        id="modal-reschedule"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        When you want to reschedule ? Ask for ACC
+                    </h5>
+                    <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="frmReschedule"
+                    method="post"
+                    action="{{ route('reschedule_personal_homecare') }}">
+                    @csrf
+                    <input type="hidden" name="id" id="id-reschedule" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="date">Reschedule Date</label>
+                            <input type="date"
+                                class="form-control"
+                                id="reschedule_date"
+                                name="reschedule_date"
+                                value=""
+                                required />
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="reschedule_reason">Reschedule Reason</label>
+                            <textarea class="form-control"
+                                id="reschedule_reason"
+                                name="reschedule_reason"
+                                minlength="80"
+                                maxlength="200"
+                                rows="3"
+                                placeholder="[Please explain your reason minimal 80 character]"
+                                required>
+                            </textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit"
+                            class="btn btn-gradient-primary mr-2">
+                            Yes
+                        </button>
+                        <button type="button"
+                            class="btn btn-gradient-danger"
+                            data-dismiss="modal">
+                            No
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Reschedule -->
 </div>
 @endsection
 
 @section("script")
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+    integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+    defer></script>
 <script type="application/javascript">
+document.addEventListener("DOMContentLoaded", function () {
+    $("#filter_branch").select2();
+    $("#filter_cso").select2();
+    $("#filter_status").select2();
+});
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
- 
+
+function submitReschedule(e) {
+    document.getElementById("id-reschedule").value = e.dataset.id;
+    document.getElementById("reschedule_date").value = e.dataset.schedule;
+}
+
 $(document).ready(function (e) {
+    @if(isset($_GET['pending_reschedule']) && isset($_GET['id_phc']))
+        var get_id_phc = {{$_GET['id_phc']}};
+        document.getElementById("id-reschedule").value = get_id_phc;
+        $("#modal-reschedule").modal("show");
+    @endif
+
     $("#btn-filter").click(function (e) {
         var urlParamArray = new Array();
         var urlParamStr = "";
-        if($('#filter_name_phone').val() != ""){
-            urlParamArray.push("filter_name_phone=" + $('#filter_name_phone').val());
+        if($('#filter_name').val() != ""){
+            urlParamArray.push("filter_name=" + $('#filter_name').val());
         }
         if($('#filter_status').val() != ""){
             urlParamArray.push("filter_status=" + $('#filter_status').val());
@@ -287,7 +467,6 @@ $(document).ready(function (e) {
         if($('#filter_schedule').val() != ""){
             urlParamArray.push("filter_schedule=" + $('#filter_schedule').val());
         }
-
         for (var i = 0; i < urlParamArray.length; i++) {
             if (i === 0) {
                 urlParamStr += "?" + urlParamArray[i]
@@ -301,7 +480,7 @@ $(document).ready(function (e) {
     $("#btn-filter_reset").click(function (e) {
          window.location.href = "{{route('list_all_phc')}}";
     });
-}); 
+});
 
 </script>
 @endsection

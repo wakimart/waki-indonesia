@@ -92,7 +92,7 @@
     <div class="container">
         <div class="row justify-content-center no-gutters">
             <h2 style="margin: 0 5px 0 5px;">
-               Program BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI
+               Program BERBAGI KASIH SAYANG HAPPY WITH WAKI
             </h2>
         </div>
         <h5 style="text-align: center;">{{ $submission['code'] }}</h5>
@@ -298,7 +298,7 @@
                             <p class="pInTable">1. Harus sudah menjadi member WAKimart.</p>
                             <p class="pInTable">2. Minimal usia 35 tahun per keluarga dari teman atau saudara.</p>
                             <p class="pInTable">3. Memberikan screenshot bukti appointment (share Link) telah dijadwalkan untuk kunjungan (minimal 1x).</p>
-                            <p class="pInTable">4. Program Sehat bersama WAKi harus diisi lengkap dan benar adanya.</p>
+                            <p class="pInTable">4. Program Happy With WAKi harus diisi lengkap dan benar adanya.</p>
                             <p class="pInTable">5. Voucher belanja dan produk tidak dapat ditukarkan dalam bentuk tunai.</p>
                             <p class="pInTable">6. Pembelanjaan menggunakan E-Voucher harus lebih dari nilai E-Voucher.</p>
                             <p class="pInTable">7. Syarat dan ketentuan dapat berubah tanpa pemberitahuan sebelumnya.</p>

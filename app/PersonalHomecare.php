@@ -18,10 +18,15 @@ class PersonalHomecare extends Model
         "branch_id",
         "cso_id",
         "id_card",
+        "member_wakimart",
         "ph_product_id",
         "checklist_out",
         "checklist_in",
         "active",
+        "is_extend",
+        "reschedule_date",
+        "extend_reason",
+        "reschedule_reason",
     ];
 
     public function branch()
@@ -64,5 +69,10 @@ class PersonalHomecare extends Model
     public function getDistrictName()
     {
         return RajaOngkir_Subdistrict::where("subdistrict_id", $this->subdistrict_id)->first()->subdistrict_name;
+    }
+
+    public function homeservice()
+    {
+        return $this->hasMany('App\HomeService');
     }
 }

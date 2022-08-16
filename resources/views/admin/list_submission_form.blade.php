@@ -18,15 +18,17 @@ if (isset($_GET["filter_type"])) {
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
-
     .select2-container--default
     .select2-selection--single
     .select2-selection__arrow {
         top: 10px;
+    }
+    .btn-delete {
+      background: transparent;
+      border: 0;
     }
 </style>
 @endsection
@@ -152,7 +154,7 @@ if (isset($_GET["filter_type"])) {
             <div class="card">
                 <div class="card-body">
                     <h5 style="margin-bottom: 0.5em;">
-                        Total: {{ $submissions->total() }} data
+                        Total: {{ $submissions->total() }} data <b>{{$_GET["filter_type"]}}</b>
                     </h5>
                     <div class="table-responsive"
                         style="border: 1px solid #ebedf2;">
@@ -176,7 +178,28 @@ if (isset($_GET["filter_type"])) {
                             </thead>
                             <tbody>
                                 @foreach($submissions as $key => $submission)
-                                    <tr>
+                                    @php
+                                        //khusus admin KEzia
+                                        $submission_done = "";
+                                        if(strtoupper($submission->type) == "MGM" && Auth::user()->id == 2){
+                                            foreach ($submission->reference as $perRef) {
+                                                if($perRef->reference_souvenir['status_prize'] == 'success'){
+                                                    $submission_done = "background-color: #beffc9;";
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        elseif(strtoupper($submission->type) == "REFERENSI"){
+                                            if($submission->status == "new"){
+                                                $submission_done = "background-color: #cdedf7;";
+                                            }
+                                            elseif($submission->status == "rejected"){
+                                                $submission_done = "background-color: #ffdbdb;";
+                                            }
+                                        }
+                                    @endphp
+
+                                    <tr style="{{ $submission_done }}">
                                         <td class="text-right">{{ $i }}</td>
                                         <td>
                                             {{ date("d F Y", strtotime($submission->created_at)) }}
@@ -211,11 +234,11 @@ if (isset($_GET["filter_type"])) {
                                         {{-- @endcan --}}
                                         {{-- @can('delete-submission') --}}
                                             <td class="text-center">
-                                                <button class="btn-delete"
+                                                <button class="btn-delete p-0"
                                                     data-toggle="modal"
                                                     data-target="#deleteDoModal"
                                                     value="{{ route('delete_submission_form', ['id' => $submission->id]) }}">
-                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #f94569;"></i>
                                                 </button>
                                             </td>
                                         {{-- @endcan --}}
@@ -273,6 +296,8 @@ if (isset($_GET["filter_type"])) {
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script type="application/javascript">
+
+
 document.addEventListener("DOMContentLoaded", function () {
     try {
         $("#filter-cso").select2();

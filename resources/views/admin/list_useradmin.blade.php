@@ -104,11 +104,11 @@ $menu_item_second = "list_user";
                                                 </a>
                                             </td>
                                             <td style="text-align: center;">
-                                                <a href="{{ route('delete_useradmin', ['id' => $user['id']]) }}"
+                                                <a class="btn-delete disabled"
                                                     data-toggle="modal"
-                                                    data-target="#deleteDoModal"
-                                                    class="btnDelete">
-                                                    <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
+                                                    href="#deleteDoModal"
+                                                    value="{{ route('delete_useradmin', ['id' => $user->id]) }}">
+                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                 </a>
                                             </td>
                                         </tr>
@@ -124,5 +124,38 @@ $menu_item_second = "list_user";
             </div>
         </div>
     </div>
+    <!-- Modal Delete -->
+	<div class="modal fade" id="deleteDoModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          	<div class="modal-content">
+            	<div class="modal-header">
+              		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                		<span aria-hidden="true">&times;</span>
+              		</button>
+            	</div>
+            	<div class="modal-body">
+              		<h5 style="text-align:center;">Are You Sure to Delete this Admin ?</h5>
+            	</div>
+            	<div class="modal-footer">
+            		<form id="frmDelete" method="post" action="">
+                        @csrf
+                    	<button type="submit" class="btn btn-gradient-danger mr-2">Yes</button>
+                	</form>
+              		<button class="btn btn-light" data-dismiss="modal">No</button>
+            	</div>
+          	</div>
+        </div>
+    </div>
+    <!-- End Modal Delete -->
 </div>
+@endsection
+
+@section('script')
+<script>
+$(document).ready(function() {
+    $(".btn-delete").click(function (e) {
+        $("#frmDelete").attr("action",  $(this).attr('value'));
+    });
+});
+</script>
 @endsection

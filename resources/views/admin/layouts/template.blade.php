@@ -12,12 +12,13 @@
     <!-- Scripts -->
     <script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
     <script src="{{ 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js' }}"></script>
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
     <script src="{{ asset('css/lib/fullcalendar/main.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/vis-timeline@latest/standalone/umd/vis-timeline-graph2d.min.js"></script>
     <script src="https://cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -84,6 +85,15 @@
                             $("#txt-notification").html("<div class=\"alert alert-success\">{{ session()->get('message')}}</div>");
                         });
                     </script>
+                    @endif
+                    <!-- wakimart link alert -->
+                    @if($errors->any())
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("#modal-Notification").modal("show");
+                                $("#txt-notification").html("<div class=\"alert alert-danger\">{{ $errors }}</div>");
+                            });
+                        </script>
                     @endif
 
                     <ul class="navbar-nav navbar-nav-right">
@@ -226,18 +236,16 @@
     @yield('script')
 
     <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.min.js"></script>
-    <script src="https://github.com/niklasvh/html2canvas/releases/download/v1.0.0-alpha.12/html2canvas.min.js"></script>
     <script src="{{ asset('css/vendors/js/vendor.bundle.base.js') }}"></script>
-    {{-- <script src="{{ asset('css/vendors/chart.js/Chart.min.js') }}"></script> --}}
 
     <script src="{{ asset('js/off-canvas.js') }}"></script>
     <script src="{{ asset('js/hoverable-collapse.js') }}"></script>
     <script src="{{ asset('js/misc.js') }}"></script>
 
-    {{-- <script src="{{ asset('js/dashboard.js') }}"></script> --}}
     <script src="{{ asset('js/todolist.js') }}"></script>
 
     <script src="{{asset('js/file-upload.js')}}"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             $("#current-password").on("keyup", function () {

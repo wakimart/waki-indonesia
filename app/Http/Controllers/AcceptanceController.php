@@ -27,7 +27,7 @@ class AcceptanceController extends Controller
 {
     public function create()
     {
-        $products = Product::all();
+        $products = Product::where('active', true)->get();
         $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
     	return view('admin.add_acceptance', compact('products', 'branches', 'csos'));
@@ -137,7 +137,12 @@ class AcceptanceController extends Controller
 
     public function edit($id){
         $acceptance = Acceptance::find($id);
-        $products = Product::all();
+        $products = Product::where('active', true)
+            ->orWhereIn('id', [
+                $acceptance->newproduct_id,
+                $acceptance->product_addons_id,
+                $acceptance->oldproduct_id,
+            ])->get();
         $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::all();
         // dd(date_format(date_create($acceptance['upgrade_date']), 'm-d-Y'));
@@ -956,5 +961,38 @@ class AcceptanceController extends Controller
                 return response()->json($data, 500);
             }
         }
+    }
+
+    /**
+     * add bill do
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function addBillOrder(Request $request, $id)
+    {
+        $acceptance = Acceptance::find($id);
+        $acceptance->bill_do = $request->bill_do;
+        $acceptance->update();
+
+        $historyAcceptance = [];
+        $user_id = Auth::user()["id"];
+        $historyAcceptance["type_menu"] = "Acceptance";
+        $historyAcceptance["method"] = "Update";
+        $historyAcceptance["meta"] = json_encode(
+            [
+                "user" => $user_id,
+                "createdAt" => date("Y-m-d H:i:s"),
+                "dataChange" => $acceptance->getChanges(),
+            ]
+        );
+        $historyAcceptance["user_id"] = $user_id;
+        $historyAcceptance["menu_id"] = $id;
+        HistoryUpdate::create($historyAcceptance);
+
+        return redirect()->route('detail_acceptance_form', $id)->with('success', 'Bill DO successfully added');
     }
 }

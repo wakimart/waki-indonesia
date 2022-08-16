@@ -7,23 +7,12 @@ $menu_item_second = "list_acceptance_form";
 <style type="text/css">
     /*-- mobile --*/
     @media (max-width: 768px){
-        #desktop {
-            display: none;
-        }
-
-        #mobile {
-            display: block;
-        }
+        #desktop {display: none;}
+        #mobile {display: block;}
     }
-
     @media (min-width: 768px){
-        #desktop {
-            display: block;
-        }
-
-        #mobile {
-            display: none;
-        }
+        #desktop {display: block;}
+        #mobile {display: none; }
     }
 </style>
 @endsection
@@ -169,7 +158,7 @@ $menu_item_second = "list_acceptance_form";
                                             {{ $acceptance['other_product'] == null ? $acceptance->oldproduct['code'] : $acceptance['other_product'] }} <i class="mdi mdi-arrow-right-bold" style="font-size: 18px; color: #fed713;"></i> {{ $acceptance->newproduct['code'] }}
                                         </td>
                                         <td>
-                                            {{ $acceptance->branch->code }} - {{ $acceptance->cso->code }}
+                                            {{ $acceptance->branch->code }} <br> {{ $acceptance->cso->code }} - {{ $acceptance->cso->name }}
                                         </td>
                                         <td>
                                             @if (strtolower($acceptance['status']) == "new")

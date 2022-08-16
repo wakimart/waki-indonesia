@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AbsentOff;
 use App\HomeService;
 use App\Order;
 use App\RegistrationPromotion;
@@ -26,12 +27,20 @@ class DashboardController extends Controller
     {
         try {
             // Update role user yg baru
-            $role = Role::where('slug', Auth::user()->roles[0]['slug'])->get();
+            $role = Role::where('slug', Auth::user()->roles[0]['slug'])->first();
             $users = User::find(Auth::user()->id);
-            $check_permission = Str::contains($users->permissions, 'personalhomecare');
 
-            if (!$check_permission) {
-                $users->permissions = $role[0]['permissions'];
+            $arr_role = (array) json_decode($role->permissions);
+            $arr_user_role = (array) json_decode($users->permissions);
+            $role_key = array_keys($arr_role);
+            $user_role_key = array_keys($arr_user_role);
+
+            $check_permission = array_diff($role_key, $user_role_key);
+            if (count($check_permission) > 0) {
+                foreach ($check_permission as $key => $val) {
+                    $arr_user_role[$val] = $arr_role[$val];
+                }
+                $users->permissions = json_encode($arr_user_role);
                 $users->save();
             }
         } catch (Exception $e) {
@@ -40,16 +49,17 @@ class DashboardController extends Controller
         }
 
         // Bulan ini
-        $startMonth = date("Y-m-01 00:00:00");
-        $endMonth = date("Y-m-t 23:59:59");
+        $startMonth = date("Y-m-01");
+        $endMonth = date("Y-m-t");
 
         // Hari ini
         $startToday = date("Y-m-d 00:00:00");
         $endToday = date("Y-m-d 23:59:59");
 
-        $order = Order::select(DB::raw("SUM(total_payment) AS total_payment"))
-        ->whereBetween("created_at", [$startMonth, $endMonth])
+        $order = Order::select(DB::raw("SUM(down_payment) AS total_payment"))
+        ->whereBetween("orderDate", [$startMonth, $endMonth])
         ->where("active", true)
+        ->whereIn('status', ['process', 'delivery', 'success'])
         ->first();
 
         $homeServiceToday = HomeService::select(DB::raw("COUNT(id) AS count"))
@@ -78,7 +88,47 @@ class DashboardController extends Controller
         $refSouvenirs = ReferenceSouvenir::where('is_acc', true)->get();
 
         //khusus untuk personal homecare to acc
-        $personalHomecares = PersonalHomecare::where('active', true)->whereIn('status', ['new', 'waiting_in'])->get();
+        $personalHomecares = [];
+        $personalHomecares['new'] = PersonalHomecare::where([['active', true], ['status', 'new']])
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+        $personalHomecares['verified'] = PersonalHomecare::where([['active', true], ['status', 'verified']])
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+        $personalHomecares['waiting_in'] = PersonalHomecare::where([['active', true], ['status', 'waiting_in']])
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+        $personalHomecares['reschedule_acc'] = PersonalHomecare::where('active', true)
+                        ->whereNotNull('reschedule_date')
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+        $personalHomecares['extend_acc'] = PersonalHomecare::where([['active', true], ['is_extend', true]])
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+        $personalHomecares['cancel_acc'] = PersonalHomecare::where([['active', true], ['is_cancel', true]])
+                        ->orderBy("updated_at", "desc")
+                        ->get();
+
+
+        // $personalHomecares = PersonalHomecare::where('active', true)
+        //                 ->whereIn('status', ['new', 'waiting_in', 'verified'])
+        //                 ->orWhere(function ($q){
+        //                     $q->whereNotNull('reschedule_date');
+        //                 })
+        //                 ->orWhere(function ($q){
+        //                     $q->where('is_extend', true);
+        //                 })
+        //                 ->orderBy("updated_at", "desc")
+        //                 ->get();
+
+        //khusus untuk acc reschedule & delete HS
+        $accRescheduleHS = HomeService::where([['active', true], ['is_acc_resc', true]])->orderBy("updated_at", "desc")->get();
+        $accDeleteHS = HomeService::where([['active', true], ['is_acc', true]])->orderBy("updated_at", "desc")->get();
+
+        $absentOffs["supervisor"] = AbsentOff::where('status', AbsentOff::$status['1'])
+            ->whereNull('supervisor_id')->orderBy('created_at', 'desc')->get();
+        $absentOffs["coordinator"] = AbsentOff::where('status', AbsentOff::$status['1'])
+            ->whereNull('coordinator_id')->orderBy('created_at', 'desc')->get();
 
         return view(
             "admin.dashboard",
@@ -88,7 +138,10 @@ class DashboardController extends Controller
                 "registration",
                 "references",
                 "refSouvenirs",
-                "personalHomecares"
+                "personalHomecares",
+                "accRescheduleHS",
+                "accDeleteHS",
+                "absentOffs"
             )
         );
     }

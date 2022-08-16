@@ -93,7 +93,7 @@
     <div class="container">
         <div class="row justify-content-center no-gutters">
             <h1 style="margin: 0 5px 0 5px;">
-               BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI
+               BERBAGI KASIH SAYANG HAPPY WITH WAKI
             </h2>
             <h2 style="margin: 0 5px 0 5px;">
                Program Member Get Member
@@ -212,7 +212,7 @@
                         <th colspan="2">Produk Hadiah</th>
                     </tr>
                     <tr>
-                        <td width="50%"><li>ECO DISINFECTANT</li></td>
+                        <td width="50%"><li>SMART COOKER 18 IN 1</li></td>
                         {{-- <td width="50%"><li>BEDSHEET</li></td> --}}
                     </tr>
                     {{-- <tr>

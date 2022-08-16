@@ -14,16 +14,25 @@ $menu_item_second = "list_product";
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
-
     .select2-container--default
     .select2-selection--single
     .select2-selection__arrow {
         top: 10px;
     }
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link {
+        color: #111 !important;
+    }
+    .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+        color: #36cd7a !important;
+    }
+    .nav-tabs .nav-link {
+        padding-left: 1.75em;
+        padding-right: 1.75em;
+    }
+
 </style>
 @endsection
 
@@ -69,32 +78,37 @@ $menu_item_second = "list_product";
                                 Select Branch
                             </option>
                             @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}">
+                                <option value="{{ $branch->id }}" {{ isset($url['branch_id']) ? ($url['branch_id'] == $branch['id'] ? 'selected' : '') : '' }}>
                                     {{ $branch->code }} - {{ $branch->name }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
-                </div>
-                <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
                     <div class="form-group">
-                        <label for="product_id">Search By Product</label>
+                        <label for="status">Search By Status</label>
                         <select class="form-control"
-                            id="product_id"
-                            name="product_id"
+                            id="status"
+                            name="status"
                             form="form-search">
-                            <option disabled selected>
-                                Select Product
+                            <option disabled {{ isset($url['status']) ? '' : 'selected' }}>
+                                Select Status
                             </option>
-                            @foreach ($products as $product)
-                                <option value="{{ $product->id }}">
-                                    {{ $product->code }} - {{ $product->name }}
-                                </option>
-                            @endforeach
+                            <option value="pending" {{ isset($url['status']) ? ($url['status'] == 'pending' ? 'selected' : '') : '' }}>
+                                Pending
+                            </option>
+                            <option value="unavailable" {{ isset($url['status']) ? ($url['status'] == 'unavailable' ? 'selected' : '') : '' }}>
+                                Unavailable
+                            </option>
+                            <option value="available" {{ isset($url['status']) ? ($url['status'] == 'available' ? 'selected' : '') : '' }}>
+                                Available
+                            </option>
                         </select>
                     </div>
                 </div>
+                <input type="hidden"
+                    name="product_id"
+                    form="form-search"
+                    value="{{ $url['product_id'] }}" />
                 <div class="col-xs-6 col-sm-6"
                     style="padding: 0; display: inline-block">
                     <div class="form-group">
@@ -109,60 +123,86 @@ $menu_item_second = "list_product";
 
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
+                    <div class="card-header" style="background: none;">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link {{ $url['product_id'] == 4 ? 'active' : ''}}"
+                                    style="font-weight: 500; font-size: 1em;"
+                                    id="one-tab"
+                                    href="{{ route('list_phc_product') }}?product_id=4{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
+                                    aria-controls="One"
+                                    aria-selected="true">
+                                    WK2079
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="card-body">
-                        <h5 style="margin-bottom: 0.5em;">
-                            Total: {{ $phcproducts->total() }}
-                        </h5>
-                        <div class="table-responsive"
-                            style="border: 1px solid #ebedf2;">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center">No.</th>
-                                        <th>Code</th>
-                                        <th>Product Name</th>
-                                        <th class="text-center">Branch</th>
-                                        <th>Status</th>
-                                        <th class="text-center">Edit</th>
-                                        <th class="text-center">Delete</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($phcproducts as $key => $phcproduct)
-                                        <tr>
-                                            <td class="text-right">
-                                                {{ ++$i }}
-                                            </td>
-                                            <td>{{ $phcproduct->code }}</td>
-                                            <td>
-                                                {{ $phcproduct->product->name }}
-                                            </td>
-                                            <td>
-                                                {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
-                                            </td>
-                                            <td>
-                                                {{ $phcproduct->status == 0 ? "Unavailable" : "Available" }}
-                                            </td>
-                                            <td class="text-center">
-                                                <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
-                                                </a>
-                                            </td>
-                                            <td class="text-center">
-                                                <a class="btn-delete"
-                                                    data-toggle="modal"
-                                                    href="#deleteDoModal"
-                                                    onclick="submitDelete(this)"
-                                                    data-id="{{ $phcproduct["id"] }}">
-                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <br>
-                            {{ $phcproducts->links() }}
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show {{ $url['product_id'] == 4 ? 'active' : ''}} p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+                                <h5 style="margin-bottom: 0.5em;">
+                                    Total: {{ $phcproducts->total() }}
+                                </h5>
+                                <div class="table-responsive"
+                                    style="border: 1px solid #ebedf2;">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">No.</th>
+                                                <th>Code</th>
+                                                <th>Product Name</th>
+                                                <th class="text-center">Branch</th>
+                                                <th>Status</th>
+                                                <th class="text-center">View</th>
+                                                <th class="text-center">Edit</th>
+                                                <th class="text-center">Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($phcproducts as $key => $phcproduct)
+                                                @if($phcproduct->product->code == 'WK2079')
+                                                <tr>
+                                                    <td class="text-right">
+                                                        {{ ++$i }}
+                                                    </td>
+                                                    <td>{{ $phcproduct->code }}</td>
+                                                    <td>
+                                                        {{ $phcproduct->product->name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $phcproduct->branch->code }} - {{ $phcproduct->branch->name }}
+                                                    </td>
+                                                    <td>
+                                                        {{ ucwords($phcproduct->status) }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('detail_phc_product', ['id' => $phcproduct['id']]) }}">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{{ route('edit_phc_product', ['id' => $phcproduct['id']]) }}">
+                                                            <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a class="btn-delete"
+                                                            data-toggle="modal"
+                                                            href="#deleteDoModal"
+                                                            onclick="submitDelete(this)"
+                                                            data-id="{{ $phcproduct["id"] }}">
+                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                @endif
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    {{ $phcproducts->appends($url)->links() }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -194,7 +234,7 @@ $menu_item_second = "list_product";
                 <div class="modal-footer">
                     <form id="frmDelete"
                         method="post"
-                        action="">
+                        action="{{ route('delete_phc_product') }}">
                         @csrf
                         <input type="hidden" name="id" id="id-delete" />
                         <button type="submit"
@@ -220,11 +260,11 @@ $menu_item_second = "list_product";
 <script type="application/javascript">
 document.addEventListener("DOMContentLoaded", function () {
     $("#branch_id").select2();
-    $("#product_id").select2();
 });
 
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
+
 </script>
 @endsection

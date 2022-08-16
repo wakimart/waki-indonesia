@@ -8,7 +8,6 @@
     <meta name="keywords" content="waki, waki indonesia, waki indo, waki-indo, waki-indonesia, waki asia, waki ecommerce, waki shop" />
 		<meta name="description" content="Waki Indonesia WAKi International Group, Bukan Janji tapi Pasti!">
 
-
 	  <!--justicon-->
 	  <link rel="apple-touch-icon" sizes="57x57" href="{{asset('sources/icon/apple-icon-57x57.png')}}">
 	  <link rel="apple-touch-icon" sizes="60x60" href="{{asset('sources/icon/apple-icon-60x60.png')}}">
@@ -63,6 +62,7 @@
 	  {{-- <link href="{{asset('css/lib/owlcarousel/assets/owl.carousel.min.css')}}" rel="stylesheet"> --}}
 	  <link href="{{asset('css/lib/lightbox/css/lightbox.min.css')}}" rel="stylesheet">
 	  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+	  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
 
 	  <!-- Main Stylesheet File -->
 	  <link href="{{asset('css/style.css')}}" rel="stylesheet">
@@ -74,22 +74,12 @@
 	<!-- End Google Tag Manager (noscript) -->
 	<!--==========================Header============================-->
 	<header id="header" class="fixed-top header-transparent">
-	  <!-- <div id="topbar">
-	    <div class="container">
-	      <div class="social-links">
-	        <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-	        <a href="#" class="facebook"><i class="fa fa-facebook"></i></a>
-	        <a href="#" class="linkedin"><i class="fa fa-linkedin"></i></a>
-	        <a href="#" class="instagram"><i class="fa fa-instagram"></i></a>
-	      </div>
-	    </div>
-	  </div> -->
 	  <div class="container">
 
 	      <div class="logo float-left">
 	        <!-- Uncomment below if you prefer to use an image logo -->
 	        <!-- <h1 class="text-light"><a href="#intro" class="scrollto"><span>WAKi</span></a></h1> -->
-	        <a href="#header" class="scrollto"><img src="{{asset('sources/Logo Since.png')}}" alt="" class="img-fluid" style="margin-right: 4em;"></a>
+	        <a href="{{route('index')}}" class="scrollto"><img src="{{asset('sources/Logo Since.png')}}" alt="" class="img-fluid" style="margin-right: 4em;"></a>
 	      </div>
 	      <nav class="main-nav float-left d-none d-lg-block scrollto">
 	        <ul>
@@ -106,18 +96,19 @@
 	          @endif
 
 						@if(Utils::$lang=='id' || Utils::$lang=='eng')
-	          <li class="drop-down"><a href="#product">Produk</a>
+	          <li class="drop-down"><span class="mm">Produk<i class="fa fa-angle-down"></i></span>
 	            <ul>
 								@foreach (App\CategoryProduct::all() as $categoryProduct)
 								<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
 									@if( ! $categoryProduct->product->isEmpty())
+										<span class="arrow text-white"><i class="fa fa-angle-down dd"></i></span>
 										<ul>
 											@foreach($categoryProduct->productIndex as $product)
 												<li><a href="{{route('single_product',['id'=>$product->id])}}">{{ $product->code }}</a></li>
 											@endforeach
 										</ul>
 									@endif
-								  </li>
+								</li>
 								@endforeach
 	            </ul>
 	          </li>
@@ -183,7 +174,7 @@
       	<div class="footer-top">
         	<div class="container">
           		<div class="row">
-					
+
             		<div class="col-lg-4">
 						<div class="row">
 						   <div class="col-sm-12">
@@ -205,7 +196,7 @@
 									Malaysia.</p>
 							  </div>
 
-							  
+
 							  <div class="social-links">
 								@if(Utils::$lang=='id')
 									  <h4>Ikuti Kami</h4>
@@ -266,55 +257,53 @@
 		              	<div class="form">
 		              	@if(Utils::$lang=='id')
 		              		<h4>Kirim Pesan</h4>
-			                <form action="" method="post" role="form" class="contactForm">
+			                <form action="" method="post" role="form" class="contactForm" id="contactForm">
 			                  	<div class="form-group">
-			                    	<input type="text" name="name" class="form-control" id="name" placeholder="Nama Lengkap" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+			                    	<input type="text" name="name" class="form-control" id="name" required minlength="4" placeholder="Nama Lengkap" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<input type="email" class="form-control" name="email" id="email" placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
+			                    	<input type="email" class="form-control" name="email" id="email" required placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<input type="text" class="form-control" name="subject" id="subject" placeholder="Subyek" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+			                    	<input type="text" class="form-control" name="subject" id="subject" required minlength="4" placeholder="Subyek" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Pesan"></textarea>
+			                    	<textarea class="form-control" name="message" rows="5" required data-rule="required" data-msg="Please write something for us" placeholder="Pesan"></textarea>
 			                    	<div class="validation"></div>
 			                  	</div>
 
-			                  	<div id="sendmessage">Pesan Anda telah terkirim. Thank you!</div>
-			                  	<div id="errormessage"></div>
-
-			                  	<div class="text-center"><button type="submit" title="Send Message">Kirim Pesan</button></div>
+			                  	<div class="text-center"><button type="submit" id="sendMessageContactForm" title="Send Message">Kirim Pesan</button></div>
 			                </form>
+							<div id="sendmessage">Pesan Anda telah terkirim. Thank you!</div>
+							<div id="errormessage">Error! Pesan gagal terkirim.</div>
 		              	@elseif(Utils::$lang=='eng')
 		              		<h4>Send us a message</h4>
-			                <form action="" method="post" role="form" class="contactForm">
+			                <form action="" method="post" role="form" class="contactForm" id="contactForm">
 			                  	<div class="form-group">
-			                    	<input type="text" name="name" class="form-control" id="name" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
+			                    	<input type="text" name="name" class="form-control" id="name" required minlength="4" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<input type="email" class="form-control" name="email" id="email" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+			                    	<input type="email" class="form-control" name="email" id="email" required placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
+			                    	<input type="text" class="form-control" name="subject" id="subject" required minlength="4" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
 			                    	<div class="validation"></div>
 			                  	</div>
 			                  	<div class="form-group">
-			                    	<textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
+			                    	<textarea class="form-control" name="message" rows="5" required data-rule="required" data-msg="Please write something for us" placeholder="Message"></textarea>
 			                    	<div class="validation"></div>
 			                  	</div>
 
-			                  	<div id="sendmessage">Your message has been sent. Thank you!</div>
-			                  	<div id="errormessage"></div>
-
-			                  	<div class="text-center"><button type="submit" title="Send Message">Send Message</button></div>
+			                  	<div class="text-center"><button type="submit" id="sendMessageContactForm" title="Send Message">Send Message</button></div>
 			                </form>
-		              	@endif
+							<div id="sendmessage">Your message has been sent. Thank you!</div>
+							<div id="errormessage">Error! Message failed to send.</div>
+						@endif
 		              </div>
 		            </div>
           		</div>
@@ -338,9 +327,9 @@
 
   	<!-- JavaScript Libraries -->
   	<script src="{{asset('css/lib/jquery/jquery.min.js')}}"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-	{{-- <script src="{{asset('css/lib/owlcarousel/owl.carousel.min.js')}}"></script> --}}
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
   	<script src="{{asset('css/lib/jquery/jquery-migrate.min.js')}}"></script>
+  	<script src="{{asset('css/lib/lightbox/js/lightbox.min.js')}}"></script>
   	<script src="{{asset('css/lib/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
   	<script src="{{asset('css/lib/easing/easing.min.js')}}"></script>
   	<script src="{{asset('css/lib/mobile-nav/mobile-nav.js')}}"></script>
@@ -348,13 +337,13 @@
   	<script src="{{asset('css/lib/waypoints/waypoints.min.js')}}"></script>
   	<script src="{{asset('css/lib/counterup/counterup.min.js')}}"></script>
   	<script src="{{asset('css/lib/isotope/isotope.pkgd.min.js')}}"></script>
-  	<script src="{{asset('css/lib/lightbox/js/lightbox.min.js')}}"></script>
-  	<!-- Contact Form JavaScript File -->
-  	<script src="contactform/contactform.js"></script>
 
   	<!-- Template Main Javascript File -->
   	<script src="{{asset('js/main.js')}}"></script>
 		<script>
+	    const observer = lozad(); // lazy loads elements with default selector as '.lozad'
+	    observer.observe();
+
 		$(document).ready(function() {
 		  $(".product-carousel").owlCarousel({
 		    items: 4,
@@ -368,10 +357,9 @@
 		      1000: {items: 4},
 		      768: {items: 3},
 		      640: {items: 2},
-		      360: {items: 1}
+		      300: {items: 1}
 		    }
 		  });
-		  console.log("test");
 			$('#video2').on('shown.bs.modal', function (event) {
 		    $('#video-2')[0].play();
 		  });
@@ -379,6 +367,35 @@
 		    $('#video-2')[0].pause();
 		  });
 		});
-		</script>
+
+		$("#contactForm").on("submit", function(e) {
+			e.preventDefault();
+			formData = {
+				"_token": "{{ csrf_token() }}",
+				'name'     : $('#contactForm input[name=name]').val(),
+				'email'    : $('#contactForm input[name=email]').val(),
+				'subject'  : $('#contactForm input[name=subject]').val(),
+				'message'  : $('#contactForm textarea[name=message]').val()
+			},
+
+			$("#sendMessageContactForm").attr('disabled', true);
+			$("#sendMessageContactForm").html("{{ (Utils::$lang=='id') ? 'Mengirim . . .' : 'Sending . . .' }}");
+			$.ajax({
+				url : "{{ route('send_contactForm') }}",
+				type: "POST",
+				dataType: 'JSON',
+				data : formData,
+				success: function(data) {
+					$('#contactForm').hide();
+					$('#contactForm').siblings("#sendmessage").show();
+				},
+				error: function (data) {
+					$('#contactForm').hide();
+					$('#contactForm').siblings("#errormessage").show();
+				}
+			});
+		});
+	</script>
+	@yield('script')
 </body>
 </html>

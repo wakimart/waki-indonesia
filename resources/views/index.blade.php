@@ -2,6 +2,26 @@
 @extends('layouts.template')
 
 @section('content')
+<div id="video2" class="modal fade videoModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
+          <video id="video-2" onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
+            <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
+          </video>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!--==========================Hero Section============================-->
 <section id="hero" class="clearfix">
@@ -27,7 +47,7 @@
 
       <div class="col-md-6" style="flex: none;">
         <div class="text-right" style="position: relative; top: 50%; transform: translateY(-50%);" data-toggle="modal" data-target="#video2">
-          <img src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid">
+          <img data-src="{{asset('sources/play.png')}}" alt="" class="icon-play img-fluid lozad">
         </div>
 
         {{-- <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
@@ -35,27 +55,6 @@
             <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
           </video>
         </div> --}}
-      </div>
-
-      <div id="video2" class="modal fade videoModal" role="dialog">
-        <div class="modal-dialog">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <div class="modal-body">
-              <div class="overlay-inner overlay-video embed-responsive embed-responsive-4by3">
-                <video id="video-2" muted onclick="this.paused?this.play():this.pause();" loop style="min-height: 100%";>
-                  <source src="{{asset('sources/Introduction of WAKi short.mp4')}}" type="video/mp4">
-                </video>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
       </div>
     </div>
 
@@ -73,7 +72,7 @@
         @elseif(Utils::$lang=='eng')
         <h3>Our Awards</h3>
         @endif --}}
-        <img src="{{asset('sources/awards-black.png')}}" alt="" class="img-fluid">
+        <img class="img-fluid lozad" data-src="{{asset('sources/awards-update.png')}}" alt="">
       </header>
 
     </div>
@@ -94,7 +93,7 @@
 
           <div class="col-lg-5 col-md-6">
             <div class="about-img wow fadeInLeft">
-              <img src="{{asset('sources/waki-building2.jpg')}}" alt="">
+              <img class="lozad" data-src="{{asset('sources/waki-building2.jpg')}}" alt="">
             </div>
           </div>
 
@@ -189,9 +188,9 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
 
           <div class="owl-carousel product-carousel">
-              <div class="card white-bg mb-3 item">
+              <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 5)}}`">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/thumbnail-massager.png')}}" class="card-img-top img-fluid" />
+                  <img data-src="{{ asset ('sources/thumbnail-massager.png')}}" class="card-img-top img-fluid lozad" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
@@ -213,9 +212,9 @@
                   </div>
                 </div>
               </div>
-              <div class="card white-bg mb-3 item">
+              <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 2)}}`">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/thumbnail-hpt.png') }}" class="card-img-top img-fluid" alt="" />
+                  <img data-src="{{ asset ('sources/thumbnail-hpt.png') }}" class="card-img-top img-fluid lozad" alt="" />
                 </div>
                 <div class="card-body ">
                   <div data-equal-height="card" class="caption">
@@ -238,9 +237,9 @@
                   </div>
                 </div>
               </div>
-              <div class="card white-bg mb-3 item">
+              <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 4)}}`">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/thumbnail-bio.png') }}" class="card-img-top img-fluid" alt="" />
+                  <img data-src="{{ asset ('sources/thumbnail-bio.png') }}" class="card-img-top img-fluid lozad" alt="" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
@@ -259,13 +258,13 @@
                       <a href="/product_category/4" class="btn-link"><span>Lihat Semua </span></a>
                     @elseif(Utils::$lang=='eng')
                       <a href="/product_category/4" class="btn-link"><span>View All </span></a>
-                    @endif        
+                    @endif
                   </div>
                 </div>
               </div>
-              <div class="card white-bg mb-3 item">
+              <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 3)}}`">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/thumbnail-humidifier.png') }}" class="card-img-top img-fluid" alt="" />
+                  <img data-src="{{ asset ('sources/thumbnail-humidifier.png') }}" class="card-img-top img-fluid lozad" alt="" />
                 </div>
                 <div class="card-body ">
                   <div data-equal-height="card" class="caption">
@@ -284,13 +283,13 @@
                       <a href="/product_category/3" class="btn-link"><span>Lihat Semua </span></a>
                     @elseif(Utils::$lang=='eng')
                       <a href="/product_category/3" class="btn-link"><span>View All </span></a>
-                    @endif  
+                    @endif
                   </div>
                 </div>
               </div>
-              <div class="card white-bg mb-3 item">
+              <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 6)}}`">
                 <div class="container product-img">
-                  <img src="{{ asset ('sources/thumbnail-household.png') }}" class="card-img-top img-fluid" alt="" />
+                  <img data-src="{{ asset ('sources/thumbnail-household.png') }}" class="card-img-top img-fluid lozad" alt="" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
@@ -309,7 +308,7 @@
                       <a href="/product_category/6" class="btn-link"><span>Lihat Semua </span></a>
                     @elseif(Utils::$lang=='eng')
                       <a href="/product_category/6" class="btn-link"><span>View All </span></a>
-                    @endif  
+                    @endif
                   </div>
                 </div>
               </div>
@@ -342,7 +341,7 @@
                 <h4 style="text-align: center;">"We bring WAKian and WAKi’s customers, towards a better life."<br>Not a Promise, but Sure!</h4>
               @endif
                <div class="text-center mt-2 mb-2">
-                <img src="{{ asset ('sources/testi-icon.png') }}" class="img-fluid" alt="" style="width: 60px; height: 60px;" />
+                <img data-src="{{ asset ('sources/testi-icon.png') }}" class="img-fluid lozad" alt="" style="width: 60px; height: 60px;" />
 
                </div>
             </header>
@@ -465,56 +464,89 @@
         @endif
       </header>
 
-      <div class="row">
-        <div class="col-lg-12">
-          <ul id="portfolio-flters">
-            @if(Utils::$lang=='id')
-            <li data-filter=".filter-photo" class="filter-active">Foto</li>
-            <li data-filter=".filter-video" >Video</li>
-            @elseif(Utils::$lang=='eng')
-            <li data-filter=".filter-photo" class="filter-active">Photo</li>
-            <li data-filter=".filter-video" >Video</li>
-            @endif
-          </ul>
+      <section class="Grid">
+        <div class="Grid-row">
+          @foreach($albums as $key => $album)
+            @php
+              $string = str_replace(' ', '', $album->event['name']);
+              $codePath = strtolower($string);
+
+              $photoPath = asset('sources/album/' . $codePath);
+
+              $index = $key + 1;
+            @endphp
+            <a class="Card" onClick="openGallery({{$index}})" id="card-{{$key+1}}">
+                <div class="Card-thumb">
+                    <div class="Card-shadow"></div>
+                    <div class="Card-shadow"></div>
+                    <div class="Card-shadow"></div>
+                    <div class="Card-image" style="background-image: url({{$photoPath.'/'.$album['arr_photo'][0]}})"></div>
+                </div>
+                <div class="Card-title"><span>{{$album->event['name']}}</span></div>
+                @if(Utils::$lang=='id')
+                <div class="Card-explore"><span>Lihat Semua</span></div><button class="Card-button">Lihat Semua</button>
+                @elseif(Utils::$lang=='eng')
+                <div class="Card-explore"><span>See More</span></div><button class="Card-button">View More</button>
+                @endif
+            </a>
+          @endforeach
         </div>
-      </div>
+      </section>
 
-      <div class="row portfolio-container">
+      @foreach($albums as $key => $album)
         @php
-        foreach($galleries as $gallerie){
-          $photos = json_decode($gallerie->photo, true);
-          $photoPath = asset('sources/portfolio/');
-          $videos = json_decode($gallerie->url_youtube, true);
+          $string = str_replace(' ', '', $album->event['name']);
+          $codePath = strtolower($string);
 
-          $photoPath = asset('sources/portfolio/');
-        }
+          $photoPath = asset('sources/album/' . $codePath);
         @endphp
+        <section class="Gallery" id="gallery-{{$key+1}}">
 
-        @for($x = 0; $x < sizeof($photos); $x++)
-        <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
-          <div class="portfolio-wrap">
-            <img src="{{$photoPath.'/'.$photos[$x]}}" class="img-fluid" alt="">
-            <div class="portfolio-info">
-              <h4><a href="#">Photo {{$x+1}}</a></h4>
-              <p>App</p>
-              <div>
-                <a href="#" data-lightbox="portfolio" data-title="App 1" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
-              </div>
+          <div class="row my-5">
+            <div class="tabs-container">
+              <ul id="portfolio-flters">
+                @if(Utils::$lang=='id')
+                <li data-filter=".filter-photo" class="filter-active">Foto</li>
+                <li data-filter=".filter-video" >Video</li>
+                @elseif(Utils::$lang=='eng')
+                <li data-filter=".filter-photo" class="filter-active">Photo</li>
+                <li data-filter=".filter-video" >Video</li>
+                @endif
+              </ul>
             </div>
           </div>
-        </div>
-        @endfor
 
-        @for($v = 0; $v < sizeof($videos) ; $v++)
-        <div class="col-lg-4 col-md-6 portfolio-item filter-video">
-          <div class="portfolio-wrap2">
-            <h5 class="portfolio-video-title">{{$videos[$v]['title']}}</h5>
-            <iframe width="100%" height="auto" position="relative" src="{{$videos[$v]['url']}}" frameborder="0" allowfullscreen=""></iframe>
+          <div class="Gallery-header"><a class="Gallery-close" onclick="closeAll()">×</a></div>
+          <div class="row portfolio-container">
+            @for($x = 0; $x < sizeof($album['arr_photo']); $x++)
+            <div class="col-lg-4 col-md-6 portfolio-item filter-photo">
+              <div class="portfolio-wrap">
+                <img data-src="{{$photoPath.'/'.$album['arr_photo'][$x]}}" class="img-fluid lozad" alt="">
+                <div class="portfolio-info">
+                  @if(Utils::$lang=='id')
+                  <h4><a href="#">Foto {{$x+1}}</a></h4>
+                  @elseif(Utils::$lang=='eng')
+                  <h4><a href="#">Photo {{$x+1}}</a></h4>
+                  @endif
+                  <div>
+                    <a href="{{$photoPath.'/'.$album['arr_photo'][$x]}}" data-lightbox="portfolio" data-title="Foto" class="link-preview" title="Preview"><i class="ion ion-eye"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            @endfor
+
+            @for($v = 0; $v < sizeof($album['url_video']) ; $v++)
+            <div class="col-lg-4 col-md-6 portfolio-item filter-video">
+              <div class="portfolio-wrap2">
+                <h5 class="portfolio-video-title">{{$album['url_video'][$v]['title']}}</h5>
+                <iframe width="100%" height="auto" position="relative" src="{{$album['url_video'][$v]['url']}}" frameborder="0" allowfullscreen=""></iframe>
+              </div>
+            </div>
+            @endfor
           </div>
-        </div>
-        @endfor
-
-      </div>
+        </section>
+      @endforeach
     </div>
   </section>
 
@@ -535,7 +567,7 @@
             <div class="col-lg-3 col-md-3 col-sm-3">
               <div class="card-business mb-3">
                 <div class="card-img-top">
-                  <img src="{{ asset ('sources/wakimartlogo.png')}}" class="img-fluid" style="padding-top: 30px;" />
+                  <img data-src="{{ asset ('sources/wakimartlogo.png')}}" class="img-fluid lozad" style="padding-top: 30px;" />
                 </div>
                 <div class="card-body">
 
@@ -554,16 +586,16 @@
             <div class="col-lg-3 col-md-3 col-sm-3">
               <div class="card-business mb-3">
                 <div class="card-img-top">
-                  <img src="{{ asset ('sources/wakishop.png')}}" class="img-fluid" />
+                  <img data-src="{{ asset ('sources/wakishop.png')}}" class="img-fluid lozad" />
                 </div>
                 <div class="card-body">
 
                   <div class="row justify-content-center align-self-center">
                     <div>
                       @if(Utils::$lang=='id')
-                        <a href="https://wakishop.asia/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
+                        <a href="https://wakishop.id/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
                       @elseif(Utils::$lang=='eng')
-                        <a href="https://wakishop.asia/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">View</a>
+                        <a href="https://wakishop.id/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">View</a>
                       @endif
                     </div>
                   </div>
@@ -573,7 +605,7 @@
             <div class="col-lg-3 col-md-3 col-sm-3">
               <div class="card-business mb-3">
                 <div class="card-img-top">
-                  <img src="{{ asset ('sources/wakifnb.png')}}" class="img-fluid" style="padding-top: 15px;"/>
+                  <img data-src="{{ asset ('sources/wakifnb.png')}}" class="img-fluid lozad" style="padding-top: 15px;"/>
                 </div>
                 <div class="card-body">
 
@@ -592,7 +624,7 @@
             <div class="col-lg-3 col-md-3 col-sm-3">
               <div class="card-business mb-3">
                 <div class="card-img-top">
-                  <img src="{{ asset ('sources/waki3dprinting.png')}}" class="img-fluid" />
+                  <img data-src="{{ asset ('sources/waki3dprinting.png')}}" class="img-fluid lozad" />
                 </div>
                 <div class="card-body">
 
@@ -616,4 +648,36 @@
   </section>
   <!-- #business -->
 </main>
+@endsection
+
+@section('script')
+<script>
+
+  function openGallery(id) {
+    closeAll();
+    const gallery = document.getElementById('gallery-'+id);
+    const card = document.getElementById('card-'+id);
+    gallery.classList.add('Gallery--active');
+    card.classList.add('Card--active');
+    if (typeof(Event) === 'function') {
+      setTimeout(function(){window.dispatchEvent(new Event('resize'))},3000);
+    } else {
+      var evt = window.document.createEvent('UIEvents');
+      evt.initUIEvent('resize', true, false, window, 0);
+      setTimeout(function(){window.dispatchEvent(evt)},3000);
+    }
+  }
+
+function closeAll() {
+  const galleryActv = document.querySelector('.Gallery--active');
+  const cardActv = document.querySelector('.Card--active');
+  if (galleryActv) {
+    galleryActv.classList.remove('Gallery--active');
+  }
+  if (cardActv) {
+    cardActv.classList.remove('Card--active');
+  }
+}
+
+</script>
 @endsection

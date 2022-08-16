@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Acceptance;
 use App\Product;
 use App\ProductService;
 use App\Service;
@@ -19,15 +20,54 @@ class ProductServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $services = Service::where('active', true)
-            ->orderBy("service_date", "desc")
-            ->get();
-        $upgrades = Upgrade::where('active', true)->get();
-        $countServices = $services->count();
-        $countUpgrades = $upgrades->count();
-        return view('admin.list_taskservice', compact('countServices', 'services', 'upgrades', 'countUpgrades'));
+        $url = $request->all();
+
+        $serviceAreas = [];
+        foreach (Service::$Area as $area) {
+            $serviceAreas[$area] = Service::where('active', true)
+                ->where('area', $area);
+
+            if ($request->has('search')) {
+                $serviceAreas[$area]->where('status', 'LIKE', '%' . $request->search . '%');
+            }
+
+            $serviceAreas[$area] = $serviceAreas[$area]
+                ->orderBy("service_date", "desc")
+                ->paginate(10, ['*'], "service_".$area);
+        }
+
+        $upgradeAreas = [];
+        foreach (Acceptance::$Area as $area) {
+            $upgradeAreas[$area] = Upgrade::where('upgrades.active', true)
+                ->select('upgrades.*', 'ac.area')
+                ->leftJoin('acceptances as ac', 'ac.id', 'upgrades.acceptance_id')
+                ->where('upgrades.status', '!=','New');
+            
+            if ($request->has('search')) {    
+                $upgradeAreas[$area]->where('upgrades.status', 'LIKE', '%' . $request->search . '%');
+            }
+
+            if ($area == 'null') {
+                $upgradeAreas[$area]->whereNull('ac.area');
+            } else {
+                $upgradeAreas[$area]->where('ac.area', $area);
+            }
+            
+            $upgradeAreas[$area] = $upgradeAreas[$area]
+                ->orderBy("ac.created_at", 'desc')
+                ->paginate(10, ['*'], "upgrade_".$area);
+        }
+
+        return view(
+            'admin.list_taskservice', 
+            compact(
+                'serviceAreas', 
+                'upgradeAreas',
+                'url'
+            )
+        );
     }
 
     /**
@@ -269,5 +309,22 @@ class ProductServiceController extends Controller
     public function destroy(ProductService $productService)
     {
         //
+    }
+
+    public function fetchProductService(Request $request)
+    {
+        $productServices = ProductService::where('service_id', $request->service_id)
+            ->where('active', 1)->get();
+        if(count($productServices) > 0) {
+            return [
+                'result' =>'true',
+                'data' => $productServices
+            ];
+        }
+
+        return [
+            'result' =>'false',
+            'data' => $productServices
+        ];
     }
 }

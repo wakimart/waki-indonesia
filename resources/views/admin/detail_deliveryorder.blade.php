@@ -87,7 +87,7 @@
                     </tr>
                     <tr>
                         <td>CSO Code : </td>
-                        <td>{{ $deliveryOrder->cso['code'] }}</td>
+                        <td>{{ $deliveryOrder->cso['code'] }} - {{ $deliveryOrder->cso['name'] }}</td>
                     </tr>
                 </table>
                 <table class="col-md-12">

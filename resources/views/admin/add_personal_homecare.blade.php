@@ -94,7 +94,7 @@ $menu_item_second = "add_personal_homecare";
                                 id="branch_id"
                                 name="branch_id"
                                 form="add-phc"
-                                onchange="setProduct(this)"
+                                onchange="setProduct()"
                                 required>
                                 <option disabled selected>
                                     Select Branch
@@ -149,6 +149,7 @@ $menu_item_second = "add_personal_homecare";
                                     class="form-control"
                                     name="schedule"
                                     id="schedule"
+                                    onchange="setProduct()"
                                     required />
                             </div>
 
@@ -159,7 +160,7 @@ $menu_item_second = "add_personal_homecare";
                                     id="ph_product_id"
                                     required>
                                     <option disabled selected>
-                                        Select Product (Please select branch first)
+                                        Select Product (Please select branch & schedule first)
                                     </option>
                                 </select>
                             </div>
@@ -252,13 +253,24 @@ $menu_item_second = "add_personal_homecare";
                                     id="id_card_image"
                                     required />
                             </div>
+                            <div class="form-group">
+                                <label for="member_wakimart_image">
+                                    Customer Wakimart Member
+                                </label>
+                                <input type="file"
+                                    class="form-control"
+                                    accept="image/jpeg, image/png"
+                                    name="member_wakimart_image"
+                                    id="member_wakimart_image"
+                                    required />
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" hidden="">
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
@@ -345,8 +357,7 @@ $menu_item_second = "add_personal_homecare";
                                             name="machine_condition"
                                             id="machine-condition-normal"
                                             value="normal"
-                                            form="add-phc"
-                                            required />
+                                            form="add-phc" />
                                         Normal
                                     </label>
                                 </div>
@@ -358,8 +369,7 @@ $menu_item_second = "add_personal_homecare";
                                             name="machine_condition"
                                             id="machine-condition-need-repair"
                                             value="need_repair"
-                                            form="add-phc"
-                                            required />
+                                            form="add-phc" />
                                         Need Repair
                                     </label>
                                 </div>
@@ -377,8 +387,7 @@ $menu_item_second = "add_personal_homecare";
                                             name="physical_condition"
                                             id="physical-condition-new"
                                             value="new"
-                                            form="add-phc"
-                                            required />
+                                            form="add-phc" />
                                         New
                                     </label>
                                 </div>
@@ -390,8 +399,7 @@ $menu_item_second = "add_personal_homecare";
                                             name="physical_condition"
                                             id="physical-condition-moderate"
                                             value="moderate"
-                                            form="add-phc"
-                                            required />
+                                            form="add-phc" />
                                         Moderate
                                     </label>
                                 </div>
@@ -403,8 +411,7 @@ $menu_item_second = "add_personal_homecare";
                                             name="physical_condition"
                                             id="physical-condition-need-repair"
                                             value="need_repair"
-                                            form="add-phc"
-                                            required />
+                                            form="add-phc" />
                                         Need Repair
                                     </label>
                                 </div>
@@ -418,8 +425,7 @@ $menu_item_second = "add_personal_homecare";
                                 accept="image/jpeg, image/png"
                                 name="product_photo_1"
                                 id="product-photo-1"
-                                form="add-phc"
-                                required />
+                                form="add-phc" />
                         </div>
 
                         <div class="form-group">
@@ -433,6 +439,55 @@ $menu_item_second = "add_personal_homecare";
                                 id="product-photo-2"
                                 form="add-phc" />
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h2>Home Service Appointment</h2>
+
+                        @for($hs = 0; $hs < 5; $hs++)
+                        <label>Appointment {{$hs + 1}}</label>
+                        <div class="form-group">
+                            <label for="">Date</label>
+                            <input type="date"
+                                form="add-phc"
+                                class="form-control"
+                                name="date[]"
+                                id="date-{{$hs}}"
+                                placeholder="Tanggal Janjian"
+                                required
+                                value="<?php echo date('Y-m-j'); ?>"
+                                onload="setMinAppointmentTime(this)"
+                                data-msg="Mohon Isi Tanggal" readonly/>
+                            <div class="validation"></div>
+                            <span class="invalid-feedback">
+                                <strong></strong>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Time</label>
+                            <input type="time"
+                                form="add-phc"
+                                class="form-control"
+                                name="time[]"
+                                id="time-{{$hs}}"
+                                placeholder="Jam Janjian"
+                                value="<?php echo date('H:i'); ?>"
+                                required
+                                data-msg="Mohon Isi Jam"
+                                min="10:00"
+                                max="20:00" />
+                            <div class="validation"></div>
+                            <span class="invalid-feedback">
+                                <strong></strong>
+                            </span>
+                        </div>
+                        @endfor
                     </div>
                 </div>
             </div>
@@ -473,7 +528,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("branch-id-hidden").value = branchId;
         document.getElementById("branch-id-hidden").setAttribute("name", "branch_id");
 
-        setProduct({value: branchId});
+        setProduct();
     }
 
     $("#ph_product_id").select2();
@@ -484,45 +539,117 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#cso_id").select2();
 });
 
-function setProduct(e) {
-    fetch(
-        '{{ route("get_phc_product") }}?branch_id=' + e.value,
-        {
-            method: "GET",
-            headers: {
-                "Accept": "application/json",
-            },
-            mode: "same-origin",
-            referrerPolicy: "no-referrer",
+function setMinAppointmentTime(e) {
+    // Tanggal & waktu dari inputan
+    const getCurrentDate = new Date(Date.parse(e.value));
+
+    // Tanggal & waktu hari ini
+    const today = new Date();
+
+    if (
+        getCurrentDate.getFullYear() === today.getFullYear()
+        && getCurrentDate.getMonth() === today.getMonth()
+        && getCurrentDate.getDate() === today.getDate()
+    ) {
+        if (today.getHours() < 10) {
+            document.getElementById("time").setAttribute("min", "10:00");
+        } else if (today.getHours() >= 10 && today.getHours() < 20) {
+            document.getElementById("time").setAttribute(
+                "min",
+                ("0" + (getCurrentDate.getHours() + 1)).slice(-2)
+                + ":"
+                + ("0" + (getCurrentDate.getMinutes() + 1)).slice(-2)
+            );
+        } else if (today.getHours() >= 20) {
+            document.getElementById("time").setAttribute("disabled", "");
         }
-    ).then(function (response) {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+    } else {
+        document.getElementById("time").setAttribute("min", "10:00");
+    }
+}
 
-        return response.json();
-    }).then(function (response) {
-        $("#ph_product_id").select2("destroy");
+function setProduct() {
+    let date = $("#schedule").val();
 
-        const data = response.data;
+    //set for appointment hs
+    if(date != ""){
+        var selected_date = new Date(date);
+        var next_selected_date = new Date (selected_date);  
+        for (var hs = 0; hs < 5; hs++) {
+            if(hs != 0){
+                next_selected_date.setDate(selected_date.getDate() + 1);
+                selected_date.setDate(next_selected_date.getDate());
+            }
 
-        data.forEach(function (value) {
-            const options = document.createElement("option");
-            options.value = value.id;
-            options.innerHTML = `${value.code} - ${value.name}`;
+            var hs_date = next_selected_date.getDate();
+            //console.log(hs_date.length);
+            if(hs_date < 10){
+                hs_date = '0' + hs_date;
+            }
+            var hs_month = next_selected_date.getMonth() + 1;
+            if(hs_month < 10){
+                hs_month = '0' + hs_month;
+            }
+            var hs_year = next_selected_date.getFullYear();
+            var fixed_date_hs =  hs_year + "-" + hs_month + "-" + hs_date;
+            console.log(fixed_date_hs);
+            document.getElementById("date-" + hs).value = fixed_date_hs;
+        }    
+    }
+    //end set for appointment hs
 
-            document.getElementById("ph_product_id").append(options);
+
+    let branch_id = $("#branch_id").val();
+    console.log({date, branch_id});
+    if(date != "" && branch_id != ""){
+        fetch(
+            '{{ route("get_phc_product") }}?branch_id=' + branch_id + '&date=' + date,
+            {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+                mode: "same-origin",
+                referrerPolicy: "no-referrer",
+            }
+        ).then(function (response) {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return response.json();
+        }).then(function (response) {
+            $("#ph_product_id").select2("destroy");
+
+            const data = response.data;
+            document.getElementById("ph_product_id").innerHTML = "<option disabled selected>Select Product (Please select branch & schedule first)</option>";
+
+            data.forEach(function (value) {
+                const options = document.createElement("option");
+                options.value = value.id;
+                options.innerHTML = `${value.code} - ${value.name}`;
+
+                document.getElementById("ph_product_id").append(options);
+            });
+
+            document.getElementById("ph_product_id").removeAttribute("disabled");
+
+            $("#ph_product_id").select2();
+        }).catch(function(error) {
+            console.error(error);
         });
-
-        document.getElementById("ph_product_id").removeAttribute("disabled");
-
-        $("#ph_product_id").select2();
-    }).catch(function(error) {
-        console.error(error);
-    });
+    }
 }
 
 function checkPhone(e) {
+    if (!e.value) {
+        document.getElementById("phone-message").classList.remove("text-success");
+        document.getElementById("phone-message").classList.add("text-danger");
+        document.getElementById("submit-button").setAttribute("disabled", "");
+        document.getElementById("phone-message").innerHTML = "Please input phone number.";
+        return;
+    }
+
     fetch(
         '{{ route("check_phc_phone") }}?phone=' + e.value,
         {

@@ -36,12 +36,50 @@ class RolesSeeder extends Seeder
         		'edit-order' => true,
                 'delete-order' => true,
 
+                //Update Order Status
+                'change-status_order'=> true,
+                'change-status_order_process'=> true,
+                'change-status_order_delivery' => true,
+                'change-status_order_success' => true,
+                'change-status_order_reject' => true,
+
+                //Update Order Payment Status
+                'change-status_payment' => true,
+                'change-status_payment_verified' => true,
+                'change-status_payment_rejected' => true,
+
+                //Order Report
+                'browse-order_report' => true,
+                'browse-order_report_branch' => true,
+                'browse-order_report_cso' => true,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => true,
+                'acc-reschedule-home_service' => true,
+                'acc-cancel-home_service' => true,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => true,
+                'acc-view-coor_absent_off' => true,
+                'acc-absent_off' => true,
+                'acc-spv_absent_off' => true,
+                'acc-reject_spv_absent_off' => true,
+                'acc-coor_absent_off' => true,
+                'acc-reject_coor_absent_off' => true,
 
                 //CSO
                 'add-cso' => true,
@@ -120,6 +158,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => true,
                 "delete-service" => true,
 
+                // Technician Schedule (Head Admin)
+                "add-technician_schedule" => true,
+                "browse-technician_schedule" => true,
+                "detail-technician_schedule" => true,
+                "edit-technician_schedule" => true,
+                "delete-technician_schedule" => true,
+
                 // Submission (Head Admin)
                 "add-submission" => true,
                 "browse-submission" => true,
@@ -151,7 +196,36 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => false,
                 "change-status-checkin-personalhomecare" => true,
                 "change-status-checkout-personalhomecare" => true,
-        	]),
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => true,
+
+                //Type Customer (Head Admin)
+        		'add-type_customer' => true,
+                'browse-type_customer' => true,
+        		'edit-type_customer' => true,
+                'delete-type_customer' => true,
+
+                //Data Sourcing (Head Admin)
+                'add-data_sourcing' => true,
+                'browse-data_sourcing' => true,
+                'edit-data_sourcing' => true,
+                'delete-data_sourcing' => true,
+
+                //Data Therapy (Head Admin)
+                'add-data_therapy' => true,
+                'browse-data_therapy' => true,
+                'detail-data_therapy' => true,
+                'edit-data_therapy' => true,
+                'delete-data_therapy' => true,
+
+                //Bank
+                'add-bank' => true,
+                'browse-bank' => true,
+        		'edit-bank' => true,
+                'delete-bank' => true,
+            ]),
         ]);
 
         $admin = Role::create([
@@ -178,12 +252,50 @@ class RolesSeeder extends Seeder
         		'edit-order' => true,
                 'delete-order' => true,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => true,
+                'acc-reschedule-home_service' => false,
+                'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => true,
@@ -262,6 +374,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => false,
                 "delete-service" => false,
 
+                // Technician Schedule (Admin)
+                "add-technician_schedule" => true,
+                "browse-technician_schedule" => true,
+                "detail-technician_schedule" => true,
+                "edit-technician_schedule" => true,
+                "delete-technician_schedule" => true,
+
                 // Submission (Admin)
                 "add-submission" => false,
                 "browse-submission" => true,
@@ -293,6 +412,35 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => false,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => false,
+                "acc-reschedule-personalhomecare" => false,
+                "acc-extend-personalhomecare" => false,
+                "change-status-product-personalhomecare" => false,
+
+                //Type Customer (Admin)
+        		'add-type_customer' => true,
+                'browse-type_customer' => true,
+        		'edit-type_customer' => true,
+                'delete-type_customer' => true,
+
+                //Data Sourcing (Admin)
+                'add-data_sourcing' => true,
+                'browse-data_sourcing' => true,
+                'edit-data_sourcing' => true,
+                'delete-data_sourcing' => true,
+
+                //Data Therapy (Admin)
+                'add-data_therapy' => true,
+                'detail-data_therapy' => true,
+                'browse-data_therapy' => true,
+                'edit-data_therapy' => true,
+                'delete-data_therapy' => true,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false,                
         	]),
         ]);
 
@@ -320,12 +468,50 @@ class RolesSeeder extends Seeder
                 'edit-order' => true,
                 'delete-order' => true,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => false,
+                'acc-reschedule-home_service' => false,
+                'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => false,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -398,6 +584,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => false,
                 "delete-service" => false,
 
+                // Technician Schedule (CSO)
+                "add-technician_schedule" => false,
+                "browse-technician_schedule" => false,
+                "detail-technician_schedule" => false,
+                "edit-technician_schedule" => false,
+                "delete-technician_schedule" => false,
+
                 // Submission (CSO)
                 "add-submission" => true,
                 "browse-submission" => true,
@@ -429,6 +622,36 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => true,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => false,
+                "acc-reschedule-personalhomecare" => false,
+                "acc-extend-personalhomecare" => false,
+                "change-status-product-personalhomecare" => false,
+
+                //Type Customer (CSO)
+        		'add-type_customer' => false,
+                'browse-type_customer' => false,
+        		'edit-type_customer' => false,
+                'delete-type_customer' => false,
+
+                //Data Sourcing (CSO)
+                'add-data_sourcing' => false,
+                'browse-data_sourcing' => false,
+                'edit-data_sourcing' => false,
+                'delete-data_sourcing' => false,
+
+                //Data Therapy (CSO)
+                'add-data_therapy' => false,
+                'browse-data_therapy' => false,
+                'detail-data_therapy' => false,
+                'edit-data_therapy' => false,
+                'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false,                
+                
             ]),
         ]);
 
@@ -456,12 +679,50 @@ class RolesSeeder extends Seeder
                 'edit-order' => true,
                 'delete-order' => true,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+                
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+                
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
                 'detail-home_service' => true,
                 'edit-home_service' => true,
                 'delete-home_service' => true,
+                'acc-view-home_service' => false,
+                'acc-reschedule-home_service' => false,
+                'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => false,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -534,6 +795,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => false,
                 "delete-service" => false,
 
+                // Technician Schedule (Branch)
+                "add-technician_schedule" => false,
+                "browse-technician_schedule" => false,
+                "detail-technician_schedule" => false,
+                "edit-technician_schedule" => false,
+                "delete-technician_schedule" => false,
+
                 // Submission (Branch)
                 "add-submission" => true,
                 "browse-submission" => true,
@@ -565,6 +833,35 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => true,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => false,
+                "acc-reschedule-personalhomecare" => false,
+                "acc-extend-personalhomecare" => false,
+                "change-status-product-personalhomecare" => false,
+
+                //Type Customer (Branch)
+        		'add-type_customer' => false,
+                'browse-type_customer' => false,
+        		'edit-type_customer' => false,
+                'delete-type_customer' => false,
+
+                //Data Sourcing (Branch)
+                'add-data_sourcing' => false,
+                'browse-data_sourcing' => false,
+                'edit-data_sourcing' => false,
+                'delete-data_sourcing' => false,
+
+                //Data Therapy (Branch)
+                'add-data_therapy' => false,
+                'browse-data_therapy' => false,
+                'detail-data_therapy' => false,
+                'edit-data_therapy' => false,
+                'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -592,12 +889,50 @@ class RolesSeeder extends Seeder
                 'edit-order' => false,
                 'delete-order' => false,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
+
                 //Home Service
                 'add-home_service' => false,
                 'browse-home_service' => true,
                 'detail-home_service' => true,
                 'edit-home_service' => false,
                 'delete-home_service' => false,
+                'acc-view-home_service' => true,
+                'acc-reschedule-home_service' => true,
+                'acc-cancel-home_service' => true,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -670,6 +1005,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => false,
                 "delete-service" => false,
 
+                // Technician Schedule (Area Manager)
+                "add-technician_schedule" => false,
+                "browse-technician_schedule" => false,
+                "detail-technician_schedule" => false,
+                "edit-technician_schedule" => false,
+                "delete-technician_schedule" => false,
+
                 // Submission (Area Manager)
                 "add-submission" => false,
                 "browse-submission" => true,
@@ -701,6 +1043,35 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => false,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => false,
+
+                //Type Customer (Area Manager)
+        		'add-type_customer' => false,
+                'browse-type_customer' => false,
+        		'edit-type_customer' => false,
+                'delete-type_customer' => false,
+
+                //Data Sourcing (Area Manager)
+                'add-data_sourcing' => false,
+                'browse-data_sourcing' => false,
+                'edit-data_sourcing' => false,
+                'delete-data_sourcing' => false,
+
+                //Data Therapy (Area Manager)
+                'add-data_therapy' => false,
+                'browse-data_therapy' => false,
+                'detail-data_therapy' => false,
+                'edit-data_therapy' => false,
+                'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -728,12 +1099,50 @@ class RolesSeeder extends Seeder
                 'edit-order' => false,
                 'delete-order' => false,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
+
                 //Home Service
                 'add-home_service' => false,
                 'browse-home_service' => true,
                 'detail-home_service' => true,
                 'edit-home_service' => false,
                 'delete-home_service' => false,
+                'acc-view-home_service' => true,
+                'acc-reschedule-home_service' => false,
+                'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -806,6 +1215,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => false,
                 "delete-service" => false,
 
+                // Technician Schedule (Head Manager)
+                "add-technician_schedule" => false,
+                "browse-technician_schedule" => false,
+                "detail-technician_schedule" => false,
+                "edit-technician_schedule" => false,
+                "delete-technician_schedule" => false,
+
                 // Submission (Head Manager)
                 "add-submission" => false,
                 "browse-submission" => true,
@@ -837,6 +1253,35 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => false,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => false,
+
+                //Type Customer (Head Manager)
+        		'add-type_customer' => false,
+                'browse-type_customer' => false,
+        		'edit-type_customer' => false,
+                'delete-type_customer' => false,
+
+                //Data Sourcing (Head Manager)
+                'add-data_sourcing' => false,
+                'browse-data_sourcing' => false,
+                'edit-data_sourcing' => false,
+                'delete-data_sourcing' => false,
+
+                //Data Therapy (Head Manager)
+                'add-data_therapy' => false,
+                'browse-data_therapy' => false,
+                'detail-data_therapy' => false,
+                'edit-data_therapy' => false,
+                'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -864,12 +1309,50 @@ class RolesSeeder extends Seeder
                 'edit-order' => false,
                 'delete-order' => false,
 
+                //Update Order Status
+                'change-status_order'=> false,
+                'change-status_order_process'=> false,
+                'change-status_order_delivery' => false,
+                'change-status_order_success' => false,
+                'change-status_order_reject' => false,
+
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
+                //Order Report
+                'browse-order_report' => false,
+                'browse-order_report_branch' => false,
+                'browse-order_report_cso' => false,
+
                 //Home Service
                 'add-home_service' => false,
                 'browse-home_service' => true,
                 'detail-home_service' => true,
                 'edit-home_service' => false,
                 'delete-home_service' => false,
+                'acc-view-home_service' => true,
+                'acc-reschedule-home_service' => false,
+                'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -948,6 +1431,13 @@ class RolesSeeder extends Seeder
                 "change-status-complete-service" => true,
                 "delete-service" => true,
 
+                // Technician Schedule (Admin Management)
+                "add-technician_schedule" => true,
+                "browse-technician_schedule" => true,
+                "detail-technician_schedule" => true,
+                "edit-technician_schedule" => true,
+                "delete-technician_schedule" => true,
+
                 // Submission (Admin Management)
                 "add-submission" => false,
                 "browse-submission" => true,
@@ -979,6 +1469,35 @@ class RolesSeeder extends Seeder
                 "delete-personal-homecare" => true,
                 "change-status-checkin-personalhomecare" => false,
                 "change-status-checkout-personalhomecare" => false,
+                "change-status-verified-personalhomecare" => true,
+                "acc-reschedule-personalhomecare" => true,
+                "acc-extend-personalhomecare" => true,
+                "change-status-product-personalhomecare" => false,
+
+                //Type Customer (Admin Management)
+        		'add-type_customer' => false,
+                'browse-type_customer' => false,
+        		'edit-type_customer' => false,
+                'delete-type_customer' => false,
+
+                //Data Sourcing (Admin Management)
+                'add-data_sourcing' => false,
+                'browse-data_sourcing' => false,
+                'edit-data_sourcing' => false,
+                'delete-data_sourcing' => false,
+
+                //Data Therapy (Admin Management)
+                'add-data_therapy' => false,
+                'browse-data_therapy' => false,
+                'detail-data_therapy' => false,
+                'edit-data_therapy' => false,
+                'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
     }

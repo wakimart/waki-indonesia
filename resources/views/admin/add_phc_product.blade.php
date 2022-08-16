@@ -49,6 +49,12 @@ $menu_item_second = "add_phc_product";
     .select2-selection__arrow {
         top: 10px;
     }
+
+    .div-CheckboxGroup {
+        border: solid 1px rgba(128, 128, 128, 0.32941);
+        padding: 10px;
+        border-radius: 3px;
+    }
 </style>
 @endsection
 
@@ -71,14 +77,17 @@ $menu_item_second = "add_phc_product";
                 </ol>
             </nav>
         </div>
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <form id="add-phc-product"
-                            method="POST"
-                            action="{{ route("store_phc_product") }}">
-                            @csrf
+
+        <form id="add-phc-product"
+            method="POST"
+            action="{{ route("store_phc_product") }}">
+            @csrf
+
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Product Detail</h2>
                             <input type="hidden"
                                 id="branch-code"
                                 name="branch_code"
@@ -91,6 +100,29 @@ $menu_item_second = "add_phc_product";
                                 name="code"
                                 id="code"
                                 required />
+                            <div class="form-group">
+                                <label for="warehouse_id">Warehouse</label>
+                                <select class="form-control"
+                                    id="warehouse_id"
+                                    name="warehouse_id"
+                                    onchange="selectWarehouse(this)" required="">
+                                    <option disabled selected>
+                                        Select Warehouse
+                                    </option>
+                                    <option value="1"
+                                        data-code="1">
+                                        Surabaya
+                                    </option>
+                                    <option value="2"
+                                        data-code="2">
+                                        Semarang
+                                    </option>
+                                    <option value="3"
+                                        data-code="3">
+                                        Jakarta
+                                    </option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="branch_id">Branch</label>
                                 <select class="form-control"
@@ -127,7 +159,7 @@ $menu_item_second = "add_phc_product";
                             </div>
                             <div class="form-group">
                                 <label for="code-increment">
-                                    Code (please select the branch & product first)
+                                    Code (please select the warehouse & product first)
                                 </label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -142,31 +174,128 @@ $menu_item_second = "add_phc_product";
                                         placeholder="Number"
                                         oninput="setCode()"
                                         disabled
+                                        readonly
                                         required />
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Product Checklist</h2>
+
                             <div class="form-group">
-                                <label for="status">Status</label>
-                                <select class="form-control"
-                                    id="status"
-                                    name="status">
-                                    <option value="0">Not Available</option>
-                                    <option value="1" selected>
-                                        Available
-                                    </option>
-                                </select>
+                                <span style="display: block;">Completeness</span>
+                                <div class="div-CheckboxGroup">
+
+                                    <div id="checklist_prod"></div>
+
+                                    <div class="form-check">
+                                        <label for="completeness-other"
+                                            class="form-check-label">
+                                            <input type="checkbox"
+                                                name="completeness[]"
+                                                id="completeness-other"
+                                                value="other"
+                                                onchange="showOtherInput(this)" />
+                                            Other
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text"
+                                            class="form-control d-none"
+                                            placeholder="Other description"
+                                            name="other_completeness"
+                                            id="other-text"/>
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="form-group">
+                                <span style="display: block;">Machine Condition</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check">
+                                        <label for="machine-condition-normal"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="machine_condition"
+                                                id="machine-condition-normal"
+                                                value="normal"/>
+                                            Normal
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label for="machine-condition-need-repair"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="machine_condition"
+                                                id="machine-condition-need-repair"
+                                                value="need_repair"/>
+                                            Need Repair
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <span style="display: block;">Physical Condition</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check">
+                                        <label for="physical-condition-new"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="physical_condition"
+                                                id="physical-condition-new"
+                                                value="new"/>
+                                            New
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label for="physical-condition-moderate"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="physical_condition"
+                                                id="physical-condition-moderate"
+                                                value="moderate"/>
+                                            Moderate
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label for="physical-condition-need-repair"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="physical_condition"
+                                                id="physical-condition-need-repair"
+                                                value="need_repair"/>
+                                            Need Repair
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <button type="submit"
                                     class="btn btn-gradient-primary">
                                     Save
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        </form>
+
     </div>
 </div>
 @endsection
@@ -178,6 +307,9 @@ $menu_item_second = "add_phc_product";
     referrerpolicy="no-referrer"
     defer></script>
 <script type="application/javascript">
+
+const arr_checklistProd = {!! json_encode( App\PersonalHomecareChecklist::$completeness_list, true ) !!};
+
 document.addEventListener("DOMContentLoaded", function () {
     $("#branch_id").select2();
     $("#product_id").select2();
@@ -189,27 +321,100 @@ function getSelectedCode(e) {
 
 function selectBranch(e) {
     document.getElementById("branch-code").value = getSelectedCode(e);
+    // setCodeSuffix();
+}
+
+function selectWarehouse(e) {
     setCodeSuffix();
 }
 
 function selectProduct(e) {
     document.getElementById("product-code").value = getSelectedCode(e);
     setCodeSuffix();
+    setChecklist(getSelectedCode(e));
+}
+
+function setChecklist(code) {
+    var firstLetter = "";
+
+    if(code == "WK2079"){
+        firstLetter = "A";
+    }
+    else if(code == "WKT2076H"){
+        firstLetter = "B";
+    }
+    else if(code == "WKT2076i"){
+        firstLetter = "C";
+    }
+    else if(code == "WKT2080"){
+        firstLetter = "D";
+    }
+    else if(code == "WKA2023"){
+        firstLetter = "E";
+    }
+    else if(code == "WKA2024"){
+        firstLetter = "F";
+    } else if (code === "WKT2090") {
+        firstLetter = "G";
+    }
+
+    document.getElementById("checklist_prod").innerHTML = "";
+    if(typeof arr_checklistProd[firstLetter] != 'undefined'){
+        arr_checklistProd[firstLetter].forEach(function (item, index){
+            $("#checklist_prod").append("<div class=\"form-check\">"
+                                            +"<label for=\"completeness-"+item+"\""
+                                            +"class=\"form-check-label\">"
+                                            +"<input type=\"checkbox\""
+                                                +"name=\"completeness[]\""
+                                                +"id=\"completeness-"+item+"\""
+                                                +"value=\""+item+"\"/>"
+                                            +item+"<i class=\"input-helper\"></i>"
+                                        +"</label>"
+                                    +"</div>");
+        });
+    }
+
 }
 
 function setCodeSuffix() {
-    const productCode = document.getElementById("product-code").value;
-    const branchCode = document.getElementById("branch-code").value;
+    let productCode = document.getElementById("product-code").value;
+    const warehouse_id = document.getElementById("warehouse_id").value;
+    // const branchCode = document.getElementById("branch-code").value;
 
-    document.getElementById("code-suffix").innerHTML = `${productCode}${branchCode}`;
+    if(productCode == "WK2079"){
+        productCode = "A";
+    }
+    else if(productCode == "WKT2076H"){
+        productCode = "B";
+    }
+    else if(productCode == "WKT2076i"){
+        productCode = "C";
+    }
+    else if(productCode == "WKT2080"){
+        productCode = "D";
+    }
+    else if(productCode == "WKA2023"){
+        productCode = "E";
+    }
+    else if(productCode == "WKA2024"){
+        productCode = "F";
+    } else if (productCode === "WKT2090") {
+        productCode = "G";
+    }
+    else{
+        productCode = "-";
+    }
 
-    if (productCode && branchCode) {
+    document.getElementById("code-suffix").innerHTML = `${productCode}${warehouse_id}_`;
+
+    if (productCode && warehouse_id) {
         document.getElementById("code-increment").removeAttribute("disabled");
-        getIncrementSuggestion(`${productCode}${branchCode}`);
+        getIncrementSuggestion(`${productCode}${warehouse_id}_`);
     }
 }
 
 function getIncrementSuggestion(code) {
+    console.log(code);
     fetch(
         `{{ route("get_phc_product_increment") }}/?code=${code}`,
         {
@@ -236,11 +441,45 @@ function getIncrementSuggestion(code) {
 }
 
 function setCode() {
-    const productCode = document.getElementById("product-code").value;
-    const branchCode = document.getElementById("branch-code").value;
+    // const productCode = document.getElementById("product-code").value;
+    // const branchCode = document.getElementById("branch-code").value;
+
+    let productCode = document.getElementById("product-code").value;
+    const warehouse_id = document.getElementById("warehouse_id").value;
     const increment = document.getElementById("code-increment").value;
 
-    document.getElementById("code").value = `${productCode}${branchCode}${increment}`;
+    if(productCode == "WK2079"){
+        productCode = "A";
+    }
+    else if(productCode == "WKT2076H"){
+        productCode = "B";
+    }
+    else if(productCode == "WKT2076i"){
+        productCode = "C";
+    }
+    else if(productCode == "WKT2080"){
+        productCode = "D";
+    }
+    else if(productCode == "WKA2023"){
+        productCode = "E";
+    }
+    else if(productCode == "WKA2024"){
+        productCode = "F";
+    } else if (productCode === "WKT2090") {
+        productCode = "G";
+    }
+
+    document.getElementById("code").value = `${productCode}${warehouse_id}_${increment}`;
+}
+
+function showOtherInput(e) {
+    if (e.checked) {
+        document.getElementById("other-text").classList.remove("d-none");
+        document.getElementById("other-text").setAttribute("required", "");
+    } else {
+        document.getElementById("other-text").removeAttribute("required");
+        document.getElementById("other-text").classList.add("d-none");
+    }
 }
 </script>
 @endsection

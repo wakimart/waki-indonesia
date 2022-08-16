@@ -54,7 +54,7 @@
 							{{ csrf_field() }}
 							<div class="form-group">
 								<label for="">Service Date</label>
-								<input type="date" class="form-control" name="service_date" id="service_date" placeholder="Tanggal Order" value="<?php echo date('Y-m-j'); ?>" required data-msg="Mohon Isi Tanggal" />
+								<input type="date" class="form-control" name="service_date" id="service_date" placeholder="Tanggal Order" value="{{ date('Y-m-j', strtotime($autofill['appointment'] ?? 'now')) }}" required data-msg="Mohon Isi Tanggal" />
 								<div class="validation"></div>
 								<span class="invalid-feedback">
 									<strong></strong>
@@ -65,19 +65,29 @@
 	                			<input type="number" class="form-control" id="no_mpc" name="no_mpc" placeholder="No. MPC">
 	                			<div class="validation"></div>
 	              			</div>
+							<div class="form-group">
+	                			<label for="">Area</label>
+								<select name="area" class="form-control" required>
+									<option value="" disabled>Choose Area</option>
+									@foreach (App\Service::$Area as $area)
+									<option value="{{ $area }}">{{ ucwords($area) }}</option>
+									@endforeach
+								</select>
+	                			<div class="validation"></div>
+	              			</div>
 	              			<div class="form-group">
 				                <label for="">Name</label>
-				                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
+				                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required value="{{ $autofill['name'] ?? '' }}">
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
-				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address" required></textarea>
+				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address" required>{{ $autofill['address'] ?? '' }}</textarea>
 				                <div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
 				                <label for="">Phone Number</label>
-				                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required>
+				                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required value="{{ $autofill['phone'] ?? '' }}">
 				                <div class="validation"></div>
 	              			</div>
 
@@ -167,6 +177,8 @@
 			                    <div id="tambahan_productservice"></div>
 			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}			                    
 			                </div>
+
+							<input type="hidden" id="technician_schedule_id" name="technician_schedule_id" value="{{ $autofill['id'] ?? '' }}">
 
 	              			<div id="errormessage"></div>
 
@@ -362,7 +374,27 @@
                     $(this).parent().next().children().removeAttr('required', '');
                 }
             });
-        @endif
+        @endif		
+
+		var product_services = <?php echo json_encode($product_tss ?? []); ?>;
+		$.each(product_services, function (i, product_service) {
+			if (i != 0) {
+				$('#tambah_productservice').trigger('click');
+			}
+			if (product_service['product_id'] != null) {
+				$('#product_service-' + detailProductService).val(product_service['product_id']).change();
+			} else {
+				$('#product_service-' + detailProductService).val("other").change();
+				$('#productservice_other_' + detailProductService).val(product_service['other_product']);
+			}
+			var issues = JSON.parse(product_service['issues']);
+			var cbx_issues = issues[0].issues;
+			$('#issues-' + detailProductService).val(issues[1].desc);
+			$("input[name='cbx_issue-" + detailProductService +"']").prop('checked', false);
+			$.each(cbx_issues, function(i, val){
+				$("input[name='cbx_issue-" + detailProductService + "'][value='" + val + "']").prop('checked', true);
+			});
+		});
 
 
 		var frmAdd;

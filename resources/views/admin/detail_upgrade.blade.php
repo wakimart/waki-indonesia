@@ -129,6 +129,8 @@ $menu_item_second = "detail_upgrade_form";
 										<td>Status</td>
 										<td>Acc Code</td>
 										<td>Upgrade Date</td>
+										<td>Bill DO</td>
+										<td>Area</td>
 									</thead>
 									<tr>
 										<td class="center">
@@ -159,6 +161,12 @@ $menu_item_second = "detail_upgrade_form";
 										</td>
 										<td class="center">
 											{{ date("d/m/Y", strtotime($upgrade->acceptance['upgrade_date'])) }}
+										</td>
+										<td class="center">
+											{{ $upgrade->acceptance->bill_do }}
+										</td>
+										<td class="center">
+											{{ $upgrade->acceptance->area ?? "No Area" }}
 										</td>
 									</tr>
 								</table>
@@ -362,6 +370,64 @@ $menu_item_second = "detail_upgrade_form";
 	        	</div>
 	      	</div>
 	    </div>
+
+	    @if($upgrade['history_status'] != null)
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center">
+                                <div class="table-responsive">
+                                    <table class="col-md-12 col-sm-12 col-xs-12">
+                                        <thead>
+                                            <td colspan="3">History Status</td>
+                                        </thead>
+                                        <tr>
+                                            <td class="center">Status</td>
+                                            <td class="center">User</td>
+                                            <td class="center">Date</td>
+                                        </tr>
+                                        @foreach($upgrade['history_status'] as $history_status)
+                                            <tr>
+                                                <td class="center">
+                                                    @if (strtolower($history_status['status']) == "process")
+                                                        <span class="badge badge-primary">
+                                                            Process
+                                                        </span>
+                                                    @elseif (strtolower($history_status['status']) == "repaired")
+                                                        <span class="badge badge-warning">
+                                                            Repaired
+                                                        </span>
+                                                    @elseif (strtolower($history_status['status']) == "approved")
+                                                        <span class="badge badge-info">
+                                                            Approved
+                                                        </span>
+                                                    @elseif (strtolower($history_status['status']) == "completed")
+                                                        <span class="badge badge-success">
+                                                            Completed
+                                                        </span>
+                                                    @elseif (strtolower($history_status['status']) == "cancel")
+                                                        <span class="badge badge-danger">
+                                                            Cancel
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td class="center">
+                                                    {{ $upgrade->statusBy(strtolower($history_status['status']))['user_id']['name'] }}
+                                                </td>
+                                                <td class="center">
+                                                    {{ date("d/m/Y", strtotime($history_status['updated_at'])) }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <?php if (strtolower($upgrade->status) === "repaired"): ?>
             <div class="row">

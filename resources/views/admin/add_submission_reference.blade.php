@@ -96,7 +96,7 @@ $menu_item_second = "add_submission_reference";
     <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">
-                Add Submission - Referensi BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI
+                Add Submission - Referensi BERBAGI KASIH SAYANG HAPPY WITH WAKI
             </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -134,7 +134,7 @@ $menu_item_second = "add_submission_reference";
                                 <input type="text"
                                     readonly
                                     disabled
-                                    value="Referensi BERBAGI KASIH SAYANG SEHAT BERSAMA WAKI" />
+                                    value="Referensi BERBAGI KASIH SAYANG HAPPY WITH WAKI" />
                             </div>
 
                             <div class="form-group">
@@ -288,7 +288,7 @@ $menu_item_second = "add_submission_reference";
                             <div id="refrensiForm" class="form-group">
                                 <h3>Reference Data</h3>
                                 <br>
-                                @for ($x = 0; $x < 5; $x++)
+                                @for ($x = 0; $x < 10; $x++)
                                     <div class="tab">
                                         <label for="member-name-{{ $x }}">
                                             Member {{ $x + 1 }}
@@ -480,7 +480,7 @@ $menu_item_second = "add_submission_reference";
                                 @endfor
 
                                 <div style="text-align: center; margin-top: 40px;">
-                                    @for ($x = 0; $x < 5; $x++)
+                                    @for ($x = 0; $x < 10; $x++)
                                         <span class="step"></span>
                                     @endfor
                                 </div>
@@ -755,12 +755,12 @@ function validateForm() {
             return currentValue === souvenirValue;
         });
 
-        if (findDuplicate.length > 2) {
-            addOrRemoveInvalid(souvenirInput, "add");
-            valid = false;
-        } else {
-            addOrRemoveInvalid(souvenirInput, "remove");
-        }
+        // if (findDuplicate.length > 2) {
+        //     addOrRemoveInvalid(souvenirInput, "add");
+        //     valid = false;
+        // } else {
+        //     addOrRemoveInvalid(souvenirInput, "remove");
+        // }
     }
 
     // return the valid status

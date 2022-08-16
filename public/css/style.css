@@ -148,7 +148,7 @@ h6 {
 # Search Bar
 --------------------------------------------------------------*/
 #searchicn{
-  color: #413e66;
+  color: #000;
   padding: 12px 15px;
 }
 #searchicn:hover{
@@ -263,6 +263,7 @@ h6 {
   background: url("../sources/hero-bg.png") center top no-repeat;
   background-size: cover;
   padding: 0 0 60px 0;
+  z-index: 2;
 }
 
 #hero .icon-play{
@@ -592,10 +593,10 @@ p.titleprodcat{
   float: left;
 }
 
-.main-nav a {
+.main-nav a, .main-nav span.mm {
   display: block;
   position: relative;
-  color: #413e66;
+  color: #000;
   padding: 10px 15px;
   transition: 0.3s;
   font-size: 14px;
@@ -604,9 +605,11 @@ p.titleprodcat{
   font-weight: 600;
 }
 
+
 .main-nav a:hover,
 .main-nav .active > a,
-.main-nav li:hover > a {
+.main-nav li:hover > a,
+.main-nav .mm:hover {
   color: #1bc554;
   text-decoration: none;
 }
@@ -702,32 +705,60 @@ p.titleprodcat{
   list-style: none;
 }
 
-.mobile-nav a {
+.mobile-nav a, .mobile-nav span.mm {
   display: block;
   position: relative;
   color: #fff;
   padding: 10px 20px;
   font-weight: 500;
 }
+.mobile-nav span.arrow{
+  display: block;
+  position: relative;
+  color: #fff;
+  padding: 0px 20px;
+  font-weight: 500;
+}
+.mobile-nav span i {
+  position: absolute;
+  right: 15px;
+  font-size: 1.5em;
+  z-index: 999;
+  cursor: pointer;
+}
+.mobile-nav span i.dd{
+  top: -1.4em;
+}
+.mobile-nav .active.drop-down > span i{
+}
+.mobile-nav span i {
+  position: absolute;
+  right: 15px;
+  font-size: 1.5em;
+  z-index: 999;
+  cursor: pointer;
+}
+
 
 .mobile-nav a:hover,
 .mobile-nav .active > a,
-.mobile-nav li:hover > a {
+.mobile-nav li:hover > a,
+.mobile-nav span i:hover {
   color: #1bc554;
   text-decoration: none;
 }
 
-.mobile-nav .drop-down > a:after {
+/* .mobile-nav .drop-down > a:after {
   content: "\f078";
   font-family: FontAwesome;
   padding-left: 10px;
   position: absolute;
   right: 15px;
-}
+} */
 
-.mobile-nav .active.drop-down > a:after {
+/* .mobile-nav .active.drop-down > a:after {
   content: "\f077";
-}
+} */
 
 .mobile-nav .drop-down > a {
   padding-right: 35px;
@@ -1442,9 +1473,434 @@ CORE
 /* Portfolio Section
 --------------------------------*/
 
+#portfolio .Grid {
+}
+#portfolio .Grid-row {
+  display: flex;
+  justify-content: space-between;
+  /* margin-bottom: 2.5rem; */
+  flex-wrap: wrap;
+}
+#portfolio .Card {
+  position: relative;
+  flex: 0 1 30%;
+  background-color: #f1faf2;
+  padding-bottom: 5rem;
+  transition: background-color 0.2s cubic-bezier(0.5, 0.3, 0.8, 0.06);
+  color: #000;
+  margin: 1.5rem auto;
+}
+#portfolio .Card-thumb {
+  position: relative;
+  /* width: 15rem; */
+  /* height: 10rem; */
+  perspective-origin: 50% 0%;
+  perspective: 600px;
+  z-index: 1;
+}
+#portfolio .Card-image,
+#portfolio .Card-shadow {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 15rem;
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+#portfolio .Card-shadow {
+  opacity: 0.8;
+}
+#portfolio .Card-shadow:nth-child(1) {
+  opacity: 0.6;
+  background-color: #ffb800;
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1) 0.07s;
+}
+#portfolio .Card-shadow:nth-child(2) {
+  opacity: 0.7;
+  background-color: #ffbb00;
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1) 0.05s;
+}
+#portfolio .Card-shadow:nth-child(3) {
+  background-color: #fcd87e;
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1) 0.03s;
+}
+#portfolio .Card-image {
+  position: relative;
+  background-size: auto 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #fff;
+}
+#portfolio .Card-image::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #000;
+  content: '';
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+#portfolio .Card-title,
+#portfolio .Card-explore {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 5rem;
+  text-align: center;
+  transition: all 0.2s cubic-bezier(0.5, 0.3, 0.8, 0.06);
+}
+#portfolio .Card-title span,
+#portfolio .Card-explore span {
+  padding: 0.5rem;
+  flex: 1 1 auto;
+  text-align: center;
+}
+#portfolio .Card-explore {
+  opacity: 0;
+  transform: translate(0, -1rem);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #048b32;
+}
+#portfolio .Card-button {
+  position: absolute;
+  left: 50%;
+  top: 5rem;
+  padding: 0.5rem 1rem;
+  background-color: #fff;
+  border-radius: 2rem;
+  border: 2px solid #048b32;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transform: translate(-50%, 2rem);
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0;
+  outline: none;
+  z-index: 4;
+}
+#portfolio .Card:hover,
+.Card--active {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+#portfolio .Card:hover .Card-thumb,
+#portfolio .Card--active .Card-thumb {
+  z-index: 3;
+}
+#portfolio .Card:hover .Card-title,
+#portfolio .Card--active .Card-title {
+  opacity: 0;
+}
+#portfolio .Card:hover .Card-explore,
+#portfolio .Card--active .Card-explore {
+  opacity: 1;
+  transform: translate(0, 1rem);
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1) 0.1s;
+}
+#portfolio .Card:hover .Card-image,
+#portfolio .Card--active .Card-image {
+  transform: scale(1.05) translate(0, -1rem) rotateX(25deg);
+}
+#portfolio .Card:hover .Card-image::before,
+#portfolio .Card--active .Card-image::before {
+  opacity: 0.4;
+}
+#portfolio .Card:hover .Card-shadow:nth-child(3),
+#portfolio .Card--active .Card-shadow:nth-child(3) {
+  transform: scale(1.02) translate(0, -0.3rem) rotateX(15deg);
+}
+#portfolio .Card:hover .Card-shadow:nth-child(2),
+#portfolio .Card--active .Card-shadow:nth-child(2) {
+  transform: scale(0.9) translate(0, 1rem) rotateX(15deg);
+}
+#portfolio .Card:hover .Card-shadow:nth-child(1),
+#portfolio .Card--active .Card-shadow:nth-child(1) {
+  transform: scale(0.82) translate(0, 2.4rem) rotateX(5deg);
+}
+#portfolio .Card:hover .Card-button,
+#portfolio .Card--active .Card-button {
+  opacity: 1;
+  color: #048b32;
+  transform: translate(-50%, 0);
+}
+#portfolio .Card:hover .Card-button:hover,
+#portfolio .Card--active .Card-button:hover {
+  color: #fff;
+  background-color: #048b32;
+}
+#portfolio .Card--active,
+#portfolio .Card--active:hover {
+  background: none;
+}
+#portfolio .Card--active .Card-explore,
+#portfolio .Card--active:hover .Card-explore {
+  opacity: 0;
+  transform: translate(0, 3rem);
+  transition: all 0.5s cubic-bezier(0.42, 0, 0.58, 1);
+}
+#portfolio .Card--active .Card-image,
+#portfolio .Card--active:hover .Card-image {
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+  transform: scale(1.05) translate(0, -2.5rem) rotateX(50deg);
+}
+#portfolio .Card--active .Card-image::before,
+#portfolio .Card--active:hover .Card-image::before {
+  opacity: 0.4;
+}
+#portfolio .Card--active .Card-button,
+#portfolio .Card--active:hover .Card-button {
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.42, 0, 0.58, 1);
+  transform: translate(-50%, -2rem) scale(1, 0.4);
+}
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(1).Card--active .Card-shadow:nth-child(3),
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(1) .Card--active:hover .Card-shadow:nth-child(3) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1);
+  transform: scale(1) translate(6%, 113%);
+}
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(1).Card--active .Card-shadow:nth-child(2),
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(1) .Card--active:hover .Card-shadow:nth-child(2) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.1s;
+  transform: scale(1) translate(6%, 223%);
+}
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(1).Card--active .Card-shadow:nth-child(1),
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(1) .Card--active:hover .Card-shadow:nth-child(1) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.2s;
+  transform: scale(2.1) translate(81%, 80%);
+}
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(2).Card--active .Card-shadow:nth-child(3),
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(2) .Card--active:hover .Card-shadow:nth-child(3) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1);
+  transform: scale(1) translate(-108%, 113%);
+}
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(2).Card--active .Card-shadow:nth-child(2),
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(2) .Card--active:hover .Card-shadow:nth-child(2) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.1s;
+  transform: scale(1) translate(-108%, 223%);
+}
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(2).Card--active .Card-shadow:nth-child(1),
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(2) .Card--active:hover .Card-shadow:nth-child(1) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.2s;
+  transform: scale(2.1) translate(26%, 80%);
+}
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(3).Card--active .Card-shadow:nth-child(3),
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(3) .Card--active:hover .Card-shadow:nth-child(3) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1);
+  transform: scale(1) translate(-222%, 113%);
+}
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(3).Card--active .Card-shadow:nth-child(2),
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(3) .Card--active:hover .Card-shadow:nth-child(2) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.1s;
+  transform: scale(1) translate(-222%, 223%);
+}
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(3).Card--active .Card-shadow:nth-child(1),
+#portfolio .Grid-row:nth-child(1) .Card:nth-child(3) .Card--active:hover .Card-shadow:nth-child(1) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.2s;
+  transform: scale(2.1) translate(-29%, 80%);
+}
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(1).Card--active .Card-shadow:nth-child(3),
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(1) .Card--active:hover .Card-shadow:nth-child(3) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1);
+  transform: scale(1) translate(6%, -55%);
+}
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(1).Card--active .Card-shadow:nth-child(2),
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(1) .Card--active:hover .Card-shadow:nth-child(2) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.1s;
+  transform: scale(1) translate(6%, 55%);
+}
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(1).Card--active .Card-shadow:nth-child(1),
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(1) .Card--active:hover .Card-shadow:nth-child(1) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.2s;
+  transform: scale(2.1) translate(81%, 0%);
+}
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(2).Card--active .Card-shadow:nth-child(3),
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(2) .Card--active:hover .Card-shadow:nth-child(3) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1);
+  transform: scale(1) translate(-108%, -55%);
+}
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(2).Card--active .Card-shadow:nth-child(2),
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(2) .Card--active:hover .Card-shadow:nth-child(2) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.1s;
+  transform: scale(1) translate(-108%, 55%);
+}
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(2).Card--active .Card-shadow:nth-child(1),
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(2) .Card--active:hover .Card-shadow:nth-child(1) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.2s;
+  transform: scale(2.1) translate(26%, 0%);
+}
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(3).Card--active .Card-shadow:nth-child(3),
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(3) .Card--active:hover .Card-shadow:nth-child(3) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1);
+  transform: scale(1) translate(-222%, -55%);
+}
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(3).Card--active .Card-shadow:nth-child(2),
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(3) .Card--active:hover .Card-shadow:nth-child(2) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.1s;
+  transform: scale(1) translate(-222%, 55%);
+}
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(3).Card--active .Card-shadow:nth-child(1),
+#portfolio .Grid-row:nth-child(2) .Card:nth-child(3) .Card--active:hover .Card-shadow:nth-child(1) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.2s;
+  transform: scale(2.1) translate(-29%, 0%);
+}
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(1).Card--active .Card-shadow:nth-child(3),
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(1) .Card--active:hover .Card-shadow:nth-child(3) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1);
+  transform: scale(1) translate(6%, -223%);
+}
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(1).Card--active .Card-shadow:nth-child(2),
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(1) .Card--active:hover .Card-shadow:nth-child(2) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.1s;
+  transform: scale(1) translate(6%, -113%);
+}
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(1).Card--active .Card-shadow:nth-child(1),
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(1) .Card--active:hover .Card-shadow:nth-child(1) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.2s;
+  transform: scale(2.1) translate(81%, -80%);
+}
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(2).Card--active .Card-shadow:nth-child(3),
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(2) .Card--active:hover .Card-shadow:nth-child(3) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1);
+  transform: scale(1) translate(-108%, -223%);
+}
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(2).Card--active .Card-shadow:nth-child(2),
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(2) .Card--active:hover .Card-shadow:nth-child(2) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.1s;
+  transform: scale(1) translate(-108%, -113%);
+}
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(2).Card--active .Card-shadow:nth-child(1),
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(2) .Card--active:hover .Card-shadow:nth-child(1) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.2s;
+  transform: scale(2.1) translate(26%, -80%);
+}
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(3).Card--active .Card-shadow:nth-child(3),
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(3) .Card--active:hover .Card-shadow:nth-child(3) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1);
+  transform: scale(1) translate(-222%, -223%);
+}
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(3).Card--active .Card-shadow:nth-child(2),
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(3) .Card--active:hover .Card-shadow:nth-child(2) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.1s;
+  transform: scale(1) translate(-222%, -113%);
+}
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(3).Card--active .Card-shadow:nth-child(1),
+#portfolio .Grid-row:nth-child(3) .Card:nth-child(3) .Card--active:hover .Card-shadow:nth-child(1) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.2s;
+  transform: scale(2.1) translate(-29%, -80%);
+}
+.Gallery {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  background: #f5f5f5;
+  transform: scale(1.2);
+  transition: none;
+  padding: 5rem 0;
+  overflow-y: scroll;
+}
+.Gallery-header {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 70px;
+  background-color: #f1faf2;
+  padding-bottom: 2.5rem;
+}
+.Gallery-close {
+  position: absolute;
+  right: 1rem;
+  /* top: 1rem; */
+  font-size: 3rem;
+  opacity: 0.5;
+  cursor: pointer;
+  line-height: 40px;
+}
+.Gallery-close:hover {
+  opacity: 0.8;
+}
+.Gallery-images {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: space-evenly;
+  margin-bottom: 1rem;
+}
+.Gallery-images:nth-child(3) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.33s;
+  opacity: 0;
+  transform: translate(0, 3rem) scale(1.1);
+}
+.Gallery-images:nth-child(4) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.44s;
+  opacity: 0;
+  transform: translate(0, 3rem) scale(1.1);
+}
+.Gallery-images:nth-child(5) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.55s;
+  opacity: 0;
+  transform: translate(0, 3rem) scale(1.1);
+}
+.Gallery-images:nth-child(6) {
+  transition: all 0.2s cubic-bezier(0.7, 0, 0.78, 1) 0.66s;
+  opacity: 0;
+  transform: translate(0, 3rem) scale(1.1);
+}
+.Gallery-left {
+  flex: 1 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.Gallery-image {
+  display: block;
+  width: 30%;
+  height: 12rem;
+  transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+  background: #f1faf2;
+  /* background-size: auto 100%; */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.Gallery-image--primary {
+  width: 31rem;
+  height: 20rem;
+  background-color: #673ab7;
+}
+.Gallery--active {
+  display: block;
+  z-index: 100;
+  background: #f1faf2;
+  transform: scale(1);
+  opacity: 1;
+  transition: all 0.5s cubic-bezier(0.7, 0, 0.78, 1) 0.1s;
+}
+.Gallery--active .Gallery-close {
+  display: block;
+}
+.Gallery--active .Gallery-images {
+  opacity: 1;
+  transform: none;
+}
+
 #portfolio {
   padding: 40px 0;
 }
+
+#portfolio .tabs-container{
+  margin: auto;
+}
+
 
 #portfolio #portfolio-flters {
   padding: 0;
@@ -2086,9 +2542,20 @@ CORE
   }
 }
 
-@media (max-width: 574px) {
+@media (max-width: 575px) {
   #footer .footer-top .social-links a {
     margin-bottom: 25px;
+  }
+
+  #portfolio .Card {
+    flex: 0 1 100%;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 991px) {
+
+  #portfolio .Card {
+    flex: 0 1 48%;
   }
 }
 

@@ -19,27 +19,27 @@ if (
 
 @section('style')
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
+    #intro {padding-top: 2em;}
+    .signature-pad {
+      width: 320px;
+      height: 200px;
+      background-color: white;
+      margin-bottom: 0.5em;
     }
-
+    @media (max-width:400px){
+      .signature-pad {
+        width: 255px !important;
+      }
+    }
+    @media (min-width:768px){
+      .signature-pad {
+        width: 500px !important;
+      }
+    }
     table {
         margin: 1em;
         font-size: 14px;
     }
-
-    .table-responsive table {
-        table-layout:fixed;
-        width: 98%;
-    }
-
-    .table-responsive table td {
-        word-wrap:break-word;
-        min-width: 160px;
-        max-width: 160px;
-        white-space:normal
-    }
-
     .table-responsive table .form-control {
         height: 32px;
         line-height: 32px;
@@ -47,63 +47,55 @@ if (
         border-radius: 2px;
         margin-bottom: 0;
     }
-
     .table-responsive table .form-control.error {
         border-color: #f50000;
         border: 1px solid red;
     }
-
     .table-responsive table td .save {
         display: none;
     }
-
     table thead {
         background-color: #8080801a;
         text-align: center;
     }
-
     table td {
         border: 0.5px #8080801a solid;
         padding: 0.5em;
-
     }
-
     .right {
         text-align: right;
         padding-right: 1em;
     }
-
     .pInTable {
         margin-bottom: 6pt !important;
         font-size: 10pt;
     }
-
     select.form-control {
         color: black !important;
     }
-
     .modal {
         overflow-y: auto !important;
     }
-
     .btn {
         width: 100%;
         min-width: 50px;
         max-width: 400px;
     }
-
     @media (max-width: 480px) {
 		.btn span {
             font-size: 2.5vw;
             padding: 0 !important;
         }
 	}
-
     @media (max-width: 1187px) {
 		.btn {
             margin-bottom: 3em;
         }
 	}
+
+    .decrease-width {
+        width: 100px !important
+    }
 </style>
 @endsection
 
@@ -116,7 +108,16 @@ if (
                     <div class="card">
                         <div class="card-body">
                             <div class="row justify-content-center">
-                                <h2>SUBMISSION SUCCESS</h2>
+                                @php
+                                    $style_h = "";
+                                    if($submission->status_reference == "new"){
+                                        $style_h = "color: #4c94ff;";
+                                    }
+                                    elseif($submission->status_reference == "rejected"){
+                                        $style_h = "color: #ff4c4c;";
+                                    }
+                                @endphp
+                                <h2 style="{{ $style_h }}">SUBMISSION {{ strtoupper($submission->status_reference) }}</h2>
                             </div>
 
                             <div class="row justify-content-center">
@@ -125,10 +126,10 @@ if (
                                     style="margin-right: 0.5em;">
                                     <table class="table">
                                         <thead>
-                                            <td class="right">Submission Date</td>
+                                            <td>Submission Date</td>
                                         </thead>
                                         <tr>
-                                            <td class="right">
+                                            <td class="text-center">
                                                 {{ date("d/m/Y H:i:s", strtotime($submission->created_at)) }}
                                             </td>
                                         </tr>
@@ -221,7 +222,7 @@ if (
                                     <table class="table"
                                         style="table-layout: auto;">
                                         <thead>
-                                            <td colspan="14">Reference</td>
+                                            <td colspan="15">Reference</td>
                                         </thead>
                                         <thead style="background-color: #80808012 !important;">
                                             <tr>
@@ -231,7 +232,8 @@ if (
                                                 <td>Province</td>
                                                 <td>City</td>
                                                 <td>Link HS</td>
-                                                {{-- <td>Order</td> --}}
+                                                <td>Order</td>
+                                                <td>Wakimart Link</td>
                                                 <td>Souvenir</td>
                                                 <td>Status</td>
                                                 <td>Deliv. Status</td>
@@ -240,6 +242,7 @@ if (
                                                 @endif
                                                 <td>Edit</td>
                                                 <td>Delete</td>
+                                                <td>Signature</td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -253,6 +256,7 @@ if (
                                                     name="id"
                                                     form="edit-form_{{ $key }}"
                                                     value="{{ $reference->id }}" />
+                                                <input type="hidden" id="wakimart_link_{{ $key }}" value="{{$reference->wakimart_link}}">
                                                 <tr>
                                                     <td id="name_{{ $key }}">
                                                         {{ $reference->name }}
@@ -311,9 +315,23 @@ if (
                                                             @endforeach
                                                         @endif
                                                     </td>
-                                                    
-                                                    {{-- <td class="text-center"
+
+                                                    <td class="text-center"
                                                         id="order_{{ $key }}"
+                                                        data-order="{{ $reference->order_id }}"
+                                                        style="overflow-x:auto;">
+                                                        @php
+                                                        if (!empty($reference->order_id)) {
+                                                            $order = Order::select("id", "code")
+                                                                ->where("id", $reference->order_id)
+                                                                ->first();
+
+                                                            echo '<a href="'.route("detail_order", ["code" => $order->code]).'">'.$order->code.'</a>';
+                                                        }
+                                                        @endphp
+                                                    </td>
+                                                    <td class="text-center"
+                                                        id="order_white_{{ $key }}"
                                                         data-order="{{ $reference->order_id }}"
                                                         style="overflow-x:auto; display: none;">
                                                         @php
@@ -322,10 +340,13 @@ if (
                                                                 ->where("id", $reference->order_id)
                                                                 ->first();
 
-                                                            echo $order->code;
+                                                            echo '<a href="'.route("detail_order", ["code" => $order->code]).'" style="color:white">'.$order->code.'</a>';
                                                         }
                                                         @endphp
-                                                    </td> --}}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="{{ $reference->wakimart_link }}" target="_blank">{{ $reference->wakimart_link }}</a>
+                                                    </td>
                                                     <td id="souvenir_{{ $key }}"
                                                         class="text-center"
                                                         data-permission="{{ $specialPermission }}"
@@ -380,6 +401,13 @@ if (
                                                             <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                         </button>
                                                     </td>
+                                                    <td class="text-center">
+                                                        @if($reference->reference_souvenir->status == 'success' &&  $reference->online_signature == '')
+                                                            <button class="btn" style="padding: 0" onclick="createSignature({{ $reference->id }})">
+                                                                <i class="mdi mdi-pencil-box-outline" style="font-size: 24px; color: #32a852;"></i>                                                
+                                                            </button>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                                 {{-- <tr>
                                                     <td class="text-center"
@@ -426,7 +454,7 @@ if (
                                 <button class="btn btn-gradient-primary mt-2"
                                     id="btnAddReference"
                                     onclick="checkAddReference()">
-                                    <span>Add Reference - Sehat Bersama WAKi</span>
+                                    <span>Add Reference - Happy With WAKi</span>
                                 </button>
                             </div>
 
@@ -439,13 +467,13 @@ if (
                                 </div>
                                 <form class="forms-sample"
                                     method="GET"
-                                    action="https://wa.me/">
+                                    action="https://api.whatsapp.com/send">
                                     <div class="form-group row justify-content-center">
                                         <button type="submit"
                                             class="btn btn-gradient-primary mr-2 my-2"
                                             name="text"
-                                            value="Terima Kasih telah mengikuti program *Sehat Bersama WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">
-                                            Share Sehat bersama Waki
+                                            value="Terima Kasih telah mengikuti program *Happy With WAKi*. Berikut adalah tautan bukti formulir ( {{ route('refrence_sehat') }}?id={{ $submission->id }} )">
+                                            Share Happy With WAKi
                                         </button>
                                         {{-- <button type="submit"
                                             class="btn btn-gradient-primary mr-2 my-2"
@@ -504,6 +532,46 @@ if (
                     </div>
                 </div>
             </div>
+
+            @if($specialPermission && ($submission->status_reference != "approved" && $submission->status_reference != "rejected"))
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row justify-content-center mb-2">
+                                <h2>Status Reference</h2>
+                            </div>
+                            <form id="actionAdd"
+                                class="forms-sample"
+                                method="POST"
+                                action="{{ route('update_submission_status_referensi') }}">
+                                {{ csrf_field() }}
+                                <input type="text"
+                                    name="id"
+                                    value="{{ $submission['id'] }}"
+                                    hidden />
+                                <div class="form-group row justify-content-center">
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-primary m-3 btn-lg"
+                                        name="status"
+                                        value="approved">
+                                        Approved
+                                    </button>
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-danger m-3 btn-lg"
+                                        name="status"
+                                        value="rejected">
+                                        Reject
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 @else
@@ -672,7 +740,7 @@ if (
                         </button>
                         <input type="hidden" id="hs-row-count" value="0" />
                     </div>
-                    {{-- <div class="form-group">
+                    <div class="form-group">
                         <label for="edit-order">Order</label>
                         <input type="hidden"
                             id="edit-order"
@@ -685,9 +753,17 @@ if (
                             data-originbutton="btn_choose_order"
                             data-toggle="modal"
                             data-target="#choose-order">
-                            Choose Order
+                            Choose Waki Order
                         </button>
-                    </div> --}}
+                    </div>
+                    <div class="form-group">
+                        <input type="text"
+                            class="form-control"
+                            id="edit-wakimart-link"
+                            name="wakimart_link"
+                            value=""
+                            placeholder="Wakimart Link"/>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -802,7 +878,7 @@ if (
     tabindex="-1"
     role="dialog"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="padding-bottom: 0;">
                 <h5 class="text-center">
@@ -820,7 +896,7 @@ if (
 
             <div class="modal-body">
                 <div id="div_detailhs" class="form-group d-none">
-                    <table id="table-detail-hs" style="margin: 1em 0em;">
+                    <table id="table-detail-hs" style="margin: 1em 0em; width:100%">
                         <thead>
                             <td>Tanggal & Jam</td>
                             <td>Link HS</td>
@@ -834,7 +910,7 @@ if (
                 </div>
                 <div id="div_detailorder" class="form-group d-none">
                     <label>Detail Order</label>
-                    <table id="table-detail-order" style="margin: 1em 0em;">
+                    <table id="table-detail-order" style="margin: 1em 0em; width: 100%">
                         <thead>
                             <td>Code</td>
                             <td>Member</td>
@@ -847,11 +923,23 @@ if (
                     </table>
                 </div>
 
+                <div id="div_wakimartlink" class="form-group d-none">
+                    <table style="margin: 1em 0em; width:100%">
+                        <thead>
+                            <td>Wakimart Link</td>
+                        </thead>
+                        <tbody id="append_tbody_wakimart_link">
+
+                        </tbody>
+                    </table>
+                </div>
+
+                
                 <form id="formUpdateStatus" method="POST" action="{{ route('update_reference') }}">
-                    {{ csrf_field() }}
-                    <div class="form-group">
+                    {{ csrf_field() }}                    
+                    <div class="form-group text-center mt-4">
                         <label>Other Detail</label>
-                        <table id="table-detail-other" style="margin: 1em 0em;">
+                        <table id="table-detail-other" style="margin: 1em 0em;width:100%">
                             <thead>
                                 <td>Item</td>
                                 <td>Name</td>
@@ -875,6 +963,8 @@ if (
                     </div>
                 </form>
 
+                <!-- display signature -->
+                <div id="displaySignature" class="mt-4 text-center"></div>
             </div>
 
         </div>
@@ -918,9 +1008,66 @@ if (
         </div>
     </div>
 </div>
+
+<!-- SIGNATURE MODAL -->
+<div class="modal fade"
+    id="createSignatureModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-bottom: 0;">
+                <h5 class="text-center">
+                    Add Signature
+                </h5>
+                <button type="button"
+                    class="close"
+                    id="modal-ref-close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+
+            <div class="modal-body">
+                <form action="{{route('online_signature.add')}}" method="POST" enctype="multipart/form-data" id="signatureForm">
+                    @csrf
+                    <div class="col-md-12 text-center p-0">
+                        <div class="wrapper">
+                            <input type="hidden" name="ref_id" id="ref-id">
+                            <input type="hidden" name="online_signature" id="signature-data">
+                            <input type="hidden" name="url" value="{{ url()->full() }}" />
+                            @foreach($references as $refForCanvas)
+                                <canvas id="signature-pad-{{$refForCanvas->id}}" class="signature-pad d-none" width=500 height=200 style="border: 2px solid black"></canvas>
+                                <div class="d-none div-d-none" id="button-canvas-{{$refForCanvas->id}}">
+                                    <button type="button" class="btn btn-secondary btn-sm decrease-width" id="clear-canvas-{{$refForCanvas->id}}">Clear</button>
+                                    <button type="button" class="btn btn-primary btn-sm decrease-width" id="save-canvas-{{$refForCanvas->id}}">Save</button>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END SIGNATURE MODAL -->
 @endsection
 
 @section('script')
+<script type="text/javascript">
+    // signature pad
+    var signature_pad = []
+    <?php foreach($references as $refForCanvas) { ?>
+        this["canvas_{{$refForCanvas->id}}"] = $("#signature-pad-{{$refForCanvas->id}}")[0];
+        if(window.devicePixelRatio >= 2){
+            this["canvas_{{$refForCanvas->id}}"].width = 255
+        }
+        signature_pad['{{$refForCanvas->id}}'] = new SignaturePad(this["canvas_{{$refForCanvas->id}}"], {});
+    <?php } ?>
+</script>
 <script type="application/javascript">
 let provinceOption = "";
 let souvenirOptionAll = `<option disabled selected value="">Choose Souvenir</option>`;
@@ -1167,8 +1314,12 @@ function loadDataPerRef(ref_id) {
     $.get('{{ route("fetchDetailPerReference", ['reference' => ""]) }}/' + ref_id )
     .done(function( result ) {
         // Empty data
+        $('#div_detailhs').addClass('d-none');
+        $('#div_detailorder').addClass('d-none');
+        $('#div_wakimartlink').addClass('d-none');
         $('#append_tbody_hs').empty();
         $('#append_tbody_order').empty();
+        $('#append_tbody_wakimart_link').empty();
         $('#append_tbody_other').empty();
 
         if(result.length > 0){
@@ -1180,7 +1331,6 @@ function loadDataPerRef(ref_id) {
             var data_souvenir = data['data_souvenir'];
             // var data_prize = data['data_prize'];
             var detail_product = data['detail_product'];
-
             // Detail HS
             if (data_hs != null) {
                 $('#div_detailhs').removeClass('d-none');
@@ -1220,7 +1370,7 @@ function loadDataPerRef(ref_id) {
             }
 
             //detail Order
-            if(data_order != null && false){
+            if(data_order != null){
                 $('#div_detailorder').removeClass('d-none');
 
                 var rowspan = detail_product.length;
@@ -1258,8 +1408,19 @@ function loadDataPerRef(ref_id) {
                         <td colspan="2" style="text-align: right;">'+fix_totalpayment+'</td>\
                     </tr>\
                 ');
+                $('#refs_order').val(data_refs[0]['order_id']);
+
             }
 
+            // data wakimart_link
+            if ( data_refs[0]['wakimart_link'] != null ) {
+                $('#div_wakimartlink').removeClass('d-none');
+                $('#append_tbody_wakimart_link').append('\
+                    <tr>\
+                        <td><a href="'+data_refs[0]['wakimart_link']+'" target="_blank">'+data_refs[0]['wakimart_link']+'</a></td>\
+                    </tr>\
+                ');
+            }
             if (data_souvenir != null) {
                 for (var a = 0; a < data_souvenir.length; a++) {
                     $('#append_tbody_other').append('\
@@ -1326,7 +1487,7 @@ function loadDataPerRef(ref_id) {
                     $('#select_edit-delivery-status-prize_'+p).val(data_refs[p]['delivery_status_prize']);
                 }
             }
-            
+
             // || data_prize != null
             if (data_souvenir != null) {
                 $('#ref_id').val(data_ref['id']);
@@ -1339,6 +1500,15 @@ function loadDataPerRef(ref_id) {
                 // $('#refs_prize').val(data_refs[0]['prize_id']);
                 // $('#refs_order').val(data_refs[0]['order_id']);
             }
+
+            var displaySignature = ''
+            if(data_ref.online_signature){
+                displaySignature = `
+                    <img src="{{asset('sources/online_signature/${data_ref.online_signature}')}}">
+                `
+            }
+            $('#displaySignature').html(displaySignature)
+            console.log(data)
 
             $("#modal-per-reference").modal("show");
         }
@@ -1353,13 +1523,14 @@ function clearModal() {
     document.getElementById("edit-name").value = "";
     document.getElementById("edit-age").value = "";
     document.getElementById("edit-phone").value = "";
+    document.getElementById("edit-wakimart-link").value = "";
     document.getElementById("edit-province").selectedIndex = 0;
     document.getElementById("edit-city").value = "";
     document.getElementById("edit-souvenir").selectedIndex = 0;
     // document.getElementById("edit-prize").selectedIndex = 0;
     document.getElementById("edit-link-hs").value = "";
     document.getElementById("link-hs-container").innerHTML = "";
-    // document.getElementById("edit-order").value = "";
+    document.getElementById("edit-order").value = "";
     // document.getElementById("btn_choose_order").innerHTML = "Choose Order";
 }
 
@@ -1385,6 +1556,7 @@ function clickEdit(e) {
     const name = document.getElementById("name_" + refSeq).innerHTML.trim();
     const age = document.getElementById("age_" + refSeq).innerHTML.trim();
     const phone = document.getElementById("phone_" + refSeq).innerHTML.trim();
+    const wakimart_link = document.getElementById("wakimart_link_" + refSeq).value;
     const province = document.getElementById("province_" + refSeq).getAttribute("data-province");
     const city = document.getElementById("city_" + refSeq).getAttribute("data-city");
     const souvenir = document.getElementById("souvenir_" + refSeq).getAttribute("data-souvenir");
@@ -1412,7 +1584,8 @@ function clickEdit(e) {
 
     function orderCode() {
         try {
-            return document.getElementById("order_" + refSeq).innerHTML.trim();
+            // return document.getElementById("order_" + refSeq).innerHTML.trim();
+            return document.getElementById("order_white_" + refSeq).innerHTML.trim();
         } catch (error) {
             delete error;
             return "";
@@ -1425,6 +1598,7 @@ function clickEdit(e) {
     document.getElementById("edit-name").value = name;
     document.getElementById("edit-age").value = age;
     document.getElementById("edit-phone").value = phone;
+    document.getElementById("edit-wakimart-link").value = wakimart_link;
     document.getElementById("edit-province").value = province;
     setCityAdd(document.getElementById("edit-province"));
     setTimeout(function () {
@@ -1461,8 +1635,8 @@ function clickEdit(e) {
     });
     document.getElementById("edit-link-hs").value = hsArray.join(", ");
 
-    // document.getElementById("edit-order").value = orderId();
-    document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Order";
+    document.getElementById("edit-order").value = orderId();
+    document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Waki Order";
 }
 
 function validateForm(refSeq) {
@@ -1678,7 +1852,7 @@ $(document).ready(function () {
     $('#order-filter-name_phone').on('input', function (e) {
         let submission_id = "{{ $submission->id }}";
         let filter = $(this).val();
-        getOrderSubmission(filter, submission_id);
+        getOrderSubmission(filter, submission_id, "btn_choose_order");
     });
 
     function getOrderSubmission(filter, submission_id, originButton) {
@@ -1865,6 +2039,26 @@ function selectOrderForEdit(id, code, origin) {
 
 function deleteReference(e) {
     document.getElementById("delete-reference-id").value = e.dataset.id;
+}
+
+function createSignature(id) {
+    $(".div-d-none").addClass('d-none')
+    $('.signature-pad').addClass('d-none')
+    $("#signature-pad-"+id).removeClass('d-none')
+    $('#createSignatureModal').modal('show');
+    $('#button-canvas-'+id).removeClass('d-none')
+    document.getElementById('clear-canvas-'+id).addEventListener('click', function () {
+        signature_pad[id].clear();
+    });
+    document.getElementById('save-canvas-'+id).addEventListener('click', function () {
+        if (signature_pad[id].isEmpty()) {
+            return alert("Please provide a signature first.");
+        } else {
+            $('#ref-id').val(id)
+            $('#signature-data').val(signature_pad[id].toDataURL("image/png"))
+            $('#signatureForm').submit()
+        }
+    });
 }
 </script>
 @endsection

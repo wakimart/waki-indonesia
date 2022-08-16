@@ -9,21 +9,26 @@ use App\DeliveryOrder;
 use App\Exports\HomeServicesExport;
 use App\Exports\HomeServicesExportByDate;
 use App\Exports\HomeServicesCompareExport;
+use App\GeometryDistrict;
 use App\HistoryUpdate;
 use App\HomeService;
 use App\Http\Controllers\gCalendarController;
 use App\Order;
+use App\RajaOngkir_Subdistrict;
 use App\User;
 use App\Utils;
 use App\Reference;
+use App\Region;
 use DateTime;
 use Validator;
+use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Intervention\Image\ImageManagerStatic as Image;
 
 class HomeServiceController extends Controller
@@ -237,16 +242,18 @@ class HomeServiceController extends Controller
         // Inisialisasi variabel $todayDate dan mengisi dengan tanggal hari ini
         $todayDate = date("Y-m-d");
 
-        $currentDayData = $this->getDayData(
-            $todayDate,
-            $request->filter_province,
-            $request->filter_city,
-            $request->filter_district,
-            $arrBranches,
-            $request->filter_cso,
-            $request->filter_search,
-            $isAdminManagement
-        );
+        // $currentDayData = $this->getDayData(
+        //     $todayDate,
+        //     $request->filter_province,
+        //     $request->filter_city,
+        //     $request->filter_district,
+        //     $arrBranches,
+        //     $request->filter_cso,
+        //     $request->filter_search,
+        //     $isAdminManagement
+        // );
+        $currentDayData = $this->printDayData($request);
+        $currentDayData = json_decode($currentDayData->getContent(), true)['msg'];
 
         return view(
             "admin.list_homeservice_new",
@@ -549,9 +556,10 @@ class HomeServiceController extends Controller
         $filterBranch = null,
         $filterCSO = null,
         $filterSearch = null,
-        $isAdminManagement = false
+        $isAdminManagement = false,
+        $display_tab_hs = null
     ) {
-        $todayDate = date("Y-m-d", strtotime($requestedDate));
+        $todayDate = date("Y-m-d", strtotime($requestedDate ?? "now"));
 
         $currentDayData = HomeService::select(
             "h.id AS hs_id",
@@ -559,9 +567,12 @@ class HomeServiceController extends Controller
             "h.name AS customer_name",
             "h.phone AS customer_phone",
             "h.appointment AS appointment",
+            "h.is_acc_resc As is_acc_resc",
+            "h.resc_acc AS resc_acc",
             "b.code AS branch_code",
             "b.name AS branch_name",
             "c.name AS cso_name",
+            "r.slug AS role_slug",
             "h.created_at AS created_at",
             "h.updated_at AS updated_at"
         )
@@ -577,6 +588,24 @@ class HomeServiceController extends Controller
             "c.id",
             "=",
             "h.cso_id"
+        )
+        ->leftJoin(
+            "users AS u",
+            "u.cso_id",
+            "=",
+            "c.id"
+        )
+        ->leftJoin(
+            "role_users AS ru",
+            "ru.user_id",
+            "=",
+            "u.id"
+        )
+        ->leftJoin(
+            "roles AS r",
+            "r.id",
+            "=",
+            "ru.role_id"
         )
         ->where("h.active", true);
 
@@ -657,6 +686,11 @@ class HomeServiceController extends Controller
             );
         }
 
+        if ($display_tab_hs == "reschedule") {
+            $currentDayData = $currentDayData->whereRaw('h.resc_acc = h.appointment')
+                ->where('h.is_acc_resc', false);
+        }
+
         $currentDayData = $currentDayData->whereBetween(
             "h.appointment",
             [
@@ -713,164 +747,215 @@ class HomeServiceController extends Controller
             $isAdminManagement = true;
         }
 
-        $currentDayData = $this->getDayData(
-            $request->date,
-            $request->filter_province,
-            $request->filter_city,
-            $request->filter_district,
-            $arrBranches,
-            $request->filter_cso,
-            $request->filter_search,
-            $isAdminManagement
-        );
+        $display_tab_hss = ["all", "reschedule"];
+        $result_tab_hss = [];    
+        foreach ($display_tab_hss as $display_tab_hs) {
+            $currentDayData = $this->getDayData(
+                $request->date,
+                $request->filter_province,
+                $request->filter_city,
+                $request->filter_district,
+                $arrBranches,
+                $request->filter_cso,
+                $request->filter_search,
+                $isAdminManagement,
+                $display_tab_hs
+            );
 
-        $result = "";
-        if ($currentDayData->isEmpty()) {
-            $result .= '<tr>';
-            $result .= '<td colspan="7">'
-                . '<div class="cjslib-rows" id="organizerContainer-list-container">'
-                . '<ol class="cjslib-list" id="organizerContainer-list">'
-                . '<div class="cjslib-list-placeholder">'
-                . '<li style="text-align:center; margin-top: 1em;">'
-                . 'No appointments on this day.'
-                . '</li>'
-                . '</div>'
-                . '</ol>'
-                . '</div>'
-                . '</td>';
-            $result .= '</tr>';
-        } else {
-            $i = 1;
-            foreach ($currentDayData as $dayData) {
-                $result .= '<tr>'
-                    . '<td style="text-align: center">'
-                    . $i
-                    . '</td>'
-                    . '<td style="text-align: center">';
-
-                $time = new DateTime($dayData->appointment);
-                $result .= $time->format("H:i");
-
-                $result .= '</td>'
-                    . '<td>';
-
-                if (!$isAdminManagement) {
-                    $result .= '<p class="titleAppoin">'
-                    . '<a href="'
-                    . route('homeServices_success')
-                    . '?code='
-                    . $dayData->hs_code
-                    . '" target="_blank">'
-                    . $dayData->hs_code
-                    . '</a>'
-                    . '</p>';
-                }
-
-                $result .= '<p class="descAppoin">';
-
-                if (!$isAdminManagement) {
-                    $result .= $dayData->customer_name . ' - ' . $dayData->customer_phone
-                        . '<br>';
-                }
-
-                $result .= 'Branch: '
-                    . $dayData->branch_code . ' - ' . $dayData->branch_name
-                    . '<br>'
-                    . 'CSO: ' . $dayData->cso_name
-                    . '<br>';
-
-                if (!$isAdminManagement) {
-                    $result .= 'Created at: ' . $dayData->created_at
-                        . '<br>'
-                        . 'Last update: ' . $dayData->updated_at;
-                }
-
-                $result .= '</p>'
+            $result = "";
+            if ($currentDayData->isEmpty()) {
+                $result .= '<tr>';
+                $result .= '<td colspan="7">'
+                    . '<div class="cjslib-rows" id="organizerContainer-list-container">'
+                    . '<ol class="cjslib-list" id="organizerContainer-list">'
+                    . '<div class="cjslib-list-placeholder">'
+                    . '<li style="text-align:center; margin-top: 1em;">'
+                    . 'No appointments on this day.'
+                    . '</li>'
+                    . '</div>'
+                    . '</ol>'
+                    . '</div>'
                     . '</td>';
+                $result .= '</tr>';
+            } else {
+                $i = 1;
+                foreach ($currentDayData as $dayData) {
+                    $result .= '<tr>'
+                        . '<td style="text-align: center">'
+                        . $i
+                        . '</td>'
+                        . '<td style="text-align: center">';
 
+                    $time = new DateTime($dayData->appointment);
+                    $result .= $time->format("H:i");
 
-                if (!$isAdminManagement) {
-                    $result .= '<td style="text-align: center">';
+                    $result .= '</td>'
+                        . '<td>';
 
-                    if(Auth::user()->hasPermission('detail-home_service')){
-                        $result .= '<button '
-                            . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
-                            . 'type="button" '
-                            . 'data-toggle="modal" '
-                            . 'data-target="#viewHomeServiceModal" '
-                            . 'onclick="clickView(this)" '
-                            . 'value="' . $dayData->hs_id . '">'
-                            . '</button>'
-                            . '</td>'
-                            . '<td style="text-align: center">';
+                    if (!$isAdminManagement) {
+                        $result .= '<p class="titleAppoin">'
+                        . '<a href="'
+                        . route('homeServices_success')
+                        . '?code='
+                        . $dayData->hs_code
+                        . '" target="_blank">'
+                        . $dayData->hs_code
+                        . '</a>'
+                        . '</p>';
                     }
-                    else{
-                        $result .= '</td>'
-                            . '<td style="text-align: center">';
+
+                    $result .= '<p class="descAppoin">';
+
+                    if (!$isAdminManagement) {
+                        $result .= $dayData->customer_name . ' - ' . $dayData->customer_phone
+                            . '<br>';
                     }
 
-                    if(Auth::user()->hasPermission('edit-home_service')){
-                        $result .= '<button '
-                            . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
-                            . 'type="button" '
-                            . 'data-toggle="modal" '
-                            . 'data-target="#cashHomeServiceModal" '
-                            . 'onclick=clickCash(this) '
-                            . 'value="' . $dayData->hs_id . '">'
-                            . '</button>'
-                            . '</td>'
-                            . '<td style="text-align: center">';
+                    $result .= 'Branch: '
+                        . $dayData->branch_code . ' - ' . $dayData->branch_name
+                        . '<br>'
+                        . 'CSO: ' . $dayData->cso_name
+                        . '<br>';
 
-                        $result .= '<button '
-                            . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
-                            . 'type="button" '
-                            . 'data-toggle="modal" '
-                            . 'data-target="#editHomeServiceModal" ';
+                    if (!$isAdminManagement) {
+                        $result .= 'Created at: ' . $dayData->created_at
+                            . '<br>'
+                            . 'Last update: ' . $dayData->updated_at;
+                        // req reschedule info
+                        $lastHistoryUpdate = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id', 'desc')->first();
+                        if(!empty($lastHistoryUpdate)){
+                            $userHistoryUpdate = User::find($lastHistoryUpdate['meta']['user']);
+                            $result .= '<br><br>Request Reschedule Date: '. $lastHistoryUpdate['meta']['createdAt'] . '<br> Request by ' . $userHistoryUpdate->name;
+                        }
+                        $befores = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
+                        $totalBefores = count($befores) - 1;
+                        $result .= "<p style='color:red'>";
+                        $currentRescheduleAppointment = "";
+                        foreach ($befores as $key => $before) {
+                            if (isset($before['meta']['appointmentBefore'])) {
+                                $statusResc = ($key == $totalBefores) ? "Wait to Approve" : "";
+                                $statusRescColor = "";
 
-                        if (Auth::user()->roles[0]["slug"] === "cso") {
-                            $result .= 'data-cso="true" ';
-                        } else {
-                            $result .= 'data-cso="false" ';
+                                if (isset($before['meta']['acc_by'])) {
+                                    if ($before['meta']['status_acc'] == "true") {
+                                        $statusRescColor = "style='color:green;'";
+                                        $statusResc = "Approved";
+                                    } else if ($before['meta']['status_acc'] == "false") {
+                                        $statusRescColor = "style='color:red;'";   
+                                        $statusResc = "Rejected";
+                                    }
+                                    $rescAccBy = User::where('id', $before['meta']['acc_by'])->value('name');
+                                    $statusResc .= " by " . $rescAccBy;
+                                }                                
+
+                                $temp_resc = "Reschedule Appointment : " . $before['meta']['dateChange']['resc_acc'];
+                                if ($statusResc) $temp_resc .= "<span $statusRescColor> (" .  $statusResc . ")</span>";
+
+                                if ($key < $totalBefores){
+                                    $result .= $temp_resc;
+                                } else {
+                                    $result .= "Appointment Before : " . $before['meta']['appointmentBefore'];
+                                    $currentRescheduleAppointment = "<p $statusRescColor>" . $temp_resc . "</p>";
+                                }
+                                $result .= "<br>";
+                            }
+                        }
+                        $result .= "</p>";
+                        $result .= $currentRescheduleAppointment;
+                    }
+
+                    $result .= '</p>'
+                        . '</td>';
+
+
+                    if (!$isAdminManagement) {
+                        $result .= '<td style="text-align: center">';
+
+                        if(Auth::user()->hasPermission('detail-home_service')){
+                            $result .= '<button '
+                                . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                                . 'type="button" '
+                                . 'data-toggle="modal" '
+                                . 'data-target="#viewHomeServiceModal" '
+                                . 'onclick="clickView(this)" '
+                                . 'value="' . $dayData->hs_id . '">'
+                                . '</button>'
+                                . '</td>'
+                                . '<td style="text-align: center">';
+                        }
+                        else{
+                            $result .= '</td>'
+                                . '<td style="text-align: center">';
                         }
 
-                        $result .= 'onclick="clickEdit(this)" '
-                            . 'value="' . $dayData->hs_id . '">'
-                            . '</button>'
-                            . '</td>'
-                            . '<td style="text-align: center">';
-                    }
-                    else{
-                        $result .= '</td>'
-                            . '<td style="text-align: center">'
-                            . '</td>'
-                            . '<td style="text-align: center">';
+                        if(Auth::user()->hasPermission('edit-home_service')){
+                            $result .= '<button '
+                                . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
+                                . 'type="button" '
+                                . 'data-toggle="modal" '
+                                . 'data-target="#cashHomeServiceModal" '
+                                . 'onclick=clickCash(this) '
+                                . 'value="' . $dayData->hs_id . '">'
+                                . '</button>'
+                                . '</td>'
+                                . '<td style="text-align: center">';
+
+                            $result .= '<button '
+                                . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '
+                                . 'type="button" '
+                                . 'data-toggle="modal" '
+                                . 'data-target="#editHomeServiceModal" ';
+
+                            if (Auth::user()->roles[0]["slug"] === "cso") {
+                                $result .= 'data-cso="true" ';
+                            } else {
+                                $result .= 'data-cso="false" ';
+                            }
+
+                            $result .= 'onclick="clickEdit(this)" '
+                                . 'value="' . $dayData->hs_id . '">'
+                                . '</button>'
+                                . '</td>'
+                                . '<td style="text-align: center">';
+                        }
+                        else{
+                            $result .= '</td>'
+                                . '<td style="text-align: center">'
+                                . '</td>'
+                                . '<td style="text-align: center">';
+                        }
+
+                        if(Auth::user()->hasPermission('delete-home_service')){
+                            $result .= '<button '
+                                . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
+                                . 'type="button" '
+                                . 'data-toggle="modal" '
+                                . 'data-target="#deleteHomeServiceModal" '
+                                . 'onclick="clickCancel(this)" '
+                                . 'value="' . $dayData->hs_id . '">'
+                                . '</button>'
+                                . '</td>';
+                        }
+                        else{
+                            $result .= '</td>';
+                        }
+                    } else {
+                        $result .= '<td></td><td></td><td></td><td></td>';
                     }
 
-                    if(Auth::user()->hasPermission('delete-home_service')){
-                        $result .= '<button '
-                            . 'class="btnappoint btn-gradient-danger mdi mdi-calendar-remove btn-homeservice-cancel" '
-                            . 'type="button" '
-                            . 'data-toggle="modal" '
-                            . 'data-target="#deleteHomeServiceModal" '
-                            . 'onclick="clickCancel(this)" '
-                            . 'value="' . $dayData->hs_id . '">'
-                            . '</button>'
-                            . '</td>';
-                    }
-                    else{
-                         $result .= '</td>';
-                    }
-                } else {
-                    $result .= '<td></td><td></td><td></td><td></td>';
+                    $result .= '</tr>';
+
+                    $i++;
                 }
-
-                $result .= '</tr>';
-
-                $i++;
             }
+            $result_tab_hss[$display_tab_hs]['data'] = $result;
+            $result_tab_hss[$display_tab_hs]['count'] = count($currentDayData);
         }
 
-        return response($result, 200)->header("Content-Type", "text/plain");
+        return response()->json(array(
+            'status'=>'oke',
+            'msg'=> $result_tab_hss
+        ),200);
     }
 
     public function admin_fetchHomeService(Request $request){
@@ -1058,7 +1143,7 @@ class HomeServiceController extends Controller
     public function edit(Request $request)
     {
         if($request->has('id')){
-            $data = HomeService::find($request->id);
+            $data = HomeService::with('technicianSchedule')->where('id', $request->id)->first();
             $data['province_name'] = $data->provinceObj['province'];
             $data['city_name'] = $data->cityObj['type'].' '.$data->cityObj['city_name'];
             $data['district_name'] = $data->districObj['subdistrict_name'];
@@ -1073,9 +1158,100 @@ class HomeServiceController extends Controller
 
     public function update(Request $request){
         $homeService = HomeService::find($request->id);
-        if($request->has('cancel')){
-            $homeService->active = false;
-            $homeService->save();
+        if ($request->has('homeServiceData')) { // reject all or approved all
+            if (substr($request->homeServiceData, 0, 4) == "true") {
+                $hsID = explode(",", substr($request->homeServiceData,5));
+            } else {
+                $hsID = explode(",", $request->homeServiceData);
+            }
+            $hSID = HomeService::whereIn('id', $hsID)->get();
+            $acc_hs_type = $request->acc_hs_type;
+            foreach ($hSID as $val) {
+                if ($acc_hs_type == "cancelhs") {
+                    $titleNya = "Rejected - ACC Cancel [Home Service]";
+                    $messagesNya = "Acc Cancel Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Rejected";
+    
+                    if($request->status_acc == "true"){
+                        $titleNya = "Approved - ACC Cancel [Home Service]";
+                        $messagesNya = "Acc Cancel Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Approved";
+                        $val->active = false;
+                    }
+                    $val->is_acc = false;
+                    $val->save();
+                } else if ($acc_hs_type == "reschedulehs") {
+                    $titleNya = "Rejected - ACC Reschedule [Home Service]";
+                    $messagesNya = "Acc Reschedule Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Rejected";
+    
+                    if($request->status_acc == "true"){
+                        $titleNya = "Approved - ACC Reschedule [Home Service]";
+                        $messagesNya = "Acc Reschedule Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Approved";
+                        $val->appointment = $val->resc_acc;
+                    }
+                    $val->is_acc_resc = false;
+                    $val->save();
+
+                    $before = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $val->id]])->orderBy('id', 'desc')->first();
+                    $before_meta = $before['meta'];
+                    $before_meta['acc_by'] = Auth::user()['id'];
+                    $before_meta['status_acc'] = $request->status_acc;
+                    $before->meta = $before_meta;
+                    $before->save();
+                }
+
+                $userNya = [$val->cso->user];
+                foreach ($val->branch->cso as $perCso) {
+                    if($perCso->user != null){
+                        array_push($userNya, $perCso->user);
+                    }
+                }
+                $this->NotifTo($userNya, $messagesNya, $titleNya);
+
+            }
+            return redirect()->route('dashboard')->with("success", "HomeService Acc telah diproses.");
+
+
+        }else if($request->has('cancel')){
+            $acc_hs_type = $request->acc_hs_type;
+            if ($acc_hs_type == "cancelhs") {
+                $titleNya = "Rejected - ACC Cancel [Home Service]";
+                $messagesNya = "Acc Cancel Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Rejected";
+
+                if($request->status_acc == "true"){
+                    $titleNya = "Approved - ACC Cancel [Home Service]";
+                    $messagesNya = "Acc Cancel Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Approved";
+                    $homeService->active = false;
+                }
+                $homeService->is_acc = false;
+                $homeService->save();
+            } else if ($acc_hs_type == "reschedulehs") {
+                $titleNya = "Rejected - ACC Reschedule [Home Service]";
+                $messagesNya = "Acc Reschedule Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Rejected";
+
+                if($request->status_acc == "true"){
+                    $titleNya = "Approved - ACC Reschedule [Home Service]";
+                    $messagesNya = "Acc Reschedule Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Approved";
+                    $homeService->appointment = $homeService->resc_acc;
+                }
+                $homeService->is_acc_resc = false;
+                $homeService->save();
+
+                $before = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $homeService->id]])->orderBy('id', 'desc')->first();
+                $before_meta = $before['meta'];
+                $before_meta['acc_by'] = Auth::user()['id'];
+                $before_meta['status_acc'] = $request->status_acc;
+                $before->meta = $before_meta;
+                $before->save();
+            }
+
+            $userNya = [$homeService->cso->user];
+            foreach ($homeService->branch->cso as $perCso) {
+                if($perCso->user != null){
+                    array_push($userNya, $perCso->user);
+                }
+            }
+            $this->NotifTo($userNya, $messagesNya, $titleNya);
+
+            return redirect()->route('dashboard')->with("success", "HomeService Acc telah diproses.");
         }
         else if($request->has('cash')){
             if($request->cash == 0){
@@ -1120,7 +1296,7 @@ class HomeServiceController extends Controller
                 // $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
                 $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
                 $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
-                $data['appointment'] = $data['date']." ".$data['time'];
+                // $data['appointment'] = $data['date']." ".$data['time'];
                 $homeService->fill($data)->save();
 
                 $user = Auth::user();
@@ -1295,6 +1471,404 @@ class HomeServiceController extends Controller
         $homeService->active = false;
         $homeService->save();
         return view('admin.list_order');
+    }
+
+    function sendFCM($body){
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Authorization: key=AAAAfcgwZss:APA91bGg7XK9XjDvLLqR36mKsC-HwEx_l5FPGXDE3bKiysfZ2yzUKczNcAuKED6VCQ619Q8l55yVh4VQyyH2yyzwIJoVajaK4t3TJV-x-4f_a9WUzIcnOYzixPIUB5DeuWRIAh1v8Yld',
+            'Content-Type: application/json'
+        ));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+
+        $result = curl_exec($curl);
+        if ($result === FALSE) {
+            die('Oops! FCM Send Error: ' . curl_error($curl));
+            $this->info(curl_error($curl));
+        }
+        curl_close($curl);
+        // return $result;
+    }
+
+    public function accNotif(Request $request)
+    {
+        $fcm_tokenNya = [];
+        $userNya = User::where('users.fmc_token', '!=', null)
+                    ->whereIn('role_users.role_id', [1,2,7])
+                    ->leftjoin('role_users', 'users.id', '=',  'role_users.user_id')
+                    ->get();
+        foreach ($userNya as $value) {
+            if($value['fmc_token'] != null){
+                foreach ($value['fmc_token'] as $fcmSatuan) {
+                    if($fcmSatuan != null){
+                        array_push($fcm_tokenNya, $fcmSatuan);
+                    }
+                }
+            }
+        }
+
+        $homeserviceNya = HomeService::find($request->id);
+
+
+        $body = ['registration_ids'=>$fcm_tokenNya,
+            'collapse_key'=>"type_a",
+            "content_available" => true,
+            "priority" => "high",
+            "notification" => [
+                "body" => "Acc Cancel Home Service for ".$homeserviceNya->type_homeservices." from customer ".$homeserviceNya->name.". By ".$homeserviceNya->branch['code']."-".$homeserviceNya->cso['name'],
+                "title" => "Home Service",
+                "icon" => "ic_launcher"
+            ],
+            "data" => [
+                "url" => URL::to(route('admin_list_homeService', ["id_hs"=>$homeserviceNya['id']])),
+            ]];
+
+        $homeserviceNya->is_acc = true;
+        $homeserviceNya->cancel_desc = $request->cancel_desc;
+        $homeserviceNya->save();
+        //end update is_acc
+
+        if(sizeof($fcm_tokenNya) > 0)
+        {
+            $this->sendFCM(json_encode($body));
+        }
+        return redirect($request->url)->with("success", "Permintaan Acc telah dikirim.");
+    }
+
+    public function accRescheduleNotif(Request $request)
+    {
+        $resc_acc = $request->date." ".$request->time;
+
+        $homeserviceNya = HomeService::find($request->id);
+        if ($homeserviceNya && $homeserviceNya->is_acc_resc != true) {        
+            $appointmentBefore = $homeserviceNya->appointment;
+
+            $homeserviceNya->is_acc_resc = true;
+            $homeserviceNya->resc_desc = $request->reschedule_desc;
+            $homeserviceNya->resc_acc = $resc_acc;
+            $homeserviceNya->save();
+
+            $user = Auth::user();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Home Service Reschedule";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $homeserviceNya, 'appointmentBefore'=>$appointmentBefore];
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $homeserviceNya->id;
+
+            $createData = HistoryUpdate::create($historyUpdate);
+
+            $titleNya = "Home Service Reschedule";
+            $messagesNya = "Acc Rescheule Home Service for ".$homeserviceNya->type_homeservices." from customer ".$homeserviceNya->name.". By ".$homeserviceNya->branch['code']."-".$homeserviceNya->cso['name'];
+
+            $userNya = User::where('users.fmc_token', '!=', null)
+                ->whereIn('role_users.role_id', [1,2,7])
+                ->leftjoin('role_users', 'users.id', '=',  'role_users.user_id')
+                ->get();
+            
+            $this->NotifTo($userNya, $messagesNya, $titleNya);
+            return redirect($request->url)->with("success", "Permintaan Acc Reschedule telah dikirim.");
+        } else {
+            return redirect($request->url)->with("error", "Permintaan Acc Reschedule sudah ada.");
+        }
+    }
+
+    public function NotifTo($userNya, $messagesNya, $titleNya)
+    {
+        $fcm_tokenNya = [];
+        foreach ($userNya as $value) {
+            if($value['fmc_token'] != null){
+                foreach ($value['fmc_token'] as $fcmSatuan) {
+                    if($fcmSatuan != null){
+                        array_push($fcm_tokenNya, $fcmSatuan);
+                    }
+                }
+            }
+        }
+
+        $body = ['registration_ids'=>$fcm_tokenNya,
+            'collapse_key'=>"type_a",
+            "content_available" => true,
+            "priority" => "high",
+            "notification" => [
+                "body" => $messagesNya,
+                "title" => $titleNya,
+                "icon" => "ic_launcher"
+            ]];
+
+        if(sizeof($fcm_tokenNya) > 0)
+        {
+            $this->sendFCM(json_encode($body));
+        }
+    }
+
+    public function list_areaHomeService(Request $request)
+    {
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
+        $csos = Cso::where('active', true)->orderBy("code", 'asc')->get();
+
+        // Inisialisasi tanggal awal bulan dan akhir bulan
+        $startDate = date("Y-m-01 00:00:00");
+        if ($request->has('filter_start_date')) {
+            $startDate = date('Y-m-d', strtotime($request->filter_start_date));
+        }
+        $endDate = date('Y-m-t 23:59:59');
+        if ($request->has('filter_end_date')) {
+            $endDate = date('Y-m-d', strtotime($request->filter_end_date));
+        }
+
+        $regions = Region::all();
+
+        $layers = GeometryDistrict::select(
+                'gd.*', 
+                'ros.subdistrict_name', 
+                'rg.id as rg_id',
+                'rg.name as rg_name', 'rg.bg_color as rg_bg_color', 
+                DB::RAW('COUNT(DISTINCT(hs.code)) as count_hs')
+            )
+            ->from('geometry_districts as gd')
+            ->join('raja_ongkir__subdistricts as ros', 'ros.id', 'gd.distric')
+            ->leftJoin('regions as rg', 'rg.id', 'gd.region_id')
+            ->leftJoin('home_services as hs', function($join) use ($request, $startDate, $endDate) {
+                $join->on('hs.distric', 'gd.distric');
+                $join->whereBetween("hs.appointment", [$startDate, $endDate]);
+                $join->where('hs.active', true);
+
+                if ($request->has('filter_branch')) {
+                    $filter_branch = Branch::find($request->filter_branch);
+                    $join->where('branch_id', $filter_branch['id']);        
+                }
+
+                if ($request->has('filter_cso')) {
+                    $filter_cso = Cso::where("code", $request->filter_cso)->first();
+                    $join->where('cso_id', $filter_cso['id']);        
+                }
+            })
+            ->groupBy('gd.id')
+            ->orderByRaw('count_hs')
+            ->get();
+        
+        return view('admin.list_areahomeservice', compact('branches', 'csos', 'startDate', 'endDate', 'regions', 'layers'));
+    }
+
+    public function printAreaListHs(Request $request)
+    {
+        // Inisialisasi tanggal awal bulan dan akhir bulan
+        $startDate = date("Y-m-01 00:00:00");
+        if ($request->has('filter_start_date')) {
+            $startDate = date('Y-m-d', strtotime($request->filter_start_date));
+        }
+        $endDate = date('Y-m-t 23:59:59');
+        if ($request->has('filter_end_date')) {
+            $endDate = date('Y-m-d', strtotime($request->filter_end_date));
+        }
+
+        $distric = RajaOngkir_Subdistrict::find($request->distric);
+        
+        $homeservices = HomeService::select(
+                "h.id AS hs_id",
+                "h.code AS hs_code",
+                "h.name AS customer_name",
+                "h.phone AS customer_phone",
+                "h.appointment AS appointment",
+                "h.is_acc_resc As is_acc_resc",
+                "h.resc_acc AS resc_acc",
+                "b.code AS branch_code",
+                "b.name AS branch_name",
+                "c.name AS cso_name",
+                "r.slug AS role_slug",
+                "h.created_at AS created_at",
+                "h.updated_at AS updated_at"
+            )
+            ->from('home_services as h')
+            ->leftJoin(
+                "branches AS b",
+                "b.id",
+                "=",
+                "h.branch_id"
+            )
+            ->leftJoin(
+                "csos AS c",
+                "c.id",
+                "=",
+                "h.cso_id"
+            )
+            ->leftJoin(
+                "users AS u",
+                "u.cso_id",
+                "=",
+                "c.id"
+            )
+            ->leftJoin(
+                "role_users AS ru",
+                "ru.user_id",
+                "=",
+                "u.id"
+            )
+            ->leftJoin(
+                "roles AS r",
+                "r.id",
+                "=",
+                "ru.role_id"
+            )    
+            ->where('h.active', true)
+            ->where('h.distric', $request->distric)
+            ->whereBetween("h.appointment", [$startDate, $endDate]);
+
+        if ($request->has('filter_branch')) {
+            $filter_branch = Branch::find($request->filter_branch);
+            $homeservices->where('h.branch_id', $filter_branch['id']);        
+        }
+
+        if ($request->has('filter_cso')) {
+            $filter_cso = Cso::where("code", $request->filter_cso)->first();
+            $homeservices->where('h.cso_id', $filter_cso['id']);        
+        }
+
+        $homeservices = $homeservices->groupBy('h.code')
+            ->orderBy("h.appointment")
+            ->get();
+
+        $homeservices = $this->printAreaListHsData($homeservices);
+        
+        return response()->json([
+            "status" => "success",
+            "distric" => $distric,
+            "msg" => $homeservices,
+        ], 200);
+    }
+
+    public function printAreaListHsData($currentDayData)
+    {
+        $result = "";
+        if ($currentDayData->isEmpty()) {
+            $result .= '<tr>';
+            $result .= '<td colspan="7">'
+                . '<div class="cjslib-rows" id="organizerContainer-list-container">'
+                . '<ol class="cjslib-list" id="organizerContainer-list">'
+                . '<div class="cjslib-list-placeholder">'
+                . '<li style="text-align:center; margin-top: 1em;">'
+                . 'No appointments on this day.'
+                . '</li>'
+                . '</div>'
+                . '</ol>'
+                . '</div>'
+                . '</td>';
+            $result .= '</tr>';
+        } else {
+            $i = 1;
+            foreach ($currentDayData as $dayData) {
+                $result .= '<tr>'
+                    . '<td style="text-align: center">'
+                    . $i
+                    . '</td>'
+                    . '<td style="text-align: left; font-weight: bold;">';
+
+                $sameHomeServices = HomeService::select('appointment')
+                    ->where('active', true)
+                    ->where('code', $dayData->hs_code)
+                    ->orderBy('appointment')
+                    ->get();
+                foreach ($sameHomeServices as $sameHomeService) {
+                    $result .= "<div style='margin-bottom: 0.5em'>" . date('d F Y H:i', strtotime($sameHomeService->appointment));
+                    $result .= "</div>";
+                }
+
+                $result .= '</td>'
+                    . '<td>';
+
+                $result .= '<p class="titleAppoin">'
+                    . '<a href="'
+                    . route('homeServices_success')
+                    . '?code='
+                    . $dayData->hs_code
+                    . '" target="_blank">'
+                    . $dayData->hs_code
+                    . '</a>'
+                    . '</p>';
+
+                $result .= '<p class="descAppoin">';
+
+                $result .= $dayData->customer_name . ' - ' . $dayData->customer_phone
+                    . '<br>';
+
+                $result .= 'Branch: '
+                    . $dayData->branch_code . ' - ' . $dayData->branch_name
+                    . '<br>'
+                    . 'CSO: ' . $dayData->cso_name
+                    . '<br>';
+
+                $result .= 'Created at: ' . $dayData->created_at
+                    . '<br>'
+                    . 'Last update: ' . $dayData->updated_at;
+
+                $befores = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
+                $totalBefores = count($befores) - 1;
+                $result .= "<p style='color:red'>";
+                $currentRescheduleAppointment = "";
+                foreach ($befores as $key => $before) {
+                    if (isset($before['meta']['appointmentBefore'])) {
+                        $statusResc = ($key == $totalBefores) ? "Wait to Approve" : "";
+                        $statusRescColor = "";
+
+                        if (isset($before['meta']['acc_by'])) {
+                            if ($before['meta']['status_acc'] == "true") {
+                                $statusRescColor = "style='color:green;'";
+                                $statusResc = "Approved";
+                            } else if ($before['meta']['status_acc'] == "false") {
+                                $statusRescColor = "style='color:red;'";   
+                                $statusResc = "Rejected";
+                            }
+                            $rescAccBy = User::where('id', $before['meta']['acc_by'])->value('name');
+                            $statusResc .= " by " . $rescAccBy;
+                        }                                
+
+                        $temp_resc = "Reschedule Appointment : " . $before['meta']['dateChange']['resc_acc'];
+                        if ($statusResc) $temp_resc .= "<span $statusRescColor> (" .  $statusResc . ")</span>";
+
+                        if ($key < $totalBefores){
+                            $result .= $temp_resc;
+                        } else {
+                            $result .= "Appointment Before : " . $before['meta']['appointmentBefore'];
+                            $currentRescheduleAppointment = "<p $statusRescColor>" . $temp_resc . "</p>";
+                        }
+                        $result .= "<br>";
+                    }
+                }
+                $result .= "</p>";
+                $result .= $currentRescheduleAppointment;
+
+                $result .= '</p>'
+                    . '</td>';
+
+                $result .= '<td style="text-align: center">';
+
+                if(Auth::user()->hasPermission('detail-home_service')){
+                    $result .= '<button '
+                        . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                        . 'type="button" '
+                        . 'data-toggle="modal" '
+                        . 'data-target="#viewHomeServiceModal" '
+                        . 'onclick="clickView('.$dayData->hs_id.')" >'
+                        . '</button>';
+                }
+                else{
+                    $result .= '</td>';
+                }
+
+                $result .= '</tr>';
+
+                $i++;
+            }
+        }
+
+        return $result;
     }
 
     //KHUSUS API APPS

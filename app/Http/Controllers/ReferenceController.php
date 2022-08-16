@@ -16,6 +16,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\File;
+use Validator;
 
 class ReferenceController extends Controller
 {
@@ -93,6 +96,7 @@ class ReferenceController extends Controller
                 "status",
                 "order_id",
                 "prize_id",
+                "wakimart_link",
             ));
             $referenceSouvenir->link_hs = json_encode(
                 explode(", ", $request->link_hs),
@@ -136,6 +140,21 @@ class ReferenceController extends Controller
                 "prize_id",
             ));
             $referenceSouvenir->save();
+
+            //history change
+            $user = Auth::user();
+            $historyUpdateSubmission = [];
+            $historyUpdateSubmission["type_menu"] = "Submission";
+            $historyUpdateSubmission["method"] = "New Reference";
+            $historyUpdateSubmission["meta"] = json_encode([
+                "user" => $user["id"],
+                "createdAt" => date("Y-m-d H:i:s"),
+                "dataChange" => ["New Reference Name" => $reference->name],
+            ], JSON_THROW_ON_ERROR);
+
+            $historyUpdateSubmission["user_id"] = $user["id"];
+            $historyUpdateSubmission["menu_id"] = $request->submission_id;
+            HistoryUpdate::create($historyUpdateSubmission);
 
             DB::commit();
 
@@ -199,87 +218,107 @@ class ReferenceController extends Controller
 
     private function updateReference(Request $request, int $userId)
     {
-        DB::beginTransaction();
+        $validator = \Validator::make($request->all(), [
+            'wakimart_link' => [
+                'nullable',Rule::unique('reference_souvenirs')->ignore($request->id, 'reference_id'),
+            ],
+        ]);
 
-        try {
-            $reference = Reference::find($request->id);
-            $reference->fill($request->only(
-                "name",
-                "age",
-                "phone",
-                "province",
-                "city"
-            ));
-            $reference->save();
-
-            $referenceSouvenir = ReferenceSouvenir::where("reference_id", $reference->id)->first();
-            $referenceSouvenir->fill($request->only(
-                "souvenir_id",
-                "status",
-                "delivery_status_souvenir",
-                "order_id",
-                "prize_id",
-                "status_prize",
-                "delivery_status_prize",
-            ));
-
-            if (!empty($request->link_hs)) {
-                //updating status homeservice
-                $homeservices = HomeService::find($request->link_hs);
-                $homeservices->status_reference = true;
-                $homeservices->save();
-
-                $referenceSouvenir->link_hs = json_encode(
-                    explode(", ", $request->link_hs),
-                    JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
-                );
+        if ($validator->fails()) {
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
             }
-            $referenceSouvenir->save();
-
-            $this->historyReference($reference, "update", $userId);
-            $this->historyReferenceSouvenir($referenceSouvenir, "update", $userId);
-
-            $city = RajaOngkir_City::select(
-                "province AS province",
-                DB::raw("CONCAT(type, ' ', city_name) AS city")
-            )
-            ->where("city_id", $reference->city)
-            ->first();
-
-            $souvenir = "";
-            if (!empty($referenceSouvenir->souvenir_id)) {
-                $souvenir = Souvenir::select("name")
-                ->where("id", $referenceSouvenir->souvenir_id)
+            if ( !empty($request->url) ) {
+                return redirect($request->url)->withErrors($arr_Hasil['wakimart_link']);
+            } else {
+                return response()->json('errors', $arr_Hasil['wakimart_link']);
+            }
+        }else{        
+            DB::beginTransaction();
+    
+            try {
+                $reference = Reference::find($request->id);
+                $reference->fill($request->only(
+                    "name",
+                    "age",
+                    "phone",
+                    "province",
+                    "city"
+                ));
+                $reference->save();
+    
+                $referenceSouvenir = ReferenceSouvenir::where("reference_id", $reference->id)->first();
+                $referenceSouvenir->fill($request->only(
+                    "souvenir_id",
+                    "status",
+                    "delivery_status_souvenir",
+                    "order_id",
+                    "prize_id",
+                    "status_prize",
+                    "delivery_status_prize",
+                    "wakimart_link",
+                ));
+    
+                if (!empty($request->link_hs)) {
+                    //updating status homeservice
+                    $homeservices = HomeService::find($request->link_hs);
+                    $homeservices->status_reference = true;
+                    $homeservices->save();
+    
+                    $referenceSouvenir->link_hs = json_encode(
+                        explode(", ", $request->link_hs),
+                        JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
+                    );
+                }
+                $referenceSouvenir->save();
+    
+                $this->historyReference($reference, "update", $userId);
+                $this->historyReferenceSouvenir($referenceSouvenir, "update", $userId);
+    
+                $city = RajaOngkir_City::select(
+                    "province AS province",
+                    DB::raw("CONCAT(type, ' ', city_name) AS city")
+                )
+                ->where("city_id", $reference->city)
                 ->first();
+    
+                $souvenir = "";
+                if (!empty($referenceSouvenir->souvenir_id)) {
+                    $souvenir = Souvenir::select("name")
+                    ->where("id", $referenceSouvenir->souvenir_id)
+                    ->first();
+                }
+    
+                DB::commit();
+                if ( !empty($request->url) ) {
+                    return redirect($request->url)->with("success", "Data referensi berhasil dimasukkan.");
+                } else {
+                    return response()->json('success');
+                }
+                // return response()->json([
+                //     "result" => 1,
+                //     "data" => $reference,
+                //     "dataSouvenir" => $referenceSouvenir,
+                //     "province" => $city->province,
+                //     "city" => $city->city,
+                //     "souvenir" => $souvenir->name,
+                // ]);
+            } catch (Exception $e) {
+                DB::rollback();
+    
+                return response()->json([
+                    "error" => $e,
+                    "error message" => $e->getMessage(),
+                ], 500);
             }
-
-            DB::commit();
-            return redirect($request->url)->with("success", "Data referensi berhasil dimasukkan.");
-
-            // return response()->json([
-            //     "result" => 1,
-            //     "data" => $reference,
-            //     "dataSouvenir" => $referenceSouvenir,
-            //     "province" => $city->province,
-            //     "city" => $city->city,
-            //     "souvenir" => $souvenir->name,
-            // ]);
-        } catch (Exception $e) {
-            DB::rollback();
-
-            return response()->json([
-                "error" => $e,
-                "error message" => $e->getMessage(),
-            ], 500);
-        }
+        } 
     }
 
     public function updateReferenceMGM(Request $request)
     {
-        // return response()->json([
-        //         "errors" => $request->all(),
-        //     ], 500);
-
         DB::beginTransaction();
 
         try {
@@ -301,19 +340,52 @@ class ReferenceController extends Controller
                 "delivery_status_prize",
                 "final_status",
             ));
-            $referenceSouvenir->is_acc = false;
 
+            if($request->has('status_acc')){
+                if($request->status_acc == "false"){
+                    $referenceSouvenir->delivery_status_prize = null;
+                }
+            }
+            $referenceSouvenir->is_acc = false;
             $referenceSouvenir->save();
 
             $userId = Auth::user()["id"];
-            $this->historyReference($reference, "update", $userId);
-            $this->historyReferenceSouvenir($referenceSouvenir, "update", $userId);
+            if(sizeof($reference->getChanges()) > 0){
+                $this->historyReference($reference, "Update Data Reference \n(".$reference['name'].")", $userId);
+            }
+
+            if(sizeof($referenceSouvenir->getChanges()) > 0){
+                if($request->has('status_acc')){
+                    if($request->status_acc == "true"){
+                        $this->historyReference($reference, "Acc Approved Data Reference \n(".$reference['name'].")", $userId);
+                    }
+                    elseif($request->status_acc == "false"){
+                        $this->historyReference($reference, "Acc Rejected Data Reference \n(".$reference['name'].")", $userId);
+                    }
+                }
+                else{
+                    $this->historyReferenceSouvenir($referenceSouvenir, "Update Reference Souvenir \n(".$reference['name'].")", $userId);
+                }
+            }
 
             DB::commit();
 
-            return response()->json([
-                "success" => $referenceSouvenir,
-            ], 200);
+            if($request->has('status_acc') || $request->has('order_id')){
+                return response()->json([
+                    "success" => $reference,
+                ], 200);
+                // return redirect()
+                //     ->route("detail_submission_form", [
+                //         "id" => $reference->submission['id'],
+                //         "type" => "mgm",
+                //     ])
+                //     ->with('success', 'Data berhasil dimasukkan.');
+            }
+            else{
+                return response()->json([
+                    "success" => $reference,
+                ], 200);
+            }
         } catch (Exception $e) {
             DB::rollBack();
 
@@ -329,7 +401,7 @@ class ReferenceController extends Controller
         string $method,
         int $userId
     ) {
-        $historyReference["type_menu"] = "Reference";
+        $historyReference["type_menu"] = "Submission";
         $historyReference["method"] = $method;
         $historyReference["meta"] = json_encode(
             [
@@ -340,7 +412,7 @@ class ReferenceController extends Controller
             JSON_THROW_ON_ERROR
         );
         $historyReference["user_id"] = $userId;
-        $historyReference["menu_id"] = $reference->id;
+        $historyReference["menu_id"] = $reference->submission['id'];
         HistoryUpdate::create($historyReference);
     }
 
@@ -349,7 +421,7 @@ class ReferenceController extends Controller
         string $method,
         int $userId
     ) {
-        $historyReferenceSouvenir["type_menu"] = "Reference Souvenir";
+        $historyReferenceSouvenir["type_menu"] = "Submission";
         $historyReferenceSouvenir["method"] = $method;
         $historyReferenceSouvenir["meta"] = json_encode(
             [
@@ -360,7 +432,7 @@ class ReferenceController extends Controller
             JSON_THROW_ON_ERROR
         );
         $historyReferenceSouvenir["user_id"] = $userId;
-        $historyReferenceSouvenir["menu_id"] = $referenceSouvenir->id;
+        $historyReferenceSouvenir["menu_id"] = $referenceSouvenir->reference->submission['id'];
         HistoryUpdate::create($historyReferenceSouvenir);
     }
 
@@ -457,6 +529,9 @@ class ReferenceController extends Controller
         $referenceSouvenirs = ReferenceSouvenir::where('reference_id', '=', $request->id)->first();
         $referenceSouvenirs->is_acc = true;
         $referenceSouvenirs->save();
+
+        $userId = Auth::user()["id"];
+        $this->historyReferenceSouvenir($referenceSouvenirs, "Ask ACC Reference Souvenir \n(".$referenceNya['name'].")", $userId);
         //end update is_acc
 
         if(sizeof($fcm_tokenNya) > 0)
@@ -721,6 +796,61 @@ class ReferenceController extends Controller
                 "error" => $e,
                 "error message" => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    /**
+     * add online signature in reference
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function addOnlineSignature(Request $request)
+    {    
+        DB::beginTransaction();
+
+        try {
+            $reference = Reference::find($request->ref_id);
+            $filename = $request->ref_id . "-signature.png";
+            $data_uri = explode(',', $request->online_signature);
+            $encoded_image = $data_uri[1];
+            $decoded_image = base64_decode($encoded_image);
+            if (!is_dir("sources/online_signature")) {
+                File::makeDirectory("sources/online_signature", 0777, true, true);
+            }
+            file_put_contents('sources/online_signature/' . $filename, $decoded_image);
+            $reference->online_signature = $filename;
+            $reference->reference_souvenir->delivery_status_souvenir = "delivered";
+            $reference->save();
+
+            $reference_souvenir = $reference->reference_souvenir;
+            $reference_souvenir->delivery_status_souvenir = "delivered";
+            $reference_souvenir->save();
+
+            //history change
+            $user = Auth::user();
+            $historyUpdateSubmission = [];
+            $historyUpdateSubmission["type_menu"] = "Submission";
+            $historyUpdateSubmission["method"] = "Signature Reference";
+            $historyUpdateSubmission["meta"] = json_encode([
+                "user" => $user["id"],
+                "updatedAt" => date("Y-m-d H:i:s"),
+                "dataChange" => ["Delivery Status" => "delivered"],
+            ], JSON_THROW_ON_ERROR);
+
+            $historyUpdateSubmission["user_id"] = $user["id"];
+            $historyUpdateSubmission["menu_id"] = $reference->submission['id'];
+            HistoryUpdate::create($historyUpdateSubmission);
+
+            DB::commit();
+            return redirect($request->url)->with("success", "signature added successfully.");           
+        } catch (Exception $e) {
+            DB::rollback();
+            File::deleteDirectory(public_path('sources/online_signature/' . $filename));        
+            return redirect($request->url)->with("error", $e->getMessage());           
         }
     }
 }

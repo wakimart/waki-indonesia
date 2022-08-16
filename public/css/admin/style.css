@@ -3080,7 +3080,7 @@ pre {
   color: #212529; }
   .table th,
   .table td {
-    padding: 0.9375rem;
+    padding: 0.5375rem;
     vertical-align: top;
     border-top: 1px solid #ebedf2; }
   .table thead th {
@@ -3786,7 +3786,8 @@ textarea.form-control {
   user-select: none;
   background-color: transparent;
   border: 1px solid transparent;
-  padding: 0.875rem 2.5rem;
+  padding: 0.875rem 1rem;
+  margin-bottom: 0.5em;
   font-size: 0.875rem;
   line-height: 1;
   border-radius: 0.1875rem;
@@ -3807,6 +3808,15 @@ textarea.form-control {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); }
   .btn.disabled, .btn:disabled {
     opacity: 0.65; }
+  .btn-delete{
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+  }
 
 a.btn.disabled,
 fieldset:disabled a.btn {
@@ -6557,7 +6567,8 @@ a.close.disabled {
   align-items: center;
   -webkit-box-pack: end;
   -ms-flex-pack: end;
-  justify-content: flex-end;
+  justify-content: center;
+  flex-wrap: wrap;
   padding: 15px;
   border-top: 1px solid #ebedf2;
   border-bottom-right-radius: 0.3rem;
@@ -10342,7 +10353,7 @@ code {
 
 /* Utilities */
 .grid-margin, .purchase-popup {
-  margin-bottom: 2.5rem; }
+  margin-bottom: 1.2rem; }
 
 @media (min-width: 576px) {
   .grid-margin-sm-0 {
@@ -10830,6 +10841,24 @@ code {
     line-height: 1;
     margin: auto 0;
     color: #b1b1b1; }
+
+    br.break{
+      display: block;
+      content: "";
+      margin-top: 15px;
+    }
+
+  /* br.break{
+    display: none;
+  }
+
+  @media (max-width: 991px){
+    br.break{
+      display: block;
+      content: "";
+      margin-top: 15px;
+    }
+  } */
 
 /*-------------------------------------------------------------------*/
 /* === Components === */
@@ -12218,9 +12247,6 @@ code {
       color: #1bb1dc; }
 
 /* Forms */
-.form-group {
-  margin-bottom: 1.5rem; }
-
 .input-group-append,
 .input-group-prepend {
   color: #c9c8c8;
@@ -13071,7 +13097,7 @@ dl {
         -ms-flex-align: center;
         align-items: center;
         white-space: nowrap;
-        padding: 1.125rem 0 1.125rem 0;
+        padding: 1rem 0 1rem 0;
         color: #3e4b5b;
         -webkit-transition-duration: 0.45s;
         transition-duration: 0.45s;
@@ -13372,10 +13398,15 @@ dl {
 
 .content-wrapper {
   background: #f2edf3;
-  padding: 2.75rem 2.25rem;
+  padding: 2rem 2rem;
   width: 100%;
   -webkit-box-flex: 1;
   -ms-flex-positive: 1;
   flex-grow: 1; }
+
+@media (max-width: 576px) {
+  .content-wrapper {
+    padding: 0.8rem !important;
+    flex-grow: 1; } }
 
 /*# sourceMappingURL=style.css.map */

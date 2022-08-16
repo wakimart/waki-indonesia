@@ -204,6 +204,27 @@ $menu_item_second = "detail_submission_form";
                 </table>
             </div>
 
+            <div class="col-md-12 center"
+                style="margin-top: 3em;">
+                <div class="row justify-content-center">
+                    <h2 class="text-center share">
+                        Share Submission Takeaway
+                    </h2>
+                </div>
+                <form class="forms-sample"
+                    method="GET"
+                    action="https://api.whatsapp.com/send">
+                    <div class="form-group row justify-content-center">
+                        <button type="submit"
+                            class="btn btn-gradient-primary mr-2 my-2"
+                            name="text"
+                            value="Terima Kasih telah mengikuti program *Takeaway*. Berikut adalah tautan bukti formulir ( {{ route('detail_submission_form', ['id' => $submission, 'type' => 'takeaway']) }} )">
+                            Share Program Takeaway
+                        </button>
+                    </div>
+                </form>
+             </div>
+
             @if ($historySubmission->isNotEmpty())
                 <div class="row justify-content-center"
                     style="margin-top: 2em;">

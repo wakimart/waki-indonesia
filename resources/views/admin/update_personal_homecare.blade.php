@@ -18,46 +18,36 @@ $menu_item_page = "personal_homecare";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     .input-group-text {
         color: black !important;
     }
-
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
-
     .select2-container--default
     .select2-selection--single
     .select2-selection__arrow {
         top: 10px;
     }
-
     .div-CheckboxGroup {
         border: solid 1px rgba(128, 128, 128, 0.32941);
         padding: 10px;
         border-radius: 3px;
     }
-
-    .img-h500 {
-        max-height: 500px;
-    }
+    .img-h500 {max-height: 500px;}
 </style>
 @endsection
 
@@ -93,7 +83,7 @@ $menu_item_page = "personal_homecare";
                                 id="branch_id"
                                 name="branch_id"
                                 form="add-phc"
-                                required>
+                                {{ $personalhomecare['status'] == "new" ? 'required' : 'disabled' }}>
                                 <option disabled>
                                     Select Branch
                                 </option>
@@ -120,6 +110,7 @@ $menu_item_page = "personal_homecare";
                             <select  class="form-control"
                                 name="cso_id"
                                 id="cso_id"
+                                {{ $personalhomecare['status'] == "new" ? 'required' : 'disabled' }}
                                 form="add-phc">
                                 <option disabled>
                                     Select CSO
@@ -163,7 +154,7 @@ $menu_item_page = "personal_homecare";
                                     name="schedule"
                                     id="schedule"
                                     value="{{ date('Y-m-d', strtotime($personalhomecare['schedule'])) }}"
-                                    required />
+                                    {{ $personalhomecare['status'] == "new" ? 'required' : 'disabled' }} />
                             </div>
 
                             <div class="form-group">
@@ -171,7 +162,7 @@ $menu_item_page = "personal_homecare";
                                 <select class="form-control"
                                     name="ph_product_id"
                                     id="ph_product_id"
-                                    required>
+                                    {{ $personalhomecare['status'] == "new" || Gate::check('change-status-product-personalhomecare') ? 'required' : 'disabled' }} >
                                     <option disabled>
                                         Select Product (Please select branch first)
                                     </option>
@@ -235,7 +226,7 @@ $menu_item_page = "personal_homecare";
                                         Select Province
                                     </option>
                                     @foreach ($provinces as $province)
-                                        @if ($personalhomecare->province_id === $province->id)
+                                        @if ($personalhomecare->province_id == $province->id)
                                             <option value="{{ $province->id }}" selected>
                                                 {{ $province->name }}
                                             </option>
@@ -259,7 +250,7 @@ $menu_item_page = "personal_homecare";
                                         Select City
                                     </option>
                                     @foreach ($cities as $city)
-                                        @if ($personalhomecare->city_id === $city->id)
+                                        @if ($personalhomecare->city_id == $city->id)
                                             <option value="{{ $city->id }}" selected>
                                                 {{ $city->name }}
                                             </option>
@@ -282,7 +273,7 @@ $menu_item_page = "personal_homecare";
                                         Select Subdistrict
                                     </option>
                                     @foreach ($subdistricts as $subdistrict)
-                                        @if ($personalhomecare->subdistrict_id === $subdistrict->id)
+                                        @if ($personalhomecare->subdistrict_id == $subdistrict->id)
                                             <option value="{{ $subdistrict->id }}" selected>
                                                 {{ $subdistrict->name }}
                                             </option>
@@ -311,233 +302,24 @@ $menu_item_page = "personal_homecare";
                                     name="id_card_image"
                                     id="id_card_image" />
                             </div>
+
+                            <div class="form-group">
+                                <img src="{{ asset("sources/phc/" . $personalhomecare->member_wakimart) }}"
+                                    class="img-thumbnail img-h500"
+                                    alt="customer member wakimart" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="member_wakimart_image">
+                                    Customer Wakimart Member
+                                </label>
+                                <input type="file"
+                                    class="form-control"
+                                    accept="image/jpeg, image/png"
+                                    name="member_wakimart_image"
+                                    id="member_wakimart_image" />
+                            </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <h2>Product Checklist</h2>
-
-                        <div class="form-group">
-                            <span style="display: block;">Completeness</span>
-                            <div class="div-CheckboxGroup">
-                                <div class="form-check">
-                                    <label for="completeness-machine"
-                                        class="form-check-label">
-                                        <input type="checkbox"
-                                            name="completeness[]"
-                                            id="completeness-machine"
-                                            value="machine"
-                                            {{ in_array("machine", $personalhomecare->
-                                            checklistOut['condition']['completeness']) ?
-                                            "checked" : "" }}
-                                            form="add-phc" />
-                                        Machine
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label for="completeness-filter"
-                                        class="form-check-label">
-                                        <input type="checkbox"
-                                            name="completeness[]"
-                                            id="completeness-filter"
-                                            value="filter"
-                                            {{ in_array("filter", $personalhomecare->
-                                            checklistOut['condition']['completeness']) ?
-                                            "checked" : "" }}
-                                            form="add-phc" />
-                                        Filter
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label for="completeness-accessories"
-                                        class="form-check-label">
-                                        <input type="checkbox"
-                                            name="completeness[]"
-                                            id="completeness-accessories"
-                                            value="accessories"
-                                            {{ in_array("accessories", $personalhomecare->
-                                            checklistOut['condition']['completeness']) ?
-                                            "checked" : "" }}
-                                            form="add-phc" />
-                                        Accessories
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label for="completeness-cable"
-                                        class="form-check-label">
-                                        <input type="checkbox"
-                                            name="completeness[]"
-                                            id="completeness-cable"
-                                            value="cable"
-                                            {{ in_array("cable", $personalhomecare->
-                                            checklistOut['condition']['completeness']) ?
-                                            "checked" : "" }}
-                                            form="add-phc" />
-                                        Cable
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label for="completeness-other"
-                                        class="form-check-label">
-                                        <input type="checkbox"
-                                            name="completeness[]"
-                                            id="completeness-other"
-                                            value="other"
-                                            {{ in_array("other", $personalhomecare->
-                                            checklistOut['condition']['completeness']) ?
-                                            "checked" : "" }}
-                                            form="add-phc"
-                                            onchange="showOtherInput(this)" />
-                                        Other
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text"
-                                        class="form-control d-none"
-                                        placeholder="Other description"
-                                        name="other_completeness"
-                                        id="other-text"
-                                        value="{{ $personalhomecare->checklistOut['condition']['other'] }}"
-                                        form="add-phc" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <span style="display: block;">Machine Condition</span>
-                            <div class="div-CheckboxGroup">
-                                <div class="form-check">
-                                    <label for="machine-condition-normal"
-                                        class="form-check-label">
-                                        <input type="radio"
-                                            class="form-check-input"
-                                            name="machine_condition"
-                                            id="machine-condition-normal"
-                                            value="normal"
-                                            {{ $personalhomecare->checklistOut
-                                            ['condition']['machine'] == "normal" ?
-                                            "checked" : "" }}
-                                            form="add-phc"
-                                            required />
-                                        Normal
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label for="machine-condition-need-repair"
-                                        class="form-check-label">
-                                        <input type="radio"
-                                            class="form-check-input"
-                                            name="machine_condition"
-                                            id="machine-condition-need-repair"
-                                            value="need_repair"
-                                            {{ $personalhomecare->checklistOut
-                                            ['condition']['machine'] == "need_repair" ?
-                                            "checked" : "" }}
-                                            form="add-phc"
-                                            required />
-                                        Need Repair
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <span style="display: block;">Physical Condition</span>
-                            <div class="div-CheckboxGroup">
-                                <div class="form-check">
-                                    <label for="physical-condition-new"
-                                        class="form-check-label">
-                                        <input type="radio"
-                                            class="form-check-input"
-                                            name="physical_condition"
-                                            id="physical-condition-new"
-                                            value="new"
-                                            {{ $personalhomecare->checklistOut
-                                            ['condition']['physical'] == "new" ?
-                                            "checked" : "" }}
-                                            form="add-phc"
-                                            required />
-                                        New
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label for="physical-condition-moderate"
-                                        class="form-check-label">
-                                        <input type="radio"
-                                            class="form-check-input"
-                                            name="physical_condition"
-                                            id="physical-condition-moderate"
-                                            value="moderate"
-                                            {{ $personalhomecare->checklistOut
-                                            ['condition']['physical'] == "moderate" ?
-                                            "checked" : "" }}
-                                            form="add-phc"
-                                            required />
-                                        Moderate
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <label for="physical-condition-need-repair"
-                                        class="form-check-label">
-                                        <input type="radio"
-                                            class="form-check-input"
-                                            name="physical_condition"
-                                            id="physical-condition-need-repair"
-                                            value="need_repair"
-                                            {{ $personalhomecare->checklistOut
-                                            ['condition']['physical'] == "need_repair" ?
-                                            "checked" : "" }}
-                                            form="add-phc"
-                                            required />
-                                        Need Repair
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        @if (isset($personalhomecare->checklistOut["image"][0]))
-                            <div class="form-group">
-                                <img src="{{ asset("sources/phc-checklist/" . $personalhomecare->checklistOut["image"][0]) }}"
-                                    class="img-thumbnail img-h500"
-                                    alt="product photo" />
-                            </div>
-                        @endif
-
-                        <div class="form-group">
-                            <label for="product-photo-1">Product Photo</label>
-                            <input type="file"
-                                class="form-control"
-                                accept="image/jpeg, image/png"
-                                name="product_photo_1"
-                                id="product-photo-1"
-                                form="add-phc" />
-                        </div>
-
-                        @if (isset($personalhomecare->checklistOut["image"][1]))
-                            <div class="form-group">
-                                <img src="{{ asset("sources/phc-checklist/" . $personalhomecare->checklistOut["image"][1]) }}"
-                                    class="img-thumbnail img-h500"
-                                    alt="product photo with CSO and Customer" />
-                            </div>
-                        @endif
-
-                        <div class="form-group">
-                            <label for="product-photo-2">
-                                Product Photo with CSO and Customer
-                            </label>
-                            <input type="file"
-                                class="form-control"
-                                accept="image/jpeg, image/png"
-                                name="product_photo_2"
-                                id="product-photo-2"
-                                form="add-phc" />
-                        </div>
                     </div>
                 </div>
             </div>
@@ -574,11 +356,6 @@ document.addEventListener("DOMContentLoaded", function() {
     $("#subdistrict_id").select2();
     $("#branch_id").select2();
     $("#cso_id").select2();
-
-    @if(in_array("other", $personalhomecare->checklistOut['condition']['completeness']))
-        document.getElementById("other-text").classList.remove("d-none");
-        document.getElementById("other-text").setAttribute("required", "");
-    @endif
 });
 
 function setProduct(e) {
@@ -711,16 +488,6 @@ function setSubdistrict(e) {
     }).catch(function (error) {
         console.error(error);
     })
-}
-
-function showOtherInput(e) {
-    if (e.checked) {
-        document.getElementById("other-text").classList.remove("d-none");
-        document.getElementById("other-text").setAttribute("required", "");
-    } else {
-        document.getElementById("other-text").removeAttribute("required");
-        document.getElementById("other-text").classList.add("d-none");
-    }
 }
 </script>
 @endsection

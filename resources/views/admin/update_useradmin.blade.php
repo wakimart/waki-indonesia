@@ -16,13 +16,11 @@ $menu_item_page = "user";
         background-repeat: no-repeat;
         display: inline-block;
     }
-
     .div-CheckboxGroup {
         border:solid 1px rgba(128, 128, 128, 0.32941);
         padding:10px;
         border-radius:3px;
     }
-
     .del {
         position: absolute;
         top: 0px;
@@ -34,11 +32,9 @@ $menu_item_page = "user";
         background-color: rgba(255,255,255,0.6);
         cursor: pointer;
     }
-
     #intro {
         padding-top: 2em;
     }
-
     button{
         background: #1bb1dc;
         border: 0;
@@ -47,19 +43,16 @@ $menu_item_page = "user";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation{
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea{
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     .select2-selection__rendered {
         line-height: 40px !important;
     }
@@ -201,6 +194,9 @@ $menu_item_page = "user";
                                                 @endforeach
                                             </select>
                                             <div class="validation"></div>
+                                            <span class="invalid-feedback">
+                                                <strong></strong>
+                                            </span>
                                         </div>
 
                                         @if ($i == 0)
@@ -419,6 +415,123 @@ $menu_item_page = "user";
                             </div>
 
                             <div class="form-group" id="group-product">
+                                <span style="display:block;">CHANGE STATUS ORDER</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status_order">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order" />
+                                            Change Status Order
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-primary"
+                                            for="change-status_order_process">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_process" />
+                                            Change Status Order Process
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-warning"
+                                            for="change-status_order_delivery">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_delivery" />
+                                            Change Status Order Delivery
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-success"
+                                            for="change-status_order_success">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_success" />
+                                            Change Status Order Success
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-danger"
+                                            for="change-status_order_reject">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_reject" />
+                                            Change Status Order Reject
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">CHANGE STATUS ORDER PAYMENT</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status_payment">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_payment" />
+                                            Change Status Order Payment
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-success"
+                                            for="change-status_payment_verified">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_payment_verified" />
+                                            Change Status Order Payment Verified
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-danger"
+                                            for="change-status_payment_rejected">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_payment_rejected" />
+                                            Change Status Order Payment Rejected
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">ORDER REPORT</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-order_report">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-order_report" />
+                                            Browse Order Report
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-order_report_branch">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-order_report_branch" />
+                                            Browse Order Report By Branch
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-order_report_cso">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-order_report_cso" />
+                                            Browse Order Report By CSO
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
                                 <span style="display:block;">HOME SERVICE</span>
                                 <div class="div-CheckboxGroup">
                                     <div class="form-check form-check-inline">
@@ -463,6 +576,165 @@ $menu_item_page = "user";
                                                 type="checkbox"
                                                 id="delete-home_service" />
                                             Delete Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-view-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-view-home_service" />
+                                            View Acc Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-reschedule-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-reschedule-home_service" />
+                                            Reschedule Acc Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-cancel-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-cancel-home_service" />
+                                            Cancel Acc Home Service
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">AREA HOME SERVICE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-area_home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-area_home_service" />
+                                            Browse Home Service
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">Cuti</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-absent_off" />
+                                            Add Form Ijin Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-absent_off" />
+                                            Browse Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-absent_off" />
+                                            Detail Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-absent_off" />
+                                            Edit Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" 
+                                            for="delete-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-absent_off" />
+                                            Delete Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="browse-acc_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-acc_absent_off" />
+                                            Browse Acc Cuti
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">Acc Cuti</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-view-spv_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-view-spv_absent_off" />
+                                            Acc View Supervisor Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-view-coor_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-view-coor_absent_off" />
+                                            Acc View Coordinator Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-absent_off" />
+                                            Acc Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-spv_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-spv_absent_off" />
+                                            Acc Supervisor Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-reject_spv_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-reject_spv_absent_off" />
+                                            Acc Reject Supervisor Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-coor_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-coor_absent_off" />
+                                            Acc Coordinator Cuti
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="acc-reject_coor_absent_off">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-reject_coor_absent_off" />
+                                            Acc Reject Coordinator Cuti
                                         </label>
                                     </div>
                                 </div>
@@ -861,6 +1133,16 @@ $menu_item_page = "user";
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label"
+                                            for="change-status-repaired-upgrade">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-repaired-upgrade"
+                                                value="change-status-repaired-upgrade" />
+                                            Change Status Repaired Upgrade
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
                                             for="change-status-complete-upgrade">
                                             <input type="checkbox"
                                                 class="form-check-input"
@@ -993,6 +1275,56 @@ $menu_item_page = "user";
                                                 id="delete-service"
                                                 value="delete-service" />
                                             Delete Service
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">TECHNICIAN SCHEDULE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-technician_schedule">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-technician_schedule" />
+                                            Add Technician Schedule
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-technician_schedule">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-technician_schedule" />
+                                            Browse Technician Schedule
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-technician_schedule">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-technician_schedule" />
+                                            Detail Technician Schedule
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-technician_schedule">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-technician_schedule" />
+                                            Edit Technician Schedule
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="delete-technician_schedule">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-technician_schedule" />
+                                            Delete Technician Schedule
                                         </label>
                                     </div>
                                 </div>
@@ -1209,6 +1541,223 @@ $menu_item_page = "user";
                                             Change Status Check-in Personal Homecare
                                         </label>
                                     </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-verified-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-verified-personalhomecare"
+                                                value="change-status-verified-personalhomecare" />
+                                            Change Status Verified Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="acc-reschedule-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="acc-reschedule-personalhomecare"
+                                                value="acc-reschedule-personalhomecare" />
+                                            Acc Reschedule Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="acc-extend-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="acc-extend-personalhomecare"
+                                                value="acc-extend-personalhomecare" />
+                                            Acc Extend Personal Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-product-personalhomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-product-personalhomecare"
+                                                value="change-status-product-personalhomecare" />
+                                            Change Status Product Personal Homecare
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">TYPE CUSTOMER</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-type_customer">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-type_customer" />
+                                            Add Type Customer
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-type_customer">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-type_customer" />
+                                            Browse Type Customer
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-type_customer">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-type_customer" />
+                                            Edit Type Customer
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-type_customer">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-type_customer" />
+                                            Delete Type Customer
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">BANK</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-bank" />
+                                            Add Bank
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-bank" />
+                                            Browse Bank
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-bank" />
+                                            Edit Bank
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-bank" />
+                                            Delete Bank
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">DATA SOURCING</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-data_sourcing">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-data_sourcing" />
+                                            Add Data Sourcing
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-data_sourcing">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-data_sourcing" />
+                                            Browse Data Sourcing
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-data_sourcing">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-data_sourcing" />
+                                            Edit Data Sourcing
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-data_sourcing">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-data_sourcing" />
+                                            Delete Data Sourcing
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">DATA THERAPY</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-data_therapy">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-data_therapy" />
+                                            Add Data Therapy
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-data_therapy">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-data_therapy" />
+                                            Browse Data Therapy
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-data_therapy">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-data_therapy" />
+                                            Detail Data Therapy
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-data_therapy">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-data_therapy" />
+                                            Edit Data Therapy
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-data_therapy">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-data_therapy" />
+                                            Delete Data Therapy
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1338,7 +1887,7 @@ $menu_item_page = "user";
                         $("#actionUpdate").find("textarea[name=" + key + "]").addClass("is-invalid");
 
                         $("#actionUpdate").find("input[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
-                        $("#actionUpdate").find("select[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionUpdate").find("select[name=" + key + "]").siblings().find("strong").text(hasil['errors'][key]);
                         $("#actionUpdate").find("textarea[name=" + key + "]").next().find("strong").text(hasil['errors'][key]);
                     }
                 }

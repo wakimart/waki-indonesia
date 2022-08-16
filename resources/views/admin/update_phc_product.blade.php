@@ -19,35 +19,34 @@ $menu_item_second = "update_product";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation {
         color: red;
-        font-size: 9pt;
+        font-size: 9pt
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     .input-group-text {
         color: black !important;
     }
-
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
-
     .select2-container--default
     .select2-selection--single
     .select2-selection__arrow {
         top: 10px;
+    }
+    .div-CheckboxGroup {
+        border: solid 1px rgba(128, 128, 128, 0.32941);
+        padding: 10px;
+        border-radius: 3px;
     }
 </style>
 @endsection
@@ -71,14 +70,20 @@ $menu_item_second = "update_product";
                 </ol>
             </nav>
         </div>
-        <div class="row">
-            <div class="col-12 grid-margin stretch-card">
-                <div class="card">
-                    <div class="card-body">
-                        <form id="add-phc-product"
-                            method="POST"
-                            action="{{ route("update_phc_product") }}">
-                            @csrf
+        <form id="add-phc-product"
+            method="POST"
+            action="{{ route("update_phc_product") }}">
+            @csrf
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <input type="hidden"
+                                id="id"
+                                name="id"
+                                value="{{ $phcproducts->id }}"
+                                required />
                             <input type="hidden"
                                 id="branch-code"
                                 name="branch_code"
@@ -91,6 +96,29 @@ $menu_item_second = "update_product";
                                 name="code"
                                 id="code"
                                 required />
+                            <div class="form-group">
+                                <label for="warehouse_id">Warehouse</label>
+                                <select class="form-control"
+                                    id="warehouse_id"
+                                    name="warehouse_id"
+                                    onchange="selectWarehouse(this)" required="">
+                                    <option disabled selected>
+                                        Select Warehouse
+                                    </option>
+                                    <option disabled {{ substr($phcproducts->code, 1, 1) == "1" ? 'selected' : '' }} value="1"
+                                        data-code="1">
+                                        Surabaya
+                                    </option>
+                                    <option disabled {{ substr($phcproducts->code, 1, 1) == "2" ? 'selected' : '' }} value="2"
+                                        data-code="2">
+                                        Semarang
+                                    </option>
+                                    <option disabled {{ substr($phcproducts->code, 1, 1) == "3" ? 'selected' : '' }} value="3"
+                                        data-code="3">
+                                        Jakarta
+                                    </option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="branch_id">Branch</label>
                                 <select class="form-control"
@@ -129,12 +157,12 @@ $menu_item_second = "update_product";
                                         @if ($phcproducts->product_id == $product->id)
                                             <option value="{{ $product->id }}"
                                                 data-code="{{ $product->code }}"
-                                                selected>
+                                                selected disabled>
                                                 {{ $product->code }} - {{ $product->name }}
                                             </option>
                                         @else
                                             <option value="{{ $product->id }}"
-                                                data-code="{{ $product->code }}">
+                                                data-code="{{ $product->code }}" disabled>
                                                 {{ $product->code }} - {{ $product->name }}
                                             </option>
                                         @endif
@@ -147,7 +175,7 @@ $menu_item_second = "update_product";
                                 </label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="code-suffix"></span>
+                                        <span class="input-group-text" id="code-suffix">{{ substr($phcproducts->code, 0, 3) }}</span>
                                     </div>
                                     <input type="text"
                                         class="form-control"
@@ -157,32 +185,188 @@ $menu_item_second = "update_product";
                                         inputmode="numeric"
                                         placeholder="Number"
                                         oninput="setCode()"
+                                        value="{{ substr($phcproducts->code, 3, 3) }}"
                                         disabled
                                         required />
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Product Checklist</h2>
+
                             <div class="form-group">
-                                <label for="status">Status</label>
-                                <select class="form-control"
-                                    id="status"
-                                    name="status">
-                                    <option value="0">Not Available</option>
-                                    <option value="1" selected>
-                                        Available
-                                    </option>
-                                </select>
+                                <span style="display: block;">Completeness</span>
+                                <div class="div-CheckboxGroup">
+
+                                    @php
+                                        $prd_firstLetter = substr($phcproducts['code'], 0, 1);
+                                        $arr_completness = App\PersonalHomecareChecklist::$completeness_list[$prd_firstLetter];
+                                    @endphp
+
+                                    @foreach($arr_completness as $checklistInput)
+                                        <div class="form-check">
+                                            <label for="completeness-{{$checklistInput}}"
+                                                class="form-check-label">
+                                                <input type="checkbox"
+                                                    name="completeness[]"
+                                                    id="completeness-{{$checklistInput}}"
+                                                    value="{{$checklistInput}}"
+
+                                                    @if($phcproducts->currentChecklist != null)
+                                                        {{ in_array($checklistInput, $phcproducts->
+                                                        currentChecklist['condition']['completeness']) ?
+                                                        "checked" : "" }}
+                                                    @endif
+
+                                                    />
+                                                {{$checklistInput}}
+                                            </label>
+                                        </div>
+                                    @endforeach
+
+                                    <div class="form-check">
+                                        <label for="completeness-other"
+                                            class="form-check-label">
+                                            <input type="checkbox"
+                                                name="completeness[]"
+                                                id="completeness-other"
+                                                value="other"
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ in_array("other", $phcproducts->
+                                                    currentChecklist['condition']['completeness']) ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                onchange="showOtherInput(this)" />
+                                            Other
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text"
+                                            class="form-control d-none"
+                                            placeholder="Other description"
+                                            name="other_completeness"
+                                            id="other-text"
+                                            value="{{ $phcproducts->currentChecklist != null ? $phcproducts->currentChecklist['condition']['other'] : "" }}" />
+                                    </div>
+                                </div>
                             </div>
+
+                            <div class="form-group">
+                                <span style="display: block;">Machine Condition</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check">
+                                        <label for="machine-condition-normal"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="machine_condition"
+                                                id="machine-condition-normal"
+                                                value="normal"
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ $phcproducts->currentChecklist
+                                                    ['condition']['machine'] == "normal" ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                    />
+                                            Normal
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label for="machine-condition-need-repair"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="machine_condition"
+                                                id="machine-condition-need-repair"
+                                                value="need_repair"
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ $phcproducts->currentChecklist
+                                                    ['condition']['machine'] == "need_repair" ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                />
+                                            Need Repair
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <span style="display: block;">Physical Condition</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check">
+                                        <label for="physical-condition-new"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="physical_condition"
+                                                id="physical-condition-new"
+                                                value="new"
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ $phcproducts->currentChecklist
+                                                    ['condition']['physical'] == "new" ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                />
+                                            New
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label for="physical-condition-moderate"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="physical_condition"
+                                                id="physical-condition-moderate"
+                                                value="moderate"
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ $phcproducts->currentChecklist
+                                                    ['condition']['physical'] == "moderate" ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                />
+                                            Moderate
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label for="physical-condition-need-repair"
+                                            class="form-check-label">
+                                            <input type="radio"
+                                                class="form-check-input"
+                                                name="physical_condition"
+                                                id="physical-condition-need-repair"
+                                                value="need_repair"
+                                                @if($phcproducts->currentChecklist != null)
+                                                    {{ $phcproducts->currentChecklist
+                                                    ['condition']['physical'] == "need_repair" ?
+                                                    "checked" : "" }}
+                                                @endif
+                                                />
+                                            Need Repair
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <button type="submit"
                                     class="btn btn-gradient-primary">
                                     Update
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
+
     </div>
 </div>
 @endsection
@@ -203,9 +387,12 @@ function getSelectedCode(e) {
     return e.options[e.selectedIndex].dataset.code;
 }
 
+function selectWarehouse(e) {
+    setCodeSuffix();
+}
+
 function selectBranch(e) {
     document.getElementById("branch-code").value = getSelectedCode(e);
-    setCodeSuffix();
 }
 
 function selectProduct(e) {
@@ -214,22 +401,95 @@ function selectProduct(e) {
 }
 
 function setCodeSuffix() {
-    const productCode = document.getElementById("product-code").value;
-    const branchCode = document.getElementById("branch-code").value;
+    let productCode = document.getElementById("product-code").value;
+    const warehouse_id = document.getElementById("warehouse_id").value;
+    // const branchCode = document.getElementById("branch-code").value;
 
-    document.getElementById("code-suffix").innerHTML = `${productCode}${branchCode}`;
+    if(productCode == "WK2079"){
+        productCode = "A";
+    }
+    else if(productCode == "WK2076H"){
+        productCode = "B";
+    }
+    else if(productCode == "WK2076i"){
+        productCode = "C";
+    }
+    else if(productCode == "WKT2080"){
+        productCode = "D";
+    }
+    else if(productCode == "WKA2023"){
+        productCode = "E";
+    }
+    else if(productCode == "WKA2024"){
+        productCode = "F";
+    }
+    else{
+        productCode = "-";
+    }
 
-    if (productCode && branchCode) {
+    document.getElementById("code-suffix").innerHTML = `${productCode}${warehouse_id}_`;
+
+    if (productCode && warehouse_id) {
         document.getElementById("code-increment").removeAttribute("disabled");
+        getIncrementSuggestion(`${productCode}${warehouse_id}_`);
     }
 }
 
+function getIncrementSuggestion(code) {
+    console.log(code);
+    fetch(
+        `{{ route("get_phc_product_increment") }}/?code=${code}`,
+        {
+            method: "GET",
+            headers: {
+                "Accept": "application/json",
+            },
+            mode: "same-origin",
+            referrerPolicy: "no-referrer",
+        }
+    ).then(function (response) {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return response.json();
+    }).then(function (response) {
+        const data = response.data.toString();
+        document.getElementById("code-increment").value = data.padStart(3, "0");
+        setCode();
+    }).catch(function (error) {
+        console.error(error);
+    });
+}
+
 function setCode() {
-    const productCode = document.getElementById("product-code").value;
-    const branchCode = document.getElementById("branch-code").value;
+    // const productCode = document.getElementById("product-code").value;
+    // const branchCode = document.getElementById("branch-code").value;
+
+    let productCode = document.getElementById("product-code").value;
+    const warehouse_id = document.getElementById("warehouse_id").value;
     const increment = document.getElementById("code-increment").value;
 
-    document.getElementById("code").value = `${productCode}${branchCode}${increment}`;
+    if(productCode == "WK2079"){
+        productCode = "A";
+    }
+    else if(productCode == "WK2076H"){
+        productCode = "B";
+    }
+    else if(productCode == "WK2076i"){
+        productCode = "C";
+    }
+    else if(productCode == "WKT2080"){
+        productCode = "D";
+    }
+    else if(productCode == "WKA2023"){
+        productCode = "E";
+    }
+    else if(productCode == "WKA2024"){
+        productCode = "F";
+    }
+
+    document.getElementById("code").value = `${productCode}${warehouse_id}_${increment}`;
 }
 </script>
 @endsection

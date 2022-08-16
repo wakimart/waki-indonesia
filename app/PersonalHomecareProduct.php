@@ -10,6 +10,7 @@ class PersonalHomecareProduct extends Model
         "code",
         "branch_id",
         "product_id",
+        "current_checklist_id",
         "status",
         "active",
     ];
@@ -27,5 +28,10 @@ class PersonalHomecareProduct extends Model
     public function personalHomecare()
     {
         return $this->hasMany("App\PersonalHomecare", "ph_product_id");
+    }
+
+    public function currentChecklist()
+    {
+        return $this->belongsTo("App\PersonalHomecareChecklist");
     }
 }

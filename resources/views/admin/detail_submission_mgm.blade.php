@@ -344,7 +344,7 @@ if (
                 </div>
                 <form class="forms-sample"
                     method="GET"
-                    action="https://wa.me/">
+                    action="https://api.whatsapp.com/send">
                     <div class="form-group row justify-content-center">
                         <button type="submit"
                             class="btn btn-gradient-primary mr-2 my-2"
@@ -401,6 +401,7 @@ if (
         <h2>CANNOT FIND SUBMISSION</h2>
     </div>
 @endif
+
 <div class="modal fade"
     id="edit-reference"
     tabindex="-1"
@@ -669,8 +670,8 @@ if (
 
                             <div style="text-align: center;">
                                 <h5>Are you sure want to deliver by CSO for this reference ?</h5>
-                                <button type="submit" class="btn btn-gradient-primary">Yes</button>
-                                <button class="btn btn-gradient-danger" data-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
                             </div>
                         </div>
                     </form>
@@ -1137,7 +1138,8 @@ function clickEdit(e) {
 
     function orderCode() {
         try {
-            return document.getElementById("order_" + refSeq).innerHTML.trim();
+            // return document.getElementById("order_" + refSeq).innerHTML.trim();
+            return document.getElementById("order_" + refSeq).getElementsByTagName("a")[0].innerHTML.trim();
         } catch (error) {
             delete error;
             return "";
@@ -1204,13 +1206,18 @@ $(document).ready(function () {
                 $('#table-order').html("");
                 if (result.orders.length > 0) {
                     let orderNya = result.orders;
+                    let productDb = result.productDb;
 
                     $.each(orderNya, function (key, value) {
-                        let isiNya = "<tr><td>" + value.orderDate + "</td><td>" +
+                        let productNya = value.product;
+
+                        let isiNya = "<tr><td>" + value.orderDate + 
+                        "<br><br><a target=\"_blank\" href=\"{{route("detail_order", ["code" => ""])}}"+ value.code +"\">Link</a><br><br>" +
+                        "</td><td>" +
                         "<b>Name</b>: " + value.name + "<br>" +
                         "<b>Phone</b>: " + value.phone + "<br>" +
                         "<b>Address</b>: " + value.address + "<br>" +
-                        "<b>Product</b>: " + value.product + "<br>";
+                        "<b>Product</b>: " + productNya+"("+value.orderDetailQty+"x)" + "<br>";
 
                         if (originButton === "btn_choose_order") {
                             isiNya += "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya(" + value.id + ", \"" + value.code + "\")'>Choose This</button></td></tr>";
@@ -1292,24 +1299,26 @@ $(document).ready(function () {
         document.getElementById("btn-confirmUpdate").innerHTML = "SAVE";
     }
 
-    $("#formUpdateStatusAcc").on("submit", function (e) {
-        e.preventDefault();
-        frmAdd = _("formUpdateStatusAcc");
-        frmAdd = new FormData(document.getElementById("formUpdateStatusAcc"));
-        frmAdd.enctype = "multipart/form-data";
-        var URLNya = $("#formUpdateStatusAcc").attr('action');
+    // $("#formUpdateStatusAcc").on("submit", function (e) {
+    //     e.preventDefault();
+    //     frmAdd = _("formUpdateStatusAcc");
+    //     frmAdd = new FormData(document.getElementById("formUpdateStatusAcc"));
+    //     console.log(e);
+    //     frmAdd.enctype = "multipart/form-data";
+    //     var URLNya = $("#formUpdateStatusAcc").attr('action');
 
-        var ajax = new XMLHttpRequest();
-        ajax.addEventListener("load", completeHandler_2, false);
-        ajax.open("POST", URLNya);
-        ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
-        ajax.send(frmAdd);
-    });
+    //     var ajax = new XMLHttpRequest();
+    //     ajax.addEventListener("load", completeHandler_2, false);
+    //     ajax.open("POST", URLNya);
+    //     ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+    //     ajax.send(frmAdd);
+    // });
 
-    function completeHandler_2(event){
-        alert("Input Success !!!");
-        window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
-    }
+    // function completeHandler_2(event){
+    //     alert("Input Success !!!");
+    //     console.log(event.target.responseText);
+    //     // window.location.href = "{{ route('detail_submission_form') }}?id="+{{ $submission->id }}+"&type=mgm";
+    // }
 
     @if(isset($_GET['id_ref']))
         loadDataPerRef({{$_GET['id_ref']}});

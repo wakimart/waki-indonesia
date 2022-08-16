@@ -12,7 +12,6 @@ $menu_item_second = "add_submission_takeaway";
     #intro {
         padding-top: 2em;
     }
-
     button{
         background: #1bb1dc;
         border: 0;
@@ -21,19 +20,16 @@ $menu_item_second = "add_submission_takeaway";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation{
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea{
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     #regForm {
       background-color: #ffffff;
       margin: 100px auto;
@@ -41,7 +37,6 @@ $menu_item_second = "add_submission_takeaway";
       width: 70%;
       min-width: 300px;
     }
-
     /* Style the input fields */
     input {
       padding: 10px;
@@ -50,21 +45,17 @@ $menu_item_second = "add_submission_takeaway";
       font-family: Raleway;
       border: 1px solid #aaaaaa;
     }
-
     /* Mark input boxes that gets an error on validation: */
     input.invalid {
       background-color: #ffdddd;
     }
-
     .invalid {
         border: 1px solid red !important;
     }
-
     /* Hide all steps by default: */
     .tab {
       display: none;
     }
-
     /* Make circles that indicate the steps of the form: */
     .step {
       height: 15px;
@@ -76,17 +67,14 @@ $menu_item_second = "add_submission_takeaway";
       display: inline-block;
       opacity: 0.5;
     }
-
     /* Mark the active step: */
     .step.active {
       opacity: 1;
     }
-
     /* Mark the steps that are finished and valid: */
     .step.finish {
       background-color: #4CAF50;
     }
-
     select {
       color: black !important;
     }
@@ -97,7 +85,7 @@ $menu_item_second = "add_submission_takeaway";
 <div class="main-panel">
       <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Edit Submission - Referensi Sehat Bersama WAKi</h3>
+            <h3 class="page-title">Edit Submission - Referensi Happy With WAKi</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -109,7 +97,7 @@ $menu_item_second = "add_submission_takeaway";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Edit Submission - Referensi Sehat Bersama WAKi
+                        Edit Submission - Referensi Happy With WAKi
                     </li>
                 </ol>
             </nav>
@@ -137,7 +125,7 @@ $menu_item_second = "add_submission_takeaway";
                                 <input type="text"
                                     readonly
                                     disabled
-                                    value="Referensi Sehat Bersama WAKi" />
+                                    value="Referensi Happy With WAKi" />
                             </div>
 
                             <div class="form-group">

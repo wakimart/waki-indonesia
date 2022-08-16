@@ -18,7 +18,11 @@ class Service extends Model
         'history_status',
         'active',
         "fail_repair_description",
+        'technician_schedule_id',
+        'area',
     ];
+
+    static $Area = ['1' => 'surabaya', '2' => 'jakarta'];
 
     public function product_services()
     {

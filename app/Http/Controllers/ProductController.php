@@ -20,9 +20,15 @@ class ProductController extends Controller
      */
     public function index($id)
     {
-        $product = Product::find($id);
+        $product = Product::where(['id' => $id, 'active' => true, 'show' => true])->first() ?? abort(404);
         $categoryProducts = CategoryProduct::all();
-        return view('single_product', compact('product', 'categoryProducts'));
+        $relatedProducts = Product::where([
+            ['show', true],
+            ['active', true],
+            ['id', '!=', $product->id],
+            ['category_id', '=', $product->category_id],
+        ])->inRandomOrder()->take(4)->get();
+        return view('single_product', compact('product', 'categoryProducts', 'relatedProducts'));
     }
 
     /**
@@ -80,11 +86,11 @@ class ProductController extends Controller
     {
         $url = $request->all();
 
-        $products = Product::all();
+        $products = Product::where('active', true);
 
-        if($request->has('search')){
-            $products = Product::where( 'name', 'LIKE', '%'.$request->search.'%' )
-                                    ->orWhere( 'code', 'LIKE', '%'.$request->search.'%' );
+        if ($request->has('search')) {
+            $products->where('name', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('code', 'LIKE', '%' . $request->search . '%');
         }
 
         $countProduct = $products->count();
@@ -98,7 +104,7 @@ class ProductController extends Controller
                 "url"
             )
         )
-        ->with("i", (request()->input("page", 1) - 1) * 10 + 1);;
+            ->with("i", (request()->input("page", 1) - 1) * 10 + 1);;
     }
 
     /**
@@ -123,7 +129,7 @@ class ProductController extends Controller
         if ($request->has('id')) {
             $products = Product::find($request->get('id'));
             $categories = CategoryProduct::all();
-            return view('admin.update_product', compact('products','categories'));
+            return view('admin.update_product', compact('products', 'categories'));
         } else {
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -138,10 +144,11 @@ class ProductController extends Controller
     public function update(Request $request)
     {
         $products = Product::find($request->input('idProduct'));
-        $products->active = $request->input("active");
+        $products->show = $request->input("show");
         $products->name = $request->input('name');
         $products->price = $request->input('price');
         $products->video = $request->input('video');
+        $products->flipbook_url = $request->input('flipbook_url');
         $products->category_id = $request->input('category_id');
         $products->description = $request->description;
         $products->quick_desc = $request->quick_description;
@@ -152,7 +159,7 @@ class ProductController extends Controller
         $namaGambar = [];
         $namaGambar = array_values($arr_image_before);
 
-        if ($request->hasFile('images0') || $request->hasFile('images1') || $request->hasFile('images2')){
+        if ($request->hasFile('images0') || $request->hasFile('images1') || $request->hasFile('images2')) {
             // Store image
             for ($i = 0; $i < $request->total_images; $i++) {
                 if ($request->hasFile('images' . $i)) {
@@ -212,7 +219,7 @@ class ProductController extends Controller
         $namaGambarFix .= "]";
         $products->image = $namaGambarFix;
         $products->save();
-        return response()->json(['testing' => $products]);
+        return response()->json(['message' => $products]);
     }
 
     /**
@@ -228,7 +235,8 @@ class ProductController extends Controller
         if (!empty($request->id)) {
             try {
                 $product = Product::where("id", $request->id)->first();
-                $product->delete();
+                $product->active = false;
+                $product->save();
 
                 $user = Auth::user();
                 $historyDeleteProduct["type_menu"] = "Product";

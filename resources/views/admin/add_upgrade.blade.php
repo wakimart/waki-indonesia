@@ -144,13 +144,17 @@
 	          						<td>Acc By</td>
 	          						<td>Acc Code</td>
 	          						<td>Upgrade Date</td>
+									<td>Bill DO</td>
 	          					</thead>
 	          					<tr>
 	          						<td style="text-align: center;"><span class="badge badge-success">Approved by : {{ $upgrade->acceptance->acceptanceLog[sizeof($upgrade->acceptance->acceptanceLog)-1]->user['name'] }}</span></td>
-	          						<td>{{ $upgrade->acceptance['code'] }}</td>
-	          						<td>
+	          						<td class="center">{{ $upgrade->acceptance['code'] }}</td>
+	          						<td class="center">
 	          							{{ date("d/m/Y", strtotime($upgrade->acceptance['upgrade_date'])) }}
 	          						</td>
+									<td class="center">
+										{{ $upgrade->acceptance->bill_do }}
+									</td>
 	          					</tr>
 	          				</table>
 	          			</div>
@@ -258,12 +262,23 @@
 	            			{{ csrf_field() }}
 	              			<div class="form-group">
 	              				<label for="">Due Date</label>
-	              				<input type="date" class="form-control" name="due_date" id="due_date" placeholder="Due Date" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal"/>
+	              				<input required="" type="date" class="form-control" name="due_date" id="due_date" placeholder="Due Date" value="<?php echo date('Y-m-j'); ?>" data-msg="Mohon Isi Tanggal"/>
 	              				<div class="validation"></div>
 	              			</div>
+							<div class="form-group">
+								<label for="">Area</label>
+								<select required="" name="area" id="area" class="form-control">
+									<option value="">Choose Area</option>
+									@foreach (App\Acceptance::$Area as $area)
+									@if($area != 'null')
+									<option value="{{ $area }}">{{ ucwords($area) }}</option>
+									@endif
+									@endforeach
+								</select>
+							</div>
 			                <div class="form-group">
 			                	<label for="">Task</label>
-			                    <textarea class="form-control" name="task" rows="10" data-msg="Mohon Isi Task" placeholder="Task"></textarea>
+			                    <textarea required="" class="form-control" name="task" rows="10" data-msg="Mohon Isi Task" placeholder="Task"></textarea>
 			                    <div class="validation"></div>
 			                </div>
 

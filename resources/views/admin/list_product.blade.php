@@ -6,18 +6,11 @@ $menu_item_second = "list_product";
 
 @section('style')
 <style type="text/css">
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
+    .center {text-align: center;}
+    .right {text-align: right;}
     .table th img, .table td img {
         border-radius: 0% !important;
     }
-
 </style>
 @endsection
 
@@ -78,6 +71,7 @@ $menu_item_second = "list_product";
                                         <th>Name</th>
                                         <th class="center">Price</th>
                                         <th>Category</th>
+                                        <th>Show</th>
                                         <th class="center">Edit</th>
                                         <th class="center">Delete</th>
                                     </tr>
@@ -120,6 +114,13 @@ $menu_item_second = "list_product";
                                             </td>
                                             <td>
                                                 {{ $product->category['name'] }}
+                                            </td>
+                                            <td>
+                                                @if ($product->show == true)
+                                                <span class="badge badge-primary">Show</span>
+                                                @else
+                                                <span class="badge badge-secondary">Hide</span>
+                                                @endif
                                             </td>
                                             <td class="center">
                                                 <a href="{{ route('edit_product', ['id' => $product['id']]) }}">
@@ -195,7 +196,7 @@ $menu_item_second = "list_product";
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
- 
+
 $(document).ready(function (e) {
     $("#btn-filter").click(function (e) {
         var urlParamArray = new Array();
@@ -212,7 +213,7 @@ $(document).ready(function (e) {
         }
         window.location.href = "{{route('list_product')}}" + urlParamStr;
     });
-}); 
+});
 
 </script>
 @endsection

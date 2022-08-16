@@ -1,8 +1,14 @@
 <?php
-    $menu_item_page = "deliveryorder";
+    $menu_item_page = "registerevent";
     $menu_item_second = "list_regispromo";
 ?>
 @extends('admin.layouts.template')
+
+@section('style')
+<style>
+  .center {text-align: center;}
+</style>
+@endsection
 
 @section('content')
 <div class="main-panel">
@@ -27,7 +33,7 @@
           </div>
         </div>
         @endif
-      
+
         @if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
           <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
           <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
@@ -42,7 +48,7 @@
           <div class="col-xs-12 col-sm-11 col-md-6 table-responsive" id="calendarContainer" style="padding: 0; float: left;"></div>
           <div class="col-xs-12 col-sm-11 col-md-6" id="organizerContainer" style="padding: 0; float: left;"></div>
         </div>
-      
+
       </div>
         <div class="col-12 grid-margin stretch-card">
           <div class="card">
@@ -57,6 +63,7 @@
                             <th> Address </th>
                             <th> Email </th>
                             <th> Phone </th>
+                            <th class="center"> Detail/Edit/Delete </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -67,6 +74,23 @@
                           <td>{{$promotion['address']}}</td>
                           <td>{{$promotion['email']}}</td>
                           <td>{{$promotion['phone']}}</td>
+                          <td class="center">
+									          @can('edit-deliveryorder')
+                            <a href="{{ route('detail_regispromo', $promotion['id']) }}" target="_blank">
+                                <i class="mdi mdi-eye mr-3" style="font-size: 24px; color:#636e72;"></i>
+                            </a>
+                            @endcan
+									          @can('edit-deliveryorder')
+                            <a href="{{ route('edit_regispromo', $promotion['id']) }}">
+                                <i class="mdi mdi-border-color mr-3" style="font-size: 24px; color:#fed713;"></i>
+                            </a>
+                            @endcan
+									          @can('delete-deliveryorder')
+                            <a class="btn-delete" href="javascript:void(0)" onclick="submitDelete(`{{ route('delete_regispromo', $promotion['id']) }}`)">
+                                <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                            </a>
+                            @endcan
+                          </td>
                         </tr>
                         @endforeach
                       </tbody>
@@ -90,14 +114,20 @@
                   </button>
               </div>
               <div class="modal-body">
-                  <h5 style="text-align:center;">Are You Sure to Delete This Branch ?</h5>
+                  <h5 style="text-align:center;">Are You Sure to Delete This Data ?</h5>
               </div>
               <div class="modal-footer">
-                <form id="frmDelete" method="post" action="">
-                    {{csrf_field()}}
-                      <button type="submit" class="btn btn-gradient-danger mr-2">Yes</button>
-                  </form>
-                  <button class="btn btn-light">No</button>
+                <form name="frmDelete"
+                    method="post"
+                    action="">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="btn btn-gradient-danger mr-2">
+                        Yes
+                    </button>
+                </form>
+                <button type="button" data-dismiss="modal" class="btn btn-light">No</button>
               </div>
             </div>
         </div>
@@ -108,6 +138,11 @@
 
 @section('script')
 <script>
+  function submitDelete(url) {
+      $('#deleteDoModal').modal('show');
+      document.frmDelete.action = url;
+  }
+
   $(document).on("click", "#btn-filter", function(e){
     var urlParamArray = new Array();
     var urlParamStr = "";
@@ -121,7 +156,7 @@
       urlParamStr += "&" + urlParamArray[i]
     }
     }
-  
+
     window.location.href = "{{route('list_regispromo')}}" + urlParamStr;
   });
 </script>

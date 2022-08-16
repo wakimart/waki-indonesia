@@ -103,6 +103,7 @@ $menu_item_second = "detail_service";
                                         <td>Status</td>
                                         <td>Service Code</td>
                                         <td>Service Date</td>
+                                        <td>Area</td>
                                     </thead>
                                     <tr>
                                         <td class="center">
@@ -145,6 +146,9 @@ $menu_item_second = "detail_service";
                                         </td>
                                         <td class="center">
                                             {{ date("d/m/Y", strtotime($services['service_date'])) }}
+                                        </td>
+                                        <td class="center">
+                                            {{ ucwords($services['area']) }}
                                         </td>
                                     </tr>
                                 </table>
@@ -805,7 +809,7 @@ $menu_item_second = "detail_service";
                         </div>
                         <form class="forms-sample"
                             method="GET"
-                            action="https://wa.me/">
+                            action="https://api.whatsapp.com/send">
                             <div class="form-group row justify-content-center">
                                 <button id="upgradeProcess"
                                     type="submit"
