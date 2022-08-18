@@ -239,7 +239,7 @@
               </div>
               <div class="card white-bg mb-3 item" style="cursor: pointer;" onclick="window.location=`{{route('product_category', 4)}}`">
                 <div class="container product-img">
-                  <img data-src="{{ asset ('sources/thumbnail-bio.png') }}" class="card-img-top img-fluid lozad" alt="" />
+                  <img data-src="{{ asset ('sources/air.jpg') }}" class="card-img-top img-fluid lozad" alt="" />
                 </div>
                 <div class="card-body">
                   <div data-equal-height="card" class="caption">
