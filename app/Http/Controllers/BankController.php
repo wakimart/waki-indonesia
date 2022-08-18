@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Bank;
+use App\BankAccount;
 use App\HistoryUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 
 class BankController extends Controller
 {
@@ -134,5 +137,190 @@ class BankController extends Controller
         }
 
         return response()->json(["result" => "Data tidak ditemukan."], 400);
+    }
+
+    /**
+     * index bank account
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function indexBankAccount(Request $request)
+    {
+        $url = $request->all();
+        $datas = BankAccount::leftJoin('banks', function($join) {
+                    $join->on('bank_accounts.bank_id', '=', 'banks.id');
+                })->where('bank_accounts.active', true);
+
+        if ($request->has('search')) {
+            $datas->where(function($q) use($request) {
+                $q->where('bank_accounts.code', 'like', '%'.$request->search.'%')
+                ->orWhere('bank_accounts.name', 'like', '%'.$request->search.'%')
+                ->orWhere('bank_accounts.account_number', 'like', '%'.$request->search.'%')
+                ->orWhere('bank_accounts.type', 'like', '%'.$request->search.'%')
+                ->orWhere('bank_accounts.charge_percentage', 'like', '%'.$request->search.'%')
+                ->orWhere('bank_accounts.estimate_transfer', 'like', '%'.$request->search.'%')
+                ->orWhere('banks.name', 'like', '%'.$request->search.'%');
+            });
+        }
+        $datas = $datas->select(['bank_accounts.*', 'banks.name as bank_name']);
+        $datas = $datas->paginate(10);
+
+        return view("admin.list_bank_account", compact("datas", "url"))->with("i", (request()->input("page", 1) - 1) * 10 + 1);
+    }
+
+    /**
+     * create bank account
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function createBankAccount()
+    {
+        $banks = Bank::where('active', true)->get();
+        return view('admin.add_bank_account', compact('banks'));
+    }
+
+    /**
+     * store bank account
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function storeBankAccount(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'code' => 'required',
+            'name' => 'required',
+            'account_number' => 'required',
+            'type' => 'required|string',
+            'charge_percentage' => 'required|numeric',
+            'estimate_transfer' => 'required|integer',
+            'bank_id' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput();
+        }else{
+            DB::beginTransaction();
+            try {
+                BankAccount::create($request->all());
+                DB::commit();
+                return Redirect::back()->with("success", "Bank account successfully added.");
+            } catch (\Exception $ex) {
+                DB::rollBack();
+                return Redirect::back()->withErrors("Something wrong when add bank account, please call Team IT")->withInput();
+            }
+        }
+    }
+
+    /**
+     * edit bank account
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function editBankAccount($id)
+    {
+        $bankAccount = BankAccount::find($id);
+        $banks = Bank::where('active', true)->get();
+        return view('admin.update_bank_account', compact('bankAccount', 'banks'));
+    }
+
+    /**
+     * update bank account
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function updateBankAccount(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'code' => 'required',
+            'name' => 'required',
+            'account_number' => 'required',
+            'type' => 'required|string',
+            'charge_percentage' => 'required|numeric',
+            'estimate_transfer' => 'required|integer',
+            'bank_id' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput();
+        }else{
+            DB::beginTransaction();
+            try {
+                $bankAccount = BankAccount::find($request->idBankAccount);
+                $bankAccount->fill($request->all())->save();
+                DB::commit();
+                return Redirect::back()->with("success", "Bank account successfully updated.");
+            } catch (\Exception $ex) {
+                DB::rollBack();
+                // return Redirect::back()->withErrors("Something wrong when update bank account, please call Team IT")->withInput();
+                return Redirect::back()->withErrors($ex->getMessage());
+            }
+        }
+    }
+
+    /**
+     * deactivate bank account
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function destroyBankAccount(Request $request)
+    {
+        DB::beginTransaction();
+
+        if (!empty($request->id)) {
+            try {
+                $bank = BankAccount::find($request->id);
+                $bank->active = false;
+                $bank->save();
+
+                $user = Auth::user();
+                $historyDeleteBank["type_menu"] = "Bank Account";
+                $historyDeleteBank["method"] = "Delete";
+                $historyDeleteBank["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $bank->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+
+                $historyDeleteBank["user_id"] = $user["id"];
+                $historyDeleteBank["menu_id"] = $request->id;
+                HistoryUpdate::create($historyDeleteBank);
+
+                DB::commit();
+                
+                return Redirect::back()->with("success", "Bank account deleted successfully.");
+            } catch (Exception $e) {
+                DB::rollback();
+                return Redirect::back()->withErrors("Something wrong when delete bank account, please call Team IT");
+            }
+        }
+        
+        return Redirect::back()->withErrors("Data not found");
     }
 }

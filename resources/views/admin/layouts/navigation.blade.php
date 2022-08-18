@@ -530,9 +530,11 @@
     <ul class="nav flex-column sub-menu">
       @if(Gate::check('add-bank'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_bank'? 'active': '' }}" href="{{route('add_bank')}}">Add Bank</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_bank_account'? 'active': '' }}" href="{{route('add_bank_account')}}">Add Bank Account</a></li>
       @endif
       @if(Gate::check('browse-bank'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_bank'? 'active': '' }}" href="{{route('list_bank')}}">List Bank</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_bank_account'? 'active': '' }}" href="{{route('list_bank_account')}}">List Bank Account</a></li>
       @endif
     </ul>
   </div>

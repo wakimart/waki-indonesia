@@ -935,6 +935,15 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->middleware('can:delete-bank');
     });
 
+    Route::group(['prefix' => 'bank-account', 'middleware' => 'auth'], function() {
+        Route::get('/', 'BankController@createBankAccount')->name('add_bank_account')->middleware('can:add-bank');
+        Route::post('/', 'BankController@storeBankAccount')->name('store_bank_account')->middleware('can:add-bank');
+        Route::get('/list', 'BankController@indexBankAccount')->name('list_bank_account')->middleware('can:browse-bank');
+        Route::get('/edit/{id}', 'BankController@editBankAccount')->name('edit_bank_account')->middleware('can:edit-bank');
+        Route::post('/update/', 'BankController@updateBankAccount')->name('update_bank_account')->middleware('can:edit-bank');
+        Route::post('/delete', 'BankController@destroyBankAccount')->name('delete_bank_account')->middleware('can:delete-bank');
+    });
+
     Route::group(['prefix' => 'data_sourcing', 'middleware' => 'auth'], function() {
         //Add Form Data Sourcing
         Route::get('/', 'DataSourcingController@create')
