@@ -95,6 +95,16 @@
 	                			<input type="number" class="form-control" id="no_mpc" name="no_mpc" placeholder="No. MPC" value="{{$services['no_mpc']}}">
 	                			<div class="validation"></div>
 	              			</div>
+							<div class="form-group">
+	                			<label for="">Area</label>
+								<select name="area" class="form-control" required>
+									<option value="" disabled>Choose Area</option>
+									@foreach (App\Service::$Area as $area)
+									<option value="{{ $area }}" @if($services['area'] == $area) selected @endif>{{ ucwords($area) }}</option>
+									@endforeach
+								</select>
+	                			<div class="validation"></div>
+	              			</div>
 	              			<div class="form-group">
 				                <label for="">Name</label>
 				                <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{$services['name']}}" required>

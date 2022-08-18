@@ -772,12 +772,12 @@ class AbsentOffController extends Controller
         $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
         $csos = Cso::where("active", true)->orderBy("code", 'asc')->get();
 
-        $absentOffs = AbsentOff::orderBy("id", 'desc');
-        $startDate = date('y-m-01');
+        $absentOffs = AbsentOff::orderBy("created_at", 'desc');
+        $startDate = null; //date('y-m-01');
         if ($request->has('filter_start_date')) {
             $startDate = date('Y-m-d', strtotime($request->filter_start_date));
         }
-        $endDate = date('Y-m-t');
+        $endDate = null; //date('Y-m-t');
         if ($request->has('filter_end_date')) {
             $endDate = date('Y-m-d', strtotime($request->filter_end_date));
         }
@@ -793,17 +793,19 @@ class AbsentOffController extends Controller
             $currentCso = Cso::where("code", $request->filter_cso)->first();
             $absentOffs->where('cso_id', $currentCso['id']);
         }
-        
-        $absentOffs->where(function($query) use ($startDate, $endDate) {
-            $query->where(function($query2) use ($startDate, $endDate) {
-                $query2->where('start_date', '<=', $startDate)
-                ->where('end_date', '>=', $endDate);
+       
+        if ($startDate && $endDate) {
+            $absentOffs->where(function($query) use ($startDate, $endDate) {
+                $query->where(function($query2) use ($startDate, $endDate) {
+                    $query2->where('start_date', '<=', $startDate)
+                    ->where('end_date', '>=', $endDate);
+                });
+                $query->orWhere(function($query2) use ($startDate, $endDate) {
+                    $query2->whereBetween('start_date', [$startDate, $endDate])
+                    ->orWhereBetween('end_date', [$startDate, $endDate]);
+                });
             });
-            $query->orWhere(function($query2) use ($startDate, $endDate) {
-                $query2->whereBetween('start_date', [$startDate, $endDate])
-                ->orWhereBetween('end_date', [$startDate, $endDate]);
-            });
-        });
+        }
         
         $statusAbsentOffs = [];
         foreach (AbsentOff::$status as $status) {

@@ -65,6 +65,16 @@
 	                			<input type="number" class="form-control" id="no_mpc" name="no_mpc" placeholder="No. MPC">
 	                			<div class="validation"></div>
 	              			</div>
+							<div class="form-group">
+	                			<label for="">Area</label>
+								<select name="area" class="form-control" required>
+									<option value="" disabled>Choose Area</option>
+									@foreach (App\Service::$Area as $area)
+									<option value="{{ $area }}">{{ ucwords($area) }}</option>
+									@endforeach
+								</select>
+	                			<div class="validation"></div>
+	              			</div>
 	              			<div class="form-group">
 				                <label for="">Name</label>
 				                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required value="{{ $autofill['name'] ?? '' }}">

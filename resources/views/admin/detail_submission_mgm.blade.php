@@ -1209,10 +1209,7 @@ $(document).ready(function () {
                     let productDb = result.productDb;
 
                     $.each(orderNya, function (key, value) {
-                        let productNya = JSON.parse(value.product);
-                        if(!isNaN(productNya[0].id)){
-                            productNya[0].id = productDb[productNya[0].id];
-                        }
+                        let productNya = value.product;
 
                         let isiNya = "<tr><td>" + value.orderDate + 
                         "<br><br><a target=\"_blank\" href=\"{{route("detail_order", ["code" => ""])}}"+ value.code +"\">Link</a><br><br>" +
@@ -1220,7 +1217,7 @@ $(document).ready(function () {
                         "<b>Name</b>: " + value.name + "<br>" +
                         "<b>Phone</b>: " + value.phone + "<br>" +
                         "<b>Address</b>: " + value.address + "<br>" +
-                        "<b>Product</b>: " + productNya[0].id+"("+productNya[0].qty+"x)" + "<br>";
+                        "<b>Product</b>: " + productNya+"("+value.orderDetailQty+"x)" + "<br>";
 
                         if (originButton === "btn_choose_order") {
                             isiNya += "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectOrderNya(" + value.id + ", \"" + value.code + "\")'>Choose This</button></td></tr>";

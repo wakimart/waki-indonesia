@@ -376,6 +376,26 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update_status_order', 'OrderController@updateStatusOrder')
             ->name('update_status_order')
             ->middleware('can:change-status_order');
+        //Store Order Payment
+        Route::post('/store_order_payment', 'OrderController@storeOrderPayment')
+            ->name('store_order_payment')
+            ->middleware('can:edit-order');
+        //Edit Order Payment
+        Route::post('/edit_order_payment', 'OrderController@editOrderPayment')
+            ->name('edit_order_payment')
+            ->middleware('can:edit-order');
+        //Update Order Payment
+        Route::post('/update_order_payment', 'OrderController@updateOrderPayment')
+            ->name('update_order_payment')
+            ->middleware('can:edit-order');
+        //Update Order Payment Status
+        Route::post('/update_status_order_payment', 'OrderController@updateStatusOrderPayment')
+            ->name('update_status_order_payment')
+            ->middleware('can:change-status_payment');
+        //Delete Order Payment
+        Route::post('/delete_order_payment', 'OrderController@deleteOrderPayment')
+            ->name('delete_order_payment')
+            ->middleware('can:edit-order');
         //Delete Order
         Route::post('/{OrderNya}', 'OrderController@delete')
             ->name('delete_order');
@@ -483,6 +503,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::get("/fetch/presence", "UserGeolocationController@fetchPresenceImage")
             ->name("fetch_geolocation_presence");
+
+        // Area Home Service
+        Route::get('/list_area_homeservice', 'HomeServiceController@list_areaHomeService')
+            ->name('list_area_homeservice')
+            ->middleware('can:browse-area_home_service');
+        Route::post('/print_area_list_hs', 'HomeServiceController@printAreaListHs')
+            ->name('print_area_list_hs')
+            ->middleware('can:browse-area_home_service');
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
@@ -873,6 +901,38 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'TypeCustomerController@destroy')
             ->name('delete_type_customer')
             ->middleware('can:delete-type_customer');
+    });
+
+    Route::group(['prefix' => 'bank', 'middleware' => 'auth'], function() {
+        //Add Form Type Customer
+        Route::get('/', 'BankController@create')
+            ->name('add_bank')
+            ->middleware('can:add-bank');
+
+        //Create Type Customer
+        Route::post('/', 'BankController@store')
+            ->name('store_bank')
+            ->middleware('can:add-bank');
+
+        //List Type Customer
+        Route::get('/list', 'BankController@index')
+            ->name('list_bank')
+            ->middleware('can:browse-bank');
+
+        //Edit Type Customer
+        Route::get('/edit/', 'BankController@edit')
+            ->name('edit_bank')
+            ->middleware('can:edit-bank');
+
+        //Update Type Customer
+        Route::post('/update/', 'BankController@update')
+            ->name('update_bank')
+            ->middleware('can:edit-bank');
+
+        //Delete Type Customer
+        Route::post('/delete', 'BankController@destroy')
+            ->name('delete_bank')
+            ->middleware('can:delete-bank');
     });
 
     Route::group(['prefix' => 'data_sourcing', 'middleware' => 'auth'], function() {

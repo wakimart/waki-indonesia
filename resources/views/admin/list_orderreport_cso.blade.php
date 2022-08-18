@@ -219,7 +219,7 @@ $menu_item_second_sub = "list_order_report_cso";
                                     <td class="text-center">{{ $key+1 }}</td>
                                     <td>{{ date("d/m/Y", strtotime($order_report['orderDate'])) }}</td>
                                     <td>{{ $order_report['name'] }}</td>
-                                    <td class="text-right">Rp. {{ number_format($order_report['down_payment']) }}</td>
+                                    <td class="text-right">Rp. {{ number_format($order_report->totalPaymentNya) }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('detail_order') }}?code={{ $order_report['code'] }}">
                                             <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(99, 110, 114);"></i>
@@ -227,7 +227,7 @@ $menu_item_second_sub = "list_order_report_cso";
                                     </td>
                                 </tr>
                                 @php
-                                    $totalPayment += $order_report['down_payment'];
+                                    $totalPayment += $order_report->totalPaymentNya;
                                 @endphp
                                 @endforeach
                                 <tr class="text-right">

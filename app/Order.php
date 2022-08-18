@@ -15,7 +15,7 @@ class Order extends Model
     static $status = ['1' => 'new', '2' => 'process', '3' => 'delivery', '4' => 'success', '5' => 'reject'];
 
     protected $fillable = [
-        'code', 'no_member', 'name', 'address', 'phone', 'cash_upgrade', 'product', 'old_product', 'prize', 'payment_type', 'bank', 'total_payment', 'down_payment', 'remaining_payment', 'customer_type', 'description', '30_cso_id', '70_cso_id', 'cso_id', 'branch_id', 'city', 'active','orderDate', 'distric', 'province', 'know_from', 'image', 'status', 'delivery_cso_id'
+        'code', 'no_member', 'name', 'address', 'phone', 'cash_upgrade', 'payment_type', 'total_payment', 'down_payment', 'remaining_payment', 'customer_type', 'description', '30_cso_id', '70_cso_id', 'cso_id', 'branch_id', 'city', 'active','orderDate', 'distric', 'province', 'know_from', 'status', 'delivery_cso_id'
     ];
     public $sortable = [
         'name', 'code', 'created_at', 'name', 'orderDate',
@@ -41,6 +41,14 @@ class Order extends Model
     {
         return $this->belongsTo('App\Branch');
     }
+    public function orderDetail()
+    {
+        return $this->hasMany("App\OrderDetail");
+    }
+    public function orderPayment()
+    {
+        return $this->hasMany("App\OrderPayment");
+    }
     public function getCSO()
     {
         return Cso::where('id', $this->cso_id)->first();
@@ -56,18 +64,27 @@ class Order extends Model
         return $district;
     }
 
-    public function getPrice()
+    public function updateDownPayment()
     {
-        $result = [];
-        $arr_promo = json_decode($this->product);
-        foreach ($arr_promo as $key => $promo) {
-            if(is_numeric($promo->id)){
-                $promos = Promo::find($promo->id);
-                array_push($result, $promos->price);
-            }else{
-                array_push($result, "0");
-            }
-        }
-        return $result;
+        $this->down_payment = OrderPayment::where("order_id", $this->id)
+            ->where('status', 'verified')
+            ->sum('total_payment');
+        $this->remaining_payment = $this->total_payment - $this->down_payment;
     }
+
+    // Unused, column product udah di hapus
+    // public function getPrice()
+    // {
+    //     $result = [];
+    //     $arr_promo = json_decode($this->product);
+    //     foreach ($arr_promo as $key => $promo) {
+    //         if(is_numeric($promo->id)){
+    //             $promos = Promo::find($promo->id);
+    //             array_push($result, $promos->price);
+    //         }else{
+    //             array_push($result, "0");
+    //         }
+    //     }
+    //     return $result;
+    // }
 }

@@ -9,13 +9,16 @@ use App\DeliveryOrder;
 use App\Exports\HomeServicesExport;
 use App\Exports\HomeServicesExportByDate;
 use App\Exports\HomeServicesCompareExport;
+use App\GeometryDistrict;
 use App\HistoryUpdate;
 use App\HomeService;
 use App\Http\Controllers\gCalendarController;
 use App\Order;
+use App\RajaOngkir_Subdistrict;
 use App\User;
 use App\Utils;
 use App\Reference;
+use App\Region;
 use DateTime;
 use Validator;
 use Exception;
@@ -818,7 +821,12 @@ class HomeServiceController extends Controller
                         $result .= 'Created at: ' . $dayData->created_at
                             . '<br>'
                             . 'Last update: ' . $dayData->updated_at;
-
+                        // req reschedule info
+                        $lastHistoryUpdate = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id', 'desc')->first();
+                        if(!empty($lastHistoryUpdate)){
+                            $userHistoryUpdate = User::find($lastHistoryUpdate['meta']['user']);
+                            $result .= '<br><br>Request Reschedule Date: '. $lastHistoryUpdate['meta']['createdAt'] . '<br> Request by ' . $userHistoryUpdate->name;
+                        }
                         $befores = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
                         $totalBefores = count($befores) - 1;
                         $result .= "<p style='color:red'>";
@@ -1288,7 +1296,7 @@ class HomeServiceController extends Controller
                 // $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($data['phone'], -4);
                 $data['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
                 $data['cso2_id'] = Cso::where('code', $data['cso2_id'])->first()['id'];
-                $data['appointment'] = $data['date']." ".$data['time'];
+                // $data['appointment'] = $data['date']." ".$data['time'];
                 $homeService->fill($data)->save();
 
                 $user = Auth::user();
@@ -1598,6 +1606,269 @@ class HomeServiceController extends Controller
         {
             $this->sendFCM(json_encode($body));
         }
+    }
+
+    public function list_areaHomeService(Request $request)
+    {
+        $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
+        $csos = Cso::where('active', true)->orderBy("code", 'asc')->get();
+
+        // Inisialisasi tanggal awal bulan dan akhir bulan
+        $startDate = date("Y-m-01 00:00:00");
+        if ($request->has('filter_start_date')) {
+            $startDate = date('Y-m-d', strtotime($request->filter_start_date));
+        }
+        $endDate = date('Y-m-t 23:59:59');
+        if ($request->has('filter_end_date')) {
+            $endDate = date('Y-m-d', strtotime($request->filter_end_date));
+        }
+
+        $regions = Region::all();
+
+        $layers = GeometryDistrict::select(
+                'gd.*', 
+                'ros.subdistrict_name', 
+                'rg.id as rg_id',
+                'rg.name as rg_name', 'rg.bg_color as rg_bg_color', 
+                DB::RAW('COUNT(DISTINCT(hs.code)) as count_hs')
+            )
+            ->from('geometry_districts as gd')
+            ->join('raja_ongkir__subdistricts as ros', 'ros.id', 'gd.distric')
+            ->leftJoin('regions as rg', 'rg.id', 'gd.region_id')
+            ->leftJoin('home_services as hs', function($join) use ($request, $startDate, $endDate) {
+                $join->on('hs.distric', 'gd.distric');
+                $join->whereBetween("hs.appointment", [$startDate, $endDate]);
+                $join->where('hs.active', true);
+
+                if ($request->has('filter_branch')) {
+                    $filter_branch = Branch::find($request->filter_branch);
+                    $join->where('branch_id', $filter_branch['id']);        
+                }
+
+                if ($request->has('filter_cso')) {
+                    $filter_cso = Cso::where("code", $request->filter_cso)->first();
+                    $join->where('cso_id', $filter_cso['id']);        
+                }
+            })
+            ->groupBy('gd.id')
+            ->orderByRaw('count_hs')
+            ->get();
+        
+        return view('admin.list_areahomeservice', compact('branches', 'csos', 'startDate', 'endDate', 'regions', 'layers'));
+    }
+
+    public function printAreaListHs(Request $request)
+    {
+        // Inisialisasi tanggal awal bulan dan akhir bulan
+        $startDate = date("Y-m-01 00:00:00");
+        if ($request->has('filter_start_date')) {
+            $startDate = date('Y-m-d', strtotime($request->filter_start_date));
+        }
+        $endDate = date('Y-m-t 23:59:59');
+        if ($request->has('filter_end_date')) {
+            $endDate = date('Y-m-d', strtotime($request->filter_end_date));
+        }
+
+        $distric = RajaOngkir_Subdistrict::find($request->distric);
+        
+        $homeservices = HomeService::select(
+                "h.id AS hs_id",
+                "h.code AS hs_code",
+                "h.name AS customer_name",
+                "h.phone AS customer_phone",
+                "h.appointment AS appointment",
+                "h.is_acc_resc As is_acc_resc",
+                "h.resc_acc AS resc_acc",
+                "b.code AS branch_code",
+                "b.name AS branch_name",
+                "c.name AS cso_name",
+                "r.slug AS role_slug",
+                "h.created_at AS created_at",
+                "h.updated_at AS updated_at"
+            )
+            ->from('home_services as h')
+            ->leftJoin(
+                "branches AS b",
+                "b.id",
+                "=",
+                "h.branch_id"
+            )
+            ->leftJoin(
+                "csos AS c",
+                "c.id",
+                "=",
+                "h.cso_id"
+            )
+            ->leftJoin(
+                "users AS u",
+                "u.cso_id",
+                "=",
+                "c.id"
+            )
+            ->leftJoin(
+                "role_users AS ru",
+                "ru.user_id",
+                "=",
+                "u.id"
+            )
+            ->leftJoin(
+                "roles AS r",
+                "r.id",
+                "=",
+                "ru.role_id"
+            )    
+            ->where('h.active', true)
+            ->where('h.distric', $request->distric)
+            ->whereBetween("h.appointment", [$startDate, $endDate]);
+
+        if ($request->has('filter_branch')) {
+            $filter_branch = Branch::find($request->filter_branch);
+            $homeservices->where('h.branch_id', $filter_branch['id']);        
+        }
+
+        if ($request->has('filter_cso')) {
+            $filter_cso = Cso::where("code", $request->filter_cso)->first();
+            $homeservices->where('h.cso_id', $filter_cso['id']);        
+        }
+
+        $homeservices = $homeservices->groupBy('h.code')
+            ->orderBy("h.appointment")
+            ->get();
+
+        $homeservices = $this->printAreaListHsData($homeservices);
+        
+        return response()->json([
+            "status" => "success",
+            "distric" => $distric,
+            "msg" => $homeservices,
+        ], 200);
+    }
+
+    public function printAreaListHsData($currentDayData)
+    {
+        $result = "";
+        if ($currentDayData->isEmpty()) {
+            $result .= '<tr>';
+            $result .= '<td colspan="7">'
+                . '<div class="cjslib-rows" id="organizerContainer-list-container">'
+                . '<ol class="cjslib-list" id="organizerContainer-list">'
+                . '<div class="cjslib-list-placeholder">'
+                . '<li style="text-align:center; margin-top: 1em;">'
+                . 'No appointments on this day.'
+                . '</li>'
+                . '</div>'
+                . '</ol>'
+                . '</div>'
+                . '</td>';
+            $result .= '</tr>';
+        } else {
+            $i = 1;
+            foreach ($currentDayData as $dayData) {
+                $result .= '<tr>'
+                    . '<td style="text-align: center">'
+                    . $i
+                    . '</td>'
+                    . '<td style="text-align: left; font-weight: bold;">';
+
+                $sameHomeServices = HomeService::select('appointment')
+                    ->where('active', true)
+                    ->where('code', $dayData->hs_code)
+                    ->orderBy('appointment')
+                    ->get();
+                foreach ($sameHomeServices as $sameHomeService) {
+                    $result .= "<div style='margin-bottom: 0.5em'>" . date('d F Y H:i', strtotime($sameHomeService->appointment));
+                    $result .= "</div>";
+                }
+
+                $result .= '</td>'
+                    . '<td>';
+
+                $result .= '<p class="titleAppoin">'
+                    . '<a href="'
+                    . route('homeServices_success')
+                    . '?code='
+                    . $dayData->hs_code
+                    . '" target="_blank">'
+                    . $dayData->hs_code
+                    . '</a>'
+                    . '</p>';
+
+                $result .= '<p class="descAppoin">';
+
+                $result .= $dayData->customer_name . ' - ' . $dayData->customer_phone
+                    . '<br>';
+
+                $result .= 'Branch: '
+                    . $dayData->branch_code . ' - ' . $dayData->branch_name
+                    . '<br>'
+                    . 'CSO: ' . $dayData->cso_name
+                    . '<br>';
+
+                $result .= 'Created at: ' . $dayData->created_at
+                    . '<br>'
+                    . 'Last update: ' . $dayData->updated_at;
+
+                $befores = HistoryUpdate::where([['type_menu', 'Home Service Reschedule'], ['menu_id', $dayData['hs_id']]])->orderBy('id')->get();
+                $totalBefores = count($befores) - 1;
+                $result .= "<p style='color:red'>";
+                $currentRescheduleAppointment = "";
+                foreach ($befores as $key => $before) {
+                    if (isset($before['meta']['appointmentBefore'])) {
+                        $statusResc = ($key == $totalBefores) ? "Wait to Approve" : "";
+                        $statusRescColor = "";
+
+                        if (isset($before['meta']['acc_by'])) {
+                            if ($before['meta']['status_acc'] == "true") {
+                                $statusRescColor = "style='color:green;'";
+                                $statusResc = "Approved";
+                            } else if ($before['meta']['status_acc'] == "false") {
+                                $statusRescColor = "style='color:red;'";   
+                                $statusResc = "Rejected";
+                            }
+                            $rescAccBy = User::where('id', $before['meta']['acc_by'])->value('name');
+                            $statusResc .= " by " . $rescAccBy;
+                        }                                
+
+                        $temp_resc = "Reschedule Appointment : " . $before['meta']['dateChange']['resc_acc'];
+                        if ($statusResc) $temp_resc .= "<span $statusRescColor> (" .  $statusResc . ")</span>";
+
+                        if ($key < $totalBefores){
+                            $result .= $temp_resc;
+                        } else {
+                            $result .= "Appointment Before : " . $before['meta']['appointmentBefore'];
+                            $currentRescheduleAppointment = "<p $statusRescColor>" . $temp_resc . "</p>";
+                        }
+                        $result .= "<br>";
+                    }
+                }
+                $result .= "</p>";
+                $result .= $currentRescheduleAppointment;
+
+                $result .= '</p>'
+                    . '</td>';
+
+                $result .= '<td style="text-align: center">';
+
+                if(Auth::user()->hasPermission('detail-home_service')){
+                    $result .= '<button '
+                        . 'class="btnappoint btn-gradient-primary mdi mdi-eye btn-homeservice-view" '
+                        . 'type="button" '
+                        . 'data-toggle="modal" '
+                        . 'data-target="#viewHomeServiceModal" '
+                        . 'onclick="clickView('.$dayData->hs_id.')" >'
+                        . '</button>';
+                }
+                else{
+                    $result .= '</td>';
+                }
+
+                $result .= '</tr>';
+
+                $i++;
+            }
+        }
+
+        return $result;
     }
 
     //KHUSUS API APPS

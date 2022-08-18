@@ -127,7 +127,7 @@ class BranchController extends Controller
             }
             return response()->json(['errors' => $arr_Hasil]);
         }else{
-            DB:beginTransaction();
+            DB::beginTransaction();
             try{
                 $branches = Branch::find($request->input('idBranch'));
                 $branches->code = $request->input('code');
@@ -140,6 +140,7 @@ class BranchController extends Controller
                 $historyUpdate['method'] = "Update";
                 $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $branches];
                 $historyUpdate['user_id'] = $user['id'];
+                $historyUpdate['menu_id'] = $request->input('idBranch');
 
                 $createData = HistoryUpdate::create($historyUpdate);
                 DB::commit();

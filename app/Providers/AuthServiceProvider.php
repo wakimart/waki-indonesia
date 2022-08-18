@@ -92,6 +92,17 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['change-status_order_reject']);
         });
 
+        //-- UPDATE ORDER STATUS --//
+        Gate::define('change-status_payment', function ($user) {
+            return $user->hasAccess(['change-status_payment']);
+        });
+        Gate::define('change-status_payment_verified', function ($user) {
+            return $user->hasAccess(['change-status_payment_verified']);
+        });
+        Gate::define('change-status_payment_rejected', function ($user) {
+            return $user->hasAccess(['change-status_payment_rejected']);
+        });
+
         //-- ORDER REPORT --//
         Gate::define('browse-order_report', function ($user) {
             return $user->hasAccess(['browse-order_report']);
@@ -127,6 +138,11 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('acc-cancel-home_service', function ($user) {
             return $user->hasAccess(['acc-cancel-home_service']);
+        });
+
+        //-- AREA HOME SERVICE --//
+        Gate::define('browse-area_home_service', function ($user) {
+            return $user->hasAccess(['browse-area_home_service']);
         });
 
         //-- Absent Off --//
@@ -252,6 +268,20 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('delete-type_customer', function ($user) {
             return $user->hasAccess(['delete-type_customer']);
+        });
+
+        //-- BANK --//
+        Gate::define('add-bank', function ($user) {
+            return $user->hasAccess(['add-bank']);
+        });
+        Gate::define('browse-bank', function ($user) {
+            return $user->hasAccess(['browse-bank']);
+        });
+        Gate::define('edit-bank', function ($user) {
+            return $user->hasAccess(['edit-bank']);
+        });
+        Gate::define('delete-bank', function ($user) {
+            return $user->hasAccess(['delete-bank']);
         });
 
         //-- DATA SOURCING --//

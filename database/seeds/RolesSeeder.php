@@ -43,6 +43,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => true,
                 'change-status_order_reject' => true,
 
+                //Update Order Payment Status
+                'change-status_payment' => true,
+                'change-status_payment_verified' => true,
+                'change-status_payment_rejected' => true,
+
                 //Order Report
                 'browse-order_report' => true,
                 'browse-order_report_branch' => true,
@@ -57,6 +62,9 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
 
                 //Absent Off
                 'add-absent_off' => true,
@@ -211,6 +219,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => true,
                 'edit-data_therapy' => true,
                 'delete-data_therapy' => true,
+
+                //Bank
+                'add-bank' => true,
+                'browse-bank' => true,
+        		'edit-bank' => true,
+                'delete-bank' => true,
             ]),
         ]);
 
@@ -245,6 +259,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -259,6 +278,9 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
 
                 //Absent Off
                 'add-absent_off' => true,
@@ -413,6 +435,12 @@ class RolesSeeder extends Seeder
                 'browse-data_therapy' => true,
                 'edit-data_therapy' => true,
                 'delete-data_therapy' => true,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false,                
         	]),
         ]);
 
@@ -447,6 +475,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -461,6 +494,9 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => false,
 
                 //Absent Off
                 'add-absent_off' => true,
@@ -609,6 +645,13 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false,                
+                
             ]),
         ]);
 
@@ -643,6 +686,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
                 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+                
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -657,6 +705,9 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => false,
 
                 //Absent Off
                 'add-absent_off' => true,
@@ -805,6 +856,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -839,6 +896,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -853,6 +915,9 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
 
                 //Absent Off
                 'add-absent_off' => true,
@@ -1001,6 +1066,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -1035,6 +1106,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -1049,6 +1125,9 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
 
                 //Absent Off
                 'add-absent_off' => true,
@@ -1197,6 +1276,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -1231,6 +1316,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -1245,6 +1335,9 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
 
                 //Absent Off
                 'add-absent_off' => true,
@@ -1399,6 +1492,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
     }

@@ -466,6 +466,39 @@ $menu_item_page = "user";
                             </div>
 
                             <div class="form-group" id="group-product">
+                                <span style="display:block;">CHANGE STATUS ORDER PAYMENT</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status_payment">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_payment" />
+                                            Change Status Order Payment
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-success"
+                                            for="change-status_payment_verified">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_payment_verified" />
+                                            Change Status Order Payment Verified
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-danger"
+                                            for="change-status_payment_rejected">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_payment_rejected" />
+                                            Change Status Order Payment Rejected
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
                                 <span style="display:block;">ORDER REPORT</span>
                                 <div class="div-CheckboxGroup">
                                     <div class="form-check form-check-inline">
@@ -567,6 +600,21 @@ $menu_item_page = "user";
                                                 type="checkbox"
                                                 id="acc-cancel-home_service" />
                                             Cancel Acc Home Service
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">AREA HOME SERVICE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-area_home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-area_home_service" />
+                                            Browse Home Service
                                         </label>
                                     </div>
                                 </div>
@@ -1573,6 +1621,48 @@ $menu_item_page = "user";
                                                 type="checkbox"
                                                 id="delete-type_customer" />
                                             Delete Type Customer
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">BANK</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-bank" />
+                                            Add Bank
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-bank" />
+                                            Browse Bank
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-bank" />
+                                            Edit Bank
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-bank">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-bank" />
+                                            Delete Bank
                                         </label>
                                     </div>
                                 </div>
