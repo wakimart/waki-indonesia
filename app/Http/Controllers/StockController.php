@@ -53,22 +53,6 @@ class StockController extends Controller
             ->orderBy("code")
             ->get();
 
-        // if (!empty($request->get("filter_name"))) {
-        //     $stocks = $stocks->where(
-        //         "products.name",
-        //         "like",
-        //         "%" . $request->get("filter_name") . "%"
-        //     );
-        // }
-
-        // if (!empty($request->get("filter_code"))) {
-        //     $stocks = $stocks->where(
-        //         "products.code",
-        //         "like",
-        //         "%" . $request->get("filter_code") . "%"
-        //     );
-        // }
-
         if (
             !empty($request->get("filter_product"))
             && empty($request->get("filter_warehouse"))
@@ -142,7 +126,7 @@ class StockController extends Controller
             );
         }
 
-        $stocks = $stocks->groupBy("product_id")->paginate(10);
+        $stocks = $stocks->paginate(10);
 
         return view('admin.list_stock_warehouse', compact(
                 'stocks',

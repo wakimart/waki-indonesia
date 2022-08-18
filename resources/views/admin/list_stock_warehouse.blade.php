@@ -83,7 +83,7 @@ $menu_item_second = "list_stock_warehouse";
                         </div>
                     </div> --}}
                     
-                    <div class="col-xs-6 col-sm-4 col-lg-3"
+                    {{-- <div class="col-xs-6 col-sm-4 col-lg-3"
                         style="margin-bottom: 0; padding: 0 5px 0 0; display: inline-block;">
                         <div class="form-group">
                             <label for="filter_month">Filter by Month</label>
@@ -95,7 +95,7 @@ $menu_item_second = "list_stock_warehouse";
                                 value="{{ $_GET["filter_month"] ?? '' }}"
                                 form="form-search" />
                         </div>
-                    </div>
+                    </div> --}}
 
                     
                     <div class="col-xs-6 col-sm-4 col-md-3"
@@ -178,17 +178,22 @@ $menu_item_second = "list_stock_warehouse";
                                             Select Parent Warehouse
                                         </option>
                                     @endif
-                                    @foreach ($parentWarehouses as $parentWarehouse)
-                                        @if (isset($_GET["filter_warehouse"]) && !empty($_GET["filter_warehouse"]) && $_GET["filter_warehouse"] == $parentWarehouse->id)
-                                            <option value="{{ $parentWarehouse->id }}" selected>
-                                                {{ $parentWarehouse->code }} - {{ $parentWarehouse->name }}
-                                            </option>
-                                        @else
-                                            <option value="{{ $parentWarehouse->id }}">
-                                                {{ $parentWarehouse->code }} - {{ $parentWarehouse->name }}
-                                            </option>
-                                        @endif
-                                    @endforeach
+
+                                    @if (isset($_GET["filter_warehouse"]) && !empty($_GET["filter_warehouse"]))
+                                        @foreach ($parentWarehouses as $parentWarehouse)
+                                            @if($_GET["filter_city"] == $parentWarehouse->city_id)
+                                                @if (isset($_GET["filter_warehouse"]) && !empty($_GET["filter_warehouse"]) && $_GET["filter_warehouse"] == $parentWarehouse->id)
+                                                    <option value="{{ $parentWarehouse->id }}" selected>
+                                                        {{ $parentWarehouse->code }} - {{ $parentWarehouse->name }}
+                                                    </option>
+                                                @else
+                                                    <option value="{{ $parentWarehouse->id }}">
+                                                        {{ $parentWarehouse->code }} - {{ $parentWarehouse->name }}
+                                                    </option>
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    @endif
                             </select>
                         </div>
                     </div>
@@ -458,6 +463,7 @@ $menu_item_second = "list_stock_warehouse";
 </script>
 <script>
     function setParentWarehouse(e) {
+        $("#filter_warehouse").prop('required',true);
         const URL = '{{ route("fetchParentByCity", ['city' => ""]) }}/' + e.value;
 
         fetch(
