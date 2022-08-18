@@ -153,7 +153,7 @@ $menu_item_second = "add_warehouse";
                                         Select Province
                                     </option>
                                     @foreach ($provinces as $province)
-                                        @if ($personalhomecare->province_id === $province->id)
+                                        @if ($warehouse->province_id === $province->id)
                                             <option value="{{ $province->id }}" selected>
                                                 {{ $province->name }}
                                             </option>
@@ -177,7 +177,7 @@ $menu_item_second = "add_warehouse";
                                         Select City
                                     </option>
                                     @foreach ($cities as $city)
-                                        @if ($personalhomecare->city_id === $city->id)
+                                        @if ($warehouse->city_id === $city->id)
                                             <option value="{{ $city->id }}" selected>
                                                 {{ $city->name }}
                                             </option>
@@ -200,7 +200,7 @@ $menu_item_second = "add_warehouse";
                                         Select Subdistrict
                                     </option>
                                     @foreach ($subdistricts as $subdistrict)
-                                        @if ($personalhomecare->subdistrict_id === $subdistrict->id)
+                                        @if ($warehouse->subdistrict_id === $subdistrict->id)
                                             <option value="{{ $subdistrict->id }}" selected>
                                                 {{ $subdistrict->name }}
                                             </option>

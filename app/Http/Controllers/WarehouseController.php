@@ -82,7 +82,12 @@ class WarehouseController extends Controller
 
     public function edit(Request $request)
     {
-        $warehouse = Warehouse::where($request->id)->first();
+        $warehouse = Warehouse::find($request->id);
+
+        $parentWarehouses = Warehouse::select("id", "code", "name")
+            ->where("parent_warehouse_id", null)
+            ->orderBy("code")
+            ->get();
 
         $provinces = RajaOngkir_Province::select(
                 "province_id AS id",
@@ -104,7 +109,12 @@ class WarehouseController extends Controller
             ->where("province_id", $warehouse->province_id)
             ->get();
 
-        return view("admin.edit_warehouse", compact("warehouse"));
+        return view("admin.update_warehouse", compact("warehouse",
+            "parentWarehouses",
+            "provinces",
+            "cities",
+            "subdistricts",
+        ));
     }
 
     public function update(Request $request)
@@ -112,7 +122,7 @@ class WarehouseController extends Controller
         DB::beginTransaction();
 
         try {
-            $warehouse = Warehouse::where($request->id)->first();
+            $warehouse = Warehouse::find($request->id);
             $warehouse->fill($request->only(
                 "code",
                 "name",

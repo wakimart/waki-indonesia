@@ -171,9 +171,24 @@ $menu_item_second = "list_stock_warehouse";
                                 name="filter_warehouse"
                                 id="filter_warehouse"
                                 form="form-search">
-                                    <option disabled selected>
-                                        Select Parent Warehouse
-                                    </option>
+                                    @if (isset($_GET["filter_warehouse"]) && !empty($_GET["filter_warehouse"]))
+                                        <option disabled>Select Parent Warehouse</option>
+                                    @else
+                                        <option disabled selected>
+                                            Select Parent Warehouse
+                                        </option>
+                                    @endif
+                                    @foreach ($parentWarehouses as $parentWarehouse)
+                                        @if (isset($_GET["filter_warehouse"]) && !empty($_GET["filter_warehouse"]) && $_GET["filter_warehouse"] == $parentWarehouse->id)
+                                            <option value="{{ $parentWarehouse->id }}" selected>
+                                                {{ $parentWarehouse->code }} - {{ $parentWarehouse->name }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $parentWarehouse->id }}">
+                                                {{ $parentWarehouse->code }} - {{ $parentWarehouse->name }}
+                                            </option>
+                                        @endif
+                                    @endforeach
                             </select>
                         </div>
                     </div>
@@ -221,11 +236,11 @@ $menu_item_second = "list_stock_warehouse";
                                 <li class="nav-item">
                                     <a class="nav-link"
                                         style="font-weight: 500; font-size: 1em;"
-                                        id="{{$key}}-tab"
+                                        id="{{$warehouse->code}}-tab"
                                         data-toggle="tab"
-                                        href="#{{$key}}-table" 
+                                        href="#{{$warehouse->code}}-table" 
                                         role="tab"
-                                        aria-controls="{{$key}}"
+                                        aria-controls="{{$warehouse->code}}"
                                         aria-selected="true">
                                         {{$warehouse['name']}}
                                     </a>
@@ -302,12 +317,15 @@ $menu_item_second = "list_stock_warehouse";
                                     <br>
                                     {{ $stocks->links() }}
                                 </div>
-
                             </div>
                             @foreach($warehouses as $key => $warehouse)
-                                <div class="tab-pane fade show pl-3 pr-3 pb-3 pt-1" id="{{$key}}-table" role="tabpanel" aria-labelledby="{{ $key }}-tab">
+                                @php
+                                    $i = 0;
+                                @endphp
+
+                                <div class="tab-pane fade show pl-3 pr-3 pb-3 pt-1" id="{{ $warehouse->code }}-table" role="tabpanel" aria-labelledby="{{ $warehouse->code }}-tab">
                                     <h5 style="margin-bottom: 1em;">
-                                        Total: {{ $stocks->total() }} data
+                                        Total: {{ count($warehouse->stock) }} data
                                     </h5>
                                     <div class="table-responsive"
                                         style="border: 1px solid #ebedf2;">

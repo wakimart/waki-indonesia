@@ -53,21 +53,21 @@ class StockController extends Controller
             ->orderBy("code")
             ->get();
 
-        if (!empty($request->get("filter_name"))) {
-            $stocks = $stocks->where(
-                "products.name",
-                "like",
-                "%" . $request->get("filter_name") . "%"
-            );
-        }
+        // if (!empty($request->get("filter_name"))) {
+        //     $stocks = $stocks->where(
+        //         "products.name",
+        //         "like",
+        //         "%" . $request->get("filter_name") . "%"
+        //     );
+        // }
 
-        if (!empty($request->get("filter_code"))) {
-            $stocks = $stocks->where(
-                "products.code",
-                "like",
-                "%" . $request->get("filter_code") . "%"
-            );
-        }
+        // if (!empty($request->get("filter_code"))) {
+        //     $stocks = $stocks->where(
+        //         "products.code",
+        //         "like",
+        //         "%" . $request->get("filter_code") . "%"
+        //     );
+        // }
 
         if (
             !empty($request->get("filter_product"))
@@ -91,20 +91,12 @@ class StockController extends Controller
             && !empty($request->get("filter_city"))
         ) {
             $warehouses = $warehouses->where(
-                    "city_id",
-                    $request->get("filter_city")
-                )
-                ->where(
                     "parent_warehouse_id",
                     $request->get("filter_warehouse")
                 );
 
             $stocks = $stocks->where(function ($query) use ($request) {
                 $query->where(
-                        "warehouses.city_id",
-                        $request->get("filter_city")
-                    )
-                    ->where(
                         "warehouses.parent_warehouse_id",
                         $request->get("filter_warehouse")
                     );
@@ -120,18 +112,23 @@ class StockController extends Controller
             && !empty($request->get("filter_warehouse"))
             && !empty($request->get("filter_city"))
         ) {
-            $stocks = $stocks->where(
-                    "stocks.product_id",
-                    $request->get("filter_product")
-                )
-                ->where(
-                    "stocks.warehouse_id",
+            $warehouses = $warehouses->where(
+                    "parent_warehouse_id",
                     $request->get("filter_warehouse")
-                )
-                ->where(
-                    "warehouses.city_id",
-                    $request->get("filter_city")
                 );
+
+            $stocks = $stocks->where(function ($query) use ($request) {
+                $query->where(
+                        [["stocks.product_id", $request->get("filter_product")],
+                        ["warehouses.parent_warehouse_id", $request->get("filter_warehouse")]]
+                    );
+            })
+            ->leftJoin(
+                'warehouses',
+                'warehouses.id',
+                '=',
+                'stocks.warehouse_id'
+            );
         }
 
         if (!empty($request->get("filter_month"))) {

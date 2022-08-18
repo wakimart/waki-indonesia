@@ -133,7 +133,6 @@ $menu_item_second = "add_history_in";
                                     <div class="col-md-12">
                                         <div class="text-center"
                                             style="display: block;
-                                                background: #4caf3ab3;
                                                 float: right;
                                                 margin-bottom: 20px;">
                                             <button class="btn btn-gradient-primary"
@@ -269,7 +268,7 @@ function addProduct() {
 
     const textCenterDivRemove = document.createElement("div");
     textCenterDivRemove.className = "text-center";
-    textCenterDivRemove.style = "display: block; background: #4caf3ab3; float: right; margin-bottom: 20px;";
+    textCenterDivRemove.style = "display: block; float: right; margin-bottom: 20px;";
 
     const buttonRemove = document.createElement("button");
     buttonRemove.className = "btn btn-gradient-danger";
