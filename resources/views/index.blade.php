@@ -562,9 +562,9 @@
         @endif
       </header>
 
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="row card-group align-items-center">
-            <div class="col-lg-3 col-md-3 col-sm-3">
+      <div class="col-lg-12 col-md-12 col-sm-12 p-0 ">
+        <div class="row card-group align-items-center justify-content-center">
+            <div class="col-lg-4 col-md-4 col-sm-4">
               <div class="card-business mb-3">
                 <div class="card-img-top">
                   <img data-src="{{ asset ('sources/wakimartlogo.png')}}" class="img-fluid lozad" style="padding-top: 30px;" />
@@ -583,7 +583,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="col-lg-4 col-md-4 col-sm-4">
               <div class="card-business mb-3">
                 <div class="card-img-top">
                   <img data-src="{{ asset ('sources/wakishop.png')}}" class="img-fluid lozad" />
@@ -602,7 +602,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="col-lg-4 col-md-4 col-sm-4">
               <div class="card-business mb-3">
                 <div class="card-img-top">
                   <img data-src="{{ asset ('sources/wakifnb.png')}}" class="img-fluid lozad" style="padding-top: 15px;"/>
@@ -621,7 +621,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-lg-3 col-md-3 col-sm-3">
+            <div class="col-lg-4 col-md-4 col-sm-4">
               <div class="card-business mb-3">
                 <div class="card-img-top">
                   <img data-src="{{ asset ('sources/waki3dprinting.png')}}" class="img-fluid lozad" />
@@ -634,6 +634,25 @@
                         <a href="https://waki3dprinting.com/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
                       @elseif(Utils::$lang=='eng')
                         <a href="https://waki3dprinting.com/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">View</a>
+                      @endif
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+              <div class="card-business mb-3">
+                <div class="card-img-top">
+                  <img data-src="{{ asset ('sources/wakirelic.png')}}" class="img-fluid lozad" />
+                </div>
+                <div class="card-body">
+
+                  <div class="row justify-content-center align-self-center">
+                    <div>
+                      @if(Utils::$lang=='id')
+                        <a href="https://wakirelicmuseum.com/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">Lihat</a>
+                      @elseif(Utils::$lang=='eng')
+                        <a href="https://wakirelicmuseum.com/" class="r-link link text-underlined"  target="_blank" rel="noopener noreferrer">View</a>
                       @endif
                     </div>
                   </div>
