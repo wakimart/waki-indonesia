@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBankAccountsTable extends Migration
+class CreateCreditCardsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,17 @@ class CreateBankAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bank_accounts', function (Blueprint $table) {
+        Schema::create('credit_cards', function (Blueprint $table) {
             $table->increments('id');
             $table->string('code');
             $table->string('name');
-            $table->string('account_number');
-            $table->enum('type', ['debit', 'card']);
-            $table->double('charge_percentage')->default(0);
+            $table->unsignedInteger("bank_account_id");
+            $table->foreign("bank_account_id")->references("id")->on("bank_accounts");
+            $table->integer('cicilan');
+            $table->double('charge_percentage_sales')->default(0);
+            $table->double('charge_percentage_company')->default(0);
             $table->integer('estimate_transfer')->default(0);
-            $table->unsignedInteger("bank_id");
-            $table->foreign("bank_id")->references("id")->on("banks");
+            $table->text('description')->nullable();
             $table->boolean('active')->default(1);
             $table->timestamps();
         });
@@ -35,6 +36,6 @@ class CreateBankAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bank_accounts');
+        Schema::dropIfExists('credit_cards');
     }
 }

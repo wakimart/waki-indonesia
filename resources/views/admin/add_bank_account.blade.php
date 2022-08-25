@@ -4,7 +4,9 @@ $menu_item_second = "add_bank_account";
 ?>
 @extends('admin.layouts.template')
 
-@section('script')
+@section('style')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+    <link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
     <style>
         select {
             color: black !important
@@ -62,7 +64,6 @@ $menu_item_second = "add_bank_account";
                                 <select class="form-control @if($errors->has('type')) is-invalid @endif" name="type" id="" required>
                                     <option value="" selected disabled>-- select type first --</option>
                                     <option value="debit" {{ old('type') == 'debit' ? 'selected' : '' }}>Debit</option>
-                                    <option value="ewallet" {{ old('type') == 'ewallet' ? 'selected' : '' }}>E-wallet</option>
                                     <option value="card" {{ old('type') == 'card' ? 'selected' : '' }}>Card</option>
                                 </select>
                                 @if($errors->has('type'))
@@ -85,12 +86,15 @@ $menu_item_second = "add_bank_account";
                             </div>
                             <div class="form-group">
                                 <label for="">Bank</label>
-                                <select class="form-control @if($errors->has('bank_id')) is-invalid @endif" name="bank_id" id="" required>
+                                <select class="form-control @if($errors->has('bank_id')) is-invalid @endif" name="bank_id" id="selectBank" required>
                                     <option value="" selected disabled>-- select bank first --</option>
                                     @foreach($banks as $bank)
-                                        <option value="{{$bank->id}}" {{ old('bank_id') == '$bank->id' ? 'selected' : '' }}>{{$bank->name}}</option>
+                                        <option value="{{$bank->id}}">{{$bank->name}}</option>
                                     @endforeach
                                 </select>
+                                @if($errors->has('bank_id'))
+                                    <span class="error">{{ $errors->first('bank_id') }}</span>
+                                @endif
                             </div>
                             <button type="submit" class="btn btn-gradient-primary mr-2">Save</button>
                             <button class="btn btn-light" type="button" onclick='location.href="{{ route('list_bank_account') }}"'>Cancel</button>
@@ -102,4 +106,16 @@ $menu_item_second = "add_bank_account";
     </div>
     <!-- partial -->
 </div>
+@endsection
+@section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
+<script>
+    $(document).ready(function(){
+        $("#selectBank").select2().select2('val', '{{old("bank_id")}}')
+        $("#selectBank").select2({
+            theme: "bootstrap4",
+            placeholder: "-- select bank first --"
+        })
+    })
+</script>
 @endsection

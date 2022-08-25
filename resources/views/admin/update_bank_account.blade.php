@@ -3,7 +3,9 @@ $menu_item_page = "bank";
 ?>
 @extends('admin.layouts.template')
 
-@section('script')
+@section('style')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+    <link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
     <style>
         select {
             color: black !important
@@ -62,7 +64,6 @@ $menu_item_page = "bank";
                                 <select class="form-control @if($errors->has('type')) is-invalid @endif" name="type" id="" required>
                                     <option value="" selected disabled>-- select type first --</option>
                                     <option value="debit" {{ $bankAccount->type == 'debit' ? 'selected' : '' }}>Debit</option>
-                                    <option value="ewallet" {{ $bankAccount->type == 'ewallet' ? 'selected' : '' }}>E-wallet</option>
                                     <option value="card" {{ $bankAccount->type == 'card' ? 'selected' : '' }}>Card</option>
                                 </select>
                                 @if($errors->has('type'))
@@ -85,10 +86,10 @@ $menu_item_page = "bank";
                             </div>
                             <div class="form-group">
                                 <label for="">Bank</label>
-                                <select class="form-control @if($errors->has('bank_id')) is-invalid @endif" name="bank_id" id="" required>
+                                <select class="form-control @if($errors->has('bank_id')) is-invalid @endif" name="bank_id" id="selectBank" required>
                                     <option value="" selected disabled>-- select bank first --</option>
                                     @foreach($banks as $bank)
-                                        <option value="{{$bank->id}}" {{ $bankAccount->bank_id == $bank->id ? 'selected' : '' }}>{{$bank->name}}</option>
+                                        <option value="{{$bank->id}}">{{$bank->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -102,4 +103,16 @@ $menu_item_page = "bank";
     </div>
     <!-- partial -->
 </div>
+@endsection
+@section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
+<script>
+    $(document).ready(function(){
+        $("#selectBank").select2().select2('val', '{{$bankAccount->bank_id}}')
+        $("#selectBank").select2({
+            theme: "bootstrap4",
+            placeholder: "-- select bank first --"
+        })
+    })
+</script>
 @endsection

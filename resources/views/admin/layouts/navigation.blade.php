@@ -531,10 +531,12 @@
       @if(Gate::check('add-bank'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_bank'? 'active': '' }}" href="{{route('add_bank')}}">Add Bank</a></li>
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_bank_account'? 'active': '' }}" href="{{route('add_bank_account')}}">Add Bank Account</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_credit_card'? 'active': '' }}" href="{{route('add_credit_card')}}">Add Credit Card</a></li>
       @endif
       @if(Gate::check('browse-bank'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_bank'? 'active': '' }}" href="{{route('list_bank')}}">List Bank</a></li>
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_bank_account'? 'active': '' }}" href="{{route('list_bank_account')}}">List Bank Account</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_credit_card'? 'active': '' }}" href="{{route('list_credit_card')}}">List Credit Card</a></li>
       @endif
     </ul>
   </div>

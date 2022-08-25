@@ -942,6 +942,17 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/edit/{id}', 'BankController@editBankAccount')->name('edit_bank_account')->middleware('can:edit-bank');
         Route::post('/update/', 'BankController@updateBankAccount')->name('update_bank_account')->middleware('can:edit-bank');
         Route::post('/delete', 'BankController@destroyBankAccount')->name('delete_bank_account')->middleware('can:delete-bank');
+        Route::get('/get-bank-account-by-bank/{id}', 'BankController@getBankAccountData')->name('get_bank_account');
+    });
+
+    Route::group(['prefix' => 'credit-card', 'middleware' => 'auth'], function() {
+        Route::get('/', 'BankController@createCreditCard')->name('add_credit_card')->middleware('can:add-bank');
+        Route::post('/', 'BankController@storeCreditCard')->name('store_credit_card')->middleware('can:add-bank');
+        Route::get('/list', 'BankController@indexCreditCard')->name('list_credit_card')->middleware('can:browse-bank');
+        Route::get('/edit/{id}', 'BankController@editCreditCard')->name('edit_credit_card')->middleware('can:edit-bank');
+        Route::post('/update/', 'BankController@updateCreditCard')->name('update_credit_card')->middleware('can:edit-bank');
+        Route::post('/delete', 'BankController@destroyCreditCard')->name('delete_credit_card')->middleware('can:delete-bank');
+        Route::get('/get-credit-card-data/{id}', 'BankController@getCreditCardData')->name('get_credit_card');
     });
 
     Route::group(['prefix' => 'data_sourcing', 'middleware' => 'auth'], function() {

@@ -6,6 +6,7 @@
 @section('style')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+<link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
     #intro {
         padding-top: 2em;
@@ -480,44 +481,6 @@
                                         required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Bank</label>
-                                    <select class="form-control"
-                                        name="bank_id"
-                                        data-msg="Mohon Pilih Bank" required>
-                                        <option selected disabled value="">
-                                            Choose Bank
-                                        </option>
-
-                                        @foreach ($banks as $bank)
-                                            <option value="{{ $bank->id }}">
-                                                {{ $bank->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Cicilan</label>
-                                    <select class="form-control bank_cicilan"
-                                        name="cicilan"
-                                        data-msg="Mohon Pilih Jumlah Cicilan" required>
-                                        <option selected value="1">1X</option>
-                                        @for ($i = 2; $i <= 12; $i += 2)
-                                            <option class="other_valCicilan"
-                                                value="{{ $i }}">
-                                                {{ $i }}X
-                                            </option>
-                                        @endfor
-                                        <option class="other_valCicilan"
-                                            value="18">
-                                            18X
-                                        </option>
-                                        <option class="other_valCicilan"
-                                            value="24">
-                                            24X
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
                                     <label for="">Nominal Payment</label>
                                     <input type="text"
                                         class="form-control downpayment"
@@ -527,6 +490,55 @@
                                         autocomplete="off"
                                         data-type="currency"
                                         data-msg="Mohon Isi Total Pembayaran" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Type</label>
+                                    <select name="type" class="form-control" id="" required>
+                                        <option value="" selected disable>-- select type first --</option>
+                                        <option value="order">ORDER</option>
+                                        <option value="cash">CASH</option>
+                                        <option value="delivery">DELIVERY</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Type Payment</label>
+                                    <select name="type_payment" class="form-control" id="" required>
+                                        <option value="" selected disable>-- select type payment first --</option>
+                                        <option value="cash">CASH</option>
+                                        <option value="debit">DEBIT</option>
+                                        <option value="card">CARD</option>
+                                        <option value="card_installment">CARD INSTALLMENT</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Installment</label>
+                                    <select name="credit_card_id" id="selectInstallment" class="form-control select-with-select2">
+                                        <option></option>
+                                        @foreach($creditCards as $cc)
+                                            <option value="{{$cc->id}}">{{$cc->code}}</option>
+                                        @endforeach
+                                    </select>
+                                    <div id="installmentDesc" class="mt-2"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Bank</label>
+                                    <select name="bank_account_id" id="selectBank" class="form-control select-with-select2">
+                                        <option></option>
+                                        @foreach($bankAccounts as $bankAccount)
+                                            <option value="{{$bankAccount->id}}">{{$bankAccount->code}}</option>
+                                        @endforeach
+                                    </select>
+                                    <div id="bankDesc" class="mt-2"></div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="">Charge</label>
+                                    <div class="col-lg-5">
+                                        <input type="text">
+                                    </div>
+                                    <div class="col-lg-2">+</div>
+                                    <div class="col-lg-5">
+
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Foto:</label>
@@ -947,6 +959,22 @@
                 }
 
             });
+        });
+        $(".select-with-select2").select2({
+            theme: 'bootstrap4',
+            placeholder: '-- select first --',
+            dropdownParent: $('#addPaymentModal .modal-content')
+        })
+        $('#selectInstallment').on('change', function() {
+            var url = '{{ route("get_credit_card", ":id") }}';
+            url = url.replace(':id', this.value);
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(data){
+                    $('#installmentDesc').html(`<span>${data.name} ${data.cicilan} bln</span>`)
+                }
+            });            
         });
     });
 

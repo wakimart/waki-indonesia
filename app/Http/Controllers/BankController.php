@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Bank;
 use App\BankAccount;
+use App\CreditCard;
 use App\HistoryUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -203,8 +204,8 @@ class BankController extends Controller
             'name' => 'required',
             'account_number' => 'required',
             'type' => 'required|string',
-            'charge_percentage' => 'required|numeric',
-            'estimate_transfer' => 'required|integer',
+            'charge_percentage' => 'required|numeric|min:0',
+            'estimate_transfer' => 'required|integer|min:0',
             'bank_id' => 'required|integer'
         ]);
 
@@ -271,8 +272,8 @@ class BankController extends Controller
                 return Redirect::back()->with("success", "Bank account successfully updated.");
             } catch (\Exception $ex) {
                 DB::rollBack();
-                // return Redirect::back()->withErrors("Something wrong when update bank account, please call Team IT")->withInput();
-                return Redirect::back()->withErrors($ex->getMessage());
+                return Redirect::back()->withErrors("Something wrong when update bank account, please call Team IT")->withInput();
+                // return Redirect::back()->withErrors($ex->getMessage());
             }
         }
     }
@@ -322,5 +323,223 @@ class BankController extends Controller
         }
         
         return Redirect::back()->withErrors("Data not found");
+    }
+
+    /**
+     * get bank account by bank
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function getBankAccountData($id)
+    {
+        $bankAccounts = BankAccount::where('active', true)->where('bank_id', $id)->get();
+        return response()->json($bankAccounts);
+    }
+
+    /**
+     * index credit card (list)
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function indexCreditCard(Request $request)
+    {
+        $url = $request->all();
+        $datas = CreditCard::leftJoin('bank_accounts', function($join) {
+                    $join->on('credit_cards.bank_account_id', '=', 'bank_accounts.id');
+                })->where('credit_cards.active', true);
+
+        if ($request->has('search')) {
+            $datas->where(function($q) use($request) {
+                $q->where('credit_cards.code', 'like', '%'.$request->search.'%')
+                ->orWhere('credit_cards.name', 'like', '%'.$request->search.'%')
+                ->orWhere('credit_cards.cicilan', 'like', '%'.$request->search.'%')
+                ->orWhere('credit_cards.charge_percentage_sales', 'like', '%'.$request->search.'%')
+                ->orWhere('credit_cards.charge_percentage_company', 'like', '%'.$request->search.'%')
+                ->orWhere('credit_cards.estimate_transfer', 'like', '%'.$request->search.'%')
+                ->orWhere('credit_cards.description', 'like', '%'.$request->search.'%')
+                ->orWhere('bank_accounts.name', 'like', '%'.$request->search.'%');
+            });
+        }
+        $datas = $datas->select(['credit_cards.*', 'bank_accounts.name as bank_account_name']);
+        $datas = $datas->paginate(10);
+
+        return view("admin.list_credit_card", compact("datas", "url"))->with("i", (request()->input("page", 1) - 1) * 10 + 1);
+    }
+
+    /**
+     * create credit card
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function createCreditCard()
+    {
+        $bankAccounts = BankAccount::where('active', true)->get();
+        return view('admin.add_credit_card', compact('bankAccounts'));
+    }
+
+    /**
+     * store credit card
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function storeCreditCard(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'code' => 'required',
+            'name' => 'required',
+            'bank_account_id' => 'required|integer',
+            'cicilan' => 'required|integer|min:0',
+            'charge_percentage_sales' => 'required|numeric|min:0',
+            'charge_percentage_company' => 'required|numeric|min:0',
+            'estimate_transfer' => 'required|integer|min:0'
+        ]);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput();
+        }else{
+            DB::beginTransaction();
+            try {
+                CreditCard::create($request->all());
+                DB::commit();
+                return Redirect::back()->with("success", "Credit card successfully added.");
+            } catch (\Exception $ex) {
+                DB::rollBack();
+                return Redirect::back()->withErrors("Something wrong when add credit card, please call Team IT")->withInput();
+            }
+        }
+    }
+
+    /**
+     * edit credit card
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function editCreditCard($id)
+    {
+        $creditCard = CreditCard::find($id);
+        $bankAccounts = BankAccount::where('active', true)->get();
+        return view('admin.update_credit_card', compact('creditCard', 'bankAccounts'));
+    }
+
+    /**
+     * update credit card
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function updateCreditCard(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'code' => 'required',
+            'name' => 'required',
+            'bank_account_id' => 'required|integer',
+            'cicilan' => 'required|integer|min:0',
+            'charge_percentage_sales' => 'required|numeric|min:0',
+            'charge_percentage_company' => 'required|numeric|min:0',
+            'estimate_transfer' => 'required|integer|min:0'
+        ]);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput();
+        }else{
+            DB::beginTransaction();
+            try {
+                $creditCard = CreditCard::find($request->idCreditCard);
+                $creditCard->fill($request->all())->save();
+                DB::commit();
+                return Redirect::back()->with("success", "Credit Card successfully updated.");
+            } catch (\Exception $ex) {
+                DB::rollBack();
+                return Redirect::back()->withErrors("Something wrong when update credit card, please call Team IT")->withInput();
+                // return Redirect::back()->withErrors($ex->getMessage());
+            }
+        }
+    }
+
+    /**
+     * destroy credit card
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function destroyCreditCard(Request $request)
+    {
+        DB::beginTransaction();
+
+        if (!empty($request->id)) {
+            try {
+                $creditCard = CreditCard::find($request->id);
+                $creditCard->active = false;
+                $creditCard->save();
+
+                $user = Auth::user();
+                $historyDeleteCreditCard["type_menu"] = "Credit Card";
+                $historyDeleteCreditCard["method"] = "Delete";
+                $historyDeleteCreditCard["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $creditCard->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+
+                $historyDeleteCreditCard["user_id"] = $user["id"];
+                $historyDeleteCreditCard["menu_id"] = $request->id;
+                HistoryUpdate::create($historyDeleteCreditCard);
+
+                DB::commit();
+                
+                return Redirect::back()->with("success", "Credit card deleted successfully.");
+            } catch (Exception $e) {
+                DB::rollback();
+                return Redirect::back()->withErrors("Something wrong when delete credit card, please call Team IT");
+            }
+        }
+        
+        return Redirect::back()->withErrors("Data not found");
+    }
+
+    /**
+     * get credit card data
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function getCreditCardData($id)
+    {
+        $data = CreditCard::find($id);
+        $data['bank_account'] = $data->bankAccount;
+        $data['bank_account']['bank'] = $data->bankAccount->bank;
+        return response()->json($data);
     }
 }

@@ -632,10 +632,10 @@ $menu_item_second = "add_order";
                                         <label for="">Payment Type</label>
                                     </div>
                                     <div class="row">
-                                        <div class="form-group col-md-8">
+                                        <div class="form-group col-md-3">
                                             <select class="form-control bank_name"
                                                 name="bank_0"
-                                                data-msg="Mohon Pilih Bank">
+                                                data-msg="Mohon Pilih Bank" onchange="selectBankAccount(this, 0)">
                                                 <option selected disabled value="">
                                                     Choose Bank
                                                 </option>
@@ -648,7 +648,12 @@ $menu_item_second = "add_order";
                                             </select>
                                             <div class="validation"></div>
                                         </div>
-                                        <div class="form-group col-md-4">
+                                        <div class="form-group col-md-6">
+                                            <select class="form-control" name="bank_account_id_0" id="select-bank-account-0">
+                                                <option value="" selected disabled>Choose Bank Account</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-3">
                                             <select class="form-control bank_cicilan"
                                                 name="cicilan_0"
                                                 data-msg="Mohon Pilih Jumlah Cicilan">
@@ -974,10 +979,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     <label for="">Payment Type ` + (total_bank + 1) + `</label>
                 </div>                                            
                 <div class="row">
-                    <div class="form-group col-md-8">
+                    <div class="form-group col-md-3">
                         <select class="form-control bank_name"
                             name="bank_` + total_bank + `"
-                            data-msg="Mohon Pilih Bank">
+                            data-msg="Mohon Pilih Bank" onchange="selectBankAccount(this, `+total_bank+`)">
                             <option selected disabled value="">
                                 Choose Bank
                             </option>
@@ -990,7 +995,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         </select>
                         <div class="validation"></div>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
+                        <select class="form-control" name="bank_account_id_`+total_bank+`" id="select-bank-account-`+total_bank+`">
+                            <option value="" selected disabled>Choose Bank Account</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
                         <select class="form-control bank_cicilan"
                             name="cicilan_` + total_bank + `"
                             data-msg="Mohon Pilih Jumlah Cicilan">
@@ -1495,5 +1505,23 @@ document.addEventListener("DOMContentLoaded", function () {
             };
         }
     });
+
+    function selectBankAccount(data, tag) {        
+        var url = '{{ route("get_bank_account", ":id") }}';
+        url = url.replace(':id', data.value);
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function(value){
+                var divOption = '<option value="" selected disabled>Choose Bank Account</option>'
+                for(let ba of value){
+                    divOption += `
+                        <option value="${ba.id}">${ba.code} - ${ba.name} (${ba.account_number})</option>
+                    `
+                }
+                $('#select-bank-account-'+tag).html(divOption)
+            }
+        });
+    }
 </script>
 @endsection

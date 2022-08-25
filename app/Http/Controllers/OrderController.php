@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\CreditCard;
+use App\BankAccount;
 
 class OrderController extends Controller
 {
@@ -217,6 +219,7 @@ class OrderController extends Controller
                         $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
                         $orderPayment->payment_date = $data["orderDate"];
                         $orderPayment->bank_id = $data['bank_' . $arrKey[1]];
+                        $orderPayment->bank_account_id = $data['bank_account_id_' . $arrKey[1]];
                         $orderPayment->cicilan = $data['cicilan_' . $arrKey[1]];
 
                         // save image
@@ -374,7 +377,9 @@ class OrderController extends Controller
         $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
         ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
-        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders'));
+        $creditCards = CreditCard::where('active', true)->get();
+        $bankAccounts = BankAccount::where('active', true)->get();
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts'));
     }
 
     /**
