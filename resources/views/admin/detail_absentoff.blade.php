@@ -198,6 +198,8 @@ $menu_item_page = "absent_off";
                                 @endif
                             @elseif ($absentOff->status == App\AbsentOff::$status['3'])
                                 <p style="color: red;">Rejected Automatically</p>
+                            @elseif ($absentOff->status == App\AbsentOff::$status['2'])
+                                <p style="color: green;">Approved Automatically</p>
                             @else
                             <p>Wait to Approve</p>
                                 @if (Gate::check('acc-absent_off'))

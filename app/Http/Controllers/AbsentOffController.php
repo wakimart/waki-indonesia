@@ -850,6 +850,8 @@ class AbsentOffController extends Controller
                             $absentOff->status = "approved";
                         }
                     }
+                } else if ($absentOff->coordinator_id && $request->status_acc == "true") {
+                    $absentOff->status = "approved";
                 }
                 $absentOff->save();
     
@@ -896,6 +898,8 @@ class AbsentOffController extends Controller
                         $absentOff->status = "approved";
                     }
                 }
+            } else if ($absentOff->coordinator_id && $request->status_acc == "true") {
+                $absentOff->status = "approved";
             }
             $absentOff->save();
 
