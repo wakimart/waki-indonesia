@@ -40,6 +40,7 @@ class StockController extends Controller
                 "products.name AS product_name",
             )
             ->leftJoin('products', 'products.id', '=', 'stocks.product_id')
+            ->groupBy('products.id')
             ->whereNull('stocks.type_warehouse')
             ->where('stocks.active', true);
 
@@ -68,6 +69,7 @@ class StockController extends Controller
                     '=',
                     'stocks.warehouse_id'
                 )
+                ->groupBy('warehouses.id')
                 ->where("stocks.product_id", $request->get("filter_product"));
         } elseif (
             empty($request->get("filter_product"))
@@ -101,12 +103,17 @@ class StockController extends Controller
                     $request->get("filter_warehouse")
                 );
 
-            $stocks = $stocks->where(function ($query) use ($request) {
-                $query->where(
+            $stocks = $stocks->addSelect(
+                        "warehouses.code AS warehouse_code",
+                        "warehouses.name AS warehouse_name",
+                    )
+                    ->where(function ($query) use ($request) {
+                    $query->where(
                         [["stocks.product_id", $request->get("filter_product")],
                         ["warehouses.parent_warehouse_id", $request->get("filter_warehouse")]]
                     );
             })
+            ->groupBy('warehouses.id')
             ->leftJoin(
                 'warehouses',
                 'warehouses.id',
