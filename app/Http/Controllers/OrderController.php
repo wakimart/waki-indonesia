@@ -790,6 +790,7 @@ class OrderController extends Controller
 
     public function storeOrderPayment(Request $request)
     {
+        // return response()->json($request->all());
         DB::beginTransaction();
         try {
             $validator = $request->validate([
@@ -807,6 +808,14 @@ class OrderController extends Controller
             $orderPayment->payment_date = $data['payment_date'];
             $orderPayment->bank_id = $data['bank_id'];
             $orderPayment->cicilan = $data['cicilan'];
+
+            $orderPayment->type = $data['type'];
+            $orderPayment->type_payment = $data['type_payment'];
+            $orderPayment->credit_card_id = $data['credit_card_id'];
+            $orderPayment->bank_account_id = $data['bank_account_id'];
+            $orderPayment->charge_percentage_bank = $data['charge_percentage_bank'];
+            $orderPayment->charge_percentage_company = $data['charge_percentage_company'];
+            $orderPayment->estimate_transfer_date = $data['estimate_transfer_date'];
 
             // save image
             $arrImage = [];

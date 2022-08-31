@@ -953,6 +953,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update/', 'BankController@updateCreditCard')->name('update_credit_card')->middleware('can:edit-bank');
         Route::post('/delete', 'BankController@destroyCreditCard')->name('delete_credit_card')->middleware('can:delete-bank');
         Route::get('/get-credit-card-data/{id}', 'BankController@getCreditCardData')->name('get_credit_card');
+        Route::get('/get-bank-account-data/{id}', 'BankController@getBankAccountDataFromPaymentModal')->name('get_bank_account_from_payment_modal');
     });
 
     Route::group(['prefix' => 'data_sourcing', 'middleware' => 'auth'], function() {

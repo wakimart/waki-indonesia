@@ -502,23 +502,24 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Type Payment</label>
-                                    <select name="type_payment" class="form-control" id="" required>
+                                    <select name="type_payment" class="form-control" id="typePayment" required>
                                         <option value="" selected disable>-- select type payment first --</option>
                                         <option value="cash">CASH</option>
                                         <option value="debit">DEBIT</option>
                                         <option value="card">CARD</option>
-                                        <option value="card_installment">CARD INSTALLMENT</option>
+                                        <option value="card installment">CARD INSTALLMENT</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Installment</label>
-                                    <select name="credit_card_id" id="selectInstallment" class="form-control select-with-select2">
+                                    <select name="credit_card_id" id="selectInstallment" class="form-control select-with-select2 installment-form" disabled>
                                         <option></option>
                                         @foreach($creditCards as $cc)
                                             <option value="{{$cc->id}}">{{$cc->code}}</option>
                                         @endforeach
                                     </select>
-                                    <div id="installmentDesc" class="mt-2"></div>
+                                    <div id="creditCardName" class="mt-2"></div>
+                                    <input type="number" min=1 class="form-control" id="creditCardInstallment" name="cicilan" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Bank</label>
@@ -528,17 +529,28 @@
                                             <option value="{{$bankAccount->id}}">{{$bankAccount->code}}</option>
                                         @endforeach
                                     </select>
+                                    <input type="hidden" name="bank_id" id="bank_id">
                                     <div id="bankDesc" class="mt-2"></div>
                                 </div>
-                                <div class="form-group row">
-                                    <label for="">Charge</label>
-                                    <div class="col-lg-5">
-                                        <input type="text">
+                                <div class="form-group">
+                                    <label for="">Charge (%)</label>
+                                    <div class="row">
+                                        <div class="col-lg-5">
+                                            <input type="number" min=0 class="form-control installment-form" step="any" placeholder="0" name="charge_percentage_company" id="chargePercentageCompany" readonly>
+                                        </div>
+                                        <div class="col-lg-2 text-center"><h3>+</h3></div>
+                                        <div class="col-lg-5">
+                                            <input type="number" min=0 class="form-control" step="any" placeholder="0" name="charge_percentage_bank" id="chargePercentageBank">
+                                        </div>
                                     </div>
-                                    <div class="col-lg-2">+</div>
-                                    <div class="col-lg-5">
-
-                                    </div>
+                                </div>
+                                <div class="form-group mb-1">
+                                    <label for="">Estimate Transfer Date</label>
+                                    <input type="date" id="estimateTransferDate"
+                                        class="form-control" 
+                                        name="estimate_transfer_date" 
+                                        value="{{ date('Y-m-d') }}"
+                                        required>
                                 </div>
                                 <div class="form-group">
                                     <label for="">Foto:</label>
@@ -605,46 +617,6 @@
                                         required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Bank</label>
-                                    <select class="form-control"
-                                        id="editPayment-bank_id"
-                                        name="bank_id"
-                                        data-msg="Mohon Pilih Bank" required>
-                                        <option selected disabled value="">
-                                            Choose Bank
-                                        </option>
-
-                                        @foreach ($banks as $bank)
-                                            <option value="{{ $bank->id }}">
-                                                {{ $bank->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Cicilan</label>
-                                    <select class="form-control bank_cicilan"
-                                        id="editPayment-cicilan"
-                                        name="cicilan"
-                                        data-msg="Mohon Pilih Jumlah Cicilan" required>
-                                        <option selected value="1">1X</option>
-                                        @for ($i = 2; $i <= 12; $i += 2)
-                                            <option class="other_valCicilan"
-                                                value="{{ $i }}">
-                                                {{ $i }}X
-                                            </option>
-                                        @endfor
-                                        <option class="other_valCicilan"
-                                            value="18">
-                                            18X
-                                        </option>
-                                        <option class="other_valCicilan"
-                                            value="24">
-                                            24X
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
                                     <label for="">Nominal Payment</label>
                                     <input type="text"
                                         id="editPayment-total_payment"
@@ -657,6 +629,68 @@
                                         data-msg="Mohon Isi Total Pembayaran" />
                                 </div>
                                 <div class="form-group">
+                                    <label for="">Type</label>
+                                    <select name="type" class="form-control" id="editPayment-select_type" required>
+                                        <option value="" selected disable>-- select type first --</option>
+                                        <option value="order">ORDER</option>
+                                        <option value="cash">CASH</option>
+                                        <option value="delivery">DELIVERY</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Type Payment</label>
+                                    <select name="type_payment" class="form-control" id="editPayment-select_type_payment" required>
+                                        <option value="" selected disable>-- select type payment first --</option>
+                                        <option value="cash">CASH</option>
+                                        <option value="debit">DEBIT</option>
+                                        <option value="card">CARD</option>
+                                        <option value="card installment">CARD INSTALLMENT</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Installment</label>
+                                    <select name="credit_card_id" id="editPayment-select_installment" class="form-control editPayment-select_with_select2 editPayment-installment_form">
+                                        <option></option>
+                                        @foreach($creditCards as $cc)
+                                            <option value="{{$cc->id}}">{{$cc->code}}</option>
+                                        @endforeach
+                                    </select> 
+                                    <div id="editPayment-credit_card_name" class="mt-2"></div>
+                                    <input type="number" min=1 class="form-control" id="editPayment-credit_card_installment" name="cicilan" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Bank</label>
+                                    <select name="bank_account_id" id="editPayment-select_bank" class="form-control">
+                                        <option></option>
+                                        @foreach($bankAccounts as $bankAccount)
+                                            <option value="{{$bankAccount->id}}">{{$bankAccount->code}}</option>
+                                        @endforeach
+                                    </select>
+                                    <input type="hidden" name="bank_id" id="editPayment-bank_id">
+                                    <div id="editPayment-bank_description" class="mt-2"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Charge (%)</label>
+                                    <div class="row">
+                                        <div class="col-lg-5">
+                                            <input type="number" min=0 class="form-control editPayment-installment_form" step="any" placeholder="0" name="charge_percentage_company" id="editPayment-charge_percentage_company">
+                                        </div>
+                                        <div class="col-lg-2 text-center"><h3>+</h3></div>
+                                        <div class="col-lg-5">
+                                            <input type="number" min=0 class="form-control" step="any" placeholder="0" name="charge_percentage_bank" id="editPayment-charge_percentage_bank">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Estimate Transfer Date</label>
+                                    <input type="date" id="editPayment-estimate_transfer_date"
+                                        class="form-control" 
+                                        name="estimate_transfer_date" 
+                                        value=""
+                                        required>
+                                </div>
+                                
+                                <div class="form-group mt-2">
                                     <label for="">Bukti Pembayaran</label>
                                     <label style="float: right">(Min: 1) (Max: 3)</label>
                                     <div class="clearfix"></div>
@@ -849,7 +883,7 @@
             $("#frmAddPayment").find('input[data-type="currency"]').each(function() {
                 $(this).val(numberNoCommas($(this).val()));
             });
-            $("#frmAddPayment").submit();
+            // $("#frmAddPayment").submit();
         });
 
         $("#imageAddPayment").on("change", function() {
@@ -878,10 +912,30 @@
                         const result = data.result;
                         $("#editPayment-order_payment_id").val(order_payment_id);
                         $("#editPayment-payment_date").val(result.payment_date);
-                        $("#editPayment-bank_id").val(result.bank_id);
-                        $("#editPayment-cicilan").val(result.cicilan);
                         $("#editPayment-total_payment").val(numberWithCommas(result.total_payment));
                         
+                        $("#editPayment-select_type").val(result.type).change()
+                        $("#editPayment-select_type_payment").val(result.type_payment).change()
+                        $("#editPayment-select_installment").val(result.credit_card_id).change()
+                        $("#editPayment-credit_card_installment").val(result.cicilan)
+                        $("#editPayment-select_bank").val(result.bank_account_id).change()
+                        $("#editPayment-bank_id").val(result.bank_id);
+                        $("#editPayment-charge_percentage_company").val(result.charge_percentage_company)
+                        $("#editPayment-charge_percentage_bank").val(result.charge_percentage_bank)
+                        $("#editPayment-estimate_transfer_date").val(result.estimate_transfer_date)
+                        if(result.type_payment == 'card installment'){
+                            $('.editPayment-installment_form').prop({'disabled' : false, 'readonly' : false})
+                        }else{
+                            $('.editPayment-installment_form').prop({'disabled' : true, 'readonly' : true})
+                        }
+                        $("#editPayment-credit_card_name").html('')
+                        $("#editPayment-bank_description").html('')
+                        if(result.credit_card_id){
+                            infoFromCreditCard(result.credit_card_id)
+                        }else if(result.bank_account_id){
+                            infoFromBankAccount(result.bank_account_id)
+                        }
+
                         const mainUrlImage = "{{ asset('sources/order') }}";
                         $.each(JSON.parse(result.image), function(index, image) {
                             $("#editPayment-productimg-" + index).closest(".imgUp").find(".imagePreview")
@@ -960,6 +1014,44 @@
 
             });
         });
+
+        // add
+        $('#typePayment').on('change', function() {
+            if(this.value == 'card installment'){
+                $('.installment-form').prop({'disabled' : false, 'readonly' : false})
+            }else{
+                $('.installment-form').prop({'disabled' : true, 'readonly' : true})
+                $('#selectInstallment').val('').trigger('change')
+                $('#creditCardName').html('')
+                $('#chargePercentageCompany').val(0)
+                $('#creditCardInstallment').val(1)
+                // error harusnya ganti ke bank akun
+                if($('#selectBank').val() !== ''){
+                    var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
+                    url = url.replace(':id', $('#selectBank').val());
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function(data){
+                            const d = new Date();
+                            d.setDate(d.getDate() + data.estimate_transfer);
+                            var month = d.getMonth() + 1
+                            var day = d.getDate()
+                            if(month < 10){
+                                month = "0"+month
+                            }
+                            if(day < 10){
+                                day = "0"+day
+                            }
+                            var date = d.getFullYear() + "-" + month + "-" + day
+                            $('#estimateTransferDate').val(date)
+                        }
+                    });            
+                }else{
+                    $('#estimateTransferDate').val('{{date("Y-m-d")}}')
+                }
+            }
+        });
         $(".select-with-select2").select2({
             theme: 'bootstrap4',
             placeholder: '-- select first --',
@@ -972,7 +1064,164 @@
                 type: "GET",
                 url: url,
                 success: function(data){
-                    $('#installmentDesc').html(`<span>${data.name} ${data.cicilan} bln</span>`)
+                    $('#creditCardName').html(`<span>${data.name}</span>`)
+                    $('#creditCardInstallment').val(data.cicilan)
+                    $('#selectBank').val(data.bank_account.id).trigger('change')
+                    $('#bankDesc').html(`
+                        <span><b>${data.bank_account.bank.name}</b> ${data.bank_account.name} (${data.bank_account.account_number})</span>
+                    `)
+                    $('#chargePercentageCompany').val(data.charge_percentage_company)
+                    $('#chargePercentageBank').val(data.bank_account.charge_percentage)
+                    const d = new Date();
+                    d.setDate(d.getDate() + data.estimate_transfer);
+                    var month = d.getMonth() + 1
+                    var day = d.getDate()
+                    if(month < 10){
+                        month = "0"+month
+                    }
+                    if(day < 10){
+                        day = "0"+day
+                    }
+                    var date = d.getFullYear() + "-" + month + "-" + day
+                    $('#estimateTransferDate').val(date)
+                    $('#bank_id').val(data.bank_account.bank_id)
+                }
+            });            
+        });
+        $('#selectBank').on('change', function() {
+            var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
+            url = url.replace(':id', this.value);
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(data){                    
+                    $('#bankDesc').html(`
+                        <span><b>${data.bank.name}</b> ${data.name} (${data.account_number})</span>
+                    `)
+                    $('#chargePercentageBank').val(data.charge_percentage)
+                    if($("#selectInstallment").val() == ''){
+                        const d = new Date();
+                        d.setDate(d.getDate() + data.estimate_transfer);
+                        var month = d.getMonth() + 1
+                        var day = d.getDate()
+                        if(month < 10){
+                            month = "0"+month
+                        }
+                        if(day < 10){
+                            day = "0"+day
+                        }
+                        var date = d.getFullYear() + "-" + month + "-" + day
+                        $('#estimateTransferDate').val(date)
+                    }
+                    $('#bank_id').val(data.bank_id)
+                }
+            });            
+        });
+
+        // edit
+        
+        $(".editPayment-select_with_select2").select2({
+            theme: 'bootstrap4',
+            placeholder: '-- select first --',
+            dropdownParent: $('#editPaymentModal .modal-content')
+        })
+
+        function infoFromCreditCard(id) {            
+            var url = '{{ route("get_credit_card", ":id") }}';
+            url = url.replace(':id', id);
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(data){
+                    $('#editPayment-credit_card_name').html(`<span>${data.name}</span>`)
+                    $('#editPayment-bank_description').html(`
+                       <span><b>${data.bank_account.bank.name}</b> ${data.bank_account.name} (${data.bank_account.account_number})</span>
+                    `)
+                }
+            }); 
+        }
+        function infoFromBankAccount(id) {            
+            var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
+            url = url.replace(':id', id);
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(data){
+                    $('#editPayment-bank_description').html(`
+                       <span><b>${data.bank.name}</b> ${data.name} (${data.account_number})</span>
+                    `)
+                }
+            }); 
+        }
+        $('#frmAddPayment, #frmEditPayment').bind('submit', function () {
+            $('.installment-form').prop({'disabled' : false, 'readonly' : false})
+        });
+
+        $('#editPayment-select_type_payment').on('change', function() {
+            if(this.value == 'card installment'){
+                $('.editPayment-installment_form').prop({'disabled' : false, 'readonly' : false})
+            }else{
+                $('.editPayment-installment_form').prop({'disabled' : true, 'readonly' : true})
+                $('#editPayment-select_installment').val('').trigger('change')
+                $('#editPayment-credit_card_name').html('')
+                $('#editPayment-charge_percentage_company').val(0)
+                $('#editPayment-credit_card_installment').val(1)
+                if($('#editPayment-select_bank').val() !== ''){
+                    var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
+                    url = url.replace(':id', $('#editPayment-select_bank').val());
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function(data){
+                            const d = new Date();
+                            d.setDate(d.getDate() + data.estimate_transfer);
+                            var month = d.getMonth() + 1
+                            var day = d.getDate()
+                            if(month < 10){
+                                month = "0"+month
+                            }
+                            if(day < 10){
+                                day = "0"+day
+                            }
+                            var date = d.getFullYear() + "-" + month + "-" + day
+                            $('#editPayment-estimate_transfer_date').val(date)
+                        }
+                    });            
+                }else{
+                    $('#editPayment-estimate_transfer_date').val('{{date("Y-m-d")}}')
+                }
+            }
+        });
+
+        $('#editPayment-select_installment').on('change', function() {
+            var url = '{{ route("get_credit_card", ":id") }}';
+            url = url.replace(':id', this.value);
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(data){
+                    $('#editPayment-credit_card_name').html(`<span>${data.name}</span>`)
+                    $('#editPayment-credit_card_installment').val(data.cicilan)
+                    $('#editPayment-select_bank').val(data.bank_account.id).trigger('change')
+                    $('#editPayment-bank_description').html(`
+                        <span><b>${data.bank_account.bank.name}</b> ${data.bank_account.name} (${data.bank_account.account_number})</span>
+                    `)
+                    $('#editPayment-charge_percentage_company').val(data.charge_percentage_company)
+                    $('#editPayment-charge_percentage_bank').val(data.bank_account.charge_percentage)
+                    const d = new Date();
+                    d.setDate(d.getDate() + data.estimate_transfer);
+                    var month = d.getMonth() + 1
+                    var day = d.getDate()
+                    if(month < 10){
+                        month = "0"+month
+                    }
+                    if(day < 10){
+                        day = "0"+day
+                    }
+                    var date = d.getFullYear() + "-" + month + "-" + day
+                    $('#editPayment-estimate_transfer_date').val(date)
+                    console.log(date)
+                    $('#editPayment-bank_id').val(data.bank_account.bank_id)
                 }
             });            
         });

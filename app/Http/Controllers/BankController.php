@@ -542,4 +542,20 @@ class BankController extends Controller
         $data['bank_account']['bank'] = $data->bankAccount->bank;
         return response()->json($data);
     }
+
+    /**
+     * get bank account data from payment modal
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function getBankAccountDataFromPaymentModal($id)
+    {
+        $data = BankAccount::find($id);
+        $data['bank'] = $data->bank;
+        return response()->json($data);
+    }
 }
