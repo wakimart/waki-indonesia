@@ -604,13 +604,13 @@ $menu_item_second = "add_order";
                                     style="text-transform: uppercase;" />
                                 <div class="validation"></div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="">Payment Method</label>
                                 <select class="form-control"
                                     id="payment_type"
                                     name="payment_type"
                                     data-msg="Mohon Pilih Tipe"
-                                    required>
+                                    >
                                     <option selected disabled value="">
                                         Choose Payment Method
                                     </option>
@@ -681,8 +681,7 @@ $menu_item_second = "add_order";
                                         <input type="text"
                                             class="form-control downpayment"
                                             name="downpayment_0"
-                                            placeholder="Total Payment"
-                                            required
+                                            placeholder="Total Payment"                                            
                                             data-type="currency"
                                             data-msg="Mohon Isi Total Pembayaran"
                                             style="text-transform: uppercase;" />
@@ -709,8 +708,7 @@ $menu_item_second = "add_order";
                                                         accept=".jpg,.jpeg,.png"
                                                         class="uploadFile img"
                                                         value="Upload Photo"
-                                                        style="width: 0px; height: 0px; overflow: hidden;"
-                                                        {{ $i === 0 ? "required" : "" }} />
+                                                        style="width: 0px; height: 0px; overflow: hidden;"/>
                                                 </label>
                                                 <i class="mdi mdi-window-close del"></i>
                                             </div>
@@ -730,14 +728,14 @@ $menu_item_second = "add_order";
                             </div>
                             <br>
                             
-                            <div class="form-group">
+                            <div class="form-group d-none">
                                 <label for="">Remaining Payment</label>
                                 <input type="text"
                                     class="form-control"
                                     name="remaining_payment"
                                     id="remaining_payment"
                                     placeholder="Remaining Payment"
-                                    required readonly
+                                    readonly
                                     data-type="currency"
                                     data-msg="Mohon Isi Sisa Pembayaran"
                                     style="text-transform: uppercase;" />

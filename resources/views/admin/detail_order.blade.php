@@ -332,7 +332,7 @@
                 </table>
                 <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share"
                 class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
-                @if (Gate::check('edit-order') && $order->remaining_payment > 0)
+                @if (Gate::check('edit-order'))
                 <button type="button" data-toggle="modal" data-target="#addPaymentModal"
                     class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash">
                     Add Payment
@@ -660,7 +660,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="">Bank</label>
-                                    <select name="bank_account_id" id="editPayment-select_bank" class="form-control">
+                                    <select name="bank_account_id" id="editPayment-select_bank" class="form-control editPayment-select_with_select2">
                                         <option></option>
                                         @foreach($bankAccounts as $bankAccount)
                                             <option value="{{$bankAccount->id}}">{{$bankAccount->code}}</option>
@@ -913,12 +913,23 @@
                         $("#editPayment-order_payment_id").val(order_payment_id);
                         $("#editPayment-payment_date").val(result.payment_date);
                         $("#editPayment-total_payment").val(numberWithCommas(result.total_payment));
+                    
+                        $("#editPayment-credit_card_name").html('')
+                        $("#editPayment-bank_description").html('')                        
+                        if(result.credit_card_id){
+                            $("#editPayment-select_installment").val(result.credit_card_id).change()
+                            $('#editPayment-select_installment').attr('data-info', 'first');
+                            infoFromCreditCard(result.credit_card_id)
+                        }                    
+                        if(result.bank_account_id){
+                            $("#editPayment-select_bank").val(result.bank_account_id).change()
+                            $('#editPayment-select_bank').attr('data-info', 'first');
+                            infoFromBankAccount(result.bank_account_id)
+                        }
                         
                         $("#editPayment-select_type").val(result.type).change()
                         $("#editPayment-select_type_payment").val(result.type_payment).change()
-                        $("#editPayment-select_installment").val(result.credit_card_id).change()
                         $("#editPayment-credit_card_installment").val(result.cicilan)
-                        $("#editPayment-select_bank").val(result.bank_account_id).change()
                         $("#editPayment-bank_id").val(result.bank_id);
                         $("#editPayment-charge_percentage_company").val(result.charge_percentage_company)
                         $("#editPayment-charge_percentage_bank").val(result.charge_percentage_bank)
@@ -927,13 +938,6 @@
                             $('.editPayment-installment_form').prop({'disabled' : false, 'readonly' : false})
                         }else{
                             $('.editPayment-installment_form').prop({'disabled' : true, 'readonly' : true})
-                        }
-                        $("#editPayment-credit_card_name").html('')
-                        $("#editPayment-bank_description").html('')
-                        if(result.credit_card_id){
-                            infoFromCreditCard(result.credit_card_id)
-                        }else if(result.bank_account_id){
-                            infoFromBankAccount(result.bank_account_id)
                         }
 
                         const mainUrlImage = "{{ asset('sources/order') }}";
@@ -1024,8 +1028,7 @@
                 $('#selectInstallment').val('').trigger('change')
                 $('#creditCardName').html('')
                 $('#chargePercentageCompany').val(0)
-                $('#creditCardInstallment').val(1)
-                // error harusnya ganti ke bank akun
+                $('#creditCardInstallment').val(1)                
                 if($('#selectBank').val() !== ''){
                     var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
                     url = url.replace(':id', $('#selectBank').val());
@@ -1154,7 +1157,7 @@
             }); 
         }
         $('#frmAddPayment, #frmEditPayment').bind('submit', function () {
-            $('.installment-form').prop({'disabled' : false, 'readonly' : false})
+            $('.installment-form, .editPayment-installment_form').prop({'disabled' : false, 'readonly' : false})
         });
 
         $('#editPayment-select_type_payment').on('change', function() {
@@ -1166,13 +1169,29 @@
                 $('#editPayment-credit_card_name').html('')
                 $('#editPayment-charge_percentage_company').val(0)
                 $('#editPayment-credit_card_installment').val(1)
-                if($('#editPayment-select_bank').val() !== ''){
-                    var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
-                    url = url.replace(':id', $('#editPayment-select_bank').val());
-                    $.ajax({
-                        type: "GET",
-                        url: url,
-                        success: function(data){
+                if($('#editPayment-select_bank').val() == ''){
+                    $('#editPayment-estimate_transfer_date').val('{{date("Y-m-d")}}')
+                }
+            }
+        });
+
+        $('#editPayment-select_installment').on('change', function() {
+            if(this.value){
+                var url = '{{ route("get_credit_card", ":id") }}';
+                url = url.replace(':id', this.value);
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function(data){
+                        if($('#editPayment-select_installment').attr('data-info') !== 'first'){
+                            $('#editPayment-credit_card_name').html(`<span>${data.name}</span>`)
+                            $('#editPayment-credit_card_installment').val(data.cicilan)
+                            $('#editPayment-select_bank').val(data.bank_account.id).trigger('change')
+                            $('#editPayment-bank_description').html(`
+                                <span><b>${data.bank_account.bank.name}</b> ${data.bank_account.name} (${data.bank_account.account_number})</span>
+                            `)
+                            $('#editPayment-charge_percentage_company').val(data.charge_percentage_company)
+                            $('#editPayment-charge_percentage_bank').val(data.bank_account.charge_percentage)
                             const d = new Date();
                             d.setDate(d.getDate() + data.estimate_transfer);
                             var month = d.getMonth() + 1
@@ -1185,45 +1204,47 @@
                             }
                             var date = d.getFullYear() + "-" + month + "-" + day
                             $('#editPayment-estimate_transfer_date').val(date)
+                            $('#editPayment-bank_id').val(data.bank_account.bank_id)
                         }
-                    });            
-                }else{
-                    $('#editPayment-estimate_transfer_date').val('{{date("Y-m-d")}}')
-                }
+                        $('#editPayment-select_installment').attr('data-info', '')
+                    }
+                }); 
             }
         });
 
-        $('#editPayment-select_installment').on('change', function() {
-            var url = '{{ route("get_credit_card", ":id") }}';
-            url = url.replace(':id', this.value);
-            $.ajax({
-                type: "GET",
-                url: url,
-                success: function(data){
-                    $('#editPayment-credit_card_name').html(`<span>${data.name}</span>`)
-                    $('#editPayment-credit_card_installment').val(data.cicilan)
-                    $('#editPayment-select_bank').val(data.bank_account.id).trigger('change')
-                    $('#editPayment-bank_description').html(`
-                        <span><b>${data.bank_account.bank.name}</b> ${data.bank_account.name} (${data.bank_account.account_number})</span>
-                    `)
-                    $('#editPayment-charge_percentage_company').val(data.charge_percentage_company)
-                    $('#editPayment-charge_percentage_bank').val(data.bank_account.charge_percentage)
-                    const d = new Date();
-                    d.setDate(d.getDate() + data.estimate_transfer);
-                    var month = d.getMonth() + 1
-                    var day = d.getDate()
-                    if(month < 10){
-                        month = "0"+month
+        $('#editPayment-select_bank').on('change', function() {
+            if(this.value){                
+                var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
+                url = url.replace(':id', this.value);
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function(data){                    
+                        if($('#editPayment-select_bank').attr('data-info') !== 'first'){
+                            $('#editPayment-bank_description').html(`
+                                <span><b>${data.bank.name}</b> ${data.name} (${data.account_number})</span>
+                            `)
+                            $('#editPayment-charge_percentage_bank').val(data.charge_percentage)
+                            if($("#editPayment-select_installment").val() == ''){
+                                const d = new Date();
+                                d.setDate(d.getDate() + data.estimate_transfer);
+                                var month = d.getMonth() + 1
+                                var day = d.getDate()
+                                if(month < 10){
+                                    month = "0"+month
+                                }
+                                if(day < 10){
+                                    day = "0"+day
+                                }
+                                var date = d.getFullYear() + "-" + month + "-" + day
+                                $('#editPayment-estimate_transfer_date').val(date)
+                            }
+                            $('#editPayment-bank_id').val(data.bank_id)
+                        }
+                        $('#editPayment-select_bank').attr('data-info', '')
                     }
-                    if(day < 10){
-                        day = "0"+day
-                    }
-                    var date = d.getFullYear() + "-" + month + "-" + day
-                    $('#editPayment-estimate_transfer_date').val(date)
-                    console.log(date)
-                    $('#editPayment-bank_id').val(data.bank_account.bank_id)
-                }
-            });            
+                });
+            }
         });
     });
 
