@@ -48,4 +48,12 @@ class Warehouse extends Model
             ->first()
             ->subdistrict_name;
     }
+
+    public function stockWithProduct($product_id)
+    {
+        if(!empty($product_id)){
+            return $this->hasMany("App\Stock")->where('product_id', $product_id)->get();
+        }
+        return $this->hasMany("App\Stock")->get();
+    }
 }

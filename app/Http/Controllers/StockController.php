@@ -98,10 +98,19 @@ class StockController extends Controller
             && !empty($request->get("filter_warehouse"))
             && !empty($request->get("filter_city"))
         ) {
-            $warehouses = $warehouses->where(
-                    "parent_warehouse_id",
-                    $request->get("filter_warehouse")
-                );
+            $warehouses = Warehouse::where("warehouses.active", true)
+                ->where('warehouses.parent_warehouse_id', $request->get("filter_warehouse"))
+                ->where('stocks.product_id', $request->get("filter_product"))
+                ->leftJoin('stocks', 'stocks.warehouse_id', '=', 'warehouses.id')
+                ->select('warehouses.*')
+                ->orderBy("warehouses.code")
+                ->get();
+            // dd($warehouses);
+
+            // $warehouses = $warehouses->where(
+            //         "parent_warehouse_id",
+            //         $request->get("filter_warehouse")
+            //     );
 
             $stocks = $stocks->addSelect(
                         "warehouses.code AS warehouse_code",

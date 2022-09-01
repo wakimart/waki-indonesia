@@ -272,12 +272,13 @@ $menu_item_second = "list_stock_warehouse";
                                                 <th>Code</th>
                                                 <th>Name</th>
                                                 <th>Remaining Stock</th>
-                                                <th colspan="2" class="text-center">
-                                                    Edit/Delete
-                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php
+                                                $totalQty = 0;
+                                            @endphp
+
                                             @foreach ($stocks as $stock)
                                                 <tr>
                                                     <td class="text-right">
@@ -295,28 +296,28 @@ $menu_item_second = "list_stock_warehouse";
                                                         {{ $stock->product_name }}
                                                     </td>
                                                     <td>
+                                                        @php
+                                                            $totalQty += $stock->quantity;
+                                                        @endphp
+
                                                         @if (isset($_GET["filter_month"]) && !empty($_GET["filter_month"]))
                                                             {{ $stock->month_quantity }}
                                                         @else
                                                             {{ $stock->quantity }}
                                                         @endif
                                                     </td>
-                                                    <td class="text-center">
-                                                        <a href="">
-                                                            <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                        </a>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <a class="btn-delete disabled"
-                                                            data-toggle="modal"
-                                                            href="#deleteDoModal"
-                                                            onclick="submitDelete(this)"
-                                                            data-id="{{ $stock->id }}">
-                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                        </a>
-                                                    </td>
                                                 </tr>
                                             @endforeach
+                                            @if(isset($_GET["filter_product"]))
+                                                <tr>
+                                                    <td colspan="{{ isset($_GET["filter_product"]) ? (isset($_GET["filter_warehouse"]) ? 3 : 4) : 4 }}" class="text-right">
+                                                        <strong>Total Quantity : </strong>
+                                                    </td>
+                                                    <td class="text-left">
+                                                        {{ $totalQty }}
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         </tbody>
                                     </table>
                                     <br>
@@ -326,6 +327,7 @@ $menu_item_second = "list_stock_warehouse";
                             @foreach($warehouses as $key => $warehouse)
                                 @php
                                     $i = 0;
+                                    $totalQty = 0;
                                 @endphp
 
                                 <div class="tab-pane fade show pl-3 pr-3 pb-3 pt-1" id="{{ $warehouse->code }}-table" role="tabpanel" aria-labelledby="{{ $warehouse->code }}-tab">
@@ -341,13 +343,10 @@ $menu_item_second = "list_stock_warehouse";
                                                     <th>Code</th>
                                                     <th>Name</th>
                                                     <th>Remaining Stock</th>
-                                                    <th colspan="2" class="text-center">
-                                                        Edit/Delete
-                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($warehouse->stock as $stockData)
+                                                @foreach ($warehouse->stockWithProduct(isset($_GET["filter_product"]) ? $_GET["filter_product"] : null) as $stockData)
                                                     <tr>
                                                         <td class="text-right">
                                                             {{ ++$i }}
@@ -359,28 +358,28 @@ $menu_item_second = "list_stock_warehouse";
                                                             {{ $stockData->product['name'] }}
                                                         </td>
                                                         <td>
+                                                            @php
+                                                                $totalQty += $stockData['quantity'];
+                                                            @endphp
+
                                                             @if (isset($_GET["filter_month"]) && !empty($_GET["filter_month"]))
                                                                 {{ $stockData->month_quantity }}
                                                             @else
                                                                 {{ $stockData['quantity'] }}
                                                             @endif
                                                         </td>
-                                                        <td class="text-center">
-                                                            <a href="">
-                                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                            </a>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <a class="btn-delete disabled"
-                                                                data-toggle="modal"
-                                                                href="#deleteDoModal"
-                                                                onclick="submitDelete(this)"
-                                                                data-id="{{ $stockData['id'] }}">
-                                                                <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                            </a>
-                                                        </td>
                                                     </tr>
                                                 @endforeach
+                                                @if(isset($_GET["filter_product"]))
+                                                    <tr>
+                                                        <td colspan="3" class="text-right">
+                                                            <strong>Total Quantity : </strong>
+                                                        </td>
+                                                        <td class="text-left">
+                                                            {{ $totalQty }}
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                             </tbody>
                                         </table>
                                         <br>
