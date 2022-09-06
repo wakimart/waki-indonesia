@@ -24,8 +24,13 @@ class Stock extends Model
         return $this->belongsTo("App\Warehouse");
     }
 
-    public function historyStock()
+    public function historyStockFrom()
     {
-        return $this->hasMany("App\HistoryStock");
+        return $this->hasMany("App\HistoryStock", "stock_from_id");
+    }
+
+    public function historyStockTo()
+    {
+        return $this->hasMany("App\HistoryStock", "stock_to_id");
     }
 }

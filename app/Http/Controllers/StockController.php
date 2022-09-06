@@ -119,8 +119,8 @@ class StockController extends Controller
             $stocks = $stocks->addSelect(
                 DB::raw(
                     "IFNULL(stocks.quantity "
-                    . "- (SELECT IFNULL(SUM(hs.quantity), 0) FROM history_stocks AS hs WHERE hs.stock_id = stocks.id AND hs.type = 'in' AND hs.date > '" . $request->get("filter_month") . "') "
-                    . "+ (SELECT IFNULL(SUM(hs2.quantity), 0) FROM history_stocks AS hs2 WHERE hs2.stock_id = stocks.id AND hs2.type = 'out' AND hs2.date > '" . $request->get("filter_month") . "')"
+                    . "- (SELECT IFNULL(SUM(hs.quantity), 0) FROM history_stocks AS hs WHERE hs.stock_to_id = stocks.id AND hs.type = 'in' AND hs.date > '" . $request->get("filter_month") . "') "
+                    . "+ (SELECT IFNULL(SUM(hs2.quantity), 0) FROM history_stocks AS hs2 WHERE hs2.stock_from_id = stocks.id AND hs2.type = 'out' AND hs2.date > '" . $request->get("filter_month") . "')"
                     . ", 0) AS month_quantity"
                 ),
             );

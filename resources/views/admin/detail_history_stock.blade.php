@@ -56,15 +56,28 @@ $menu_item_second = "detail_history_stock";
                                         readonly />
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="warehouse">Warehouse</label>
-                                    <input type="text"
-                                        class="form-control"
-                                        id="warehouse"
-                                        value="{{$historystock[0]->stock->warehouse['name'] }}"
-                                        readonly />
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="from_warehouse_id">From Warehouse</label>
+                                            <input type="text"
+                                                class="form-control"
+                                                id="from_warehouse_id"
+                                                value="{{$historystock[0]->stockFrom->warehouse['name'] }}"
+                                                readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="to_warehouse_id">To Warehouse</label>
+                                            <input type="text"
+                                                class="form-control"
+                                                id="to_warehouse_id"
+                                                value="{{$historystock[0]->stockTo->warehouse['name'] ?? '' }}"
+                                                readonly />
+                                        </div>
+                                    </div>
                                 </div>
-
                                 <?php
                                 $countHistoryStock = count($historystock);
                                 ?>
@@ -77,11 +90,11 @@ $menu_item_second = "detail_history_stock";
                                             <input type="text"
                                                 class="form-control"
                                                 id="product_{{ $i }}"
-                                                value="{{ $historystock[$i]->stock->product['name']  }}"
+                                                value="{{ $historystock[$i]->stockFrom->product['name']  }}"
                                                 readonly />
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="quantity_{{ $i }}">
                                                 Quantity
@@ -89,6 +102,17 @@ $menu_item_second = "detail_history_stock";
                                             <input id="quantity_{{ $i }}"
                                                 class="form-control"
                                                 value="{{ $historystock[$i]->quantity }}"
+                                                readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="Koli{{ $i }}">
+                                                Koli
+                                            </label>
+                                            <input id="Koli{{ $i }}"
+                                                class="form-control"
+                                                value="{{ $historystock[$i]->koli }}"
                                                 readonly />
                                         </div>
                                     </div>
@@ -169,7 +193,11 @@ $menu_item_second = "detail_history_stock";
                                             </div>
                                             <div class="col-10" style="padding-left: 0;">
                                                 <div style="margin-bottom: 5px;">
-                                                    <h5>{{$historystock[0]->stock->warehouse['code'] }}</h5>
+                                                    <h5>
+                                                        {{$historystock[0]->stockFrom->warehouse['code'] }}
+                                                        -
+                                                        {{$historystock[0]->stockTo->warehouse['code'] ?? '' }}
+                                                    </h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -181,7 +209,11 @@ $menu_item_second = "detail_history_stock";
                                             </div>
                                             <div class="col-10" style="padding-left: 0;">
                                                 <div style="margin-bottom: 5px;">
-                                                    <h5>{{$historystock[0]->stock->warehouse['name'] }}</h5>
+                                                    <h5>
+                                                        {{$historystock[0]->stockFrom->warehouse['name'] }}
+                                                        -
+                                                        {{$historystock[0]->stockTo->warehouse['name'] ?? ''}}
+                                                    </h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -193,6 +225,7 @@ $menu_item_second = "detail_history_stock";
                                                         <td class="text-center">Kode Produk</td>
                                                         <td class="text-center">Nama Produk</td>
                                                         <td class="text-center">Qty</td>
+                                                        <td class="text-center">Koli</td>
                                                     </thead>
                                                     <?php
                                                     $countHistoryStock = count($historystock);
@@ -201,13 +234,16 @@ $menu_item_second = "detail_history_stock";
                                                     <tr>
                                                         <td class="text-center">{{ $i+1 }}</td>
                                                         <td class="text-center">
-                                                            {{ $historystock[$i]->stock->product['code']  }}
+                                                            {{ $historystock[$i]->stockFrom->product['code']  }}
                                                         </td>
                                                         <td class="text-center">
-                                                            {{ $historystock[$i]->stock->product['name']  }}
+                                                            {{ $historystock[$i]->stockFrom->product['name']  }}
                                                         </td>
                                                         <td class="text-center">
                                                             {{ $historystock[$i]->quantity }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {{ $historystock[$i]->koli }}
                                                         </td>
                                                     </tr>
                                                     @endfor

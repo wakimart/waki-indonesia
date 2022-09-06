@@ -23,16 +23,22 @@ class HistoryStockExport implements FromView, ShouldAutoSize
         $inputWarehouse = $this->inputWarehouse;
         $inputStock = $this->inputStock;
 
-        $historyStockNya = HistoryStock::with('stock');
+        $historyStockNya = HistoryStock::with(['stockFrom', 'stockTo']);
         
         if($this->inputWarehouse != null){
-            $historyStockNya = $historyStockNya->whereHas('stock', function($query) use ($inputWarehouse){
+            $historyStockNya = $historyStockNya->whereHas('stockFrom', function($query) use ($inputWarehouse){
+                $query->where('warehouse_id', $inputWarehouse);
+            });
+            $historyStockNya = $historyStockNya->whereHas('stockTo', function($query) use ($inputWarehouse){
                 $query->where('warehouse_id', $inputWarehouse);
             });
         }
 
         if($this->inputStock != null){
-            $historyStockNya = $historyStockNya->whereHas('stock', function($query) use ($inputStock){
+            $historyStockNya = $historyStockNya->whereHas('stockFrom', function($query) use ($inputStock){
+                $query->where('product_id', $inputStock);
+            });
+            $historyStockNya = $historyStockNya->whereHas('stockTo', function($query) use ($inputStock){
                 $query->where('product_id', $inputStock);
             });
         }

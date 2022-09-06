@@ -76,13 +76,14 @@ $menu_item_second = "add_history_in";
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST"
+                        <form id="actionAdd" method="POST"
                             action="{{ route("store_history_stock") }}">
                             @csrf
 
                             <div class="form-group">
                                 <label>Type</label>
                                 <input type="hidden"
+                                    id="type"
                                     name="type"
                                     value="in" />
                                 <input class="form-control"
@@ -99,6 +100,7 @@ $menu_item_second = "add_history_in";
                                     name="code"
                                     id="code"
                                     required />
+                                <span class="invalid-feedback"><strong></strong></span>
                             </div>
 
                             <div class="form-group">
@@ -109,23 +111,46 @@ $menu_item_second = "add_history_in";
                                     id="date"
                                     value="{{ date("Y-m-d") }}"
                                     required />
+                                <span class="invalid-feedback"><strong></strong></span>
                             </div>
 
-                            <div class="form-group">
-                                <label for="warehouse_id">Warehouse</label>
-                                <select class="form-control"
-                                    name="warehouse_id"
-                                    id="warehouse_id"
-                                    required>
-                                    <option disabled selected>
-                                        Select Warehouse
-                                    </option>
-                                    @foreach ($warehouses as $warehouse)
-                                        <option value="{{ $warehouse->id }}">
-                                            {{ $warehouse->code }} - {{ $warehouse->name }}
+                            <input type="hidden" id="from_warehouse_id-disabled" name="from_warehouse_id" value="">
+                            <input type="hidden" id="to_warehouse_id-disabled" name="to_warehouse_id" value="">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="from_warehouse_id">From Warehouse</label>
+                                    <select class="form-control"
+                                        name="from_warehouse_id"
+                                        id="from_warehouse_id"
+                                        required>
+                                        <option disabled selected>
+                                            Select Warehouse
                                         </option>
-                                    @endforeach
-                                </select>
+                                        @foreach ($warehouses as $warehouse)
+                                            <option value="{{ $warehouse->id }}">
+                                                {{ $warehouse->code }} - {{ $warehouse->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <span class="invalid-feedback"><strong></strong></span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="to_warehouse_id">To Warehouse</label>
+                                    <select class="form-control"
+                                        name="to_warehouse_id"
+                                        id="to_warehouse_id"
+                                        required>
+                                        <option disabled selected>
+                                            Select Warehouse
+                                        </option>
+                                        @foreach ($warehouses as $warehouse)
+                                            <option value="{{ $warehouse->id }}">
+                                                {{ $warehouse->code }} - {{ $warehouse->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <span class="invalid-feedback"><strong></strong></span>
+                                </div>
                             </div>
 
                             <div id="product-container">
@@ -168,9 +193,10 @@ $menu_item_second = "add_history_in";
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <span class="invalid-feedback"><strong></strong></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="quantity_0">
                                                 Quantity
@@ -182,6 +208,21 @@ $menu_item_second = "add_history_in";
                                                 placeholder="Quantity"
                                                 min="0"
                                                 required />
+                                            <span class="invalid-feedback"><strong></strong></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="koli_0">
+                                                Koli
+                                            </label>
+                                            <input id="koli_0"
+                                                class="form-control"
+                                                type="text"
+                                                name="koli[]"
+                                                placeholder="Koli"
+                                                required />
+                                            <span class="invalid-feedback"><strong></strong></span>
                                         </div>
                                     </div>
                                 </div>
@@ -196,10 +237,12 @@ $menu_item_second = "add_history_in";
                                     rows="2"
                                     placeholder="Description"
                                     maxlength="300"></textarea>
+                                <span class="invalid-feedback"><strong></strong></span>
                             </div>
 
                             <div class="form-group">
                                 <button type="submit"
+                                    id="addHistory"
                                     class="btn btn-gradient-primary">
                                     Save
                                 </button>
@@ -224,9 +267,10 @@ let productOptions = "<option disabled selected>Select Product</option>";
 
 document.addEventListener("DOMContentLoaded", function() {
     getProduct();
-    $("#warehouse_id").select2();
+    $("#from_warehouse_id").select2();
+    $("#to_warehouse_id").select2();
     $("#product_0").select2();
-    $("#type").select2();
+    // $("#type").select2();
 });
 
 function getProduct() {
@@ -310,7 +354,7 @@ function addProduct() {
 
     // Quantity Input
     const colMd4DivQuantity = document.createElement("div");
-    colMd4DivQuantity.className = "col-md-4";
+    colMd4DivQuantity.className = "col-md-2";
 
     const formGroupDivQuantity = document.createElement("div");
     formGroupDivQuantity.className = "form-group";
@@ -328,10 +372,34 @@ function addProduct() {
     inputQuantity.required = true;
     inputQuantity.min = 0;
 
+    // Koli Input
+    const colMd2DivKoli = document.createElement("div");
+    colMd2DivKoli.className = "col-md-2";
+
+    const formGroupDivKoli = document.createElement("div");
+    formGroupDivKoli.className = "form-group";
+
+    const labelKoli = document.createElement("label");
+    labelKoli.innerHTML = "Koli";
+    labelKoli.setAttribute("for", `koli_${counter}`);
+
+    const inputKoli = document.createElement("input");
+    inputKoli.className = "form-control";
+    inputKoli.type = "text";
+    inputKoli.name = "koli[]";
+    inputKoli.id = `koli_${counter}`;
+    inputKoli.placeholder = "Koli";
+    inputKoli.required = true;
+
     formGroupDivQuantity.appendChild(labelQuantity);
     formGroupDivQuantity.appendChild(inputQuantity);
     colMd4DivQuantity.appendChild(formGroupDivQuantity);
     rowDivProduct.appendChild(colMd4DivQuantity);
+
+    formGroupDivKoli.appendChild(labelKoli);
+    formGroupDivKoli.appendChild(inputKoli);
+    colMd2DivKoli.appendChild(formGroupDivKoli);
+    rowDivProduct.appendChild(colMd2DivKoli);
 
     document.getElementById("tambahan_product").appendChild(rowDivProduct);
     document.getElementById("product-counter").value = counter;
@@ -342,5 +410,104 @@ function removeProduct(counter) {
     document.getElementById(`row-remove-${counter}`).remove();
     document.getElementById(`row-product-${counter}`).remove();
 }
+
+$("#code").on("change", function() {
+    getStockByCode()
+});
+
+function getStockByCode() {
+    var code = $("#code").val();
+    const type = $("#type").val();
+    $.ajax({
+        method: "GET",
+        url: "{{ route('fetchHistoryStockByCode') }}",
+        data: {code, type},
+        success: function(data) {
+            if (data['data'] != null) {
+                var result = data['data'];
+                $("#from_warehouse_id").val(result['from_warehouse_id']).trigger("change");
+                $("#from_warehouse_id-disabled").val(result['from_warehouse_id']);
+                $('#from_warehouse_id').attr('disabled',true);
+
+                $("#to_warehouse_id").val(result['to_warehouse_id']).trigger("change");
+                $("#to_warehouse_id-disabled").val(result['to_warehouse_id']);
+                $('#to_warehouse_id').attr('disabled',true);
+            } else {
+                $('#from_warehouse_id').attr('disabled',false);
+                $('#to_warehouse_id').attr('disabled',false);
+            }
+        }
+    });
+}
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var frmAdd;
+
+        $("#actionAdd").on("submit", function (e) {
+            e.preventDefault();
+
+            var from_warehouse_id = $("#from_warehouse_id").val();
+            var to_warehouse_id = $("#to_warehouse_id").val();
+            if (from_warehouse_id == to_warehouse_id) {
+                return alert('Can\'t use same warehouse.');
+            }
+
+            frmAdd = _("actionAdd");
+            frmAdd = new FormData(document.getElementById("actionAdd"));
+            frmAdd.enctype = "multipart/form-data";
+            var URLNya = $("#actionAdd").attr('action');
+
+            var ajax = new XMLHttpRequest();
+            ajax.upload.addEventListener("progress", progressHandler, false);
+            ajax.addEventListener("load", completeHandler, false);
+            ajax.addEventListener("error", errorHandler, false);
+            ajax.open("POST", URLNya);
+            ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+            ajax.send(frmAdd);
+        });
+        function progressHandler(event){
+            document.getElementById("addHistory").innerHTML = "UPLOADING...";
+        }
+        function completeHandler(event){
+            var hasil = JSON.parse(event.target.responseText);
+
+            for (var key of frmAdd.keys()) {
+                $("#actionAdd").find("input[name='"+key.name+"']").removeClass("is-invalid");
+                $("#actionAdd").find("select[name='"+key.name+"']").removeClass("is-invalid");
+                $("#actionAdd").find("textarea[name='"+key.name+"']").removeClass("is-invalid");
+
+                $("#actionAdd").find("input[name='"+key.name+"']").next().find("strong").text("");
+                $("#actionAdd").find("select[name='"+key.name+"']").siblings().find("strong").text("");
+                $("#actionAdd").find("textarea[name='"+key.name+"']").next().find("strong").text("");
+            }
+
+            if(hasil['errors'] != null){
+                for (var key of frmAdd.keys()) {
+                    if(typeof hasil['errors'][key] === 'undefined') {
+
+                    }
+                    else {
+                        $("#actionAdd").find("input[name='"+key+"']").addClass("is-invalid");
+                        $("#actionAdd").find("select[name='"+key+"']").addClass("is-invalid");
+                        $("#actionAdd").find("textarea[name='"+key+"']").addClass("is-invalid");
+
+                        $("#actionAdd").find("input[name='"+key+"']").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionAdd").find("select[name='"+key+"']").siblings().find("strong").text(hasil['errors'][key]);
+                        $("#actionAdd").find("textarea[name='"+key+"']").next().find("strong").text(hasil['errors'][key]);
+                    }
+                }
+                alert("Input Error !!!");
+            }
+            else{
+                alert("Input Success !!!");
+                window.location.reload()
+            }
+            document.getElementById("addHistory").innerHTML = "SAVE";
+        }
+        function errorHandler(event){
+            document.getElementById("addHistory").innerHTML = "SAVE";
+        }
+    })
 </script>
 @endsection

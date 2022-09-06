@@ -155,8 +155,8 @@ $menu_item_second = "list_history_stock";
                                     <tr>
                                         <th>No.</th>
                                         <th>Code</th>
+                                        <th>Warehouse (From-To)</th>
                                         <th>Date</th>
-                                        <th>Warehouse</th>
                                         <th>Type</th>
                                         <th>Product</th>
                                         <th>Quantity</th>
@@ -167,6 +167,10 @@ $menu_item_second = "list_history_stock";
                                 </thead>
                                 <tbody>
                                     @foreach ($historystocks as $code => $historycode)
+                                        @php 
+                                            $historycodeType = $historycode;
+                                            $historycodeType = $historycodeType->groupBy(["type"])->values();
+                                        @endphp
                                         <tr>
                                             <td class="text-center" rowspan="{{ sizeof($historycode) }}">
                                                 {{ ++$i }}
@@ -174,19 +178,19 @@ $menu_item_second = "list_history_stock";
                                             <td rowspan="{{ sizeof($historycode) }}">
                                                 {{ $code }}
                                             </td>
-                                            <td rowspan="{{ sizeof($historycode) }}">
-                                                {{ date("d-m-Y", strtotime($historycode[0]->date)) }}
-                                            </td>
                                             <td class="text-center" rowspan="{{ sizeof($historycode) }}">
-                                                <b>{{ $historycode[0]->stock->warehouse['code'] }}</b>
-                                                <br>
-                                                ({{ $historycode[0]->stock->warehouse['name'] }})
+                                                <b>{{ $historycode[0]->stockFrom->warehouse['code'] }}</b>
+                                                =>
+                                                <b>{{ $historycode[0]->stockTo->warehouse['code'] ?? '' }}</b>
                                             </td>
-                                            <td class="text-center" rowspan="{{ sizeof($historycode) }}">
-                                                {{ ucfirst($historycode[0]->type) }}
+                                            <td rowspan="{{ sizeof($historycodeType[0]) }}">
+                                                {{ date("d-m-Y", strtotime($historycodeType[0][0]->date)) }}
+                                            </td>
+                                            <td class="text-center" rowspan="{{ sizeof($historycodeType[0]) }}">
+                                                {{ ucfirst($historycodeType[0][0]->type) }}
                                             </td>
                                             <td>
-                                                {{ $historycode[0]->stock->product['code'] }}
+                                                {{ $historycode[0]->stockFrom->product['code'] }}
                                             </td>
                                             <td class="text-right">
                                                 {{ $historycode[0]->quantity }}
@@ -218,16 +222,47 @@ $menu_item_second = "list_history_stock";
                                             </td>
                                         </tr>
 
-                                        @if (sizeof($historycode) > 1)
-                                            @for ($i = 1; $i < sizeof($historycode); $i++)
+                                        @if (sizeof($historycodeType[0]) > 1)
+                                            @for ($k = 1; $k < sizeof($historycodeType[0]); $k++)
                                                 <tr>
                                                     <td>
-                                                        {{ $historycode[$i]->stock->product['code'] }}
+                                                        {{ $historycodeType[0][$k]->stockFrom->product['code'] }}
                                                     </td>
                                                     <td class="text-right">
-                                                        {{ $historycode[$i]->quantity }}
+                                                        {{ $historycodeType[0][$k]->quantity }}
                                                     </td>
                                                 </tr>
+                                            @endfor
+                                        @endif
+
+                                        @if(sizeof($historycodeType) > 1)
+                                            @for($j = 1; $j < sizeof($historycodeType); $j++)
+                                                <tr>
+                                                    <td rowspan="{{ sizeof($historycodeType[$j]) }}">
+                                                        {{ date("d-m-Y", strtotime($historycodeType[$j][0]->date)) }}
+                                                    </td>
+                                                    <td class="text-center" rowspan="{{ sizeof($historycodeType[$j]) }}">
+                                                        {{ ucfirst($historycodeType[$j][0]->type) }}
+                                                    </td>
+                                                    <td>
+                                                        {{ $historycodeType[$j][0]->stockFrom->product['code'] }}
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {{ $historycodeType[$j][0]->quantity }}
+                                                    </td>
+                                                </tr>
+                                                @if (sizeof($historycodeType[$j]) > 1)
+                                                    @for ($k = 1; $k < sizeof($historycodeType[$j]); $k++)
+                                                        <tr>
+                                                            <td>
+                                                                {{ $historycodeType[$j][$k]->stockFrom->product['code'] }}
+                                                            </td>
+                                                            <td class="text-right">
+                                                                {{ $historycodeType[$j][$k]->quantity }}
+                                                            </td>
+                                                        </tr>
+                                                    @endfor
+                                                @endif
                                             @endfor
                                         @endif
                                     @endforeach
