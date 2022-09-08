@@ -190,7 +190,7 @@ class UpgradeController extends Controller
                     $history_stock['upgrade_id'] = $upgrade->id;
                     $history_stock['type_warehouse'] = "Display";
                     $history_stock['quantity'] = 1;
-                    $history_stock['stock_id'] = $temp_arrId[0];
+                    $history_stock['stock_to_id'] = $temp_arrId[0];
                     HistoryStock::create($history_stock);
                 }else{
                     $stock = Stock::where([
@@ -205,7 +205,7 @@ class UpgradeController extends Controller
                     $history_stock['upgrade_id'] = $upgrade->id;
                     $history_stock['type_warehouse'] = "Display";
                     $history_stock['quantity'] = 1;
-                    $history_stock['stock_id'] = $stock['id'];
+                    $history_stock['stock_to_id'] = $stock['id'];
                     HistoryStock::create($history_stock);
                 }
             }elseif ($getOtherProduct != null) {
@@ -227,7 +227,7 @@ class UpgradeController extends Controller
 
                     $history_stock['upgrade_id'] = $upgrade->id;
                     $history_stock['type_warehouse'] = "Display";
-                    $history_stock['stock_id'] = $temp_arrId[0];
+                    $history_stock['stock_to_id'] = $temp_arrId[0];
                     HistoryStock::create($history_stock);
                 }else{
                     $stock = Stock::where([
@@ -241,7 +241,7 @@ class UpgradeController extends Controller
                     $history_stock['upgrade_id'] = $upgrade->id;
                     $history_stock['type_warehouse'] = "Display";
                     $history_stock['quantity'] = 1;
-                    $history_stock['stock_id'] = $stock['id'];
+                    $history_stock['stock_to_id'] = $stock['id'];
                     HistoryStock::create($history_stock);
                 }
             }
@@ -355,7 +355,7 @@ class UpgradeController extends Controller
                             $history_stock['upgrade_id'] = $upgrade->id;
                             $history_stock['type_warehouse'] = "Display";
                             $history_stock['quantity'] = -1;
-                            $history_stock['stock_id'] = $stock['id'];
+                            $history_stock['stock_to_id'] = $stock['id'];
                             HistoryStock::create($history_stock);
                         }else if($stock['type_warehouse'] == "Ready") {
                             $stock['quantity'] = $stock['quantity'] + 1;
@@ -364,7 +364,7 @@ class UpgradeController extends Controller
                             $history_stock['upgrade_id'] = $upgrade->id;
                             $history_stock['type_warehouse'] = "Ready";
                             $history_stock['quantity'] = 1;
-                            $history_stock['stock_id'] = $stock['id'];
+                            $history_stock['stock_to_id'] = $stock['id'];
                             HistoryStock::create($history_stock);
                         }
                     }
@@ -379,7 +379,7 @@ class UpgradeController extends Controller
                             $history_stock['upgrade_id'] = $upgrade->id;
                             $history_stock['type_warehouse'] = "Display";
                             $history_stock['quantity'] = -1;
-                            $history_stock['stock_id'] = $stock['id'];
+                            $history_stock['stock_to_id'] = $stock['id'];
                             HistoryStock::create($history_stock);
                         }else if($stock['type_warehouse'] == "Ready") {
                             $stock['quantity'] = $stock['quantity'] + 1;
@@ -388,7 +388,7 @@ class UpgradeController extends Controller
                             $history_stock['upgrade_id'] = $upgrade->id;
                             $history_stock['type_warehouse'] = "Ready";
                             $history_stock['quantity'] = 1;
-                            $history_stock['stock_id'] = $stock['id'];
+                            $history_stock['stock_to_id'] = $stock['id'];
                             HistoryStock::create($history_stock);
                         }
                     }

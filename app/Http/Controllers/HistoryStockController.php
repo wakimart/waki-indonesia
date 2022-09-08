@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Facades\Excel;
 use Throwable;
 
@@ -25,7 +26,8 @@ class HistoryStockController extends Controller
      */
     public function index(Request $request)
     {
-        $historystocks = HistoryStock::orderBy("id", "desc")->whereNotNull('code');
+        $historystocks = HistoryStock::orderBy("id", "desc")->whereNotNull('code')
+            ->where('active', true);
 
         if ($request->has("filter_code")) {
             $filterCode = $request->filter_code;
@@ -128,6 +130,22 @@ class HistoryStockController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = \Validator::make($request->all(), [
+            'type' => 'required',
+            'code' => 'required',
+            'date' => 'required',
+            'from_warehouse_id' => 'required|exists:warehouses,id',
+            'to_warehouse_id' => 'required|different:from_warehouse_id|exists:warehouses,id',
+        ]);
+        if($validator->fails()){
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json(['errors' => $arr_Hasil]);
+        }
         DB::beginTransaction();
 
         try {
@@ -135,29 +153,57 @@ class HistoryStockController extends Controller
             $countProduct = count($products);
 
             for ($i = 0; $i < $countProduct; $i++) {
-                $stock = Stock::where("warehouse_id", $request->warehouse_id)
+                $stock_from = Stock::where("warehouse_id", $request->from_warehouse_id)
+                    ->where("product_id", $products[$i])
+                    ->where("type_warehouse", null)
+                    ->first();
+                $stock_to = Stock::where("warehouse_id", $request->to_warehouse_id)
                     ->where("product_id", $products[$i])
                     ->where("type_warehouse", null)
                     ->first();
 
-                if (empty($stock)) {
-                    $stock = new Stock();
-                    $stock->warehouse_id = $request->warehouse_id;
-                    $stock->product_id = $products[$i];
-                    $stock->quantity = 0;
-                    $stock->save();
+                if (empty($stock_from)) {
+                    $stock_from = new Stock();
+                    $stock_from->warehouse_id = $request->from_warehouse_id;
+                    $stock_from->product_id = $products[$i];
+                    $stock_from->quantity = 0;
+                    $stock_from->save();
+                }
+                if (empty($stock_to)) {
+                    $stock_to = new Stock();
+                    $stock_to->warehouse_id = $request->to_warehouse_id;
+                    $stock_to->product_id = $products[$i];
+                    $stock_to->quantity = 0;
+                    $stock_to->save();
+                }
+
+                // Validation Same Stock
+                $checkUniqueCodeType = HistoryStock::where('type', $request->type)
+                    ->where('code', $request->code)
+                    ->where('date', $request->date)
+                    ->where('stock_from_id', $stock_from->id)
+                    ->where('stock_to_id', $stock_to->id)
+                    ->where('active', true)->first();
+                if ($checkUniqueCodeType) {
+                    $arr_Hasil = [];
+                    $arr_Hasil['code'] = 'Stock ' . $request->type . ' code with product ' . ($i + 1) . ' is already exists';
+                    return response()->json(['errors' => $arr_Hasil]);
                 }
 
                 if ($request->type === "in") {
-                    $stock->quantity += $request->quantity[$i];
+                    $stock_to->quantity += $request->quantity[$i];
+                    $stock_to->save();
                 } elseif ($request->type === "out") {
-                    if (($stock->quantity - $request->quantity[$i]) >= 0) {
-                        $stock->quantity -= $request->quantity[$i];
+                    if (($stock_from->quantity - $request->quantity[$i]) >= 0) {
+                        $stock_from->quantity -= $request->quantity[$i];
+                        $stock_from->save();
                     } else {
-                        throw new Exception("Stock is not enough");
+                        // Validation Out Of Stock
+                        $arr_Hasil = [];
+                        $arr_Hasil['quantity[]'] = 'Stock ' . ($i + 1) . ' is not enough';
+                        return response()->json(['errors' => $arr_Hasil]);
                     }
                 }
-                $stock->save();
 
                 $historyStock = new HistoryStock();
                 $historyStock->fill($request->only(
@@ -166,26 +212,30 @@ class HistoryStockController extends Controller
                     "type",
                     "description",
                 ));
-                $historyStock->stock_id = $stock->id;
+                $historyStock->stock_from_id = $stock_from->id;
+                $historyStock->stock_to_id = $stock_to->id;
                 $historyStock->quantity = $request->quantity[$i];
+                $historyStock->koli = $request->koli[$i];
+                $historyStock->user_id = Auth::user()->id;
                 $historyStock->save();
             }
 
             DB::commit();
 
-            if ($request->type === "in") {
-                return redirect()
-                    ->route("add_history_in")
-                    ->with("success", "History Stock successfully added.");
-            } elseif ($request->type === "out") {
-                return redirect()
-                    ->route("add_history_out")
-                    ->with("success", "History Stock successfully added.");
-            }
+            // if ($request->type === "in") {
+                // return redirect()
+                //     ->route("add_history_in")
+                //     ->with("success", "History Stock successfully added.");
+            // } elseif ($request->type === "out") {
+                // return redirect()
+                //     ->route("add_history_out")
+                //     ->with("success", "History Stock successfully added.");
+            // }
+            return response()->json(['success' => "History Stock successfully added."]);
         } catch (Throwable $th) {
             DB::rollBack();
 
-            return response()->json(["error" => $th->getMessage()], 500);
+            return response()->json(["errors" => $th->getMessage()], 500);
         }
     }
 
@@ -202,6 +252,24 @@ class HistoryStockController extends Controller
         }
     }
 
+    public function fetchHistoryStockByCode(Request $request)
+    {
+        if ($request->code && $request->type) {
+            $type = $request->type == 'in' ? 'out' : 'in';
+            $historyStock = HistoryStock::where('code', $request->code)
+                ->where('type', $type)
+                ->where('active', true)
+                ->first();
+            if ($historyStock) {
+                $historyStock->from_warehouse_id = $historyStock->stockFrom->warehouse_id;
+                $historyStock->to_warehouse_id = $historyStock->stockTo->warehouse_id ?? '';
+                return response()->json(["data" => $historyStock]);
+            }
+            return response()->json(["success" => 'No Data Found']);
+        }
+        return response()->json(["error" => 'Error Parameter'], 500);
+    }
+
     /**
      * Display the specified resource.
      *
@@ -211,7 +279,8 @@ class HistoryStockController extends Controller
 
     public function show(Request $request)
     {
-        $historystock = HistoryStock::where("code", $request->code)->get();
+        $historystock = HistoryStock::where("code", $request->code)
+            ->where('active', true)->get();
 
         return view('admin.detail_history_stock', compact(
             'historystock',
@@ -252,7 +321,8 @@ class HistoryStockController extends Controller
      */
     public function editIn(Request $request)
     {
-        $historyStocks = HistoryStock::where("code", $request->code)->get();
+        $historyStocks = HistoryStock::where("code", $request->code)
+            ->where('active', true)->get();
 
         $products = Product::select("id", "code", "name")
             ->where("active", true)
@@ -279,7 +349,8 @@ class HistoryStockController extends Controller
      */
     public function editOut(Request $request)
     {
-        $historyStocks = HistoryStock::where("code", $request->code)->get();
+        $historyStocks = HistoryStock::where("code", $request->code)
+            ->where('active', true)->get();
 
         $products = Product::select("id", "code", "name")
             ->where("active", true)
@@ -306,6 +377,22 @@ class HistoryStockController extends Controller
      */
     public function update(Request $request)
     {
+        $validator = \Validator::make($request->all(), [
+            'type' => 'required',
+            'code' => 'required',
+            'date' => 'required',
+            'from_warehouse_id' => 'required|exists:warehouses,id',
+            'to_warehouse_id' => 'required|different:from_warehouse_id|exists:warehouses,id',
+        ]);
+        if($validator->fails()){
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json(['errors' => $arr_Hasil]);
+        }
         DB::beginTransaction();
 
         try {
@@ -318,10 +405,11 @@ class HistoryStockController extends Controller
             // Deactivate History Stock based on code
             foreach ($historyStocks as $historyStock) {
                 // Change quantity in stock
-                $stock = Stock::where("id", $historyStock->stock_id)->first();
                 if ($historyStock->type === "in") {
+                    $stock = Stock::where("id", $historyStock->stock_to_id)->first();
                     $stock->quantity -= $historyStock->quantity;
                 } elseif ($historyStock->type === "out") {
+                    $stock = Stock::where("id", $historyStock->stock_from_id)->first();
                     $stock->quantity += $historyStock->quantity;
                 }
                 $stock->save();
@@ -350,25 +438,58 @@ class HistoryStockController extends Controller
             $countProduct = count($products);
 
             for ($i = 0; $i < $countProduct; $i++) {
-                $stock = Stock::where("warehouse_id", $request->warehouse_id)
+                $stock_from = Stock::where("warehouse_id", $request->from_warehouse_id)
+                    ->where("product_id", $products[$i])
+                    ->where("type_warehouse", null)
+                    ->first();
+                $stock_to = Stock::where("warehouse_id", $request->to_warehouse_id)
                     ->where("product_id", $products[$i])
                     ->where("type_warehouse", null)
                     ->first();
 
-                if (empty($stock)) {
-                    $stock = new Stock();
-                    $stock->warehouse_id = $request->warehouse_id;
-                    $stock->product_id = $products[$i];
-                    $stock->quantity = 0;
-                    $stock->save();
+                if (empty($stock_from)) {
+                    $stock_from = new Stock();
+                    $stock_from->warehouse_id = $request->from_warehouse_id;
+                    $stock_from->product_id = $products[$i];
+                    $stock_from->quantity = 0;
+                    $stock_from->save();
+                }
+                if (empty($stock_to)) {
+                    $stock_to = new Stock();
+                    $stock_to->warehouse_id = $request->to_warehouse_id;
+                    $stock_to->product_id = $products[$i];
+                    $stock_to->quantity = 0;
+                    $stock_to->save();
+                }
+
+                // Validation Same Stock
+                $checkUniqueCodeType = HistoryStock::where('type', $request->type)
+                    ->where('code', $request->code)
+                    ->where('code', '!=', $request->old_code)
+                    ->where('date', $request->date)
+                    ->where('stock_from_id', $stock_from->id)
+                    ->where('stock_to_id', $stock_to->id)
+                    ->where('active', true)->first();
+                if ($checkUniqueCodeType) {
+                    $arr_Hasil = [];
+                    $arr_Hasil['code'] = 'Stock ' . $request->type . ' code with product ' . ($i + 1) . ' is already exists';
+                    return response()->json(['errors' => $arr_Hasil]);
                 }
 
                 if ($request->type === "in") {
-                    $stock->quantity += $request->quantity[$i];
+                    $stock_to->quantity += $request->quantity[$i];
+                    $stock_to->save();
                 } elseif ($request->type === "out") {
-                    $stock->quantity -= $request->quantity[$i];
+                    if (($stock_from->quantity - $request->quantity[$i]) >= 0) {
+                        $stock_from->quantity -= $request->quantity[$i];
+                        $stock_from->save();
+                    } else {
+                        // Validation Out Of Stock
+                        $arr_Hasil = [];
+                        $arr_Hasil['quantity[]'] = 'Stock ' . ($i + 1) . ' is not enough';
+                        return response()->json(['errors' => $arr_Hasil]);
+                    }
                 }
-                $stock->save();
 
                 $historyStock = new HistoryStock();
                 $historyStock->fill($request->only(
@@ -377,8 +498,11 @@ class HistoryStockController extends Controller
                     "type",
                     "description",
                 ));
-                $historyStock->stock_id = $stock->id;
+                $historyStock->stock_from_id = $stock_from->id;
+                $historyStock->stock_to_id = $stock_to->id;
                 $historyStock->quantity = $request->quantity[$i];
+                $historyStock->koli = $request->koli[$i];
+                $historyStock->user_id = Auth::user()->id;
                 $historyStock->save();
 
                 // History (Stock)
@@ -399,9 +523,10 @@ class HistoryStockController extends Controller
 
             DB::commit();
 
-            return redirect()
-                ->route("list_history_stock")
-                ->with("success", "History Stock successfully updated.");
+            // return redirect()
+            //     ->route("list_history_stock")
+            //     ->with("success", "History Stock successfully updated.");
+            return response()->json(['success' => "History Stock successfully added."]);
         } catch (Throwable $th) {
             DB::rollBack();
 
@@ -429,10 +554,11 @@ class HistoryStockController extends Controller
             // Deactivate History Stock based on code
             foreach ($historyStocks as $historyStock) {
                 // Change quantity in stock
-                $stock = Stock::where("id", $historyStock->stock_id)->first();
                 if ($historyStock->type === "in") {
+                    $stock = Stock::where("id", $historyStock->stock_to_id)->first();
                     $stock->quantity -= $historyStock->quantity;
                 } elseif ($historyStock->type === "out") {
+                    $stock = Stock::where("id", $historyStock->stock_from_id)->first();
                     $stock->quantity += $historyStock->quantity;
                 }
                 $stock->save();

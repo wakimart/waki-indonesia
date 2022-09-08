@@ -82,9 +82,11 @@ Route::get('/fetchDistrict/{city}', function ($city) {
 })->name('fetchDistrict');
 Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSouvenir");
 Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
-Route::get("/fetchProductService", "ProductServiceController@fetchProductService")->name("fetchProductService");
+Route::get("/fetchProductService", "ProductServiceController@fetchHistoryStockByCode")->name("fetchProductService");
 
 Route::get('/fetchParentByCity/{city}', 'StockController@fetchParentByCity')->name('fetchParentByCity');
+// Fetch History Stock By Code
+Route::get("/fetchHistoryStockByCode", 'HistoryStockController@fetchHistoryStockByCode')->name('fetchHistoryStockByCode');
 
 Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
 
