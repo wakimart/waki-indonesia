@@ -1759,7 +1759,9 @@ class SubmissionController extends Controller
             "reference_souvenirs.prize_id AS prize_id",
             "reference_souvenirs.status_prize AS status_prize",
             "reference_souvenirs.delivery_status_prize AS delivery_status_prize",
-            "reference_souvenirs.wakimart_link"
+            "reference_souvenirs.wakimart_link",
+            "reference_souvenirs.order_code",
+            "reference_souvenirs.order_image"
         )
         ->leftJoin(
             "reference_souvenirs",

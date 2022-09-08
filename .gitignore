@@ -24,3 +24,4 @@ Homestead.json
 .phpunit.result.cache
 
 public/sources/online_signature/
+public/sources/reference

@@ -96,6 +96,28 @@ if (
     .decrease-width {
         width: 100px !important
     }
+
+    .imagePreview {
+        width: 100%;
+        height: 150px;
+        background-position: center center;
+        background-color: #fff;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: inline-block;
+    }
+    .del {
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+    }
+
 </style>
 @endsection
 
@@ -321,26 +343,35 @@ if (
                                                         data-order="{{ $reference->order_id }}"
                                                         style="overflow-x:auto;">
                                                         @php
-                                                        if (!empty($reference->order_id)) {
-                                                            $order = Order::select("id", "code")
-                                                                ->where("id", $reference->order_id)
-                                                                ->first();
+                                                        if (!empty($reference->order_code)) {
+                                                            // $order = Order::select("id", "code")
+                                                            //     ->where("id", $reference->order_id)
+                                                            //     ->first();
 
-                                                            echo '<a href="'.route("detail_order", ["code" => $order->code]).'">'.$order->code.'</a>';
+                                                            echo '<a href="'.route("detail_order", ["code" => $reference->order_code]).'">'.$reference->order_code.'</a>';
                                                         }
+                                                        $order_images = json_decode($reference->order_image, true) ?? [];
                                                         @endphp
+                                                        <br>
+                                                        @foreach ($order_images as $order_image)
+                                                        <a href="{{ asset("sources/reference/referensi/$order_image") }}" class="order_image_preview"
+                                                            target="_blank">
+                                                            <i class="mdi mdi-numeric-{{ $loop->iteration }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                                                        </a>
+                                                        @endforeach
                                                     </td>
                                                     <td class="text-center"
                                                         id="order_white_{{ $key }}"
                                                         data-order="{{ $reference->order_id }}"
                                                         style="overflow-x:auto; display: none;">
                                                         @php
-                                                        if (!empty($reference->order_id)) {
-                                                            $order = Order::select("id", "code")
-                                                                ->where("id", $reference->order_id)
-                                                                ->first();
+                                                        if (!empty($reference->order_code)) {
+                                                            // $order = Order::select("id", "code")
+                                                            //     ->where("id", $reference->order_id)
+                                                            //     ->first();
 
-                                                            echo '<a href="'.route("detail_order", ["code" => $order->code]).'" style="color:white">'.$order->code.'</a>';
+                                                            // echo '<a href="'.route("detail_order", ["code" => $reference->order_code]).'" style="color:white">'.$reference->order_code.'</a>';
+                                                            echo $reference->order_code;
                                                         }
                                                         @endphp
                                                     </td>
@@ -747,14 +778,48 @@ if (
                             name="order_id"
                             value="" />
                         <br>
-                        <button class="btn btn-gradient-info"
+                        {{-- <button class="btn btn-gradient-info"
                             type="button"
                             id="btn_choose_order"
                             data-originbutton="btn_choose_order"
                             data-toggle="modal"
                             data-target="#choose-order">
                             Choose Waki Order
-                        </button>
+                        </button> --}}
+                        <input type="text"
+                            class="form-control"
+                            id="edit-order-code"
+                            name="order_code"
+                            value=""
+                            placeholder="Order DO" />
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-order">Upload Images</label>
+                        <label style="float: right">(Max: 3)</label>
+                        <div class="clearfix"></div>
+                        @for ($i = 0; $i < 3; $i++)
+                            <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                style="padding: 15px; float: left;">
+                                <label>Image {{ $i + 1 }}</label>
+                                <div class="imagePreview"
+                                    id="edit-order-img_preview_{{ $i }}"
+                                    style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
+                                </div>
+                                <label class="file-upload-browse btn btn-gradient-primary"
+                                    style="margin-top: 15px; padding: 10px">
+                                    Upload
+                                    <input name="images_{{ $i }}"
+                                        id="edit-order-productimg-{{ $i }}"
+                                        type="file"
+                                        accept=".jpg,.jpeg,.png"
+                                        class="uploadFile img"
+                                        value="Upload Photo"
+                                        style="width: 0px; height: 0px; overflow: hidden; border: none !important;" />
+                                </label>
+                                <i class="mdi mdi-window-close del"></i>
+                            </div>
+                        @endfor
+                        <div id="edit-order-image-del"></div>
                     </div>
                     <div class="form-group">
                         <input type="text"
@@ -1531,7 +1596,14 @@ function clearModal() {
     document.getElementById("edit-link-hs").value = "";
     document.getElementById("link-hs-container").innerHTML = "";
     document.getElementById("edit-order").value = "";
+    document.getElementById("edit-order-code").value = "";
     // document.getElementById("btn_choose_order").innerHTML = "Choose Order";
+
+    for (var i=0; i<3; i++) {
+        document.getElementById("edit-order-productimg-" + i).value = "";
+        document.getElementById("edit-order-img_preview_" + i).style.backgroundImage  = "url({{ asset('sources/dashboard/no-img-banner.jpg') }})";
+    }
+    document.getElementById("edit-order-image-del").innerHTML = "";
 }
 
 function clickEdit(e) {
@@ -1636,7 +1708,12 @@ function clickEdit(e) {
     document.getElementById("edit-link-hs").value = hsArray.join(", ");
 
     document.getElementById("edit-order").value = orderId();
-    document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Waki Order";
+    // document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Waki Order";
+    document.getElementById("edit-order-code").value = orderCode() || "";
+
+    $("#order_" + refSeq).find(".order_image_preview").each(function(index) {
+        document.getElementById("edit-order-img_preview_" + index).style.backgroundImage = "url(" + $(this).attr('href') + ")";
+    })
 }
 
 function validateForm(refSeq) {
@@ -2060,5 +2137,44 @@ function createSignature(id) {
         }
     });
 }
+
+$(document).on("click", "i.del", function () {
+    $(this).closest(".imgUp").find('.imagePreview').css("background-image", "");
+    $(this).closest(".imgUp").find('.btn').find('.img').val("");
+    $(this).closest(".imgUp").find('.form-control').val("");
+    const inputImage = $(this).closest(".imgUp").find(".img");
+    const inputImageId = inputImage.attr("id").split("-")[3];
+    $('<input>').attr({
+        type: 'hidden',
+        name: 'dltimg-' + inputImageId,
+        value: inputImageId
+    }).appendTo('#edit-order-image-del');
+});
+
+$(function () {
+    $(document).on("change", ".uploadFile", function () {
+        const uploadFile = $(this);
+        const files = this.files ? this.files : [];
+
+        // no file selected, or no FileReader support
+        if (!files.length || !window.FileReader) {
+            return;
+        }
+
+        // only image file
+        if (/^image/.test(files[0].type)) {
+            // instance of the FileReader
+            const reader = new FileReader();
+            // read the local file
+            reader.readAsDataURL(files[0]);
+
+            // set image data as background of div
+            reader.onloadend = function () {
+                uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+            };
+        }
+
+    });
+});
 </script>
 @endsection
