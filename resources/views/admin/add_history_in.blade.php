@@ -77,7 +77,7 @@ $menu_item_second = "add_history_in";
                 <div class="card">
                     <div class="card-body">
                         <form id="actionAdd" method="POST"
-                            action="{{ route("store_history_stock") }}">
+                            action="{{ route("store_history_stock") }}" autocomplete="off">
                             @csrf
 
                             <div class="form-group">
@@ -101,6 +101,8 @@ $menu_item_second = "add_history_in";
                                     id="code"
                                     required />
                                 <span class="invalid-feedback"><strong></strong></span>
+                                <small id="code_error" style="color: red"></small>
+                                <small id="code_success" style="color: green"></small>
                             </div>
 
                             <div class="form-group">
@@ -214,14 +216,13 @@ $menu_item_second = "add_history_in";
                                     <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="koli_0">
-                                                Koli
+                                                Koli (Optional)
                                             </label>
                                             <input id="koli_0"
                                                 class="form-control"
-                                                type="text"
+                                                type="number"
                                                 name="koli[]"
-                                                placeholder="Koli"
-                                                required />
+                                                placeholder="Koli" />
                                             <span class="invalid-feedback"><strong></strong></span>
                                         </div>
                                     </div>
@@ -385,11 +386,10 @@ function addProduct() {
 
     const inputKoli = document.createElement("input");
     inputKoli.className = "form-control";
-    inputKoli.type = "text";
+    inputKoli.type = "number";
     inputKoli.name = "koli[]";
     inputKoli.id = `koli_${counter}`;
     inputKoli.placeholder = "Koli";
-    inputKoli.required = true;
 
     formGroupDivQuantity.appendChild(labelQuantity);
     formGroupDivQuantity.appendChild(inputQuantity);
@@ -423,7 +423,14 @@ function getStockByCode() {
         url: "{{ route('fetchHistoryStockByCode') }}",
         data: {code, type},
         success: function(data) {
-            if (data['data'] != null) {
+            $("#addHistory").prop('disabled', false);
+            $("#code_error").html('');
+            $("#code_succes").html('');
+            if (data['same_code'] != null) {
+                $("#code_error").html(data['same_code']);
+                $("#addHistory").prop('disabled', true);
+            } else if (data['data'] != null) {
+                $("#code_success").html("Found a Same Code");
                 var result = data['data'];
                 $("#from_warehouse_id").val(result['from_warehouse_id']).trigger("change");
                 $("#from_warehouse_id-disabled").val(result['from_warehouse_id']);
@@ -433,6 +440,7 @@ function getStockByCode() {
                 $("#to_warehouse_id-disabled").val(result['to_warehouse_id']);
                 $('#to_warehouse_id').attr('disabled',true);
             } else {
+                $("#code_success").html("New Code");
                 $('#from_warehouse_id').attr('disabled',false);
                 $('#to_warehouse_id').attr('disabled',false);
             }

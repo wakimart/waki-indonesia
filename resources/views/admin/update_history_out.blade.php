@@ -77,7 +77,7 @@ $menu_item_second = "update_history_out";
                 <div class="card">
                     <div class="card-body">
                         <form id="actionAdd" method="POST"
-                            action="{{ route("update_history_stock") }}">
+                            action="{{ route("update_history_stock") }}" autocomplete="off">
                             @csrf
 
                             <div class="form-group">
@@ -105,6 +105,8 @@ $menu_item_second = "update_history_out";
                                     value="{{ $historyStocks[0]->code }}"
                                     required />
                                 <span class="invalid-feedback"><strong></strong></span>
+                                <small id="code_error" style="color: red"></small>
+                                <small id="code_success" style="color: green"></small>
                             </div>
 
                             <div class="form-group">
@@ -150,7 +152,7 @@ $menu_item_second = "update_history_out";
                                         </option>
                                         @foreach ($warehouses as $warehouse)
                                             <option value="{{ $warehouse->id }}"
-                                                @if($historyStocks[0]->stockTo->warehouse_id ?? '' == $warehouse->id) selected @endif>
+                                                @if(($historyStocks[0]->stockTo->warehouse_id ?? '') == $warehouse->id) selected @endif>
                                                 {{ $warehouse->code }} - {{ $warehouse->name }}
                                             </option>
                                         @endforeach
@@ -186,6 +188,7 @@ $menu_item_second = "update_history_out";
                                     value="{{ $countHistoryStock - 1 }}" />
 
                                 @for ($i = 0; $i < $countHistoryStock; $i++)
+                                    <input type="hidden" name="old_history_stocks_id[]" value="{{ $historyStocks[$i]['id'] }}">
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="form-group">
@@ -233,15 +236,14 @@ $menu_item_second = "update_history_out";
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="koli_{{ $i }}">
-                                                    Koli
+                                                    Koli (Optional)
                                                 </label>
                                                 <input id="koli_{{ $i }}"
                                                     class="form-control"
-                                                    type="text"
+                                                    type="number"
                                                     name="koli[]"
                                                     placeholder="Koli"
-                                                    value="{{ $historyStocks[$i]->koli }}"
-                                                    required />
+                                                    value="{{ $historyStocks[$i]->koli }}" />
                                                 <span class="invalid-feedback"><strong></strong></span>
                                             </div>
                                         </div>
@@ -409,11 +411,10 @@ function addProduct() {
 
     const inputKoli = document.createElement("input");
     inputKoli.className = "form-control";
-    inputKoli.type = "text";
+    inputKoli.type = "number";
     inputKoli.name = "koli[]";
     inputKoli.id = `koli_${counter}`;
     inputKoli.placeholder = "Koli";
-    inputKoli.required = true;
 
     formGroupDivQuantity.appendChild(labelQuantity);
     formGroupDivQuantity.appendChild(inputQuantity);
@@ -442,12 +443,20 @@ $("#code").on("change", function() {
 function getStockByCode() {
     var code = $("#code").val();
     const type = $("#type").val();
+    const history_stocks_id = JSON.parse("<?php echo $historyStocks->pluck('id'); ?>");
     $.ajax({
         method: "GET",
         url: "{{ route('fetchHistoryStockByCode') }}",
-        data: {code, type},
+        data: {code, type, history_stocks_id},
         success: function(data) {
-            if (data['data'] != null) {
+            $("#editHistory").prop('disabled', false);
+            $("#code_error").html('');
+            $("#code_succes").html('');
+            if (data['same_code'] != null) {
+                $("#code_error").html(data['same_code']);
+                $("#editHistory").prop('disabled', true);
+            } else if (data['data'] != null) {
+                $("#code_success").html("Found a Same Code");
                 var result = data['data'];
                 $("#from_warehouse_id").val(result['from_warehouse_id']).trigger("change");
                 $("#from_warehouse_id-disabled").val(result['from_warehouse_id']);
@@ -457,6 +466,7 @@ function getStockByCode() {
                 $("#to_warehouse_id-disabled").val(result['to_warehouse_id']);
                 $('#to_warehouse_id').attr('disabled',true);
             } else {
+                $("#code_success").html("New Code");
                 $('#from_warehouse_id').attr('disabled',false);
                 $('#to_warehouse_id').attr('disabled',false);
             }
