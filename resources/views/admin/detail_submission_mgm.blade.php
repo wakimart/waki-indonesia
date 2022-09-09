@@ -231,20 +231,24 @@ if (
                                     <td class="text-center"
                                         id="order_{{ $key }}"
                                         data-order="{{ $reference->order_id }}"
+                                        data-ordercode="{{ $reference->order_code }}"
                                         style="overflow-x: auto;">
                                         <?php
-                                        if (!empty($reference->order_code)) {
-                                            // $order = Order::select("id", "code")
-                                            //     ->where("id", $reference->order_id)
-                                            //     ->first();
+                                        if (!empty($reference->order_id) && empty($reference->order_code)) {
+                                            $order = Order::select("id", "code")
+                                                ->where("id", $reference->order_id)
+                                                ->first();
                                             echo '<a href="'
-                                                . route("detail_order", ["code" => $reference->order_code])
+                                                . route("detail_order", ["code" => $order->code])
                                                 . '">'
-                                                . $reference->order_code
+                                                . $order->code
                                                 . '</a>';
+                                        } else if (!empty($reference->order_code)) {
+                                            echo '<span>' . $reference->order_code . '</span>';
                                         }
                                         $order_images = json_decode($reference->order_image, true) ?? [];
                                         ?>
+                                        <br>
                                         @foreach ($order_images as $order_image)
                                         <a href="{{ asset("sources/reference/mgm/$order_image") }}" class="order_image_preview"
                                             target="_blank">
@@ -705,6 +709,18 @@ if (
                         </tbody>
                     </table>
                 </div>
+                <div id="div_detailorder_code" class="form-group d-none">
+                    <label>Detail Order</label>
+                    <table id="table-detail-order" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Code</td>
+                            <td>Proof Image</td>
+                        </thead>
+                        <tbody id="append_tbody_ordercode">
+
+                        </tbody>
+                    </table>
+                </div>
 
                 @if(isset($_GET['id_ref']) && Auth::user()->id == 1)
                     <div class="form-group">
@@ -1008,9 +1024,12 @@ function loadDataPerRef(ref_id) {
     $.get('{{ route("fetchDetailPerReference", ['reference' => ""]) }}/' + ref_id )
     .done(function( result ) {
         // Empty data
+        $('#div_detailorder').addClass('d-none');
+        $("#div_detailorder_code").addClass('d-none');
         $('#append_tbody_hs').empty();
         $('#append_tbody_order').empty();
         $('#append_tbody_other').empty();
+        $("#append_tbody_ordercode").empty();
 
         if(result.length > 0){
             var data = JSON.parse(result);
@@ -1061,8 +1080,9 @@ function loadDataPerRef(ref_id) {
             }
 
             // Detail Order
-            if (data_order != null) {
+            if (data_order != null && data_refs[0]['order_code'] == null) {
                 $('#div_detailorder').removeClass('d-none');
+                $("#div_detailorder_code").addClass('d-none');
 
                 var rowspan = detail_product.length;
                 for (var o = 0; o < detail_product.length; o++) {
@@ -1099,6 +1119,22 @@ function loadDataPerRef(ref_id) {
                         <td colspan="2" style="text-align: right;">'+fix_totalpayment+'</td>\
                     </tr>\
                 ');
+            } else if (data_refs[0]['order_code'] != null) {
+                $('#div_detailorder').addClass('d-none');
+                $("#div_detailorder_code").removeClass('d-none');
+
+                var temp_append_tbody_ordercode = `<tr><td>` + data_refs[0]['order_code'] + `</td><td>`;
+                
+                var order_images = JSON.parse(data_refs[0]['order_image']) ?? [];
+                for (var i=0; i<order_images.length; i++) {
+                    temp_append_tbody_ordercode +=
+                        `<a href="{{ asset("sources/reference/mgm/") }}/` + order_images[i] + `" class="order_image_preview"
+                            target="_blank">
+                            <i class="mdi mdi-numeric-` + (i+1) + `-box" style="font-size: 24px; color: #2daaff;"></i>
+                        </a>`;
+                }
+                temp_append_tbody_ordercode += `</td></tr>`;
+                $("#append_tbody_ordercode").append(temp_append_tbody_ordercode);
             }
 
             if (data_prize != null) {
@@ -1208,7 +1244,7 @@ function clickEdit(e) {
     function orderCode() {
         try {
             // return document.getElementById("order_" + refSeq).innerHTML.trim();
-            return document.getElementById("order_" + refSeq).getElementsByTagName("a")[0].innerHTML.trim();
+            return document.getElementById("order_" + refSeq).dataset.ordercode;
         } catch (error) {
             delete error;
             return "";
