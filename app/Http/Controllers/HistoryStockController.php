@@ -26,7 +26,7 @@ class HistoryStockController extends Controller
      */
     public function index(Request $request)
     {
-        $historystocks = HistoryStock::orderBy("id", "desc")->whereNotNull('code')
+        $historystocks = HistoryStock::orderBy("created_at", "desc")->orderBy('id', 'asc')->whereNotNull('code')
             ->where('active', true);
 
         if ($request->has("filter_code")) {
@@ -132,11 +132,17 @@ class HistoryStockController extends Controller
     {
         $validator = \Validator::make($request->all(), [
             'type' => 'required',
-            'code' => 'required',
             'date' => 'required',
             'from_warehouse_id' => 'required|exists:warehouses,id',
             'to_warehouse_id' => 'required|different:from_warehouse_id|exists:warehouses,id',
-        ]);
+            'code' => [
+                'required',
+                Rule::unique('history_stocks')
+                    ->where('type', $request->type)
+                    ->where('code', $request->code)
+                    ->where('active', true)
+            ],
+        ], ['code.unique' => 'The Code already used.']);
         if($validator->fails()){
             $arr_Errors = $validator->errors()->all();
             $arr_Keys = $validator->errors()->keys();
@@ -177,19 +183,6 @@ class HistoryStockController extends Controller
                     $stock_to->save();
                 }
 
-                // Validation Same Stock
-                $checkUniqueCodeType = HistoryStock::where('type', $request->type)
-                    ->where('code', $request->code)
-                    ->where('date', $request->date)
-                    ->where('stock_from_id', $stock_from->id)
-                    ->where('stock_to_id', $stock_to->id)
-                    ->where('active', true)->first();
-                if ($checkUniqueCodeType) {
-                    $arr_Hasil = [];
-                    $arr_Hasil['code'] = 'Stock ' . $request->type . ' code with product ' . ($i + 1) . ' is already exists';
-                    return response()->json(['errors' => $arr_Hasil]);
-                }
-
                 if ($request->type === "in") {
                     $stock_to->quantity += $request->quantity[$i];
                     $stock_to->save();
@@ -215,7 +208,7 @@ class HistoryStockController extends Controller
                 $historyStock->stock_from_id = $stock_from->id;
                 $historyStock->stock_to_id = $stock_to->id;
                 $historyStock->quantity = $request->quantity[$i];
-                $historyStock->koli = $request->koli[$i];
+                $historyStock->koli = $request->koli[$i] ?? 0;
                 $historyStock->user_id = Auth::user()->id;
                 $historyStock->save();
             }
@@ -255,15 +248,30 @@ class HistoryStockController extends Controller
     public function fetchHistoryStockByCode(Request $request)
     {
         if ($request->code && $request->type) {
-            $type = $request->type == 'in' ? 'out' : 'in';
+            $type = $request->type;
+            $type_inverse = $type == 'in' ? 'out' : 'in';
+
+            // Check Unique Code and Type
             $historyStock = HistoryStock::where('code', $request->code)
                 ->where('type', $type)
-                ->where('active', true)
-                ->first();
+                ->where('active', true);
+            if ($request->has('history_stocks_id')) {
+                $historyStock->whereNotIn('id', $request->history_stocks_id);
+            }
+                
+            $historyStock = $historyStock->first();
             if ($historyStock) {
-                $historyStock->from_warehouse_id = $historyStock->stockFrom->warehouse_id;
-                $historyStock->to_warehouse_id = $historyStock->stockTo->warehouse_id ?? '';
-                return response()->json(["data" => $historyStock]);
+                return response()->json(['same_code' => 'The Code already used.']);
+            }
+
+            // Get Warehouse From and Warehouse To
+            $historyStockInverse = HistoryStock::where('code', $request->code)
+                ->where('type', $type_inverse)
+                ->where('active', true)->first();
+            if ($historyStockInverse) {
+                $historyStockInverse->from_warehouse_id = $historyStockInverse->stockFrom->warehouse_id;
+                $historyStockInverse->to_warehouse_id = $historyStockInverse->stockTo->warehouse_id ?? '';
+                return response()->json(["data" => $historyStockInverse]);
             }
             return response()->json(["success" => 'No Data Found']);
         }
@@ -280,6 +288,7 @@ class HistoryStockController extends Controller
     public function show(Request $request)
     {
         $historystock = HistoryStock::where("code", $request->code)
+            ->where('type', $request->type)
             ->where('active', true)->get();
 
         return view('admin.detail_history_stock', compact(
@@ -322,6 +331,7 @@ class HistoryStockController extends Controller
     public function editIn(Request $request)
     {
         $historyStocks = HistoryStock::where("code", $request->code)
+            ->where('type', 'in')
             ->where('active', true)->get();
 
         $products = Product::select("id", "code", "name")
@@ -350,6 +360,7 @@ class HistoryStockController extends Controller
     public function editOut(Request $request)
     {
         $historyStocks = HistoryStock::where("code", $request->code)
+            ->where('type', 'out')
             ->where('active', true)->get();
 
         $products = Product::select("id", "code", "name")
@@ -379,11 +390,18 @@ class HistoryStockController extends Controller
     {
         $validator = \Validator::make($request->all(), [
             'type' => 'required',
-            'code' => 'required',
             'date' => 'required',
             'from_warehouse_id' => 'required|exists:warehouses,id',
             'to_warehouse_id' => 'required|different:from_warehouse_id|exists:warehouses,id',
-        ]);
+            'code' => [
+                'required',
+                Rule::unique('history_stocks')
+                    ->whereNotIn('id', $request->old_history_stocks_id)
+                    ->where('type', $request->type)
+                    ->where('code', $request->code)
+                    ->where('active', true)
+            ],
+        ], ['code.unique' => 'The Code already used.']);
         if($validator->fails()){
             $arr_Errors = $validator->errors()->all();
             $arr_Keys = $validator->errors()->keys();
@@ -397,6 +415,7 @@ class HistoryStockController extends Controller
 
         try {
             $historyStocks = HistoryStock::where("code", $request->old_code)
+                ->where('type', $request->type)
                 ->where("active", true)
                 ->get();
 
@@ -462,20 +481,6 @@ class HistoryStockController extends Controller
                     $stock_to->save();
                 }
 
-                // Validation Same Stock
-                $checkUniqueCodeType = HistoryStock::where('type', $request->type)
-                    ->where('code', $request->code)
-                    ->where('code', '!=', $request->old_code)
-                    ->where('date', $request->date)
-                    ->where('stock_from_id', $stock_from->id)
-                    ->where('stock_to_id', $stock_to->id)
-                    ->where('active', true)->first();
-                if ($checkUniqueCodeType) {
-                    $arr_Hasil = [];
-                    $arr_Hasil['code'] = 'Stock ' . $request->type . ' code with product ' . ($i + 1) . ' is already exists';
-                    return response()->json(['errors' => $arr_Hasil]);
-                }
-
                 if ($request->type === "in") {
                     $stock_to->quantity += $request->quantity[$i];
                     $stock_to->save();
@@ -501,7 +506,7 @@ class HistoryStockController extends Controller
                 $historyStock->stock_from_id = $stock_from->id;
                 $historyStock->stock_to_id = $stock_to->id;
                 $historyStock->quantity = $request->quantity[$i];
-                $historyStock->koli = $request->koli[$i];
+                $historyStock->koli = $request->koli[$i] ?? 0;
                 $historyStock->user_id = Auth::user()->id;
                 $historyStock->save();
 
@@ -546,6 +551,7 @@ class HistoryStockController extends Controller
 
         try {
             $historyStocks = HistoryStock::where("code", $request->old_code)
+                ->where('type', $request->type)
                 ->where("active", true)
                 ->get();
 

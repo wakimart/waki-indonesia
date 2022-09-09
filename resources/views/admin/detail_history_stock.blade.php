@@ -188,15 +188,14 @@ $menu_item_second = "detail_history_stock";
                                         <div class="row">
                                             <div class="col-2">
                                                 <div style="margin-bottom: 5px; text-align: right;">
-                                                    <h5>Kode Cabang :</h5>
+                                                    <h5>Cabang Awal :</h5>
                                                 </div>
                                             </div>
                                             <div class="col-10" style="padding-left: 0;">
                                                 <div style="margin-bottom: 5px;">
                                                     <h5>
                                                         {{$historystock[0]->stockFrom->warehouse['code'] }}
-                                                        -
-                                                        {{$historystock[0]->stockTo->warehouse['code'] ?? '' }}
+                                                        ({{$historystock[0]->stockFrom->warehouse['name']}})
                                                     </h5>
                                                 </div>
                                             </div>
@@ -204,15 +203,14 @@ $menu_item_second = "detail_history_stock";
                                         <div class="row">
                                             <div class="col-2">
                                                 <div style="margin-bottom: 5px; text-align: right;">
-                                                    <h5>Nama Cabang :</h5>
+                                                    <h5>Cabang Tujuan :</h5>
                                                 </div>
                                             </div>
                                             <div class="col-10" style="padding-left: 0;">
                                                 <div style="margin-bottom: 5px;">
                                                     <h5>
-                                                        {{$historystock[0]->stockFrom->warehouse['name'] }}
-                                                        -
-                                                        {{$historystock[0]->stockTo->warehouse['name'] ?? ''}}
+                                                        {{$historystock[0]->stockTo->warehouse['code'] ?? '' }}
+                                                        ({{$historystock[0]->stockTo->warehouse['name'] ?? ''}})
                                                     </h5>
                                                 </div>
                                             </div>
@@ -251,6 +249,7 @@ $menu_item_second = "detail_history_stock";
                                                         <tr>
                                                             <th colspan="3" style="text-align: right">Total</th>
                                                             <td class="text-center">{{$historystock->sum('quantity')}}</td>
+                                                            <td class="text-center">{{$historystock->sum('koli')}}</td>
                                                         </tr>
                                                     </tfoot>
                                                 </table>

@@ -1350,6 +1350,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //Export to XLS HistoryStock
         Route::get('/export-to-xls', 'HistoryStockController@export_to_xls')
         ->name('historystock_export-to-xls');
+        Route::post("delete", "HistoryStockController@destroy")
+            ->name("delete_history_stock");
     });
 
     Route::group(["prefix" => "stock-warehouse", "middleware" => "auth"], function () {

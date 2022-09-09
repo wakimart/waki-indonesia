@@ -195,28 +195,29 @@ $menu_item_second = "list_history_stock";
                                             <td class="text-right">
                                                 {{ $historycode[0]->quantity }}
                                             </td>
-                                            <td class="text-center" rowspan="{{ sizeof($historycode) }}">
-                                                <a href="{{ route('detail_history_stock', ['code' => $historycode[0]['code']]) }}">
+                                            <td class="text-center" rowspan="{{ sizeof($historycodeType[0]) }}">
+                                                <a href="{{ route('detail_history_stock', ['code' => $historycodeType[0][0]['code'], 'type' => $historycodeType[0][0]['type']]) }}">
                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                 </a>
                                             </td>
-                                            <td class="text-center" rowspan="{{ sizeof($historycode) }}">
-                                                @if ($historycode[0]->type == "in")
-                                                    <a href="{{ route('edit_history_in', ['code' => $historycode[0]['code']]) }}">
+                                            <td class="text-center" rowspan="{{ sizeof($historycodeType[0]) }}">
+                                                @if ($historycodeType[0][0]->type == "in")
+                                                    <a href="{{ route('edit_history_in', ['code' => $historycodeType[0][0]['code']]) }}">
                                                         <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                     </a>
                                                 @else
-                                                    <a href="{{ route('edit_history_out', ['code' => $historycode[0]['code']]) }}">
+                                                    <a href="{{ route('edit_history_out', ['code' => $historycodeType[0][0]['code']]) }}">
                                                         <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                     </a>
                                                 @endif
                                             </td>
-                                            <td class="text-center" rowspan="{{ sizeof($historycode) }}">
+                                            <td class="text-center" rowspan="{{ sizeof($historycodeType[0]) }}">
                                                 <a class="btn-delete disabled"
                                                     data-toggle="modal"
                                                     href="#deleteDoModal"
                                                     onclick="submitDelete(this)"
-                                                    data-id="{{ $historycode[0]->id }}">
+                                                    data-id="{{ $historycodeType[0][0]->code }}"
+                                                    data-type="{{ $historycodeType[0][0]->type }}">
                                                     <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                 </a>
                                             </td>
@@ -249,6 +250,32 @@ $menu_item_second = "list_history_stock";
                                                     </td>
                                                     <td class="text-right">
                                                         {{ $historycodeType[$j][0]->quantity }}
+                                                    </td>
+                                                    <td class="text-center" rowspan="{{ sizeof($historycodeType[$j]) }}">
+                                                        <a href="{{ route('detail_history_stock', ['code' => $historycodeType[$j][0]['code'], 'type' => $historycodeType[$j][0]['type']]) }}">
+                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-center" rowspan="{{ sizeof($historycodeType[$j]) }}">
+                                                        @if ($historycodeType[$j][0]->type == "in")
+                                                            <a href="{{ route('edit_history_in', ['code' => $historycodeType[$j][0]['code']]) }}">
+                                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ route('edit_history_out', ['code' => $historycodeType[$j][0]['code']]) }}">
+                                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                            </a>
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center" rowspan="{{ sizeof($historycodeType[$j]) }}">
+                                                        <a class="btn-delete disabled"
+                                                            data-toggle="modal"
+                                                            href="#deleteDoModal"
+                                                            onclick="submitDelete(this)"
+                                                            data-id="{{ $historycodeType[$j][0]->code }}"
+                                                            data-type="{{ $historycodeType[$j][0]->type }}">
+                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                        </a>
                                                     </td>
                                                 </tr>
                                                 @if (sizeof($historycodeType[$j]) > 1)
@@ -301,15 +328,16 @@ $menu_item_second = "list_history_stock";
             <div class="modal-footer">
                 <form id="frmDelete"
                     method="post"
-                    action="{{ route('delete_personal_homecare') }}">
+                    action="{{ route('delete_history_stock') }}">
                     @csrf
-                    <input type="hidden" name="id" id="id-delete" />
+                    <input type="hidden" name="old_code" id="id-delete" />
+                    <input type="hidden" name="type" id="id-delete-type" />
                     <button type="submit"
                         class="btn btn-gradient-danger mr-2">
                         Yes
                     </button>
                 </form>
-                <button class="btn btn-light">No</button>
+                <button class="btn btn-light" data-dismiss="modal">No</button>
             </div>
         </div>
     </div>
@@ -416,6 +444,7 @@ $menu_item_second = "list_history_stock";
 <script type="application/javascript">
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
+    document.getElementById("id-delete-type").value = e.dataset.type;
 }
 
 // Export XLS
