@@ -425,7 +425,7 @@ function getStockByCode() {
         success: function(data) {
             $("#addHistory").prop('disabled', false);
             $("#code_error").html('');
-            $("#code_succes").html('');
+            $("#code_success").html('');
             if (data['same_code'] != null) {
                 $("#code_error").html(data['same_code']);
                 $("#addHistory").prop('disabled', true);
