@@ -297,6 +297,42 @@ $menu_item_second = "detail_history_stock";
                     </div>
                  </div>
             </div>
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row justify-content-center mt-3">
+                            <h2>HISTORY STOCK LOG</h2>
+                        </div>
+                        <div class="row justify-content-center p-3">
+                            <table class="col-md-12">
+                                <thead>
+                                    <td>No.</td>
+                                    <td>Action</td>
+                                    <td>User</td>
+                                    <td>Change</td>
+                                    <td>Time</td>
+                                </thead>
+                                @if($historyUpdateStock != null)
+                                @foreach($historyUpdateStock as $key => $historyUpdateStock)
+                                <tr>
+                                    <td>{{$key+1}}</td>
+                                    <td>{{$historyUpdateStock->method}}</td>
+                                    <td>{{$historyUpdateStock->name}}</td>
+                                    <?php $dataChange = json_decode($historyUpdateStock->meta, true);?>
+                                    <td>
+                                    @foreach ($dataChange['dataChange'] as $key=>$value)
+                                        <b>{{$key}}</b>: {{ is_array($value) ? json_encode($value) : $value }}<br/>
+                                    @endforeach
+                                    </td>
+                                    <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateStock->created_at)) }}</td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

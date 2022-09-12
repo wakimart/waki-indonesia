@@ -189,7 +189,22 @@ $menu_item_second = "update_history_out";
 
                                 @for ($i = 0; $i < $countHistoryStock; $i++)
                                     <input type="hidden" name="old_history_stocks_id[]" value="{{ $historyStocks[$i]['id'] }}">
-                                    <div class="row">
+                                    <div class="row" id="row-remove-{{ $i }}">
+                                        <input type="hidden" name="history_stocks_id[]" value="{{ $historyStocks[$i]['id'] }}">
+                                        <div class="col-md-12">
+                                            <div class="text-center" 
+                                                style="display: block; 
+                                                    float: right; 
+                                                    margin-bottom: 20px;">
+                                                <button class="btn btn-gradient-danger" 
+                                                    type="button" 
+                                                    onclick="removeProduct({{ $i }})">
+                                                    Remove Product
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="row-product-{{ $i }}">
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <label for="product_{{ $i }}">
