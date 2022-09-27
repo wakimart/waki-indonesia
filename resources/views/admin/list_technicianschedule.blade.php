@@ -1195,18 +1195,18 @@ function clickView(btn) {
             if (result.code_homeservice) {
                 document.getElementById("url_share").setAttribute(
                     "href",
-                    "whatsapp://send?text=<?php echo route('homeServices_success'); ?>"
+                    "https://wa.me/?text=<?php echo route('homeServices_success'); ?>"
                     + "?code="
                     + result.code_homeservice
                 );
             } else {
                 document.getElementById("url_share").setAttribute(
                     "href",
-                    "whatsapp://send?text=<?php echo route('services_success'); ?>"
+                    "https://wa.me/?text=<?php echo route('services_success'); ?>"
                     + "?code="
                     + btoa(result.id)
                 );
-            }            
+            }
         @endif
 
         var temp_product_ts = '';

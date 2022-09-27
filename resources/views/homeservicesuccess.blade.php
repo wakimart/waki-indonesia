@@ -61,38 +61,38 @@
           <table class="col-md-12">
               <tr>
                   <td>
-                      <p class="pInTable">Terima kasih kepada Bapak/Ibu yang terhormat atas dukungan dan dorongan yang telah 
+                      <p class="pInTable">Terima kasih kepada Bapak/Ibu yang terhormat atas dukungan dan dorongan yang telah
                       diberikan kepada WAKi Indonesia agar dapat berkembang dan menjadi lebih baik di masa mendatang.</p>
                         @if($homeService->type_homeservices == "Home service")
-                          <p class="pInTable">Tujuan Home Service adalah untuk merapatkan hubungan antara
-                            bapak/ibu sama WAKi dan biar bapak/ibu lebih memahami cara guna
-                            WAKi produk supaya capai kesan yang lebih baik.</p>
-                            
-                            
+                          <p class="pInTable">Tujuan Home Service adalah untuk mempererat hubungan antara bapak/ibu
+                            dengan WAKi dan memberikan cara penggunaan produk Waki
+                            untuk mencapai efek yang lebih baik dan maksimal.</p>
+
+
                           <p class="pInTable">Team WAKi Home Service akan menghubungi terlebih dahulu
                             sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
                             atau perubahan jadwal home service, dapat menghubungi WAKi
                             Home Service Department kembali di nomor (+6281234511881) atau
                             {{ $homeService->cso['name'] }}, {{ $homeService['cso_phone'] }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
                         @elseif($homeService->type_homeservices == "Soft Launching WAKimart Apps")
-                            <p class="pInTable">Bapak/Ibu yang terhormat berkesempatan untuk menjadi member 
+                            <p class="pInTable">Bapak/Ibu yang terhormat berkesempatan untuk menjadi member
                             WAKimart berikut dengan voucher "Salam Perkenalan"
-                            tanpa dipungut biaya apapun. Tujuan Invitation Invitation Soft Launching WAKimart Apps adalah untuk mempermudah Bapak/Ibu 
-                            dalam proses pengaktifan voucher "Salam Perkenalan" dan supaya lebih memahami 
+                            tanpa dipungut biaya apapun. Tujuan Invitation Invitation Soft Launching WAKimart Apps adalah untuk mempermudah Bapak/Ibu
+                            dalam proses pengaktifan voucher "Salam Perkenalan" dan supaya lebih memahami
                             keuntungan member WAKimart dengan baik.</p>
-                            
-                            
+
+
                           <p class="pInTable">Team WAKi Soft Launching WAKimart Apps akan menghubungi terlebih dahulu
                             sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
-                            atau perubahan jadwal Invitation Soft Launching WAKimart Apps, dapat menghubungi WAKi 
+                            atau perubahan jadwal Invitation Soft Launching WAKimart Apps, dapat menghubungi WAKi
                             Soft Launching WAKimart Apps Department kembali di nomor (+6281234511881) atau
                             {{ $homeService->cso['name'] }}, {{ $homeService['cso_phone'] }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
                         @else
-                            <p class="pInTable">Tujuan {{$homeService->type_homeservices}} adalah untuk merapatkan hubungan antara 
-                            Bapak/Ibu dengan WAKi  dan supaya Bapak/Ibu lebih memahami 
+                            <p class="pInTable">Tujuan {{$homeService->type_homeservices}} adalah untuk merapatkan hubungan antara
+                            Bapak/Ibu dengan WAKi  dan supaya Bapak/Ibu lebih memahami
                             keuntungan member WAKi supaya capai kesan yang lebih baik.</p>
-                            
-                            
+
+
                           <p class="pInTable">Team WAKi {{$homeService->type_homeservices}} akan menghubungi terlebih dahulu
                             sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
                             atau perubahan jadwal {{$homeService->type_homeservices}}, dapat menghubungi WAKi

@@ -59,10 +59,12 @@
                   <td>
                       <p class="pInTable">
                         Terima kasih kepada Bapak/Ibu yang terhormat atas dukungan dan dorongan yang telah diberikan kepada WAKi Indonesia agar dapat berkembang dan menjadi lebih baik di masa mendatang.
-                      
-                        Tujuan Service adalah untuk merapatkan hubungan antara bapak/ibu sama WAKi dan biar bapak/ibu lebih memahami cara guna WAKi produk supaya capai kesan yang lebih baik.
-
-                        Team WAKi Service akan menghubungi terlebih dahulu sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut atau perubahan jadwal service, dapat menghubungi WAKi Service Department kembali di nomor (+628993199999).
+                      </p>
+                      <p class="pInTable">
+                        Tujuan Servis adalah untuk mempererat hubungan antara bapak/ibu dengan WAKi dan memberikan cara penggunaan produk Waki untuk mencapai efek yang lebih baik dan maksimal.
+                      </p>
+                      <p class="pInTable">
+                        Team Servis WAKi akan menghubungi terlebih dahulu sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut atau perubahan jadwal service, dapat menghubungi WAKi Service Department kembali di nomor (+628993199999).
                       </p>
                   </td>
               </tr>
@@ -92,9 +94,9 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td>{{ 
-                        $technician_schedule->provinceObj['province'] }}, 
-                        {{ $technician_schedule->cityObj['type'] }} 
+                    <td>{{
+                        $technician_schedule->provinceObj['province'] }},
+                        {{ $technician_schedule->cityObj['type'] }}
                         {{ $technician_schedule->cityObj['city_name'] }},
                         {{ $technician_schedule->districObj['subdistrict_name'] }}
                     </td>
@@ -127,7 +129,7 @@
                 </thead>
                 <tr>
                     <td>Produk : </td>
-                    <td>{{ ($product_ts->product_id != null) 
+                    <td>{{ ($product_ts->product_id != null)
                         ? $product_ts->product['name']
                         : $product_ts->other_product }}
                     </td>
@@ -150,13 +152,25 @@
                 <tr>
                     <td>
                         <p class="pInTable">
-                            Sehubungan dengan kenaikan biaya operasional bagian maintenance/service, maka kami dengan berat hati memutuskan untuk mengenakan biaya kunjungan service/pengecheckan produk ke rumah Bapak/Ibu, dengan ketentuan sbb :
-                            • Kunjungan service dilakukan oleh team teknisi untuk melakukan service/pengecheckan produk-produk WAKi di rumah Bapak/Ibu
-                            • Apabila perbaikan tidak bisa dikerjakan di rumah Bapak/Ibu, maka pengerjaan akan dilakukan di tempat kami.
-                            • Biaya untuk 1(satu) kali kunjungan adalah Rp 200.000,- (dua ratus ribu rupiah) dan akan dibuatkan tanda terima resmi dari WAKI.
-                            • Apabila pada saat kunjungan service tersebut, perbaikan harus dilakukan di kantor kami, maka untuk pengembalian produk ke rumah Bapak/Ibu adalah free.
-                            • Apabila Bapak/Ibu menghantarkan produk ke tempat kami, dan setelah selesai dilakukan perbaikan, produk tersebut wajib diambil sendiri. Apabila kami yang menghantarkan tetap akan dikenakan biaya sebesar Rp 200.000,-
-                            • Apabila ternyata ada sparepart yang perlu dilakukan penggantian, maka harga sparepart tersebut adalah berbeda dg biaya kunjungan service.
+                        Sehubungan dengan kenaikan biaya operasional bagian maintenance/service, maka kami dengan berat hati memutuskan untuk mengenakan biaya kunjungan service/pengecheckan produk ke rumah Bapak/Ibu, dengan ketentuan sbb :
+                        </p>
+                        <p class="pInTable">
+                        • Kunjungan service dilakukan oleh team teknisi untuk melakukan service/pengecheckan produk-produk WAKi di rumah Bapak/Ibu.
+                        </p>
+                        <p class="pInTable">
+                        • Apabila perbaikan tidak bisa dikerjakan di rumah Bapak/Ibu, maka pengerjaan akan dilakukan di tempat kami.
+                        </p>
+                        <p class="pInTable">
+                        • Biaya untuk 1(satu) kali kunjungan adalah Rp 200.000,- (dua ratus ribu rupiah) dan akan dibuatkan tanda terima resmi dari WAKI.
+                        </p>
+                        <p class="pInTable">
+                        • Apabila pada saat kunjungan service tersebut, perbaikan harus dilakukan di kantor kami, maka untuk pengembalian produk ke rumah Bapak/Ibu adalah free.
+                        </p>
+                        <p class="pInTable">
+                        • Apabila Bapak/Ibu menghantarkan produk ke tempat kami, dan setelah selesai dilakukan perbaikan, produk tersebut wajib diambil sendiri. Apabila kami yang menghantarkan tetap akan dikenakan biaya sebesar Rp 200.000,-
+                        </p>
+                        <p class="pInTable">
+                        • Apabila ternyata ada sparepart yang perlu dilakukan penggantian, maka harga sparepart tersebut adalah berbeda dg biaya kunjungan service.
                         </p>
                     </td>
                 </tr>
