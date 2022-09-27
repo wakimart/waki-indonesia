@@ -825,7 +825,7 @@ $menu_item_second = "list_technician";
                         target="_blank">
                         <button id="btn-share"
                             type="button"
-                            class="btn btn-gradient-primary mr-2 d-none">
+                            class="btn btn-gradient-primary mr-2">
                             <span class="mdi mdi-whatsapp"
                                 style="font-size: 18px;">
                             </span>
@@ -1192,12 +1192,21 @@ function clickView(btn) {
         @elseif(isset($_GET['id_detail_hs']))
             $("#viewTechnicianScheduleModal").modal("show");
         @else
-            document.getElementById("url_share").setAttribute(
-                "href",
-                "whatsapp://send?text=<?php echo route('homeServices_success'); ?>"
-                + "?code="
-                + result.code
-            );
+            if (result.code_homeservice) {
+                document.getElementById("url_share").setAttribute(
+                    "href",
+                    "whatsapp://send?text=<?php echo route('homeServices_success'); ?>"
+                    + "?code="
+                    + result.code_homeservice
+                );
+            } else {
+                document.getElementById("url_share").setAttribute(
+                    "href",
+                    "whatsapp://send?text=<?php echo route('services_success'); ?>"
+                    + "?code="
+                    + btoa(result.id)
+                );
+            }            
         @endif
 
         var temp_product_ts = '';

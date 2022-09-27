@@ -55,6 +55,9 @@ Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeService
 Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
+// Service
+Route::get('/service-success', 'TechnicianScheduleController@successRegister')->name('services_success');
+
 //Program Refrence
 Route::get('/referenceuntung', 'SubmissionController@untungBiayaIklan')->name('refrence_untung');
 Route::get('/referencesehat', 'SubmissionController@referenceSehat')->name('refrence_sehat');

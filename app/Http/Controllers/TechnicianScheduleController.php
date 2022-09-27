@@ -796,4 +796,10 @@ class TechnicianScheduleController extends Controller
         
         return Excel::download(new TechnicianScheduleExport($date, $city, $cso, $search), 'Technician Schedule.xlsx');
     }
+
+    public function successRegister(Request $request)
+    {
+        $technician_schedule = TechnicianSchedule::where('id', base64_decode($request->code))->first();
+        return view('servicesuccess', compact('technician_schedule'));
+    }
 }
