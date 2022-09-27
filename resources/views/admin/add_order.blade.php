@@ -331,6 +331,7 @@ $menu_item_second = "add_order";
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group">
+                                            <label for="">Purchase Product</label>
                                             <select class="form-control pilihan-product"
                                                 id="product_0"
                                                 name="product_0"
@@ -375,6 +376,7 @@ $menu_item_second = "add_order";
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
+                                            <label for="">Qty Product</label>
                                             <input type="number"
                                                 class="form-control"
                                                 name="qty_0"
@@ -1150,7 +1152,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const newDivCol12Qty = document.createElement("div");
             newDivCol12Qty.className = "col-md-12 form-group text-right";
 
+            newDivCol9.innerHTML = "<label>Purchase Product</label>";
             newDivCol9.appendChild(newDivProduct.appendChild(newSelectProduct));
+            newDivCol3.innerHTML = "<label>Qty Product</label>"
             newDivCol3.appendChild(newDivQty.appendChild(newSelectQty));
             newDivCol12Qty.appendChild(newDivRemove.appendChild(newButtonRemove));
             newDivOther.appendChild(newInputOther);
