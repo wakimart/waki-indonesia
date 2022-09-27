@@ -573,144 +573,56 @@ $menu_item_page = "order";
                                     <div class="validation"></div>
                                 </div>
                             </div>
+
                             <div class="form-group">
-                                <label for="">Payment Method</label>
-                                <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe" required>
-                                    <option selected disabled value="">Choose Payment Method</option>
-
-                                    @foreach($paymentTypes as $key=>$paymentType)
-                                        @if($orders['payment_type'] == $key)
-                                            <option value="{{ $key }}" selected="true">{{ strtoupper($paymentType) }}</option>
-                                        @else
-                                            <option value="{{ $key }}">{{ strtoupper($paymentType) }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                                <div class="validation"></div>
-                            </div>
-
-                            @if($orders['payment_type'] == 1 || $orders['payment_type'] == 2)
-                            <div id="container-jenispembayaran">
-                                {{-- ++++++++ BANK ++++++++ --}}
-                                @php $indexPayment = 0; @endphp
-                                @foreach($orders->orderPayment as $payment)
-                                <input type="hidden" name="bankold_{{ $indexPayment }}" value="{{ $payment['id'] }}">
-                                <div class="p-3 mb-2" style="border: 1px solid black" id="bank_{{ $indexPayment }}">
-                                    <input type="hidden" name="orderpaymentold[]" value={{ $payment['id'] }}>
-                                    <div class="form-group">
-                                        <label for="">Payment Type {{ ($indexPayment) != 0 ? ($indexPayment + 1) : '' }}</label>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-8">
-                                            <select class="form-control bank_name" name="bank_{{ $indexPayment }}" data-msg="Mohon Pilih Bank">
-                                                <option selected disabled value="">Choose Bank</option>
-
-                                                @foreach($banks as $bank)
-                                                    <option value="{{ $bank->id }}"
-                                                        @if($payment['bank_id'] == $bank['id']) selected @endif>
-                                                        {{ $bank->name }}
-                                                    </option>
+                                <table class="col-md-12 text-center table">
+                                    <thead>
+                                        <td colspan="7">Payment Detail</td>
+                                    </thead>
+                                    <thead style="background-color: #80808012 !important">
+                                        <td>Date</td>
+                                        <td>Type</td>
+                                        <td>Total Payment</td>
+                                        <td>Angsuran</td>
+                                        <td>Bank In</td>
+                                        <td>Image</td>
+                                        <td>Status</td>
+                                    </thead>
+                                    @if(count($orders->orderPayment) > 0)
+                                        @foreach ($orders->orderPayment as $orderPayment)
+                                        <tr>
+                                            <td>{{ $orderPayment->payment_date }}</td>
+                                            <td>{{ ucfirst($orderPayment->type) }}</td>
+                                            <td>Rp. {{ number_format($orderPayment->total_payment) }}</td>
+                                            <td>{{ ($orderPayment->type_payment == 'card installment') ? $orderPayment->creditCard->name : (isset($orderPayment->bank_account_id)) ? $orderPayment->bankAccount->name : $orderPayment->bank->name }} {{ $orderPayment->cicilan }} Bln</td>
+                                            <td>{{ $orders->branch->code }} ({{ $orderPayment->bank['name'] }})</td>
+                                            <td>
+                                                @foreach (json_decode($orderPayment->image, true) as $orderPaymentImage)
+                                                <a href="{{ asset("sources/order/$orderPaymentImage") }}"
+                                                    target="_blank">
+                                                    <i class="mdi mdi-numeric-{{ $loop->iteration }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                                                </a>
                                                 @endforeach
-                                            </select>
-                                            <div class="validation"></div>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <select class="form-control bank_cicilan" name="cicilan_{{ $indexPayment }}" data-msg="Mohon Pilih Jumlah Cicilan">
-                                                <option selected value="1">1X</option>
-                                                @for($i=2; $i<=12;$i+=2)
-                                                    <option class="other_valCicilan" value="{{ $i }}" 
-                                                    @if($payment['cicilan'] == $i) selected @endif>
-                                                        {{ $i }}X
-                                                    </option>
-                                                @endfor
-                                                <option class="other_valCicilan"
-                                                    value="18">
-                                                    18X
-                                                </option>
-                                                <option class="other_valCicilan"
-                                                    value="24">
-                                                    24X
-                                                </option>
-                                            </select>
-                                            <div class="validation"></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="">Total Payment</label>
-                                        <input type="text"
-                                            class="form-control downpayment"
-                                            name="downpayment_{{ $indexPayment }}"
-                                            placeholder="Total Payment"
-                                            required
-                                            data-type="currency"
-                                            data-msg="Mohon Isi Total Pembayaran"
-                                            value="{{ number_format($payment->total_payment, 2) }}"
-                                            style="text-transform: uppercase;" />
-                                        <div class="validation"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-xs-12">
-                                            <label>Bukti Pembayaran</label>
-                                            <span style="float: right;">min. 1 picture</span>
-                                        </div>
-                                        @php $arrPaymentImage = json_decode($payment['image'], true); @endphp
-                                        @for ($i = 0; $i < 3; $i++)
-                                            <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
-                                                style="padding: 15px; float: left;">
-                                                <label>Image {{ $i + 1 }}</label>
-                                                @if (!empty($arrPaymentImage[$i]))
-                                                    <div class="imagePreview"
-                                                        style="background-image: url({{ asset("sources/order/" . $arrPaymentImage[$i]) }});"></div>
-                                                @else
-                                                    <div class="imagePreview"
-                                                        style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});"></div>
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($orderPayment['status'] == "unverified")
+                                                    <span class="badge badge-warning">Unverified</span>
+                                                @elseif ($orderPayment['status'] == "verified")
+                                                    <span class="badge badge-success">Verified</span>
+                                                @elseif ($orderPayment['status'] == "rejected")
+                                                    <span class="badge badge-danger">Rejected</span>
                                                 @endif
-                                                <label class="file-upload-browse btn btn-gradient-primary"
-                                                    style="margin-top: 15px;">
-                                                    Upload
-                                                    <input name="images_{{ $indexPayment }}_{{ $i }}"
-                                                        id="gambars-{{ $indexPayment }}-{{ $i }}"
-                                                        type="file"
-                                                        accept=".jpg,.jpeg,.png"
-                                                        class="uploadFile img"
-                                                        value="Upload Photo"
-                                                        style="width: 0px; height: 0px; overflow: hidden;" />
-                                                </label>
-                                                <i class="mdi mdi-window-close del"></i>
-                                            </div>
-                                        @endfor
-                                        <div class="validation"></div>
-                                    </div>
-                                    <div class="text-center">
-                                        @If ($indexPayment == 0)
-                                        <button id="tambah_bank"
-                                            title="Tambah Bank"
-                                            type="button">
-                                            <i class="mdi mdi-plus"></i> Add Payment Type
-                                        </button>
-                                        @else
-                                        <button style="padding: 0.4em 0.7em; background-color: red"
-                                            class="hapus_bank"
-                                            title="Hapus Bank"
-                                            value="{{ $indexPayment }}"
-                                            type="button">
-                                            <i class="mdi mdi-minus"></i> Delete Payment Type
-                                        </button>
-                                        @endif
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                @php $indexPayment++; @endphp
-                                @endforeach
-
-                                <div id="tambahan_bank"></div>
-                                <div class="form-group">
-                                    <label for="">Remaining Payment</label>
-                                    <input type="text" class="form-control" name="remaining_payment" id="remaining_payment" value="{{number_format($orders['remaining_payment'])}}" required readonly data-type="currency" data-msg="Mohon Isi Sisa Pembayaran" style="text-transform:uppercase"/>
-                                    <div class="validation"></div>
-                                </div>
+                                            </td>                                        
+                                        </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan=7>No Payment</td>
+                                        </tr>
+                                    @endif
+                                </table>
                             </div>
-                            @endif
+               
                             <div class="form-group">
                                 <label for="">Description</label>
                                 <textarea class="form-control" name="description" rows="5" data-msg="Mohon Isi Keterangan">{{$orders['description']}}</textarea>
@@ -959,7 +871,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 </script>
 <script type="application/javascript">
-    var total_bank = "{{ $indexPayment-1 }}";
+    var total_bank = 0;
     var total_product = "{{ $total_product }}";
     var count = 0;
     var arrBooleanCso = ['false', 'false', 'false'];

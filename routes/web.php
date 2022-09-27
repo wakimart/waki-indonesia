@@ -435,6 +435,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/export_order_report_cso', 'OrderController@admin_ExportOrderReportCso')
             ->name('admin_export_order_report_cso')
             ->middleware('can:browse-order_report_cso');
+
+
+        //View order payment (detail)
+        Route::get('/view_order_payment/{id}', 'OrderController@viewOrderPayment')->name('view_order_payment');
+        //Update Order payment for those who are not head admin
+        Route::match(['put', 'patch'], '/update_order_payment_for_those_who_are_not_head_admin/{id}', 'OrderController@updateOrderPaymentForThoseWhoAreNotHeadAdmin')->name('update_order_payment_for_those_who_are_not_head_admin');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {

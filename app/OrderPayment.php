@@ -19,4 +19,12 @@ class OrderPayment extends Model
     {
         return $this->belongsTo("App\Bank");
     }
+
+    public function creditCard(){
+        return $this->belongsTo('App\CreditCard');
+    }
+
+    public function bankAccount(){
+        return $this->belongsTo('App\BankAccount');
+    }
 }

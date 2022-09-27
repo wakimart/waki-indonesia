@@ -69,6 +69,10 @@
         background-color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
     }
+
+    .black-color {
+        color: black !important;
+    }
 </style>
 @endsection
 
@@ -148,25 +152,29 @@
                         </tr>
                     @endforeach
                 </table>
-                <table class="col-md-12">
+                <table class="table">
                     <thead>
-                        <td colspan="7">Payment Detail</td>
+                        <td colspan="10">Payment Detail</td>
                     </thead>
                     <thead style="background-color: #80808012 !important">
                         <td>Date</td>
-                        <td>Bank</td>
+                        <td>Type</td>
                         <td>Total Payment</td>
+                        <td>Angsuran</td>
+                        <td>Bank In</td>
                         <td>Image</td>
                         <td>Status</td>
                         @if (Gate::check('detail-order') || Gate::check('edit-order') || Gate::check('delete-order'))
-                            <td colspan="2">Edit/Delete</td>
+                            <td colspan="3">View/Edit/Delete</td>
                         @endif
                     </thead>
                     @foreach ($order->orderPayment as $orderPayment)
                     <tr>
                         <td>{{ $orderPayment->payment_date }}</td>
-                        <td>{{ $orderPayment->bank['name'] }} ({{ $orderPayment->cicilan }}x)</td>
+                        <td>{{ ucfirst($orderPayment->type) }}</td>
                         <td>Rp. {{ number_format($orderPayment->total_payment) }}</td>
+                        <td>{{ ($orderPayment->type_payment == 'card installment') ? $orderPayment->creditCard->name : (isset($orderPayment->bank_account_id)) ? $orderPayment->bankAccount->name : $orderPayment->bank->name }} {{ $orderPayment->cicilan }} Bln</td>
+                        <td>{{ $order->branch->code }} ({{ $orderPayment->bank['name'] }})</td>
                         <td>
                             @foreach (json_decode($orderPayment->image, true) as $orderPaymentImage)
                             <a href="{{ asset("sources/order/$orderPaymentImage") }}"
@@ -184,6 +192,18 @@
                                 <span class="badge badge-danger">Rejected</span>
                             @endif
                         </td>
+                        <td style="text-align: center;">
+                            <button value="{{ $orderPayment['id'] }}" class="btn-delete btn-view_order_payment">
+                                <i class="mdi mdi-eye" style="font-size: 24px; color:#33b5e5;"></i>
+                            </button>
+                        </td>
+                        @if($orderPayment['status'] == 'verified' && !Auth::user()->inRole("head-admin"))
+                            <td style="text-align: center;">
+                                <button value="{{ $orderPayment['id'] }}" class="btn-delete btn-edit_order_payment_for_those_who_are_not_head_admin">
+                                    <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                                </button>
+                            </td>
+                        @endif
                         @can('edit-order')
                             @if ($order->status != 'new' || Auth::user()->inRole("head-admin"))
                             @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
@@ -213,7 +233,7 @@
                     <tr>
                         <td colspan="2" class="text-right" style="background-color: #80808012 !important">Total Payment</td>
                         <td>Rp. {{ number_format($order->down_payment) }}</td>
-                        <td colspan="4" style="background-color: #f2f2f2;" rowspan="3"></td>
+                        <td colspan="7" style="background-color: #f2f2f2;" rowspan="3"></td>
                     </tr>
                     <tr>
                         <td colspan="2" class="text-right" style="background-color: #80808012 !important">Total Price</td>
@@ -579,6 +599,158 @@
                 </div>
             </div>
             <!-- End Modal Add Payment -->
+            <!-- Modal View Payment -->
+            <div class="modal fade"
+                id="viewPaymentModal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h5 style="text-align: center;">
+                                Detail Payment
+                            </h5>
+                            <br>
+                            <div class="form-group mb-1">
+                                <label for="">Payment Date</label>
+                                <input type="date" 
+                                    id="viewPayment-payment_date"
+                                    class="form-control" 
+                                    value=""
+                                    readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Nominal Payment</label>
+                                <input type="text"
+                                    id="viewPayment-total_payment"
+                                    class="form-control downpayment"
+                                    readonly
+                                    data-type="currency"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Type</label>
+                                <select name="type" class="form-control black-color" id="viewPayment-select_type" disabled>
+                                    <option value=""></option>
+                                    <option value="order">ORDER</option>
+                                    <option value="cash">CASH</option>
+                                    <option value="delivery">DELIVERY</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Type Payment</label>
+                                <select name="type_payment" class="form-control black-color" id="viewPayment-select_type_payment" disabled>
+                                    <option value=""></option>
+                                    <option value="cash">CASH</option>
+                                    <option value="debit">DEBIT</option>
+                                    <option value="card">CARD</option>
+                                    <option value="card installment">CARD INSTALLMENT</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Installment</label>
+                                <select id="viewPayment-select_installment" class="form-control black-color" disabled>
+                                    <option value=""></option>    
+                                    @foreach($creditCards as $cc)
+                                        <option value="{{$cc->id}}">{{$cc->code}}</option>
+                                    @endforeach
+                                </select> 
+                                <div id="viewPayment-credit_card_name" class="mt-2"></div>
+                                <input type="number" class="form-control" id="viewPayment-credit_card_installment" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Bank</label>
+                                <select id="viewPayment-select_bank" class="form-control black-color" disabled>
+                                    <option></option>
+                                    @foreach($bankAccounts as $bankAccount)
+                                        <option value="{{$bankAccount->id}}">{{$bankAccount->code}}</option>
+                                    @endforeach
+                                </select>
+                                <div id="viewPayment-bank_description" class="mt-2"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Charge (%)</label>
+                                <div class="row">
+                                    <div class="col-lg-5">
+                                        <input type="number" class="form-control" step="any" id="viewPayment-charge_percentage_company" readonly>
+                                    </div>
+                                    <div class="col-lg-2 text-center"><h3>+</h3></div>
+                                    <div class="col-lg-5">
+                                        <input type="number" class="form-control" step="any" id="viewPayment-charge_percentage_bank" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Estimate Transfer Date</label>
+                                <input type="date" id="viewPayment-estimate_transfer_date" class="form-control" readonly>
+                            </div>
+                            <div class="form-group mt-2">
+                                <label for="">Bukti Pembayaran</label>
+                                <div class="clearfix"></div>
+                                @for ($i = 0; $i < 3; $i++)
+                                    <div class="col-xs-12 col-sm-6 col-md-4 form-group"
+                                        style="padding: 15px; float: left;">
+                                        <label>Image {{ $i + 1 }}</label>
+                                        <div id="viewPayment-image-{{ $i }}" class="imagePreview"
+                                            style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
+                                        </div>
+                                    </div>
+                                @endfor
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal View Payment -->
+            <!-- Modal Edit Payment For Those Who Are Not Head Admin -->
+            <div class="modal fade"
+                id="editPaymentModalForThoseWhoAreNotHeadAdmin"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="post" id="editFormPaymentForThoseWhoAreNotHeadAdmin" action="">
+                            @csrf
+                            {{ method_field('PUT') }}
+                            <div class="modal-body">
+                                <h5 style="text-align: center;">
+                                    Edit Payment
+                                </h5>
+                                <br>
+                                <div class="form-group">
+                                    <label for="">Estimate Transfer Date</label>
+                                    <input type="date" id="editPaymentForThoseWhoAreNotHeadAdmin-estimate_transfer_date"
+                                        class="form-control" 
+                                        name="estimate_transfer_date" 
+                                        required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-gradient-success mr-2">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Edit Payment For Which Is Not Head Admin -->
             <!-- Modal Edit Payment -->
             <div class="modal fade"
                 id="editPaymentModal"
@@ -894,6 +1066,41 @@
             }
         });
 
+        // View Order Payment
+        $(".btn-view_order_payment").click(function() {
+            var url = '{{route("view_order_payment", ":id")}}'
+            url = url.replace(':id', $(this).val())
+            $.ajax({
+                method: "get",
+                url: url,
+                success: function(data) {
+                    $('#viewPaymentModal').modal('show');
+                    $("#viewPayment-payment_date").val(data.payment_date);
+                    $("#viewPayment-total_payment").val(numberWithCommas(data.total_payment));
+                    $("#viewPayment-select_type").val(data.type).change()
+                    $("#viewPayment-select_type_payment").val(data.type_payment).change()
+                    $("#viewPayment-select_installment").val(data.credit_card_id).change()
+                    $('#viewPayment-credit_card_name').html(data.credit_card_name)
+                    $('#viewPayment-credit_card_installment').val(data.installment)
+                    $("#viewPayment-select_bank").val(data.bank_account_id).change()
+                    $('#viewPayment-bank_description').html(`
+                        <b>${data.bank_name}</b> ${data.bank_account_name} (${data.bank_account_number})
+                    `)
+                    $('#viewPayment-charge_percentage_company').val(data.charge_percentage_company)
+                    $('#viewPayment-charge_percentage_bank').val(data.charge_percentage_bank)
+                    $('#viewPayment-estimate_transfer_date').val(data.estimate_transfer_date)
+                    const mainUrlImage = "{{ asset('sources/order') }}";
+                    $.each(JSON.parse(data.images), function(index, image) {
+                        $("#viewPayment-image-" + index).css('background-image', 'url(' + mainUrlImage + "/" +image + ')');
+                    });
+                },
+                error: function(data) {
+                    $('#viewPaymentModal').modal('hide');
+                    alert(data.responseJSON.error);
+                }
+            });
+        });
+
         // Edit Order Payment
         $(".btn-edit_order_payment").click(function() {
             $("#submitFrmEditPayment").hide();
@@ -960,6 +1167,27 @@
                 },
                 error: function(data) {
                     alert("Error!");
+                }
+            });
+        });
+
+        $(".btn-edit_order_payment_for_those_who_are_not_head_admin").click(function() {
+            var id = $(this).val()
+            var url = '{{route("view_order_payment", ":id")}}'
+            url = url.replace(':id', id)
+            $.ajax({
+                method: "get",
+                url: url,
+                success: function(data) {
+                    $('#editPaymentModalForThoseWhoAreNotHeadAdmin').modal('show');
+                    var urlForm = '{{route("update_order_payment_for_those_who_are_not_head_admin", ":paymentID")}}'
+                    urlForm = urlForm.replace(':paymentID', id)
+                    $('#editFormPaymentForThoseWhoAreNotHeadAdmin').attr('action', urlForm)
+                    $('#editPaymentForThoseWhoAreNotHeadAdmin-estimate_transfer_date').val(data.estimate_transfer_date)
+                },
+                error: function(data) {
+                    $('#editPaymentModalForThoseWhoAreNotHeadAdmin').modal('hide');
+                    alert(data.responseJSON.error);
                 }
             });
         });
