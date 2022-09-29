@@ -437,6 +437,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/export_order_report_cso', 'OrderController@admin_ExportOrderReportCso')
             ->name('admin_export_order_report_cso')
             ->middleware('can:browse-order_report_cso');
+
+
+        //View order payment (detail)
+        Route::get('/view_order_payment/{id}', 'OrderController@viewOrderPayment')->name('view_order_payment');
+        //Update Order payment for those who are not head admin
+        Route::match(['put', 'patch'], '/update_order_payment_for_those_who_are_not_head_admin/{id}', 'OrderController@updateOrderPaymentForThoseWhoAreNotHeadAdmin')->name('update_order_payment_for_those_who_are_not_head_admin');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {
@@ -935,6 +941,27 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'BankController@destroy')
             ->name('delete_bank')
             ->middleware('can:delete-bank');
+    });
+
+    Route::group(['prefix' => 'bank-account', 'middleware' => 'auth'], function() {
+        Route::get('/', 'BankController@createBankAccount')->name('add_bank_account')->middleware('can:add-bank');
+        Route::post('/', 'BankController@storeBankAccount')->name('store_bank_account')->middleware('can:add-bank');
+        Route::get('/list', 'BankController@indexBankAccount')->name('list_bank_account')->middleware('can:browse-bank');
+        Route::get('/edit/{id}', 'BankController@editBankAccount')->name('edit_bank_account')->middleware('can:edit-bank');
+        Route::post('/update/', 'BankController@updateBankAccount')->name('update_bank_account')->middleware('can:edit-bank');
+        Route::post('/delete', 'BankController@destroyBankAccount')->name('delete_bank_account')->middleware('can:delete-bank');
+        Route::get('/get-bank-account-by-bank/{id}', 'BankController@getBankAccountData')->name('get_bank_account');
+    });
+
+    Route::group(['prefix' => 'credit-card', 'middleware' => 'auth'], function() {
+        Route::get('/', 'BankController@createCreditCard')->name('add_credit_card')->middleware('can:add-bank');
+        Route::post('/', 'BankController@storeCreditCard')->name('store_credit_card')->middleware('can:add-bank');
+        Route::get('/list', 'BankController@indexCreditCard')->name('list_credit_card')->middleware('can:browse-bank');
+        Route::get('/edit/{id}', 'BankController@editCreditCard')->name('edit_credit_card')->middleware('can:edit-bank');
+        Route::post('/update/', 'BankController@updateCreditCard')->name('update_credit_card')->middleware('can:edit-bank');
+        Route::post('/delete', 'BankController@destroyCreditCard')->name('delete_credit_card')->middleware('can:delete-bank');
+        Route::get('/get-credit-card-data/{id}', 'BankController@getCreditCardData')->name('get_credit_card');
+        Route::get('/get-bank-account-data/{id}', 'BankController@getBankAccountDataFromPaymentModal')->name('get_bank_account_from_payment_modal');
     });
 
     Route::group(['prefix' => 'data_sourcing', 'middleware' => 'auth'], function() {

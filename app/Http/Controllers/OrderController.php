@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManagerStatic as Image;
+use App\CreditCard;
+use App\BankAccount;
 
 class OrderController extends Controller
 {
@@ -217,6 +219,7 @@ class OrderController extends Controller
                         $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
                         $orderPayment->payment_date = $data["orderDate"];
                         $orderPayment->bank_id = $data['bank_' . $arrKey[1]];
+                        $orderPayment->bank_account_id = $data['bank_account_id_' . $arrKey[1]];
                         $orderPayment->cicilan = $data['cicilan_' . $arrKey[1]];
 
                         // save image
@@ -374,7 +377,9 @@ class OrderController extends Controller
         $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
         ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
-        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders'));
+        $creditCards = CreditCard::where('active', true)->get();
+        $bankAccounts = BankAccount::where('active', true)->get();
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts'));
     }
 
     /**
@@ -432,9 +437,9 @@ class OrderController extends Controller
             $orders['name'] = $data['name'];
             $orders['address'] = $data['address'];
             $orders['cash_upgrade'] = $data['cash_upgrade'];
-            $orders['payment_type'] = $data['payment_type'];
+            // $orders['payment_type'] = $data['payment_type'];
             $orders['total_payment'] = $data['total_payment'];
-            $orders['remaining_payment'] = $data['remaining_payment'];
+            // $orders['remaining_payment'] = $data['remaining_payment'];
             $orders['customer_type'] = $data['customer_type'];
             $orders['description'] = $data['description'];
             $orders['phone'] = $data['phone'];
@@ -445,9 +450,9 @@ class OrderController extends Controller
             $orders->save();
 
             $orderDetails = OrderDetail::where("order_id", $orders["id"])->get();
-            $orderPayments = OrderPayment::where("order_id", $orders["id"])->get();
+            // $orderPayments = OrderPayment::where("order_id", $orders["id"])->get();
             $orderDetailOlds = OrderDetail::where("order_id", $orders["id"])->get();
-            $orderPaymentOlds = OrderPayment::where("order_id", $orders["id"])->get();
+            // $orderPaymentOlds = OrderPayment::where("order_id", $orders["id"])->get();
 
             //pembentukan array product
             $index = 0;
@@ -542,93 +547,93 @@ class OrderController extends Controller
             }
 
             //pembentukan array Bank
-            $index = 0;
-            foreach ($data as $key => $value) {
-                $arrKey = explode("_", $key);
-                if($arrKey[0] == 'bank'){
-                    if(isset($data['cicilan_'.$arrKey[1]])){
-                        $isUpdateOrCreatePayment = true;
-                        // Update Order Payment
-                        if (isset($data['orderpaymentold'][$arrKey[1]])) {
-                            $orderPayment = OrderPayment::find($data['orderpaymentold'][$arrKey[1]]);
-                        } else {
-                            if (isset($data['bankold_'.$arrKey[1]])) {
-                                $isUpdateOrCreatePayment = false;
-                            }
-                            $orderPayment = new OrderPayment;
-                        }
-                        // Update Order Payment
-                        if ($isUpdateOrCreatePayment) {
-                            $orderPayment->order_id = $orders['id'];
-                            $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
-                            $orderPayment->payment_date = $orders["orderDate"];
-                            $orderPayment->bank_id = $data['bank_' . $arrKey[1]];
-                            $orderPayment->cicilan = $data['cicilan_' . $arrKey[1]];
+            // $index = 0;
+            // foreach ($data as $key => $value) {
+            //     $arrKey = explode("_", $key);
+            //     if($arrKey[0] == 'bank'){
+            //         if(isset($data['cicilan_'.$arrKey[1]])){
+            //             $isUpdateOrCreatePayment = true;
+            //             // Update Order Payment
+            //             if (isset($data['orderpaymentold'][$arrKey[1]])) {
+            //                 $orderPayment = OrderPayment::find($data['orderpaymentold'][$arrKey[1]]);
+            //             } else {
+            //                 if (isset($data['bankold_'.$arrKey[1]])) {
+            //                     $isUpdateOrCreatePayment = false;
+            //                 }
+            //                 $orderPayment = new OrderPayment;
+            //             }
+            //             // Update Order Payment
+            //             if ($isUpdateOrCreatePayment) {
+            //                 $orderPayment->order_id = $orders['id'];
+            //                 $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
+            //                 $orderPayment->payment_date = $orders["orderDate"];
+            //                 $orderPayment->bank_id = $data['bank_' . $arrKey[1]];
+            //                 $orderPayment->cicilan = $data['cicilan_' . $arrKey[1]];
     
-                            // save image
-                            $arrImage = [];
-                            $idxImg = 1;
-                            for ($i = 0; $i < 3; $i++) {
-                                $orderPaymentImages = json_decode($orderPayment->image, true) ?? [];
-                                // Jika Hapus Gambar Lama
-                                if (isset($orderPaymentImages[$i]) && isset($data['dltimg-'.$arrKey[1].'-'.$i])) {
-                                    if (File::exists("sources/order/" . $orderPaymentImages[$i])) {
-                                        File::delete("sources/order/" . $orderPaymentImages[$i]);
-                                    }
-                                    unset($orderPaymentImages[$i]);
-                                }
-                                if ($request->hasFile('images_' . $arrKey[1] . '_' . $i)) {
-                                    $path = "sources/order";
+            //                 // save image
+            //                 $arrImage = [];
+            //                 $idxImg = 1;
+            //                 for ($i = 0; $i < 3; $i++) {
+            //                     $orderPaymentImages = json_decode($orderPayment->image, true) ?? [];
+            //                     // Jika Hapus Gambar Lama
+            //                     if (isset($orderPaymentImages[$i]) && isset($data['dltimg-'.$arrKey[1].'-'.$i])) {
+            //                         if (File::exists("sources/order/" . $orderPaymentImages[$i])) {
+            //                             File::delete("sources/order/" . $orderPaymentImages[$i]);
+            //                         }
+            //                         unset($orderPaymentImages[$i]);
+            //                     }
+            //                     if ($request->hasFile('images_' . $arrKey[1] . '_' . $i)) {
+            //                         $path = "sources/order";
     
-                                    // Hapus Img Lama Jika Update Image
-                                    if (isset($orderPaymentImages[$i])) {
-                                        if (File::exists("sources/order/" . $orderPaymentImages[$i])) {
-                                            File::delete("sources/order/" . $orderPaymentImages[$i]);
-                                        }
-                                    }
+            //                         // Hapus Img Lama Jika Update Image
+            //                         if (isset($orderPaymentImages[$i])) {
+            //                             if (File::exists("sources/order/" . $orderPaymentImages[$i])) {
+            //                                 File::delete("sources/order/" . $orderPaymentImages[$i]);
+            //                             }
+            //                         }
     
-                                    $file = $request->file('images_' . $arrKey[1] . '_' . $i);
-                                    $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $arrKey[1] . $idxImg . "_order." . $file->getClientOriginalExtension();
+            //                         $file = $request->file('images_' . $arrKey[1] . '_' . $i);
+            //                         $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $arrKey[1] . $idxImg . "_order." . $file->getClientOriginalExtension();
     
-                                    // Cek ada folder tidak
-                                    if (!is_dir($path)) {
-                                        File::makeDirectory($path, 0777, true, true);
-                                    }
+            //                         // Cek ada folder tidak
+            //                         if (!is_dir($path)) {
+            //                             File::makeDirectory($path, 0777, true, true);
+            //                         }
     
-                                    //compressed img
-                                    $compres = Image::make($file->getRealPath());
-                                    $compres->resize(540, null, function ($constraint) {
-                                        $constraint->aspectRatio();
-                                    })->save($path.'/'.$fileName);
+            //                         //compressed img
+            //                         $compres = Image::make($file->getRealPath());
+            //                         $compres->resize(540, null, function ($constraint) {
+            //                             $constraint->aspectRatio();
+            //                         })->save($path.'/'.$fileName);
     
-                                    //array_push($data['image'], $fileName);
-                                    $arrImage[] = $fileName;
-                                    $idxImg++;
-                                } else if (isset($orderPaymentImages[$i])) {
-                                    $arrImage[] = $orderPaymentImages[$i];
-                                    $idxImg++;
-                                }
-                            }
-                            $orderPayment->image = json_encode($arrImage);
-                            $orderPayment->save();
-                            $index++;
-                        }
-                    }
-                }
-            }
+            //                         //array_push($data['image'], $fileName);
+            //                         $arrImage[] = $fileName;
+            //                         $idxImg++;
+            //                     } else if (isset($orderPaymentImages[$i])) {
+            //                         $arrImage[] = $orderPaymentImages[$i];
+            //                         $idxImg++;
+            //                     }
+            //                 }
+            //                 $orderPayment->image = json_encode($arrImage);
+            //                 $orderPayment->save();
+            //                 $index++;
+            //             }
+            //         }
+            //     }
+            // }
 
             // Hapus Old Order Payment
-            foreach ($orderPayments as $orderPayment) {
-                if (!in_array($orderPayment['id'], $data['orderpaymentold'])) {
-                    $orderPaymentImages = json_decode($orderPayment->image, true);
-                    foreach ($orderPaymentImages as $orderPaymentImage) {
-                        if (File::exists("sources/order/" . $orderPaymentImage)) {
-                            File::delete("sources/order/" . $orderPaymentImage);
-                        }
-                    }
-                    $orderPayment->delete();
-                }
-            }            
+            // foreach ($orderPayments as $orderPayment) {
+            //     if (!in_array($orderPayment['id'], $data['orderpaymentold'])) {
+            //         $orderPaymentImages = json_decode($orderPayment->image, true);
+            //         foreach ($orderPaymentImages as $orderPaymentImage) {
+            //             if (File::exists("sources/order/" . $orderPaymentImage)) {
+            //                 File::delete("sources/order/" . $orderPaymentImage);
+            //             }
+            //         }
+            //         $orderPayment->delete();
+            //     }
+            // }            
 
             //update image
             // $arr_image_before = $orders['image'];
@@ -711,7 +716,7 @@ class OrderController extends Controller
             $orders->save();
 
             $dataChanges = array_diff(json_decode($orders, true), json_decode($dataBefore, true));
-            $childs = ["orderDetail" => $orderDetailOlds, "orderPayment" => $orderPaymentOlds];
+            $childs = ["orderDetail" => $orderDetailOlds];
             foreach ($childs as $key => $child) {
                 $orderChild = $orders->$key->keyBy('id');
                 $child = $child->keyBy('id');
@@ -785,6 +790,7 @@ class OrderController extends Controller
 
     public function storeOrderPayment(Request $request)
     {
+        // return response()->json($request->all());
         DB::beginTransaction();
         try {
             $validator = $request->validate([
@@ -795,6 +801,12 @@ class OrderController extends Controller
                 'cicilan' => 'required',
             ]);
 
+            $orderPrice = Order::find($request->order_id);
+            $orderPaymentTotal = OrderPayment::where('order_id', $orderPrice->id)->sum('total_payment');
+            if((double)$orderPrice->total_payment < ((double)$orderPaymentTotal+$request->total_payment)){
+                return redirect()->back()->withErrors('payment over the total order');
+            }
+
             $data = $request->all();
             $orderPayment = new OrderPayment;
             $orderPayment->order_id = $data['order_id'];
@@ -802,6 +814,14 @@ class OrderController extends Controller
             $orderPayment->payment_date = $data['payment_date'];
             $orderPayment->bank_id = $data['bank_id'];
             $orderPayment->cicilan = $data['cicilan'];
+
+            $orderPayment->type = $data['type'];
+            $orderPayment->type_payment = $data['type_payment'];
+            $orderPayment->credit_card_id = $data['credit_card_id'];
+            $orderPayment->bank_account_id = $data['bank_account_id'];
+            $orderPayment->charge_percentage_bank = $data['charge_percentage_bank'];
+            $orderPayment->charge_percentage_company = $data['charge_percentage_company'];
+            $orderPayment->estimate_transfer_date = $data['estimate_transfer_date'];
 
             // save image
             $arrImage = [];
@@ -873,10 +893,17 @@ class OrderController extends Controller
     {
         DB::beginTransaction();
         try {
+            
             if ($request->has('order_id') && $request->has('order_payment_id')) {
                 $orderPayment = OrderPayment::where('order_id', $request->get('order_id'))
-                    ->where('id', $request->get('order_payment_id'))->first();
+                ->where('id', $request->get('order_payment_id'))->first();
                     
+                $orderPrice = Order::find($request->order_id);
+                $orderPaymentTotal = OrderPayment::where('order_id', $orderPrice->id)->sum('total_payment');
+                if((double)$orderPrice->total_payment < ((double)$orderPaymentTotal + ($request->total_payment - $orderPayment->total_payment))){
+                    return redirect()->back()->withErrors('payment over the total order');
+                }
+                
                 if ($orderPayment) {
                     $orderPaymentOld = OrderPayment::where('order_id', $request->get('order_id'))
                         ->where('id', $request->get('order_payment_id'))->first();
@@ -886,6 +913,14 @@ class OrderController extends Controller
                     $orderPayment->payment_date = $data['payment_date'];
                     $orderPayment->bank_id = $data['bank_id'];
                     $orderPayment->cicilan = $data['cicilan'];
+
+                    $orderPayment->type = $data['type'];
+                    $orderPayment->type_payment = $data['type_payment'];
+                    $orderPayment->credit_card_id = $data['credit_card_id'];
+                    $orderPayment->bank_account_id = $data['bank_account_id'];
+                    $orderPayment->charge_percentage_bank = $data['charge_percentage_bank'];
+                    $orderPayment->charge_percentage_company = $data['charge_percentage_company'];
+                    $orderPayment->estimate_transfer_date = $data['estimate_transfer_date'];
 
                     // save image
                     $arrImage = [];
@@ -1971,5 +2006,71 @@ class OrderController extends Controller
             ->first();
 
         return response()->json(["data" => $customer]);
+    }
+
+    /**
+     * detail order payment for new modal view
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function viewOrderPayment($id)
+    {
+        if($id){
+            $orderPayment = OrderPayment::find($id);
+            if(isset($orderPayment)){
+                return response()->json([
+                    'payment_date' => $orderPayment->payment_date,
+                    'total_payment' => $orderPayment->total_payment,
+                    'type' => $orderPayment->type,
+                    'type_payment' => $orderPayment->type_payment,
+                    'credit_card_id' => $orderPayment->credit_card_id,
+                    'credit_card_name' => $orderPayment->creditCard ? $orderPayment->creditCard->name : '',
+                    'installment' => $orderPayment->cicilan,
+                    'bank_account_id' => $orderPayment->bank_account_id,
+                    'bank_name' => $orderPayment->bank->name,
+                    'bank_account_name' => $orderPayment->bankAccount ? $orderPayment->bankAccount->name : '',
+                    'bank_account_number' => $orderPayment->bankAccount ? $orderPayment->bankAccount->account_number : '',
+                    'charge_percentage_bank' => $orderPayment->charge_percentage_bank,
+                    'charge_percentage_company' => $orderPayment->charge_percentage_company,
+                    'estimate_transfer_date' => $orderPayment->estimate_transfer_date,
+                    'images' => $orderPayment->image
+                ], 200);
+            }
+        }
+        return response()->json(['error' => 'Invalid Payment ID'], 500);
+    }
+
+    /**
+     * update order payment for those who are not head admin
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function updateOrderPaymentForThoseWhoAreNotHeadAdmin(Request $request, $id)
+    {
+        if($id){
+            $orderPayment = OrderPayment::find($id);
+            if(isset($orderPayment)){
+                DB::beginTransaction();
+                try {
+                    $orderPayment->estimate_transfer_date = $request->estimate_transfer_date;
+                    $orderPayment->update();
+                    DB::commit();
+                    return redirect()->back()->with('success', 'Order Payment Berhasil Di Ubah');
+                } catch (\Exception $ex) {
+                    DB::rollback();
+                    return response()->json(['error' =>  $ex->getMessage(), 500]);
+                }
+                
+            }
+        }
+        return response()->json(['error' => 'Invalid Payment ID'], 500);
     }
 }
