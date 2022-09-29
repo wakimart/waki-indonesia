@@ -672,7 +672,7 @@
                                 </div>
                             </form>
                             <div class="clearfix"></div>
-                            @if (Gate::check('change-status_payment'))
+                            @if (Gate::check('change-status_payment') && $order->status != 'new')
                             <div id="divUpdateStatusPayment" class="text-center p-3" style="border: 1px solid black">
                                 <h5 class="mb-3">Status Payment</h5>
                                 <form id="frmUpdateStatusPayment"
