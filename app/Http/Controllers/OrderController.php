@@ -756,6 +756,16 @@ class OrderController extends Controller
 
     public function updateStatusOrder(Request $request)
     {
+        $networkStatus = app('App\Http\Controllers\Api\OnlineSideController')->checkNetwork();
+        if(!$networkStatus){
+            return redirect()->back()->withErrors('Jaringan offline tidak tersedia, silahkan hubungi tim IT');
+        }else{
+            $networkStatus = json_decode($networkStatus, true);
+            if($networkStatus['status'] == 'unauthenticated'){
+                return redirect()->back()->withErrors($networkStatus['message']);
+            }
+        }
+
         $order = Order::find($request->input('orderId'));
         $dataBefore = Order::find($request->input('orderId'));
         $last_status_order = $order->status;
@@ -766,6 +776,11 @@ class OrderController extends Controller
             $order->delivery_cso_id = json_encode($request->delivery_cso_id);
         }        
         $order->save();
+
+        $dataorder = app('App\Http\Controllers\Api\OnlineSideController')->sendOrderData($request->orderId);
+        if($dataorder['status'] == 'error'){
+            return redirect()->back()->withErrors($dataorder['message']);
+        }
 
         $user = Auth::user();
         $historyUpdate['type_menu'] = "Order";
@@ -965,6 +980,15 @@ class OrderController extends Controller
 
     public function updateStatusOrderPayment(Request $request)
     {
+        $networkStatus = app('App\Http\Controllers\Api\OnlineSideController')->checkNetwork();
+        if(!$networkStatus){
+            return redirect()->back()->withErrors('Jaringan offline tidak tersedia, silahkan hubungi tim IT');
+        }else{
+            $networkStatus = json_decode($networkStatus, true);
+            if($networkStatus['status'] == 'unauthenticated'){
+                return redirect()->back()->withErrors($networkStatus['message']);
+            }
+        }
         if ($request->has('order_id') && $request->has('order_payment_id')) {
             $orderPayment = OrderPayment::where('order_id', $request->get('order_id'))
                 ->where('id', $request->get('order_payment_id'))->first();
@@ -996,6 +1020,11 @@ class OrderController extends Controller
                 $historyUpdate['user_id'] = $user['id'];
                 $historyUpdate['menu_id'] = $data['order_id'];
                 $createData = HistoryUpdate::create($historyUpdate);
+
+                $dataorderpayment = app('App\Http\Controllers\Api\OnlineSideController')->sendOrderPaymentData($request->order_payment_id);
+                if($dataorderpayment['status'] == 'error'){
+                    return redirect()->back()->withErrors($dataorderpayment['message']);
+                }
 
                 return redirect()->back()->with('success', 'Order Payment Berhasil Di Ubah');
             }
