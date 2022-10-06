@@ -1,5 +1,5 @@
 <?php
-$menu_item_page = "personal_homecare";
+$menu_item_page = "product_homecare";
 $menu_item_second = "list_product";
 ?>
 @extends('admin.layouts.template')
@@ -105,10 +105,6 @@ $menu_item_second = "list_product";
                         </select>
                     </div>
                 </div>
-                <input type="hidden"
-                    name="product_id"
-                    form="form-search"
-                    value="{{ $url['product_id'] }}" />
                 <div class="col-xs-6 col-sm-6"
                     style="padding: 0; display: inline-block">
                     <div class="form-group">
@@ -125,21 +121,23 @@ $menu_item_second = "list_product";
                 <div class="card">
                     <div class="card-header" style="background: none;">
                         <ul class="nav nav-tabs card-header-tabs">
+                            @php $tabActive = request()->query('tabActive') ?? array_key_first($phcProductCodes); @endphp
+                            @foreach ($phcProductCodes as $keyCode => $phcproducts)
                             <li class="nav-item">
-                                <a class="nav-link {{ $url['product_id'] == 4 ? 'active' : ''}}"
+                                <a class="nav-link {{ $tabActive == $keyCode ? 'active' : ''}}"
                                     style="font-weight: 500; font-size: 1em;"
-                                    id="one-tab"
-                                    href="{{ route('list_phc_product') }}?product_id=4{{ isset($url['status']) ? '&status='.$url['status'] : '' }}{{ isset($url['branch_id']) ? '&branch_id='.$url['branch_id'] : '' }}"
-                                    aria-controls="One"
-                                    aria-selected="true">
-                                    WK2079
+                                    data-toggle="tab"
+                                    href="#tab_{{ $keyCode }}">
+                                    {{ ucwords($keyCode) }} ({{ $phcproducts->total() }})
                                 </a>
                             </li>
+                            @endforeach
                         </ul>
                     </div>
                     <div class="card-body">
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show {{ $url['product_id'] == 4 ? 'active' : ''}} p-3" id="one" role="tabpanel" aria-labelledby="one-tab">
+                            @foreach ($phcProductCodes as $keyCode => $phcproducts)
+                            <div class="tab-pane fade {{ $tabActive == $keyCode ? 'show  active' : ''}} p-3" id="tab_{{ $keyCode }}">
                                 <h5 style="margin-bottom: 0.5em;">
                                     Total: {{ $phcproducts->total() }}
                                 </h5>
@@ -160,10 +158,9 @@ $menu_item_second = "list_product";
                                         </thead>
                                         <tbody>
                                             @foreach ($phcproducts as $key => $phcproduct)
-                                                @if($phcproduct->product->code == 'WK2079')
                                                 <tr>
                                                     <td class="text-right">
-                                                        {{ ++$i }}
+                                                        {{ $loop->iteration + $phcproducts->firstItem() -1 }}
                                                     </td>
                                                     <td>{{ $phcproduct->code }}</td>
                                                     <td>
@@ -195,14 +192,14 @@ $menu_item_second = "list_product";
                                                         </a>
                                                     </td>
                                                 </tr>
-                                                @endif
                                             @endforeach
                                         </tbody>
                                     </table>
                                     <br>
-                                    {{ $phcproducts->appends($url)->links() }}
+                                    {{ $phcproducts->appends($url)->appends(['tabActive' => $keyCode])->links() }}
                                 </div>
                             </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -265,6 +262,11 @@ document.addEventListener("DOMContentLoaded", function () {
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
+
+$('.nav-tabs').on('click', 'li', function() {
+	$('.nav-tabs li.active').removeClass('active');
+	$(this).addClass('active');
+});
 
 </script>
 @endsection

@@ -201,6 +201,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => true,
 
+                // Public Homecare (Head Admin)
+                "add-public-homecare" => false,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => false,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => false,
+                "change-status-checkin-publichomecare" => true,
+                "change-status-checkout-publichomecare" => true,
+                "change-status-verified-publichomecare" => true,
+                "change-status-product-publichomecare" => true,
+
                 //Type Customer (Head Admin)
         		'add-type_customer' => true,
                 'browse-type_customer' => true,
@@ -417,6 +428,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => false,
                 "change-status-product-personalhomecare" => false,
 
+                // Public Homecare (Admin)
+                "add-public-homecare" => false,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => false,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => false,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => false,
+                "change-status-product-publichomecare" => false,
+
                 //Type Customer (Admin)
         		'add-type_customer' => true,
                 'browse-type_customer' => true,
@@ -626,6 +648,17 @@ class RolesSeeder extends Seeder
                 "acc-reschedule-personalhomecare" => false,
                 "acc-extend-personalhomecare" => false,
                 "change-status-product-personalhomecare" => false,
+
+                // Public Homecare (CSO)
+                "add-public-homecare" => true,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => true,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => true,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => false,
+                "change-status-product-publichomecare" => false,
 
                 //Type Customer (CSO)
         		'add-type_customer' => false,
@@ -838,6 +871,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => false,
                 "change-status-product-personalhomecare" => false,
 
+                // Personal Homecare (Branch)
+                "add-public-homecare" => true,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => true,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => true,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => false,
+                "change-status-product-publichomecare" => false,
+
                 //Type Customer (Branch)
         		'add-type_customer' => false,
                 'browse-type_customer' => false,
@@ -1048,6 +1092,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => false,
 
+                // Public Homecare (Area Manager)
+                "add-public-homecare" => false,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => false,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => false,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => true,
+                "change-status-product-publichomecare" => false,
+
                 //Type Customer (Area Manager)
         		'add-type_customer' => false,
                 'browse-type_customer' => false,
@@ -1257,6 +1312,17 @@ class RolesSeeder extends Seeder
                 "acc-reschedule-personalhomecare" => true,
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => false,
+
+                // Public Homecare (Head Manager)
+                "add-public-homecare" => false,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => false,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => false,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => true,
+                "change-status-product-publichomecare" => false,
 
                 //Type Customer (Head Manager)
         		'add-type_customer' => false,
@@ -1473,6 +1539,17 @@ class RolesSeeder extends Seeder
                 "acc-reschedule-personalhomecare" => true,
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => false,
+
+                // Public Homecare (Admin Management)
+                "add-public-homecare" => false,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => true,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => true,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => true,
+                "change-status-product-publichomecare" => false,
 
                 //Type Customer (Admin Management)
         		'add-type_customer' => false,

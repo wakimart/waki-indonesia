@@ -34,6 +34,10 @@ Route::post('/sendcontactform', 'IndexController@sendContactForm')->name('send_c
 Route::get('/personal-homecare/{id}', 'PersonalHomecareController@phForm')->name('personal_homecare');
 Route::get('/thankyou-personal-homecare/{id}', 'PersonalHomecareController@thankyouForm')->name('thankyou_ph');
 
+//Public Homecare
+Route::get('/public-homecare/{id}', 'PublicHomecareController@puhForm')->name('public_homecare');
+Route::get('/thankyou-public-homecare/{id}', 'PublicHomecareController@thankyouForm')->name('thankyou_puh');
+
 //Service Product
 Route::get('/service', 'ServiceController@indexUser')->name('service');
 Route::get('/trackservice/{id}', 'ServiceController@trackService')->name('track_service');
@@ -1305,6 +1309,37 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("extend_personal_homecare");
         Route::post("reschedulePersonalHomecare", "PersonalHomecareController@reschedulePersonalHomecare")
             ->name("reschedule_personal_homecare");
+    });
+
+    Route::group(["prefix" => "public-homecare", "middleware" => "auth"], function () {
+        Route::get("add", "PublicHomecareController@create")
+            ->name("add_public_homecare")
+            ->middleware('can:add-public-homecare');
+        Route::post("store", "PublicHomecareController@store")
+            ->name("store_public_homecare")
+            ->middleware("can:add-public-homecare");
+        Route::get("get-product", "PublicHomecareController@getPuhcProduct")
+            ->name("get_puhc_product");
+        Route::get("check-phone", "PublicHomecareController@checkPhone")
+            ->name("check_puhc_phone");
+        Route::get("list-all", 'PublicHomecareController@index')
+            ->name("list_all_puhc");
+        Route::get("edit/{id}", "PublicHomecareController@edit")
+            ->name("edit_public_homecare")
+            ->middleware("can:edit-public-homecare");
+        Route::post("update", "PublicHomecareController@update")
+            ->name("update_public_homecare")
+            ->middleware("can:edit-public-homecare");
+        Route::post("update/status", "PublicHomecareController@updateStatus")
+            ->name("update_public_homecare_status");
+        Route::post("update/checklist-in", "PublicHomecareController@updateChecklistIn")
+            ->name("update_public_homecare_checklist_in");
+        Route::get("detail/{id}", "PublicHomecareController@detail")
+            ->name("detail_public_homecare")
+            ->middleware("can:detail-public-homecare");
+        Route::post("delete", "PublicHomecareController@destroy")
+            ->name("delete_public_homecare")
+            ->middleware("can:delete-public-homecare");
     });
 
     Route::view('faq_agreement', 'admin.faq_agreement')->name('faq_agreement');
