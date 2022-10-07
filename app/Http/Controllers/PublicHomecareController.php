@@ -226,6 +226,7 @@ class PublicHomecareController extends Controller
                 ->where("personal_homecare_products.branch_id", $request->branch_id)
                 ->where("personal_homecare_products.active", true)
                 ->where("personal_homecare_products.status", "!=", "pending")
+                ->where("personal_homecare_products.product_id", "1")
                 ->get();
 
             $finalPhcProd = [];
