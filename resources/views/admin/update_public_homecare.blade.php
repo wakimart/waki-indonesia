@@ -416,6 +416,21 @@ $menu_item_page = "public_homecare";
     $("#cso_optional_id").select2();
 });
 
+$(document).ready(function() {
+    $(document).on("select2:select", '.ph_product_id', function(e) { 
+        const ph_product = $(this);
+        var count_ph_product = 0;
+        $('.ph_product_id').each(function() {
+            if (ph_product.val() == $(this).val()) count_ph_product++;
+            if (count_ph_product > 1) {
+                ph_product.val("").trigger("change");
+                alert('Cannot Choose Same Product');
+                return false;
+            }
+        })
+    });
+});
+
 var product_options = `<option disabled selected>Select Product (Please select branch & schedule first)</option>
     @foreach ($phcProducts as $phcProduct)
         <option value="{{ $phcProduct['id'] }}">
