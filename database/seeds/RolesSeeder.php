@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Seeder;
 use App\Role;
 
@@ -12,6 +13,9 @@ class RolesSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
+        Role::query()->truncate();
+        
         $admin = Role::create([
         	'name' => 'HEAD-ADMIN',
             'slug' => 'head-admin',
