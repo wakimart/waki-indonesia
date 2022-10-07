@@ -267,11 +267,6 @@ $menu_item_page = "public_homecare";
                                             <img style="height: 300px" src="{{ asset('sources/puhc') . '/' . $publichomecare['approval_letter'] }}">
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>Other Product</td>
-                                        <td>:</td>
-                                        <td>{{ $publichomecare->other_product }}</td>
-                                    </tr>
                                 </table>
                             </div>
                         </div>
@@ -656,6 +651,21 @@ $menu_item_page = "public_homecare";
         </div>
         @endforeach
 
+        <div class="row">
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card" style="padding: 1em;">
+                    <div class="card-body">
+                        <div class="row justify-content-center">
+                            <h2 class="text-center">Other Product</h2>
+                        </div>
+                        <div class="row justify-content-center mt-3">
+                            {{ $publichomecare->other_product }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         @if (strtolower($publichomecare['status']) == "new" && Gate::check('change-status-verified-publichomecare'))
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
@@ -1036,6 +1046,9 @@ $menu_item_page = "public_homecare";
                             </div>
                         </div>
                         @endforeach
+
+                        <h5 class="mt-3">Other Product</h5>
+                        <p>{{ $publichomecare->other_product }}</p>
                     </div>
                 </div>
             </div>
