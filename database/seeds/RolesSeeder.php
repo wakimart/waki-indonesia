@@ -202,11 +202,11 @@ class RolesSeeder extends Seeder
                 "change-status-product-personalhomecare" => true,
 
                 // Public Homecare (Head Admin)
-                "add-public-homecare" => false,
+                "add-public-homecare" => true,
                 "browse-public-homecare" => true,
-                "edit-public-homecare" => false,
+                "edit-public-homecare" => true,
                 "detail-public-homecare" => true,
-                "delete-public-homecare" => false,
+                "delete-public-homecare" => true,
                 "change-status-checkin-publichomecare" => true,
                 "change-status-checkout-publichomecare" => true,
                 "change-status-verified-publichomecare" => true,
@@ -1321,7 +1321,7 @@ class RolesSeeder extends Seeder
                 "delete-public-homecare" => false,
                 "change-status-checkin-publichomecare" => false,
                 "change-status-checkout-publichomecare" => false,
-                "change-status-verified-publichomecare" => true,
+                "change-status-verified-publichomecare" => false,
                 "change-status-product-publichomecare" => false,
 
                 //Type Customer (Head Manager)
@@ -1543,12 +1543,12 @@ class RolesSeeder extends Seeder
                 // Public Homecare (Admin Management)
                 "add-public-homecare" => false,
                 "browse-public-homecare" => true,
-                "edit-public-homecare" => true,
+                "edit-public-homecare" => false,
                 "detail-public-homecare" => true,
-                "delete-public-homecare" => true,
+                "delete-public-homecare" => false,
                 "change-status-checkin-publichomecare" => false,
                 "change-status-checkout-publichomecare" => false,
-                "change-status-verified-publichomecare" => true,
+                "change-status-verified-publichomecare" => false,
                 "change-status-product-publichomecare" => false,
 
                 //Type Customer (Admin Management)

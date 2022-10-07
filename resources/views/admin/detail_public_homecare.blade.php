@@ -868,7 +868,7 @@ $menu_item_page = "public_homecare";
                                     SURAT TANDA TERIMA BARANG
                                 </h2>
                                 <h5>
-                                    PROGRAM PINJAMIN PRODUK 5 HARI : COBA PRODUK DI RUMAH SENDIRI
+                                    PROGRAM PINJAMIN PRODUK UNTUK INSTANSI
                                 <h5>
                             </div>
                             <div style="width: 95%; margin: auto; text-align: justify;">
@@ -876,7 +876,7 @@ $menu_item_page = "public_homecare";
                             </div>
                             <div style="width: 100%; background-color: #b4d9c4; padding: 0.25em; margin-bottom: 0.5em;">
                                 <h4 style="padding-left: 5%;margin: 0;">
-                                    DATA CUSTOMER
+                                    DATA INSTANSI
                                 </H4>
                             </div>
                             <div style="width: 95%; margin: auto; display: table; margin-bottom: 1.5em;">
@@ -886,11 +886,6 @@ $menu_item_page = "public_homecare";
                                 <div style="width: 98%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
                                     <h5>
                                         NO.TELP: {{ $publichomecare['phone'] }}
-                                    </h5>
-                                </div>
-                                <div style="width: 98%; margin-right: 3%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
-                                    <h5>
-                                        NO.MEMBER:
                                     </h5>
                                 </div>
                                 <div style="width: 98%; margin-bottom: 5px; float: left; border-bottom: 1px solid black;">
@@ -924,7 +919,7 @@ $menu_item_page = "public_homecare";
                         <div style="width: 100%; margin: auto; text-align: justify;">
                             <div style="width: 24%; float: left;">
                                 <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
-                                    <p>Tanda Tangan Customer Penerima</p>
+                                    <p>Tanda Tangan Instansi Penerima</p>
                                 </div>
                             </div>
                             <div style="width: 24%; float: left;">
@@ -934,7 +929,7 @@ $menu_item_page = "public_homecare";
                             </div>
                             <div style="width: 24%; float: left;">
                                 <div style="width: 70%; margin: auto; border-top: 4px solid black; text-align: center;">
-                                    <p>Tanda Tangan Customer Kembali</p>
+                                    <p>Tanda Tangan Instansi Kembali</p>
                                 </div>
                             </div>
                             <div style="width: 24%; float: left;">

@@ -136,24 +136,24 @@
 <section id="intro" class="clearfix">
     <div class="container">
         <div class="row justify-content-center">
-            <h2 class="text-center" style="margin-bottom: 0.2em; font-weight: 600; color: #002853;">Program Pinjamin Produk 5 Hari</h2>
+            <h2 class="text-center" style="margin-bottom: 0.2em; font-weight: 600; color: #002853;">Program Pinjamin Produk untuk Instansi</h2>
         </div>
         <div class="row justify-content-center">
-            <h4 class="text-center" style="font-weight: 400;">Coba Produk di Rumah Sendiri</h4>
+            <h4 class="text-center" style="font-weight: 400;">Coba Produk di Instansi</h4>
         </div>
         <hr>
         
         <div class="row justify-content-center mt-5">
             <h4 class="text-center" style="font-size: 48px; font-family: 'Poppins', sans-serif; font-weight: 500; color: #f0bc5e;">
             <span><img class="img-fluid" style="margin-right: 15px; width: 60px; vertical-align: text-center;" src="{{asset('sources/confetti.png')}}"></span>
-                Terima Kasih Bpk/Ibu {{ $publichomecare['name'] }}
+                Terima Kasih Kepada {{ $publichomecare['name'] }}
                 <span><img class="img-fluid" style="margin-right: 15px; width: 60px; vertical-align: text-center;" src="{{asset('sources/confetti.png')}}"></span>
             </h4>
         </div>
         <div class="row justify-content-center">
             <p class="text-center" style="font-size: 18px; color: #000; font-weight: 500;">
                 telah mengikuti program
-                <span style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #002853;"> Pinjamin Produk 5 Hari</span> 
+                <span style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #002853;"> Pinjamin Produk untuk Instansi</span> 
                 di WAKi
             </p> 
         </div>
@@ -161,9 +161,9 @@
             <img class="img-fluid" style="margin-right: 15px; width: 120px;" src="{{asset('sources/thankyou.png')}}">
         </div>
         <div class="row justify-content-center mb-5">
-        <p class="text-center" style="font-size: 18px; color: #000; font-weight: 500;">
+        <p class="text-center d-none" style="font-size: 18px; color: #000; font-weight: 500;">
             Anda bisa mengikuti program
-            <span style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #002853;"> Pinjamin Produk 5 Hari</span>
+            <span style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #002853;"> Pinjamin Produk untuk Instansi</span>
             lagi, setelah 2 pekan depan. 
         </p>
         </div>
@@ -176,9 +176,9 @@
                     <img style="margin-right: 15px; width: 120px;" src="{{asset('sources/ph-desc.png')}}"> 
                     <span>
                         <p style="margin-top: 2em; margin-bottom: 0.7em; font-weight: bold;">
-                            APA ITU PROGRAM PINJAMIN PRODUK 5 HARI?
+                            APA ITU PROGRAM PINJAMIN PRODUK UNTUK INSTANSI?
                         </p>
-                        <p>Bapak & Ibu bisa mencoba produk WAKi (Electro/Hepa/HPT) di rumah sendiri selama 5 hari, dimana petugas kami akan mendemokan produk tersebut sebelumnya.</p>
+                        <p>Bapak & Ibu bisa mencoba produk WAKi (Electro) di instansi terkait, dimana petugas kami akan mendemokan produk tersebut.</p>
                     </span>
                 </div>
             </div>
