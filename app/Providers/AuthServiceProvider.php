@@ -256,6 +256,32 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-promo']);
         });
 
+        //-- STOCK IN OUT --//
+        Gate::define('browse-stock', function ($user) {
+            return $user->hasAccess(['browse-stock']);
+        });
+        Gate::define('add-stock_in', function ($user) {
+            return $user->hasAccess(['add-stock_in']);
+        });
+        Gate::define('add-stock_out', function ($user) {
+            return $user->hasAccess(['add-stock_out']);
+        });
+        Gate::define('detail-stock_in_out', function ($user) {
+            return $user->hasAccess(['detail-stock_in_out']);
+        });
+        Gate::define('browse-stock_in_out', function ($user) {
+            return $user->hasAccess(['browse-stock_in_out']);
+        });
+        Gate::define('edit-stock_in', function ($user) {
+            return $user->hasAccess(['edit-stock_in']);
+        });
+        Gate::define('edit-stock_out', function ($user) {
+            return $user->hasAccess(['edit-stock_out']);
+        });
+        Gate::define('delete-stock_in_out', function ($user) {
+            return $user->hasAccess(['delete-stock_in_out']);
+        });
+
         //-- TYPE CUSTOMER --//
         Gate::define('add-type_customer', function ($user) {
             return $user->hasAccess(['add-type_customer']);

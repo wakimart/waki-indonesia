@@ -462,7 +462,7 @@
 </li>
 @endif
 
-@if(Gate::check('add-product') || Gate::check('browse-product'))
+@if(Gate::check('brwose-stock') || Gate::check('add-stock_in') || Gate::check('add-stock_out') || Gate::check('browse-stock_in_out'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'stock'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#stock-dd" aria-expanded="false" aria-controls="stock-dd">
     <span class="menu-title">Stock</span>
@@ -471,8 +471,17 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'stock'? 'show': '' }}" id="stock-dd">
     <ul class="nav flex-column sub-menu">
-      @if(Gate::check('browse-product'))
+      @if(Gate::check('add-stock_in'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_stock_in'? 'active': '' }}" href="{{route('add_stock_in')}}">Stock In</a></li>
+      @endif
+      @if(Gate::check('add-stock_in'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_stock_out'? 'active': '' }}" href="{{route('add_stock_out')}}">Stock Out</a></li>
+      @endif
+      @if(Gate::check('browse-stock'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_stock'? 'active': '' }}" href="{{route('list_stock')}}">List Stock</a></li>
+      @endif
+      @if(Gate::check('browse-stock_in_out'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_stock_in_out'? 'active': '' }}" href="{{route('list_stock_in_out')}}">List Stock In/Out</a></li>
       @endif
     </ul>
   </div>

@@ -85,6 +85,7 @@ Route::get('/fetchDistrict/{city}', function ($city) {
 Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSouvenir");
 Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
 Route::get("/fetchProductService", "ProductServiceController@fetchProductService")->name("fetchProductService");
+Route::get('/fetchWarehouse', "WarehouseController@fetchWarehouse")->name('fetchWarehouse');
 
 Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
 
@@ -842,6 +843,69 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/list', 'StockController@index')
             ->name('list_stock')
             ->middleware('can:browse-product');
+    });
+
+    Route::group(['prefix' => 'stock', 'middleware' => 'auth'], function() {
+        //List Stock
+        // Route::get('/list', 'StockController@index')
+        //     ->name('list_stock')
+        //     ->middleware('can:browse-product');
+
+        // List Stock New
+        Route::get('/list', 'StockInOutController@index')
+            ->name('list_stock')
+            ->middleware('can:browse-stock');
+        
+        //Add Form Stock In
+        Route::get('/in', 'StockInOutController@createIn')
+            ->name('add_stock_in')
+            ->middleware('can:add-stock_in');
+
+        //Add Form Stock Out
+        Route::get('/out', 'StockInOutController@createOut')
+            ->name('add_stock_out')
+            ->middleware('can:add-stock_out');
+
+        Route::get("get-product", "StockInOutController@getProduct")
+            ->name("stock_in_out_get_product");
+        
+        Route::get("generate_code", "StockInOutController@generateCode")
+            ->name('stock_in_out_generate_code');
+
+        Route::get("get-stock", "StockInOutController@getStock")
+            ->name("stock_in_out_get_stock");
+        
+        //Create Stock
+        Route::post('/', 'StockInOutController@store')
+            ->name('store_stock_in_out');
+
+        //List Stock In/Out
+        Route::get('/list_in_out', 'StockInOutController@indexInOut')
+            ->name('list_stock_in_out')
+            ->middleware('can:browse-stock_in_out');
+
+        Route::get('/detail', 'StockInOutController@show')
+            ->name('detail_stock_in_out')
+            ->middleware('can:detail-stock_in_out');
+
+        //Edit Stock In
+        Route::get('/edit/in', 'StockInOutController@editIn')
+            ->name('edit_stock_in')
+            ->middleware('can:edit-stock_in');
+
+        //Edit Stock Out
+        Route::get('/edit/out', 'StockInOutController@editOut')
+            ->name('edit_stock_out')
+            ->middleware('can:edit-stock_out');
+
+        //Update Stock In/Out
+        Route::post('/update/', 'StockInOutController@update')
+            ->name('update_stock_in_out');
+
+        //Delete Stock In/Out
+        Route::post('/delete', 'StockInOutController@destroy')
+            ->name('delete_stock_in_out')
+            ->middleware('can:delete-stock_in_out');
     });
 
     Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){

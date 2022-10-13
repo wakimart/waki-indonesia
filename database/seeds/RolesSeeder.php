@@ -115,6 +115,16 @@ class RolesSeeder extends Seeder
         		'edit-promo' => true,
                 'delete-promo' => true,
 
+                //Stock In Out
+                'browse-stock' => true,
+                'add-stock_in' => true,
+                'add-stock_out' => true,
+                'detail-stock_in_out' => true,
+                'browse-stock_in_out' => true,
+                'edit-stock_in' => true,
+                'edit-stock_out' => true,
+                'delete-stock_in_out' => true,
+
                 //report
 
                 //user admin
@@ -330,6 +340,16 @@ class RolesSeeder extends Seeder
                 'browse-promo' => true,
         		'edit-promo' => true,
                 'delete-promo' => true,
+
+                //Stock In Out
+                'browse-stock' => true,
+                'add-stock_in' => true,
+                'add-stock_out' => true,
+                'detail-stock_in_out' => true,
+                'browse-stock_in_out' => true,
+                'edit-stock_in' => true,
+                'edit-stock_out' => true,
+                'delete-stock_in_out' => true,
 
                 //report
 
@@ -547,6 +567,16 @@ class RolesSeeder extends Seeder
                 'edit-promo' => false,
                 'delete-promo' => false,
 
+                //Stock In Out
+                'browse-stock' => false,
+                'add-stock_in' => false,
+                'add-stock_out' => false,
+                'detail-stock_in_out' => false,
+                'browse-stock_in_out' => false,
+                'edit-stock_in' => false,
+                'edit-stock_out' => false,
+                'delete-stock_in_out' => false,
+
                 //report
 
                 //user admin
@@ -758,6 +788,16 @@ class RolesSeeder extends Seeder
                 'edit-promo' => false,
                 'delete-promo' => false,
 
+                //Stock In Out
+                'browse-stock' => false,
+                'add-stock_in' => false,
+                'add-stock_out' => false,
+                'detail-stock_in_out' => false,
+                'browse-stock_in_out' => false,
+                'edit-stock_in' => false,
+                'edit-stock_out' => false,
+                'delete-stock_in_out' => false,
+
                 //report
 
                 //user admin
@@ -967,6 +1007,16 @@ class RolesSeeder extends Seeder
                 'browse-promo' => false,
                 'edit-promo' => false,
                 'delete-promo' => false,
+
+                //Stock In Out
+                'browse-stock' => false,
+                'add-stock_in' => false,
+                'add-stock_out' => false,
+                'detail-stock_in_out' => false,
+                'browse-stock_in_out' => false,
+                'edit-stock_in' => false,
+                'edit-stock_out' => false,
+                'delete-stock_in_out' => false,
 
                 //report
 
@@ -1178,6 +1228,16 @@ class RolesSeeder extends Seeder
                 'edit-promo' => false,
                 'delete-promo' => false,
 
+                //Stock In Out
+                'browse-stock' => false,
+                'add-stock_in' => false,
+                'add-stock_out' => false,
+                'detail-stock_in_out' => false,
+                'browse-stock_in_out' => false,
+                'edit-stock_in' => false,
+                'edit-stock_out' => false,
+                'delete-stock_in_out' => false,
+
                 //report
 
                 //user admin
@@ -1387,6 +1447,16 @@ class RolesSeeder extends Seeder
                 'browse-promo' => false,
                 'edit-promo' => false,
                 'delete-promo' => false,
+
+                //Stock In Out
+                'browse-stock' => false,
+                'add-stock_in' => false,
+                'add-stock_out' => false,
+                'detail-stock_in_out' => false,
+                'browse-stock_in_out' => false,
+                'edit-stock_in' => false,
+                'edit-stock_out' => false,
+                'delete-stock_in_out' => false,
 
                 //report
 
