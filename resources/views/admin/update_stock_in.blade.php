@@ -460,31 +460,6 @@ function getWarehouse(warehouse_type, check_parent, target_element) {
         },
     });
 }
-
-$(document).on('change', '#date, #from_warehouse_type', function() {
-    const old_code = "{{ $stockInOut->code }}";
-    const type = $("#type").val();
-    const date = $("#date").val();
-    const warehouse_type = $("#from_warehouse_type").val();
-    const check_date = date != "{{ $stockInOut->date }}";
-    const check_warehouse_type = warehouse_type != "{{ $stockInOut->warehouseFrom['type']}}";
-    if (type && date && warehouse_type && (check_date || check_warehouse_type)) {
-        $.ajax({
-            method: "GET",
-            url: "{{ route('stock_in_out_generate_code') }}",
-            data: {type, date, warehouse_type},
-            success: function(response) {
-                if (response.data) {
-                    $("#code").val(response.data);
-                } else {
-                    alert(response.data);
-                }
-            },
-        });
-    } else {
-        $("#code").val(old_code);
-    }
-})
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
