@@ -766,36 +766,45 @@ class OrderController extends Controller
             }
         }
 
-        $order = Order::find($request->input('orderId'));
-        $dataBefore = Order::find($request->input('orderId'));
-        $last_status_order = $order->status;
-        $order->status = $request->input('status_order');
-        
-        // Save Delivery CSO
-        if ($order->status == Order::$status['3']) {
-            $order->delivery_cso_id = json_encode($request->delivery_cso_id);
-        }        
-        $order->save();
+        DB::beginTransaction();
+        try{
+            $order = Order::find($request->input('orderId'));
+            $dataBefore = Order::find($request->input('orderId'));
+            $last_status_order = $order->status;
+            $order->status = $request->input('status_order');
+            
+            // Save Delivery CSO
+            if ($order->status == Order::$status['3']) {
+                $order->delivery_cso_id = json_encode($request->delivery_cso_id);
+            }        
+            $order->save();
 
-        $dataorder = app('App\Http\Controllers\Api\OnlineSideController')->sendOrderData($request->orderId);
-        if($dataorder['status'] == 'error'){
-            return redirect()->back()->withErrors($dataorder['message']);
+            if($request->input('status_order') == "process"){
+                $dataorder = app('App\Http\Controllers\Api\OnlineSideController')->sendOrderData($request->orderId);
+                if($dataorder['status'] == 'error'){
+                    return redirect()->back()->withErrors($dataorder['message']);
+                }
+            }
+
+            $user = Auth::user();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Update Status";
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> array_diff(json_decode($order, true), json_decode($dataBefore,true))
+            ]);
+
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $order->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+            
+            DB::commit();
+            return redirect()->back()->with('success', 'Status Order Berhasil Di Ubah');
+        }catch(\Exception $ex){
+            DB::rollback();
+            return redirect()->back()->withErrors($ex->getMessage());
         }
-
-        $user = Auth::user();
-        $historyUpdate['type_menu'] = "Order";
-        $historyUpdate['method'] = "Update Status";
-        $historyUpdate['meta'] = json_encode([
-            'user'=>$user['id'],
-            'createdAt' => date("Y-m-d h:i:s"),
-            'dataChange'=> array_diff(json_decode($order, true), json_decode($dataBefore,true))
-        ]);
-
-        $historyUpdate['user_id'] = $user['id'];
-        $historyUpdate['menu_id'] = $order->id;
-        $createData = HistoryUpdate::create($historyUpdate);
-        
-        return redirect()->back()->with('success', 'Status Order Berhasil Di Ubah');
     }
 
     public function storeOrderPayment(Request $request)
@@ -994,39 +1003,48 @@ class OrderController extends Controller
                 ->where('id', $request->get('order_payment_id'))->first();
     
             if ($orderPayment) {
-                $data = $request->all();
-                $orderPayment_status = $request->get('status_acc');
-                if ($orderPayment_status =='true') {
-                    $orderPayment->status = 'verified';
-                } else if($orderPayment_status == 'false') {
-                    $orderPayment->status = 'rejected';
+                DB::beginTransaction();
+                try{
+                    $data = $request->all();
+                    $orderPayment_status = $request->get('status_acc');
+                    if ($orderPayment_status =='true') {
+                        $orderPayment->status = 'verified';
+                    } else if($orderPayment_status == 'false') {
+                        $orderPayment->status = 'rejected';
+                    }
+                    $orderPayment->save();
+
+                    // Set Order Down Payment
+                    $order = Order::find($data['order_id']);
+                    $order->updateDownPayment();
+                    $order->save();
+
+                    $user = Auth::user();
+                    $historyUpdate['type_menu'] = "Order";
+                    $historyUpdate['method'] = "Update";
+                    $historyUpdate['meta'] = json_encode([
+                        'user'=>$user['id'],
+                        'createdAt' => date("Y-m-d h:i:s"),
+                        'dataChange'=> ["Update Status Order Payment: " => [$orderPayment->id => $orderPayment->status ]]
+                    ]);
+
+                    $historyUpdate['user_id'] = $user['id'];
+                    $historyUpdate['menu_id'] = $data['order_id'];
+                    $createData = HistoryUpdate::create($historyUpdate);
+
+                    if($orderPayment_status =='true'){
+                        $dataorderpayment = app('App\Http\Controllers\Api\OnlineSideController')->sendOrderPaymentData($request->order_payment_id);
+                        if($dataorderpayment['status'] == 'error'){
+                            return redirect()->back()->withErrors($dataorderpayment['message']);
+                        }
+                    }
+                    
+                    DB::commit();
+                    return redirect()->back()->with('success', 'Order Payment Berhasil Di Ubah');
+                }catch(\Exception $ex){
+                    DB::rollback();
+                    return redirect()->back()->withErrors($ex->getMessage());
                 }
-                $orderPayment->save();
-
-                // Set Order Down Payment
-                $order = Order::find($data['order_id']);
-                $order->updateDownPayment();
-                $order->save();
-
-                $user = Auth::user();
-                $historyUpdate['type_menu'] = "Order";
-                $historyUpdate['method'] = "Update";
-                $historyUpdate['meta'] = json_encode([
-                    'user'=>$user['id'],
-                    'createdAt' => date("Y-m-d h:i:s"),
-                    'dataChange'=> ["Update Status Order Payment: " => [$orderPayment->id => $orderPayment->status ]]
-                ]);
-
-                $historyUpdate['user_id'] = $user['id'];
-                $historyUpdate['menu_id'] = $data['order_id'];
-                $createData = HistoryUpdate::create($historyUpdate);
-
-                $dataorderpayment = app('App\Http\Controllers\Api\OnlineSideController')->sendOrderPaymentData($request->order_payment_id);
-                if($dataorderpayment['status'] == 'error'){
-                    return redirect()->back()->withErrors($dataorderpayment['message']);
-                }
-
-                return redirect()->back()->with('success', 'Order Payment Berhasil Di Ubah');
             }
         }
         return response()->json(['result' => 'Gagal!!']);
