@@ -948,6 +948,26 @@
 
             });
         });
+
+        function testNetwork(){
+            $.ajax({
+                method: "post",
+                url: "http://{{ env('OFFLINE_URL') }}/api/end-point-for-check-status-network",
+                dataType: 'json',
+                contentType: 'application/json',
+                processData: false,
+                headers: {
+                    "api-key": "{{ env('API_KEY') }}",
+                },
+                success: function(data) {
+                    console.log(data);
+                },
+                error: function(data) {
+                    console.log({"Error!":  data['responseText']});
+                }
+            });
+        };
+        testNetwork();
     });
 
 </script>
