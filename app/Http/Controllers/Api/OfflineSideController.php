@@ -133,14 +133,7 @@ class OfflineSideController extends Controller
             }
             
             $orderPayment->image = $request->image;
-            $orderPayment->status = $request->status;
-            $orderPayment->bank_account_id = $request->bank_account_id;            
-            $orderPayment->type = $request->type;            
-            $orderPayment->type_payment = $request->type_payment;            
-            $orderPayment->credit_card_id = $request->credit_card_id;            
-            $orderPayment->charge_percentage_bank = $request->charge_percentage_bank;            
-            $orderPayment->charge_percentage_company = $request->charge_percentage_company;            
-            $orderPayment->estimate_transfer_date = $request->estimate_transfer_date;            
+            $orderPayment->status = "unverified";
             $orderPayment->save();
 
             $orderCode->updateDownPayment();
@@ -167,7 +160,7 @@ class OfflineSideController extends Controller
             DB::rollback();
             return response()->json([
                 'status' => 'error',
-                'message' => $ex->getMessage() 
+                'message' => $ex->getMessage()
             ]);
         }
     }

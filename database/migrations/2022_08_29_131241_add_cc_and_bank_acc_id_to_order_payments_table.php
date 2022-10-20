@@ -14,8 +14,8 @@ class AddCcAndBankAccIdToOrderPaymentsTable extends Migration
     public function up()
     {
         Schema::table('order_payments', function (Blueprint $table) {
-            $table->enum('type', ['order', 'cash', 'delivery']);
-            $table->enum('type_payment', ['cash', 'debit', 'card', 'card installment']);
+            $table->enum('type', ['order', 'cash', 'delivery'])->nullable();
+            $table->enum('type_payment', ['cash', 'debit', 'card', 'card installment'])->nullable();
             $table->unsignedInteger("credit_card_id")->nullable();
             $table->foreign("credit_card_id")->references("id")->on("credit_cards");
             $table->double('charge_percentage_bank')->default(0);
