@@ -92,6 +92,17 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['change-status_order_reject']);
         });
 
+        //-- UPDATE ORDER STATUS --//
+        Gate::define('change-status_payment', function ($user) {
+            return $user->hasAccess(['change-status_payment']);
+        });
+        Gate::define('change-status_payment_verified', function ($user) {
+            return $user->hasAccess(['change-status_payment_verified']);
+        });
+        Gate::define('change-status_payment_rejected', function ($user) {
+            return $user->hasAccess(['change-status_payment_rejected']);
+        });
+
         //-- ORDER REPORT --//
         Gate::define('browse-order_report', function ($user) {
             return $user->hasAccess(['browse-order_report']);
@@ -127,6 +138,52 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('acc-cancel-home_service', function ($user) {
             return $user->hasAccess(['acc-cancel-home_service']);
+        });
+
+        //-- AREA HOME SERVICE --//
+        Gate::define('browse-area_home_service', function ($user) {
+            return $user->hasAccess(['browse-area_home_service']);
+        });
+
+        //-- Absent Off --//
+        Gate::define('add-absent_off', function ($user) {
+            return $user->hasAccess(['add-absent_off']);
+        });
+        Gate::define('browse-absent_off', function ($user) {
+            return $user->hasAccess(['browse-absent_off']);
+        });
+        Gate::define('detail-absent_off', function ($user) {
+            return $user->hasAccess(['detail-absent_off']);
+        });
+        Gate::define('edit-absent_off', function ($user) {
+            return $user->hasAccess(['edit-absent_off']);
+        });
+        Gate::define('delete-absent_off', function ($user) {
+            return $user->hasAccess(['delete-absent_off']);
+        });
+        Gate::define('browse-acc_absent_off', function ($user) {
+            return $user->hasAccess(['browse-acc_absent_off']);
+        });
+        Gate::define('acc-view-spv_absent_off', function ($user) {
+            return $user->hasAccess(['acc-view-spv_absent_off']);
+        });
+        Gate::define('acc-view-coor_absent_off', function ($user) {
+            return $user->hasAccess(['acc-view-coor_absent_off']);
+        });
+        Gate::define('acc-absent_off', function ($user) {
+            return $user->hasAccess(['acc-absent_off']);
+        });
+        Gate::define('acc-spv_absent_off', function ($user) {
+            return $user->hasAccess(['acc-spv_absent_off']);
+        });
+        Gate::define('acc-reject_spv_absent_off', function ($user) {
+            return $user->hasAccess(['acc-reject_spv_absent_off']);
+        });
+        Gate::define('acc-coor_absent_off', function ($user) {
+            return $user->hasAccess(['acc-coor_absent_off']);
+        });
+        Gate::define('acc-reject_coor_absent_off', function ($user) {
+            return $user->hasAccess(['acc-reject_coor_absent_off']);
         });
 
         //-- CSO --//
@@ -211,6 +268,20 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('delete-type_customer', function ($user) {
             return $user->hasAccess(['delete-type_customer']);
+        });
+
+        //-- BANK --//
+        Gate::define('add-bank', function ($user) {
+            return $user->hasAccess(['add-bank']);
+        });
+        Gate::define('browse-bank', function ($user) {
+            return $user->hasAccess(['browse-bank']);
+        });
+        Gate::define('edit-bank', function ($user) {
+            return $user->hasAccess(['edit-bank']);
+        });
+        Gate::define('delete-bank', function ($user) {
+            return $user->hasAccess(['delete-bank']);
         });
 
         //-- DATA SOURCING --//
@@ -527,6 +598,44 @@ class AuthServiceProvider extends ServiceProvider
         // Product status
         Gate::define("change-status-product-personalhomecare", function ($user) {
             return $user->hasAccess(["change-status-product-personalhomecare"]);
+        });
+
+        //-- PUBLIC HOMECARE --//
+        // Add
+        Gate::define("add-public-homecare", function ($user) {
+            return $user->hasAccess(["add-public-homecare"]);
+        });
+        // Browse
+        Gate::define("browse-public-homecare", function ($user) {
+            return $user->hasAccess(["browse-public-homecare"]);
+        });
+        // View
+        Gate::define("detail-public-homecare", function ($user) {
+            return $user->hasAccess(["detail-public-homecare"]);
+        });
+        // Edit
+        Gate::define("edit-public-homecare", function ($user) {
+            return $user->hasAccess(["edit-public-homecare"]);
+        });
+        // Delete
+        Gate::define("delete-public-homecare", function ($user) {
+            return $user->hasAccess(["delete-public-homecare"]);
+        });
+        // Approve status
+        Gate::define("change-status-checkin-publichomecare", function ($user) {
+            return $user->hasAccess(["change-status-checkin-publichomecare"]);
+        });
+        // Reject status
+        Gate::define("change-status-checkout-publichomecare", function ($user) {
+            return $user->hasAccess(["change-status-checkout-publichomecare"]);
+        });
+        // Verified status
+        Gate::define("change-status-verified-publichomecare", function ($user) {
+            return $user->hasAccess(["change-status-verified-publichomecare"]);
+        });
+        // Product status
+        Gate::define("change-status-product-publichomecare", function ($user) {
+            return $user->hasAccess(["change-status-product-publichomecare"]);
         });
     }
 }

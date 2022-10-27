@@ -234,8 +234,7 @@ $menu_item_second = "add_submission_reference";
                                     name="address"
                                     rows="4"
                                     placeholder="Full address"
-                                    required>
-                                </textarea>
+                                    required></textarea>
                             </div>
 
                             <div class="form-group">

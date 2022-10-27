@@ -11,18 +11,15 @@ $menu_item_second = "list_technician";
         color: #ffc107 !important;
         background-color: #1bcfb4 !important;
     }
-
     .cjslib-calendar.cjslib-size-small .cjslib-day > .cjslib-day-indicator {
         width: 24px;
         height: 24px;
     }
-
     .cjslib-calendar.cjslib-size-small .cjslib-day > .cjslib-indicator-type-numeric {
         font-size: 12px;
         font-weight: bolder;
         color: #ffffff !important;
     }
-
     .btnappoint {
         display: inline-block;
         font-weight: 400;
@@ -37,35 +34,20 @@ $menu_item_second = "list_technician";
         user-select: none;
     }
 
-    .titleAppoin {
-        font-weight: bolder;
-    }
-
-    .timeContainerDiv{
-        flex: 1 !important;
-    }
-
+    .titleAppoin {font-weight: bolder;}
+    .timeContainerDiv{flex: 1 !important;}
     .paragrapContainerDiv{
         flex-direction: column;
         align-items: normal !important;
     }
-
-    .iconContainerDiv{
-        flex: 1 !important;
-    }
-
+    .iconContainerDiv{flex: 1 !important;}
     .cjslib-day-indicator {
-        olor: #ffa000; background-color: #ffa000;
+        color: #ffa000; background-color: #ffa000;
     }
-
-    .cjslib-indicator-type-numeric {
-        color: #ffffff;
-    }
-
+    .cjslib-indicator-type-numeric {color: #ffffff;}
     .cjslib-day.cjslib-day-today > .cjslib-day-num {
         border-color: #ffa000 !important;
     }
-
     .table-bordered th, .table-bordered td {
         border: 1px solid darkgray !important;
     }
@@ -710,7 +692,7 @@ $menu_item_second = "list_technician";
                                                                 if (Gate::check('edit-technician_schedule')) {
                                                                     echo "<a "
                                                                         . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit"'
-                                                                        . "href='" . route('edit_technician_schedule', ['id' => $dayData->id]) 
+                                                                        . "href='" . route('edit_technician_schedule', ['id' => $dayData->id])
                                                                         . "'></a>";
                                                                 }
                                                                 ?>
@@ -843,7 +825,7 @@ $menu_item_second = "list_technician";
                         target="_blank">
                         <button id="btn-share"
                             type="button"
-                            class="btn btn-gradient-primary mr-2 d-none">
+                            class="btn btn-gradient-primary mr-2">
                             <span class="mdi mdi-whatsapp"
                                 style="font-size: 18px;">
                             </span>
@@ -1173,7 +1155,7 @@ function clickView(btn) {
 
         if (result.code_homeservice) {
             document.getElementById("view_code_homeservice").innerHTML = "<a href='"
-            + "{{route('homeServices_success')}}" + "?code=" 
+            + "{{route('homeServices_success')}}" + "?code="
             + result.code_homeservice + "'"
             + "target='_blank'>" + result.code_homeservice
             + "</a>";
@@ -1183,7 +1165,7 @@ function clickView(btn) {
 
         if (result.code_service) {
             document.getElementById("view_code_service").innerHTML = "<a href='"
-            + "{{url('cms-admin/service/detail')}}" + "/" 
+            + "{{url('cms-admin/service/detail')}}" + "/"
             + result.id_service + "'"
             + "target='_blank'>" + result.code_service
             + "</a>";
@@ -1210,12 +1192,21 @@ function clickView(btn) {
         @elseif(isset($_GET['id_detail_hs']))
             $("#viewTechnicianScheduleModal").modal("show");
         @else
-            document.getElementById("url_share").setAttribute(
-                "href",
-                "whatsapp://send?text=<?php echo route('homeServices_success'); ?>"
-                + "?code="
-                + result.code
-            );
+            if (result.code_homeservice) {
+                document.getElementById("url_share").setAttribute(
+                    "href",
+                    "https://wa.me/?text=<?php echo route('homeServices_success'); ?>"
+                    + "?code="
+                    + result.code_homeservice
+                );
+            } else {
+                document.getElementById("url_share").setAttribute(
+                    "href",
+                    "https://wa.me/?text=<?php echo route('services_success'); ?>"
+                    + "?code="
+                    + btoa(result.id)
+                );
+            }
         @endif
 
         var temp_product_ts = '';
@@ -1239,7 +1230,7 @@ function clickView(btn) {
                 </tr>
                 <tr>
                     <td class="col-4">Issues:</td>
-                    <td class="col-8">` + 
+                    <td class="col-8">` +
                         issues[0].issues.join(',') + `
                     </td>
                 </tr>

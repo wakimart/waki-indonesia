@@ -1,5 +1,5 @@
 <?php
-$menu_item_page = "personal_homecare";
+$menu_item_page = "product_homecare";
 $menu_item_second = "update_product";
 ?>
 @extends('admin.layouts.template')
@@ -19,37 +19,30 @@ $menu_item_second = "update_product";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation {
         color: red;
-        font-size: 9pt;
+        font-size: 9pt
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     .input-group-text {
         color: black !important;
     }
-
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
-
     .select2-container--default
     .select2-selection--single
     .select2-selection__arrow {
         top: 10px;
     }
-
     .div-CheckboxGroup {
         border: solid 1px rgba(128, 128, 128, 0.32941);
         padding: 10px;
@@ -85,11 +78,11 @@ $menu_item_second = "update_product";
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
-                            
+
                             <input type="hidden"
                                 id="id"
                                 name="id"
-                                value="{{ $phcproducts->id }}" 
+                                value="{{ $phcproducts->id }}"
                                 required />
                             <input type="hidden"
                                 id="branch-code"
@@ -192,7 +185,7 @@ $menu_item_second = "update_product";
                                         inputmode="numeric"
                                         placeholder="Number"
                                         oninput="setCode()"
-                                        value="{{ substr($phcproducts->code, 3, 3) }}" 
+                                        value="{{ substr($phcproducts->code, 3, 3) }}"
                                         disabled
                                         required />
                                 </div>

@@ -27,9 +27,16 @@ Route::get('/product_category/{id}', 'CategoryProductController@index')->name('p
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
 Route::get('/firebase','FirebaseController@index');
 
+// Send Contact Us Form
+Route::post('/sendcontactform', 'IndexController@sendContactForm')->name('send_contactForm');
+
 //Personal Homecare
 Route::get('/personal-homecare/{id}', 'PersonalHomecareController@phForm')->name('personal_homecare');
 Route::get('/thankyou-personal-homecare/{id}', 'PersonalHomecareController@thankyouForm')->name('thankyou_ph');
+
+//Public Homecare
+Route::get('/public-homecare/{id}', 'PublicHomecareController@puhForm')->name('public_homecare');
+Route::get('/thankyou-public-homecare/{id}', 'PublicHomecareController@thankyouForm')->name('thankyou_puh');
 
 //Service Product
 Route::get('/service', 'ServiceController@indexUser')->name('service');
@@ -42,8 +49,8 @@ Route::get('/register-success', 'DeliveryOrderController@successorder')->name('s
 Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
 //Order
-Route::get('/order', 'OrderController@index')->name('add_order');
-Route::post('/order', 'OrderController@store')->name('store_order');
+// Route::get('/order', 'OrderController@index')->name('add_order');
+// Route::post('/order', 'OrderController@store')->name('store_order');
 Route::get('/order-success', 'OrderController@successorder')->name('order_success');
 //Route::get('/templistorderwaki1995', 'OrderController@listOrder')->name('list_order');
 
@@ -51,6 +58,9 @@ Route::get('/order-success', 'OrderController@successorder')->name('order_succes
 Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeServices');
 Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
+
+// Service
+Route::get('/service-success', 'TechnicianScheduleController@successRegister')->name('services_success');
 
 //Program Refrence
 Route::get('/referenceuntung', 'SubmissionController@untungBiayaIklan')->name('refrence_untung');
@@ -373,6 +383,26 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update_status_order', 'OrderController@updateStatusOrder')
             ->name('update_status_order')
             ->middleware('can:change-status_order');
+        //Store Order Payment
+        Route::post('/store_order_payment', 'OrderController@storeOrderPayment')
+            ->name('store_order_payment')
+            ->middleware('can:edit-order');
+        //Edit Order Payment
+        Route::post('/edit_order_payment', 'OrderController@editOrderPayment')
+            ->name('edit_order_payment')
+            ->middleware('can:edit-order');
+        //Update Order Payment
+        Route::post('/update_order_payment', 'OrderController@updateOrderPayment')
+            ->name('update_order_payment')
+            ->middleware('can:edit-order');
+        //Update Order Payment Status
+        Route::post('/update_status_order_payment', 'OrderController@updateStatusOrderPayment')
+            ->name('update_status_order_payment')
+            ->middleware('can:change-status_payment');
+        //Delete Order Payment
+        Route::post('/delete_order_payment', 'OrderController@deleteOrderPayment')
+            ->name('delete_order_payment')
+            ->middleware('can:edit-order');
         //Delete Order
         Route::post('/{OrderNya}', 'OrderController@delete')
             ->name('delete_order');
@@ -480,6 +510,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::get("/fetch/presence", "UserGeolocationController@fetchPresenceImage")
             ->name("fetch_geolocation_presence");
+
+        // Area Home Service
+        Route::get('/list_area_homeservice', 'HomeServiceController@list_areaHomeService')
+            ->name('list_area_homeservice')
+            ->middleware('can:browse-area_home_service');
+        Route::post('/print_area_list_hs', 'HomeServiceController@printAreaListHs')
+            ->name('print_area_list_hs')
+            ->middleware('can:browse-area_home_service');
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
@@ -612,6 +650,56 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post("/delete/", "SparepartController@destroy")
             ->name("delete_sparepart");
     });
+
+    Route::group(['prefix' => 'absent_off', 'middleware' => 'auth'], function() {
+        //Add Absent Off
+        Route::get('/', 'AbsentOffController@create')
+            ->name('add_absent_off')
+            ->middleware('can:add-absent_off');
+        //Store Absent Off
+        Route::post('/', 'AbsentOffController@store')
+            ->name('store_absent_off')
+            ->middleware('can:add-absent_off');
+        //List Absent Off
+        Route::get('/list', 'AbsentOffController@index')
+            ->name('list_absent_off')
+            ->middleware('can:browse-absent_off');
+        //Print Absent Off daily data count per month
+        Route::post("/absentoff_print_data_count", "AbsentOffController@printAppointmentCount")
+            ->name("absentoff_print_data_count");
+        //Print Absent Off data detail on a selected day
+        Route::post("/absentoff_print_appointment", "AbsentOffController@printDayData")
+            ->name("absentoff_print_appointment");
+        //Detail Absent Off
+        Route::get("/detail/", "AbsentOffController@show")
+            ->name("detail_absent_off")
+            ->middleware('can:detail-absent_off');
+        Route::post("/detail_response", "AbsentOffController@detailResponse")
+            ->name("detail_response_absent_off")
+            ->middleware('can:detail-absent_off');
+        //Edit Absent Off
+        Route::get('/edit/', 'AbsentOffController@edit')
+            ->name('edit_absent_off')
+            ->middleware('can:edit-absent_off');
+        //Update Absent Off
+        Route::post('/update/', 'AbsentOffController@update')
+            ->name('update_absent_off')
+            ->middleware('can:edit-absent_off');
+        //Delete Absent Off
+        Route::post("/delete", "AbsentOffController@destroy")
+            ->name("delete_absent_off")
+            ->middleware('can:delete-absent_off');
+
+        //List Acc Absent Off
+        Route::get('/list_acc', 'AbsentOffController@indexAcc')
+            ->name('list_acc_absent_off')
+            ->middleware('can:browse-acc_absent_off');
+        //Update Acc Absent Of
+        Route::post("/update_acc", "AbsentOffController@updateAcc")
+            ->name("update_acc_absent_off")
+            ->middleware('can:acc-absent_off');
+    });
+
 
     Route::group(['prefix' => 'cso', 'middleware' => 'auth'], function() {
         //Add Form CSO
@@ -820,6 +908,38 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'TypeCustomerController@destroy')
             ->name('delete_type_customer')
             ->middleware('can:delete-type_customer');
+    });
+
+    Route::group(['prefix' => 'bank', 'middleware' => 'auth'], function() {
+        //Add Form Type Customer
+        Route::get('/', 'BankController@create')
+            ->name('add_bank')
+            ->middleware('can:add-bank');
+
+        //Create Type Customer
+        Route::post('/', 'BankController@store')
+            ->name('store_bank')
+            ->middleware('can:add-bank');
+
+        //List Type Customer
+        Route::get('/list', 'BankController@index')
+            ->name('list_bank')
+            ->middleware('can:browse-bank');
+
+        //Edit Type Customer
+        Route::get('/edit/', 'BankController@edit')
+            ->name('edit_bank')
+            ->middleware('can:edit-bank');
+
+        //Update Type Customer
+        Route::post('/update/', 'BankController@update')
+            ->name('update_bank')
+            ->middleware('can:edit-bank');
+
+        //Delete Type Customer
+        Route::post('/delete', 'BankController@destroy')
+            ->name('delete_bank')
+            ->middleware('can:delete-bank');
     });
 
     Route::group(['prefix' => 'data_sourcing', 'middleware' => 'auth'], function() {
@@ -1189,6 +1309,37 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("extend_personal_homecare");
         Route::post("reschedulePersonalHomecare", "PersonalHomecareController@reschedulePersonalHomecare")
             ->name("reschedule_personal_homecare");
+    });
+
+    Route::group(["prefix" => "public-homecare", "middleware" => "auth"], function () {
+        Route::get("add", "PublicHomecareController@create")
+            ->name("add_public_homecare")
+            ->middleware('can:add-public-homecare');
+        Route::post("store", "PublicHomecareController@store")
+            ->name("store_public_homecare")
+            ->middleware("can:add-public-homecare");
+        Route::get("get-product", "PublicHomecareController@getPuhcProduct")
+            ->name("get_puhc_product");
+        Route::get("check-phone", "PublicHomecareController@checkPhone")
+            ->name("check_puhc_phone");
+        Route::get("list-all", 'PublicHomecareController@index')
+            ->name("list_all_puhc");
+        Route::get("edit/{id}", "PublicHomecareController@edit")
+            ->name("edit_public_homecare")
+            ->middleware("can:edit-public-homecare");
+        Route::post("update", "PublicHomecareController@update")
+            ->name("update_public_homecare")
+            ->middleware("can:edit-public-homecare");
+        Route::post("update/status", "PublicHomecareController@updateStatus")
+            ->name("update_public_homecare_status");
+        Route::post("update/checklist-in", "PublicHomecareController@updateChecklistIn")
+            ->name("update_public_homecare_checklist_in");
+        Route::get("detail/{id}", "PublicHomecareController@detail")
+            ->name("detail_public_homecare")
+            ->middleware("can:detail-public-homecare");
+        Route::post("delete", "PublicHomecareController@destroy")
+            ->name("delete_public_homecare")
+            ->middleware("can:delete-public-homecare");
     });
 
     Route::view('faq_agreement', 'admin.faq_agreement')->name('faq_agreement');

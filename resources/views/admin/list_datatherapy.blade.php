@@ -6,18 +6,11 @@ $menu_item_second = "list_data_therapy";
 
 @section('style')
 <style type="text/css">
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
+    .center {text-align: center;}
+    .right {text-align: right;}
     .table th img, .table td img {
         border-radius: 0% !important;
     }
-
 </style>
 @endsection
 
@@ -201,7 +194,7 @@ $menu_item_second = "list_data_therapy";
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
- 
+
 $(document).ready(function (e) {
     $("#btn-filter").click(function (e) {
         var urlParamArray = new Array();
@@ -218,7 +211,7 @@ $(document).ready(function (e) {
         }
         window.location.href = "{{route('list_data_therapy')}}" + urlParamStr;
     });
-}); 
+});
 
 </script>
 @endsection

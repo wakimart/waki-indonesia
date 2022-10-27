@@ -9,6 +9,8 @@ use App\CategoryProduct;
 use App\Album;
 use App\Product;
 use App\Version;
+use Illuminate\Support\Facades\Mail;
+
 class IndexController extends Controller
 {
     /**
@@ -118,5 +120,31 @@ class IndexController extends Controller
                    'data' => $version
         ];
         return response()->json($result, 200);
+    }
+
+    public function sendContactForm(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|min:4',
+            'email' => 'required',
+            'subject' => 'required',
+            'message' => 'required',
+        ]);
+
+        $content="From: ".$request->name." \nEmail: <".$request->email."> \nMessage: ".$request->message;
+        $recipient = env("MAIL_CONTACTUS");
+        // $mailheader = "From: <".$request->email."> \r\n";
+        
+        Mail::send([], [], function ($message) use ($recipient, $request, $content) {
+            $message->to($recipient)
+              ->from($request->email)
+              ->subject($request->subject)
+              ->setBody($content); // assuming text/plain
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Mail successfully send.'
+        ], 200);
     }
 }

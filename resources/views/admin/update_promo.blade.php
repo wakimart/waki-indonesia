@@ -27,16 +27,13 @@ $menu_item_page = "promo";
         background-color: rgba(255,255,255,0.6);
         cursor: pointer;
   	}
-
   	#intro {
         padding-top: 2em;
     }
-
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     button {
         background: #1bb1dc;
         border: 0;

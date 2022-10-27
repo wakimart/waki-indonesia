@@ -16,7 +16,6 @@ $menu_item_page = "data_therapy";
         background-repeat: no-repeat;
         display: inline-block;
     }
-
     .del {
         position: absolute;
         top: 0px;
@@ -129,7 +128,7 @@ $menu_item_page = "data_therapy";
                                     <strong></strong>
                                 </span>
 	              			</div>
-                              
+
 	              			<div class="form-group">
 	                			<label for="">CSO</label>
                                 <select id="cso" name="cso_id" class="form-control pilihan-product" data-msg="Mohon Pilih CSO" required>
@@ -175,7 +174,7 @@ $menu_item_page = "data_therapy";
                             <input type="hidden"
                                 name="idDataTherapy"
                                 value="{{ $data_therapy['id'] }}" />
-                            
+
                             <button id="addDataTherapy"
                                 type="submit"
                                 class="btn btn-gradient-primary mr-2">

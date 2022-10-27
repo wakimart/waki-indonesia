@@ -100,14 +100,14 @@
 </li>
 @endif
 
-@if(Gate::check('add-phc-product') || Gate::check('browse-phc-product') || Gate::check('add-personal-homecare') || Gate::check('browse-personal-homecare'))
-<li class="{{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'active': '' }} nav-item">
-  <a class="nav-link" data-toggle="collapse" href="#personalhomecare-dd" aria-expanded="false" aria-controls="personalhomecare-dd">
-    <span class="menu-title">Personal Homecare</span>
+@if(Gate::check('add-phc-product') || Gate::check('browse-phc-product'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'product_homecare'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#producthomecare-dd" aria-expanded="false" aria-controls="producthomecare-dd">
+    <span class="menu-title">Product Homecare</span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-calendar-text menu-icon"></i>
   </a>
-  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'show': '' }}" id="personalhomecare-dd">
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'product_homecare'? 'show': '' }}" id="producthomecare-dd">
     <ul class="nav flex-column sub-menu">
       @if(Gate::check('add-phc-product'))
       <li class="nav-item">
@@ -133,6 +133,20 @@
         </a>
       </li>
       @endif
+    </ul>
+  </div>
+</li>
+@endif
+
+@if(Gate::check('add-personal-homecare') || Gate::check('browse-personal-homecare'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#personalhomecare-dd" aria-expanded="false" aria-controls="personalhomecare-dd">
+    <span class="menu-title">Personal Homecare</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-calendar-text menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'show': '' }}" id="personalhomecare-dd">
+    <ul class="nav flex-column sub-menu">
       @if(Gate::check('add-personal-homecare'))
       <li class="nav-item">
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_personal_homecare'? 'active': '' }}"
@@ -146,6 +160,36 @@
         <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_all'? 'active': '' }}"
           href="{{  route('list_all_phc') }}">
           List All Personal Homecare
+        </a>
+      </li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
+@if(Gate::check('add-public-homecare') || Gate::check('browse-public-homecare'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'public_homecare'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#publichomecare-dd" aria-expanded="false" aria-controls="publichomecare-dd">
+    <span class="menu-title">Public Homecare</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-calendar-text menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'public_homecare'? 'show': '' }}" id="publichomecare-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-public-homecare'))
+      <li class="nav-item">
+        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_public_homecare'? 'active': '' }}"
+          href="{{  route('add_public_homecare') }}">
+          Add Public Homecare
+        </a>
+      </li>
+      @endif
+      @if(Gate::check('browse-public-homecare'))
+      <li class="nav-item">
+        <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_all_public_homecare'? 'active': '' }}"
+          href="{{  route('list_all_puhc') }}">
+          List All Public Homecare
         </a>
       </li>
       @endif
@@ -175,6 +219,14 @@
             <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == "track_homeservice" ? "active" : "" }}"
                 href="{{  route("track_homeservice") }}">
                 Track Home Service
+            </a>
+        </li>
+      @endif
+      @if(Gate::check('browse-area_home_service'))
+        <li class="nav-item">
+            <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == "list_area_homeservice" ? "active" : "" }}"
+                href="{{  route("list_area_homeservice") }}">
+                Area Home Service
             </a>
         </li>
       @endif
@@ -237,6 +289,29 @@
       @endif
       @if(Gate::check('browse-technician_schedule'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_technician_schedule'? 'active': '' }}" href="{{ route('list_technician_schedule')}}">List Schedule </a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
+@if(Gate::check('add-absent_off') || Gate::check('browse-absent_off') || Gate::check('browse-acc_absent_off'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'absent_off'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#absent_off-dd" aria-expanded="false" aria-controls="absent_off-dd">
+    <span class="menu-title">Cuti</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-calendar-text menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'absent_off'? 'show': '' }}" id="absent_off-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-absent_off'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_absent_off'? 'active': '' }}" href="{{ route('add_absent_off')}}">Form Ijin Cuti </a></li>
+      @endif
+      @if(Gate::check('browse-absent_off'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_absent_off'? 'active': '' }}" href="{{ route('list_absent_off')}}">List Cuti </a></li>
+      @endif
+      @if(Gate::check('browse-acc_absent_off'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_acc_absent_off'? 'active': '' }}" href="{{ route('list_acc_absent_off')}}">List Acc Cuti </a></li>
       @endif
     </ul>
   </div>
@@ -488,6 +563,26 @@
       @endif
       @if(Gate::check('browse-type_customer'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_type_customer'? 'active': '' }}" href="{{route('list_type_customer')}}">List Type Customer</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
+@if(Gate::check('add-bank') || Gate::check('browse-bank'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'bank'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#bank-dd" aria-expanded="false" aria-controls="bank-dd">
+    <span class="menu-title">Bank</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-package menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'bank'? 'show': '' }}" id="bank-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-bank'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_bank'? 'active': '' }}" href="{{route('add_bank')}}">Add Bank</a></li>
+      @endif
+      @if(Gate::check('browse-bank'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_bank'? 'active': '' }}" href="{{route('list_bank')}}">List Bank</a></li>
       @endif
     </ul>
   </div>

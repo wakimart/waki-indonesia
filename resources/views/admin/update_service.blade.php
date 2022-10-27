@@ -28,31 +28,17 @@
         font-size: 14px !important;
     }
 
-	.check label{
-		width: 25em;
-	}
+	.check label{width: 25em;}
 
 	@media (min-width: 768px){
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
+		#desktop{display: block;}
+		#mobile{display: none;}
 	}
-
 	@media (max-width: 768px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
+		#desktop{display: none;}
+		#mobile{display: block;
 		}
 	}
-
-
 </style>
 @endsection
 
@@ -90,7 +76,7 @@
 	          		<div class="card-body">
 	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('update_service') }}">
 							{{ csrf_field() }}
-							
+
 							@php
 								$service_date = explode(' ',$services['service_date']);
 								$service_date = $service_date[0];
@@ -107,6 +93,16 @@
 	              			<div class="form-group">
 	                			<label for="">No. MPC (optional)</label>
 	                			<input type="number" class="form-control" id="no_mpc" name="no_mpc" placeholder="No. MPC" value="{{$services['no_mpc']}}">
+	                			<div class="validation"></div>
+	              			</div>
+							<div class="form-group">
+	                			<label for="">Area</label>
+								<select name="area" class="form-control" required>
+									<option value="" disabled>Choose Area</option>
+									@foreach (App\Service::$Area as $area)
+									<option value="{{ $area }}" @if($services['area'] == $area) selected @endif>{{ ucwords($area) }}</option>
+									@endforeach
+								</select>
 	                			<div class="validation"></div>
 	              			</div>
 	              			<div class="form-group">
@@ -178,7 +174,7 @@
 						                        <input id="idQtySparepart-0-0" type="number" class="form-control" placeholder="Qty">
 						                        <div class="validation"></div>
 						                    </div>
-						                    <div class="text-center" style="display: inline-block; float: right;"><button class="add_sparepart btn btn-gradient-primary mr-2" id="tambah_sparepart" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>	
+						                    <div class="text-center" style="display: inline-block; float: right;"><button class="add_sparepart btn btn-gradient-primary mr-2" id="tambah_sparepart" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
 				                    	</div>
 				                    </div>
 
@@ -221,8 +217,8 @@
 									</div>
 									<br>
 
-				                    
-				                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}			                    
+
+				                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 				                </div>
 				                <input type="hidden" id="id_productservice-{{$key}}" name="id_productservice" value="{{$product_service['id']}}">
 				                <input type="hidden" id="id_service-{{$key}}" name="id_service" value="{{$product_service['service_id']}}">
@@ -235,7 +231,7 @@
 							<input type="hidden" id="technician_schedule_id" name="technician_schedule_id" value="{{ $services['technician_schedule_id'] }}">
 	              			@php $total_productservice = count($product_services); @endphp
 	              			<input type="hidden" id="total_productservice" value="{{$total_productservice}}">
-	              			
+
 	              			<div class="form-group">
 	              				<button id="addService" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
 	              				<button class="btn btn-light">Cancel</button>
@@ -302,7 +298,7 @@
 			idService++;
 			detailProductService++;
 			counter_service++;
-			detailSparepart++; 
+			detailSparepart++;
 
 			if(counter_service <= 3){
 				e.preventDefault();
@@ -444,7 +440,7 @@
 	        e.preventDefault();
 	        frmAdd = _("actionAdd");
 	        frmAdd = new FormData(document.getElementById("actionAdd"));
-	        frmAdd.enctype = "multipart/form-data";       
+	        frmAdd.enctype = "multipart/form-data";
 
 	        for (var i = 0; i < idService; i++) {
 	        	var id_product_service = $("#id_productservice-" + i).val();
@@ -531,7 +527,7 @@
 	            }
 	            alert(hasil['errors']);
 	        }
-	        else{ 
+	        else{
 	            alert("Input Success !!!");
 	            window.location.reload()
 	        }
@@ -542,7 +538,7 @@
 	        document.getElementById("addService").innerHTML = "SAVE";
 	    }
 	});
-	
+
 
 </script>
 @endsection

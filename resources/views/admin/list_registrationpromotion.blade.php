@@ -6,9 +6,7 @@
 
 @section('style')
 <style>
-  .center {
-    text-align: center;
-  }
+  .center {text-align: center;}
 </style>
 @endsection
 
@@ -77,7 +75,7 @@
                           <td>{{$promotion['email']}}</td>
                           <td>{{$promotion['phone']}}</td>
                           <td class="center">
-									          @can('edit-deliveryorder')  
+									          @can('edit-deliveryorder')
                             <a href="{{ route('detail_regispromo', $promotion['id']) }}" target="_blank">
                                 <i class="mdi mdi-eye mr-3" style="font-size: 24px; color:#636e72;"></i>
                             </a>
@@ -92,7 +90,7 @@
                                 <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                             </a>
                             @endcan
-                          </td>                                            
+                          </td>
                         </tr>
                         @endforeach
                       </tbody>

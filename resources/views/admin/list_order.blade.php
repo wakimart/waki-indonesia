@@ -396,6 +396,7 @@ $menu_item_second = "list_order";
                                     <th> Member Name </th>
                                     <th> Type Customer </th>
                                     <th> Branch & CSO</th>
+                                    <th> Total Price </th>
                                     <th> Total Payment </th>
                                     <th> Status </th>
                                     {{-- <th colspan="2"> Product </th> --}}
@@ -434,6 +435,7 @@ $menu_item_second = "list_order";
                                             {{ $order->cso['code'] }} - {{ $order->cso['name'] }}
                                         </td>
                                         <td>Rp. {{ number_format($order['total_payment']) }}</td>
+                                        <td>Rp. {{ number_format($order->orderPayment->sum('total_payment')) }}</td>
                                         <td class="text-center">
                                             @if ($order['status'] == \App\Order::$status['1'])
                                                 <span class="badge badge-secondary">New</span>

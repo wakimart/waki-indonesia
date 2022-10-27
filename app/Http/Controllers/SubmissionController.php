@@ -10,6 +10,8 @@ use App\HomeService;
 use App\Prize;
 use App\Promo;
 use App\Order;
+use App\OrderDetail;
+use App\Product;
 use App\Reference;
 use App\ReferenceImage;
 use App\ReferencePromo;
@@ -819,17 +821,13 @@ class SubmissionController extends Controller
 
         $arr_product = [];
         if ($get_order != null) {
-            foreach (json_decode($get_order[0]['product'], true) as $item) {
+            $get_order_details = OrderDetail::where('type', OrderDetail::$Type['1'])
+                ->where('order_id', $get_order[0]['id'])->get();
+            foreach ($get_order_details as $item) {
                 $temp = [];
-                if (is_numeric($item['id']) && $item['id'] != 8) {
-                    $temp['name'] = DeliveryOrder::$Promo[$item['id']]['name'];
-                    $temp['qty'] = $item['qty'];
-                    array_push($arr_product, $temp);
-                } else {
-                    $temp['name'] = $item['id'];
-                    $temp['qty'] = $item['qty'];
-                    array_push($arr_product, $temp);
-                }
+                $temp['name'] = $item->productNameNya();
+                $temp['qty'] = $item['qty'];
+                array_push($arr_product, $temp);
             }
         }
 
@@ -1761,7 +1759,9 @@ class SubmissionController extends Controller
             "reference_souvenirs.prize_id AS prize_id",
             "reference_souvenirs.status_prize AS status_prize",
             "reference_souvenirs.delivery_status_prize AS delivery_status_prize",
-            "reference_souvenirs.wakimart_link"
+            "reference_souvenirs.wakimart_link",
+            "reference_souvenirs.order_code",
+            "reference_souvenirs.order_image"
         )
         ->leftJoin(
             "reference_souvenirs",

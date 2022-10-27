@@ -605,6 +605,19 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
                                 <label style="color: #545454; font-weight: 600; ">
+                                    Area
+                                </label>
+    
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <label style="color: #545454; font-weight: 600; ">
+                                   {{ ucwords($services['area']) }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <label style="color: #545454; font-weight: 600; ">
                                     Customer Address
                                 </label>
     

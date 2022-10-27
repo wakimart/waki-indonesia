@@ -1,5 +1,5 @@
 <?php
-$menu_item_page = "personal_homecare";
+$menu_item_page = "product_homecare";
 $menu_item_second = "list_approved";
 ?>
 @extends('admin.layouts.template')
@@ -11,61 +11,46 @@ $menu_item_second = "list_approved";
     crossorigin="anonymous"
     referrerpolicy="no-referrer" />
 <style type="text/css">
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
+    .center {text-align: center;}
+    .right {text-align: right;}
     .table th img, .table td img {
         border-radius: 0% !important;
     }
 
 	#calendar {
-/* 		float: right; */
-        margin: 0 auto;
+    /*float: right; */
+    margin: 0 auto;
 		background-color: #FFFFFF;
 		border-radius: 6px;
 	}
-
-    #myTable{
-        display: none;
-    }
-
-    @media (min-width: 768px){
-        #calendar .fc-scroller {
-            overflow-y: hidden !important;
-        }
-    }
-
-    @media (max-width: 767.98px) {
-        .fc .fc-toolbar.fc-header-toolbar {
-            display: block;
-            text-align: center;
-            float: none !important;
-        }
-
-        .fc-header-toolbar .fc-toolbar-chunk {
-            display: block;
-            float: none !important;
-        }
-    }
-
-    .select2-selection__rendered {
-        line-height: 45px !important;
-    }
-
-    .select2-container .select2-selection--single {
-        height: 45px !important;
-    }
-
-    .select2-container--default
-    .select2-selection--single
-    .select2-selection__arrow {
-        top: 10px;
-    }
+  #myTable{display: none;}
+  @media (min-width: 768px){
+      #calendar .fc-scroller {
+          overflow-y: hidden !important;
+      }
+  }
+  @media (max-width: 767.98px) {
+      .fc .fc-toolbar.fc-header-toolbar {
+          display: block;
+          text-align: center;
+          float: none !important;
+      }
+      .fc-header-toolbar .fc-toolbar-chunk {
+          display: block;
+          float: none !important;
+      }
+  }
+  .select2-selection__rendered {
+      line-height: 45px !important;
+  }
+  .select2-container .select2-selection--single {
+      height: 45px !important;
+  }
+  .select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
+      top: 10px;
+  }
 
 </style>
 @endsection
@@ -115,20 +100,20 @@ $menu_item_second = "list_approved";
                     </div>
                     <div class="col-xs-6 col-sm-6" style="padding: 0; display: inline-block">
                         <div class="form-group">
-                            <button id="btn-filter" 
-                                type="button" 
-                                class="btn btn-gradient-primary m-1" 
-                                name="filter" 
+                            <button id="btn-filter"
+                                type="button"
+                                class="btn btn-gradient-primary m-1"
+                                name="filter"
                                 value="-">
-                                <span class="mdi mdi-filter"></span> 
+                                <span class="mdi mdi-filter"></span>
                                 Apply Filter
                             </button>
-                            <button id="btn-filter_reset" 
-                                type="button" 
-                                class="btn btn-gradient-danger m-1" 
-                                name="filter_reset" 
+                            <button id="btn-filter_reset"
+                                type="button"
+                                class="btn btn-gradient-danger m-1"
+                                name="filter_reset"
                                 value="-">
-                                <span class="mdi mdi-refresh"></span> 
+                                <span class="mdi mdi-refresh"></span>
                                 Reset Filter
                             </button>
                         </div>
@@ -141,8 +126,8 @@ $menu_item_second = "list_approved";
                 <div class="card">
                     <div class="card-body">
                         <div id='calendar'></div>
-                        
-                        
+
+
                         <div class="card"
                             id="myTable">
                             <div class="card-body">
@@ -151,9 +136,9 @@ $menu_item_second = "list_approved";
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th colspan="10" 
-                                                    id="theader" 
-                                                    class="text-center" 
+                                                <th colspan="10"
+                                                    id="theader"
+                                                    class="text-center"
                                                     style="background-color: #61e2a0; color: #fff;">
                                                 </th>
                                             </tr>
@@ -165,7 +150,7 @@ $menu_item_second = "list_approved";
                                                 <th>Branch</th>
                                                 <th class="text-center">CSO</th>
                                                 <th>Status</th>
-                                                <th colspan="3" 
+                                                <th colspan="3"
                                                     class="center">
                                                     View/Edit/Delete
                                                 </th>
@@ -183,8 +168,8 @@ $menu_item_second = "list_approved";
                                                 <td class="center view">
                                                     <a href="#"
                                                         target="_blank">
-                                                        <i class="mdi mdi-eye" 
-                                                            style="font-size: 24px; 
+                                                        <i class="mdi mdi-eye"
+                                                            style="font-size: 24px;
                                                                 color: rgb(76 172 245);">
                                                         </i>
                                                     </a>
@@ -192,8 +177,8 @@ $menu_item_second = "list_approved";
                                                 <td class="center edit">
                                                     <a href="#"
                                                         target="_blank">
-                                                        <i class="mdi mdi-border-color" 
-                                                            style="font-size: 24px; 
+                                                        <i class="mdi mdi-border-color"
+                                                            style="font-size: 24px;
                                                                 color: #fed713;">
                                                         </i>
                                                     </a>
@@ -204,8 +189,8 @@ $menu_item_second = "list_approved";
                                                         href="#deleteDoModal"
                                                         onclick="submitDelete(this)"
                                                         data-id="">
-                                                        <i class="mdi mdi-delete" 
-                                                            style="font-size: 24px; 
+                                                        <i class="mdi mdi-delete"
+                                                            style="font-size: 24px;
                                                             color: #fe7c96;">
                                                         </i>
                                                     </a>
@@ -280,7 +265,7 @@ $menu_item_second = "list_approved";
         function submitDelete(e) {
         document.getElementById("id-delete").value = e.dataset.id;
     }
-    
+
     $(document).ready(function (e) {
         $("#btn-filter").click(function (e) {
             var urlParamArray = new Array();
@@ -301,7 +286,7 @@ $menu_item_second = "list_approved";
         $("#btn-filter_reset").click(function (e) {
             window.location.href = "{{route('list_approved_phc')}}";
         });
-    }); 
+    });
 
     $(document).ready(function () {
         var calendarEl = document.getElementById('calendar');
@@ -313,13 +298,13 @@ $menu_item_second = "list_approved";
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
         },
         initialDate: new Date(),
-        navLinks: true, 
-        businessHours: true, 
+        navLinks: true,
+        businessHours: true,
         editable: false,
         selectable: true,
         allDay: true,
         nextDayThreshold: '00:00:01',
-        dayMaxEventRows: 2, 
+        dayMaxEventRows: 2,
         views: {
             timeGrid: {
                 dayMaxEventRows: 3
@@ -328,7 +313,7 @@ $menu_item_second = "list_approved";
         events: [
             @foreach($personalhomecares as $personalhomecare)
             {
-                title : '{{ $personalhomecare->personalHomecareProduct->code }}', 
+                title : '{{ $personalhomecare->personalHomecareProduct->code }}',
                 description : '{{ $personalhomecare['name'] }}',
                 branch : '{{ $personalhomecare->branch->code }}',
                 cso : '{{ $personalhomecare->cso->code }} - {{ $personalhomecare->cso->name }}',
@@ -347,11 +332,11 @@ $menu_item_second = "list_approved";
             $(info.el).tooltip({
                 placement: "right",
                 html: true,
-                title: "<p>Kode Produk : " 
-                        + info.event.title 
-                        + "</p>" 
-                        + "<p>Nama Customer : " 
-                        + info.event.extendedProps.description 
+                title: "<p>Kode Produk : "
+                        + info.event.title
+                        + "</p>"
+                        + "<p>Nama Customer : "
+                        + info.event.extendedProps.description
                         + "</p>"
                         + "<p>Schedule Date : "
                         + moment(info.event.start).format('M/DD/YYYY')
@@ -364,12 +349,12 @@ $menu_item_second = "list_approved";
         eventContent: function(info) {
             const img = info.event._def.extendedProps.img;
             const text = "<div class='d-flex' style='align-items: center; padding-left: 10px;'>"
-                    + "<img style='margin-right: 10px;' src='" 
-                    + img 
+                    + "<img style='margin-right: 10px;' src='"
+                    + img
                     + "' width='18' height='18'> "
-                    + "<span style='line-height: 20px;'>" 
-                    + info.event._def.title 
-                    + "<br>" 
+                    + "<span style='line-height: 20px;'>"
+                    + info.event._def.title
+                    + "<br>"
                     + info.event.extendedProps.description
                     + "</span>"
                     + "</div>";

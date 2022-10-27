@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Seeder;
 use App\Role;
 
@@ -12,6 +13,9 @@ class RolesSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
+        Role::query()->truncate();
+        
         $admin = Role::create([
         	'name' => 'HEAD-ADMIN',
             'slug' => 'head-admin',
@@ -43,6 +47,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => true,
                 'change-status_order_reject' => true,
 
+                //Update Order Payment Status
+                'change-status_payment' => true,
+                'change-status_payment_verified' => true,
+                'change-status_payment_rejected' => true,
+
                 //Order Report
                 'browse-order_report' => true,
                 'browse-order_report_branch' => true,
@@ -57,6 +66,24 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => true,
+                'acc-view-coor_absent_off' => true,
+                'acc-absent_off' => true,
+                'acc-spv_absent_off' => true,
+                'acc-reject_spv_absent_off' => true,
+                'acc-coor_absent_off' => true,
+                'acc-reject_coor_absent_off' => true,
 
                 //CSO
                 'add-cso' => true,
@@ -178,6 +205,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => true,
 
+                // Public Homecare (Head Admin)
+                "add-public-homecare" => true,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => true,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => true,
+                "change-status-checkin-publichomecare" => true,
+                "change-status-checkout-publichomecare" => true,
+                "change-status-verified-publichomecare" => true,
+                "change-status-product-publichomecare" => true,
+
                 //Type Customer (Head Admin)
         		'add-type_customer' => true,
                 'browse-type_customer' => true,
@@ -196,6 +234,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => true,
                 'edit-data_therapy' => true,
                 'delete-data_therapy' => true,
+
+                //Bank
+                'add-bank' => true,
+                'browse-bank' => true,
+        		'edit-bank' => true,
+                'delete-bank' => true,
             ]),
         ]);
 
@@ -230,6 +274,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -244,6 +293,24 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => true,
@@ -365,6 +432,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => false,
                 "change-status-product-personalhomecare" => false,
 
+                // Public Homecare (Admin)
+                "add-public-homecare" => false,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => false,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => false,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => false,
+                "change-status-product-publichomecare" => false,
+
                 //Type Customer (Admin)
         		'add-type_customer' => true,
                 'browse-type_customer' => true,
@@ -383,6 +461,12 @@ class RolesSeeder extends Seeder
                 'browse-data_therapy' => true,
                 'edit-data_therapy' => true,
                 'delete-data_therapy' => true,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false,                
         	]),
         ]);
 
@@ -417,6 +501,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -431,6 +520,24 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => false,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -546,6 +653,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => false,
                 "change-status-product-personalhomecare" => false,
 
+                // Public Homecare (CSO)
+                "add-public-homecare" => true,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => true,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => true,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => false,
+                "change-status-product-publichomecare" => false,
+
                 //Type Customer (CSO)
         		'add-type_customer' => false,
                 'browse-type_customer' => false,
@@ -564,6 +682,13 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false,                
+                
             ]),
         ]);
 
@@ -598,6 +723,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
                 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+                
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -612,6 +742,24 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => false,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -727,6 +875,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => false,
                 "change-status-product-personalhomecare" => false,
 
+                // Personal Homecare (Branch)
+                "add-public-homecare" => true,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => true,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => true,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => false,
+                "change-status-product-publichomecare" => false,
+
                 //Type Customer (Branch)
         		'add-type_customer' => false,
                 'browse-type_customer' => false,
@@ -745,6 +904,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -779,6 +944,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -793,6 +963,24 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -908,6 +1096,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => false,
 
+                // Public Homecare (Area Manager)
+                "add-public-homecare" => false,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => false,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => false,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => true,
+                "change-status-product-publichomecare" => false,
+
                 //Type Customer (Area Manager)
         		'add-type_customer' => false,
                 'browse-type_customer' => false,
@@ -926,6 +1125,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -960,6 +1165,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -974,6 +1184,24 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -1089,6 +1317,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => false,
 
+                // Public Homecare (Head Manager)
+                "add-public-homecare" => false,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => false,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => false,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => false,
+                "change-status-product-publichomecare" => false,
+
                 //Type Customer (Head Manager)
         		'add-type_customer' => false,
                 'browse-type_customer' => false,
@@ -1107,6 +1346,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
 
@@ -1141,6 +1386,11 @@ class RolesSeeder extends Seeder
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
 
+                //Update Order Payment Status
+                'change-status_payment' => false,
+                'change-status_payment_verified' => false,
+                'change-status_payment_rejected' => false,
+
                 //Order Report
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
@@ -1155,6 +1405,24 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+
+                //Area Home Service
+                'browse-area_home_service' => true,
+
+                //Absent Off
+                'add-absent_off' => true,
+                'browse-absent_off' => true,
+                'detail-absent_off' => true,
+                'edit-absent_off' => true,
+                'delete-absent_off' => true,
+                'browse-acc_absent_off' => true,
+                'acc-view-spv_absent_off' => false,
+                'acc-view-coor_absent_off' => false,
+                'acc-absent_off' => false,
+                'acc-spv_absent_off' => false,
+                'acc-reject_spv_absent_off' => false,
+                'acc-coor_absent_off' => false,
+                'acc-reject_coor_absent_off' => false,
 
                 //CSO
                 'add-cso' => false,
@@ -1276,6 +1544,17 @@ class RolesSeeder extends Seeder
                 "acc-extend-personalhomecare" => true,
                 "change-status-product-personalhomecare" => false,
 
+                // Public Homecare (Admin Management)
+                "add-public-homecare" => false,
+                "browse-public-homecare" => true,
+                "edit-public-homecare" => false,
+                "detail-public-homecare" => true,
+                "delete-public-homecare" => false,
+                "change-status-checkin-publichomecare" => false,
+                "change-status-checkout-publichomecare" => false,
+                "change-status-verified-publichomecare" => false,
+                "change-status-product-publichomecare" => false,
+
                 //Type Customer (Admin Management)
         		'add-type_customer' => false,
                 'browse-type_customer' => false,
@@ -1294,6 +1573,12 @@ class RolesSeeder extends Seeder
                 'detail-data_therapy' => false,
                 'edit-data_therapy' => false,
                 'delete-data_therapy' => false,
+
+                //Bank
+                'add-bank' => false,
+                'browse-bank' => false,
+                'edit-bank' => false,
+                'delete-bank' => false, 
             ]),
         ]);
     }
