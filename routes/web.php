@@ -1193,6 +1193,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
     Route::view('faq_agreement', 'admin.faq_agreement')->name('faq_agreement');
     Route::get('mpc-waki/list', 'Api\WakimartController@listMPCWaki')->name('mpc_waki_list')->middleware('auth');
+    Route::post('mpc-waki/check', 'Api\WakimartController@checkMpcWaki')->name('mpc_waki_check')->middleware('auth');
 });
 
 Auth::routes();

@@ -30,7 +30,7 @@ class WakimartController extends Controller
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri'  => 'https://wakimart.co.id/',
+            'base_uri'  => 'http://127.0.0.1:81/',
             'headers'   => [
                 'api-key' => env('API_KEY')
             ]
@@ -171,6 +171,10 @@ class WakimartController extends Controller
                 Session::put('error-api-waki', "No response from server. Assume the host is offline or server is overloaded.");
                 return view('admin.list_mpc_waki', compact('MPCWakiData'));
             }
+            else{
+                Session::put('error-api-waki', $e->getMessage());
+                return view('admin.list_mpc_waki', compact('MPCWakiData'));
+            }
         }
     }
 
@@ -199,5 +203,41 @@ class WakimartController extends Controller
             $filter[] = $data[$arrIn];
         }
         return $filter;
+    }
+
+    public function checkMpcWaki(Request $request){
+        $wakimartMemberData = WakimartMember::where('mpc_code', $request->mpc_waki)->first();
+        $memberID = [];
+        if($wakimartMemberData) {
+            $memberID[] = $wakimartMemberData->member_id;
+        }
+        $form = array(
+            'member_id' => $memberID
+        );
+        try {
+            $res = $this->client->request('post', 'api/fetch-member', [
+                'form_params' => $form
+            ]);
+            $decoded = json_decode($res->getBody()->getContents());
+            $sessionStatus = '';
+            $sessionMessage = '';
+            if ( $decoded->status == "success" ) {
+                $data = [];
+                foreach ( $decoded->data as $index => $mpc_data ) {
+                    $data['name'] = $mpc_data->name;
+                    $data['phone'] = $mpc_data->phone;
+                }
+                return response()->json([
+                    "status" => "success",
+                    "message" => "member data has been successfully saved on waki-indonesia",
+                    "data_mpc" => $data
+                ], 200);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                "status" => "error",
+                "message" => $e->getMessage(),
+            ], 500);
+        }
     }
 }
