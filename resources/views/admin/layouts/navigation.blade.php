@@ -466,12 +466,6 @@
 </li>
 @endif
 
-<li class="{{isset($menu_item_page) && $menu_item_page == 'mpc_waki'? 'active': '' }} nav-item">
-  <a class="nav-link" href="{{ route('mpc_waki_list')}}">
-		<span class="menu-title">List MPC Waki</span>
-		<i class="mdi mdi-account-multiple menu-icon"></i>
-	</a>
-</li>
 @if(Gate::check('add-category') || Gate::check('browse-category'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'category'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#kategori-dd" aria-expanded="false" aria-controls="kategori-dd">
@@ -586,6 +580,15 @@
       @endif
     </ul>
   </div>
+</li>
+@endif
+
+@if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing') || Gate::check('add-data_therapy') || Gate::check('browse-data_therapy'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'mpc_waki'? 'active': '' }} nav-item">
+  <a class="nav-link" href="{{ route('mpc_waki_list')}}">
+    <span class="menu-title">List MPC Waki</span>
+    <i class="mdi mdi-account-multiple menu-icon"></i>
+  </a>
 </li>
 @endif
 
