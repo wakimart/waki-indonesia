@@ -498,7 +498,6 @@
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'mpc_waki'? 'active': '' }} nav-item">
 			  <a class="nav-link" href="{{ route('mpc_waki_list')}}">
 			    <span class="menu-title">List MPC Waki</span>
-			    <i class="mdi mdi-account-multiple menu-icon"></i>
 			  </a>
 			</li>
 		</ul>
