@@ -1,5 +1,5 @@
 <?php
-$menu_item_page = "service";
+$menu_item_page = "sparepart";
 $menu_item_second = "add_sparepart";
 ?>
 @extends('admin.layouts.template')

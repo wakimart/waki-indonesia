@@ -1,7 +1,7 @@
 <?php
 /* @var $sparepart App\Sparepart */
 
-$menu_item_page = "service";
+$menu_item_page = "sparepart";
 ?>
 @extends('admin.layouts.template')
 

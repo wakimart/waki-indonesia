@@ -1,11 +1,9 @@
-@if(Gate::check('show-dashboard'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'dashboard'? 'active': '' }} nav-item">
 	<a class="nav-link" href="{{ route('dashboard')}}">
 		<span class="menu-title">Dashboard</span>
 		<i class="mdi mdi-home menu-icon"></i>
 	</a>
 </li>
-@endif
 
 @if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'deliveryorder' || isset($menu_item_page) && $menu_item_page == 'registerevent' ? 'active': '' }}">
@@ -16,6 +14,7 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'deliveryorder' || isset($menu_item_page) && $menu_item_page == 'registerevent' ? 'show': '' }}" id="registrationData-dd">
     <ul class="nav flex-column">
+
 			<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'active': '' }}">
 				<a class="nav-link" data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'true': '' }}" aria-controls="deliveryorder-dd">
 			    <span class="menu-title">Registration</span>
@@ -32,6 +31,8 @@
 			    </ul>
 			  </div>
 			</li>
+
+      @if( (Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder')) && Auth::user()->roles[0]['slug'] == 'head-admin')
 			<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'registerevent'? 'active': '' }}">
 				<a class="nav-link" data-toggle="collapse" href="#registerevent-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'registerevent'? 'true': '' }}" aria-controls="registerevent-dd">
 			    <span class="menu-title">Registration Event</span>
@@ -42,12 +43,14 @@
 			      @if(Gate::check('add-deliveryorder'))
 			      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_deliveryorder'? 'active': '' }}" href="{{ route('add_regispromo')}}">Add Registration</a></li>
 			      @endif
-			      @if(Auth::user()->roles[0]['slug'] == 'head-admin')
+            @if(Gate::check('browse-deliveryorder'))
 			      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_regispromo'? 'active': '' }}" href="{{ route('list_regispromo') }}">List Registration Promotion</a></li>
 			      @endif
 			    </ul>
 			  </div>
 			</li>
+      @endif
+
 		</ul>
 	</div>
 </li>
@@ -62,6 +65,8 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'order' || isset($menu_item_page) && $menu_item_page == 'order_report' ? 'show': '' }}" id="orderTrans-dd">
     <ul class="nav flex-column">
+
+    @if(Gate::check('add-order') || Gate::check('browse-order'))
 		<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'order'? 'active': '' }}">
 		  <a class="nav-link" data-toggle="collapse" href="#order-dd" aria-expanded="false" aria-controls="order-dd">
 		    <span class="menu-title">Order</span>
@@ -78,6 +83,9 @@
 		    </ul>
 		  </div>
 		</li>
+    @endif
+
+    @if(Gate::check('browse-order_report') || Gate::check('browse-order_report_branch') || Gate::check('browse-order_report_cso'))
 		<li class="nav-item {{isset($menu_item_page_sub) && $menu_item_page_sub == 'order_report'? 'active': '' }}">
 			<a class="nav-link" data-toggle="collapse" data-parent="#order-dd" href="#orderreport-dd" aria-expanded="false" aria-controls="orderreport-dd">
 				<span class="menu-title">Order Report</span>
@@ -97,6 +105,8 @@
 				</ul>
 			</div>
 		</li>
+    @endif
+
 	</ul>
 </div>
 </li>
@@ -139,7 +149,7 @@
 </li>
 @endif
 
-@if(Gate::check('add-phc-product') || Gate::check('browse-phc-product' || Gate::check('add-personal-homecare') || Gate::check('browse-personal-homecare') || Gate::check('add-public-homecare') || Gate::check('browse-public-homecare')))
+@if(Gate::check('add-phc-product') || Gate::check('browse-phc-product') || Gate::check('add-personal-homecare') || Gate::check('browse-personal-homecare') || Gate::check('add-public-homecare') || Gate::check('browse-public-homecare'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'product_homecare' || isset($menu_item_page) && $menu_item_page == 'personal_homecare' || isset($menu_item_page) && $menu_item_page == 'public_homecare' ? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#homeCare-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'product_homecare' || isset($menu_item_page) && $menu_item_page == 'personal_homecare' || isset($menu_item_page) && $menu_item_page == 'public_homecare' ? 'true': '' }}" aria-controls="homeCare-dd">
     <span class="menu-title">Homecare</span>
@@ -148,6 +158,8 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'product_homecare' || isset($menu_item_page) && $menu_item_page == 'personal_homecare' || isset($menu_item_page) && $menu_item_page == 'public_homecare' ? 'show': '' }}" id="homeCare-dd">
     <ul class="nav flex-column">
+      
+      @if(Gate::check('add-phc-product') || Gate::check('browse-phc-product'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'product_homecare'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#producthomecare-dd" aria-expanded="false" aria-controls="producthomecare-dd">
 			    <span class="menu-title">Product Homecare</span>
@@ -182,6 +194,9 @@
 			    </ul>
 			  </div>
 			</li>
+      @endif
+
+      @if(Gate::check('add-personal-homecare') || Gate::check('browse-personal-homecare'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#personalhomecare-dd" aria-expanded="false" aria-controls="personalhomecare-dd">
 			    <span class="menu-title">Personal Homecare</span>
@@ -208,6 +223,9 @@
 			    </ul>
 			  </div>
 			</li>
+      @endif
+
+      @if(Gate::check('add-public-homecare') || Gate::check('browse-public-homecare'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'public_homecare'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#publichomecare-dd" aria-expanded="false" aria-controls="publichomecare-dd">
 			    <span class="menu-title">Public Homecare</span>
@@ -234,12 +252,14 @@
 			    </ul>
 			  </div>
 			</li>
+      @endif
+
 		</ul>
 	</div>
 </li>
 @endif
 
-@if (Gate::check('add-submission') || Gate::check('browse-submission') || Gate::check('browse-reference'))
+@if (Gate::check('add-submission') || Gate::check('browse-submission'))
 <li class="nav-item {{ isset($menu_item_page) && $menu_item_page == 'submission' ? 'active': '' }}">
     <a class="nav-link"
         data-toggle="collapse"
@@ -293,14 +313,6 @@
                 </a>
             </li>
         @endif
-        @if (Gate::check('browse-reference'))
-           {{--  <li class="nav-item">
-                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_reference' ? 'active' : '' }}"
-                    href="{{ route('list_reference') }}">
-                    List Reference
-                </a>
-            </li> --}}
-        @endif
         </ul>
     </div>
 </li>
@@ -346,15 +358,17 @@
 </li>
 @endif
 
-@if(Gate::check('add-service') || Gate::check('browse-service') || Gate::check('add-technician_schedule') || Gate::check('browse-technician_schedule'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'service' || isset($menu_item_page) && $menu_item_page == 'technician' ? 'active': '' }}">
-  <a class="nav-link" data-toggle="collapse" href="#svcTech-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'service' || isset($menu_item_page) && $menu_item_page == 'technician' ? 'true': '' }}" aria-controls="svcTech-dd">
+@if(Gate::check('add-service') || Gate::check('browse-service') || Gate::check('add-technician_schedule') || Gate::check('browse-technician_schedule') || Gate::check('add-sparepart') || Gate::check('browse-sparepart'))
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'service' || isset($menu_item_page) && $menu_item_page == 'technician' ? 'active': '' || isset($menu_item_page) && $menu_item_page == 'sparepart' ? 'active': '' }}">
+  <a class="nav-link" data-toggle="collapse" href="#svcTech-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'service' || isset($menu_item_page) && $menu_item_page == 'technician' ? 'true': '' || isset($menu_item_page) && $menu_item_page == 'sparepart' ? 'true': '' }}" aria-controls="svcTech-dd">
     <span class="menu-title">Service & Technician</span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-wrench menu-icon"></i>
   </a>
-  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'service' || isset($menu_item_page) && $menu_item_page == 'technician' ? 'show': '' }}" id="svcTech-dd">
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'service' || isset($menu_item_page) && $menu_item_page == 'technician' ? 'show': '' || isset($menu_item_page) && $menu_item_page == 'sparepart' ? 'show': '' }}" id="svcTech-dd">
     <ul class="nav flex-column">
+
+      @if(Gate::check('add-service') || Gate::check('browse-service'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'service'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#service-dd" aria-expanded="false" aria-controls="service-dd">
 			    <span class="menu-title">Service</span>
@@ -368,25 +382,12 @@
 			      @if(Gate::check('browse-service'))
 			      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_service'? 'active': '' }}" href="{{  route('list_service') }}">List Service</a></li>
 			      @endif
-			      @if (Gate::check('add-sparepart'))
-			      <li class="nav-item">
-			        <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'add_sparepart'? 'active': '' }}"
-			          href="{{ route('add_sparepart')}}">
-			          Add Sparepart
-			        </a>
-			      </li>
-			      @endif
-			      @if (Gate::check('browse-sparepart'))
-			      <li class="nav-item">
-			        <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_sparepart'? 'active': '' }}"
-			          href="{{  route('list_sparepart') }}">
-			          List Sparepart
-			        </a>
-			      </li>
-			      @endif
 			    </ul>
 			  </div>
 			</li>
+      @endif
+
+      @if(Gate::check('add-service') || Gate::check('add-technician_schedule') || Gate::check('browse-technician_schedule'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'technician'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">
 			    <span class="menu-title">Technician</span>
@@ -406,6 +407,37 @@
 			    </ul>
 			  </div>
 			</li>
+      @endif
+
+      @if(Gate::check('add-sparepart') || Gate::check('browse-sparepart'))
+      <li class="{{isset($menu_item_page) && $menu_item_page == 'sparepart'? 'active': '' }} nav-item">
+        <a class="nav-link" data-toggle="collapse" href="#sparepart-dd" aria-expanded="false" aria-controls="service-dd">
+          <span class="menu-title">Sparepart</span>
+          <i class="menu-arrow"></i>
+        </a>
+        <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'sparepart'? 'show': '' }}" id="sparepart-dd">
+          <ul class="nav flex-column sub-menu">
+            @if (Gate::check('add-sparepart'))
+            <li class="nav-item">
+              <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'add_sparepart'? 'active': '' }}"
+                href="{{ route('add_sparepart')}}">
+                Add Sparepart
+              </a>
+            </li>
+            @endif
+            @if (Gate::check('browse-sparepart'))
+            <li class="nav-item">
+              <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_sparepart'? 'active': '' }}"
+                href="{{  route('list_sparepart') }}">
+                List Sparepart
+              </a>
+            </li>
+            @endif
+          </ul>
+        </div>
+      </li>
+      @endif
+
 		</ul>
 	</div>
 </li>
@@ -452,14 +484,16 @@
 @endif
 
 @if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing') || Gate::check('add-data_therapy') || Gate::check('browse-data_therapy'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' ? 'active': '' }}">
-  <a class="nav-link" data-toggle="collapse" href="#masterData-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' ? 'true': '' }}" aria-controls="masterData-dd">
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' ? 'active': '' }}">
+  <a class="nav-link" data-toggle="collapse" href="#masterData-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' ? 'true': '' }}" aria-controls="masterData-dd">
     <span class="menu-title">Master Data</span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-table-edit menu-icon"></i>
   </a>
-  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' ? 'show': '' }}" id="masterData-dd">
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' ? 'show': '' }}" id="masterData-dd">
     <ul class="nav flex-column">
+
+      @if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#data_sourcing-dd" aria-expanded="false" aria-controls="data_sourcing-dd">
 			    <span class="menu-title">Data Sourcing</span>
@@ -473,12 +507,12 @@
 			      @if(Gate::check('browse-data_sourcing'))
 			      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_data_sourcing'? 'active': '' }}" href="{{route('list_data_sourcing')}}">List Data Sourcing</a></li>
 			      @endif
-			      @if(Auth::user()->roles[0]['slug'] == 'head-admin')
-			      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'import_data_sourcing'? 'active': '' }}" href="{{route('import_data_sourcing')}}">Import Data</a></li>
-			      @endif
 			    </ul>
 			  </div>
 			</li>
+      @endif
+
+      @if(Gate::check('add-data_therapy') || Gate::check('browse-data_therapy'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'data_therapy'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#data_therapy-dd" aria-expanded="false" aria-controls="data_therapy-dd">
 			    <span class="menu-title">Data Therapy</span>
@@ -495,11 +529,22 @@
 			    </ul>
 			  </div>
 			</li>
+      @endif
+
+      @if(Auth::user()->roles[0]['slug'] == 'head-admin')
+      <li class="{{isset($menu_item_page) && $menu_item_page == 'import_data_sourcing'? 'active': '' }} nav-item">
+        <a class="nav-link" href="{{route('import_data_sourcing')}}">
+          <span class="menu-title">Import Data</span>
+        </a>
+      </li>
+      @endif
+
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'mpc_waki'? 'active': '' }} nav-item">
 			  <a class="nav-link" href="{{ route('mpc_waki_list')}}">
 			    <span class="menu-title">List MPC Waki</span>
 			  </a>
 			</li>
+
 		</ul>
 	</div>
 </li>
@@ -514,6 +559,7 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'cso' || isset($menu_item_page) && $menu_item_page == 'branch' || isset($menu_item_page) && $menu_item_page == 'promo' || isset($menu_item_page) && $menu_item_page == 'type_customer' || isset($menu_item_page) && $menu_item_page == 'bank' || isset($menu_item_page) && $menu_item_page == 'souvenir' || isset($menu_item_page) && $menu_item_page == 'prize' ? 'show': '' }}" id="masterAdmin-dd">
     <ul class="nav flex-column">
+      
 			@if(Gate::check('add-cso') || Gate::check('browse-cso'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'cso'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#cso-dd" aria-expanded="false" aria-controls="cso-dd">
@@ -532,6 +578,7 @@
 			  </div>
 			</li>
 			@endif
+
 			@if(Gate::check('add-branch') || Gate::check('browse-branch'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'branch'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#branch-dd" aria-expanded="false" aria-controls="branch-dd">
@@ -550,6 +597,7 @@
 			  </div>
 			</li>
 			@endif
+
 			@if(Gate::check('add-promo') || Gate::check('browse-promo'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'promo'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#promo-dd" aria-expanded="false" aria-controls="promo-dd">
@@ -568,6 +616,7 @@
 			  </div>
 			</li>
 			@endif
+
 			@if(Gate::check('add-type_customer') || Gate::check('browse-type_customer'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'type_customer'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#type_customer-dd" aria-expanded="false" aria-controls="type_customer-dd">
@@ -586,6 +635,7 @@
 			  </div>
 			</li>
 			@endif
+
 			@if(Gate::check('add-bank') || Gate::check('browse-bank'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'bank'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#bank-dd" aria-expanded="false" aria-controls="bank-dd">
@@ -604,6 +654,7 @@
 			  </div>
 			</li>
 			@endif
+
 			@if(Auth::user()->roles[0]['slug'] == 'head-admin')
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'souvenir'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#souvenir-dd" aria-expanded="false" aria-controls="souvenir-dd">
@@ -630,6 +681,7 @@
 			  </div>
 			</li>
 			@endif
+
 		</ul>
 	</div>
 </li>
