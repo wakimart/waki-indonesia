@@ -13079,10 +13079,9 @@ dl {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
-    flex-direction: column;
-    margin-bottom: 60px; }
+    flex-direction: column; }
     .sidebar .nav .nav-item {
-      padding: 0 1.5rem;
+      padding: 0 1rem;
       -webkit-transition-duration: 0.25s;
       transition-duration: 0.25s;
       transition-property: background;
@@ -13097,7 +13096,7 @@ dl {
         -ms-flex-align: center;
         align-items: center;
         white-space: nowrap;
-        padding: 1rem 0 1rem 0;
+        padding: 0.75rem 0 0.75rem 0;
         color: #3e4b5b;
         -webkit-transition-duration: 0.45s;
         transition-duration: 0.45s;

@@ -17,7 +17,7 @@ var lightColor = getComputedStyle(document.body).getPropertyValue('--light');
     var footer = $('.footer');
     var sidebar = $('.sidebar');
 
-    /*//Add active class to nav-link based on url dynamically
+    //Add active class to nav-link based on url dynamically
     //Active class can be hard coded directly in html file also as required
 
     /*function addActiveClass(element) {
@@ -59,7 +59,8 @@ var lightColor = getComputedStyle(document.body).getPropertyValue('--light');
     //Close other submenu in sidebar on opening any
 
     sidebar.on('show.bs.collapse', '.collapse', function() {
-      sidebar.find('.collapse.show').collapse('hide');
+      $(this).child().find('.collapse.show').collapse('hide');
+      // sidebar.find('.collapse.show').collapse('hide');
     });
 
 
