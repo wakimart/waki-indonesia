@@ -452,13 +452,13 @@
 @endif
 
 @if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing') || Gate::check('add-data_therapy') || Gate::check('browse-data_therapy'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' ? 'active': '' }}">
-  <a class="nav-link" data-toggle="collapse" href="#masterData-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' ? 'true': '' }}" aria-controls="masterData-dd">
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' ? 'active': '' }}">
+  <a class="nav-link" data-toggle="collapse" href="#masterData-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' ? 'true': '' }}" aria-controls="masterData-dd">
     <span class="menu-title">Master Data</span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-table-edit menu-icon"></i>
   </a>
-  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' ? 'show': '' }}" id="masterData-dd">
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' ? 'show': '' }}" id="masterData-dd">
     <ul class="nav flex-column">
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#data_sourcing-dd" aria-expanded="false" aria-controls="data_sourcing-dd">
@@ -494,6 +494,12 @@
 			      @endif
 			    </ul>
 			  </div>
+			</li>
+			<li class="{{isset($menu_item_page) && $menu_item_page == 'mpc_waki'? 'active': '' }} nav-item">
+			  <a class="nav-link" href="{{ route('mpc_waki_list')}}">
+			    <span class="menu-title">List MPC Waki</span>
+			    <i class="mdi mdi-account-multiple menu-icon"></i>
+			  </a>
 			</li>
 		</ul>
 	</div>
