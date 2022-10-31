@@ -538,7 +538,7 @@ class PublicHomecareController extends Controller
 
     public function updateStatus(Request $request)
     {
-        
+
         DB::beginTransaction();
 
         try {
@@ -561,34 +561,41 @@ class PublicHomecareController extends Controller
                 $puhc->save();
             }
             elseif($request->status == "process"){
-                $imageArray = [];
                 $userId = Auth::user()["id"];
                 $path = "sources/phc-checklist";
-                if ($request->hasFile("product_photo_1")) {
-                    $fileName = time()
-                        . "_"
-                        . $userId
-                        . "_"
-                        . "1."
-                        . $request->file("product_photo_1")->getClientOriginalExtension();
-                    $request->file("product_photo_1")->move($path, $fileName);
-                    $imageArray[0] = $fileName;
-                }
+                $imageNameInst = "";
 
-                if ($request->hasFile("product_photo_2")) {
+                if ($request->hasFile("product_photo_inst")) {
                     $fileName = time()
                         . "_"
                         . $userId
+                        . "_"
+                        . $puhc['id']
                         . "_"
                         . "2."
-                        . $request->file("product_photo_2")->getClientOriginalExtension();
-                    $request->file("product_photo_2")->move($path, $fileName);
-                    $imageArray[1] = $fileName;
+                        . $request->file("product_photo_inst")->getClientOriginalExtension();
+                    $request->file("product_photo_inst")->move($path, $fileName);
+                    $imageNameInst = $fileName;
                 }
 
                 $puhcProductsNya = PublicHomecareProduct::where('public_homecare_id', $request->id)->get();
 
                 foreach ($puhcProductsNya as $puhcProductNya) {
+                    $imageArray = [];
+                    if ($request->hasFile("product_photo_".$puhcProductNya['id'])) {
+                        $fileName = time()
+                            . "_"
+                            . $userId
+                            . "_"
+                            . $puhcProductNya['id']
+                            . "_"
+                            . "1."
+                            . $request->file("product_photo_".$puhcProductNya['id'])->getClientOriginalExtension();
+                        $request->file("product_photo_".$puhcProductNya['id'])->move($path, $fileName);
+                        $imageArray[0] = $fileName;
+                        $imageArray[1] = $imageNameInst;
+                    }
+
                     $phcProductNya = $puhcProductNya->personalHomecareProduct;
                     $tempChecklist = $phcProductNya->currentChecklist;
                     $phcChecklistOut = $tempChecklist->replicate();

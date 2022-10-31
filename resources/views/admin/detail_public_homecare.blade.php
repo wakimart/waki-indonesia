@@ -1129,23 +1129,25 @@ $menu_item_page = "public_homecare";
                         name="status"
                         value="process" />
 
-                    <div class="form-group">
-                        <label for="product-photo-1">Product Photo</label>
-                        <input type="file"
-                            class="form-control"
-                            accept="image/jpeg, image/png"
-                            name="product_photo_1"
-                            id="product-photo-1"
-                            required />
-                    </div>
+                    @foreach($publichomecare->publicHomecareProduct as $productNyaPH)
+                        <div class="form-group">
+                            <label for="product-photo-{{ $productNyaPH['id'] }}">Product Photo ({{ $productNyaPH->personalHomecareProduct['code'] }})</label>
+                            <input type="file"
+                                class="form-control"
+                                accept="image/jpeg, image/png"
+                                name="product_photo_{{ $productNyaPH['id'] }}"
+                                id="product-photo-{{ $productNyaPH['id'] }}"
+                                required />
+                        </div>
+                    @endforeach
 
                     <div class="form-group">
-                        <label for="product-photo-2">Product Photo at Instation</label>
+                        <label for="product-photo-inst">Product Photo at Instation</label>
                         <input type="file"
                             class="form-control"
                             accept="image/jpeg, image/png"
-                            name="product_photo_2"
-                            id="product-photo-2"
+                            name="product_photo_inst"
+                            id="product-photo-inst"
                             required />
                     </div>
                 </div>
