@@ -8,7 +8,7 @@
 <div class="table-responsive" style="border: 1px solid #ebedf2;">
     <table class="table table-bordered">               
         <tr>
-            <th style="font-weight: 900; font-size: 14px">Order Report By Branch</th>
+            <th style="font-weight: 900; font-size: 14px">Total Sale By Branch</th>
         </tr>
         <tr>
             <th style="font-weight: 900; font-size: 12px">Branch : {{ $currentBranch ? $currentBranch['code'] . " - " . $currentBranch['name'] : "All Branch" }}</th>

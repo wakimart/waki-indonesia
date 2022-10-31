@@ -55,7 +55,7 @@
     </ul>
   </div>
 </li>
-@if(Gate::check('browse-order_report') || Gate::check('browse-order_report_branch') || Gate::check('browse-order_report_cso'))
+@if(Gate::check('browse-order_report') || Gate::check('browse-total_sale'))
 <li class="{{isset($menu_item_page_sub) && $menu_item_page_sub == 'order_report'? 'active': '' }} nav-item">
 	<a class="nav-link" data-toggle="collapse" data-parent="#order-dd" href="#orderreport-dd" aria-expanded="false" aria-controls="orderreport-dd">
 		<span class="menu-title">Order Report</span>
@@ -65,13 +65,10 @@
 	<div class="collapse {{isset($menu_item_page_sub) && $menu_item_page_sub == 'order_report'? 'show': '' }}" id="orderreport-dd">
 		<ul class="nav flex-column sub-menu">
 			@if(Gate::check('browse-order_report'))
-			<li class="nav-item"> <a class="nav-link {{isset($menu_item_second_sub) && $menu_item_second_sub == 'list_order_report'? 'active': '' }}" href="{{  route('admin_list_order_report') }}">List Order Report</a></li>
+			<li class="nav-item"> <a class="nav-link {{isset($menu_item_second_sub) && $menu_item_second_sub == 'list_order_report'? 'active': '' }}" href="{{  route('admin_list_order_report') }}">List Total Sale</a></li>
 			@endif
-			@if(Gate::check('browse-order_report_branch'))
-			<li class="nav-item"> <a class="nav-link {{isset($menu_item_second_sub) && $menu_item_second_sub == 'list_order_report_branch'? 'active': '' }}" href="{{  route('admin_list_order_report_branch') }}">List Order Report By Branch</a></li>
-			@endif
-			@if(Gate::check('browse-order_report_cso'))
-			<li class="nav-item"> <a class="nav-link {{isset($menu_item_second_sub) && $menu_item_second_sub == 'list_order_report_cso'? 'active': '' }}" href="{{  route('admin_list_order_report_cso') }}">List Order Report By CSO</a></li>
+			@if(Gate::check('browse-total_sale'))
+			<li class="nav-item"> <a class="nav-link {{isset($menu_item_second_sub) && $menu_item_second_sub == 'list_total_sale'? 'active': '' }}" href="{{  route('list_total_sale') }}">List Order Report</a></li>
 			@endif
 		</ul>
 	</div>

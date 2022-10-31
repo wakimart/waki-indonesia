@@ -516,7 +516,7 @@ $menu_item_page = "user";
                                             <input class="form-check-input"
                                                 type="checkbox"
                                                 id="browse-order_report_branch" />
-                                            Browse Order Report By Branch
+                                            Browse Total Sale By Branch
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -525,7 +525,16 @@ $menu_item_page = "user";
                                             <input class="form-check-input"
                                                 type="checkbox"
                                                 id="browse-order_report_cso" />
-                                            Browse Order Report By CSO
+                                            Browse Total Sale By CSO
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-total_sale">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-total_sale" />
+                                            Browse Order Report
                                         </label>
                                     </div>
                                 </div>

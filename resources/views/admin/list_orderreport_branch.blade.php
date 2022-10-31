@@ -8,7 +8,7 @@ $menu_item_second_sub = "list_order_report_branch";
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">List Order Report By Branch</h3>
+            <h3 class="page-title">List Total Sale By Branch</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -20,7 +20,7 @@ $menu_item_second_sub = "list_order_report_branch";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        List Order Report By Branch
+                        List Total Sale By Branch
                     </li>
                 </ol>
             </nav>
@@ -132,7 +132,7 @@ $menu_item_second_sub = "list_order_report_branch";
                             target="_blank"
                             class="btn btn-gradient-info m-1">
                             <span class="mdi mdi-file-document"></span>
-                            Print Order Report
+                            Print Total Sale
                         </a>
                         @php 
                             $exportParameter['export_type'] = "xls";
@@ -140,7 +140,7 @@ $menu_item_second_sub = "list_order_report_branch";
                         <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"
                             class="btn btn-gradient-info m-1">
                             <span class="mdi mdi-file-document"></span>
-                            Export Order Report
+                            Export Total Sale
                         </a>
                     </div>
                 </div>

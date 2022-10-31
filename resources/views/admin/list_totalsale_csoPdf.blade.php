@@ -23,15 +23,16 @@
             </div>
             <div class="content">
                 <p class="title">
-                    Total Sale By Branch
+                    Order Report By Cso
                 </p>
                 <br>
                 <h4>Branch : {{ $currentBranch ? $currentBranch['code'] . " - " . $currentBranch['name'] : "All Branch" }}</h4>
+                <h4>Cso : {{ $currentCso ? $currentCso['code'] . " - " . $currentCso['name'] : "All Cso" }}</h4>
                 <h5>
                     Date: {{ date("d/m/Y", strtotime($startDate)) }} - {{ date("d/m/Y", strtotime($endDate)) }}</h5>
                 </h5>
                 <div>
-                    Total : {{ $countOrderReports }} data
+                    Total : {{ $countTotalSales }} data
                 </div>
 
                 <p class="normal">
@@ -39,39 +40,33 @@
                     <thead>
                         <tr>
                             <th class="col-md-1" style="width: 10%; text-align:center;">No</th>
-                            <th class="col-md-4" style="width: 30%; text-align:center;">CSO</th>
-                            <th class="col-md-2" style="width: 20%; text-align:center;">Sales Until Yesterday</th>
-                            <th class="col-md-2" style="width: 20%; text-align:center;">Sales Today</th>
-                            <th class="col-md-2" style="width: 20%; text-align:center;">Total Sales</th>
+                            <th class="col-md-2" style="width: 20%; text-align:center;">Order Date</th>
+                            <th class="col-md-2" style="width: 20%; text-align:center;">Bank In</th>
+                            <th class="col-md-2" style="width: 20%; text-align:center;">Debit</th>
+                            <th class="col-md-2" style="width: 20%; text-align:center;">Netto Debit</th>
+                            <th class="col-md-2" style="width: 20%; text-align:center;">Card</th>
+                            <th class="col-md-2" style="width: 20%; text-align:center;">Netto Card</th>
                         </tr>
                     </thead>
                     <tbody name="collection">
-                        @php
-                            $total_sale_untilYesterday = 0;
-                            $total_sale_today = 0;
-                            $totalSales = 0;
-                        @endphp
-                        @foreach ($order_reports as $key => $order_report)
+                        @foreach ($total_sales as $key => $total_sale)
                             <tr>
                                 <td style="text-align:center;">{{ $key + 1 }}</td>
-                                <td>{{ $order_report['code'] }} - {{ $order_report['name'] }}</td>
-                                <td style="text-align:right;">Rp. {{ number_format($order_report['total_sale_untilYesterday']) }}</td>
-                                <td style="text-align:right;">Rp. {{ number_format($order_report['total_sale_today']) }}</td>
-                                <td style="text-align:right;">Rp.
-                                    {{ number_format($order_report['total_sale_untilYesterday'] + $order_report['total_sale_today']) }}
-                                </td>
+                                <td>{{ date("d/m/Y", strtotime($total_sale['order_date'])) }}</td>
+                                <td style="text-align:right;">Rp. {{ number_format($total_sale['sum_ts_bank_in']) }}</td>
+                                <td style="text-align:right;">Rp. {{ number_format($total_sale['sum_ts_debit']) }}</td>
+                                <td style="text-align:right;">Rp. {{ number_format($total_sale['sum_ts_netto_debit']) }}</td>
+                                <td style="text-align:right;">Rp. {{ number_format($total_sale['sum_ts_card']) }}</td>
+                                <td style="text-align:right;">Rp. {{ number_format($total_sale['sum_ts_netto_card']) }}</td>
                             </tr>
-                            @php
-                                $total_sale_untilYesterday += $order_report['total_sale_untilYesterday'];
-                                $total_sale_today += $order_report['total_sale_today'];
-                                // $totalSales += ($order_report['total_sale_untilYesterday'] + $order_report['total_sale_today']);
-                            @endphp
                         @endforeach
                         <tr class="text-right">
                             <th colspan="2">TOTAL SALES</th>
-                            <th>Rp. {{ number_format($total_sale_untilYesterday) }}</th>
-                            <th>Rp. {{ number_format($total_sale_today) }}</th>
-                            <th>Rp. {{ number_format($total_sale_untilYesterday + $total_sale_today) }}</th>
+                            <th>Rp. {{ number_format($total_sales->sum('sum_ts_bank_in')) }}</th>
+                            <th>Rp. {{ number_format($total_sales->sum('sum_ts_debit')) }}</th>
+                            <th>Rp. {{ number_format($total_sales->sum('sum_ts_netto_debit')) }}</th>
+                            <th>Rp. {{ number_format($total_sales->sum('sum_ts_card')) }}</th>
+                            <th>Rp. {{ number_format($total_sales->sum('sum_ts_netto_card')) }}</th>
                         </tr>
                     </tbody>
 

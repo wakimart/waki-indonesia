@@ -56,6 +56,7 @@ class RolesSeeder extends Seeder
                 'browse-order_report' => true,
                 'browse-order_report_branch' => true,
                 'browse-order_report_cso' => true,
+                'browse-total_sale' => true,
 
                 //Home Service
                 'add-home_service' => true,
@@ -272,6 +273,7 @@ class RolesSeeder extends Seeder
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
                 'browse-order_report_cso' => false,
+                'browse-total_sale' => false,
 
                 //Home Service
                 'add-home_service' => true,
@@ -488,6 +490,7 @@ class RolesSeeder extends Seeder
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
                 'browse-order_report_cso' => false,
+                'browse-total_sale' => false,
 
                 //Home Service
                 'add-home_service' => true,
@@ -699,6 +702,7 @@ class RolesSeeder extends Seeder
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
                 'browse-order_report_cso' => false,
+                'browse-total_sale' => false,
 
                 //Home Service
                 'add-home_service' => true,
@@ -909,6 +913,7 @@ class RolesSeeder extends Seeder
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
                 'browse-order_report_cso' => false,
+                'browse-total_sale' => false,
 
                 //Home Service
                 'add-home_service' => false,
@@ -1119,6 +1124,7 @@ class RolesSeeder extends Seeder
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
                 'browse-order_report_cso' => false,
+                'browse-total_sale' => false,
 
                 //Home Service
                 'add-home_service' => false,
@@ -1329,6 +1335,7 @@ class RolesSeeder extends Seeder
                 'browse-order_report' => false,
                 'browse-order_report_branch' => false,
                 'browse-order_report_cso' => false,
+                'browse-total_sale' => false,
 
                 //Home Service
                 'add-home_service' => false,

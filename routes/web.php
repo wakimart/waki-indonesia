@@ -445,6 +445,29 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::match(['put', 'patch'], '/update_order_payment_for_those_who_are_not_head_admin/{id}', 'OrderController@updateOrderPaymentForThoseWhoAreNotHeadAdmin')->name('update_order_payment_for_those_who_are_not_head_admin');
     });
 
+    Route::group(['prefix' => 'total_sale', 'middleware' => 'auth'], function() {
+        //List Total Sale
+        Route::get('/list_total_sale', 'TotalSaleController@listTotalSale')
+            ->name('list_total_sale')
+            ->middleware('can:browse-total_sale');
+        //List Total Sale By Branch
+        Route::get('/list_total_sale_branch', 'TotalSaleController@listTotalSaleBranch')
+            ->name('list_total_sale_branch')
+            ->middleware('can:browse-total_sale');
+        //List Total Sale By Cso
+        Route::get('/list_total_sale_cso', 'TotalSaleController@listTotalSaleCso')
+            ->name('list_total_sale_cso')
+            ->middleware('can:browse-total_sale');
+        //Export Total Sale By Bank
+        Route::get('/export_total_sale__bybank', 'TotalSaleController@exportTotalSaleByBank')
+            ->name('export_total_sale__bybank')
+            ->middleware('can:browse-total_sale');
+        //Export Total Sale By Branch
+        Route::get('/export_total_sale_bybranch', 'TotalSaleController@exportTotalSaleByBranch')
+            ->name('export_total_sale_bybranch')
+            ->middleware('can:browse-total_sale');
+    });
+
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {
         //notif acc cancel hs
         Route::post("/accNotifHomeservice", "HomeServiceController@accNotif")

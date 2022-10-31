@@ -113,6 +113,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('browse-order_report_cso', function ($user) {
             return $user->hasAccess(['browse-order_report_cso']);
         });
+        Gate::define('browse-total_sale', function ($user) {
+            return $user->hasAccess(['browse-total_sale']);
+        });
 
         //-- HOME SERVICE --//
         Gate::define('add-home_service', function ($user) {

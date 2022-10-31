@@ -23,7 +23,7 @@
             </div>
             <div class="content">
                 <p class="title">
-                    Order Report
+                    Total Sale
                 </p>
                 <br>
 
