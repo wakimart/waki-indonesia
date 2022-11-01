@@ -427,7 +427,7 @@
                                 <input id="order-id" name="orderId" hidden="hidden" value="{{ $order['id'] }}">
                                 <input id="status-order" name="status_order" hidden="hidden">
                                 <button id="btn-edit-status-order"
-                                    type="submit"
+                                    type="button"
                                     class="btn btn-gradient-primary mr-2">
                                     Yes
                                 </button>
@@ -681,12 +681,13 @@
                                     @csrf
                                     <input type="hidden" id="updateStatusPayment-order_id" name="order_id" value="{{ $order['id'] }}">
                                     <input type="hidden" id="updateStatusPayment-order_payment_id" name="order_payment_id" value="">
+                                    <input type="hidden" id="statusACC" name="status_acc">
                                     <div class="btn-action" style="text-align: center;">
                                         @if (Gate::check('change-status_payment_verified'))
-                                        <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Verified</button>
+                                        <button type="button" class="btn btn-gradient-primary" id="btn-update-status-payment-true">Verified</button>
                                         @endif
                                         @if (Gate::check('change-status_payment_rejected'))
-                                        <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">Rejected</button>
+                                        <button type="button" class="btn btn-gradient-danger" id="btn-update-status-payment-false">Rejected</button>
                                         @endif
                                     </div>
                                 </form>
@@ -741,6 +742,27 @@
                 </div>
             </div>
             <!-- End Modal Delete -->
+            <!-- Error modal -->
+            <div class="modal fade"
+                id="error-modal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="error-modal-desc"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal View -->
             @endif
 
             @else
@@ -948,8 +970,9 @@
 
             });
         });
-
-        function testNetwork(){
+        
+        var networkValue
+        function testNetwork(networkValue, response){            
             $.ajax({
                 method: "post",
                 url: "http://{{ env('OFFLINE_URL') }}/api/end-point-for-check-status-network",
@@ -959,15 +982,169 @@
                 headers: {
                     "api-key": "{{ env('API_KEY') }}",
                 },
-                success: function(data) {
-                    console.log(data);
-                },
-                error: function(data) {
-                    console.log({"Error!":  data['responseText']});
+                success: response,
+                error: function(xhr, status, error) {
+                    var modal = `                
+                        <div class="modal-body">
+                            <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                            <hr>
+                            <p class="text-center">${xhr.responseJSON.message}</p>
+                        </div>                
+                    `
+                    $('#modal-change-status').modal("hide")
+                    $('.modal-backdrop').remove();
+                    $('#error-modal-desc').html(modal)
+                    $('#error-modal').modal("show")
                 }
             });
         };
-        testNetwork();
+        
+        $('#btn-edit-status-order').on('click', function() {        
+            testNetwork(networkValue, function(val){
+                var order_details = []
+                @foreach($order->orderDetail as $detail)
+                    var row = {
+                        'product_id':'{{$detail->product_id}}',
+                        'promo_id':'{{$detail->promo_id}}',
+                        'qty':'{{$detail->qty}}',
+                        'type':'{{$detail->type}}',
+                        'other':'{{$detail->other}}'
+                    }
+                    order_details.push(row)
+                @endforeach
+                var formSerialize = $('#actionAdd').serializeArray()
+                var deliveryCSOID = []
+                for(var i = 0; i < formSerialize.length; i++){
+                    if(formSerialize[i].name == 'delivery_cso_id[]'){
+                        deliveryCSOID.push(formSerialize[i].value)
+                    }
+                }
+                var order = {
+                    'code':'{{$order->code}}',
+                    'no_member':'{{$order->no_member}}',
+                    'name':'{{$order->name}}',
+                    'address':'{{$order->address}}',
+                    'cash_upgrade':'{{$order->cash_upgrade}}',
+                    'total_payment':'{{$order->total_payment}}',
+                    'down_payment':'{{$order->down_payment}}',
+                    'remaining_payment':'{{$order->remaining_payment}}',
+                    'cso_id':'{{$order->cso_id}}',
+                    'branch_id':'{{$order->branch_id}}',
+                    '30_cso_id':"{{$order['30_cso_id']}}",
+                    '70_cso_id':"{{$order['70_cso_id']}}",
+                    'customer_type':'{{$order->customer_type}}',
+                    'description':'{{$order->description}}',
+                    'phone':'{{$order->phone}}',
+                    'orderDate':'{{$order->orderDate}}',
+                    'know_from':'{{$order->know_from}}',
+                    'province':'{{$order->province}}',
+                    'city':'{{$order->city}}',
+                    'distric':'{{$order->distric}}',
+                    'status':$('#status-order').val(),
+                    'delivery_cso_id':deliveryCSOID,
+                    'order_details':order_details,
+                    'user_id':'{{Auth::user()->code}}'
+                }
+
+                $.ajax({
+                    method: "post",
+                    url: "http://{{ env('OFFLINE_URL') }}/api/replicate-order-data",
+                    data: order,
+                    success: function(res){
+                        if(res.status == 'success'){
+                            $('#actionAdd').submit();
+                        }else{
+                            var modal = `                
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-center">${res.status}</h5>
+                                    <hr>
+                                    <p class="text-center">${res.message}</p>
+                                </div>                
+                            `
+                            $('#modal-change-status').modal("hide")
+                            $('.modal-backdrop').remove();
+                            $('#error-modal-desc').html(modal)
+                            $('#error-modal').modal("show")
+                        }
+                    },
+                    error: function(xhr){
+                        var modal = `                
+                            <div class="modal-body">
+                                <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                                <hr>
+                                <p class="text-center">${xhr.responseJSON.message}</p>
+                            </div>                
+                        `
+                        $('#modal-change-status').modal("hide")
+                        $('.modal-backdrop').remove();
+                        $('#error-modal-desc').html(modal)
+                        $('#error-modal').modal("show")
+                    }
+                    
+                })
+            })
+            return false
+        });
+
+        $('#btn-update-status-payment-true, #btn-update-status-payment-false').on('click', function() {
+            var classPayment = $(this).attr('class')
+            var isVerified = false
+            if(classPayment == 'btn btn-gradient-primary'){
+                $('#statusACC').val('true')
+                isVerified = true
+            }else{
+                $('#statusACC').val('false')
+            }
+
+            if(isVerified){
+                testNetwork(networkValue, function(val){
+                    var orderPaymentData = {
+                        'order_code':'{{$order->code}}',
+                        'total_payment':'',
+                        'payment_date':'',
+                        'bank_id':'',
+                        'cicilan':'',
+                        'image':'',
+                        'user_id':'{{Auth::user()->code}}'
+                    }
+                    @foreach($order->orderPayment as $payment)
+                        if($('#updateStatusPayment-order_payment_id').val() == '{{$payment->id}}'){
+                            orderPaymentData.total_payment = '{{$payment->total_payment}}'
+                            orderPaymentData.payment_date = '{{$payment->payment_date}}'
+                            orderPaymentData.bank_id = '{{$payment->bank_id}}'
+                            orderPaymentData.cicilan = '{{$payment->cicilan}}'
+                            orderPaymentData.image = <?= $payment->image; ?>
+                        }                        
+                    @endforeach
+                    for(var i = 0; i < orderPaymentData.image.length; i++){
+                        orderPaymentData['order_payment_file_'+i] = `{{ asset('sources/order/${orderPaymentData.image[i]}') }}`
+                    }
+                    $.ajax({
+                        method: "post",
+                        url: "http://{{ env('OFFLINE_URL') }}/api/replicate-order-payment-data",
+                        data: orderPaymentData,
+                        success: function(res){
+                            $('#frmUpdateStatusPayment').submit();
+                        },
+                        error: function(xhr){
+                            var modal = `                
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                                    <hr>
+                                    <p class="text-center">${xhr.responseJSON.message}</p>
+                                </div>                
+                            `
+                            $('#error-modal-desc').html(modal)
+                            $('#error-modal').modal("show")
+                        }
+                        
+                    })
+                })
+                return false
+            }else{
+                $('#frmUpdateStatusPayment').submit();
+            }
+        });
     });
 
 </script>
