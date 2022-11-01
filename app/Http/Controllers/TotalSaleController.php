@@ -102,7 +102,7 @@ class TotalSaleController extends Controller
             ->leftJoin('orders as o', 'o.branch_id', 'b.id')
             ->leftJoin('order_payments as op', 'op.order_id', 'o.id')
             ->leftJoin('total_sales as ts', 'ts.order_payment_id', 'op.id')
-            ->whereBetween('o.created_at', [$startDate." 00:00:00", $endDate." 23:59:59"])
+            ->whereBetween('op.payment_date', [$startDate, $endDate])
             ->where('b.active', true)
             ->where('o.active', true)
             ->orderBy('b.code')
@@ -143,7 +143,7 @@ class TotalSaleController extends Controller
             ->join('orders as o', 'o.cso_id', 'c.id')
             ->join('order_payments as op', 'op.order_id', 'o.id')
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
-            ->whereBetween('o.created_at', [$startDate." 00:00:00", $endDate." 23:59:59"])
+            ->whereBetween('op.payment_date', [$startDate, $endDate])
             ->where('c.active', true)
             ->where('o.active', true);
 
@@ -183,7 +183,7 @@ class TotalSaleController extends Controller
         }
         
         $total_sales = Order::from('orders as o')
-            ->select('o.*')
+            ->select('o.*', 'op.payment_date as op_payment_date')
             ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
             ->selectRaw("SUM(ts.debit) as sum_ts_debit")
             ->selectRaw("SUM(ts.netto_debit) as sum_ts_netto_debit")
@@ -191,7 +191,7 @@ class TotalSaleController extends Controller
             ->selectRaw("SUM(ts.netto_card) as sum_ts_netto_card")
             ->join('order_payments as op', 'op.order_id', 'o.id')
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
-            ->whereBetween('o.created_at', [$startDate." 00:00:00", $endDate." 23:59:59"])
+            ->whereBetween('op.payment_date', [$startDate, $endDate])
             ->where('o.active', true);
 
         $currentBranch = null;
@@ -205,7 +205,7 @@ class TotalSaleController extends Controller
             $total_sales->where('o.cso_id', $currentCso['id']);
         }
 
-        $total_sales = $total_sales->orderBy('o.created_at', 'desc')
+        $total_sales = $total_sales->orderBy('op.payment_date', 'desc')
             ->groupBy('o.id')->get();
         $countTotalSales = $total_sales->count();
 
@@ -248,12 +248,12 @@ class TotalSaleController extends Controller
             ->join('orders as o', 'o.id', 'op.order_id')
             ->join('branches as br', 'br.id', 'o.branch_id')
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
-            ->whereBetween('o.created_at', [$startDate." 00:00:00", $endDate." 23:59:59"])
+            ->whereBetween('op.payment_date', [$startDate, $endDate])
             ->where('o.active', true)
             ->groupBy('b.id', 'br.id', 'op.id')
             ->orderBy('b.code', 'asc')
             ->orderBy('br.code', 'asc')
-            ->orderBy('o.created_at', 'asc')->get();
+            ->orderBy('op.payment_date', 'asc')->get();
         
         $total_sales = [];
 
@@ -301,12 +301,12 @@ class TotalSaleController extends Controller
             ->join('order_payments as op', 'op.order_id', 'o.id')
             ->join('bank_accounts as b', 'b.id', 'op.bank_account_id')
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
-            ->whereBetween('o.created_at', [$startDate." 00:00:00", $endDate." 23:59:59"])
+            ->whereBetween('op.payment_date', [$startDate, $endDate])
             ->where('o.active', true)
             ->groupBy('br.id', 'b.id', 'op.id')
             ->orderBy('br.code', 'asc')
             ->orderBy('b.code', 'asc')
-            ->orderBy('o.created_at', 'asc')->get();
+            ->orderBy('op.payment_date', 'asc')->get();
         
         $total_sales = [];
 

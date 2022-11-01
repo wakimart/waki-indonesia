@@ -175,7 +175,7 @@ $menu_item_page_sub = "order_report";
                             <thead>
                                 <tr class="text-center">
                                     <th> No. </th>
-                                    <th class="text-left"> Order Date </th>
+                                    <th class="text-left"> Order Payment Date </th>
                                     <th> Bank In</th>
                                     <th> Debit</th>
                                     <th> Netto Debit</th>
@@ -188,7 +188,7 @@ $menu_item_page_sub = "order_report";
                                 @foreach ($total_sales as $key => $total_sale)
                                 <tr>
                                     <td class="text-center">{{ $key+1 }}</td>
-                                    <td>{{ date("d/m/Y H:i:s", strtotime($total_sale['created_at'])) }}</td>
+                                    <td>{{ date("d/m/Y", strtotime($total_sale['op_payment_date'])) }}</td>
                                     <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_bank_in']) }}</td>
                                     <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_debit']) }}</td>
                                     <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_netto_debit']) }}</td>

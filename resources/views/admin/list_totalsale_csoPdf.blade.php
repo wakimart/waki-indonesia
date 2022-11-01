@@ -40,7 +40,7 @@
                     <thead>
                         <tr>
                             <th class="col-md-1" style="width: 10%; text-align:center;">No</th>
-                            <th class="col-md-2" style="width: 20%; text-align:center;">Order Date</th>
+                            <th class="col-md-2" style="width: 20%; text-align:center;">Order Payment Date</th>
                             <th class="col-md-2" style="width: 20%; text-align:center;">Bank In</th>
                             <th class="col-md-2" style="width: 20%; text-align:center;">Debit</th>
                             <th class="col-md-2" style="width: 20%; text-align:center;">Netto Debit</th>
@@ -52,7 +52,7 @@
                         @foreach ($total_sales as $key => $total_sale)
                             <tr>
                                 <td style="text-align:center;">{{ $key + 1 }}</td>
-                                <td>{{ date("d/m/Y", strtotime($total_sale['order_date'])) }}</td>
+                                <td>{{ date("d/m/Y", strtotime($total_sale['op_payment_date'])) }}</td>
                                 <td style="text-align:right;">Rp. {{ number_format($total_sale['sum_ts_bank_in']) }}</td>
                                 <td style="text-align:right;">Rp. {{ number_format($total_sale['sum_ts_debit']) }}</td>
                                 <td style="text-align:right;">Rp. {{ number_format($total_sale['sum_ts_netto_debit']) }}</td>
