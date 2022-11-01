@@ -1141,7 +1141,7 @@
                         $("#editPayment-charge_percentage_company").val(result.charge_percentage_company)
                         $("#editPayment-charge_percentage_bank").val(result.charge_percentage_bank)
                         $("#editPayment-estimate_transfer_date").val(result.estimate_transfer_date)
-                        if(result.type_payment == 'card installment'){
+                        if(result.type_payment == 'card installment' || result.type_payment == 'card'){
                             $('.editPayment-installment_form').prop({'disabled' : false, 'readonly' : false})
                         }else{
                             $('.editPayment-installment_form').prop({'disabled' : true, 'readonly' : true})
@@ -1249,7 +1249,7 @@
 
         // add
         $('#typePayment').on('change', function() {
-            if(this.value == 'card installment'){
+            if(this.value == 'card installment' || this.value == 'card'){
                 $('.installment-form').prop({'disabled' : false, 'readonly' : false})
             }else{
                 $('.installment-form').prop({'disabled' : true, 'readonly' : true})
@@ -1389,7 +1389,7 @@
         });
 
         $('#editPayment-select_type_payment').on('change', function() {
-            if(this.value == 'card installment'){
+            if(this.value == 'card installment' || this.value == 'card'){
                 $('.editPayment-installment_form').prop({'disabled' : false, 'readonly' : false})
             }else{
                 $('.editPayment-installment_form').prop({'disabled' : true, 'readonly' : true})
