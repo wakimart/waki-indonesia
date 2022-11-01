@@ -58,6 +58,13 @@ class RolesSeeder extends Seeder
                 'browse-order_report_cso' => true,
                 'browse-total_sale' => true,
 
+                // Financial Routine
+                "add-financial_routine" => true,
+                "browse-financial_routine" => true,
+                "detail-financial_routine" => true,
+                "edit-financial_routine" => true,
+                "delete-financial_routine" => true,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -274,6 +281,13 @@ class RolesSeeder extends Seeder
                 'browse-order_report_branch' => false,
                 'browse-order_report_cso' => false,
                 'browse-total_sale' => false,
+
+                // Financial Routine
+                "add-financial_routine" => false,
+                "browse-financial_routine" => false,
+                "detail-financial_routine" => false,
+                "edit-financial_routine" => false,
+                "delete-financial_routine" => false,
 
                 //Home Service
                 'add-home_service' => true,
@@ -492,6 +506,13 @@ class RolesSeeder extends Seeder
                 'browse-order_report_cso' => false,
                 'browse-total_sale' => false,
 
+                // Financial Routine
+                "add-financial_routine" => false,
+                "browse-financial_routine" => false,
+                "detail-financial_routine" => false,
+                "edit-financial_routine" => false,
+                "delete-financial_routine" => false,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -704,6 +725,13 @@ class RolesSeeder extends Seeder
                 'browse-order_report_cso' => false,
                 'browse-total_sale' => false,
 
+                // Financial Routine
+                "add-financial_routine" => false,
+                "browse-financial_routine" => false,
+                "detail-financial_routine" => false,
+                "edit-financial_routine" => false,
+                "delete-financial_routine" => false,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -914,6 +942,13 @@ class RolesSeeder extends Seeder
                 'browse-order_report_branch' => false,
                 'browse-order_report_cso' => false,
                 'browse-total_sale' => false,
+
+                // Financial Routine
+                "add-financial_routine" => false,
+                "browse-financial_routine" => false,
+                "detail-financial_routine" => false,
+                "edit-financial_routine" => false,
+                "delete-financial_routine" => false,
 
                 //Home Service
                 'add-home_service' => false,
@@ -1126,6 +1161,13 @@ class RolesSeeder extends Seeder
                 'browse-order_report_cso' => false,
                 'browse-total_sale' => false,
 
+                // Financial Routine
+                "add-financial_routine" => false,
+                "browse-financial_routine" => false,
+                "detail-financial_routine" => false,
+                "edit-financial_routine" => false,
+                "delete-financial_routine" => false,
+
                 //Home Service
                 'add-home_service' => false,
                 'browse-home_service' => true,
@@ -1336,6 +1378,13 @@ class RolesSeeder extends Seeder
                 'browse-order_report_branch' => false,
                 'browse-order_report_cso' => false,
                 'browse-total_sale' => false,
+
+                // Financial Routine
+                "add-financial_routine" => false,
+                "browse-financial_routine" => false,
+                "detail-financial_routine" => false,
+                "edit-financial_routine" => false,
+                "delete-financial_routine" => false,
 
                 //Home Service
                 'add-home_service' => false,

@@ -77,6 +77,26 @@
 
 @endif
 
+@if(Gate::check('add-financial_routine') || Gate::check('browse-financial_routine'))
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'financial_routine'? 'active': '' }}">
+  <a class="nav-link" data-toggle="collapse" href="#financial_routine-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'financial_routine'? 'true': '' }}" aria-controls="financial_routine-dd">
+    <span class="menu-title">Financial Routine</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-calendar-text menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'financial_routine'? 'show': '' }}" id="financial_routine-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-financial_routine'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_financial_routine'? 'active': '' }}" href="{{ route('add_financial_routine')}}">Add by Bank</a></li>
+      @endif
+      @if(Gate::check('browse-financial_routine'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_financial_routine'? 'active': '' }}" href="{{ route('list_financial_routine') }}">List by Bank</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
 @if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'true': '' }}" aria-controls="deliveryorder-dd">

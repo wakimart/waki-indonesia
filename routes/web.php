@@ -86,6 +86,9 @@ Route::get("/fetchSouvenir", "SouvenirController@fetchSouvenir")->name("fetchSou
 Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
 Route::get("/fetchProductService", "ProductServiceController@fetchProductService")->name("fetchProductService");
 
+Route::get("/check_routine_date", "FinancialRoutineController@checkRoutineDate")
+    ->name("check_routine_date");
+
 Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)
@@ -466,6 +469,65 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/export_total_sale_bybranch', 'TotalSaleController@exportTotalSaleByBranch')
             ->name('export_total_sale_bybranch')
             ->middleware('can:browse-total_sale');
+    });
+
+    Route::group(['prefix' => 'financial_routine', 'middleware' => 'auth'], function() {
+        // Add Form Financial Routine
+        Route::get('/add', 'FinancialRoutineController@create')
+            ->name('add_financial_routine')
+            ->middleware("can:add-financial_routine");
+
+        // Create Financial Routine
+        Route::post('/store', 'FinancialRoutineController@store')
+            ->name('store_financial_routine')
+            ->middleware("can:add-financial_routine");
+
+        // List Financial Routine
+        Route::get('/list', 'FinancialRoutineController@index')
+            ->name('list_financial_routine')
+            ->middleware("can:browse-financial_routine");
+
+        // Detail Financial Routine
+        Route::get('/detail', 'FinancialRoutineController@show')
+            ->name('detail_financial_routine')
+            ->middleware("can:detail-financial_routine");
+
+        // Edit Financial Routine
+        Route::get('/edit', 'FinancialRoutineController@edit')
+            ->name('edit_financial_routine')
+            ->middleware("can:edit-financial_routine");
+
+        // Update Financial Routine
+        Route::post('/update', 'FinancialRoutineController@update')
+            ->name('update_financial_routine')
+            ->middleware("can:edit-financial_routine");
+
+        // Delete Financial Routine
+        Route::post('/delete', 'FinancialRoutineController@destroy')
+            ->name('delete_financial_routine')
+            ->middleware("can:delete-financial_routine");
+
+        // Print Financial Routine
+        Route::get('print_financial_routine', 'FinancialRoutineController@print')
+            ->name('print_financial_routine')
+            ->middleware('can:detail-financial_routine');
+
+        //Store Financial Routine Transaction
+        Route::post('/store_financial_routine_transaction', 'FinancialRoutineTransactionController@store')
+            ->name('store_financial_routine_transaction')
+            ->middleware('can:add-financial_routine');
+        //Edit Financial Routine Transaction
+        Route::post('/edit_financial_routine_transaction', 'FinancialRoutineTransactionController@edit')
+            ->name('edit_financial_routine_transaction')
+            ->middleware('can:edit-financial_routine');
+        //Update Financial Routine Transaction
+        Route::post('/update_financial_routine_transaction', 'FinancialRoutineTransactionController@update')
+            ->name('update_financial_routine_transaction')
+            ->middleware('can:edit-financial_routine');
+        //Delete Financial Routine Transaction
+        Route::post('/delete_financial_routine_transaction', 'FinancialRoutineTransactionController@destroy')
+            ->name('delete_financial_routine_transaction')
+            ->middleware('can:delete-financial_routine');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {

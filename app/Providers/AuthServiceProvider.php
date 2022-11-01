@@ -117,6 +117,23 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['browse-total_sale']);
         });
 
+        //-- FINANCIAL ROUTINE --//
+        Gate::define('add-financial_routine', function ($user) {
+            return $user->hasAccess(['add-financial_routine']);
+        });
+        Gate::define('browse-financial_routine', function ($user) {
+            return $user->hasAccess(['browse-financial_routine']);
+        });
+        Gate::define('detail-financial_routine', function ($user) {
+            return $user->hasAccess(['detail-financial_routine']);
+        });
+        Gate::define('edit-financial_routine', function ($user) {
+            return $user->hasAccess(['edit-financial_routine']);
+        });
+        Gate::define('delete-financial_routine', function ($user) {
+            return $user->hasAccess(['delete-financial_routine']);
+        });
+
         //-- HOME SERVICE --//
         Gate::define('add-home_service', function ($user) {
             return $user->hasAccess(['add-home_service']);
