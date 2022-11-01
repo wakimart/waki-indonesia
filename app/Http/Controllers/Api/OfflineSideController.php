@@ -161,7 +161,7 @@ class OfflineSideController extends Controller
                 $path = $request['order_payment_file_' . $index];
                 $filename = basename($path);
 
-                Image::make($path)->save('/var/www/public_html/waki-indonesia/public/sources/order/' . $filename);
+                Image::make($path)->save('/var/www/public_html/waki-indonesia/sources/order/' . $filename);
             }
             
             $orderPayment->image = json_encode($request->image);
