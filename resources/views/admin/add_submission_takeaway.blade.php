@@ -226,8 +226,7 @@ $menu_item_second = "add_submission_takeaway";
                                     name="address"
                                     rows="4"
                                     placeholder="Full address"
-                                    required>
-                                </textarea>
+                                    required></textarea>
                             </div>
 
                             @for ($j = 0; $j < 2; $j++)

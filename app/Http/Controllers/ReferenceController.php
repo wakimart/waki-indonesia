@@ -10,7 +10,9 @@ use App\ReferencePromo;
 use App\ReferenceSouvenir;
 use App\Souvenir;
 use App\HomeService;
+use App\Order;
 use App\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManagerStatic as Image;
 use Validator;
 
 class ReferenceController extends Controller
@@ -260,6 +263,7 @@ class ReferenceController extends Controller
                     "status_prize",
                     "delivery_status_prize",
                     "wakimart_link",
+                    "order_code"
                 ));
     
                 if (!empty($request->link_hs)) {
@@ -273,6 +277,56 @@ class ReferenceController extends Controller
                         JSON_FORCE_OBJECT|JSON_THROW_ON_ERROR
                     );
                 }
+
+                // Update order_id from order_code
+                // $referenceSouvenir->order_id = Order::where('code', $request->order_code)->value('id');
+
+                // save image
+                $arrImage = [];
+                $idxImg = 1;
+                $order_images = json_decode($referenceSouvenir->order_image, true) ?? [];
+                for ($i = 0; $i < 3; $i++) {
+                    // Jika Hapus Gambar Lama
+                    if (isset($order_images[$i]) && $request->has('dltimg-'.$i) == true) {
+                        if (File::exists("sources/reference/referensi/" . $order_images[$i])) {
+                            File::delete("sources/reference/referensi/" . $order_images[$i]);
+                        }
+                        unset($order_images[$i]);
+                    }
+                    if ($request->hasFile('images_' . $i)) {
+                        $path = "sources/reference/referensi";
+
+                        // Hapus Img Lama Jika Update Image
+                        if (isset($order_images[$i])) {
+                            if (File::exists("sources/reference/referensi/" . $order_images[$i])) {
+                                File::delete("sources/reference/referensi/" . $order_images[$i]);
+                            }
+                        }
+
+                        $file = $request->file('images_' . $i);
+                        $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $idxImg . "_referensi." . $file->getClientOriginalExtension();
+
+                        // Cek ada folder tidak
+                        if (!is_dir($path)) {
+                            File::makeDirectory($path, 0777, true, true);
+                        }
+
+                        //compressed img
+                        $compres = Image::make($file->getRealPath());
+                        $compres->resize(540, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })->save($path.'/'.$fileName);
+
+                        //array_push($data['image'], $fileName);
+                        $arrImage[] = $fileName;
+                        $idxImg++;
+                    } else if (isset($order_images[$i])) {
+                        $arrImage[] = $order_images[$i];
+                        $idxImg++;
+                    }
+                }
+                $referenceSouvenir->order_image = json_encode($arrImage);
+
                 $referenceSouvenir->save();
     
                 $this->historyReference($reference, "update", $userId);
@@ -339,6 +393,7 @@ class ReferenceController extends Controller
                 "status_prize",
                 "delivery_status_prize",
                 "final_status",
+                "order_code",
             ));
 
             if($request->has('status_acc')){
@@ -347,6 +402,56 @@ class ReferenceController extends Controller
                 }
             }
             $referenceSouvenir->is_acc = false;
+
+            // Update order_id from order_code
+            // $referenceSouvenir->order_id = Order::where('code', $request->order_code)->value('id');
+            
+            // save image
+            $arrImage = [];
+            $idxImg = 1;
+            $order_images = json_decode($referenceSouvenir->order_image, true) ?? [];
+            for ($i = 0; $i < 3; $i++) {
+                // Jika Hapus Gambar Lama
+                if (isset($order_images[$i]) && $request->has('dltimg-'.$i) == true) {
+                    if (File::exists("sources/reference/mgm/" . $order_images[$i])) {
+                        File::delete("sources/reference/mgm/" . $order_images[$i]);
+                    }
+                    unset($order_images[$i]);
+                }
+                if ($request->hasFile('images_' . $i)) {
+                    $path = "sources/reference/mgm";
+
+                    // Hapus Img Lama Jika Update Image
+                    if (isset($order_images[$i])) {
+                        if (File::exists("sources/reference/mgm/" . $order_images[$i])) {
+                            File::delete("sources/reference/mgm/" . $order_images[$i]);
+                        }
+                    }
+
+                    $file = $request->file('images_' . $i);
+                    $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $idxImg . "_mgm." . $file->getClientOriginalExtension();
+
+                    // Cek ada folder tidak
+                    if (!is_dir($path)) {
+                        File::makeDirectory($path, 0777, true, true);
+                    }
+
+                    //compressed img
+                    $compres = Image::make($file->getRealPath());
+                    $compres->resize(540, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save($path.'/'.$fileName);
+
+                    //array_push($data['image'], $fileName);
+                    $arrImage[] = $fileName;
+                    $idxImg++;
+                } else if (isset($order_images[$i])) {
+                    $arrImage[] = $order_images[$i];
+                    $idxImg++;
+                }
+            }
+            $referenceSouvenir->order_image = json_encode($arrImage);
+
             $referenceSouvenir->save();
 
             $userId = Auth::user()["id"];
@@ -371,15 +476,15 @@ class ReferenceController extends Controller
             DB::commit();
 
             if($request->has('status_acc') || $request->has('order_id')){
-                return response()->json([
-                    "success" => $reference,
-                ], 200);
-                // return redirect()
-                //     ->route("detail_submission_form", [
-                //         "id" => $reference->submission['id'],
-                //         "type" => "mgm",
-                //     ])
-                //     ->with('success', 'Data berhasil dimasukkan.');
+                // return response()->json([
+                //     "success" => $reference,
+                // ], 200);
+                return redirect()
+                    ->route("detail_submission_form", [
+                        "id" => $reference->submission['id'],
+                        "type" => "mgm",
+                    ])
+                    ->with('success', 'Data berhasil dimasukkan.');
             }
             else{
                 return response()->json([

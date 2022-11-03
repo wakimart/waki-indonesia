@@ -227,8 +227,7 @@ $menu_item_second = "add_submission_mgm";
                                     name="address"
                                     rows="4"
                                     placeholder="Full address"
-                                    required>
-                                </textarea>
+                                    required></textarea>
                             </div>
 
                             <div class="form-group">
@@ -393,7 +392,7 @@ $menu_item_second = "add_submission_mgm";
                                             </select>
                                         </div>
 
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="member-order-{{ $x }}">
                                                 Order
                                             </label>
@@ -411,7 +410,7 @@ $menu_item_second = "add_submission_mgm";
                                                 data-target="#choose-order">
                                                 Choose Order
                                             </button>
-                                        </div>
+                                        </div> --}}
 
                                         {{-- <div class="form-group">
                                             <label for="do-proof">

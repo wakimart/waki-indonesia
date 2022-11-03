@@ -22,7 +22,9 @@ Route::resource('gcalendar', 'gCalendarController');
 Route::get('oauth', ['as' => 'oauthCallback', 'uses' => 'gCalendarController@oauth'])->name('oauthCallback');
 Route::get('/term_cond', 'IndexController@termNCondition')->name('term_cond');
 
-Route::get('/', 'IndexController@index')->name('index');
+Route::get('/', function () {
+    return redirect('/cms-admin');;
+})->name('index');
 Route::get('/product_category/{id}', 'CategoryProductController@index')->name('product_category');
 Route::get('/single_product/{id}', 'ProductController@index')->name('single_product');
 Route::get('/firebase','FirebaseController@index');
