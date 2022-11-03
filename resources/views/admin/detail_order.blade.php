@@ -535,7 +535,7 @@
                                     <select name="credit_card_id" id="selectInstallment" class="form-control select-with-select2 installment-form" disabled>
                                         <option></option>
                                         @foreach($creditCards as $cc)
-                                            <option value="{{$cc->id}}">{{$cc->code}}</option>
+                                            <option value="{{$cc->id}}">{{$cc->code}} - {{$cc->name}}</option>
                                         @endforeach
                                     </select>
                                     <div id="creditCardName" class="mt-2"></div>
@@ -546,7 +546,7 @@
                                     <select name="bank_account_id" id="selectBank" class="form-control select-with-select2">
                                         <option></option>
                                         @foreach($bankAccounts as $bankAccount)
-                                            <option value="{{$bankAccount->id}}">{{$bankAccount->code}}</option>
+                                            <option value="{{$bankAccount->id}}">{{$bankAccount->code}} - {{$bankAccount->name}} ({{$bankAccount->account_number}})</option>
                                         @endforeach
                                     </select>
                                     <input type="hidden" name="bank_id" id="bank_id">
@@ -824,7 +824,7 @@
                                     <select name="credit_card_id" id="editPayment-select_installment" class="form-control editPayment-select_with_select2 editPayment-installment_form">
                                         <option></option>
                                         @foreach($creditCards as $cc)
-                                            <option value="{{$cc->id}}">{{$cc->code}}</option>
+                                            <option value="{{$cc->id}}">{{$cc->code}} - {{$cc->name}}</option>
                                         @endforeach
                                     </select> 
                                     <div id="editPayment-credit_card_name" class="mt-2"></div>
@@ -835,7 +835,7 @@
                                     <select name="bank_account_id" id="editPayment-select_bank" class="form-control editPayment-select_with_select2">
                                         <option></option>
                                         @foreach($bankAccounts as $bankAccount)
-                                            <option value="{{$bankAccount->id}}">{{$bankAccount->code}}</option>
+                                            <option value="{{$bankAccount->id}}">{{$bankAccount->code}} - {{$bankAccount->name}} ({{$bankAccount->account_number}})</option>
                                         @endforeach
                                     </select>
                                     <input type="hidden" name="bank_id" id="editPayment-bank_id">
