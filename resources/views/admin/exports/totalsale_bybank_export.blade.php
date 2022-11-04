@@ -8,16 +8,16 @@
 <div class="table-responsive" style="border: 1px solid #ebedf2;">
     <table class="table table-bordered">               
         <tr>
-            <th colspan="8" style="font-weight: 900; font-size: 20px; text-align: center;">
+            <th colspan="9" style="font-weight: 900; font-size: 20px; text-align: center;">
                 Report Bank In Sales (by Bank)
             </th>
         </tr>
         <tr>
-            <th colspan="8" style="font-weight: 900; font-size: 16px; text-align: center;">
+            <th colspan="9" style="font-weight: 900; font-size: 16px; text-align: center;">
                 Date Periode : {{ date('d/m/Y', strtotime($startDate)) }} - {{ date('d/m/Y', strtotime($endDate)) }} 
             </th>
         </tr>
-        <tr><td colspan="8"></td></tr>
+        <tr><td colspan="9"></td></tr>
         @php 
             $idxBank = 0;
             $idxBranch = 0;
@@ -26,10 +26,10 @@
         @endphp
         @foreach ($total_sales as $bank)
             @if ($idxBank != 0)
-            <tr><td colspan="8" style="border: 1px solid #000000;"></td></tr>
+            <tr><td colspan="9" style="border: 1px solid #000000;"></td></tr>
             @endif
             <tr>
-                <th colspan="8" style="font-weight: 900; text-align: center; border: 1px solid #000000;">
+                <th colspan="9" style="font-weight: 900; text-align: center; border: 1px solid #000000;">
                     Bank : {{ $bank['code'] }} - {{ $bank['name'] }}
                 </th>
             </tr>
@@ -42,17 +42,18 @@
             @endphp
             @foreach ($bank['branches'] as $branch)
                 @if ($idxBranch != 0)
-                <tr><td colspan="8" style="border: 1px solid #000000;"></td></tr>
+                <tr><td colspan="9" style="border: 1px solid #000000;"></td></tr>
                 @endif
                 <tr>
-                    <th colspan="8" style="font-weight: 900; border: 1px solid #000000;">
+                    <th colspan="9" style="font-weight: 900; border: 1px solid #000000;">
                         Branch : {{ $branch['br_code'] }} - {{ $branch['br_name'] }}
                     </th>
                 </tr>
                 <tr>
                     <td style="border: 1px solid #000000; font-size: 9px;">No.</td>
-                    <td style="text-align: center; border: 1px solid #000000; font-size: 9px;">Order Date</td>
+                    <td style="text-align: center; border: 1px solid #000000; font-size: 9px;">Order Payment Date</td>
                     <td style="text-align: center; border: 1px solid #000000; font-size: 9px;">Estimate Date</td>
+                    <td style="text-align: center; border: 1px solid #000000; font-size: 9px;">Order Code</td>
                     <td style="text-align: center; border: 1px solid #000000; font-size: 9px;">Bank In</td>
                     <td style="text-align: center; border: 1px solid #000000; font-size: 9px;">Debit</td>
                     <td style="text-align: center; border: 1px solid #000000; font-size: 9px;">Netto Debit</td>
@@ -70,10 +71,13 @@
                     <tr>
                         <td style="text-align: right; border: 1px solid #000000; font-size: 9px;">{{ $key+1 }}</td>
                         <td style="text-align: right; border: 1px solid #000000; font-size: 9px;">
-                            {{ date('d/m/Y H:i:s', strtotime($order['o_created_at'])) }}
+                            {{ date('d/m/Y', strtotime($order['op_payment_date'])) }}
                         </td>
                         <td style="text-align: right; border: 1px solid #000000; font-size: 9px;">
                             {{ $order['op_estimate_transfer_date'] ? date("d/m/Y", strtotime($order['op_estimate_transfer_date'])) : date('d/m/Y', strtotime('+'.$order['estimate_transfer'].' days', strtotime($order['o.created_at']))) }}
+                        </td>
+                        <td style="text-align: right; border: 1px solid #000000; font-size: 9px;">
+                            {{ $order['o_code'] }}
                         </td>
                         <td style="text-align: right; border: 1px solid #000000; font-size: 9px;">
                             Rp {{ number_format($order['ts_bank_in']) }}
@@ -100,7 +104,7 @@
                     @endphp
                 @endforeach
                 <tr>
-                    <td colspan="3" style="background-color: #ffffd7; text-align: right; border: 1px solid #000000; font-size: 9px;">
+                    <td colspan="4" style="background-color: #ffffd7; text-align: right; border: 1px solid #000000; font-size: 9px;">
                         Sub Total
                     </td>
                     <td style="background-color: #ffffd7; text-align: right; border: 1px solid #000000; font-size: 9px;">
@@ -129,7 +133,7 @@
                 @endphp
             @endforeach
             <tr>
-                <td colspan="3" style="background-color: #afd095; text-align: right; border: 1px solid #000000; font-size: 9px;">
+                <td colspan="4" style="background-color: #afd095; text-align: right; border: 1px solid #000000; font-size: 9px;">
                     Total
                 </td>
                 <td style="background-color: #afd095; text-align: right; border: 1px solid #000000; font-size: 9px;">
@@ -155,9 +159,9 @@
                 $totalSaleNetto += $totalNettoDebit + $totalNettoCard;
             @endphp
         @endforeach
-        <tr><td colspan="8"></td></tr>
+        <tr><td colspan="9"></td></tr>
         <tr>
-            <td colspan="3" style="font-weight: 900; text-align: right; font-size: 12px;">
+            <td colspan="4" style="font-weight: 900; text-align: right; font-size: 12px;">
                 Total Sale Gross
             </td>
             <td style="font-weight: 900; text-align: left; font-size: 12px;">
@@ -165,7 +169,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3" style="font-weight: 900; text-align: right; color: #ff0000; font-size: 12px;">
+            <td colspan="4" style="font-weight: 900; text-align: right; color: #ff0000; font-size: 12px;">
                 Total Charge
             </td>
             <td style="font-weight: 900; text-align: left; color: #ff0000; font-size: 12px;">
@@ -173,7 +177,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3" style="font-weight: 900; text-align: right; color: #2a6099; font-size: 12px;">
+            <td colspan="4" style="font-weight: 900; text-align: right; color: #2a6099; font-size: 12px;">
                 Total Sale Netto
             </td>
             <td style="font-weight: 900; text-align: left; color: #2a6099; font-size: 12px;">
