@@ -20,12 +20,14 @@ class BranchController extends Controller
     public function index(Request $request)
     {   
         // $branches = Branch::where('branches.active', true);   
-        $branches = Branch::where('branches.active', true)->orderBy('code', 'asc')->get();
+        $branches = Branch::where('branches.active', true)->orderBy('code', 'asc');
         $countBranches = Branch::where('branches.active', true)->count();
 
         if($request->has('search')){
-            $branches = $branches->where( 'name', 'LIKE', '%'.$request->search.'%' )
-                                    ->orWhere( 'code', 'LIKE', '%'.$request->search.'%' );
+            $branches = $branches->where(function($query) use($request) {
+                $query->where( 'name', 'LIKE', '%'.$request->search.'%' )
+                    ->orWhere( 'code', 'LIKE', '%'.$request->search.'%' );
+            });
         }
         $branches = $branches->paginate(10);
         return view('admin.list_branch', compact('branches', 'countBranches'));

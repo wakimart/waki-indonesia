@@ -89,8 +89,10 @@ class ProductController extends Controller
         $products = Product::where('active', true);
 
         if ($request->has('search')) {
-            $products->where('name', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('code', 'LIKE', '%' . $request->search . '%');
+            $products->where(function($query) use($request) {
+                $query->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('code', 'LIKE', '%' . $request->search . '%');
+            });
         }
 
         $countProduct = $products->count();

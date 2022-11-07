@@ -82,7 +82,7 @@
 							<br/>
 							@if(count($MPCWakiData) > 0)
 								@if($MPCWakiData->hasPages())
-									{{ $MPCWakiData->links() }}
+									{{ $MPCWakiData->appends(request()->input())->links() }}
 								@else
 									<ul class="pagination" role="navigation">						
 										<li class="page-item disabled" aria-disabled="true" aria-label="« Previous">
