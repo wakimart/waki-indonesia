@@ -26,6 +26,7 @@
             <tr class="text-center">
                 <th style="font-weight: 900;"> No. </th>
                 <th style="font-weight: 900;" class="text-left"> Order Payment Date </th>
+                <th style="font-weight: 900;"> Order Code</th>
                 <th style="font-weight: 900;"> Bank In</th>
                 <th style="font-weight: 900;"> Debit</th>
                 <th style="font-weight: 900;"> Netto Debit</th>
@@ -38,6 +39,7 @@
                 <tr>
                     <td class="text-center">{{ $key + 1 }}</td>
                     <td>{{ date("d/m/Y", strtotime($total_sale['op_payment_date'])) }}</td>
+                    <td>{{ $total_sale['code'] }}</td>
                     <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_bank_in']) }}</td>
                     <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_debit']) }}</td>
                     <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_netto_debit']) }}</td>
@@ -46,7 +48,7 @@
                 </tr>
             @endforeach
             <tr class="text-right">
-                <th style="font-weight: 900;" colspan="2">TOTAL SALES</th>
+                <th style="font-weight: 900;" colspan="3">TOTAL SALES</th>
                 <th style="font-weight: 900;">Rp. {{ number_format($total_sales->sum('sum_ts_bank_in')) }}</th>
                 <th style="font-weight: 900;">Rp. {{ number_format($total_sales->sum('sum_ts_debit')) }}</th>
                 <th style="font-weight: 900;">Rp. {{ number_format($total_sales->sum('sum_ts_netto_debit')) }}</th>

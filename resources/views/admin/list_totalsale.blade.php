@@ -75,13 +75,16 @@ $menu_item_second_sub = "list_total_sale";
                     <div class="form-group">
                         @php 
                             $exportParameter = request()->input(); 
+                            if(!Auth::user()->inRole("head-admin")){
+                                $exportParameter['isPrint'] = 1;
+                            }
                         @endphp
-                        <a href="{{ route('export_total_sale__bybank', $exportParameter). (Auth::user()->inRole("head-admin") ? '' : '?isPrint=1' ) }}"
+                        <a href="{{ route('export_total_sale__bybank', $exportParameter) }}"
                             class="btn btn-gradient-info m-1">
                             <span class="mdi mdi-file-document"></span>
                             {{ Auth::user()->inRole("head-admin") ? 'Export' : 'Print' }} Order Report By Bank
                         </a>
-                        <a href="{{ route('export_total_sale_bybranch', $exportParameter). (Auth::user()->inRole("head-admin") ? '' : '?isPrint=1' ) }}"
+                        <a href="{{ route('export_total_sale_bybranch', $exportParameter) }}"
                             class="btn btn-gradient-info m-1">
                             <span class="mdi mdi-file-document"></span>
                             {{ Auth::user()->inRole("head-admin") ? 'Export' : 'Print' }} Order Report By Branch

@@ -31,13 +31,14 @@ class TotalSaleByBankExport implements FromView, ShouldAutoSize, WithColumnWidth
     {
         return [
             'A' => 3,
-            'B' => 15,
+            'B' => 10,
             'C' => 10,
-            'D' => 11.2,
+            'D' => 17,
             'E' => 11.2,
             'F' => 11.2,
             'G' => 11.2,
             'H' => 11.2,
+            'I' => 11.2,
         ];
     } 
 
