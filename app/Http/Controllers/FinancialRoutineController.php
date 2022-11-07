@@ -324,12 +324,13 @@ class FinancialRoutineController extends Controller
         $startDate = date('Y-m-01', strtotime($financialRoutine->routine_date));
         $endDate = date('Y-m-d', strtotime($financialRoutine->routine_date));
         $total_sales = OrderPayment::from('order_payments as op')
-            ->select('op.*', 'c.code as c_code', 'c.name as c_name')
-            ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
-            ->selectRaw("SUM(ts.debit) as sum_ts_debit")
-            ->selectRaw("SUM(ts.netto_debit) as sum_ts_netto_debit")
-            ->selectRaw("SUM(ts.card) as sum_ts_card")
-            ->selectRaw("SUM(ts.netto_card) as sum_ts_netto_card")
+            ->select('op.*', 'o.code as o_code', 'c.code as c_code', 'c.name as c_name'
+                , 'ts.bank_in as ts_bank_in'
+                , 'ts.debit as ts_debit'
+                , 'ts.netto_debit as ts_netto_debit'
+                , 'ts.card as ts_card'
+                , 'ts.netto_card as ts_netto_card'
+            )
             ->join('orders as o', 'o.id', 'op.order_id')
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
             ->join('csos as c', 'c.id', 'o.Cso_id')

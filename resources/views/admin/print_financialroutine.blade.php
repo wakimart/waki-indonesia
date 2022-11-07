@@ -293,7 +293,7 @@ $menu_item_page = "financial_routine";
                                                         <td class="text-center" style="width: 5%;">No</td>
                                                         <td class="text-center" style="width: 15%;">Order Payment Date</td>
                                                         <td class="text-center" style="width: 15%;">Estimate Date</td>
-                                                        <td class="text-center" style="width: 25%;">Cso</td>
+                                                        <td class="text-center" style="width: 25%;">Order Code</td>
                                                         <td class="text-center" style="width: 20%">Bank In</td>
                                                         <td class="text-center" style="width: 20%">Debit</td>
                                                         <td class="text-center" style="width: 20%">Netto Debit</td>
@@ -311,32 +311,31 @@ $menu_item_page = "financial_routine";
                                                                 {{ $total_sale['estimate_transfer_date'] ? date("d/m/Y", strtotime($total_sale['estimate_transfer_date'])) : date('d/m/Y', strtotime('+'.$total_sale->bankAccount['estimate_transfer'].' days', strtotime($total_sale['payment_date']))) }}
                                                             </td>
                                                             <td class="text-left">
-                                                                {{ $total_sale->c_code }} - {{ $total_sale->c_name }}
+                                                                {{ $total_sale->o_code }}
                                                             <td class="text-right">
-                                                                {{ number_format($total_sale->sum_ts_bank_in) }}
+                                                                {{ number_format($total_sale->ts_bank_in) }}
                                                             </td>
                                                             <td class="text-right">
-                                                                {{ number_format($total_sale->sum_ts_debit) }}
+                                                                {{ number_format($total_sale->ts_debit) }}
                                                             </td>
                                                             <td class="text-right">
-                                                                {{ number_format($total_sale->sum_ts_netto_debit) }}
+                                                                {{ number_format($total_sale->ts_netto_debit) }}
                                                             </td>
                                                             <td class="text-right">
-                                                                {{ number_format($total_sale->sum_ts_card) }}
+                                                                {{ number_format($total_sale->ts_card) }}
                                                             </td>
                                                             <td class="text-right">
-                                                                {{ number_format($total_sale->sum_ts_netto_card) }}
+                                                                {{ number_format($total_sale->ts_netto_card) }}
                                                             </td>
                                                         </tr>
                                                         @endforeach
                                                         <tr>
-                                                            <td class="text-right" colspan="3" style="font-weight: 600;">Total : </td>
-                                                            <td></td>
-                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('sum_ts_bank_in')) }}</td>
-                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('sum_ts_debit')) }}</td>
-                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('sum_ts_netto_debit')) }}</td>
-                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('sum_ts_card')) }}</td>
-                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('sum_ts_netto_card')) }}</td>
+                                                            <td class="text-right" colspan="4" style="font-weight: 600;">Total : </td>
+                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('ts_bank_in')) }}</td>
+                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('ts_debit')) }}</td>
+                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('ts_netto_debit')) }}</td>
+                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('ts_card')) }}</td>
+                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('ts_netto_card')) }}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
