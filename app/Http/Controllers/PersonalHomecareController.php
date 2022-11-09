@@ -10,6 +10,8 @@ use App\PersonalHomecare;
 use App\HomeService;
 use App\PersonalHomecareChecklist;
 use App\PersonalHomecareProduct;
+use App\PublicHomecare;
+use App\PublicHomecareProduct;
 use App\RajaOngkir_City;
 use App\RajaOngkir_Province;
 use App\RajaOngkir_Subdistrict;
@@ -307,18 +309,38 @@ class PersonalHomecareController extends Controller
                 ->where("personal_homecare_products.branch_id", $request->branch_id)
                 ->where("personal_homecare_products.active", true)
                 ->where("personal_homecare_products.status", "!=", "pending")
+                ->where("personal_homecare_products.product_id", "4")
                 ->get();
 
             $finalPhcProd = [];
             $firstDate = (new Carbon($request->date))->subDays(6);
             $lastDate =  (new Carbon($request->date))->addDays(6);
 
+            $firstDatePuhc = (new Carbon($request->date))->subDays(1);
+            $lastDatePuhc = (new Carbon($request->date))->addDays(1);
+
             foreach ($phcProducts as $perProd) {
                 $phcNya = PersonalHomecare::where('ph_product_id', $perProd['id'])
                         ->whereBetween('schedule', [$firstDate, $lastDate])
                         ->where("active", true)
                         ->get();
-                if(sizeof($phcNya) == 0){
+                $puhcNya = PublicHomecareProduct::from('public_homecare_products as puhcp')
+                        ->join('public_homecares as puhc', 'puhcp.public_homecare_id', 'puhc.id')
+                        ->where('puhcp.ph_product_id', $perProd['id'])
+                        ->where(function($query) use ($firstDatePuhc, $lastDatePuhc) {
+                            $query->where(function($query2) use ($firstDatePuhc, $lastDatePuhc) {
+                                $query2->where('puhc.start_date', '<=', $firstDatePuhc)
+                                    ->where('puhc.end_date', '>=', $lastDatePuhc);
+                            });
+                            $query->orWhere(function($query2) use ($firstDatePuhc, $lastDatePuhc) {
+                                $query2->whereBetween('start_date', [$firstDatePuhc, $lastDatePuhc])
+                                    ->orWhereBetween('end_date', [$firstDatePuhc, $lastDatePuhc]);
+                            });
+                        })
+                        ->where("puhc.active", true)
+                        ->where("puhc.status", "!=", "rejected")
+                        ->first();
+                if(sizeof($phcNya) == 0 && $puhcNya != true){
                     array_push($finalPhcProd, $perProd);
                 }
             }
@@ -430,6 +452,7 @@ class PersonalHomecareController extends Controller
             ->where("personal_homecare_products.branch_id", $personalhomecare->branch_id)
             ->where("personal_homecare_products.active", true)
             ->where("personal_homecare_products.status", "!=", "pending")
+            ->where("personal_homecare_products.product_id", "4")
             ->get();
 
         $ownProd = PersonalHomecareProduct::select(
@@ -450,12 +473,31 @@ class PersonalHomecareController extends Controller
         $firstDate = (new Carbon($personalhomecare->schedule))->subDays(6);
         $lastDate =  (new Carbon($personalhomecare->schedule))->addDays(6);
 
+        $firstDatePuhc = (new Carbon($personalhomecare->date))->subDays(1);
+        $lastDatePuhc = (new Carbon($personalhomecare->date))->addDays(1);
+
         foreach ($phcProducts as $perProd) {
             $phcNya = PersonalHomecare::where('ph_product_id', $perProd['id'])
                     ->whereBetween('schedule', [$firstDate, $lastDate])
                     ->where("active", true)
                     ->get();
-            if(sizeof($phcNya) == 0){
+            $puhcNya = PublicHomecareProduct::from('public_homecare_products as puhcp')
+                    ->join('public_homecares as puhc', 'puhcp.public_homecare_id', 'puhc.id')
+                    ->where('puhcp.ph_product_id', $perProd['id'])
+                    ->where(function($query) use ($firstDatePuhc, $lastDatePuhc) {
+                        $query->where(function($query2) use ($firstDatePuhc, $lastDatePuhc) {
+                            $query2->where('puhc.start_date', '<=', $firstDatePuhc)
+                                ->where('puhc.end_date', '>=', $lastDatePuhc);
+                        });
+                        $query->orWhere(function($query2) use ($firstDatePuhc, $lastDatePuhc) {
+                            $query2->whereBetween('start_date', [$firstDatePuhc, $lastDatePuhc])
+                                ->orWhereBetween('end_date', [$firstDatePuhc, $lastDatePuhc]);
+                        });
+                    })
+                    ->where("puhc.active", true)
+                    ->where("puhc.status", "!=", "rejected")
+                    ->first();
+            if(sizeof($phcNya) == 0 && $puhcNya != true){
                 array_push($finalPhcProd, $perProd);
             }
         }

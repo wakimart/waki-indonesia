@@ -1,6 +1,5 @@
 <?php
-$menu_item_page = "data_sourcing";
-$menu_item_second = "import_data_sourcing";
+$menu_item_page = "import_data_sourcing";
 ?>
 @extends('admin.layouts.template')
 

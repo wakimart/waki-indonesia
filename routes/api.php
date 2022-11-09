@@ -1,4 +1,6 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+header( 'Access-Control-Allow-Headers: Authorization, Content-Type, x-csrf-token, api-key' );
 
 use Illuminate\Http\Request;
 
@@ -16,3 +18,5 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware('cors')->post('/wakimart-member', 'Api\WakimartController@storeMember');

@@ -149,6 +149,7 @@ $menu_item_second = "add_order";
                                     name="no_member"
                                     placeholder="No. Member" />
                                 <div class="validation"></div>
+                                <div id="checkMPC" style="color: green; font-size: 9pt;"></div>
                             </div>
                             <div class="form-group">
                                 <label for="name">Name</label>
@@ -1498,6 +1499,41 @@ document.addEventListener("DOMContentLoaded", function () {
                 uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
             };
         }
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#no_member").focus(function(){
+            $("#name").attr("readonly", true);
+            $("#phone").attr("readonly", true);
+            $("#checkMPC").text("");
+        });
+        $("#no_member").blur(function(){
+            $.ajax({
+                method: "post",
+                url: "{{ route('mpc_waki_check') }}",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'mpc_waki': this.value,
+                },
+                success: function(data) {
+                    $("#name").removeAttr("readonly");
+                    $("#phone").removeAttr("readonly");
+                    if(data['status'] == 'success'){
+                        $("#checkMPC").text("Found MPC Data");
+                        $("#name").val(data['data_mpc']['name']);
+                        $("#phone").val(data['data_mpc']['phone']);
+                    }
+                },
+                error: function(data) {
+                    $("#name").removeAttr("readonly");
+                    $("#phone").removeAttr("readonly");
+                    console.log({"Error!":  data['responseText']});
+                }
+            });
+        });
     });
 </script>
 @endsection

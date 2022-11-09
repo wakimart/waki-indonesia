@@ -96,7 +96,7 @@
                       </tbody>
                   </table>
                   <br/>
-                  {{ $promotions->links()}}
+                  {{ $promotions->appends(request()->input())->links()}}
                 </div>
               </div>
           </div>

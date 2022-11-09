@@ -26,32 +26,39 @@ class PersonalHomecareProductController extends Controller
             ->orderBy("code")
             ->get();
 
-        $phcproducts = PersonalHomecareProduct::where('active', true)
-            ->orderBy('code', 'asc');
+        $productCodes = PersonalHomecareProduct::select('personal_homecare_products.product_id', 'products.code as p_code')
+            ->join('products', 'products.id', 'personal_homecare_products.product_id')
+            ->where('personal_homecare_products.active', true)
+            ->groupBy('personal_homecare_products.product_id')
+            ->orderByRaw('personal_homecare_products.product_id = 4 desc, products.code asc')
+            ->get();
 
-        if ($request->has("branch_id")) {
-            $phcproducts = $phcproducts->where('branch_id', $request->input("branch_id"));
+        $phcProductCodes = [];
+        foreach ($productCodes as $productCode) {
+            $pCode = $productCode->p_code;
+            $phcProductCodes[$pCode] = PersonalHomecareProduct::where('active', true)
+                ->where('product_id', $productCode->product_id)
+                ->orderBy('code', 'asc');
+
+            if ($request->has("branch_id")) {
+                $phcProductCodes[$pCode]->where('branch_id', $request->input("branch_id"));
+            }
+    
+            if ($request->has("status")) {
+                $phcProductCodes[$pCode]->where('status', $request->input("status"));
+            }
+            
+            $phcProductCodes[$pCode] = $phcProductCodes[$pCode]
+                ->with(["branch", "product"])
+                ->paginate(10, ['*'], $pCode);
         }
-
-        if ($request->has("status")) {
-            $phcproducts = $phcproducts->where('status', $request->input("status"));
-        }
-
-        if ($request->has("product_id")) {
-            $phcproducts = $phcproducts->where('product_id', $request->input("product_id"));
-        } else {
-            $request['product_id'] = 4;
-            $phcproducts = $phcproducts->where('product_id', $request->input("product_id"));
-        }
-
-        $phcproducts = $phcproducts->with(["branch", "product"])->paginate(10);
 
         $url = $request->all();
 
         return view("admin.list_homecareproduct", compact(
                 "branches",
                 "products",
-                "phcproducts",
+                "phcProductCodes",
                 "url",
             ))
             ->with('i', (request()->input('page', 1) - 1) * 10);

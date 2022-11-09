@@ -1584,6 +1584,102 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+                            <div class="form-group" id="group-public-homecare">
+                                <span style="display: block;">PUBLIC HOMECARE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-public-homecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-public-homecare"
+                                                value="add-public-homecare" />
+                                            Add Public Homcare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-public-homecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="browse-public-homecare"
+                                                value="browse-public-homecare" />
+                                            Browse Public Homcare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-public-homecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-public-homecare"
+                                                value="edit-public-homecare" />
+                                            Edit Public Homcare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-public-homecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="detail-public-homecare"
+                                                value="detail-public-homecare" />
+                                            Detail Public Homcare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-public-homecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-public-homecare"
+                                                value="delete-public-homecare" />
+                                            Delete Public Homcare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-checkout-publichomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-checkout-publichomecare"
+                                                value="change-status-checkout-publichomecare" />
+                                            Change Status Checkout Public Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-checkin-publichomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-checkin-publichomecare"
+                                                value="change-status-checkin-publichomecare" />
+                                            Change Status Check-in Public Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-verified-publichomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-verified-publichomecare"
+                                                value="change-status-verified-publichomecare" />
+                                            Change Status Verified Public Homecare
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-product-publichomecare">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-product-publichomecare"
+                                                value="change-status-product-publichomecare" />
+                                            Change Status Product Public Homecare
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group" id="group-product">
                                 <span style="display:block;">TYPE CUSTOMER</span>
                                 <div class="div-CheckboxGroup">

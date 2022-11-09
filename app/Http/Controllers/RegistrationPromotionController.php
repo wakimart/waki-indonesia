@@ -136,10 +136,12 @@ class RegistrationPromotionController extends Controller
         $countPromotions = RegistrationPromotion::where('active', true)->count();
 
         if($request->has('search')){
-            $promotions = $promotions->where( 'first_name', 'LIKE', '%'.$request->search.'%' )
-                                    ->orWhere( 'last_name', 'LIKE', '%'.$request->search.'%' )
-                                    ->orWhere( 'phone', 'LIKE', '%'.$request->search.'%' )
-                                    ->orWhere( 'email', 'LIKE', '%'.$request->search.'%' );
+            $promotions = $promotions->where(function($query) use ($request) {
+                $query->where( 'first_name', 'LIKE', '%'.$request->search.'%' )
+                    ->orWhere( 'last_name', 'LIKE', '%'.$request->search.'%' )
+                    ->orWhere( 'phone', 'LIKE', '%'.$request->search.'%' )
+                    ->orWhere( 'email', 'LIKE', '%'.$request->search.'%' );
+            });
         }
         $promotions = $promotions->paginate(10);
         return view('admin.list_registrationpromotion', compact('promotions', 'countPromotions'));

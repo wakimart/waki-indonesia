@@ -1,6 +1,6 @@
 <?php
 $menu_item_page = "technician";
-$menu_item_second = "list_technician";
+$menu_item_second = "list_technician_schedule";
 ?>
 @extends('admin.layouts.template')
 

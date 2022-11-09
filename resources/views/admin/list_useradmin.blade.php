@@ -117,7 +117,7 @@ $menu_item_second = "list_user";
                                 </tbody>
                             </table>
                             <br/>
-                            {{ $users->links() }}
+                            {{ $users->appends(request()->input())->links() }}
                         </div>
                     </div>
                 </div>

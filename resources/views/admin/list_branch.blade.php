@@ -77,7 +77,7 @@
           						</tbody>
 							</table>
 							<br/>
-							{{ $branches->links()}}
+							{{ $branches->appends(request()->input())->links()}}
         				</div>
       				</div>
     			</div>

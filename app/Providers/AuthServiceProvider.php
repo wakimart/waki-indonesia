@@ -599,5 +599,43 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define("change-status-product-personalhomecare", function ($user) {
             return $user->hasAccess(["change-status-product-personalhomecare"]);
         });
+
+        //-- PUBLIC HOMECARE --//
+        // Add
+        Gate::define("add-public-homecare", function ($user) {
+            return $user->hasAccess(["add-public-homecare"]);
+        });
+        // Browse
+        Gate::define("browse-public-homecare", function ($user) {
+            return $user->hasAccess(["browse-public-homecare"]);
+        });
+        // View
+        Gate::define("detail-public-homecare", function ($user) {
+            return $user->hasAccess(["detail-public-homecare"]);
+        });
+        // Edit
+        Gate::define("edit-public-homecare", function ($user) {
+            return $user->hasAccess(["edit-public-homecare"]);
+        });
+        // Delete
+        Gate::define("delete-public-homecare", function ($user) {
+            return $user->hasAccess(["delete-public-homecare"]);
+        });
+        // Approve status
+        Gate::define("change-status-checkin-publichomecare", function ($user) {
+            return $user->hasAccess(["change-status-checkin-publichomecare"]);
+        });
+        // Reject status
+        Gate::define("change-status-checkout-publichomecare", function ($user) {
+            return $user->hasAccess(["change-status-checkout-publichomecare"]);
+        });
+        // Verified status
+        Gate::define("change-status-verified-publichomecare", function ($user) {
+            return $user->hasAccess(["change-status-verified-publichomecare"]);
+        });
+        // Product status
+        Gate::define("change-status-product-publichomecare", function ($user) {
+            return $user->hasAccess(["change-status-product-publichomecare"]);
+        });
     }
 }

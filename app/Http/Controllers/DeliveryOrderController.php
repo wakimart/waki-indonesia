@@ -54,6 +54,7 @@ class DeliveryOrderController extends Controller
     		}
     	}
     	$data['arr_product'] = json_encode($data['arr_product']);
+        $data['type_register'] = 'Normal Register';
 
         $deliveryOrder = DeliveryOrder::create($data);
 
@@ -126,6 +127,7 @@ class DeliveryOrderController extends Controller
             // }
             $data['arr_product'] = json_encode($data['arr_product']);
             //$data['province'] = RajaOngkir_Province::where('province_id', (int)$data['province_id'])->first()['province'];
+            $data['type_register'] = 'Normal Register';
 
             $deliveryOrder = DeliveryOrder::create($data);
 
@@ -143,7 +145,7 @@ class DeliveryOrderController extends Controller
             //return response()->json(['success' => route('detail_deliveryorder', ['code'=>$deliveryOrder['code']])]);
         } catch (\Exception $ex) {
             DB::rollback();
-            return response()->json(['errors' => $ex]);
+            return response()->json(['errors' => $ex->getMessage()]);
         }
 
     }
