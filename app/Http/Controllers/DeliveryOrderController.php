@@ -143,7 +143,7 @@ class DeliveryOrderController extends Controller
             //return response()->json(['success' => route('detail_deliveryorder', ['code'=>$deliveryOrder['code']])]);
         } catch (\Exception $ex) {
             DB::rollback();
-            return response()->json(['errors' => $ex]);
+            return response()->json(['errors' => $ex->getMessage()]);
         }
 
     }
