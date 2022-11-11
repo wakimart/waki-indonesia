@@ -73,14 +73,14 @@ $menu_item_page = "bank";
                             </div>
                             <div class="form-group">
                                 <label for="">Charge Percentage Sales</label>
-                                <input type="number" min=0 step="any" class="form-control @if($errors->has('charge_percentage_sales')) is-invalid @endif" name="charge_percentage_sales" value="{{ $creditCard->charge_percentage_sales }}" required>
+                                <input type="number" min=0 step=".01" class="form-control @if($errors->has('charge_percentage_sales')) is-invalid @endif" name="charge_percentage_sales" value="{{ $creditCard->charge_percentage_sales }}" required>
                                 @if($errors->has('charge_percentage_sales'))
                                     <span class="error">{{ $errors->first('charge_percentage_sales') }}</span>
                                 @endif
                             </div>
                             <div class="form-group">
                                 <label for="">Charge Percentage Company</label>
-                                <input type="number" min=0 step="any" class="form-control @if($errors->has('charge_percentage_company')) is-invalid @endif" name="charge_percentage_company" value="{{ $creditCard->charge_percentage_company }}" required>
+                                <input type="number" min=0 step=".01" class="form-control @if($errors->has('charge_percentage_company')) is-invalid @endif" name="charge_percentage_company" value="{{ $creditCard->charge_percentage_company }}" required>
                                 @if($errors->has('charge_percentage_company'))
                                     <span class="error">{{ $errors->first('charge_percentage_company') }}</span>
                                 @endif
