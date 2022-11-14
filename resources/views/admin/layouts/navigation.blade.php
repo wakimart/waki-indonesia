@@ -318,6 +318,41 @@
 </li>
 @endif
 
+@if (Gate::check('add-submission_video_photo') || Gate::check('browse-submission_video_photo'))
+<li class="nav-item {{ isset($menu_item_page) && $menu_item_page == 'submission_video_photo' ? 'active': '' }}">
+    <a class="nav-link"
+        data-toggle="collapse"
+        href="#submission_video_photo-dd"
+        aria-expanded="{{ isset($menu_item_page) && $menu_item_page == 'submission_video_photo' ? 'true': '' }}"
+        aria-controls="submission_video_photo-dd">
+        <span class="menu-title">Submission Video & Photo</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-account-card-details menu-icon"></i>
+    </a>
+    <div class="collapse {{ isset($menu_item_page) && $menu_item_page == 'submission_video_photo' ? 'show' : '' }}"
+        id="submission_video_photo-dd">
+        <ul class="nav flex-column sub-menu">
+        @if (Gate::check('add-submission_video_photo'))
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'add_submission_video_photo' ? 'active' : '' }}"
+                    href="{{ route('add_submission_video_photo')}}">
+                    Add Submmission Video & Photo
+                </a>
+            </li>
+        @endif
+        @if (Gate::check('browse-submission_video_photo'))
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_video_photo' ? 'active' : '' }}"
+                    href="{{ route('list_submission_video_photo') }}">
+                    List Submission Video & Photo
+                </a>
+            </li>
+        @endif
+        </ul>
+    </div>
+</li>
+@endif
+
 {{-- Khusus untuk Acc --}}
 @if(Gate::check('add-acceptance') || Gate::check('browse-acceptance'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'acceptance'? 'active': '' }}">

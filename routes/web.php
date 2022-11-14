@@ -92,6 +92,8 @@ Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
 Route::get("/fetchProductService", "ProductServiceController@fetchProductService")->name("fetchProductService");
 
 Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
+Route::get("/check_submission_video_photo_branch", "SubmissionVideoPhotoController@checkBrancSubmission")
+    ->name("check_submission_video_photo_branch");
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)
 Route::group(['prefix' => 'api-apps'], function () {
@@ -1117,6 +1119,56 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // add online signature
         Route::post("/online_signature", "ReferenceController@addOnlineSignature")
             ->name("online_signature.add");
+    });
+
+    Route::group(['prefix' => 'submission_video_photo', 'middleware' => 'auth'], function() {
+        //Add Form Submission Video Photo
+        Route::get('/', 'SubmissionVideoPhotoController@create')
+            ->name('add_submission_video_photo')
+            ->middleware('can:add-submission_video_photo');
+
+        //Create Submission Video Photo
+        Route::post('/', 'SubmissionVideoPhotoController@store')
+            ->name('store_submission_video_photo')
+            ->middleware('can:add-submission_video_photo');
+
+        //List Submission Video Photo
+        Route::get('/list', 'SubmissionVideoPhotoController@index')
+            ->name('list_submission_video_photo')
+            ->middleware('can:browse-submission_video_photo');
+        
+        //Detail Submission Video Photo
+        Route::get('/detail', 'SubmissionVideoPhotoController@show')
+            ->name('detail_submission_video_photo')
+            ->middleware('can:detail-submission_video_photo');
+
+        //Edit Submission Video Photo
+        Route::get('/edit/', 'SubmissionVideoPhotoController@edit')
+            ->name('edit_submission_video_photo')
+            ->middleware('can:edit-submission_video_photo');
+
+        //Update Submission Video Photo
+        Route::post('/update/', 'SubmissionVideoPhotoController@update')
+            ->name('update_submission_video_photo')
+            ->middleware('can:edit-submission_video_photo');
+
+        //Delete Submission Video Photo
+        Route::post('/delete', 'SubmissionVideoPhotoController@destroy')
+            ->name('delete_submission_video_photo')
+            ->middleware('can:delete-submission_video_photo');
+
+        //Store Submission Video Photo Detail
+        Route::post('/store_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@store')
+            ->name('store_submission_video_photo_detail');
+        //Edit Submission Video Photo Detail
+        Route::post('/edit_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@edit')
+            ->name('edit_submission_video_photo_detail');
+        //Update Submission Video Photo Detail
+        Route::post('/update_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@update')
+            ->name('update_submission_video_photo_detail');
+        //Delete Submission Video Photo Detail
+        Route::post('/delete_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@destroy')
+            ->name('delete_submission_video_photo_detail');
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {

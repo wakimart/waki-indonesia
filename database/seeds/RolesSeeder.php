@@ -177,6 +177,23 @@ class RolesSeeder extends Seeder
                 "edit-submission" => true,
                 "delete-submission" => true,
 
+                // Submission Video Photo (Head Admin)
+                "add-submission_video_photo" => false,
+                "browse-submission_video_photo" => false,
+                "detail-submission_video_photo" => false,
+                "edit-submission_video_photo" => false,
+                "delete-submission_video_photo" => false,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Head Admin)
+                "add-submission_video_photo_detail" => false,
+                "detail-submission_video_photo_detail" => false,
+                "edit-submission_video_photo_detail" => false,
+                "delete-submission_video_photo_detail" => false,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (Head Admin)
                 "add-sparepart" => true,
                 "browse-sparepart" => true,
@@ -404,6 +421,23 @@ class RolesSeeder extends Seeder
                 "edit-submission" => false,
                 "delete-submission" => false,
 
+                // Submission Video Photo (Admin)
+                "add-submission_video_photo" => false,
+                "browse-submission_video_photo" => false,
+                "detail-submission_video_photo" => false,
+                "edit-submission_video_photo" => false,
+                "delete-submission_video_photo" => false,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Admin)
+                "add-submission_video_photo_detail" => false,
+                "detail-submission_video_photo_detail" => false,
+                "edit-submission_video_photo_detail" => false,
+                "delete-submission_video_photo_detail" => false,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (Admin)
                 "add-sparepart" => true,
                 "browse-sparepart" => true,
@@ -624,6 +658,23 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Submission Video Photo (CSO)
+                "add-submission_video_photo" => true,
+                "browse-submission_video_photo" => true,
+                "detail-submission_video_photo" => true,
+                "edit-submission_video_photo" => true,
+                "delete-submission_video_photo" => true,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (CSO)
+                "add-submission_video_photo_detail" => true,
+                "detail-submission_video_photo_detail" => true,
+                "edit-submission_video_photo_detail" => true,
+                "delete-submission_video_photo_detail" => true,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
 
                 // Sparepart (CSO)
                 "add-sparepart" => false,
@@ -847,6 +898,23 @@ class RolesSeeder extends Seeder
                 "edit-submission" => true,
                 "delete-submission" => true,
 
+                // Submission Video Photo (Branch)
+                "add-submission_video_photo" => true,
+                "browse-submission_video_photo" => true,
+                "detail-submission_video_photo" => true,
+                "edit-submission_video_photo" => true,
+                "delete-submission_video_photo" => true,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Branch)
+                "add-submission_video_photo_detail" => true,
+                "detail-submission_video_photo_detail" => true,
+                "edit-submission_video_photo_detail" => true,
+                "delete-submission_video_photo_detail" => true,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (Branch)
                 "add-sparepart" => false,
                 "browse-sparepart" => false,
@@ -1068,6 +1136,23 @@ class RolesSeeder extends Seeder
                 "edit-submission" => true,
                 "delete-submission" => true,
 
+                // Submission Video Photo (Area Manager)
+                "add-submission_video_photo" => false,
+                "browse-submission_video_photo" => false,
+                "detail-submission_video_photo" => false,
+                "edit-submission_video_photo" => false,
+                "delete-submission_video_photo" => false,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Area Manager)
+                "add-submission_video_photo_detail" => false,
+                "detail-submission_video_photo_detail" => false,
+                "edit-submission_video_photo_detail" => false,
+                "delete-submission_video_photo_detail" => false,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (Area Manager)
                 "add-sparepart" => false,
                 "browse-sparepart" => false,
@@ -1288,6 +1373,23 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Submission Video Photo (Head Manager)
+                "add-submission_video_photo" => false,
+                "browse-submission_video_photo" => false,
+                "detail-submission_video_photo" => false,
+                "edit-submission_video_photo" => false,
+                "delete-submission_video_photo" => false,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Head Manager)
+                "add-submission_video_photo_detail" => false,
+                "detail-submission_video_photo_detail" => false,
+                "edit-submission_video_photo_detail" => false,
+                "delete-submission_video_photo_detail" => false,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
 
                 // Sparepart (Head Manager)
                 "add-sparepart" => false,
@@ -1515,6 +1617,23 @@ class RolesSeeder extends Seeder
                 "detail-submission" => true,
                 "edit-submission" => false,
                 "delete-submission" => false,
+
+                // Submission Video Photo (Admin Management)
+                "add-submission_video_photo" => false,
+                "browse-submission_video_photo" => false,
+                "detail-submission_video_photo" => false,
+                "edit-submission_video_photo" => false,
+                "delete-submission_video_photo" => false,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Admin Management)
+                "add-submission_video_photo_detail" => false,
+                "detail-submission_video_photo_detail" => false,
+                "edit-submission_video_photo_detail" => false,
+                "delete-submission_video_photo_detail" => false,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
 
                 // Sparepart (Admin Management)
                 "add-sparepart" => true,

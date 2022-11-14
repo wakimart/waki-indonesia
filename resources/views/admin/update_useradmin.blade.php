@@ -1422,6 +1422,148 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+                            <div class="form-group" id="group-submission-video-photo">
+                                <span style="display: block;">SUBMISSION VIDEO & PHOTO</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-submission_video_photo"
+                                                value="add-submission_video_photo" />
+                                            Add Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="browse-submission_video_photo"
+                                                value="browse-submission_video_photo" />
+                                            Browse Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="detail-submission_video_photo"
+                                                value="detail-submission_video_photo" />
+                                            Detail Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-submission_video_photo"
+                                                value="edit-submission_video_photo" />
+                                            Edit Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-submission_video_photo"
+                                                value="delete-submission_video_photo" />
+                                            Delete Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-approved-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-approved-submission_video_photo"
+                                                value="change-status-approved-submission_video_photo" />
+                                            Change Status Approved Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-rejected-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-rejected-submission_video_photo"
+                                                value="change-status-rejected-submission_video_photo" />
+                                            Change Status Rejected Submission Video & Photo
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-submission-video-photo">
+                                <span style="display: block;">SUBMISSION VIDEO & PHOTO DETAIL</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-submission_video_photo_detail"
+                                                value="add-submission_video_photo_detail" />
+                                            Add Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="detail-submission_video_photo_detail"
+                                                value="detail-submission_video_photo_detail" />
+                                            Detail Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-submission_video_photo_detail"
+                                                value="edit-submission_video_photo_detail" />
+                                            Edit Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-submission_video_photo_detail"
+                                                value="delete-submission_video_photo_detail" />
+                                            Delete Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-approved-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-approved-submission_video_photo_detail"
+                                                value="change-status-approved-submission_video_photo_detail" />
+                                            Change Status Approved Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="change-status-rejected-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-rejected-submission_video_photo_detail"
+                                                value="change-status-rejected-submission_video_photo_detail" />
+                                            Change Status Rejected Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group" id="group-phc-product">
                                 <span style="display: block;">PERSONAL HOMECARE PRODUCT</span>
                                 <div class="div-CheckboxGroup">

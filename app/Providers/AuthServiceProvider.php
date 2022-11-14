@@ -512,6 +512,62 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(["delete-submission"]);
         });
 
+        //-- SUBMISSION Video & Photo --//
+        // Add Submission Video & Photo
+        Gate::define("add-submission_video_photo", function ($user) {
+            return $user->hasAccess(["add-submission_video_photo"]);
+        });
+        // Browse Submission Video & Photo
+        Gate::define("browse-submission_video_photo", function ($user) {
+            return $user->hasAccess(["browse-submission_video_photo"]);
+        });
+        // View detail Submission Video & Photo
+        Gate::define("detail-submission_video_photo", function ($user) {
+            return $user->hasAccess(["detail-submission_video_photo"]);
+        });
+        // Edit Submission Video & Photo
+        Gate::define("edit-submission_video_photo", function ($user) {
+            return $user->hasAccess(["edit-submission_video_photo"]);
+        });
+        // Delete Submission Video & Photo
+        Gate::define("delete-submission_video_photo", function ($user) {
+            return $user->hasAccess(["delete-submission_video_photo"]);
+        });
+        // Change Status Approved Submission Video & Photo
+        Gate::define("change-status-approved-submission_video_photo", function ($user) {
+            return $user->hasAccess(["change-status-approved-submission_video_photo"]);
+        });
+        // Change Status Rejected Submission Video & Photo
+        Gate::define("change-status-rejected-submission_video_photo", function ($user) {
+            return $user->hasAccess(["change-status-rejected-submission_video_photo"]);
+        });
+
+        //-- SUBMISSION Vide & Photo Detail --//
+        // Add Submission Video & Photo Detail
+        Gate::define("add-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["add-submission_video_photo_detail"]);
+        });
+        // View detail Submission Video & Photo Detail
+        Gate::define("detail-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["detail-submission_video_photo_detail"]);
+        });
+        // Edit Submission Video & Photo Detail
+        Gate::define("edit-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["edit-submission_video_photo_detail"]);
+        });
+        // Delete Submission Video & Photo Detail
+        Gate::define("delete-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["delete-submission_video_photo_detail"]);
+        });
+        // Change Status Approved Submission Video & Photo Detail
+        Gate::define("change-status-approved-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["change-status-approved-submission_video_photo_detail"]);
+        });
+        // Change Status Rejected Submission Video & Photo Detail
+        Gate::define("change-status-rejected-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["change-status-rejected-submission_video_photo_detail"]);
+        });
+
         //-- SPAREPART --//
         // Add sparepart
         Gate::define("add-sparepart", function ($user) {
