@@ -8,9 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
+    #intro { padding-top: 2em; }
     button{
         background: #1bb1dc;
         border: 0;
@@ -30,20 +28,12 @@
     table td{
         border: 0.5px #8080801a solid;
         padding: 0.5em;
+        word-break: break-word;
     }
-    .right{
-        text-align: right;
-    }
+    .right{ text-align: right; }
     .pInTable{
         margin-bottom: 6pt !important;
         font-size: 10pt;
-    }
-    input, select, textarea{
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        border: 1px solid #dce1ec !important;
-        font-size: 14px !important;
-        width: 100% !important;
     }
     .select2-results__options{
         max-height: 15em;
@@ -69,22 +59,20 @@
         background-color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
     }
-
-    .black-color {
-        color: black !important;
-    }
+    .black-color { color: black !important; }
+    .content-wrapper { background: transparent !important;}
 </style>
 @endsection
 
 @section('content')
 @if( $order['code'] != null)
     <section id="intro" class="clearfix">
-        <div class="container">
-            <div class="row justify-content-center">
+      	<div class="container-fluid">
+            <div class="text-center">
                 <h2>ORDER SUCCESS</h2>
             </div>
-            <div class="row justify-content-center">
-                <table class="col-md-12">
+            <div class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td>Order Code</td>
                         <td>Order Date</td>
@@ -94,7 +82,7 @@
                         <td class="right">{{ date("d/m/Y", strtotime($order['orderDate'])) }}</td>
                     </tr>
                 </table>
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td>Sales Branch</td>
                         <td>Sales Code</td>
@@ -104,7 +92,7 @@
                         <td>{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
                     </tr>
                 </table>
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td colspan="2">Customer Data</td>
                     </thead>
@@ -133,7 +121,7 @@
                         <td>{{ $order['district']['province'] }}, {{ $order['district']['kota_kab'] }}, {{ $order['district']['subdistrict_name'] }}</td>
                     </tr>
                 </table>
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td colspan="4">Detail Order</td>
                     </thead>
@@ -152,7 +140,7 @@
                         </tr>
                     @endforeach
                 </table>
-                <table class="table">
+                <table class="w-100">
                     <thead>
                         <td colspan="10">Payment Detail</td>
                     </thead>
@@ -245,7 +233,7 @@
                     </tr>
                 </table>
 
-                <table class="col-md-12 d-none">
+                <table class="w-100 d-none">
                     <thead>
                         <td colspan="2">Terms and Condition</td>
                     </thead>
@@ -263,7 +251,7 @@
                     </tr>
                 </table>
                 @if($order['description'] != null)
-                    <table class="col-md-12">
+                    <table class="w-100">
                         <thead>
                             <td>Description</td>
                         </thead>
@@ -273,7 +261,7 @@
                     </table>
                 @endif
                 @if($order['image'] != null)
-                    <table class="col-md-12">
+                    <table class="w-100">
                         <thead>
                             <td>Payment Proof</td>
                         </thead>
@@ -290,7 +278,7 @@
                     </table>
                 @endif
 
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td>Status Order</td>
                     </thead>
@@ -350,50 +338,52 @@
                         </tr>
                     @endif
                 </table>
-                <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share"
-                class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
-                @if (Gate::check('edit-order'))
-                <button type="button" data-toggle="modal" data-target="#addPaymentModal"
-                    class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash">
-                    Add Payment
-                </button>
+                <div class="row justify-content-center">
+                  <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share"
+                  class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
+                  @if (Gate::check('edit-order'))
+                  <button type="button" data-toggle="modal" data-target="#addPaymentModal"
+                      class="btn btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash">
+                      Add Payment
+                  </button>
+                </div>
+                <div class="clearfix"></div>
                 @endif
             </div>
 
-            <div class="row justify-content-center" style="margin-top: 2em;">
-                <h2>ORDER HISTORY LOG</h2>
-            </div>
-            <div class="row justify-content-center">
-              <table class="col-md-12">
-                  <thead>
-                      <td>No.</td>
-                      <td>Action</td>
-                      <td>User</td>
-                      <td>Change</td>
-                      <td>Time</td>
-                  </thead>
-                  @if($historyUpdateOrder != null)
-                  @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
-                  @php
+            <div class="col-md-12">
+                <h2 class="text-center">ORDER HISTORY LOG</h2>
+                <table class="w-100">
+                    <thead>
+                        <td>No.</td>
+                        <td>Action</td>
+                        <td>User</td>
+                        <td>Change</td>
+                        <td>Time</td>
+                    </thead>
+                    @if($historyUpdateOrder != null)
+                    @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
+                    @php
 
-                  @endphp
-                  <tr>
-                      <td>{{$key+1}}</td>
-                      <td>{{$historyUpdateOrder->method}}</td>
-                      <td>{{$historyUpdateOrder->name}}</td>
-                      <?php $dataChange = json_decode($historyUpdateOrder->meta, true);?>
-                      <td>
-                      @foreach ($dataChange['dataChange'] as $key=>$value)
-                          <b>{{$key}}</b>: {{ is_array($value) ? json_encode($value) : $value }}<br/>
-                      @endforeach
-                      </td>
-                      <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
-                  </tr>
-                  @endforeach
-                  @endif
-              </table>
+                    @endphp
+                    <tr>
+                        <td>{{$key+1}}</td>
+                        <td>{{$historyUpdateOrder->method}}</td>
+                        <td>{{$historyUpdateOrder->name}}</td>
+                        <?php $dataChange = json_decode($historyUpdateOrder->meta, true);?>
+                        <td>
+                        @foreach ($dataChange['dataChange'] as $key=>$value)
+                            <b>{{$key}}</b>: {{ is_array($value) ? json_encode($value) : $value }}<br/>
+                        @endforeach
+                        </td>
+                        <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
+                    </tr>
+                    @endforeach
+                    @endif
+                </table>
             </div>
 
+        </div>
             <!-- Modal Change Status Order -->
             <div class="modal fade"
                 id="modal-change-status"
@@ -494,9 +484,9 @@
                                 <br>
                                 <div class="form-group mb-1">
                                     <label for="">Payment Date</label>
-                                    <input type="date" 
-                                        class="form-control" 
-                                        name="payment_date" 
+                                    <input type="date"
+                                        class="form-control"
+                                        name="payment_date"
                                         value="{{ date('Y-m-d') }}"
                                         required>
                                 </div>
@@ -567,8 +557,8 @@
                                 <div class="form-group mb-1">
                                     <label for="">Estimate Transfer Date</label>
                                     <input type="date" id="estimateTransferDate"
-                                        class="form-control" 
-                                        name="estimate_transfer_date" 
+                                        class="form-control"
+                                        name="estimate_transfer_date"
                                         value="{{ date('Y-m-d') }}"
                                         required>
                                 </div>
@@ -622,9 +612,9 @@
                             <br>
                             <div class="form-group mb-1">
                                 <label for="">Payment Date</label>
-                                <input type="date" 
+                                <input type="date"
                                     id="viewPayment-payment_date"
-                                    class="form-control" 
+                                    class="form-control"
                                     value=""
                                     readonly>
                             </div>
@@ -658,11 +648,11 @@
                             <div class="form-group">
                                 <label for="">Installment</label>
                                 <select id="viewPayment-select_installment" class="form-control black-color" disabled>
-                                    <option value=""></option>    
+                                    <option value=""></option>
                                     @foreach($creditCards as $cc)
                                         <option value="{{$cc->id}}">{{$cc->code}}</option>
                                     @endforeach
-                                </select> 
+                                </select>
                                 <div id="viewPayment-credit_card_name" class="mt-2"></div>
                                 <input type="number" class="form-control" id="viewPayment-credit_card_installment" readonly>
                             </div>
@@ -738,8 +728,8 @@
                                 <div class="form-group">
                                     <label for="">Estimate Transfer Date</label>
                                     <input type="date" id="editPaymentForThoseWhoAreNotHeadAdmin-estimate_transfer_date"
-                                        class="form-control" 
-                                        name="estimate_transfer_date" 
+                                        class="form-control"
+                                        name="estimate_transfer_date"
                                         required>
                                 </div>
                             </div>
@@ -781,10 +771,10 @@
                                 <br>
                                 <div class="form-group mb-1">
                                     <label for="">Payment Date</label>
-                                    <input type="date" 
+                                    <input type="date"
                                         id="editPayment-payment_date"
-                                        class="form-control" 
-                                        name="payment_date" 
+                                        class="form-control"
+                                        name="payment_date"
                                         value=""
                                         required>
                                 </div>
@@ -826,7 +816,7 @@
                                         @foreach($creditCards as $cc)
                                             <option value="{{$cc->id}}">{{$cc->code}} - {{$cc->name}}</option>
                                         @endforeach
-                                    </select> 
+                                    </select>
                                     <div id="editPayment-credit_card_name" class="mt-2"></div>
                                     <input type="number" min=1 class="form-control" id="editPayment-credit_card_installment" name="cicilan" required>
                                 </div>
@@ -856,12 +846,12 @@
                                 <div class="form-group">
                                     <label for="">Estimate Transfer Date</label>
                                     <input type="date" id="editPayment-estimate_transfer_date"
-                                        class="form-control" 
-                                        name="estimate_transfer_date" 
+                                        class="form-control"
+                                        name="estimate_transfer_date"
                                         value=""
                                         required>
                                 </div>
-                                
+
                                 <div class="form-group mt-2">
                                     <label for="">Bukti Pembayaran</label>
                                     <label style="float: right">(Min: 1) (Max: 3)</label>
@@ -966,7 +956,6 @@
                 <h2>CANNOT FIND ORDER</h2>
             </div>
             @endif
-        </div>
 
     </section>
 
@@ -1120,20 +1109,20 @@
                         $("#editPayment-order_payment_id").val(order_payment_id);
                         $("#editPayment-payment_date").val(result.payment_date);
                         $("#editPayment-total_payment").val(numberWithCommas(result.total_payment));
-                    
+
                         $("#editPayment-credit_card_name").html('')
-                        $("#editPayment-bank_description").html('')                        
+                        $("#editPayment-bank_description").html('')
                         if(result.credit_card_id){
                             $("#editPayment-select_installment").val(result.credit_card_id).change()
                             $('#editPayment-select_installment').attr('data-info', 'first');
                             infoFromCreditCard(result.credit_card_id)
-                        }                    
+                        }
                         if(result.bank_account_id){
                             $("#editPayment-select_bank").val(result.bank_account_id).change()
                             $('#editPayment-select_bank').attr('data-info', 'first');
                             infoFromBankAccount(result.bank_account_id)
                         }
-                        
+
                         $("#editPayment-select_type").val(result.type).change()
                         $("#editPayment-select_type_payment").val(result.type_payment).change()
                         $("#editPayment-credit_card_installment").val(result.cicilan)
@@ -1159,7 +1148,7 @@
                             $("#divUpdateStatusPayment").show();
                         }
                         @endif
-                        
+
                         $("#submitFrmEditPayment").show();
                     } else {
                         alert(data.result);
@@ -1256,7 +1245,7 @@
                 $('#selectInstallment').val('').trigger('change')
                 $('#creditCardName').html('')
                 $('#chargePercentageCompany').val(0)
-                $('#creditCardInstallment').val(1)                
+                $('#creditCardInstallment').val(1)
                 if($('#selectBank').val() !== ''){
                     var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
                     url = url.replace(':id', $('#selectBank').val());
@@ -1277,7 +1266,7 @@
                             var date = d.getFullYear() + "-" + month + "-" + day
                             $('#estimateTransferDate').val(date)
                         }
-                    });            
+                    });
                 }else{
                     $('#estimateTransferDate').val('{{date("Y-m-d")}}')
                 }
@@ -1317,7 +1306,7 @@
                     $('#estimateTransferDate').val(date)
                     $('#bank_id').val(data.bank_account.bank_id)
                 }
-            });            
+            });
         });
         $('#selectBank').on('change', function() {
             var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
@@ -1325,7 +1314,7 @@
             $.ajax({
                 type: "GET",
                 url: url,
-                success: function(data){                    
+                success: function(data){
                     $('#bankDesc').html(`
                         <span><b>${data.bank.name}</b> ${data.name} (${data.account_number})</span>
                     `)
@@ -1346,18 +1335,18 @@
                     }
                     $('#bank_id').val(data.bank_id)
                 }
-            });            
+            });
         });
 
         // edit
-        
+
         $(".editPayment-select_with_select2").select2({
             theme: 'bootstrap4',
             placeholder: '-- select first --',
             dropdownParent: $('#editPaymentModal .modal-content')
         })
 
-        function infoFromCreditCard(id) {            
+        function infoFromCreditCard(id) {
             var url = '{{ route("get_credit_card", ":id") }}';
             url = url.replace(':id', id);
             $.ajax({
@@ -1369,9 +1358,9 @@
                        <span><b>${data.bank_account.bank.name}</b> ${data.bank_account.name} (${data.bank_account.account_number})</span>
                     `)
                 }
-            }); 
+            });
         }
-        function infoFromBankAccount(id) {            
+        function infoFromBankAccount(id) {
             var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
             url = url.replace(':id', id);
             $.ajax({
@@ -1382,7 +1371,7 @@
                        <span><b>${data.bank.name}</b> ${data.name} (${data.account_number})</span>
                     `)
                 }
-            }); 
+            });
         }
         $('#frmAddPayment, #frmEditPayment').bind('submit', function () {
             $('.installment-form, .editPayment-installment_form').prop({'disabled' : false, 'readonly' : false})
@@ -1436,18 +1425,18 @@
                         }
                         $('#editPayment-select_installment').attr('data-info', '')
                     }
-                }); 
+                });
             }
         });
 
         $('#editPayment-select_bank').on('change', function() {
-            if(this.value){                
+            if(this.value){
                 var url = '{{ route("get_bank_account_from_payment_modal", ":id") }}';
                 url = url.replace(':id', this.value);
                 $.ajax({
                     type: "GET",
                     url: url,
-                    success: function(data){                    
+                    success: function(data){
                         if($('#editPayment-select_bank').attr('data-info') !== 'first'){
                             $('#editPayment-bank_description').html(`
                                 <span><b>${data.bank.name}</b> ${data.name} (${data.account_number})</span>
