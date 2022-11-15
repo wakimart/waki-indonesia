@@ -128,7 +128,9 @@ $menu_item_second = "list_submission_video_photo";
                                     <th>Type</th>
                                     <th>Branch</th>
                                     <th>Status</th>
+                                    @if (Gate::check('detail-submission_video_photo'))
                                     <th class="text-center">View</th>
+                                    @endif
                                     @if (Gate::check('edit-submission_video_photo'))
                                         <th class="text-center">Edit</th>
                                     @endif
@@ -174,11 +176,13 @@ $menu_item_second = "list_submission_video_photo";
                                         <td>
                                             {{ ucwords($submissionVP->status) }}
                                         </td>
+                                        @can('detail-submission_video_photo')
                                         <td class="text-center">
                                             <a href="{{ route("detail_submission_video_photo", ["id" => $submissionVP->id]) }}">
                                                 <i class="mdi mdi-eye" style="font-size: 24px;"></i>
                                             </a>
                                         </td>
+                                        @endcan
                                         @can('edit-submission_video_photo')
                                             <td class="text-center">
                                                 <a href="{{ route('edit_submission_video_photo', ['id' => $submissionVP->id]) }}">

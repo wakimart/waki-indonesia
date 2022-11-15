@@ -1476,7 +1476,7 @@ $menu_item_page = "user";
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <label class="form-check-label"
+                                        <label class="form-check-label text-success"
                                             for="change-status-approved-submission_video_photo">
                                             <input type="checkbox"
                                                 class="form-check-input"
@@ -1485,7 +1485,7 @@ $menu_item_page = "user";
                                             Change Status Approved Submission Video & Photo
                                         </label>
                                     </div>
-                                    <div class="form-check form-check-inline">
+                                    <div class="form-check form-check-inline text-danger">
                                         <label class="form-check-label"
                                             for="change-status-rejected-submission_video_photo">
                                             <input type="checkbox"
@@ -1513,16 +1513,6 @@ $menu_item_page = "user";
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <label class="form-check-label"
-                                            for="detail-submission_video_photo_detail">
-                                            <input type="checkbox"
-                                                class="form-check-input"
-                                                id="detail-submission_video_photo_detail"
-                                                value="detail-submission_video_photo_detail" />
-                                            Detail Submission Video & Photo Detail
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label"
                                             for="edit-submission_video_photo_detail">
                                             <input type="checkbox"
                                                 class="form-check-input"
@@ -1542,7 +1532,7 @@ $menu_item_page = "user";
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <label class="form-check-label"
+                                        <label class="form-check-label text-success"
                                             for="change-status-approved-submission_video_photo_detail">
                                             <input type="checkbox"
                                                 class="form-check-input"
@@ -1551,7 +1541,7 @@ $menu_item_page = "user";
                                             Change Status Approved Submission Video & Photo Detail
                                         </label>
                                     </div>
-                                    <div class="form-check form-check-inline">
+                                    <div class="form-check form-check-inline text-danger">
                                         <label class="form-check-label"
                                             for="change-status-rejected-submission_video_photo_detail">
                                             <input type="checkbox"

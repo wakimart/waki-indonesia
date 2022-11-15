@@ -1157,18 +1157,22 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('delete_submission_video_photo')
             ->middleware('can:delete-submission_video_photo');
 
+        //Update Status Submission Video Photo
+        Route::post("/update_status", "SubmissionVideoPhotoController@updateStatus")
+            ->name("update_status_submission_video_photo");
+
         //Store Submission Video Photo Detail
         Route::post('/store_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@store')
             ->name('store_submission_video_photo_detail');
-        //Edit Submission Video Photo Detail
-        Route::post('/edit_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@edit')
-            ->name('edit_submission_video_photo_detail');
         //Update Submission Video Photo Detail
         Route::post('/update_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@update')
             ->name('update_submission_video_photo_detail');
         //Delete Submission Video Photo Detail
         Route::post('/delete_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@destroy')
             ->name('delete_submission_video_photo_detail');
+        //Update Status Submission Video Photo Detail
+        Route::post("/update_status_detail", "SubmissionVideoPhotoDetailController@updateStatus")
+            ->name("update_status_submission_video_photo_detail");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {

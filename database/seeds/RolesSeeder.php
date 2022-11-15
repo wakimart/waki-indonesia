@@ -188,7 +188,6 @@ class RolesSeeder extends Seeder
 
                 // Submission Video Photo Detail (Head Admin)
                 "add-submission_video_photo_detail" => false,
-                "detail-submission_video_photo_detail" => false,
                 "edit-submission_video_photo_detail" => false,
                 "delete-submission_video_photo_detail" => false,
                 "change-status-approved-submission_video_photo_detail" => false,
@@ -432,7 +431,6 @@ class RolesSeeder extends Seeder
 
                 // Submission Video Photo Detail (Admin)
                 "add-submission_video_photo_detail" => false,
-                "detail-submission_video_photo_detail" => false,
                 "edit-submission_video_photo_detail" => false,
                 "delete-submission_video_photo_detail" => false,
                 "change-status-approved-submission_video_photo_detail" => false,
@@ -670,7 +668,6 @@ class RolesSeeder extends Seeder
 
                 // Submission Video Photo Detail (CSO)
                 "add-submission_video_photo_detail" => true,
-                "detail-submission_video_photo_detail" => true,
                 "edit-submission_video_photo_detail" => true,
                 "delete-submission_video_photo_detail" => true,
                 "change-status-approved-submission_video_photo_detail" => false,
@@ -909,7 +906,6 @@ class RolesSeeder extends Seeder
 
                 // Submission Video Photo Detail (Branch)
                 "add-submission_video_photo_detail" => true,
-                "detail-submission_video_photo_detail" => true,
                 "edit-submission_video_photo_detail" => true,
                 "delete-submission_video_photo_detail" => true,
                 "change-status-approved-submission_video_photo_detail" => false,
@@ -1147,7 +1143,6 @@ class RolesSeeder extends Seeder
 
                 // Submission Video Photo Detail (Area Manager)
                 "add-submission_video_photo_detail" => false,
-                "detail-submission_video_photo_detail" => false,
                 "edit-submission_video_photo_detail" => false,
                 "delete-submission_video_photo_detail" => false,
                 "change-status-approved-submission_video_photo_detail" => false,
@@ -1385,7 +1380,6 @@ class RolesSeeder extends Seeder
 
                 // Submission Video Photo Detail (Head Manager)
                 "add-submission_video_photo_detail" => false,
-                "detail-submission_video_photo_detail" => false,
                 "edit-submission_video_photo_detail" => false,
                 "delete-submission_video_photo_detail" => false,
                 "change-status-approved-submission_video_photo_detail" => false,
@@ -1629,7 +1623,6 @@ class RolesSeeder extends Seeder
 
                 // Submission Video Photo Detail (Admin Management)
                 "add-submission_video_photo_detail" => false,
-                "detail-submission_video_photo_detail" => false,
                 "edit-submission_video_photo_detail" => false,
                 "delete-submission_video_photo_detail" => false,
                 "change-status-approved-submission_video_photo_detail" => false,

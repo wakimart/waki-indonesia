@@ -133,7 +133,7 @@ $menu_item_second = "add_submission_video_photo";
                                 <input type="text"
                                     readonly
                                     disabled
-                                    value="Testimonial Video Photo" />
+                                    value="Testimonial Video & Photo" />
                             </div>
                             <div class="form-group">
                                 <label id="submission_date" for="submission_date">
@@ -464,10 +464,11 @@ function addOrRemoveInvalid(element, command) {
         if (branch) {
             $("#submission_video_photo_error").html("");
             $("#submission_video_photo_success").html("");
+            $("#refrensiForm").hide();
             $.get( '{{ route("check_submission_video_photo_branch") }}', { branch })
             .done(function( result ) {
                 if (result['status'] == 'success'){      
-                    $("#submission_video_photo_success").html("New Submission Video Photo");
+                    $("#submission_video_photo_success").html("New Submission Video & Photo");
                     $("#refrensiForm").show();
                 } else if(result['exists']) {
                     $("#submission_video_photo_error").html(result['exists']);   
