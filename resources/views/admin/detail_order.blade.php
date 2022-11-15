@@ -485,6 +485,7 @@
                                 <div class="form-group mb-1">
                                     <label for="">Payment Date</label>
                                     <input type="date"
+                                        id="add_payment_date" 
                                         class="form-control"
                                         name="payment_date"
                                         value="{{ date('Y-m-d') }}"
@@ -1253,7 +1254,7 @@
                         type: "GET",
                         url: url,
                         success: function(data){
-                            const d = new Date();
+                            const d = new Date($("#add_payment_date").val());
                             d.setDate(d.getDate() + data.estimate_transfer);
                             var month = d.getMonth() + 1
                             var day = d.getDate()
@@ -1292,7 +1293,7 @@
                     `)
                     $('#chargePercentageCompany').val(data.charge_percentage_company)
                     $('#chargePercentageBank').val(data.bank_account.charge_percentage)
-                    const d = new Date();
+                    const d = new Date($("#add_payment_date").val());
                     d.setDate(d.getDate() + data.estimate_transfer);
                     var month = d.getMonth() + 1
                     var day = d.getDate()
@@ -1320,7 +1321,7 @@
                     `)
                     $('#chargePercentageBank').val(data.charge_percentage)
                     if($("#selectInstallment").val() == ''){
-                        const d = new Date();
+                        const d = new Date($("#add_payment_date").val());
                         d.setDate(d.getDate() + data.estimate_transfer);
                         var month = d.getMonth() + 1
                         var day = d.getDate()
@@ -1339,7 +1340,6 @@
         });
 
         // edit
-
         $(".editPayment-select_with_select2").select2({
             theme: 'bootstrap4',
             placeholder: '-- select first --',
@@ -1409,7 +1409,7 @@
                             `)
                             $('#editPayment-charge_percentage_company').val(data.charge_percentage_company)
                             $('#editPayment-charge_percentage_bank').val(data.bank_account.charge_percentage)
-                            const d = new Date();
+                            const d = new Date($("#editPayment-payment_date").val());
                             d.setDate(d.getDate() + data.estimate_transfer);
                             var month = d.getMonth() + 1
                             var day = d.getDate()
@@ -1443,7 +1443,7 @@
                             `)
                             $('#editPayment-charge_percentage_bank').val(data.charge_percentage)
                             if($("#editPayment-select_installment").val() == ''){
-                                const d = new Date();
+                                const d = new Date($("#editPayment-payment_date").val());
                                 d.setDate(d.getDate() + data.estimate_transfer);
                                 var month = d.getMonth() + 1
                                 var day = d.getDate()
