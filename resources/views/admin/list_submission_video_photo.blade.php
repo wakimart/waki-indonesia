@@ -184,20 +184,24 @@ $menu_item_second = "list_submission_video_photo";
                                             @endcan
                                         </td>
                                         <td class="text-center">
-                                            @can('edit-submission_video_photo' && !$submissionVP->status != 'approved')
-                                                <a href="{{ route('edit_submission_video_photo', ['id' => $submissionVP->id]) }}">
-                                                    <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                </a>
+                                            @can('edit-submission_video_photo')
+                                                @if($submissionVP->status != 'approved')
+                                                    <a href="{{ route('edit_submission_video_photo', ['id' => $submissionVP->id]) }}">
+                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                    </a>
+                                                @endif
                                             @endcan
                                         </td>
                                         <td class="text-center">
-                                            @can('delete-submission_video_photo' && !$submissionVP->status != 'approved')
-                                                <button class="btn-delete p-0"
-                                                    data-toggle="modal"
-                                                    data-target="#deleteDoModal"
-                                                    value="{{ route('delete_submission_video_photo', ['id' => $submissionVP->id]) }}">
-                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #f94569;"></i>
-                                                </button>
+                                            @can('delete-submission_video_photo')
+                                                @if($submissionVP->status != 'approved')
+                                                    <button class="btn-delete p-0"
+                                                        data-toggle="modal"
+                                                        data-target="#deleteDoModal"
+                                                        value="{{ route('delete_submission_video_photo', ['id' => $submissionVP->id]) }}">
+                                                        <i class="mdi mdi-delete" style="font-size: 24px; color: #f94569;"></i>
+                                                    </button>
+                                                @endif
                                             @endcan
                                         </td>
                                     </tr>
