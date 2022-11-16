@@ -143,11 +143,11 @@ $menu_item_second = "list_submission_video_photo";
                                 @foreach($submissionVPs as $key => $submissionVP)
                                     @php
                                         //khusus admin KEzia
-                                        $submission_done = "";
+                                        $submissionVP_done = "";
                                         if(Auth::user()->id == 2){
                                             foreach ($submissionVP->submissionVideoPhotoDetails as $perDetail) {
                                                 if($perDetail->status == 'approved'){
-                                                    $submission_done = "background-color: #beffc9;";
+                                                    $submissionVP_done = "background-color: #beffc9;";
                                                     break;
                                                 }
                                             }
@@ -176,30 +176,30 @@ $menu_item_second = "list_submission_video_photo";
                                         <td>
                                             {{ ucwords($submissionVP->status) }}
                                         </td>
-                                        @can('detail-submission_video_photo')
                                         <td class="text-center">
-                                            <a href="{{ route("detail_submission_video_photo", ["id" => $submissionVP->id]) }}">
-                                                <i class="mdi mdi-eye" style="font-size: 24px;"></i>
-                                            </a>
+                                            @can('detail-submission_video_photo')
+                                                <a href="{{ route("detail_submission_video_photo", ["id" => $submissionVP->id]) }}">
+                                                    <i class="mdi mdi-eye" style="font-size: 24px;"></i>
+                                                </a>
+                                            @endcan
                                         </td>
-                                        @endcan
-                                        @can('edit-submission_video_photo')
-                                            <td class="text-center">
+                                        <td class="text-center">
+                                            @can('edit-submission_video_photo' && !$submissionVP->status != 'approved')
                                                 <a href="{{ route('edit_submission_video_photo', ['id' => $submissionVP->id]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                 </a>
-                                            </td>
-                                        @endcan
-                                        @can('delete-submission_video_photo')
-                                            <td class="text-center">
+                                            @endcan
+                                        </td>
+                                        <td class="text-center">
+                                            @can('delete-submission_video_photo' && !$submissionVP->status != 'approved')
                                                 <button class="btn-delete p-0"
                                                     data-toggle="modal"
                                                     data-target="#deleteDoModal"
                                                     value="{{ route('delete_submission_video_photo', ['id' => $submissionVP->id]) }}">
                                                     <i class="mdi mdi-delete" style="font-size: 24px; color: #f94569;"></i>
                                                 </button>
-                                            </td>
-                                        @endcan
+                                            @endcan
+                                        </td>
                                     </tr>
                                     <?php $i++; ?>
                                 @endforeach

@@ -281,17 +281,9 @@ $menu_item_second = "add_submission_video_photo";
                                                     value="">
                                                     Choose Souvenir
                                                 </option>
-                                                @foreach ($souvenirs as $souvenir)
-                                                    @if ($souvenir->id === 7)
-                                                        <option value="{{ $souvenir->name }}" hidden>
-                                                            {{ $souvenir->name }}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{ $souvenir->name }}">
-                                                            {{ $souvenir->name }}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
+                                                <option value="SLIPPER MASSAGE">
+                                                    SLIPPER MASSAGE
+                                                </option>
                                             </select>
                                         </div>
                                     </div>

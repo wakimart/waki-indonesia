@@ -277,7 +277,7 @@ if (
                                 </div>
                             </div>
 
-                            @If(Gate::check('add-submission_video_photo_detail'))
+                            @If(Gate::check('add-submission_video_photo_detail') && !$submissionVP->status == 'approved')
                             <div class="col-md-12 text-center mt-4">
                                 <button class="btn btn-gradient-primary mt-2"
                                     id="btnAddReference"
@@ -523,17 +523,9 @@ if (
                             <option selected disabled>
                                 Pilih Souvenir
                             </option>
-                            @foreach($souvenirs as $souvenir)
-                                @if($souvenir['id'] == 7)
-                                    <option value="{{ $souvenir['name'] }}" hidden>
-                                        {{ $souvenir['name'] }}
-                                    </option>
-                                @else
-                                    <option value="{{ $souvenir['name'] }}">
-                                        {{ $souvenir['name'] }}
-                                    </option>
-                                @endif
-                            @endforeach
+                            <option value="SLIPPER MASSAGE">
+                                SLIPPER MASSAGE
+                            </option>
                         </select>
                     </div>
                 </form>
