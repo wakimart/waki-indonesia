@@ -7,9 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
+    #intro {padding-top: 2em;}
     button{
         background: #1bb1dc;
         border: 0;
@@ -30,19 +28,11 @@
         border: 0.5px #8080801a solid;
         padding: 0.5em;
     }
-    .right{
-        text-align: right;
-    }
+    .content-wrapper{ background:transparent !important;}
+    .right{text-align: right;}
     .pInTable{
         margin-bottom: 6pt !important;
         font-size: 10pt;
-    }
-    input, select, textarea{
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        border: 1px solid #dce1ec !important;
-        font-size: 14px !important;
-        width: 100% !important;
     }
     .select2-results__options{
         max-height: 15em;
@@ -72,9 +62,11 @@
 @endsection
 
 @section('content')
+<div class="main-panel">
+
 @if( $order['code'] != null)
     <section id="intro" class="clearfix">
-        <div class="container">
+        <div class="content-wrapper">
             <div class="row justify-content-center">
                 <h2>ORDER SUCCESS</h2>
             </div>
@@ -304,23 +296,23 @@
                                 <div class="form-group row justify-content-center">
                                     @if ($order['status'] == \App\Order::$status['1'] && Gate::check('change-status_order_process'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['2']}}"
-                                        class="btn btn-gradient-success mr-2 btn-lg btn-change-status-order">
+                                        class="btn btn-gradient-success mr-2 btn-change-status-order">
                                         Process Order
                                     </button>
                                     @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_delivery'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}"
-                                        class="btn btn-gradient-warning mr-2 btn-lg btn-change-status-order">
+                                        class="btn btn-gradient-warning mr-2 btn-change-status-order">
                                         Delivery Order
                                     </button>
                                     @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_success'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['4']}}"
-                                        class="btn btn-gradient-primary mr-2 btn-lg btn-change-status-order">
+                                        class="btn btn-gradient-primary mr-2 btn-change-status-order">
                                         Success Order
                                     </button>
                                     @endif
                                     @if (($order['status'] == \App\Order::$status['1'] || $order['status'] == \App\Order::$status['2']) && Gate::check('change-status_order_reject'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['5']}}"
-                                        class="btn btn-gradient-danger mr-2 btn-lg btn-change-status-order">
+                                        class="btn btn-gradient-danger mr-2 btn-change-status-order">
                                         Reject Order
                                     </button>
                                     @endif
@@ -333,7 +325,7 @@
                 class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
                 @if (Gate::check('edit-order') && $order->remaining_payment > 0)
                 <button type="button" data-toggle="modal" data-target="#addPaymentModal"
-                    class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash">
+                    class="btn btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash">
                     Add Payment
                 </button>
                 @endif
@@ -473,9 +465,9 @@
                                 <br>
                                 <div class="form-group mb-1">
                                     <label for="">Payment Date</label>
-                                    <input type="date" 
-                                        class="form-control" 
-                                        name="payment_date" 
+                                    <input type="date"
+                                        class="form-control"
+                                        name="payment_date"
                                         value="{{ date('Y-m-d') }}"
                                         required>
                                 </div>
@@ -585,10 +577,10 @@
                                 <br>
                                 <div class="form-group mb-1">
                                     <label for="">Payment Date</label>
-                                    <input type="date" 
+                                    <input type="date"
                                         id="editPayment-payment_date"
-                                        class="form-control" 
-                                        name="payment_date" 
+                                        class="form-control"
+                                        name="payment_date"
                                         value=""
                                         required>
                                 </div>
@@ -774,6 +766,7 @@
 
     </section>
 
+</div>
 @endsection
 
 @section('script')
@@ -891,7 +884,7 @@
                         $("#editPayment-bank_id").val(result.bank_id);
                         $("#editPayment-cicilan").val(result.cicilan);
                         $("#editPayment-total_payment").val(numberWithCommas(result.total_payment));
-                        
+
                         const mainUrlImage = "{{ asset('sources/order') }}";
                         $.each(JSON.parse(result.image), function(index, image) {
                             $("#editPayment-productimg-" + index).closest(".imgUp").find(".imagePreview")
@@ -904,7 +897,7 @@
                             $("#divUpdateStatusPayment").show();
                         }
                         @endif
-                        
+
                         $("#submitFrmEditPayment").show();
                     } else {
                         alert(data.result);
@@ -970,9 +963,9 @@
 
             });
         });
-        
+
         var networkValue
-        function testNetwork(networkValue, response){            
+        function testNetwork(networkValue, response){
             $.ajax({
                 method: "post",
                 url: "http://{{ env('OFFLINE_URL') }}/api/end-point-for-check-status-network",
@@ -984,12 +977,12 @@
                 },
                 success: response,
                 error: function(xhr, status, error) {
-                    var modal = `                
+                    var modal = `
                         <div class="modal-body">
                             <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
                             <hr>
                             <p class="text-center">${xhr.responseJSON.message}</p>
-                        </div>                
+                        </div>
                     `
                     $('#modal-change-status').modal("hide")
                     $('.modal-backdrop').remove();
@@ -998,8 +991,8 @@
                 }
             });
         };
-        
-        $('#btn-edit-status-order').on('click', function() {        
+
+        $('#btn-edit-status-order').on('click', function() {
             testNetwork(networkValue, function(val){
                 var order_details = []
                 @foreach($order->orderDetail as $detail)
@@ -1054,12 +1047,12 @@
                         if(res.status == 'success'){
                             $('#actionAdd').submit();
                         }else{
-                            var modal = `                
+                            var modal = `
                                 <div class="modal-body">
                                     <h5 class="modal-title text-center">${res.status}</h5>
                                     <hr>
                                     <p class="text-center">${res.message}</p>
-                                </div>                
+                                </div>
                             `
                             $('#modal-change-status').modal("hide")
                             $('.modal-backdrop').remove();
@@ -1068,19 +1061,19 @@
                         }
                     },
                     error: function(xhr){
-                        var modal = `                
+                        var modal = `
                             <div class="modal-body">
                                 <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
                                 <hr>
                                 <p class="text-center">${xhr.responseJSON.message}</p>
-                            </div>                
+                            </div>
                         `
                         $('#modal-change-status').modal("hide")
                         $('.modal-backdrop').remove();
                         $('#error-modal-desc').html(modal)
                         $('#error-modal').modal("show")
                     }
-                    
+
                 })
             })
             return false
@@ -1114,7 +1107,7 @@
                             orderPaymentData.bank_id = '{{$payment->bank_id}}'
                             orderPaymentData.cicilan = '{{$payment->cicilan}}'
                             orderPaymentData.image = <?= $payment->image; ?>
-                        }                        
+                        }
                     @endforeach
                     for(var i = 0; i < orderPaymentData.image.length; i++){
                         orderPaymentData['order_payment_file_'+i] = `{{ asset('sources/order/${orderPaymentData.image[i]}') }}`
@@ -1127,17 +1120,17 @@
                             $('#frmUpdateStatusPayment').submit();
                         },
                         error: function(xhr){
-                            var modal = `                
+                            var modal = `
                                 <div class="modal-body">
                                     <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
                                     <hr>
                                     <p class="text-center">${xhr.responseJSON.message}</p>
-                                </div>                
+                                </div>
                             `
                             $('#error-modal-desc').html(modal)
                             $('#error-modal').modal("show")
                         }
-                        
+
                     })
                 })
                 return false
