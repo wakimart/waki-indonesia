@@ -277,7 +277,7 @@ if (
                                 </div>
                             </div>
 
-                            @If(Gate::check('add-submission_video_photo_detail') && !$submissionVP->status == 'approved')
+                            @if(Gate::check('add-submission_video_photo_detail') && $submissionVP->status != 'approved')
                             <div class="col-md-12 text-center mt-4">
                                 <button class="btn btn-gradient-primary mt-2"
                                     id="btnAddReference"
