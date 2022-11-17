@@ -22,17 +22,14 @@ if (
         padding-top: 2em;
         min-width: 0;
     }
-
     table {
         margin: 1em;
         font-size: 14px;
     }
-
     .table-responsive table {
         width: 100%;
         overflow:scroll;
     }
-
     .table-responsive table .form-control {
         height: 32px;
         line-height: 32px;
@@ -40,36 +37,26 @@ if (
         border-radius: 2px;
         margin-bottom: 0;
     }
-
     .table-responsive table .form-control.error {
         border-color: #f50000;
         border: 1px solid red;
     }
-
-    .table-responsive table td .save {
-        display: none;
-    }
-
+    .table-responsive table td .save {display: none;}
     table thead {
         background-color: #8080801a;
         text-align: center;
     }
-
     table td {
         border: 0.5px #8080801a solid;
         padding: 0.5em;
-
     }
-
     .pInTable {
         margin-bottom: 6pt !important;
         font-size: 10pt;
     }
-
     select.form-control {
         color: black !important;
     }
-
     .imagePreview {
         width: 100%;
         height: 150px;
@@ -90,7 +77,7 @@ if (
         background-color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
     }
-
+    .content-wrapper{ background:transparent !important;}
     @media screen and (max-width: 768px) {
         .table-responsive {
             margin-right: 10px;
@@ -103,12 +90,12 @@ if (
 @section('content')
 @if ($submission->code !== null)
     <section id="intro" class="clearfix">
-        <div class="container">
+        <div class="content-wrapper">
             <div class="row justify-content-center">
                 <h2>SUBMISSION SUCCESS</h2>
             </div>
             <div class="row justify-content-center">
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td class="text-right">Submission Date</td>
                     </thead>
@@ -119,7 +106,7 @@ if (
                     </tr>
                 </table>
 
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td colspan="2">Customer Data</td>
                     </thead>
@@ -152,7 +139,7 @@ if (
                     </tr>
                 </table>
 
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td>Sales Branch</td>
                         <td>Sales Code</td>
@@ -172,7 +159,7 @@ if (
                 </table>
 
                 <div class="table-responsive">
-                    <table class="col-md-12">
+                    <table class="w-100">
                         <thead>
                             <td colspan="14">Reference</td>
                         </thead>
@@ -394,7 +381,8 @@ if (
                     <h2>SUBMISSION HISTORY LOG</h2>
                 </div>
                 <div class="row justify-content-center">
-                    <table class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="w-100">
                         <thead>
                             <td class="center">No.</td>
                             <td>Action</td>
@@ -424,6 +412,7 @@ if (
                             </tr>
                         @endforeach
                     </table>
+                  </div>
                 </div>
             @endif
         </div>
@@ -1124,7 +1113,7 @@ function loadDataPerRef(ref_id) {
                 $("#div_detailorder_code").removeClass('d-none');
 
                 var temp_append_tbody_ordercode = `<tr><td>` + data_refs[0]['order_code'] + `</td><td>`;
-                
+
                 var order_images = JSON.parse(data_refs[0]['order_image']) ?? [];
                 for (var i=0; i<order_images.length; i++) {
                     temp_append_tbody_ordercode +=
@@ -1211,7 +1200,7 @@ function clearModal() {
     document.getElementById("edit-order").value = "";
     document.getElementById("edit-order-code").value = "";
     // document.getElementById("btn_choose_order").innerHTML = "Choose Order";
-    
+
     for (var i=0; i<3; i++) {
         document.getElementById("edit-order-productimg-" + i).value = "";
         document.getElementById("edit-order-img_preview_" + i).style.backgroundImage  = "url({{ asset('sources/dashboard/no-img-banner.jpg') }})";
@@ -1321,7 +1310,7 @@ $(document).ready(function () {
                     $.each(orderNya, function (key, value) {
                         let productNya = value.product;
 
-                        let isiNya = "<tr><td>" + value.orderDate + 
+                        let isiNya = "<tr><td>" + value.orderDate +
                         "<br><br><a target=\"_blank\" href=\"{{route("detail_order", ["code" => ""])}}"+ value.code +"\">Link</a><br><br>" +
                         "</td><td>" +
                         "<b>Name</b>: " + value.name + "<br>" +

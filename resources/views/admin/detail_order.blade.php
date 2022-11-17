@@ -71,7 +71,7 @@
                 <h2>ORDER SUCCESS</h2>
             </div>
             <div class="row justify-content-center">
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td>Order Code</td>
                         <td>Order Date</td>
@@ -81,7 +81,7 @@
                         <td class="right">{{ date("d/m/Y", strtotime($order['orderDate'])) }}</td>
                     </tr>
                 </table>
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td>Sales Branch</td>
                         <td>Sales Code</td>
@@ -91,7 +91,7 @@
                         <td>{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
                     </tr>
                 </table>
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td colspan="2">Customer Data</td>
                     </thead>
@@ -120,7 +120,7 @@
                         <td>{{ $order['district']['province'] }}, {{ $order['district']['kota_kab'] }}, {{ $order['district']['subdistrict_name'] }}</td>
                     </tr>
                 </table>
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td colspan="4">Detail Order</td>
                     </thead>
@@ -139,82 +139,84 @@
                         </tr>
                     @endforeach
                 </table>
-                <table class="col-md-12">
-                    <thead>
-                        <td colspan="7">Payment Detail</td>
-                    </thead>
-                    <thead style="background-color: #80808012 !important">
-                        <td>Date</td>
-                        <td>Bank</td>
-                        <td>Total Payment</td>
-                        <td>Image</td>
-                        <td>Status</td>
-                        @if (Gate::check('detail-order') || Gate::check('edit-order') || Gate::check('delete-order'))
-                            <td colspan="2">Edit/Delete</td>
-                        @endif
-                    </thead>
-                    @foreach ($order->orderPayment as $orderPayment)
-                    <tr>
-                        <td>{{ $orderPayment->payment_date }}</td>
-                        <td>{{ $orderPayment->bank['name'] }} ({{ $orderPayment->cicilan }}x)</td>
-                        <td>Rp. {{ number_format($orderPayment->total_payment) }}</td>
-                        <td>
-                            @foreach (json_decode($orderPayment->image, true) as $orderPaymentImage)
-                            <a href="{{ asset("sources/order/$orderPaymentImage") }}"
-                                target="_blank">
-                                <i class="mdi mdi-numeric-{{ $loop->iteration }}-box" style="font-size: 24px; color: #2daaff;"></i>
-                            </a>
-                            @endforeach
-                        </td>
-                        <td class="text-center">
-                            @if ($orderPayment['status'] == "unverified")
-                                <span class="badge badge-warning">Unverified</span>
-                            @elseif ($orderPayment['status'] == "verified")
-                                <span class="badge badge-success">Verified</span>
-                            @elseif ($orderPayment['status'] == "rejected")
-                                <span class="badge badge-danger">Rejected</span>
-                            @endif
-                        </td>
-                        @can('edit-order')
-                            @if ($order->status != 'new' || Auth::user()->inRole("head-admin"))
-                            @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
-                                <td style="text-align: center;">
-                                    <button value="{{ $orderPayment['id'] }}"
-                                        data-toggle="modal"
-                                        data-target="#editPaymentModal"
-                                        class="btn-delete btn-edit_order_payment">
-                                        <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
-                                    </button>
-                                </td>
-                            @endif
-                            @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
-                                <td style="text-align: center;">
-                                    <button value="{{ route('delete_order_payment', ['id' => $orderPayment['id']])}}"
-                                        data-toggle="modal"
-                                        data-target="#deleteDoModal"
-                                        class="btn-delete btn-delete_order_payment">
-                                        <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
-                                    </button>
-                                </td>
-                            @endif
-                            @endif
-                        @endcan
-                    </tr>
-                    @endforeach
-                    <tr>
-                        <td colspan="2" class="text-right" style="background-color: #80808012 !important">Total Payment</td>
-                        <td>Rp. {{ number_format($order->down_payment) }}</td>
-                        <td colspan="4" style="background-color: #f2f2f2;" rowspan="3"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="text-right" style="background-color: #80808012 !important">Total Price</td>
-                        <td>Rp. {{ number_format($order['total_payment']) }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="text-right" style="background-color: #80808012 !important">Remaining Payment</td>
-                        <td>Rp. {{ number_format($order['remaining_payment']) }}</td>
-                    </tr>
-                </table>
+                <div class="table-responsive">
+                  <table class="w-100">
+                      <thead>
+                          <td colspan="7">Payment Detail</td>
+                      </thead>
+                      <thead style="background-color: #80808012 !important">
+                          <td>Date</td>
+                          <td>Bank</td>
+                          <td>Total Payment</td>
+                          <td>Image</td>
+                          <td>Status</td>
+                          @if (Gate::check('detail-order') || Gate::check('edit-order') || Gate::check('delete-order'))
+                              <td colspan="2">Edit/Delete</td>
+                          @endif
+                      </thead>
+                      @foreach ($order->orderPayment as $orderPayment)
+                      <tr>
+                          <td>{{ $orderPayment->payment_date }}</td>
+                          <td>{{ $orderPayment->bank['name'] }} ({{ $orderPayment->cicilan }}x)</td>
+                          <td>Rp. {{ number_format($orderPayment->total_payment) }}</td>
+                          <td>
+                              @foreach (json_decode($orderPayment->image, true) as $orderPaymentImage)
+                              <a href="{{ asset("sources/order/$orderPaymentImage") }}"
+                                  target="_blank">
+                                  <i class="mdi mdi-numeric-{{ $loop->iteration }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                              </a>
+                              @endforeach
+                          </td>
+                          <td class="text-center">
+                              @if ($orderPayment['status'] == "unverified")
+                                  <span class="badge badge-warning">Unverified</span>
+                              @elseif ($orderPayment['status'] == "verified")
+                                  <span class="badge badge-success">Verified</span>
+                              @elseif ($orderPayment['status'] == "rejected")
+                                  <span class="badge badge-danger">Rejected</span>
+                              @endif
+                          </td>
+                          @can('edit-order')
+                              @if ($order->status != 'new' || Auth::user()->inRole("head-admin"))
+                              @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
+                                  <td style="text-align: center;">
+                                      <button value="{{ $orderPayment['id'] }}"
+                                          data-toggle="modal"
+                                          data-target="#editPaymentModal"
+                                          class="btn btn-delete btn-edit_order_payment">
+                                          <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                                      </button>
+                                  </td>
+                              @endif
+                              @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
+                                  <td style="text-align: center;">
+                                      <button value="{{ route('delete_order_payment', ['id' => $orderPayment['id']])}}"
+                                          data-toggle="modal"
+                                          data-target="#deleteDoModal"
+                                          class="btn btn-delete btn-delete_order_payment">
+                                          <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
+                                      </button>
+                                  </td>
+                              @endif
+                              @endif
+                          @endcan
+                      </tr>
+                      @endforeach
+                      <tr>
+                          <td colspan="2" class="text-right" style="background-color: #80808012 !important">Total Payment</td>
+                          <td>Rp. {{ number_format($order->down_payment) }}</td>
+                          <td colspan="4" style="background-color: #f2f2f2;" rowspan="3"></td>
+                      </tr>
+                      <tr>
+                          <td colspan="2" class="text-right" style="background-color: #80808012 !important">Total Price</td>
+                          <td>Rp. {{ number_format($order['total_payment']) }}</td>
+                      </tr>
+                      <tr>
+                          <td colspan="2" class="text-right" style="background-color: #80808012 !important">Remaining Payment</td>
+                          <td>Rp. {{ number_format($order['remaining_payment']) }}</td>
+                      </tr>
+                  </table>
+                </div>
 
                 <table class="col-md-12 d-none">
                     <thead>
@@ -234,7 +236,7 @@
                     </tr>
                 </table>
                 @if($order['description'] != null)
-                    <table class="col-md-12">
+                    <table class="w-100">
                         <thead>
                             <td>Description</td>
                         </thead>
@@ -244,7 +246,7 @@
                     </table>
                 @endif
                 @if($order['image'] != null)
-                    <table class="col-md-12">
+                    <table class="w-100">
                         <thead>
                             <td>Payment Proof</td>
                         </thead>
@@ -261,7 +263,7 @@
                     </table>
                 @endif
 
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td>Status Order</td>
                     </thead>
@@ -335,34 +337,36 @@
                 <h2>ORDER HISTORY LOG</h2>
             </div>
             <div class="row justify-content-center">
-              <table class="col-md-12">
-                  <thead>
-                      <td>No.</td>
-                      <td>Action</td>
-                      <td>User</td>
-                      <td>Change</td>
-                      <td>Time</td>
-                  </thead>
-                  @if($historyUpdateOrder != null)
-                  @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
-                  @php
+              <div class="table-responsive">
+                <table class="w-100">
+                    <thead>
+                        <td>No.</td>
+                        <td>Action</td>
+                        <td>User</td>
+                        <td>Change</td>
+                        <td>Time</td>
+                    </thead>
+                    @if($historyUpdateOrder != null)
+                    @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
+                    @php
 
-                  @endphp
-                  <tr>
-                      <td>{{$key+1}}</td>
-                      <td>{{$historyUpdateOrder->method}}</td>
-                      <td>{{$historyUpdateOrder->name}}</td>
-                      <?php $dataChange = json_decode($historyUpdateOrder->meta, true);?>
-                      <td>
-                      @foreach ($dataChange['dataChange'] as $key=>$value)
-                          <b>{{$key}}</b>: {{ is_array($value) ? json_encode($value) : $value }}<br/>
-                      @endforeach
-                      </td>
-                      <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
-                  </tr>
-                  @endforeach
-                  @endif
-              </table>
+                    @endphp
+                    <tr>
+                        <td>{{$key+1}}</td>
+                        <td>{{$historyUpdateOrder->method}}</td>
+                        <td>{{$historyUpdateOrder->name}}</td>
+                        <?php $dataChange = json_decode($historyUpdateOrder->meta, true);?>
+                        <td>
+                        @foreach ($dataChange['dataChange'] as $key=>$value)
+                            <b>{{$key}}</b>: {{ is_array($value) ? json_encode($value) : $value }}<br/>
+                        @endforeach
+                        </td>
+                        <td>{{ date("d/m/Y H:i:s", strtotime($historyUpdateOrder->created_at)) }}</td>
+                    </tr>
+                    @endforeach
+                    @endif
+                </table>
+              </div>
             </div>
 
             <!-- Modal Change Status Order -->
