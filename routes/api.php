@@ -1,5 +1,6 @@
 <?php
-
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Headers: Authorization, Content-Type, x-csrf-token, api-key' );
 use Illuminate\Http\Request;
 
 /*
@@ -15,4 +16,10 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::group(['middleware' => 'cors'], function() {
+    Route::post('/end-point-for-check-status-network', 'Api\OfflineSideController@networkEndPoint');
+    Route::post('/replicate-order-data', 'Api\OfflineSideController@replicateOrderData');
+    Route::post('/replicate-order-payment-data', 'Api\OfflineSideController@replicateOrderPaymentData');
 });

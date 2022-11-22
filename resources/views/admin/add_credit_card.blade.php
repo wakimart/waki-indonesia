@@ -73,14 +73,14 @@ $menu_item_second = "add_credit_card";
                             </div>
                             <div class="form-group">
                                 <label for="">Charge Percentage Sales</label>
-                                <input type="number" min=0 step="any" class="form-control @if($errors->has('charge_percentage_sales')) is-invalid @endif" name="charge_percentage_sales" value="{{ old('charge_percentage_sales') ? old('charge_percentage_sales') : 0 }}" required>
+                                <input type="number" min=0 step=".01" class="form-control @if($errors->has('charge_percentage_sales')) is-invalid @endif" name="charge_percentage_sales" value="{{ old('charge_percentage_sales') ? old('charge_percentage_sales') : 0 }}" required>
                                 @if($errors->has('charge_percentage_sales'))
                                     <span class="error">{{ $errors->first('charge_percentage_sales') }}</span>
                                 @endif
                             </div>
                             <div class="form-group">
                                 <label for="">Charge Percentage Company</label>
-                                <input type="number" min=0 step="any" class="form-control @if($errors->has('charge_percentage_company')) is-invalid @endif" name="charge_percentage_company" value="{{ old('charge_percentage_company') ? old('charge_percentage_company') : 0 }}" required>
+                                <input type="number" min=0 step=".01" class="form-control @if($errors->has('charge_percentage_company')) is-invalid @endif" name="charge_percentage_company" value="{{ old('charge_percentage_company') ? old('charge_percentage_company') : 0 }}" required>
                                 @if($errors->has('charge_percentage_company'))
                                     <span class="error">{{ $errors->first('charge_percentage_company') }}</span>
                                 @endif

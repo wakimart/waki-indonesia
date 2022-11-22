@@ -8,16 +8,16 @@
 @endif
 
 @if(Gate::check('browse-frontendcms'))
-<li class="{{isset($menu_item_page) && $menu_item_page == 'index_frontendcms'? 'active': '' }} nav-item">
+{{-- <li class="{{isset($menu_item_page) && $menu_item_page == 'index_frontendcms'? 'active': '' }} nav-item">
 	<a class="nav-link" href="{{ route('add_album') }}">
 		<span class="menu-title">Front-End CMS</span>
 		<i class="mdi mdi-format-float-left menu-icon"></i>
 	</a>
-</li>
+</li> --}}
 @endif
 
 @if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'registerevent'? 'active': '' }}">
+{{-- <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'registerevent'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#registerevent-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'registerevent'? 'true': '' }}" aria-controls="registerevent-dd">
     <span class="menu-title">Registration Event</span>
     <i class="menu-arrow"></i>
@@ -33,7 +33,7 @@
       @endif
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 @if(Gate::check('add-order') || Gate::check('browse-order')
@@ -55,6 +55,8 @@
     </ul>
   </div>
 </li>
+@endif
+
 @if(Gate::check('browse-order_report') || Gate::check('browse-total_sale'))
 <li class="{{isset($menu_item_page_sub) && $menu_item_page_sub == 'order_report'? 'active': '' }} nav-item">
 	<a class="nav-link" data-toggle="collapse" data-parent="#order-dd" href="#orderreport-dd" aria-expanded="false" aria-controls="orderreport-dd">
@@ -75,10 +77,9 @@
 </li>
 @endif
 
-@endif
 
 @if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'active': '' }}">
+{{-- <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'true': '' }}" aria-controls="deliveryorder-dd">
     <span class="menu-title">Registration</span>
     <i class="menu-arrow"></i>
@@ -94,11 +95,11 @@
       @endif
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 @if(Gate::check('add-phc-product') || Gate::check('browse-phc-product') || Gate::check('add-personal-homecare') || Gate::check('browse-personal-homecare'))
-<li class="{{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'active': '' }} nav-item">
+{{-- <li class="{{isset($menu_item_page) && $menu_item_page == 'personal_homecare'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#personalhomecare-dd" aria-expanded="false" aria-controls="personalhomecare-dd">
     <span class="menu-title">Personal Homecare</span>
     <i class="menu-arrow"></i>
@@ -148,11 +149,11 @@
       @endif
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 @if(Gate::check('add-home_service') || Gate::check('browse-home_service'))
-<li class="{{isset($menu_item_page) && $menu_item_page == 'homeservice'? 'active': '' }} nav-item">
+{{-- <li class="{{isset($menu_item_page) && $menu_item_page == 'homeservice'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#homeservice-dd" aria-expanded="false" aria-controls="homeservice-dd">
     <span class="menu-title">Home Service</span>
     <i class="menu-arrow"></i>
@@ -185,11 +186,11 @@
       @endif
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 @if(Gate::check('add-service') || Gate::check('browse-service'))
-<li class="{{isset($menu_item_page) && $menu_item_page == 'service'? 'active': '' }} nav-item">
+{{-- <li class="{{isset($menu_item_page) && $menu_item_page == 'service'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#service-dd" aria-expanded="false" aria-controls="service-dd">
     <span class="menu-title">Service</span>
     <i class="menu-arrow"></i>
@@ -221,12 +222,12 @@
       @endif
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 
 @if(Gate::check('add-service') || Gate::check('browse-service') || Gate::check('add-technician_schedule') || Gate::check('browse-technician_schedule'))
-<li class="{{isset($menu_item_page) && $menu_item_page == 'technician'? 'active': '' }} nav-item">
+{{-- <li class="{{isset($menu_item_page) && $menu_item_page == 'technician'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#technician-dd" aria-expanded="false" aria-controls="technician-dd">
     <span class="menu-title">Technician</span>
     <i class="menu-arrow"></i>
@@ -245,11 +246,11 @@
       @endif
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 @if(Gate::check('add-absent_off') || Gate::check('browse-absent_off') || Gate::check('browse-acc_absent_off'))
-<li class="{{isset($menu_item_page) && $menu_item_page == 'absent_off'? 'active': '' }} nav-item">
+{{-- <li class="{{isset($menu_item_page) && $menu_item_page == 'absent_off'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#absent_off-dd" aria-expanded="false" aria-controls="absent_off-dd">
     <span class="menu-title">Cuti</span>
     <i class="menu-arrow"></i>
@@ -268,11 +269,11 @@
       @endif
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 @if (Gate::check('add-submission') || Gate::check('browse-submission') || Gate::check('browse-reference'))
-<li class="nav-item {{ isset($menu_item_page) && $menu_item_page == 'submission' ? 'active': '' }}">
+{{-- <li class="nav-item {{ isset($menu_item_page) && $menu_item_page == 'submission' ? 'active': '' }}">
     <a class="nav-link"
         data-toggle="collapse"
         href="#submission-dd"
@@ -325,22 +326,14 @@
                 </a>
             </li>
         @endif
-        @if (Gate::check('browse-reference'))
-           {{--  <li class="nav-item">
-                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_reference' ? 'active' : '' }}"
-                    href="{{ route('list_reference') }}">
-                    List Reference
-                </a>
-            </li> --}}
-        @endif
         </ul>
     </div>
-</li>
+</li> --}}
 @endif
 
 {{-- Khusus untuk Acc --}}
 @if(Gate::check('add-acceptance') || Gate::check('browse-acceptance'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'acceptance'? 'active': '' }}">
+{{-- <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'acceptance'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#acceptance-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'acceptance'? 'true': '' }}" aria-controls="acceptance-dd">
     <span class="menu-title">ACC Upgrade Form</span>
     <i class="menu-arrow"></i>
@@ -356,12 +349,12 @@
       @endif
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 {{-- Khusus untuk Upgrade --}}
 @if(Gate::check('browse-upgrade'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'upgrade'? 'active': '' }}">
+{{-- <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'upgrade'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#upgrade-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'upgrade'? 'true': '' }}" aria-controls="upgrade-dd">
     <span class="menu-title">Post Process Upgrade<br><b style="color: red">(Admin ONLY)</b></span>
     <i class="menu-arrow"></i>
@@ -375,7 +368,7 @@
       @endif
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 
@@ -497,7 +490,7 @@
 @endif
 
 @if(Gate::check('add-type_customer') || Gate::check('browse-type_customer'))
-<li class="{{isset($menu_item_page) && $menu_item_page == 'type_customer'? 'active': '' }} nav-item">
+{{-- <li class="{{isset($menu_item_page) && $menu_item_page == 'type_customer'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#type_customer-dd" aria-expanded="false" aria-controls="type_customer-dd">
     <span class="menu-title">Type Customer</span>
     <i class="menu-arrow"></i>
@@ -513,7 +506,7 @@
       @endif
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 @if(Gate::check('add-bank') || Gate::check('browse-bank'))
@@ -584,7 +577,7 @@
 @endif
 
 @if(Auth::user()->roles[0]['slug'] == 'head-admin')
-<li class="{{isset($menu_item_page) && $menu_item_page == 'souvenir'? 'active': '' }} nav-item">
+{{-- <li class="{{isset($menu_item_page) && $menu_item_page == 'souvenir'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#souvenir-dd" aria-expanded="false" aria-controls="souvenir-dd">
     <span class="menu-title">Souvenir</span>
     <i class="menu-arrow"></i>
@@ -610,7 +603,7 @@
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_prize'? 'active': '' }}" href="{{route('list_prize')}}">List Prize</a></li>
     </ul>
   </div>
-</li>
+</li> --}}
 @endif
 
 
