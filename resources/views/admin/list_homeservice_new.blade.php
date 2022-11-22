@@ -330,7 +330,6 @@ $menu_item_second = "list_homeservice";
                         if (
                             Auth::user()->roles[0]['slug'] !== 'branch'
                             && Auth::user()->roles[0]['slug'] !== 'cso'
-                            && Auth::user()->roles[0]['slug'] !== 'area-manager'
                             && Auth::user()->roles[0]["slug"] !== "admin-management"
                         ):
                         ?>

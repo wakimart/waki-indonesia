@@ -12,6 +12,7 @@ class SubmissionVideoPhotoDetail extends Model
         'url_drive', 'status', 
         'mpc_wakimart', 'name',
         'phone', 'address', 'souvenir',
+        'acc_description',
     ];
 
     public function cso()
