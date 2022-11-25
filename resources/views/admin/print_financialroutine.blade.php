@@ -288,57 +288,94 @@ $menu_item_page = "financial_routine";
                                         </div>
                                         <div class="row justify-content-center" style="padding: 0.5em 2em;">
                                             <div class="table-responsive">
+                                                @php
+                                                    $totalSaleGross = 0;
+                                                    $totalSaleNetto = 0;
+                                                @endphp
+                                                @foreach ($total_sales as $branch)
                                                 <table class="table">
                                                     <thead class="table-bordered">
-                                                        <td class="text-center" style="width: 5%;">No</td>
-                                                        <td class="text-center" style="width: 15%;">Order Payment Date</td>
-                                                        <td class="text-center" style="width: 15%;">Estimate Date</td>
-                                                        <td class="text-center" style="width: 25%;">Order Code</td>
-                                                        <td class="text-center" style="width: 20%">Bank In</td>
-                                                        <td class="text-center" style="width: 20%">Debit</td>
-                                                        <td class="text-center" style="width: 20%">Netto Debit</td>
-                                                        <td class="text-center" style="width: 20%">Card</td>
-                                                        <td class="text-center" style="width: 20%">Netto Card</td>
+                                                        <tr>
+                                                            <td colspan="11" class="text-center" style="width: 5%; font-weight: 900;">Branch : {{ $branch['br_code'] }} - {{ $branch['br_name'] }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-center" style="width: 5%;">No</td>
+                                                            <td class="text-center" style="width: 15%;">Order Payment Date</td>
+                                                            <td class="text-center" style="width: 15%;">Estimate Date</td>
+                                                            <td class="text-center" style="width: 25%;">Order Code</td>
+                                                            <td class="text-center" style="width: 20%">Bank In</td>
+                                                            <td class="text-center" style="width: 20%">Debit</td>
+                                                            <td class="text-center" style="width: 20%">Netto Debit</td>
+                                                            <td class="text-center" style="width: 20%">Card</td>
+                                                            <td class="text-center" style="width: 20%">Netto Card</td>
+                                                        </tr>
                                                     </thead>
                                                     <tbody class="table-bordered">
-                                                        @foreach ($total_sales as $total_sale)
+                                                        @php 
+                                                            $subtotalBankIn = 0;
+                                                            $subtotalDebit = 0;
+                                                            $subtotalNettoDebit = 0;
+                                                            $subtotalCard = 0;
+                                                            $subtotalNettoCard = 0;
+                                                        @endphp
+                                                        @foreach ($branch['orders'] as $total_sale)
                                                         <tr>
                                                             <td class="text-center">{{ $loop->iteration }}</td>
                                                             <td class="text-left">
                                                                 {{ date("d/m/Y", strtotime($total_sale['payment_date'])) }}
                                                             </td>
                                                             <td class="text-left">
-                                                                {{ $total_sale['estimate_transfer_date'] ? date("d/m/Y", strtotime($total_sale['estimate_transfer_date'])) : date('d/m/Y', strtotime('+'.$total_sale->bankAccount['estimate_transfer'].' days', strtotime($total_sale['payment_date']))) }}
+                                                                {{ $total_sale['estimate_transfer_date'] ? date("d/m/Y", strtotime($total_sale['estimate_transfer_date'])) : date('d/m/Y', strtotime('+'.$total_sale['bacc_estimate_transfer'].' days', strtotime($total_sale['payment_date']))) }}
                                                             </td>
                                                             <td class="text-left">
-                                                                {{ $total_sale->o_code }}
+                                                                {{ $total_sale['o_code'] }}
                                                             <td class="text-right">
-                                                                {{ number_format($total_sale->ts_bank_in) }}
+                                                                {{ number_format($total_sale['ts_bank_in']) }}
                                                             </td>
                                                             <td class="text-right">
-                                                                {{ number_format($total_sale->ts_debit) }}
+                                                                {{ number_format($total_sale['ts_debit']) }}
                                                             </td>
                                                             <td class="text-right">
-                                                                {{ number_format($total_sale->ts_netto_debit) }}
+                                                                {{ number_format($total_sale['ts_netto_debit']) }}
                                                             </td>
                                                             <td class="text-right">
-                                                                {{ number_format($total_sale->ts_card) }}
+                                                                {{ number_format($total_sale['ts_card']) }}
                                                             </td>
                                                             <td class="text-right">
-                                                                {{ number_format($total_sale->ts_netto_card) }}
+                                                                {{ number_format($total_sale['ts_netto_card']) }}
                                                             </td>
                                                         </tr>
+                                                        @php 
+                                                            $subtotalBankIn += $total_sale['ts_bank_in'];
+                                                            $subtotalDebit += $total_sale['ts_debit'];
+                                                            $subtotalNettoDebit += $total_sale['ts_netto_debit'];
+                                                            $subtotalCard += $total_sale['ts_card'];
+                                                            $subtotalNettoCard += $total_sale['ts_netto_card'];
+                                                        @endphp
                                                         @endforeach
                                                         <tr>
                                                             <td class="text-right" colspan="4" style="font-weight: 600;">Total : </td>
-                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('ts_bank_in')) }}</td>
-                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('ts_debit')) }}</td>
-                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('ts_netto_debit')) }}</td>
-                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('ts_card')) }}</td>
-                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($total_sales->sum('ts_netto_card')) }}</td>
+                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalBankIn) }}</td>
+                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalDebit) }}</td>
+                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalNettoDebit) }}</td>
+                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalCard) }}</td>
+                                                            <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalNettoCard) }}</td>
                                                         </tr>
+                                                        @php
+                                                            $totalSaleGross += $subtotalBankIn + $subtotalDebit + $subtotalCard;
+                                                            $totalSaleNetto += $subtotalNettoDebit + $subtotalNettoCard;
+                                                        @endphp
+                                                        @if($loop->last)
+                                                        <tr>
+                                                            <td colspan="11" style="text-align: center;">
+                                                                <span class="mx-2" style="font-weight: 900; color: #2a6099;">{{ "Total Sale Gross : Rp. ".number_format($totalSaleGross) }}</span>
+                                                                <span class="mx-2" style="font-weight: 900; color: #2a992f;">{{ "Total Sale Netto : Rp. ".number_format($totalSaleNetto) }}</span>
+                                                            </td>
+                                                        </tr>
+                                                        @endif
                                                     </tbody>
                                                 </table>
+                                                @endforeach
                                             </div>
                                         </div>
                                     </div>

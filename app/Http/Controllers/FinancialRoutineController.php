@@ -323,8 +323,10 @@ class FinancialRoutineController extends Controller
 
         $startDate = date('Y-m-01', strtotime($financialRoutine->routine_date));
         $endDate = date('Y-m-d', strtotime($financialRoutine->routine_date));
-        $total_sales = OrderPayment::from('order_payments as op')
+        $total_sales_temp = OrderPayment::from('order_payments as op')
             ->select('op.*', 'o.code as o_code', 'c.code as c_code', 'c.name as c_name'
+                , 'br.id as br_id', 'br.code as br_code', 'br.name as br_name'
+                , 'bacc.id as bacc_id', 'bacc.code as bacc_code', 'bacc.name as bacc_name', 'bacc.account_number as bacc_account_number', 'bacc.estimate_transfer as bacc_estimate_transfer'
                 , 'ts.bank_in as ts_bank_in'
                 , 'ts.debit as ts_debit'
                 , 'ts.netto_debit as ts_netto_debit'
@@ -334,12 +336,21 @@ class FinancialRoutineController extends Controller
             ->join('orders as o', 'o.id', 'op.order_id')
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
             ->join('csos as c', 'c.id', 'o.Cso_id')
+            ->join('branches as br', 'br.id', 'o.branch_id')
+            ->join('bank_accounts as bacc', 'bacc.id', 'op.bank_account_id')
             ->whereBetween('op.payment_date', [$startDate, $endDate])
             ->where('op.bank_account_id', $financialRoutine->bank_account_id)
             ->where('o.active', true)
             ->orderBy('op.payment_date')
             ->groupBy('op.id')
             ->get();
+
+        $total_sales = [];
+        foreach ($total_sales_temp as $ts_temp) {
+            if (!isset($total_sales[$ts_temp['br_id']])) 
+                $total_sales[$ts_temp['br_id']] = $ts_temp->toArray();
+            $total_sales[$ts_temp['br_id']]['orders'][] = $ts_temp;
+        }
 
         return view('admin.print_financialroutine', compact('financialRoutine', 'total_sales'));
     }
