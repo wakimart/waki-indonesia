@@ -296,7 +296,7 @@ $menu_item_page = "financial_routine";
                                                 <table class="table">
                                                     <thead class="table-bordered">
                                                         <tr>
-                                                            <td colspan="11" class="text-center" style="width: 5%; font-weight: 900;">Branch : {{ $branch['br_code'] }} - {{ $branch['br_name'] }}</td>
+                                                            <td colspan="9" class="text-center" style="width: 5%; font-weight: 900;">Branch : {{ $branch['br_code'] }} - {{ $branch['br_name'] }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td class="text-center" style="width: 5%;">No</td>
@@ -367,7 +367,7 @@ $menu_item_page = "financial_routine";
                                                         @endphp
                                                         @if($loop->last)
                                                         <tr>
-                                                            <td colspan="11" style="text-align: center;">
+                                                            <td colspan="9" style="text-align: center;">
                                                                 <span class="mx-2" style="font-weight: 900; color: #2a6099;">{{ "Total Sale Gross : Rp. ".number_format($totalSaleGross) }}</span>
                                                                 <span class="mx-2" style="font-weight: 900; color: #2a992f;">{{ "Total Sale Netto : Rp. ".number_format($totalSaleNetto) }}</span>
                                                             </td>
