@@ -624,11 +624,13 @@ $menu_item_page = "order";
                                                     </option>
                                                 @endfor
                                                 <option class="other_valCicilan"
-                                                    value="18">
+                                                    value="18"
+                                                    @if($payment['cicilan'] == 18) selected @endif>
                                                     18X
                                                 </option>
                                                 <option class="other_valCicilan"
-                                                    value="24">
+                                                    value="24"
+                                                    @if($payment['cicilan'] == 24) selected @endif>
                                                     24X
                                                 </option>
                                             </select>
