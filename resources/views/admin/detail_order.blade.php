@@ -1044,7 +1044,7 @@
                     'order_details':order_details,
                     'user_id':'{{Auth::user()->code}}'
                 }
-                $('#actionAdd').submit();
+                // $('#actionAdd').submit();
 
                 $.ajax({
                     method: "post",
@@ -1119,7 +1119,7 @@
                     for(var i = 0; i < orderPaymentData.image.length; i++){
                         orderPaymentData['order_payment_file_'+i] = `{{ asset('sources/order/${orderPaymentData.image[i]}') }}`
                     }
-                    $('#frmUpdateStatusPayment').submit();                    
+                    // $('#frmUpdateStatusPayment').submit();                    
 
                     $.ajax({
                         method: "post",
