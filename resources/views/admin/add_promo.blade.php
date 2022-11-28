@@ -16,7 +16,6 @@ $menu_item_second = "add_promo";
         background-repeat: no-repeat;
         display: inline-block;
     }
-
   	.del {
         position: absolute;
         top: 0px;
@@ -28,16 +27,13 @@ $menu_item_second = "add_promo";
         background-color: rgba(255,255,255,0.6);
         cursor: pointer;
   	}
-
   	#intro {
         padding-top: 2em;
     }
-
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     button {
         background: #1bb1dc;
         border: 0;
@@ -46,7 +42,6 @@ $menu_item_second = "add_promo";
         color: #fff;
         transition: 0.3s;
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;

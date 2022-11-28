@@ -7,10 +7,7 @@ $menu_item_second = "add_home_service";
 
 @section('style')
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
-
+    #intro {padding-top: 2em;}
     button {
         background: #1bb1dc;
         border: 0;
@@ -19,12 +16,10 @@ $menu_item_second = "add_home_service";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;

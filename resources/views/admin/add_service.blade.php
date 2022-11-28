@@ -27,10 +27,7 @@
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
-	.check label{
-		width: 25em;
-	}
+	  .check label{ width: 25em;	}
 </style>
 @endsection
 
@@ -133,7 +130,7 @@
 					                        <input id="idQtySparepart-0-0" type="number" class="form-control" placeholder="Qty">
 					                        <div class="validation"></div>
 					                    </div>
-					                    <div class="text-center" style="display: inline-block; float: right;"><button class="add_sparepart btn btn-gradient-primary mr-2" id="tambah_sparepart" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>	
+					                    <div class="text-center" style="display: inline-block; float: right;"><button class="add_sparepart btn btn-gradient-primary mr-2" id="tambah_sparepart" type="button" title="Tambah Sparepart" style="padding: 0.4em 0.7em;"><i class="mdi mdi-plus"></i></button></div>
 			                    	</div>
 			                    </div>
 
@@ -175,7 +172,7 @@
 								<br>
 
 			                    <div id="tambahan_productservice"></div>
-			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}			                    
+			                    {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 			                </div>
 
 							<input type="hidden" id="technician_schedule_id" name="technician_schedule_id" value="{{ $autofill['id'] ?? '' }}">
@@ -248,7 +245,7 @@
 			idService++;
 			detailProductService++;
 			counter_service++;
-			detailSparepart++; 
+			detailSparepart++;
 
 			if(counter_service <= 3){
 				e.preventDefault();
@@ -374,7 +371,7 @@
                     $(this).parent().next().children().removeAttr('required', '');
                 }
             });
-        @endif		
+        @endif
 
 		var product_services = <?php echo json_encode($product_tss ?? []); ?>;
 		$.each(product_services, function (i, product_service) {
@@ -404,7 +401,7 @@
 	        e.preventDefault();
 	        frmAdd = _("actionAdd");
 	        frmAdd = new FormData(document.getElementById("actionAdd"));
-	        frmAdd.enctype = "multipart/form-data";       
+	        frmAdd.enctype = "multipart/form-data";
 
 	        for (var i = 0; i < idService + 1 ; i++) {
 	        	var product = $("#product_service-" + i).val();
@@ -484,7 +481,7 @@
 	            }
 	            alert(hasil['errors']);
 	        }
-	        else{ 
+	        else{
 	            alert("Input Success !!!");
 	            var route_to_list = "{{route('list_service')}}";
 	           	window.location.href = route_to_list;
@@ -496,7 +493,7 @@
 	        document.getElementById("addService").innerHTML = "SAVE";
 	    }
 	});
-	
+
 
 </script>
 @endsection

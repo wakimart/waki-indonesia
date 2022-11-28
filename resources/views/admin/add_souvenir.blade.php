@@ -14,12 +14,10 @@ $menu_item_second = "add_souvenir";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;

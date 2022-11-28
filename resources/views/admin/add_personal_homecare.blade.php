@@ -19,37 +19,30 @@ $menu_item_second = "add_personal_homecare";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     .input-group-text {
         color: black !important;
     }
-
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
-
     .select2-container--default
     .select2-selection--single
     .select2-selection__arrow {
         top: 10px;
     }
-
     .div-CheckboxGroup {
         border: solid 1px rgba(128, 128, 128, 0.32941);
         padding: 10px;
@@ -574,7 +567,7 @@ function setProduct() {
     //set for appointment hs
     if(date != ""){
         var selected_date = new Date(date);
-        var next_selected_date = new Date (selected_date);  
+        var next_selected_date = new Date (selected_date);
         for (var hs = 0; hs < 5; hs++) {
             if(hs != 0){
                 next_selected_date.setDate(selected_date.getDate() + 1);
@@ -594,7 +587,7 @@ function setProduct() {
             var fixed_date_hs =  hs_year + "-" + hs_month + "-" + hs_date;
             console.log(fixed_date_hs);
             document.getElementById("date-" + hs).value = fixed_date_hs;
-        }    
+        }
     }
     //end set for appointment hs
 

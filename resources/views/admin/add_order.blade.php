@@ -9,10 +9,7 @@ $menu_item_second = "add_order";
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
-
+    #intro {padding-top: 2em;}
     button {
         background: #1bb1dc;
         border: 0;
@@ -21,27 +18,22 @@ $menu_item_second = "add_order";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
-
     .imagePreview {
         width: 100%;
         height: 150px;
@@ -51,7 +43,6 @@ $menu_item_second = "add_order";
         background-repeat: no-repeat;
         display: inline-block;
     }
-
     .del {
         position: absolute;
         top: 0px;
@@ -63,7 +54,6 @@ $menu_item_second = "add_order";
         background-color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
     }
-
     .select2-container--bootstrap4 .select2-results__group {
         color: black;
     }
@@ -361,8 +351,8 @@ $menu_item_second = "add_order";
                                                 <optgroup label="Product">
                                                     @foreach($products as $product)
                                                     <option value="product_{{ $product->id }}">
-                                                        {{ $product->code }} 
-                                                        - ({{ $product->name }}) 
+                                                        {{ $product->code }}
+                                                        - ({{ $product->name }})
                                                         - Rp {{ number_format($product->price) }}
                                                     </option>
                                                     @endforeach
@@ -432,8 +422,8 @@ $menu_item_second = "add_order";
 
                                                 @foreach($products as $product)
                                                 <option value="{{ $product->id }}">
-                                                    {{ $product->code }} 
-                                                    - ({{ $product->name }}) 
+                                                    {{ $product->code }}
+                                                    - ({{ $product->name }})
                                                     - Rp {{ number_format($product->price) }}
                                                 </option>
                                                 @endforeach
@@ -484,8 +474,8 @@ $menu_item_second = "add_order";
 
                                                 @foreach($products as $product)
                                                 <option value="{{ $product->id }}">
-                                                    {{ $product->code }} 
-                                                    - ({{ $product->name }}) 
+                                                    {{ $product->code }}
+                                                    - ({{ $product->name }})
                                                     - Rp {{ number_format($product->price) }}
                                                 </option>
                                                 @endforeach
@@ -727,7 +717,7 @@ $menu_item_second = "add_order";
                                 <div id="tambahan_bank"></div>
                             </div>
                             <br>
-                            
+
                             <div class="form-group">
                                 <label for="">Remaining Payment</label>
                                 <input type="text"
@@ -891,7 +881,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var total_product = 0;
     var arrBooleanCso = [ {{ Auth::user()->roles[0]['slug'] == 'cso' ? "true" : "false" }}, false, false ];
 
-    $(document).ready(function () {       
+    $(document).ready(function () {
         $(document).on("input", 'input[data-type="currency"]', function() {
             $(this).val(numberWithCommas($(this).val()));
         });
@@ -975,7 +965,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="p-3 mb-2" style="border: 1px solid black" id="bank_` + total_bank + `">
                 <div class="form-group">
                     <label for="">Payment Type ` + (total_bank + 1) + `</label>
-                </div>                                            
+                </div>
                 <div class="row">
                     <div class="form-group col-md-8">
                         <select class="form-control bank_name"
@@ -1190,7 +1180,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // $('#product_other_container_'+$(this).val()).remove();
             // $('#product_other_'+$(this).val()).remove();
             // $("#product_"+$(this).val()).select2('destroy');
-            
+
             // $(this).remove();
 
             //kurangi total price
@@ -1262,8 +1252,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
-    
-    
+
+
     function checkProductArray(array, index){
         for (var i = 0; i < array.length; i++) {
             if(array[i][0] === index){
@@ -1272,7 +1262,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         return false;
     }
-    
+
     var total_price = 0;
     var arr_index_temp = [];
     function selectOther(e) {
@@ -1295,7 +1285,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if(result.length > 0){
                     var data = JSON.parse(result);
                     var price = parseInt(data['price']);
-                    
+
                     if(arr_index_temp.length == 0){
                         arr_index_temp.push([sequence, promo_id, price, get_qty]);
                         total_price = total_price + (price * get_qty);

@@ -8,9 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
+    #intro { padding-top: 2em; }
     button{
         background: #1bb1dc;
         border: 0;
@@ -29,10 +27,7 @@
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
-	.check label{
-		width: 25em;
-	}
+  	.check label{ width: 25em; }
 </style>
 @endsection
 
@@ -72,7 +67,7 @@
                             <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Branch" required
                                 @if (Auth::user()->roles[0]['slug'] === 'cso') disabled @endif >
                                 @foreach ($branches as $branch)
-                                <option value="{{ $branch->id }}" 
+                                <option value="{{ $branch->id }}"
                                     @if(Auth::user()->cso['branch_id'] == $branch->id) selected @endif>
                                     {{ $branch->code }} - {{ $branch->name }}
                                 </option>
@@ -186,10 +181,10 @@
             placeholder: "Choose CSO"
         });
 
-        $("#cso").on("select2:select", function(e) { 
+        $("#cso").on("select2:select", function(e) {
             var selectedCsoId = $(this).val();
             var found_cso = csos.find((cso) => {
-                return cso.id == selectedCsoId; 
+                return cso.id == selectedCsoId;
             })
             if (found_cso) {
                 $("#name").val(found_cso.name);
@@ -220,7 +215,7 @@
 	        e.preventDefault();
 	        frmAdd = _("actionAdd");
 	        frmAdd = new FormData(document.getElementById("actionAdd"));
-	        frmAdd.enctype = "multipart/form-data";       
+	        frmAdd.enctype = "multipart/form-data";
 
 	        var URLNya = $("#actionAdd").attr('action');
 	        var ajax = new XMLHttpRequest();
@@ -264,7 +259,7 @@
 	            }
 	            alert(hasil['errors']);
 	        }
-	        else{ 
+	        else{
 	            alert("Input Success !!!");
 	            var route_to_list = "{{route('list_acc_absent_off')}}";
 	           	window.location.href = route_to_list;

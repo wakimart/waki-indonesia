@@ -13,25 +13,17 @@
         padding-bottom: 10px;
         padding-top: 10px;
     }
-
     .btn-outline-success.disabled, .btn-outline-success:disabled:hover {
         color: #1bcfb4 !important;
         background: transparent !important;
     }
-
     .btn-outline-danger.disabled, .btn-outline-danger:disabled:hover {
         color: #fe7c96 !important;
         background: transparent !important;
     }
-
-    .btn-action button{
-        margin-bottom: 0.6em;
-    }
-
+    .btn-action button{ margin-bottom: 0.6em; }
     @media(max-width: 468px){
-        .btn-action button{
-            margin-bottom: 0.6em;
-        }
+        .btn-action button{ margin-bottom: 0.6em; }
     }
 </style>
 @endsection
@@ -140,7 +132,7 @@
                                                 <form id="formSelectAllVerified" method="POST" action="{{ route('update_personal_homecare_status') }}">
                                             @elseif($keyNya == "waiting_in")
                                                 <form id="formSelectAllWaitingIn" method="POST" action="{{ route('update_personal_homecare_status') }}">
-                                            @elseif($keyNya == "reschedule_acc")                                            
+                                            @elseif($keyNya == "reschedule_acc")
                                                 <form id="formSelectAllReschedule" method="POST" action="{{ route('reschedule_personal_homecare') }}">
                                             @elseif($keyNya == "extend_acc")
                                                 <form id="formSelectAllExtend" method="POST" action="{{ route('update_personal_homecare_status') }}">
@@ -263,7 +255,7 @@
                                                                     <p>Do you approved it ?</p>
                                                                   </div>
                                                                   <div class="btn-action" style="text-align: center;">
-                                                                  
+
                                                                   @if($personalHomecare->status == "new")
                                                                     <button type="submit" class="btn btn-gradient-primary" name="status" value="verified">Yes</button>
                                                                     <button type="submit" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
@@ -410,7 +402,7 @@
                                                         <br class="break">
                                                       </div>
                                                     </td>
-        
+
                                                     <td style="text-align: center; white-space: normal;" rowspan="2">
                                                       @if(Auth::user()->inRole("head-admin"))
                                                       <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
@@ -419,11 +411,11 @@
                                                               <input type="hidden" name="acc_hs_type" value="reschedulehs">
                                                               <input type="hidden" id="hiddenInput" name="cancel" value="1" />
                                                               <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $perHomeservice->id }}" />
-        
+
                                                               <div style="text-align: center;">
                                                                 <p>Do you approved it ?</p>
                                                               </div>
-        
+
                                                               <div class="btn-action" style="text-align: center;">
                                                                   <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
                                                                   <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
@@ -511,13 +503,13 @@
                                                         ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }}  - {{ $perHomeservice->cso['name'] }})
                                                         <br class="break">
                                                       </div>
-        
+
                                                       <br class="break">
                                                       <div class="cancelReason" style="font-weight:bold;">
                                                         <p>{{ $perHomeservice['cancel_desc'] }}<p>
                                                       </div>
                                                     </td>
-        
+
                                                     <td style="text-align: center; white-space: normal;">
                                                       @if(Auth::user()->inRole("head-admin"))
                                                       <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
@@ -526,11 +518,11 @@
                                                               <input type="hidden" name="acc_hs_type" value="cancelhs">
                                                               <input type="hidden" id="hiddenInput" name="cancel" value="1" />
                                                               <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $perHomeservice->id }}" />
-        
+
                                                               <div style="text-align: center;">
                                                                 <p>Do you approved it ?</p>
                                                               </div>
-        
+
                                                               <div class="btn-action" style="text-align: center;">
                                                                   <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
                                                                   <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
@@ -563,7 +555,7 @@
                         <h4 style="margin-bottom: 1em;">
                             Cuti Acc
                         </h4>
-                        @php $accCutiTypes = ["supervisor", "coordinator"]; 
+                        @php $accCutiTypes = ["supervisor", "coordinator"];
                             $keyActiveTabCuti = Gate::check('acc-view-spv_absent_off') ? 'supervisor' : 'coordinator' ; @endphp
                         <ul class="nav nav-tabs card-header-tabs">
                             @foreach ($accCutiTypes as $keyCutiType => $accCutiType)
@@ -701,11 +693,11 @@
                                                                         <input type="hidden" name="acc_cuti_type" value="{{ $accCutiType }}">
                                                                         <input type="hidden" id="hiddenInput" name="cancel" value="1" />
                                                                         <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $absentOff->id }}" />
-                    
+
                                                                         <div style="text-align: center;">
                                                                             <p>Do you approved it ?</p>
                                                                         </div>
-                    
+
                                                                         <div class="btn-action" style="text-align: center;">
                                                                             @if (
                                                                                 ($accCutiType == "supervisor" && Gate::check('acc-spv_absent_off'))
@@ -1093,7 +1085,7 @@
                                                         <br class="break">
                                                       </div>
                                                     </td>
-        
+
                                                     <td style="text-align: center; white-space: normal;" rowspan="2">
                                                       @if(Gate::check('acc-reschedule-home_service') == true)
                                                       <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
@@ -1102,11 +1094,11 @@
                                                               <input type="hidden" name="acc_hs_type" value="reschedulehs">
                                                               <input type="hidden" id="hiddenInput" name="cancel" value="1" />
                                                               <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $perHomeservice->id }}" />
-        
+
                                                               <div style="text-align: center;">
                                                                 <p>Do you approved it ?</p>
                                                               </div>
-        
+
                                                               <div class="btn-action" style="text-align: center;">
                                                                   <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
                                                                   <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
@@ -1196,13 +1188,13 @@
                                                         ({{ $perHomeservice->branch['code'] }} - {{ $perHomeservice->cso['code'] }} - {{ $perHomeservice->cso['name'] }})
                                                         <br class="break">
                                                       </div>
-        
+
                                                       <br class="break">
                                                       <div class="cancelReason" style="font-weight:bold;">
                                                         <p>{{ $perHomeservice['cancel_desc'] }}<p>
                                                       </div>
                                                     </td>
-        
+
                                                     <td style="text-align: center; white-space: normal;">
                                                       @if(Gate::check('acc-cancel-home_service') == true)
                                                       <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
@@ -1211,11 +1203,11 @@
                                                               <input type="hidden" name="acc_hs_type" value="cancelhs">
                                                               <input type="hidden" id="hiddenInput" name="cancel" value="1" />
                                                               <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $perHomeservice->id }}" />
-        
+
                                                               <div style="text-align: center;">
                                                                 <p>Do you approved it ?</p>
                                                               </div>
-        
+
                                                               <div class="btn-action" style="text-align: center;">
                                                                   <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
                                                                   <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
@@ -1386,11 +1378,11 @@
                                                                         <input type="hidden" name="acc_cuti_type" value="{{ $accCutiType }}">
                                                                         <input type="hidden" id="hiddenInput" name="cancel" value="1" />
                                                                         <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $absentOff->id }}" />
-                    
+
                                                                         <div style="text-align: center;">
                                                                             <p>Do you approved it ?</p>
                                                                         </div>
-                    
+
                                                                         <div class="btn-action" style="text-align: center;">
                                                                             @if (
                                                                                 ($accCutiType == "supervisor" && Gate::check('acc-spv_absent_off'))
@@ -1546,7 +1538,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 checkedLength($(this));
             }
         });
-        
+
         let checkedLength = function(element) {
             const checkedlength = element.closest('.tab-pane.active').find('input:checkbox:not(:first):checked').length;
             if (checkedlength > 0) {

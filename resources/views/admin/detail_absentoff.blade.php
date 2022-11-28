@@ -5,10 +5,7 @@ $menu_item_page = "absent_off";
 
 @section('style')
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
-
+    #intro { padding-top: 2em; }
     #regForm {
         background-color: #ffffff;
         margin: 100px auto;
@@ -16,34 +13,21 @@ $menu_item_page = "absent_off";
         width: 70%;
         min-width: 300px;
     }
-
     table {
         margin: 1em;
         font-size: 14px;
     }
-
     table thead {
         background-color: #8080801a;
         text-align: center;
     }
-
     table td {
         border: 0.5px #8080801a solid;
         padding: 0.5em;
     }
-
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
-    .justify-content-center {
-        padding: 0em 1em;
-    }
-
+    .center { text-align: center; }
+    .right { text-align: right; }
+    .justify-content-center { padding: 0em 1em; }
     .imagePreview {
         width: 100%;
         height: 150px;
@@ -131,7 +115,7 @@ $menu_item_page = "absent_off";
                                         <td>Created By</td>
                                         <td>{{ $absentOff->user->name }} ({{ $absentOff->created_at }})</td>
                                     </tr>
-                                    @php 
+                                    @php
                                         $historyUpdates = App\HistoryUpdate::where([['type_menu', 'Absent Off'], ['menu_id', $absentOff['id']]])
                                             ->orderBy('id', 'asc')->get();
                                     @endphp
@@ -169,7 +153,7 @@ $menu_item_page = "absent_off";
                     </div>
                 </div>
             </div>
-            @php 
+            @php
             $statusAcc = [];
             if ($absentOff->supervisor_id || $absentOff->coordinator_id) {
                 foreach ($absentOff->historyUpdateAcc() as $historyUpdateAcc) {

@@ -8,10 +8,7 @@ $menu_item_second = "add_submission_video_photo";
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
-
+    #intro {padding-top: 2em;}
     button{
         background: #1bb1dc;
         border: 0;
@@ -20,76 +17,56 @@ $menu_item_second = "add_submission_video_photo";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation{
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea{
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     #regForm {
-        background-color: #ffffff;
-        margin: 100px auto;
-        padding: 40px;
-        width: 70%;
-        min-width: 300px;
+      background-color: #ffffff;
+      margin: 100px auto;
+      padding: 40px;
+      width: 70%;
+      min-width: 300px;
     }
-
-    /* Style the input fields */
     input {
-        padding: 10px;
-        width: 100%;
-        font-size: 17px;
-        font-family: Raleway;
-        border: 1px solid #aaaaaa;
+      padding: 10px;
+      width: 100%;
+      font-size: 17px;
+      font-family: Raleway;
+      border: 1px solid #aaaaaa;
     }
-
-    /* Mark input boxes that gets an error on validation: */
     input.invalid {
-        background-color: #ffdddd;
+      background-color: #ffdddd;
     }
-
     .invalid {
         border: 1px solid red !important;
-        border-color: #f50000 !important;
     }
-
-    /* Hide all steps by default: */
     .tab {
-        display: none;
+      display: none;
     }
-
-    /* Make circles that indicate the steps of the form: */
     .step {
-        height: 15px;
-        width: 15px;
-        margin: 0 2px;
-        background-color: #bbbbbb;
-        border: none;
-        border-radius: 50%;
-        display: inline-block;
-        opacity: 0.5;
+      height: 15px;
+      width: 15px;
+      margin: 0 2px;
+      background-color: #bbbbbb;
+      border: none;
+      border-radius: 50%;
+      display: inline-block;
+      opacity: 0.5;
     }
-
-    /* Mark the active step: */
     .step.active {
-        opacity: 1;
+      opacity: 1;
     }
-
-    /* Mark the steps that are finished and valid: */
     .step.finish {
-        background-color: #4CAF50;
+      background-color: #4CAF50;
     }
-
-    select {
-        color: black !important;
-    }
+    select {color: black !important;}
 </style>
 @endsection
 
@@ -210,7 +187,7 @@ $menu_item_second = "add_submission_video_photo";
                                                 @endforeach
                                             </select>
                                         </div>
-                                        
+
 
                                         <div class="form-group">
                                             <label for="member-mpc_wakimart-{{ $x }}">
@@ -259,14 +236,14 @@ $menu_item_second = "add_submission_video_photo";
 
                                         <div class="form-group">
                                             <label for="member-url_drive-{{ $x }}">Url Drive Video & Photo</label>
-                                            <input type="text" 
+                                            <input type="text"
                                                 class="form-control"
                                                 id="member-url_drive-{{ $x }}"
                                                 name="url_drive_ref_{{ $x }}"
                                                 placeholder="https://deive.google.com/drive/folders/"
                                                 {{ $x > 0 ? "" : "required" }} />
                                         </div>
-                                        
+
                                         <div class="form-group">
                                             <label for="member-souvenir-{{ $x }}">
                                                 Souvenir
@@ -459,11 +436,11 @@ function addOrRemoveInvalid(element, command) {
             $("#refrensiForm").hide();
             $.get( '{{ route("check_submission_video_photo_branch") }}', { branch })
             .done(function( result ) {
-                if (result['status'] == 'success'){      
+                if (result['status'] == 'success'){
                     $("#submission_video_photo_success").html("New Submission Video & Photo");
                     $("#refrensiForm").show();
                 } else if(result['exists']) {
-                    $("#submission_video_photo_error").html(result['exists']);   
+                    $("#submission_video_photo_error").html(result['exists']);
                     $("#refrensiForm").hide();
                 } else {
                     console.log(result);
@@ -475,7 +452,7 @@ function addOrRemoveInvalid(element, command) {
                 alert(err.message);
                 $("#fr_data").hide();
             });
-        } 
+        }
     });
 </script>
 @endsection
