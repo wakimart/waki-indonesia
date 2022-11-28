@@ -971,30 +971,30 @@
         var networkValue
         function testNetwork(networkValue, response){
             response();
-            // $.ajax({
-            //     method: "post",
-            //     url: "http://{{ env('OFFLINE_URL') }}/api/end-point-for-check-status-network",
-            //     dataType: 'json',
-            //     contentType: 'application/json',
-            //     processData: false,
-            //     headers: {
-            //         "api-key": "{{ env('API_KEY') }}",
-            //     },
-            //     success: response,
-            //     error: function(xhr, status, error) {
-            //         var modal = `
-            //             <div class="modal-body">
-            //                 <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
-            //                 <hr>
-            //                 <p class="text-center">${xhr.responseJSON.message}</p>
-            //             </div>
-            //         `
-            //         $('#modal-change-status').modal("hide")
-            //         $('.modal-backdrop').remove();
-            //         $('#error-modal-desc').html(modal)
-            //         $('#error-modal').modal("show")
-            //     }
-            // });
+            $.ajax({
+                method: "post",
+                url: "http://{{ env('OFFLINE_URL') }}/api/end-point-for-check-status-network",
+                dataType: 'json',
+                contentType: 'application/json',
+                processData: false,
+                headers: {
+                    "api-key": "{{ env('API_KEY') }}",
+                },
+                success: response,
+                error: function(xhr, status, error) {
+                    var modal = `
+                        <div class="modal-body">
+                            <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                            <hr>
+                            <p class="text-center">${xhr.responseJSON.message}</p>
+                        </div>
+                    `
+                    $('#modal-change-status').modal("hide")
+                    $('.modal-backdrop').remove();
+                    $('#error-modal-desc').html(modal)
+                    $('#error-modal').modal("show")
+                }
+            });
         };
 
         $('#btn-edit-status-order').on('click', function() {
@@ -1044,44 +1044,44 @@
                     'order_details':order_details,
                     'user_id':'{{Auth::user()->code}}'
                 }
-                $('#actionAdd').submit();
+                // $('#actionAdd').submit();
 
-                // $.ajax({
-                //     method: "post",
-                //     url: "http://{{ env('OFFLINE_URL') }}/api/replicate-order-data",
-                //     data: order,
-                //     success: function(res){
-                //         if(res.status == 'success'){
-                //             $('#actionAdd').submit();
-                //         }else{
-                //             var modal = `
-                //                 <div class="modal-body">
-                //                     <h5 class="modal-title text-center">${res.status}</h5>
-                //                     <hr>
-                //                     <p class="text-center">${res.message}</p>
-                //                 </div>
-                //             `
-                //             $('#modal-change-status').modal("hide")
-                //             $('.modal-backdrop').remove();
-                //             $('#error-modal-desc').html(modal)
-                //             $('#error-modal').modal("show")
-                //         }
-                //     },
-                //     error: function(xhr){
-                //         var modal = `
-                //             <div class="modal-body">
-                //                 <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
-                //                 <hr>
-                //                 <p class="text-center">${xhr.responseJSON.message}</p>
-                //             </div>
-                //         `
-                //         $('#modal-change-status').modal("hide")
-                //         $('.modal-backdrop').remove();
-                //         $('#error-modal-desc').html(modal)
-                //         $('#error-modal').modal("show")
-                //     }
+                $.ajax({
+                    method: "post",
+                    url: "http://{{ env('OFFLINE_URL') }}/api/replicate-order-data",
+                    data: order,
+                    success: function(res){
+                        if(res.status == 'success'){
+                            $('#actionAdd').submit();
+                        }else{
+                            var modal = `
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-center">${res.status}</h5>
+                                    <hr>
+                                    <p class="text-center">${res.message}</p>
+                                </div>
+                            `
+                            $('#modal-change-status').modal("hide")
+                            $('.modal-backdrop').remove();
+                            $('#error-modal-desc').html(modal)
+                            $('#error-modal').modal("show")
+                        }
+                    },
+                    error: function(xhr){
+                        var modal = `
+                            <div class="modal-body">
+                                <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                                <hr>
+                                <p class="text-center">${xhr.responseJSON.message}</p>
+                            </div>
+                        `
+                        $('#modal-change-status').modal("hide")
+                        $('.modal-backdrop').remove();
+                        $('#error-modal-desc').html(modal)
+                        $('#error-modal').modal("show")
+                    }
 
-                // })
+                })
             })
             return false
         });
@@ -1119,28 +1119,28 @@
                     for(var i = 0; i < orderPaymentData.image.length; i++){
                         orderPaymentData['order_payment_file_'+i] = `{{ asset('sources/order/${orderPaymentData.image[i]}') }}`
                     }
-                    $('#frmUpdateStatusPayment').submit();                    
+                    // $('#frmUpdateStatusPayment').submit();                    
 
-                    // $.ajax({
-                    //     method: "post",
-                    //     url: "http://{{ env('OFFLINE_URL') }}/api/replicate-order-payment-data",
-                    //     data: orderPaymentData,
-                    //     success: function(res){
-                    //         $('#frmUpdateStatusPayment').submit();
-                    //     },
-                    //     error: function(xhr){
-                    //         var modal = `
-                    //             <div class="modal-body">
-                    //                 <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
-                    //                 <hr>
-                    //                 <p class="text-center">${xhr.responseJSON.message}</p>
-                    //             </div>
-                    //         `
-                    //         $('#error-modal-desc').html(modal)
-                    //         $('#error-modal').modal("show")
-                    //     }
+                    $.ajax({
+                        method: "post",
+                        url: "http://{{ env('OFFLINE_URL') }}/api/replicate-order-payment-data",
+                        data: orderPaymentData,
+                        success: function(res){
+                            $('#frmUpdateStatusPayment').submit();
+                        },
+                        error: function(xhr){
+                            var modal = `
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                                    <hr>
+                                    <p class="text-center">${xhr.responseJSON.message}</p>
+                                </div>
+                            `
+                            $('#error-modal-desc').html(modal)
+                            $('#error-modal').modal("show")
+                        }
 
-                    // })
+                    })
                 })
                 return false
             }else{

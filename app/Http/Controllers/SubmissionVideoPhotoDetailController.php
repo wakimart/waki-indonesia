@@ -124,6 +124,7 @@ class SubmissionVideoPhotoDetailController extends Controller
             $user = Auth::user();
             $subVPDetail = SubmissionVideoPhotoDetail::find($request->id);
             $subVPDetail->status = $request->status;
+            $subVPDetail->acc_description = $request->has('acc_description') ? $request->acc_description : null;
             $subVPDetail->save();
 
             $historyUpdate = [];

@@ -39,14 +39,14 @@ Route::get('/public-homecare/{id}', 'PublicHomecareController@puhForm')->name('p
 Route::get('/thankyou-public-homecare/{id}', 'PublicHomecareController@thankyouForm')->name('thankyou_puh');
 
 //Service Product
-Route::get('/service', 'ServiceController@indexUser')->name('service');
+// Route::get('/service', 'ServiceController@indexUser')->name('service');
 Route::get('/trackservice/{id}', 'ServiceController@trackService')->name('track_service');
 
 //DO Register
-Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
-Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
+// Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
+// Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
 Route::get('/register-success', 'DeliveryOrderController@successorder')->name('successorder');
-Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
+// Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
 //Order
 // Route::get('/order', 'OrderController@index')->name('add_order');
@@ -55,8 +55,8 @@ Route::get('/order-success', 'OrderController@successorder')->name('order_succes
 //Route::get('/templistorderwaki1995', 'OrderController@listOrder')->name('list_order');
 
 //Home service
-Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeServices');
-Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
+// Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeServices');
+// Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
 // Service

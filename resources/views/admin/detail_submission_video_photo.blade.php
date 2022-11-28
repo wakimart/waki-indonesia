@@ -241,6 +241,10 @@ if (
                                                         data-status="{{ $sVPDetail->status }}">
                                                         {{ ucwords($sVPDetail->status) }}
                                                     </td>
+                                                    <td class="d-none" 
+                                                        id="acc_description_{{ $key }}">
+                                                        {{ ucwords($sVPDetail->acc_description) }}
+                                                    </td>
                                                     @if(Gate::check('edit-submission_video_photo_detail'))
                                                     <td class="text-center">
                                                         @if ($sVPDetail->status !== "approved")
@@ -530,15 +534,22 @@ if (
                     </div>
                 </form>
                 <div class="clearfix"></div>
-                @if (Gate::check('change-status-approved-submission_video_photo_detail') 
-                || Gate::check('change-status-rejected-submission_video_photo_detail'))
                 <div id="divIdStatusDetail" class="text-center p-3" style="border: 1px solid black;">
-                    <h5 class="mb-3">Status Detail</h5>
+                    <h5 id="status_detail" class="mb-3">Status Detail</h5>
                     <form id="frmUpdateStatusDetail"
                         method="post"
                         action="{{ route('update_status_submission_video_photo_detail') }}">
                         @csrf
                         <input type="hidden" id="id-update-staus-detail" name="id" value="">
+                        <div class="form-group">
+                            <textarea
+                                class="form-control"
+                                id="edit-acc_description"
+                                name="acc_description"
+                                value=""
+                                placeholder="Description (Optional)"
+                                rows="3" {{ (Gate::check('change-status-approved-submission_video_photo_detail') || Gate::check('change-status-rejected-submission_video_photo_detail')) ? '' : 'disabled'}} ></textarea>
+                        </div>
                         <div class="btn-action" style="text-align: center;">
                             @if (Gate::check('change-status-approved-submission_video_photo_detail'))
                             <button type="submit" 
@@ -561,7 +572,6 @@ if (
                         </div>
                     </form>
                 </div>
-                @endif
             </div>
             <div class="modal-footer">
                 <input type="submit"
@@ -642,6 +652,7 @@ function clearModal() {
     document.getElementById("edit-name").value = "";
     document.getElementById("edit-phone").value = "";
     document.getElementById("edit-address").value = "";
+    document.getElementById("edit-acc_description").value = "";
     document.getElementById("edit-souvenir").value = "";
     $("#divIdStatusDetail").hide();
     $("#id-update-staus-detail").val("");
@@ -662,8 +673,10 @@ function clickEdit(e) {
     const address = document.getElementById("address_" + refSeq).innerHTML.trim();
     const souvenir = document.getElementById("souvenir_" + refSeq).innerHTML.trim();
     const status = document.getElementById("status_" + refSeq).getAttribute("data-status");
+    const acc_description = document.getElementById("acc_description_" + refSeq).innerHTML.trim();
 
     document.getElementById("modal-title").innerHTML = "Edit";
+    document.getElementById("status_detail").innerHTML = "Status Detail ( "+ status.toUpperCase() +" )";
     document.getElementById("edit-form").setAttribute("action", actionUpdate);
     document.getElementById("edit-id").value = id;
     $("#edit-cso").val(cso).trigger('change');
@@ -674,6 +687,7 @@ function clickEdit(e) {
     document.getElementById("edit-phone").value = phone;
     document.getElementById("edit-address").value = address;
     document.getElementById("edit-souvenir").value = souvenir;
+    document.getElementById("edit-acc_description").value = acc_description;
 
     if (status != 'approved') {
         $("#divIdStatusDetail").show();
