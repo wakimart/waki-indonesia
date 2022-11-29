@@ -17,8 +17,11 @@ class FinancialRoutineController extends Controller
 {
     public function index(Request $request)
     {
-        $banks = BankAccount::where('active', true)->get();
-        $financialRoutines = FinancialRoutine::where('active', true);
+        $banks = BankAccount::leftjoin('branches','branches.bank_account_id', '=','bank_accounts.id' )
+            ->where([['bank_accounts.active', true], ['branches.bank_account_id', '=', null]])
+            ->select('bank_accounts.*')->get();
+        $financialRoutines = FinancialRoutine::where('active', true)
+            ->whereIn('bank_account_id', $banks->pluck('id')->toArray());
 
         if ($request->filter_date) {
             $financialRoutines->whereBetween('routine_date', [
@@ -39,8 +42,11 @@ class FinancialRoutineController extends Controller
 
     public function create(Request $request)
     {
-        $banks = BankAccount::where('active', true)->get();
-        return view('admin.add_financialroutine', compact('banks'));
+        $banks = BankAccount::leftjoin('branches','branches.bank_account_id', '=','bank_accounts.id' )
+                ->where([['bank_accounts.active', true], ['branches.bank_account_id', '=', null]])
+                ->select('bank_accounts.*')->get();
+        $banksPettyCash = BankAccount::where('active', true)->get();
+        return view('admin.add_financialroutine', compact('banks', 'banksPettyCash'));
     }
 
     public function store(Request $request)
@@ -141,10 +147,13 @@ class FinancialRoutineController extends Controller
                 ->with("danger", "Data not found.");
         }
 
-        $banks = BankAccount::where('active', true)->get();
+        $banks = BankAccount::leftjoin('branches','branches.bank_account_id', '=','bank_accounts.id' )
+            ->where([['bank_accounts.active', true], ['branches.bank_account_id', '=', null]])
+            ->select('bank_accounts.*')->get();
+        $banksPettyCash = BankAccount::where('id', 7)->get();
         $financialRoutine = FinancialRoutine::where('id', $request->id)->first();
 
-        return view('admin.edit_financialroutine', compact('banks', 'financialRoutine'));
+        return view('admin.edit_financialroutine', compact('banks', 'financialRoutine', 'banksPettyCash'));
     }
 
     public function update(Request $request)

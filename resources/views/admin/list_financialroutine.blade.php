@@ -1,6 +1,10 @@
 <?php
 $menu_item_page = "financial_routine";
-$menu_item_second = "list_financial_routine";
+$menu_item_second = Route::currentRouteName();
+$isBranch = false;
+if($menu_item_second === 'list_financial_routine_branch'){
+    $isBranch = true;
+}
 ?>
 @extends("admin.layouts.template")
 
@@ -93,7 +97,7 @@ $menu_item_second = "list_financial_routine";
                         <label for=""></label>
                         <div class="form-group">
                             <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1"><span class="mdi mdi-filter"></span> Apply Filter</button>
-                            <a href="{{ route('list_financial_routine') }}"
+                            <a href="{{ $isBranch ? route("list_financial_routine_branch") : route("list_financial_routine") }}"
                                 class="btn btn-gradient-danger m-1"
                                 value="-">
                                 <span class="mdi mdi-filter"></span> Reset Filter
@@ -134,7 +138,7 @@ $menu_item_second = "list_financial_routine";
                                         </td>
                                         @can('detail-financial_routine')
                                         <td class="text-center">
-                                            <a href="{{ route("print_financial_routine", ["id" => $financialRoutine->id]) }}"
+                                            <a href="{{ route("print_financial_routine".($isBranch ? "_branch" : ""), ["id" => $financialRoutine->id]) }}"
                                                 target="_blank">
                                                 <i class="mdi mdi-printer" style="font-size: 24px; color: #1c1c1c;"></i>
                                             </a>
@@ -142,14 +146,14 @@ $menu_item_second = "list_financial_routine";
                                         @endcan
                                         @can('detail-financial_routine')
                                         <td class="text-center">
-                                            <a href="{{ route("detail_financial_routine", ["id" => $financialRoutine->id]) }}">
+                                            <a href="{{ route("detail_financial_routine".($isBranch ? "_branch" : ""), ["id" => $financialRoutine->id]) }}">
                                                 <i class="mdi mdi-eye" style="font-size: 24px; color: #33b5e5;"></i>
                                             </a>
                                         </td>
                                         @endcan
                                         @can('edit-financial_routine')
                                         <td class="text-center">
-                                            <a href="{{ route("edit_financial_routine", ["id" => $financialRoutine->id]) }}">
+                                            <a href="{{ route("edit_financial_routine".($isBranch ? "_branch" : ""), ["id" => $financialRoutine->id]) }}">
                                                 <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                             </a>
                                         </td>
@@ -200,7 +204,7 @@ $menu_item_second = "list_financial_routine";
             </div>
             <div class="modal-footer">
                 <form method="POST"
-                    action="{{ route("delete_financial_routine") }}">
+                    action="{{ route("delete_financial_routine".($isBranch ? "_branch" : "")) }}">
                     @csrf
                     <input type="hidden" name="id" id="id-delete" />
                     <button type="submit" class="btn btn-gradient-danger">
@@ -238,7 +242,7 @@ $menu_item_second = "list_financial_routine";
 		}
 	  }
 
-	  window.location.href = "{{route('list_financial_routine')}}" + urlParamStr;
+	  window.location.href = "{{ $isBranch ? route("list_financial_routine_branch") : route("list_financial_routine") }}" + urlParamStr;
 	});
     function submitDelete(e) {
         document.getElementById("id-delete").value = e.dataset.id;

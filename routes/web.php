@@ -88,6 +88,8 @@ Route::get("/fetchProductService", "ProductServiceController@fetchProductService
 
 Route::get("/check_routine_date", "FinancialRoutineController@checkRoutineDate")
     ->name("check_routine_date");
+Route::get("/check_routine_date_branch", "FinancialRoutineBranchController@checkRoutineDate")
+    ->name("check_routine_date_branch");
 
 Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
 
@@ -525,6 +527,55 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('update_financial_routine_transaction')
             ->middleware('can:edit-financial_routine');
         //Delete Financial Routine Transaction
+        Route::post('/delete_financial_routine_transaction', 'FinancialRoutineTransactionController@destroy')
+            ->name('delete_financial_routine_transaction')
+            ->middleware('can:delete-financial_routine');
+    });
+
+    Route::group(['prefix' => 'financial_routine_branch', 'middleware' => 'auth'], function() {
+        // Add Form Financial Routine Branch
+        Route::get('/add', 'FinancialRoutineBranchController@create')
+            ->name('add_financial_routine_branch')
+            ->middleware("can:add-financial_routine");
+
+        // List Financial Routine Branch
+        Route::get('/list', 'FinancialRoutineBranchController@index')
+            ->name('list_financial_routine_branch')
+            ->middleware("can:browse-financial_routine");
+
+        // Detail Financial Routine Branch
+        Route::get('/detail', 'FinancialRoutineBranchController@show')
+            ->name('detail_financial_routine_branch')
+            ->middleware("can:detail-financial_routine");
+
+        // Edit Financial Routine Branch
+        Route::get('/edit', 'FinancialRoutineBranchController@edit')
+            ->name('edit_financial_routine_branch')
+            ->middleware("can:edit-financial_routine");
+
+        // Delete Financial Routine Branch
+        Route::post('/delete', 'FinancialRoutineBranchController@destroy')
+            ->name('delete_financial_routine_branch')
+            ->middleware("can:delete-financial_routine");
+
+        // Print Financial Routine Branch
+        Route::get('print_financial_routine_branch', 'FinancialRoutineBranchController@print')
+            ->name('print_financial_routine_branch')
+            ->middleware('can:detail-financial_routine');
+
+        //Store Financial Routine Branch Transaction
+        Route::post('/store_financial_routine_transaction', 'FinancialRoutineTransactionController@store')
+            ->name('store_financial_routine_transaction')
+            ->middleware('can:add-financial_routine');
+        //Edit Financial Routine Branch Transaction
+        Route::post('/edit_financial_routine_transaction', 'FinancialRoutineTransactionController@edit')
+            ->name('edit_financial_routine_transaction')
+            ->middleware('can:edit-financial_routine');
+        //Update Financial Routine Branch Transaction
+        Route::post('/update_financial_routine_transaction', 'FinancialRoutineTransactionController@update')
+            ->name('update_financial_routine_transaction')
+            ->middleware('can:edit-financial_routine');
+        //Delete Financial Routine Branch Transaction
         Route::post('/delete_financial_routine_transaction', 'FinancialRoutineTransactionController@destroy')
             ->name('delete_financial_routine_transaction')
             ->middleware('can:delete-financial_routine');

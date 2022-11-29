@@ -308,9 +308,17 @@ $menu_item_page = "financial_routine";
                             required>
                             <option selected disabled value="">Choose Bank</option>
                             @foreach ($banks as $bank)
-                            <option value="{{ $bank->id }}">
-                                {{ $bank->code }} - {{ $bank->name }}
-                            </option>
+                                @if(Route::currentRouteName() === 'detail_financial_routine_branch')
+                                    @if($bank->branch['bank_id'] == $financialRoutine->bank_id)
+                                        <option value="{{ $bank->id }}">
+                                            {{ $bank->code }} - {{ $bank->name }} ({{ ucwords($bank->type) }})
+                                        </option>
+                                    @endif
+                                @else
+                                    <option value="{{ $bank->id }}">
+                                        {{ $bank->code }} - {{ $bank->name }} ({{ ucwords($bank->type) }})
+                                    </option>
+                                @endif
                             @endforeach
                         </select>
                     </div>

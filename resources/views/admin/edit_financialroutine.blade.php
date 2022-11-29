@@ -1,5 +1,9 @@
 <?php
 $menu_item_page = "financial_routine";
+$isBranch = false;
+if(Route::currentRouteName() === 'edit_financial_routine_branch'){
+    $isBranch = true;
+}
 ?>
 @extends("admin.layouts.template")
 
@@ -286,8 +290,8 @@ $menu_item_page = "financial_routine";
                             class="form-control" 
                             required>
                             <option selected disabled value="">Choose Bank</option>
-                            @foreach ($banks as $bank)
-                            <option value="{{ $bank->id }}">
+                            @foreach ($banksPettyCash as $bank)
+                            <option @if($isBranch) class="branch_{{ $bank->branch['bank_id'] }}" style="display: {{ ($bank->branch['bank_id'] == $financialRoutine->bank_id) ? "inherit" : "none" }};" @endif value="{{ $bank->id }}">
                                 {{ $bank->code }} - {{ $bank->name }}
                             </option>
                             @endforeach
@@ -354,8 +358,8 @@ $menu_item_page = "financial_routine";
                             class="form-control" 
                             required>
                             <option selected disabled value="">Choose Bank</option>
-                            @foreach ($banks as $bank)
-                            <option value="{{ $bank->id }}">
+                            @foreach ($banksPettyCash as $bank)
+                            <option @if($isBranch) class="branch_{{ $bank->branch['bank_id'] }}" @endif value="{{ $bank->id }}">
                                 {{ $bank->code }} - {{ $bank->name }}
                             </option>
                             @endforeach
@@ -464,7 +468,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert('Input Error!');
         } else {
             alert("Input Success !!!");
-            var url = "{{ route('detail_financial_routine', ['id'=>$financialRoutine->id]) }}";
+            var url = "{{  $isBranch ? route("detail_financial_routine_branch") : route("detail_financial_routine") }}?id={{ $financialRoutine->id }}";
             window.location.href = url;
             // window.location.reload()
         }
@@ -535,7 +539,7 @@ $(document).ready(function() {
         if (routine_date && bank) {
             $("#financialroutine_error").html("");
             $("#financialroutine_success").html("");
-            $.get( '{{route("check_routine_date")}}', { idFinancialRoutine, routine_date, bank })
+            $.get( '{{ $isBranch ? route("check_routine_date_branch") : route("check_routine_date") }}', { idFinancialRoutine, routine_date, bank })
             .done(function( result ) {
                 if (result['status'] == 'success'){                
                     $("#last_financial_routine_id").val(result['lastMonthFinancialRoutine']['id'])
@@ -544,6 +548,7 @@ $(document).ready(function() {
                     $("#last_month_remains_sale").val(numberWithCommas(result['lastMonthFinancialRoutine']['remains_sales']));
                     $("#financialroutine_success").html("New Financial Routine");
                     $("#fr_data").show();
+                    @if($isBranch) changeListDetailBank(bank); @endif
                 } else if(result['same_data']) {
                     $("#financialroutine_error").html(result['same_data']);   
                     $("#fr_data").hide();
@@ -606,5 +611,14 @@ function ucwords(str) {
         return $1.toUpperCase();
     });
 }
+
+@if($isBranch)
+    function changeListDetailBank(id){
+        @foreach($banks as $bankNya)
+            $(".branch_{{ $bankNya['id'] }}").css("display", "none");
+        @endforeach
+        $(".branch_"+id).css("display", "inherit");
+    }
+@endif
 </script>
 @endsection

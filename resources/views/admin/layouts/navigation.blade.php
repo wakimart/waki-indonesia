@@ -93,6 +93,12 @@
       @if(Gate::check('browse-financial_routine'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_financial_routine'? 'active': '' }}" href="{{ route('list_financial_routine') }}">List by Bank</a></li>
       @endif
+      @if(Gate::check('add-financial_routine'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_financial_routine_branch'? 'active': '' }}" href="{{ route('add_financial_routine_branch')}}">Add by Branch</a></li>
+      @endif
+      @if(Gate::check('browse-financial_routine'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_financial_routine_branch'? 'active': '' }}" href="{{ route('list_financial_routine_branch') }}">List by Branch</a></li>
+      @endif
     </ul>
   </div>
 </li>
