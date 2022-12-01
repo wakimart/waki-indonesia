@@ -65,6 +65,21 @@ class RolesSeeder extends Seeder
                 "edit-financial_routine" => true,
                 "delete-financial_routine" => true,
 
+                //Petty Cash
+                'browse-petty_cash' => true,
+                'detail-petty_cash' => true,
+                'delete-petty_cash' => true,
+                'add-petty_cash_in' => true,
+                'edit-petty_cash_in' => true,
+                'add-petty_cash_out' => true,
+                'edit-petty_cash_out' => true,
+
+                //Petty Cash Account
+                'browse-petty_cash_type' => true,
+                'add-petty_cash_type' => true,
+                'edit-petty_cash_type' => true,
+                'delete-petty_cash_type' => true,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -288,6 +303,21 @@ class RolesSeeder extends Seeder
                 "detail-financial_routine" => false,
                 "edit-financial_routine" => false,
                 "delete-financial_routine" => false,
+
+                //Petty Cash
+                'browse-petty_cash' => false,
+                'detail-petty_cash' => false,
+                'delete-petty_cash' => false,
+                'add-petty_cash_in' => false,
+                'edit-petty_cash_in' => false,
+                'add-petty_cash_out' => false,
+                'edit-petty_cash_out' => false,
+
+                //Petty Cash Account
+                'browse-petty_cash_type' => false,
+                'add-petty_cash_type' => false,
+                'edit-petty_cash_type' => false,
+                'delete-petty_cash_type' => false,
 
                 //Home Service
                 'add-home_service' => true,
@@ -513,6 +543,21 @@ class RolesSeeder extends Seeder
                 "edit-financial_routine" => false,
                 "delete-financial_routine" => false,
 
+                //Petty Cash
+                'browse-petty_cash' => false,
+                'detail-petty_cash' => false,
+                'delete-petty_cash' => false,
+                'add-petty_cash_in' => false,
+                'edit-petty_cash_in' => false,
+                'add-petty_cash_out' => false,
+                'edit-petty_cash_out' => false,
+
+                //Petty Cash Account
+                'browse-petty_cash_type' => false,
+                'add-petty_cash_type' => false,
+                'edit-petty_cash_type' => false,
+                'delete-petty_cash_type' => false,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -732,6 +777,21 @@ class RolesSeeder extends Seeder
                 "edit-financial_routine" => false,
                 "delete-financial_routine" => false,
 
+                //Petty Cash
+                'browse-petty_cash' => false,
+                'detail-petty_cash' => false,
+                'delete-petty_cash' => false,
+                'add-petty_cash_in' => false,
+                'edit-petty_cash_in' => false,
+                'add-petty_cash_out' => false,
+                'edit-petty_cash_out' => false,
+
+                //Petty Cash Account
+                'browse-petty_cash_type' => false,
+                'add-petty_cash_type' => false,
+                'edit-petty_cash_type' => false,
+                'delete-petty_cash_type' => false,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -949,6 +1009,21 @@ class RolesSeeder extends Seeder
                 "detail-financial_routine" => false,
                 "edit-financial_routine" => false,
                 "delete-financial_routine" => false,
+
+                //Petty Cash
+                'browse-petty_cash' => false,
+                'detail-petty_cash' => false,
+                'delete-petty_cash' => false,
+                'add-petty_cash_in' => false,
+                'edit-petty_cash_in' => false,
+                'add-petty_cash_out' => false,
+                'edit-petty_cash_out' => false,
+
+                //Petty Cash Account
+                'browse-petty_cash_type' => false,
+                'add-petty_cash_type' => false,
+                'edit-petty_cash_type' => false,
+                'delete-petty_cash_type' => false,
 
                 //Home Service
                 'add-home_service' => false,
@@ -1168,6 +1243,21 @@ class RolesSeeder extends Seeder
                 "edit-financial_routine" => false,
                 "delete-financial_routine" => false,
 
+                //Petty Cash
+                'browse-petty_cash' => false,
+                'detail-petty_cash' => false,
+                'delete-petty_cash' => false,
+                'add-petty_cash_in' => false,
+                'edit-petty_cash_in' => false,
+                'add-petty_cash_out' => false,
+                'edit-petty_cash_out' => false,
+
+                //Petty Cash Account
+                'browse-petty_cash_type' => false,
+                'add-petty_cash_type' => false,
+                'edit-petty_cash_type' => false,
+                'delete-petty_cash_type' => false,
+
                 //Home Service
                 'add-home_service' => false,
                 'browse-home_service' => true,
@@ -1385,6 +1475,21 @@ class RolesSeeder extends Seeder
                 "detail-financial_routine" => false,
                 "edit-financial_routine" => false,
                 "delete-financial_routine" => false,
+
+                //Petty Cash
+                'browse-petty_cash' => false,
+                'detail-petty_cash' => false,
+                'delete-petty_cash' => false,
+                'add-petty_cash_in' => false,
+                'edit-petty_cash_in' => false,
+                'add-petty_cash_out' => false,
+                'edit-petty_cash_out' => false,
+
+                //Petty Cash Account
+                'browse-petty_cash_type' => false,
+                'add-petty_cash_type' => false,
+                'edit-petty_cash_type' => false,
+                'delete-petty_cash_type' => false,
 
                 //Home Service
                 'add-home_service' => false,

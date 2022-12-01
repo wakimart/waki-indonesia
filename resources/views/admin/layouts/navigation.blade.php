@@ -104,6 +104,92 @@
 </li>
 @endif
 
+@if (Gate::check("add-petty_cash_in") || Gate::check("add-petty_cash_out") || Gate::check("browse-petty_cash"))
+  <li class="{{isset($menu_item_page) && $menu_item_page === 'petty_cash' ? 'active' : '' }} nav-item">
+    <a class="nav-link"
+      data-toggle="collapse"
+      href="#petty_cash-dd"
+      aria-expanded="false"
+      aria-controls="petty_cash-dd">
+      <span class="menu-title">Petty Cash</span>
+      <i class="menu-arrow"></i>
+      <i class="mdi mdi-shape menu-icon"></i>
+    </a>
+    <div class="collapse {{ isset($menu_item_page) && $menu_item_page === 'petty_cash' ? 'show' : '' }}"
+      id="petty_cash-dd">
+      <ul class="nav flex-column sub-menu">
+        @if (Gate::check("add-petty_cash_in"))
+          <li class="nav-item">
+            <a class="nav-link {{ isset($menu_item_second) && $menu_item_second === 'add_petty_cash_in' ? 'active' : '' }}"
+              href="{{ route('add_petty_cash_in') }}">
+              Petty Cash In
+            </a>
+          </li>
+        @endif
+        @if (Gate::check("add-petty_cash_out"))
+          <li class="nav-item">
+            <a class="nav-link {{ isset($menu_item_second) && $menu_item_second === 'add_petty_cash_out' ? 'active' : '' }}"
+              href="{{ route('add_petty_cash_out') }}">
+              Petty Cash Out
+            </a>
+          </li>
+        @endif
+        @if (Gate::check("browse-petty_cash"))
+          <li class="nav-item">
+            <a class="nav-link {{ isset($menu_item_second) && $menu_item_second === 'list_petty_cash' ? 'active' : '' }}"
+              href="{{ route('list_petty_cash') }}">
+              List Petty Cash
+            </a>
+          </li>
+        @endif
+        @if (Gate::check("add-posting_petty_cash"))
+          <li class="nav-item">
+            <a class="nav-link {{ isset($menu_item_second) && $menu_item_second === 'add_posting_petty_cash' ? 'active' : '' }}"
+              href="{{ route('add_posting_petty_cash') }}">
+              Posting Petty Cash
+            </a>
+          </li>
+        @endif
+      </ul>
+    </div>
+  </li>
+@endif
+
+@if (Gate::check("add-petty_cash_type") || Gate::check("browse-petty_cash_type"))
+  <li class="{{isset($menu_item_page) && $menu_item_page === 'petty_cash_type' ? 'active' : '' }} nav-item">
+    <a class="nav-link"
+      data-toggle="collapse"
+      href="#petty_cash_type-dd"
+      aria-expanded="false"
+      aria-controls="petty_cash_type-dd">
+      <span class="menu-title">Petty Cash Type</span>
+      <i class="menu-arrow"></i>
+      <i class="mdi mdi-shape menu-icon"></i>
+    </a>
+    <div class="collapse {{ isset($menu_item_page) && $menu_item_page === 'petty_cash_type' ? 'show' : '' }}"
+      id="petty_cash_type-dd">
+      <ul class="nav flex-column sub-menu">
+        @if (Gate::check("add-petty_cash_type"))
+          <li class="nav-item">
+            <a class="nav-link {{ isset($menu_item_second) && $menu_item_second === 'add_petty_cash_type' ? 'active' : '' }}"
+              href="{{ route('add_petty_cash_type') }}">
+              Add Petty Cash Type
+            </a>
+          </li>
+        @endif
+        @if (Gate::check("browse-petty_cash_type"))
+          <li class="nav-item">
+            <a class="nav-link {{ isset($menu_item_second) && $menu_item_second === 'list_petty_cash_type' ? 'active' : '' }}"
+              href="{{ route('list_petty_cash_type') }}">
+              List Petty Cash Type
+            </a>
+          </li>
+        @endif
+      </ul>
+    </div>
+  </li>
+@endif
+
 @if(Gate::check('add-deliveryorder') || Gate::check('browse-deliveryorder'))
 {{-- <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#deliveryorder-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'deliveryorder'? 'true': '' }}" aria-controls="deliveryorder-dd">

@@ -63,6 +63,7 @@ $menu_item_second = "list_bank_account";
                                         <th>Charge Percentage</th>
                                         <th>Estimate Transfer</th>
                                         <th>Bank</th>
+                                        <th>Petty Cash Type</th>
                                         @can('edit-bank')
                                         <th>Edit</th>
                                         @endcan
@@ -82,6 +83,7 @@ $menu_item_second = "list_bank_account";
                                             <td>{{ $bankAccount->charge_percentage }}</td>
                                             <td>{{ $bankAccount->estimate_transfer }}</td>
                                             <td>{{ $bankAccount->bank_name }}</td>
+                                            <td>{{ ucwords($bankAccount->petty_cash_type) }}</td>
                                             @can('edit-bank')
                                             <td class="center">
                                                 <a href="{{ route('edit_bank_account', $bankAccount->id) }}">

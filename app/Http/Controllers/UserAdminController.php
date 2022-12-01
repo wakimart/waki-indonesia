@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BankAccount;
 use App\Branch;
 use App\Cso;
 use App\HistoryUpdate;
@@ -183,7 +184,8 @@ class UserAdminController extends Controller
                 ->whereNull('u.id')
                 ->orWhere('cs.id', $users->cso_id)->get();
             $branches = Branch::all();
-            return view('admin.update_useradmin', compact('users', 'roles', 'role_users', 'csos', 'branches'));
+            $bankAccounts = BankAccount::where('active', true)->get();
+            return view('admin.update_useradmin', compact('users', 'roles', 'role_users', 'csos', 'branches', 'bankAccounts'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -259,6 +261,14 @@ class UserAdminController extends Controller
                 if($request->get('cso_id') != null){
                     $data['cso_id'] = $request->get('cso_id');
                 }
+            }
+
+            //check bank account list
+            if($request->has('list_bank_accounts')){
+                $user->list_bank_account_id = json_encode($request->list_bank_accounts, false);
+            }
+            else{
+                $user->list_bank_account_id = null;
             }
 
             $user->fill($data)->save();

@@ -273,6 +273,26 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+                            <h3>List Bank Permission <strong>(only for Petty Cash)</strong></h3>
+                            <fieldset class="border p-2">
+                                <legend  class="w-auto">List Bank</legend>
+                                @foreach($bankAccounts as $keyNya => $bankNya)
+                                    <div class="form-check form-check-inline" style="display: inline-block;">
+                                        <label class="form-check-label"
+                                            for="list_bank_accounts_{{ $keyNya }}">
+                                            <input class=""
+                                                type="checkbox"
+                                                id="list_bank_accounts_{{ $keyNya }}"
+                                                name="list_bank_accounts[]" 
+                                                value="{{ $bankNya->id }}" 
+                                                {{ !empty($users->list_bank_account_id) ? (in_array($bankNya->id, json_decode($users->list_bank_account_id, true)) ? "checked=true" : "") : "" }} />
+                                                {{ $bankNya->code }} - {{ $bankNya->name}}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </fieldset>
+                            <br>
+
                             <h3 style="margin-top:10px; margin-bottom:10px; text-decoration: underline;">
                                 PERMISSIONS
                             </h4>
@@ -586,6 +606,117 @@ $menu_item_page = "user";
                                                 type="checkbox"
                                                 id="delete-financial_routine" />
                                             Delete Financial Routine
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">PETTY CASH</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-petty_cash_in">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-petty_cash_in" />
+                                            Add Petty Cash In
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-petty_cash_out">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-petty_cash_out" />
+                                            Add Petty Cash Out
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-petty_cash">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-petty_cash" />
+                                            Browse Petty Cash
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-petty_cash">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-petty_cash" />
+                                            Detail Petty Cash
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-petty_cash_in">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-petty_cash_in" />
+                                            Edit Petty Cash In
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-petty_cash_out">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-petty_cash_out" />
+                                            Edit Petty Cash Out
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-petty_cash">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-petty_cash" />
+                                            Delete Petty Cash
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">PETTY CASH TYPE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-petty_cash_type">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-petty_cash_type" />
+                                            Add Petty Cash Type
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-petty_cash_type">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-petty_cash_type" />
+                                            Browse Petty Cash Type
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-petty_cash_type">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-petty_cash_type" />
+                                            Edit Petty Cash Type
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-petty_cash_type">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-petty_cash_type" />
+                                            Delete Petty Cash Type
                                         </label>
                                     </div>
                                 </div>

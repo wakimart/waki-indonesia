@@ -93,6 +93,23 @@ $menu_item_page = "bank";
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label for="">Petty Cash Out Type</label>
+                                <select class="form-control @if($errors->has('estimate_transfer')) is-invalid @endif" id="petty_cash_type" name="petty_cash_type" required>
+                                    <option selected disabled value="">
+                                        Pilihan Type
+                                    </option>
+                                    @foreach(\App\BankAccount::$PettyCashType as $pettyCashType)
+                                    <option value="{{ $pettyCashType }}" 
+										@if($pettyCashType == $bankAccount->petty_cash_type) selected @endif>
+                                        {{ ucwords($pettyCashType) }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                @if($errors->has('petty_cash_type'))
+                                    <span class="error">{{ $errors->first('petty_cash_type') }}</span>
+                                @endif
+                            </div>
                             <button type="submit" class="btn btn-gradient-primary mr-2">Update</button>
                             <button class="btn btn-light" type="button" onclick='location.href="{{ route('list_bank_account') }}"'>Cancel</button>
                         </form>

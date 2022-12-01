@@ -90,6 +90,8 @@ Route::get("/check_routine_date", "FinancialRoutineController@checkRoutineDate")
     ->name("check_routine_date");
 Route::get("/check_routine_date_branch", "FinancialRoutineBranchController@checkRoutineDate")
     ->name("check_routine_date_branch");
+Route::get("/fetch-bank-by-petty-cash-type", "PettyCashOutTypeController@getBankByPettyCashType")
+    ->name("fetch_bank_by_petty_cash_type");
 
 Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
 
@@ -579,6 +581,105 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete_financial_routine_transaction', 'FinancialRoutineTransactionController@destroy')
             ->name('delete_financial_routine_transaction')
             ->middleware('can:delete-financial_routine');
+    });
+
+    Route::group(['prefix' => 'petty_cash', 'middleware' => 'auth'], function() {
+        // Add Petty Cash In
+        Route::get('/in', 'PettyCashController@createIn')
+            ->name('add_petty_cash_in')
+            ->middleware("can:add-petty_cash_in");
+        
+        // Add Petty Cash Out
+        Route::get('/out', 'PettyCashController@createOut')
+            ->name('add_petty_cash_out')
+            ->middleware("can:add-petty_cash_out");
+        
+        // Generate Petty Cash Code
+        Route::get('generate_code', 'PettyCashController@generateCode')
+            ->name('petty_cash_generate_code');
+        
+        // Create Petty Cash
+        Route::post('/store', 'PettyCashController@store')
+            ->name('store_petty_cash');
+
+        // List Petty Cash
+        Route::get('/list', 'PettyCashController@index')
+            ->name('list_petty_cash')
+            ->middleware("can:browse-petty_cash");
+
+        // Detail Petty Cash
+        Route::get('/detail', 'PettyCashController@show')
+            ->name('detail_petty_cash')
+            ->middleware("can:detail-petty_cash");
+
+        // Edit Petty Cash In
+        Route::get('/edit/in', 'PettyCashController@editIn')
+            ->name('edit_petty_cash_in')
+            ->middleware("can:edit-petty_cash_in");
+        
+        // Edit Petty Cash Out
+        Route::get('/edit/out', 'PettyCashController@editOut')
+            ->name('edit_petty_cash_out')
+            ->middleware("can:edit-petty_cash_out");
+
+        // Update Petty Cash
+        Route::post('/update', 'PettyCashController@update')
+            ->name('update_petty_cash');
+
+        // Delete Petty Cash
+        Route::post('/delete', 'PettyCashController@destroy')
+            ->name('delete_petty_cash')
+            ->middleware("can:delete-petty_cash");
+
+        // Print Petty Cash
+        Route::get('/print', 'PettyCashController@print')
+            ->name('print_petty_cash')
+            ->middleware("can:browse-petty_cash");
+
+        //Store Petty Cash Detail
+        Route::post('/store_petty_cash_detail', 'PettyCashDetailController@store')
+            ->name('store_petty_cash_detail');
+        //Edit Petty Cash Detail
+        Route::post('/edit_petty_cash_detail', 'PettyCashDetailController@edit')
+            ->name('edit_petty_cash_detail');
+        //Update Petty Cash Detail
+        Route::post('/update_petty_cash_detail', 'PettyCashDetailController@update')
+            ->name('update_petty_cash_detail');
+        //Delete Petty Cash Detail
+        Route::post('/delete_petty_cash_detail', 'PettyCashDetailController@destroy')
+            ->name('delete_petty_cash_detail');
+    });
+
+    Route::group(['prefix' => 'petty_cash_type', 'middleware' => 'auth'], function() {
+        // Add Form Petty Cash Type
+        Route::get('/add', 'PettyCashOutTypeController@create')
+            ->name('add_petty_cash_type')
+            ->middleware("can:add-petty_cash_type");
+
+        // Create Petty Cash Type
+        Route::post('/store', 'PettyCashOutTypeController@store')
+            ->name('store_petty_cash_type')
+            ->middleware("can:add-petty_cash_type");
+
+        // List Petty Cash Type
+        Route::get('/list', 'PettyCashOutTypeController@index')
+            ->name('list_petty_cash_type')
+            ->middleware("can:browse-petty_cash_type");
+
+        // Edit Petty Cash Type
+        Route::get('/edit', 'PettyCashOutTypeController@edit')
+            ->name('edit_petty_cash_type')
+            ->middleware("can:edit-petty_cash_type");
+
+        // Update Petty Cash Type
+        Route::post('/update', 'PettyCashOutTypeController@update')
+            ->name('update_petty_cash_type')
+            ->middleware("can:edit-petty_cash_type");
+
+        // Delete Petty Cash Type
+        Route::post('/delete', 'PettyCashOutTypeController@destroy')
+            ->name('delete_petty_cash_type')
+            ->middleware("can:delete-petty_cash_type");
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {

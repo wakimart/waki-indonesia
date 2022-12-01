@@ -206,7 +206,8 @@ class BankController extends Controller
             'type' => 'required|string',
             'charge_percentage' => 'required|numeric|min:0',
             'estimate_transfer' => 'required|integer|min:0',
-            'bank_id' => 'required|integer'
+            'bank_id' => 'required|integer',
+            'petty_cash_type' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -258,7 +259,8 @@ class BankController extends Controller
             'type' => 'required|string',
             'charge_percentage' => 'required|numeric',
             'estimate_transfer' => 'required|integer',
-            'bank_id' => 'required|integer'
+            'bank_id' => 'required|integer',
+            'petty_cash_type' => 'required',
         ]);
 
         if ($validator->fails()) {

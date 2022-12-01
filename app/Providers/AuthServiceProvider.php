@@ -134,6 +134,43 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-financial_routine']);
         });
 
+        //-- PETTY CASH --//
+        Gate::define('add-petty_cash_in', function ($user) {
+            return $user->hasAccess(['add-petty_cash_in']);
+        });
+        Gate::define('add-petty_cash_out', function ($user) {
+            return $user->hasAccess(['add-petty_cash_out']);
+        });
+        Gate::define('browse-petty_cash', function ($user) {
+            return $user->hasAccess(['browse-petty_cash']);
+        });
+        Gate::define('detail-petty_cash', function ($user) {
+            return $user->hasAccess(['detail-petty_cash']);
+        });
+        Gate::define('edit-petty_cash_in', function ($user) {
+            return $user->hasAccess(['edit-petty_cash_in']);
+        });
+        Gate::define('edit-petty_cash_out', function ($user) {
+            return $user->hasAccess(['edit-petty_cash_out']);
+        });
+        Gate::define('delete-petty_cash', function ($user) {
+            return $user->hasAccess(['delete-petty_cash']);
+        });
+
+        //-- PETTY CASH TYPE --//
+        Gate::define('add-petty_cash_type', function ($user) {
+            return $user->hasAccess(['add-petty_cash_type']);
+        });
+        Gate::define('browse-petty_cash_type', function ($user) {
+            return $user->hasAccess(['browse-petty_cash_type']);
+        });
+        Gate::define('edit-petty_cash_type', function ($user) {
+            return $user->hasAccess(['edit-petty_cash_type']);
+        });
+        Gate::define('delete-petty_cash_type', function ($user) {
+            return $user->hasAccess(['delete-petty_cash_type']);
+        });
+
         //-- HOME SERVICE --//
         Gate::define('add-home_service', function ($user) {
             return $user->hasAccess(['add-home_service']);
