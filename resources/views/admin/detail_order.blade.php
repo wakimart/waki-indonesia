@@ -970,7 +970,7 @@
 
         var networkValue
         function testNetwork(networkValue, response){
-            response();
+            // response();
             $.ajax({
                 method: "post",
                 url: "http://{{ env('OFFLINE_URL') }}/api/end-point-for-check-status-network",
