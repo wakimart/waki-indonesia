@@ -30,6 +30,8 @@ use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\CreditCard;
 use App\BankAccount;
+use App\OrderOnline;
+use App\OrderPaymentOnline;
 
 class OrderController extends Controller
 {
@@ -281,11 +283,11 @@ class OrderController extends Controller
     {
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
         // Khusus head-manager, head-admin, admin
-        $orders = Order::where('active', true);
+        $orders = OrderOnline::where('active', true);
 
         // Khusus akun CSO
         if (Auth::user()->roles[0]['slug'] == 'cso') {
-            $orders = Order::where('cso_id', Auth::user()->cso['id'])->where('active', true);
+            $orders = OrderOnline::where('cso_id', Auth::user()->cso['id'])->where('active', true);
         }
 
         // Khusus akun branch dan area-manager
@@ -297,7 +299,7 @@ class OrderController extends Controller
             foreach (Auth::user()->listBranches() as $value) {
                 array_push($arrbranches, $value['id']);
             }
-            $orders = Order::WhereIn('branch_id', $arrbranches)->where('active', true);
+            $orders = OrderOnline::WhereIn('branch_id', $arrbranches)->where('active', true);
         }
 
         // Kalau ada Filter
@@ -371,7 +373,8 @@ class OrderController extends Controller
     {
         $csos = Cso::where('active', true)->orderBy('code')->get();
         $banks = Bank::all();
-        $order = Order::where('code', $request['code'])->first();
+        $order = OrderOnline::where('code', $request['code'])->first();
+        $orderOffline = Order::where('code', $request['code'])->first();
         $csoDeliveryOrders = Cso::whereIn('id', json_decode($order['delivery_cso_id']) ?? [])->get();
         $order['district'] = $order->getDistrict();
         $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
@@ -379,7 +382,7 @@ class OrderController extends Controller
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
         $creditCards = CreditCard::where('active', true)->get();
         $bankAccounts = BankAccount::where('active', true)->get();
-        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts'));
+        return view('admin.detail_order', compact('order', 'orderOffline', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts'));
     }
 
     /**
@@ -759,34 +762,35 @@ class OrderController extends Controller
 
     }
 
-    public function updateStatusOrder(Request $request)
-    {
-        $order = Order::find($request->input('orderId'));
-        $dataBefore = Order::find($request->input('orderId'));
-        $last_status_order = $order->status;
-        $order->status = $request->input('status_order');
+    // Use OrderOnlineController updateStatusOrder
+    // public function updateStatusOrder(Request $request)
+    // {
+    //     $order = Order::find($request->input('orderId'));
+    //     $dataBefore = Order::find($request->input('orderId'));
+    //     $last_status_order = $order->status;
+    //     $order->status = $request->input('status_order');
         
-        // Save Delivery CSO
-        if ($order->status == Order::$status['3']) {
-            $order->delivery_cso_id = json_encode($request->delivery_cso_id);
-        }        
-        $order->save();
+    //     // Save Delivery CSO
+    //     if ($order->status == Order::$status['3']) {
+    //         $order->delivery_cso_id = json_encode($request->delivery_cso_id);
+    //     }        
+    //     $order->save();
 
-        $user = Auth::user();
-        $historyUpdate['type_menu'] = "Order";
-        $historyUpdate['method'] = "Update Status";
-        $historyUpdate['meta'] = json_encode([
-            'user'=>$user['id'],
-            'createdAt' => date("Y-m-d h:i:s"),
-            'dataChange'=> array_diff(json_decode($order, true), json_decode($dataBefore,true))
-        ]);
+    //     $user = Auth::user();
+    //     $historyUpdate['type_menu'] = "Order";
+    //     $historyUpdate['method'] = "Update Status";
+    //     $historyUpdate['meta'] = json_encode([
+    //         'user'=>$user['id'],
+    //         'createdAt' => date("Y-m-d h:i:s"),
+    //         'dataChange'=> array_diff(json_decode($order, true), json_decode($dataBefore,true))
+    //     ]);
 
-        $historyUpdate['user_id'] = $user['id'];
-        $historyUpdate['menu_id'] = $order->id;
-        $createData = HistoryUpdate::create($historyUpdate);
+    //     $historyUpdate['user_id'] = $user['id'];
+    //     $historyUpdate['menu_id'] = $order->id;
+    //     $createData = HistoryUpdate::create($historyUpdate);
         
-        return redirect()->back()->with('success', 'Status Order Berhasil Di Ubah');
-    }
+    //     return redirect()->back()->with('success', 'Status Order Berhasil Di Ubah');
+    // }
 
     public function storeOrderPayment(Request $request)
     {
@@ -876,7 +880,11 @@ class OrderController extends Controller
     public function editOrderPayment(Request $request)
     {
         if($request->has('order_id') && $request->has('order_payment_id')){
-            $orderPayment = OrderPayment::where('order_id', $request->get('order_id'))
+            $orderPayment = $request->order_db == 'online' 
+                ? OrderPaymentOnline::query()
+                : OrderPayment::query();
+
+            $orderPayment = $orderPayment->where('order_id', $request->get('order_id'))
                 ->where('id', $request->get('order_payment_id'))->first();
 
             if ($orderPayment) {
@@ -2033,6 +2041,7 @@ class OrderController extends Controller
     {
         if($id){
             $orderPayment = OrderPayment::find($id);
+            if (!$orderPayment) $orderPayment = OrderPaymentOnline::find($id);
             if(isset($orderPayment)){
                 return response()->json([
                     'payment_date' => $orderPayment->payment_date,

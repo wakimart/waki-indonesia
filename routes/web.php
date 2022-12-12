@@ -448,6 +448,18 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::match(['put', 'patch'], '/update_order_payment_for_those_who_are_not_head_admin/{id}', 'OrderController@updateOrderPaymentForThoseWhoAreNotHeadAdmin')->name('update_order_payment_for_those_who_are_not_head_admin');
     });
 
+    Route::group(['prefix' => 'order_online', 'middleware' => 'auth'], function() {
+        // Update Status Order Online
+        Route::post('/update_status_order', 'Online\OrderOnlineController@updateStatucOrder')
+            ->name('update_status_order_online')
+            ->middleware('can:change-status_order');
+        
+        //Update Order Payment Status Online
+        Route::post('/update_status_order_payment', 'Online\OrderOnlineController@updateStatusOrderPayment')
+            ->name('update_status_order_payment_online')
+            ->middleware('can:change-status_payment');
+    });
+
     Route::group(['prefix' => 'total_sale', 'middleware' => 'auth'], function() {
         //List Total Sale
         Route::get('/list_total_sale', 'TotalSaleController@listTotalSale')

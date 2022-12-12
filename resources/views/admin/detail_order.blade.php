@@ -157,6 +157,12 @@
                         @endif
                     </thead>
                     @foreach ($order->orderPayment as $orderPayment)
+                    @php 
+                        $oOfflinePayment = ($orderOffline->orderPayment ?? null) 
+                            ? $orderOffline->orderPayment->find($orderPayment['id']) 
+                            : null; 
+                        if ($oOfflinePayment) $orderPayment = $oOfflinePayment;
+                    @endphp
                     <tr>
                         <td>{{ $orderPayment->payment_date }}</td>
                         <td>{{ ucfirst($orderPayment->type) }}</td>
@@ -180,23 +186,55 @@
                                 <span class="badge badge-danger">Rejected</span>
                             @endif
                         </td>
+
+                        {{-- ========== Order Payment Online ========== --}}
+                        @if(!$oOfflinePayment)
+                        @can('edit-order')
+                            @if ($order->status != 'new' || Auth::user()->inRole("head-admin"))
+                                @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
+                                    <td style="text-align: center;">
+                                        <button value="{{ $orderPayment['id'] }}"
+                                            data-toggle="modal"
+                                            data-target="#online-editPaymentModal"
+                                            class="btn btn-delete online-btn-edit_order_payment">
+                                            <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                                        </button>
+                                    </td>
+                                @endif
+                                {{-- @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
+                                    <td style="text-align: center;">
+                                        <button value="{{ route('delete_order_payment', ['id' => $orderPayment['id']])}}"
+                                            data-toggle="modal"
+                                            data-target="#deleteDoModal"
+                                            class="btn btn-delete btn-delete_order_payment">
+                                            <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
+                                        </button>
+                                    </td>
+                                @endif --}}
+                            @endif
+                        @endcan
+                        @endif
+                        {{-- ========== END Order Payment Online ========== --}}
+
+                        {{-- ========= Order Payment Offline ========== --}}
+                        @if($oOfflinePayment)
                         <td style="text-align: center;">
-                            <button value="{{ $orderPayment['id'] }}" class="btn-delete btn-view_order_payment">
+                            <button value="{{ $oOfflinePayment['id'] }}" class="btn-delete btn-view_order_payment">
                                 <i class="mdi mdi-eye" style="font-size: 24px; color:#33b5e5;"></i>
                             </button>
                         </td>
-                        @if($orderPayment['status'] == 'verified' && !Auth::user()->inRole("head-admin"))
+                        @if($oOfflinePayment['status'] == 'verified' && !Auth::user()->inRole("head-admin"))
                             <td style="text-align: center;">
-                                <button value="{{ $orderPayment['id'] }}" class="btn-delete btn-edit_order_payment_for_those_who_are_not_head_admin">
+                                <button value="{{ $oOfflinePayment['id'] }}" class="btn-delete btn-edit_order_payment_for_those_who_are_not_head_admin">
                                     <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
                                 </button>
                             </td>
                         @endif
                         @can('edit-order')
                             @if ($order->status != 'new' || Auth::user()->inRole("head-admin"))
-                            @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
+                            @if($oOfflinePayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
                                 <td style="text-align: center;">
-                                    <button value="{{ $orderPayment['id'] }}"
+                                    <button value="{{ $oOfflinePayment['id'] }}"
                                         data-toggle="modal"
                                         data-target="#editPaymentModal"
                                         class="btn-delete btn-edit_order_payment">
@@ -204,9 +242,9 @@
                                     </button>
                                 </td>
                             @endif
-                            @if($orderPayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
+                            @if($oOfflinePayment['status'] !== "verified" || Auth::user()->inRole("head-admin"))
                                 <td style="text-align: center;">
-                                    <button value="{{ route('delete_order_payment', ['id' => $orderPayment['id']])}}"
+                                    <button value="{{ route('delete_order_payment', ['id' => $oOfflinePayment['id']])}}"
                                         data-toggle="modal"
                                         data-target="#deleteDoModal"
                                         class="btn-delete btn-delete_order_payment">
@@ -216,6 +254,8 @@
                             @endif
                             @endif
                         @endcan
+                        @endif
+                        {{-- ========= END Order Payment Offline ========== --}}
                     </tr>
                     @endforeach
                     <tr>
@@ -342,10 +382,10 @@
                   <a href="whatsapp://send?text={{ Route('order_success') }}?code={{ $order['code'] }}" data-action="share/whatsapp/share"
                   class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
                   @if (Gate::check('edit-order'))
-                  <button type="button" data-toggle="modal" data-target="#addPaymentModal"
+                  {{-- <button type="button" data-toggle="modal" data-target="#addPaymentModal"
                       class="btn btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash">
                       Add Payment
-                  </button>
+                  </button> --}}
                 </div>
                 <div class="clearfix"></div>
                 @endif
@@ -384,6 +424,158 @@
             </div>
 
         </div>
+            {{-- ========== Order Payment Online Modal ========== --}}
+            <!-- Modal Edit Payment -->
+            <div class="modal fade"
+                id="online-editPaymentModal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="online-frmEditPayment"
+                                method="post"
+                                action="{{ route('update_status_order_payment_online') }}"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" id="online-editPayment-order_id" name="order_id" value="{{ $order['id'] }}">
+                                <input type="hidden" id="online-editPayment-order_payment_id" name="order_payment_id" value="">
+                                <h5 style="text-align: center;">
+                                    Edit Payment
+                                </h5>
+                                <br>
+                                <div class="form-group mb-1">
+                                    <label for="">Payment Date</label>
+                                    <input type="date"
+                                        id="online-editPayment-payment_date"
+                                        class="form-control"
+                                        name="payment_date"
+                                        value=""
+                                        required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Bank</label>
+                                    <select class="form-control"
+                                        id="online-editPayment-bank_id"
+                                        name="bank_id"
+                                        data-msg="Mohon Pilih Bank" required>
+                                        <option selected disabled value="">
+                                            Choose Bank
+                                        </option>
+
+                                        @foreach ($banks as $bank)
+                                            <option value="{{ $bank->id }}">
+                                                {{ $bank->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Cicilan</label>
+                                    <select class="form-control bank_cicilan"
+                                        id="online-editPayment-cicilan"
+                                        name="cicilan"
+                                        data-msg="Mohon Pilih Jumlah Cicilan" required>
+                                        <option selected value="1">1X</option>
+                                        @for ($i = 2; $i <= 12; $i += 2)
+                                            <option class="other_valCicilan"
+                                                value="{{ $i }}">
+                                                {{ $i }}X
+                                            </option>
+                                        @endfor
+                                        <option class="other_valCicilan"
+                                            value="18">
+                                            18X
+                                        </option>
+                                        <option class="other_valCicilan"
+                                            value="24">
+                                            24X
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Nominal Payment</label>
+                                    <input type="text"
+                                        id="online-editPayment-total_payment"
+                                        class="form-control downpayment"
+                                        name="total_payment"
+                                        placeholder="Nominal Payment"
+                                        required
+                                        autocomplete="off"
+                                        data-type="currency"
+                                        data-msg="Mohon Isi Total Pembayaran" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Bukti Pembayaran</label>
+                                    <label style="float: right">(Min: 1) (Max: 3)</label>
+                                    <div class="clearfix"></div>
+                                    @for ($i = 0; $i < 3; $i++)
+                                        <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                            style="padding: 15px; float: left;">
+                                            <label>Image {{ $i + 1 }}</label>
+                                            <div class="imagePreview"
+                                                style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
+                                            </div>
+                                            <label class="file-upload-browse btn btn-gradient-primary"
+                                                style="margin-top: 15px; padding: 10px">
+                                                Upload
+                                                <input name="images_{{ $i }}"
+                                                    id="online-editPayment-productimg-{{ $i }}"
+                                                    type="file"
+                                                    accept=".jpg,.jpeg,.png"
+                                                    class="uploadFile img"
+                                                    value="Upload Photo"
+                                                    style="width: 0px; height: 0px; overflow: hidden; border: none !important;" />
+                                            </label>
+                                            <i class="mdi mdi-window-close del"></i>
+                                        </div>
+                                    @endfor
+                                </div>
+                            </form>
+                            <div class="clearfix"></div>
+                            @if (Gate::check('change-status_payment') && $order->status != 'new')
+                            <div id="online-divUpdateStatusPayment" class="text-center p-3" style="border: 1px solid black">
+                                <h5 class="mb-3">Status Payment</h5>
+                                <form id="online-frmUpdateStatusPayment"
+                                    method="post"
+                                    action="{{ route('update_status_order_payment_online') }}">
+                                    @csrf
+                                    <input type="hidden" id="online-updateStatusPayment-order_id" name="order_id" value="{{ $order['id'] }}">
+                                    <input type="hidden" id="online-updateStatusPayment-order_payment_id" name="order_payment_id" value="">
+                                    <div class="btn-action" style="text-align: center;">
+                                        @if (Gate::check('change-status_payment_verified'))
+                                        <button type="submit" class="btn btn-gradient-primary" id="online-btn-update-status-payment-true" name="status_acc" value="true">Verified</button>
+                                        @endif
+                                        @if (Gate::check('change-status_payment_rejected'))
+                                        <button type="submit" class="btn btn-gradient-danger" id="online-btn-update-status-payment-false" name="status_acc" value="false">Rejected</button>
+                                        @endif
+                                    </div>
+                                </form>
+                            </div>
+                            @endif
+                        </div>
+                        <div class="modal-footer footer-cash">
+                            <button type="submit" form="online-frmEditPayment"
+                                id="online-submitFrmEditPayment"
+                                class="btn btn-gradient-success mr-2">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Edit Payment -->
+            {{-- ========== END Order Payment Online Modal ========== --}}
+
             <!-- Modal Change Status Order -->
             <div class="modal fade"
                 id="modal-change-status"
@@ -395,7 +587,7 @@
                         <form id="actionAdd"
                             class="forms-sample"
                             method="POST"
-                            action="{{ route('update_status_order') }}">
+                            action="{{ route('update_status_order_online') }}">
                             @csrf
                             <div class="modal-header">
                                 <button type="button"
@@ -1463,6 +1655,57 @@
                 });
             }
         });
+
+        // ======== Script Order Payment Online ======== //
+        // Edit Order Payment Online
+        $(".online-btn-edit_order_payment").click(function() {
+            $("#online-submitFrmEditPayment").hide();
+            $("#online-divUpdateStatusPayment").hide();
+            var order_payment_id = $(this).val();
+            $.ajax({
+                method: "post",
+                url: "{{ route('edit_order_payment') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    order_id: "{{ $order['id'] }}",
+                    order_payment_id: order_payment_id,
+                    order_db: 'online',
+                },
+                success: function(data) {
+                    if (data.status == 'success') {
+                        const result = data.result;
+
+                        $("#online-editPayment-order_payment_id").val(order_payment_id);
+                        $("#online-editPayment-payment_date").val(result.payment_date);
+                        $("#online-editPayment-bank_id").val(result.bank_id);
+                        $("#online-editPayment-cicilan").val(result.cicilan);
+                        $("#online-editPayment-total_payment").val(numberWithCommas(result.total_payment));
+
+                        const mainUrlImage = "{{ env('APP_URL_SERVER').'/sources/order' }}";
+                        $.each(JSON.parse(result.image), function(index, image) {
+                            $("#online-editPayment-productimg-" + index).closest(".imgUp").find(".imagePreview")
+                                .css('background-image', 'url(' + mainUrlImage + "/" +image + ')');
+                        });
+
+                        @if (Gate::check('change-status_payment'))
+                        if (result.status != "verified") {
+                            $("#online-updateStatusPayment-order_payment_id").val(order_payment_id);
+                            $("#online-divUpdateStatusPayment").show();
+                        }
+                        @endif
+
+                        // $("#online-submitFrmEditPayment").show();
+                        $("#online-frmEditPayment input, #online-frmEditPayment select, #online-frmEditPayment textarea").prop('disabled', true);
+                        $("#online-frmEditPayment .file-upload-browse, #online-frmEditPayment .del").hide();
+                    } else {
+                        alert(data.result);
+                    }
+                },
+                error: function(data) {
+                    alert("Error!");
+                }
+            });
+        })
     });
 
 </script>
