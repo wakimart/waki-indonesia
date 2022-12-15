@@ -142,7 +142,17 @@
                             @foreach ($statusAbsentOffs as $statusKey => $absentOffs)
                             <li class="nav-item">
                                 <a class="nav-link 
-                                    @if ($statusKey == App\AbsentOff::$status['1']) active @endif" 
+                                    @php
+                                        if(isset($_GET['current_tab'])){
+                                            if($_GET['current_tab'] == $statusKey){
+                                                echo 'active';
+                                            }
+                                        }elseif($statusKey == App\AbsentOff::$status['1']){
+                                            echo 'active';
+                                        }else{
+                                            echo '';
+                                        }
+                                    @endphp"
                                     id="{{ $statusKey }}-tab" 
                                     data-toggle="tab" 
                                     href="#{{ $statusKey }}" 
@@ -157,7 +167,17 @@
                         <div class="tab-content" id="myTabContent">
                             @foreach ($statusAbsentOffs as $statusKey => $absentOffs)
                             <div class="tab-pane fade p-3
-                                @if ($statusKey == App\AbsentOff::$status['1']) show active @endif" 
+                                @php
+                                    if(isset($_GET['current_tab'])){
+                                        if($_GET['current_tab'] == $statusKey){
+                                            echo 'show active';
+                                        }
+                                    }elseif($statusKey == App\AbsentOff::$status['1']){
+                                        echo 'show active';
+                                    }else{
+                                        echo '';
+                                    }
+                                @endphp"
                                 id="{{ $statusKey }}" role="tabpanel" 
                                 aria-labelledby="{{ $statusKey }}-tab">
 
@@ -214,6 +234,7 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    @php request()->merge(['current_tab'=>$statusKey]); @endphp
                                     {{ $absentOffs->appends(request()->input())->links() }}
                                 </div>
                             </div>
