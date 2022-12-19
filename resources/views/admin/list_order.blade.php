@@ -392,6 +392,7 @@ $menu_item_second = "list_order";
                                 <tr>
                                     <th> No. </th>
                                     <th> Order Code </th>
+                                    <th> Temp No </th>
                                     <th> @sortablelink('orderDate', 'Order Date') </th>
                                     <th> Member Name </th>
                                     <th> Type Customer </th>
@@ -419,6 +420,9 @@ $menu_item_second = "list_order";
                                             <a href="{{ route('detail_order') }}?code={{ $order['code'] }}">
                                                 {{ $order['code'] }}
                                             </a>
+                                        </td>
+                                        <td {{-- rowspan="{{ $totalProduct }}" --}}>
+                                            {{ $order['temp_no'] }}
                                         </td>
                                         <td {{-- rowspan="{{ $totalProduct }}" --}}>
                                             {{ date("d/m/Y", strtotime($order['orderDate'])) }}

@@ -105,6 +105,17 @@ $menu_item_second = "add_order";
                                     <strong></strong>
                                 </span>
                             </div>
+                            <div class="form-group">
+                                <label for="tempNo">Temp No (Opsional)</label>
+                                <input type="text"
+                                    class="form-control"
+                                    name="temp_no"
+                                    placeholder="Temp No"/>
+                                <div class="validation"></div>
+                                <span class="invalid-feedback">
+                                    <strong></strong>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -358,9 +369,6 @@ $menu_item_second = "add_order";
                                                     @endforeach
                                                 </optgroup>
 
-                                                <option value="other">
-                                                    OTHER
-                                                </option>
                                             </select>
                                             <div class="validation"></div>
                                         </div>

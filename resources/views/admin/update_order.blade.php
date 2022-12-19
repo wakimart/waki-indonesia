@@ -83,6 +83,11 @@ $menu_item_page = "order";
                                 <input type="text" class="form-control" id="order-code" name="order_code" value="{{ $orders['code'] }}" readonly="">
                                 <div class="validation"></div>
                             </div>
+                            <div class="form-group">
+                                <label for="temp no">Temp No</label>
+                                <input type="text" class="form-control" name="temp_no" value="{{ $orders['temp_no'] }}">
+                                <div class="validation"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
