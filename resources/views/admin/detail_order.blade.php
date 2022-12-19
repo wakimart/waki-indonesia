@@ -75,10 +75,12 @@
                 <table class="w-100">
                     <thead>
                         <td>Order Code</td>
+                        <td>Temp No</td>
                         <td>Order Date</td>
                     </thead>
                     <tr>
                         <td>{{ $order['code'] }}</td>
+                        <td>{{ $order['temp_no'] }}</td>
                         <td class="right">{{ date("d/m/Y", strtotime($order['orderDate'])) }}</td>
                     </tr>
                 </table>

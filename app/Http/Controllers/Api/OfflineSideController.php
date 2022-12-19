@@ -74,6 +74,7 @@ class OfflineSideController extends Controller
                 $order->distric = $request->distric;
                 $order->status = $request->status;
                 $order->delivery_cso_id = $request->delivery_cso_id;
+                $order->temp_no = $request->temp_no;
                 $order->save();
 
                 foreach($request->order_details as $detail){

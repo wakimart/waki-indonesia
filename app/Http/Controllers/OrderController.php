@@ -354,6 +354,11 @@ class OrderController extends Controller
                         "code",
                         "like",
                         "%" . $filterString . "%"
+                    )
+                    ->orWhere(
+                        "temp_no",
+                        "like",
+                        "%" . $filterString . "%"
                     );
                 }
             );
@@ -447,6 +452,7 @@ class OrderController extends Controller
             $orders['province'] = $data['province_id'];
             $orders['city'] = $data['city'];
             $orders['distric'] = $data['distric'];
+            $orders['temp_no'] = $data['temp_no'];
             $orders->save();
 
             $orderDetails = OrderDetail::where("order_id", $orders["id"])->get();
