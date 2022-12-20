@@ -282,6 +282,20 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-stock_in_out']);
         });
 
+        //-- WAREHOUSE --//
+        Gate::define('add-warehouse', function ($user) {
+            return $user->hasAccess(['add-warehouse']);
+        });
+        Gate::define('browse-warehouse', function ($user) {
+            return $user->hasAccess(['browse-warehouse']);
+        });
+        Gate::define('edit-warehouse', function ($user) {
+            return $user->hasAccess(['edit-warehouse']);
+        });
+        Gate::define('delete-warehouse', function ($user) {
+            return $user->hasAccess(['delete-warehouse']);
+        });
+
         //-- TYPE CUSTOMER --//
         Gate::define('add-type_customer', function ($user) {
             return $user->hasAccess(['add-type_customer']);

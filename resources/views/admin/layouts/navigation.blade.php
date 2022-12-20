@@ -488,6 +488,26 @@
 </li>
 @endif
 
+@if(Gate::check('add-warehouse') || Gate::check('browse-warehouse'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'warehouse'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#warehouse-dd" aria-expanded="false" aria-controls="warehouse-dd">
+    <span class="menu-title">Warehouse</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-gift menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'warehouse'? 'show': '' }}" id="warehouse-dd">
+    <ul class="nav flex-column sub-menu">
+      @if(Gate::check('add-warehouse'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_warehouse'? 'active': '' }}" href="{{route('add_warehouse')}}">Add Warehouse</a></li>
+      @endif
+      @if(Gate::check('browse-warehouse'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_warehouse'? 'active': '' }}" href="{{route('list_warehouse')}}">List Warehouse</a></li>
+      @endif
+    </ul>
+  </div>
+</li>
+@endif
+
 @if(Gate::check('add-promo') || Gate::check('browse-promo'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'promo'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#promo-dd" aria-expanded="false" aria-controls="promo-dd">

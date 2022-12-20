@@ -908,6 +908,27 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->middleware('can:delete-stock_in_out');
     });
 
+    Route::group(["prefix" => "warehouse", "middleware" => "auth"], function () {
+        Route::get("add", "WarehouseController@create")
+            ->name("add_warehouse")
+            ->middleware('can:add-warehouse');
+        Route::post("store", "WarehouseController@store")
+            ->name("store_warehouse")
+            ->middleware('can:add-warehouse');
+        Route::get("list", "WarehouseController@index")
+            ->name("list_warehouse")
+            ->middleware('can:browse-warehouse');
+        Route::get("edit/{id}", "WarehouseController@edit")
+            ->name("edit_warehouse")
+            ->middleware('can:edit-warehouse');
+        Route::post("update", "WarehouseController@update")
+            ->name("update_warehouse")
+            ->middleware('can:edit-warehouse');
+        Route::post("delete", "WarehouseController@destroy")
+            ->name("delete_warehouse")
+            ->middleware('can:delete-warehouse');
+    });
+
     Route::group(['prefix' => 'promo', 'middleware' => 'auth'], function(){
     	// Add Form Promo
     	Route::get('/', 'PromoController@create')

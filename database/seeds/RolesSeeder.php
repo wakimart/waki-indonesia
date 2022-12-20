@@ -125,6 +125,12 @@ class RolesSeeder extends Seeder
                 'edit-stock_out' => true,
                 'delete-stock_in_out' => true,
 
+                //Warehouse
+        		'add-warehouse' => true,
+                'browse-warehouse' => true,
+        		'edit-warehouse' => true,
+                'delete-warehouse' => true,
+
                 //report
 
                 //user admin
@@ -350,6 +356,12 @@ class RolesSeeder extends Seeder
                 'edit-stock_in' => true,
                 'edit-stock_out' => true,
                 'delete-stock_in_out' => true,
+
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
 
                 //report
 
@@ -577,6 +589,12 @@ class RolesSeeder extends Seeder
                 'edit-stock_out' => false,
                 'delete-stock_in_out' => false,
 
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
+
                 //report
 
                 //user admin
@@ -798,6 +816,12 @@ class RolesSeeder extends Seeder
                 'edit-stock_out' => false,
                 'delete-stock_in_out' => false,
 
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
+
                 //report
 
                 //user admin
@@ -1017,6 +1041,12 @@ class RolesSeeder extends Seeder
                 'edit-stock_in' => false,
                 'edit-stock_out' => false,
                 'delete-stock_in_out' => false,
+
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
 
                 //report
 
@@ -1238,6 +1268,12 @@ class RolesSeeder extends Seeder
                 'edit-stock_out' => false,
                 'delete-stock_in_out' => false,
 
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
+
                 //report
 
                 //user admin
@@ -1457,6 +1493,12 @@ class RolesSeeder extends Seeder
                 'edit-stock_in' => false,
                 'edit-stock_out' => false,
                 'delete-stock_in_out' => false,
+
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
 
                 //report
 

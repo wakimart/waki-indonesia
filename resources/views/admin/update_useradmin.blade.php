@@ -1029,6 +1029,48 @@ $menu_item_page = "user";
                             </div>
 
                             <div class="form-group" id="group-product">
+                                <span style="display:block;">WAREHOUSE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-warehouse">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-warehouse" />
+                                            Add Warehouse
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-warehouse">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-warehouse" />
+                                            Browse Warehouse
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-warehouse">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-warehouse" />
+                                            Edit Warehouse
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-warehouse">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-warehouse" />
+                                            Delete Warehouse
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
                                 <span style="display:block;">USER ADMIN</span>
                                 <div class="div-CheckboxGroup">
                                     <div class="form-check form-check-inline">
