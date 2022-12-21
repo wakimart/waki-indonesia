@@ -149,6 +149,17 @@ class OrderController extends Controller
             $data['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
             $data['province'] = $data['province_id'];
             $data['status'] = "new";
+
+            //pembentukan array request hs
+            $data['request_hs'] = [];
+            for ($i=0; $i<3; $i++) {
+                $request_hs_date = $request->input('request_hs_date_'.$i);
+                $request_hs_time = $request->input('request_hs_time_'.$i);
+                if ($request_hs_date && $request_hs_time) {
+                    $data['request_hs'][] = $request_hs_date . " " . $request_hs_time;
+                }
+            }
+            $data['request_hs'] = json_encode($data['request_hs']);
             
             $order = Order::create($data);
 
@@ -448,6 +459,18 @@ class OrderController extends Controller
             $orders['city'] = $data['city'];
             $orders['distric'] = $data['distric'];
             $orders['temp_no'] = $data['temp_no'];
+
+            //pembentukan array request hs
+            $data['request_hs'] = [];
+            for ($i=0; $i<3; $i++) {
+                $request_hs_date = $request->input('request_hs_date_'.$i);
+                $request_hs_time = $request->input('request_hs_time_'.$i);
+                if ($request_hs_date && $request_hs_time) {
+                    $data['request_hs'][] = $request_hs_date . " " . $request_hs_time;
+                }
+            }
+            $orders['request_hs'] = json_encode($data['request_hs']);
+
             $orders->save();
 
             $orderDetails = OrderDetail::where("order_id", $orders["id"])->get();
@@ -772,6 +795,10 @@ class OrderController extends Controller
             // Save Delivery CSO
             if ($order->status == Order::$status['3']) {
                 $order->delivery_cso_id = json_encode($request->delivery_cso_id);
+                // Add Home Service From Order Delivery
+                if ($request->index_order_home_service) {
+                    HomeServiceController::addHomeServiceFromOrderDelivery($order->id, $request->index_order_home_service);
+                }
             }        
             $order->save();
             

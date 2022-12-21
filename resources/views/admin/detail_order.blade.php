@@ -294,6 +294,19 @@
                         </tr>
                     @endforeach
                     @endif
+                    @if ($order->home_service_id)
+                    <tr><td></td></tr>
+                    <tr>
+                        <td>Homeservice Delivery Schedule :</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a href="{{ route("homeServices_success", ['code' => $order->homeService['code']]) }}">
+                                {{ $order->homeService['code'] }} ({{ date('Y-m-d H:i', strtotime($order->homeService['appointment'])) }})
+                            </a>
+                        </td>
+                    </tr>
+                    @endif
                     @if (Gate::check('change-status_order'))
                         <tr>
                             <td>
@@ -418,6 +431,16 @@
                                         </div>
                                     </div>
                                     <div id="tambahan_cso"></div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    @php $order_request_hs = json_decode($order['request_hs'], true) ?? []; @endphp
+                                    <label>Pilihan Homeservice</label>
+                                    <select class="form-control" name="index_order_home_service">
+                                        <option value="">No Request Homeservice</option>
+                                        @foreach ($order_request_hs as $key => $order_r_hs)
+                                        <option value="{{ $key }}">{{ date('d-m-Y H:i', strtotime($order_r_hs)) }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 @endif
                             </div>
