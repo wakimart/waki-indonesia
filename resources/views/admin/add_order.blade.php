@@ -359,12 +359,6 @@ $menu_item_second = "add_order";
                                                     <?php endforeach; ?>
                                                 </optgroup>
 
-                                                @if(Auth::user()->roles[0]['slug'] =! 'cso' && Auth::user()->roles[0]['slug'] =! 'branch')
-                                                    <option value="other">
-                                                        OTHER
-                                                    </option>
-                                                @endif
-
                                                 <optgroup label="Product">
                                                     @foreach($products as $product)
                                                     <option value="product_{{ $product->id }}">
@@ -375,6 +369,11 @@ $menu_item_second = "add_order";
                                                     @endforeach
                                                 </optgroup>
 
+                                                @if(Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'branch')
+                                                    <option value="other">
+                                                        OTHER
+                                                    </option>
+                                                @endif
                                             </select>
                                             <div class="validation"></div>
                                         </div>
