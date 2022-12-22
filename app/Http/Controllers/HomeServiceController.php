@@ -1880,10 +1880,13 @@ class HomeServiceController extends Controller
     }
 
     //Add Home Service From Order Delivery
-    public static function addHomeServiceFromOrderDelivery($order_id, $index_request_hs)
+    public static function addHomeServiceFromOrderDelivery($order, $index_request_hs, $request_hs_date, $request_hs_time)
     {
-        $order = Order::where('id', $order_id)->first();
-        $getAppointment = json_decode($order['request_hs'], true);
+        if ($index_request_hs != null) {
+            $getAppointment = json_decode($order['request_hs'], true)[$index_request_hs];
+        } else if ($request_hs_date && $request_hs_time) {
+            $getAppointment = $request_hs_date." ".$request_hs_time;
+        }
         
         $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($order['phone'], -4);
         $data['no_member'] = $order['no_member'];
@@ -1895,12 +1898,16 @@ class HomeServiceController extends Controller
         $data['phone'] = $order['phone'];
         $data['branch_id'] = $order['branch_id'];
         $data['cso_id'] = $order['cso_id'];
-        if ($order['70_cso_id'] != $order['30_cso_id']) {
+        if ($index_request_hs != null && $order['70_cso_id'] != $order['30_cso_id']) {
             $data['cso_id'] = $order['70_cso_id'];
             $data['cso2_id'] = $order['30_cso_id'];
+        } else if ($request_hs_date && $request_hs_time) {
+            $delivery_cso_id = json_decode($order->delivery_cso_id, true);
+            if (isset($delivery_cso_id[0])) $data['cso_id'] = $delivery_cso_id[0];
+            if (isset($delivery_cso_id[1])) { $data['cso2_id'] = $delivery_cso_id[1]; }
         }
         $data['cso_phone'] = Cso::where('id', $data['cso_id'])->first()['phone'];
-        $data['appointment'] = $getAppointment[$index_request_hs];
+        $data['appointment'] = $getAppointment;
         $data['type_homeservices'] = 'Home Delivery';
         $data['type_customer'] = $order['customer_type'];
         $homeservice = HomeService::create($data);
