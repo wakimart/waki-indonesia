@@ -1881,9 +1881,16 @@ class HomeServiceController extends Controller
         $data['no_member'] = $order['no_member'];
         $data['name'] = $order['name'];
         $data['address'] = $order['address'];
+        $data['province'] = $order['province'];
+        $data['city'] = $order['city'];
+        $data['distric'] = $order['distric'];
         $data['phone'] = $order['phone'];
         $data['branch_id'] = $order['branch_id'];
         $data['cso_id'] = $order['cso_id'];
+        if ($order['70_cso_id'] != $order['30_cso_id']) {
+            $data['cso_id'] = $order['70_cso_id'];
+            $data['cso2_id'] = $order['30_cso_id'];
+        }
         $data['cso_phone'] = Cso::where('id', $data['cso_id'])->first()['phone'];
         $data['appointment'] = $getAppointment[$index_request_hs];
         $data['type_homeservices'] = 'Home Delivery';
