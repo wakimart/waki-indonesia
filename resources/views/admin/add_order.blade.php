@@ -754,6 +754,18 @@ $menu_item_second = "add_order";
                         </div>
                     </div>
                 </div>
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <button type="button"
+                                class="btn btn-gradient-primary mr-2"
+                                data-toggle="modal"
+                                data-target="#modal-delivery-by-cso">
+                                Request Delivery by CSO
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -809,6 +821,46 @@ $menu_item_second = "add_order";
                     type="button"
                     data-dismiss="modal">
                     OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- modal Request Delivery by CSO -->
+<div class="modal fade" role="dialog" tabindex="-1" id="modal-delivery-by-cso">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Request Delivery by CSO</h4>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @for($i=0; $i<3; $i++)
+                <div class="form-group">
+                    <label for=""><b>Option HS {{ $i+1 }}</b></label><br/>
+                    <label for="">Tanggal Janjian</label>
+                    <input type="date" form="actionAdd" class="form-control" id="request_hs_date_{{ $i }}" name="request_hs_date_{{ $i }}"value="" />
+                    <span class="invalid-feedback"><strong></strong></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="">Jam Janjian</label>
+                    <input type="time" form="actionAdd" class="form-control" name="request_hs_time_{{ $i }}" id="request_hs_time_{{ $i }}"/>
+                    <span class="invalid-feedback"><strong></strong></span>
+                </div>
+                @endfor
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-gradient-primary"
+                    type="button"
+                    data-dismiss="modal">
+                    Ok
                 </button>
             </div>
         </div>

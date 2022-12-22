@@ -1879,6 +1879,36 @@ class HomeServiceController extends Controller
         return $result;
     }
 
+    //Add Home Service From Order Delivery
+    public static function addHomeServiceFromOrderDelivery($order_id, $index_request_hs)
+    {
+        $order = Order::where('id', $order_id)->first();
+        $getAppointment = json_decode($order['request_hs'], true);
+        
+        $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($order['phone'], -4);
+        $data['no_member'] = $order['no_member'];
+        $data['name'] = $order['name'];
+        $data['address'] = $order['address'];
+        $data['province'] = $order['province'];
+        $data['city'] = $order['city'];
+        $data['distric'] = $order['distric'];
+        $data['phone'] = $order['phone'];
+        $data['branch_id'] = $order['branch_id'];
+        $data['cso_id'] = $order['cso_id'];
+        if ($order['70_cso_id'] != $order['30_cso_id']) {
+            $data['cso_id'] = $order['70_cso_id'];
+            $data['cso2_id'] = $order['30_cso_id'];
+        }
+        $data['cso_phone'] = Cso::where('id', $data['cso_id'])->first()['phone'];
+        $data['appointment'] = $getAppointment[$index_request_hs];
+        $data['type_homeservices'] = 'Home Delivery';
+        $data['type_customer'] = $order['customer_type'];
+        $homeservice = HomeService::create($data);
+        
+        $order->home_service_id = $homeservice['id'];
+        $order->save();
+    }
+
     //KHUSUS API APPS
     public function addApi(Request $request)
     {
