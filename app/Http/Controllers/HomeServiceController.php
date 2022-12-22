@@ -793,21 +793,29 @@ class HomeServiceController extends Controller
                         . '<td>';
 
                     if (!$isAdminManagement) {
-                        $result .= '<p class="titleAppoin">'
-                        . '<a href="'
-                        . route('homeServices_success')
-                        . '?code='
-                        . $dayData->hs_code
-                        . '" target="_blank">'
-                        . $dayData->hs_code
-                        . '</a>'
-                        . '</p>';
+                        if(Auth::user()->hasPermission('view-phone-home_service')){
+                            $result .= '<p class="titleAppoin">'
+                                . '<a href="'
+                                . route('homeServices_success')
+                                . '?code='
+                                . $dayData->hs_code
+                                . '" target="_blank">'
+                                . $dayData->hs_code
+                                . '</a>'
+                                . '</p>';
+                        }
+                        else{
+                            $result .= '<p class="titleAppoin">'
+                                . $dayData->hs_code
+                                . '</p>';
+                        }
+                        
                     }
 
                     $result .= '<p class="descAppoin">';
 
                     if (!$isAdminManagement) {
-                        $result .= $dayData->customer_name . ' - ' . $dayData->customer_phone
+                        $result .= $dayData->customer_name . ' - ' . ((Auth::user()->hasPermission('view-phone-home_service')) ? $dayData->customer_phone : '')
                             . '<br>';
                     }
 
