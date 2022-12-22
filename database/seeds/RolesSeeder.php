@@ -66,6 +66,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => true,
@@ -309,6 +311,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => true,
@@ -552,6 +556,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => false,
@@ -790,6 +796,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => false,
@@ -1027,6 +1035,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => true,
@@ -1264,6 +1274,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => true,
@@ -1501,6 +1513,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => true,

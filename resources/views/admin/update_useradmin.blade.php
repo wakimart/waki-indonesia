@@ -602,6 +602,22 @@ $menu_item_page = "user";
                                             Cancel Acc Home Service
                                         </label>
                                     </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="view-phone-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="view-phone-home_service" />
+                                            View Phone Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="view-type-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="view-type-home_service" />
+                                            View Type Home Service
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 

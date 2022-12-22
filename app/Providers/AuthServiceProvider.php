@@ -139,6 +139,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('acc-cancel-home_service', function ($user) {
             return $user->hasAccess(['acc-cancel-home_service']);
         });
+        Gate::define('view-phone-home_service', function ($user) {
+            return $user->hasAccess(['view-phone-home_service']);
+        });
+        Gate::define('view-type-home_service', function ($user) {
+            return $user->hasAccess(['view-type-home_service']);
+        });
 
         //-- AREA HOME SERVICE --//
         Gate::define('browse-area_home_service', function ($user) {
