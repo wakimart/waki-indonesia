@@ -447,12 +447,12 @@
                                 <div class="form-group mb-3">
                                     <label for="">Tanggal Janjian</label>
                                     <input type="date" class="form-control" id="request_hs_date" name="request_hs_date"
-                                        value="" />
+                                        value="" required="" />
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="">Jam Janjian</label>
                                     <input type="time" class="form-control" name="request_hs_time" id="request_hs_time"
-                                        value=""/>
+                                        value="" required="" />
                                 </div>
                                 @endif
                                 @endif
