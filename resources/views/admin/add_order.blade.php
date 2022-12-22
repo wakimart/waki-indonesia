@@ -345,20 +345,6 @@ $menu_item_second = "add_order";
                                                     Choose Product
                                                 </option>
 
-                                                <optgroup label="Promo">
-                                                    <?php foreach ($promos as $key => $promo): ?>
-                                                        <option value="promo_<?php echo $promo["id"]; ?>">
-                                                            <?php
-                                                            echo $promo->code
-                                                                . " - ("
-                                                                . implode(", ", $promo->productName())
-                                                                . ") - Rp. "
-                                                                . number_format($promo->price);
-                                                            ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                </optgroup>
-
                                                 <optgroup label="Product">
                                                     @foreach($products as $product)
                                                     <option value="product_{{ $product->id }}">
@@ -369,6 +355,11 @@ $menu_item_second = "add_order";
                                                     @endforeach
                                                 </optgroup>
 
+                                                @if(Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'branch')
+                                                    <option value="other">
+                                                        OTHER
+                                                    </option>
+                                                @endif
                                             </select>
                                             <div class="validation"></div>
                                         </div>

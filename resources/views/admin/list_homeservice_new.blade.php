@@ -356,26 +356,28 @@ $menu_item_second = "list_homeservice";
                                             <span class="mdi mdi-file-document"></span>
                                             Export XLS
                                         </button>
-                                        <button id="btn-exportDate"
-                                            type="button"
-                                            class="btn btn-gradient-info m-1"
-                                            name="export"
-                                            data-toggle="modal"
-                                            data-target="#datePickerHomeServiceModal"
-                                            value="-">
-                                            <span class="mdi mdi-file-document"></span>
-                                            Export XLS with Start-End Date
-                                        </button>
-                                        <button id="btn-exportByInput"
-                                            type="button"
-                                            class="btn btn-gradient-info m-1"
-                                            name="export"
-                                            data-toggle="modal"
-                                            data-target="#datePickerByInput"
-                                            value="-">
-                                            <span class="mdi mdi-file-document"></span>
-                                            Export XLS by Input Date
-                                        </button>
+                                        @if(Gate::check('view-type-home_service') && Gate::check('view-phone-home_service'))
+                                            <button id="btn-exportDate"
+                                                type="button"
+                                                class="btn btn-gradient-info m-1"
+                                                name="export"
+                                                data-toggle="modal"
+                                                data-target="#datePickerHomeServiceModal"
+                                                value="-">
+                                                <span class="mdi mdi-file-document"></span>
+                                                Export XLS with Start-End Date
+                                            </button>
+                                            <button id="btn-exportByInput"
+                                                type="button"
+                                                class="btn btn-gradient-info m-1"
+                                                name="export"
+                                                data-toggle="modal"
+                                                data-target="#datePickerByInput"
+                                                value="-">
+                                                <span class="mdi mdi-file-document"></span>
+                                                Export XLS by Input Date
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -739,6 +741,7 @@ $menu_item_second = "list_homeservice";
           </div>
           <div class="modal-body">
               <table style="margin: auto;">
+                @if(Gate::check('view-type-home_service'))
                   <tr>
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Customer: </td>
                       <td id="view_type_customer" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
@@ -747,6 +750,7 @@ $menu_item_second = "list_homeservice";
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Home Service: </td>
                       <td id="view_type_homeservices" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                   </tr>
+                @endif
 
                   <tr><td style="padding-top: 1em;"></td></tr>
 
@@ -758,10 +762,13 @@ $menu_item_second = "list_homeservice";
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Nama: </td>
                       <td id="view-name" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                   </tr>
+
+                @if(Gate::check('view-phone-home_service'))
                   <tr style="margin-top: 0.5em">
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Telp: </td>
                       <td id="view-phone" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                   </tr>
+                @endif
                   <tr style="margin-top: 0.5em">
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Provinsi: </td>
                       <td id="view-province" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
@@ -834,18 +841,20 @@ $menu_item_second = "list_homeservice";
                           </button>
                       </a>
                   @endif
-                  <a id="url_share"
-                      href=""
-                      data-action="share/whatsapp/share"
-                      target="_blank">
-                      <button id="btn-share"
-                          type="button"
-                          class="btn btn-gradient-primary mr-2">
-                          <span class="mdi mdi-whatsapp">
-                          </span>
-                          Share
-                      </button>
-                  </a>
+                  @if(Gate::check('view-type-home_service') && Gate::check('view-phone-home_service'))
+                      <a id="url_share"
+                          href=""
+                          data-action="share/whatsapp/share"
+                          target="_blank">
+                          <button id="btn-share"
+                              type="button"
+                              class="btn btn-gradient-primary mr-2">
+                              <span class="mdi mdi-whatsapp">
+                              </span>
+                              Share
+                          </button>
+                      </a>
+                  @endif
                   <button class="btn btn-light"
                       data-dismiss="modal"
                       aria-label="Close">
@@ -1798,11 +1807,15 @@ function clickView(btn) {
             + ":"
             + ("0" + (appointmentDate.getMinutes())).slice(-2);
 
-        document.getElementById("view_type_customer").innerHTML = result.type_customer;
-        document.getElementById("view_type_homeservices").innerHTML = result.type_homeservices;
+        @if(Gate::check('view-type-home_service'))
+            document.getElementById("view_type_customer").innerHTML = result.type_customer;
+            document.getElementById("view_type_homeservices").innerHTML = result.type_homeservices;
+        @endif
         document.getElementById("view-no_member").innerHTML = result.no_member;
         document.getElementById("view-name").innerHTML = result.name;
-        document.getElementById("view-phone").innerHTML = (result.phone).toString();
+        @if(Gate::check('view-phone-home_service'))
+            document.getElementById("view-phone").innerHTML = (result.phone).toString();
+        @endif
         document.getElementById("view-province").innerHTML = result.province_name;
         document.getElementById("view-city").innerHTML = result.city_name;
         document.getElementById("view-distric").innerHTML = result.district_name;
