@@ -1,5 +1,25 @@
 <?php
-    $menu_item_page = "order";
+    $menu_item_page = "order";    
+
+    // for multiple offline url
+    stream_context_set_default( [
+        'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+        ],
+    ]);
+    $offlineURL = '';
+    try {
+        $url = 'https://waki-indonesia-offline.office/cms-admin/login';
+        $headers = get_headers($url, 1);
+        if($headers[0] == 'HTTP/1.0 200 OK'){
+            $offlineURL = env('OFFLINE_URL');
+        }else{
+            $offlineURL = env('OFFLINE_URL_2');
+        }
+    } catch (\Throwable $th) {
+        $offlineURL = env('OFFLINE_URL_2');
+    }
 ?>
 @extends('admin.layouts.template')
 
@@ -975,7 +995,7 @@
             // response();
             $.ajax({
                 method: "post",
-                url: "http://{{ env('OFFLINE_URL') }}/api/end-point-for-check-status-network",
+                url: "http://{{ $offlineURL }}/api/end-point-for-check-status-network",
                 dataType: 'json',
                 contentType: 'application/json',
                 processData: false,
@@ -1044,13 +1064,14 @@
                     'status':$('#status-order').val(),
                     'delivery_cso_id':deliveryCSOID,
                     'order_details':order_details,
-                    'user_id':'{{Auth::user()->code}}'
+                    'user_id':'{{Auth::user()->code}}',
+                    'temp_no':'{{$order->temp_no}}'
                 }
                 // $('#actionAdd').submit();
 
                 $.ajax({
                     method: "post",
-                    url: "http://{{ env('OFFLINE_URL') }}/api/replicate-order-data",
+                    url: "http://{{ $offlineURL }}/api/replicate-order-data",
                     data: order,
                     success: function(res){
                         if(res.status == 'success'){
@@ -1125,7 +1146,7 @@
 
                     $.ajax({
                         method: "post",
-                        url: "http://{{ env('OFFLINE_URL') }}/api/replicate-order-payment-data",
+                        url: "http://{{ $offlineURL }}/api/replicate-order-payment-data",
                         data: orderPaymentData,
                         success: function(res){
                             $('#frmUpdateStatusPayment').submit();
