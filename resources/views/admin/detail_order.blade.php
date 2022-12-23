@@ -452,8 +452,9 @@
                                     </div>
                                     <div id="tambahan_cso"></div>
                                 </div>
+                                @php $order_request_hs = json_decode($order['request_hs'], true) ?? []; @endphp
+                                @if($order_request_hs)
                                 <div class="form-group mb-3">
-                                    @php $order_request_hs = json_decode($order['request_hs'], true) ?? []; @endphp
                                     <label>Pilihan Homeservice</label>
                                     <select class="form-control" name="index_order_home_service">
                                         <option value="">No Request Homeservice</option>
@@ -462,6 +463,18 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                @else
+                                <div class="form-group mb-3">
+                                    <label for="">Tanggal Janjian</label>
+                                    <input type="date" class="form-control" id="request_hs_date" name="request_hs_date"
+                                        value="" required="" />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="">Jam Janjian</label>
+                                    <input type="time" class="form-control" name="request_hs_time" id="request_hs_time"
+                                        value="" required="" />
+                                </div>
+                                @endif
                                 @endif
                             </div>
                             <div class="modal-footer">

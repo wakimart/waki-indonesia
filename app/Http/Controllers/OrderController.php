@@ -796,8 +796,8 @@ class OrderController extends Controller
             if ($order->status == Order::$status['3']) {
                 $order->delivery_cso_id = json_encode($request->delivery_cso_id);
                 // Add Home Service From Order Delivery
-                if ($request->index_order_home_service) {
-                    HomeServiceController::addHomeServiceFromOrderDelivery($order->id, $request->index_order_home_service);
+                if ($request->index_order_home_service != null || ($request->request_hs_date && $request->request_hs_time)) {
+                    HomeServiceController::addHomeServiceFromOrderDelivery($order, $request->index_order_home_service, $request->request_hs_date, $request->request_hs_time);
                 }
             }        
             $order->save();
