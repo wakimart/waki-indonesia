@@ -1031,7 +1031,7 @@
             // response();
             $.ajax({
                 method: "post",
-                url: "http://{{ $offlineURL }}/api/end-point-for-check-status-network",
+                url: "https://{{ $offlineURL }}/api/end-point-for-check-status-network",
                 dataType: 'json',
                 contentType: 'application/json',
                 processData: false,
@@ -1107,7 +1107,7 @@
 
                 $.ajax({
                     method: "post",
-                    url: "http://{{ $offlineURL }}/api/replicate-order-data",
+                    url: "https://{{ $offlineURL }}/api/replicate-order-data",
                     data: order,
                     success: function(res){
                         if(res.status == 'success'){
@@ -1182,7 +1182,7 @@
 
                     $.ajax({
                         method: "post",
-                        url: "http://{{ $offlineURL }}/api/replicate-order-payment-data",
+                        url: "https://{{ $offlineURL }}/api/replicate-order-payment-data",
                         data: orderPaymentData,
                         success: function(res){
                             $('#frmUpdateStatusPayment').submit();
