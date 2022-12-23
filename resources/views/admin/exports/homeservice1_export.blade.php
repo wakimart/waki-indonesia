@@ -66,7 +66,7 @@
             @endphp
             
             <tr>
-                <td rowspan="9" style="vertical-align: center; text-align: center; border: 1px solid black">{{ $index }}</td>
+                <td rowspan="6" style="vertical-align: center; text-align: center; border: 1px solid black">{{ $index }}</td>
                 <td style="vertical-align: center; text-align: center; border: 1px solid black; background: yellow;">Appointment</td>
                 @foreach($nowHomeService as $showHS)
                     @if($showHS != null)
@@ -90,40 +90,10 @@
                 @endforeach
             </tr>
             <tr>
-                <td style="vertical-align: center; text-align: center; border: 1px solid black">Tipe Customer</td>
-                @foreach($nowHomeService as $showHS)
-                    @if($showHS != null)
-                        <td style="vertical-align: center; text-align: center; border: 1px solid black; word-wrap: break-word; height: 50px">{{ $showHS['type_customer'] }}</td>
-                    @else
-                        <td style="border: 1px solid black"></td>
-                    @endif
-                @endforeach
-            </tr>
-            <tr>
-                <td style="vertical-align: center; text-align: center; border: 1px solid black">MPC</td>
-                @foreach($nowHomeService as $showHS)
-                    @if($showHS != null)
-                        <td style="vertical-align: center; text-align: center; border: 1px solid black; word-wrap: break-word; height: 50px">{{ $showHS['no_member'] }}</td>
-                    @else
-                        <td style="border: 1px solid black"></td>
-                    @endif
-                @endforeach
-            </tr>
-            <tr>
                 <td style="vertical-align: center; text-align: center; border: 1px solid black">Customer Name</td>
                 @foreach($nowHomeService as $showHS)
                     @if($showHS != null)
                         <td style="vertical-align: center; text-align: center; border: 1px solid black; word-wrap: break-word; height: 50px">{{ $showHS['name'] }}</td>                    
-                    @else
-                        <td style="border: 1px solid black"></td>
-                    @endif
-                @endforeach
-            </tr>
-            <tr>
-                <td style="vertical-align: center; text-align: center; border: 1px solid black">Phone</td>
-                @foreach($nowHomeService as $showHS)
-                    @if($showHS != null)
-                        <td style="vertical-align: center; text-align: center; border: 1px solid black; word-wrap: break-word; height: 50px">{{ $showHS['phone'] }}</td>
                     @else
                         <td style="border: 1px solid black"></td>
                     @endif
@@ -159,18 +129,6 @@
                     @else
                         <td style="border: 1px solid black"></td>
                     @endif
-                @endforeach
-            </tr>
-            <tr>
-                <td style="vertical-align: center; text-align: center; border: 1px solid black">Delivery Name</td>
-                @foreach($nowHomeService as $showHS)
-                    <td style="border: 1px solid black"></td>
-                @endforeach
-            </tr>
-            <tr>
-                <td style="vertical-align: center; text-align: center; border: 1px solid black">Result</td>
-                @foreach($nowHomeService as $showHS)
-                    <td style="border: 1px solid black"></td>
                 @endforeach
             </tr>
 
