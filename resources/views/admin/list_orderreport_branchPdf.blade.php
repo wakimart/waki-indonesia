@@ -23,7 +23,7 @@
             </div>
             <div class="content">
                 <p class="title">
-                    Order Report By Branch
+                    Total Sale By Branch
                 </p>
                 <br>
                 <h4>Branch : {{ $currentBranch ? $currentBranch['code'] . " - " . $currentBranch['name'] : "All Branch" }}</h4>

@@ -516,7 +516,7 @@ $menu_item_page = "user";
                                             <input class="form-check-input"
                                                 type="checkbox"
                                                 id="browse-order_report_branch" />
-                                            Browse Order Report By Branch
+                                            Browse Total Sale By Branch
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -525,7 +525,67 @@ $menu_item_page = "user";
                                             <input class="form-check-input"
                                                 type="checkbox"
                                                 id="browse-order_report_cso" />
-                                            Browse Order Report By CSO
+                                            Browse Total Sale By CSO
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-total_sale">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-total_sale" />
+                                            Browse Order Report
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">FINANCIAL ROUTINE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-financial_routine">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-financial_routine" />
+                                            Add Financial Routine
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-financial_routine">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-financial_routine" />
+                                            Browse Financial Routine
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-financial_routine">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-financial_routine" />
+                                            Detail Financial Routine
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-financial_routine">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-financial_routine" />
+                                            Edit Financial Routine
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-financial_routine">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-financial_routine" />
+                                            Delete Financial Routine
                                         </label>
                                     </div>
                                 </div>

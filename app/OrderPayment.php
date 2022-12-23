@@ -27,4 +27,9 @@ class OrderPayment extends Model
     public function bankAccount(){
         return $this->belongsTo('App\BankAccount');
     }
+
+    public function totalSale()
+    {
+        return $this->hasOne('App\TotalSale', 'order_payment_id', 'id');
+    }
 }

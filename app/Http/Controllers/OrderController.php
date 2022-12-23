@@ -354,6 +354,11 @@ class OrderController extends Controller
                         "code",
                         "like",
                         "%" . $filterString . "%"
+                    )
+                    ->orWhere(
+                        "temp_no",
+                        "like",
+                        "%" . $filterString . "%"
                     );
                 }
             );
@@ -447,6 +452,7 @@ class OrderController extends Controller
             $orders['province'] = $data['province_id'];
             $orders['city'] = $data['city'];
             $orders['distric'] = $data['distric'];
+            $orders['temp_no'] = $data['temp_no'];
             $orders->save();
 
             $orderDetails = OrderDetail::where("order_id", $orders["id"])->get();
@@ -974,6 +980,11 @@ class OrderController extends Controller
                     $order->updateDownPayment();
                     $order->save();
 
+                    // Update Total Sale Verified Order Payment
+                    if ($orderPayment->status == "verified") {
+                        TotalSaleController::updateTotalSale($orderPayment->id);
+                    }
+
                     $user = Auth::user();
                     $historyUpdate['type_menu'] = "Order";
                     $historyUpdate['method'] = "Update";
@@ -1009,6 +1020,7 @@ class OrderController extends Controller
                 $orderPayment_status = $request->get('status_acc');
                 if ($orderPayment_status =='true') {
                     $orderPayment->status = 'verified';
+                    TotalSaleController::insertTotalSale($orderPayment->id);
                 } else if($orderPayment_status == 'false') {
                     $orderPayment->status = 'rejected';
                 }
@@ -1055,6 +1067,12 @@ class OrderController extends Controller
                             File::delete("sources/order/" . $orderPaymentImage);
                         }
                     }
+
+                    // Delete Total Sale
+                    if ($orderPayment->status == 'verified') {
+                        TotalSaleController::deleteTotalSale($orderPayment->id);
+                    }
+
                     $orderPayment->delete();
 
                     // Set Order Down Payment

@@ -87,6 +87,11 @@ Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
 Route::get("/fetchProductService", "ProductServiceController@fetchProductService")->name("fetchProductService");
 Route::get('/fetchWarehouse', "WarehouseController@fetchWarehouse")->name('fetchWarehouse');
 
+Route::get("/check_routine_date", "FinancialRoutineController@checkRoutineDate")
+    ->name("check_routine_date");
+Route::get("/check_routine_date_branch", "FinancialRoutineBranchController@checkRoutineDate")
+    ->name("check_routine_date_branch");
+
 Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)
@@ -444,6 +449,137 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/view_order_payment/{id}', 'OrderController@viewOrderPayment')->name('view_order_payment');
         //Update Order payment for those who are not head admin
         Route::match(['put', 'patch'], '/update_order_payment_for_those_who_are_not_head_admin/{id}', 'OrderController@updateOrderPaymentForThoseWhoAreNotHeadAdmin')->name('update_order_payment_for_those_who_are_not_head_admin');
+    });
+
+    Route::group(['prefix' => 'total_sale', 'middleware' => 'auth'], function() {
+        //List Total Sale
+        Route::get('/list_total_sale', 'TotalSaleController@listTotalSale')
+            ->name('list_total_sale')
+            ->middleware('can:browse-total_sale');
+        //List Total Sale By Branch
+        Route::get('/list_total_sale_branch', 'TotalSaleController@listTotalSaleBranch')
+            ->name('list_total_sale_branch')
+            ->middleware('can:browse-total_sale');
+        //List Total Sale By Cso
+        Route::get('/list_total_sale_cso', 'TotalSaleController@listTotalSaleCso')
+            ->name('list_total_sale_cso')
+            ->middleware('can:browse-total_sale');
+        //Export Total Sale By Bank
+        Route::get('/export_total_sale__bybank', 'TotalSaleController@exportTotalSaleByBank')
+            ->name('export_total_sale__bybank')
+            ->middleware('can:browse-total_sale');
+        //Export Total Sale By Branch
+        Route::get('/export_total_sale_bybranch', 'TotalSaleController@exportTotalSaleByBranch')
+            ->name('export_total_sale_bybranch')
+            ->middleware('can:browse-total_sale');
+    });
+
+    Route::group(['prefix' => 'financial_routine', 'middleware' => 'auth'], function() {
+        // Add Form Financial Routine
+        Route::get('/add', 'FinancialRoutineController@create')
+            ->name('add_financial_routine')
+            ->middleware("can:add-financial_routine");
+
+        // Create Financial Routine
+        Route::post('/store', 'FinancialRoutineController@store')
+            ->name('store_financial_routine')
+            ->middleware("can:add-financial_routine");
+
+        // List Financial Routine
+        Route::get('/list', 'FinancialRoutineController@index')
+            ->name('list_financial_routine')
+            ->middleware("can:browse-financial_routine");
+
+        // Detail Financial Routine
+        Route::get('/detail', 'FinancialRoutineController@show')
+            ->name('detail_financial_routine')
+            ->middleware("can:detail-financial_routine");
+
+        // Edit Financial Routine
+        Route::get('/edit', 'FinancialRoutineController@edit')
+            ->name('edit_financial_routine')
+            ->middleware("can:edit-financial_routine");
+
+        // Update Financial Routine
+        Route::post('/update', 'FinancialRoutineController@update')
+            ->name('update_financial_routine')
+            ->middleware("can:edit-financial_routine");
+
+        // Delete Financial Routine
+        Route::post('/delete', 'FinancialRoutineController@destroy')
+            ->name('delete_financial_routine')
+            ->middleware("can:delete-financial_routine");
+
+        // Print Financial Routine
+        Route::get('print_financial_routine', 'FinancialRoutineController@print')
+            ->name('print_financial_routine')
+            ->middleware('can:detail-financial_routine');
+
+        //Store Financial Routine Transaction
+        Route::post('/store_financial_routine_transaction', 'FinancialRoutineTransactionController@store')
+            ->name('store_financial_routine_transaction')
+            ->middleware('can:add-financial_routine');
+        //Edit Financial Routine Transaction
+        Route::post('/edit_financial_routine_transaction', 'FinancialRoutineTransactionController@edit')
+            ->name('edit_financial_routine_transaction')
+            ->middleware('can:edit-financial_routine');
+        //Update Financial Routine Transaction
+        Route::post('/update_financial_routine_transaction', 'FinancialRoutineTransactionController@update')
+            ->name('update_financial_routine_transaction')
+            ->middleware('can:edit-financial_routine');
+        //Delete Financial Routine Transaction
+        Route::post('/delete_financial_routine_transaction', 'FinancialRoutineTransactionController@destroy')
+            ->name('delete_financial_routine_transaction')
+            ->middleware('can:delete-financial_routine');
+    });
+
+    Route::group(['prefix' => 'financial_routine_branch', 'middleware' => 'auth'], function() {
+        // Add Form Financial Routine Branch
+        Route::get('/add', 'FinancialRoutineBranchController@create')
+            ->name('add_financial_routine_branch')
+            ->middleware("can:add-financial_routine");
+
+        // List Financial Routine Branch
+        Route::get('/list', 'FinancialRoutineBranchController@index')
+            ->name('list_financial_routine_branch')
+            ->middleware("can:browse-financial_routine");
+
+        // Detail Financial Routine Branch
+        Route::get('/detail', 'FinancialRoutineBranchController@show')
+            ->name('detail_financial_routine_branch')
+            ->middleware("can:detail-financial_routine");
+
+        // Edit Financial Routine Branch
+        Route::get('/edit', 'FinancialRoutineBranchController@edit')
+            ->name('edit_financial_routine_branch')
+            ->middleware("can:edit-financial_routine");
+
+        // Delete Financial Routine Branch
+        Route::post('/delete', 'FinancialRoutineBranchController@destroy')
+            ->name('delete_financial_routine_branch')
+            ->middleware("can:delete-financial_routine");
+
+        // Print Financial Routine Branch
+        Route::get('print_financial_routine_branch', 'FinancialRoutineBranchController@print')
+            ->name('print_financial_routine_branch')
+            ->middleware('can:detail-financial_routine');
+
+        //Store Financial Routine Branch Transaction
+        Route::post('/store_financial_routine_transaction', 'FinancialRoutineTransactionController@store')
+            ->name('store_financial_routine_transaction')
+            ->middleware('can:add-financial_routine');
+        //Edit Financial Routine Branch Transaction
+        Route::post('/edit_financial_routine_transaction', 'FinancialRoutineTransactionController@edit')
+            ->name('edit_financial_routine_transaction')
+            ->middleware('can:edit-financial_routine');
+        //Update Financial Routine Branch Transaction
+        Route::post('/update_financial_routine_transaction', 'FinancialRoutineTransactionController@update')
+            ->name('update_financial_routine_transaction')
+            ->middleware('can:edit-financial_routine');
+        //Delete Financial Routine Branch Transaction
+        Route::post('/delete_financial_routine_transaction', 'FinancialRoutineTransactionController@destroy')
+            ->name('delete_financial_routine_transaction')
+            ->middleware('can:delete-financial_routine');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {

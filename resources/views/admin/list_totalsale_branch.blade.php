@@ -1,6 +1,5 @@
 <?php
 $menu_item_page_sub = "order_report";
-$menu_item_second_sub = "list_order_report_branch";
 ?>
 @extends('admin.layouts.template')
 
@@ -8,19 +7,19 @@ $menu_item_second_sub = "list_order_report_branch";
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">List Total Sale By Branch</h3>
+            <h3 class="page-title">List Order Report By Branch</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
                         <a data-toggle="collapse"
-                            href="#order_report_branch-dd"
+                            href="#total_sale_branch-dd"
                             aria-expanded="false"
-                            aria-controls="order_report_branch-dd">
+                            aria-controls="total_sale_branch-dd">
                             Order Report
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        List Total Sale By Branch
+                        List Order Report By Branch
                     </li>
                 </ol>
             </nav>
@@ -57,7 +56,7 @@ $menu_item_second_sub = "list_order_report_branch";
                 style="padding: 0;display: inline-block;">
                 <div class="form-group">
                     <label for="filter_branch">
-                        Filter By Team
+                        Filter By Brnach
                     </label>
                     <select class="form-control"
                         id="filter_branch"
@@ -86,24 +85,6 @@ $menu_item_second_sub = "list_order_report_branch";
                 </div>
             </div>
 
-            {{-- <div class="col-xs-12 col-sm-12 row"
-                style="margin: 0;padding: 0;">
-                <div class="col-xs-6 col-sm-4"
-                    style="padding: 0;display: inline-block;">
-                    <div class="form-group">
-                        <label for="filter_string">
-                            Filter by Name, Phone, or Code
-                        </label>
-                        <input type="text"
-                            class="form-control"
-                            placeholder="Name, Phone, or Code"
-                            value="{{ $_GET["filter_string"] ?? "" }}"
-                            id="filter_string"
-                            name="filter_string">
-                    </div>
-                </div>
-            </div> --}}
-
             <div class="col-xs-12 col-sm-12 row"
                 style="margin: 0; padding: 0;">
                 <div class="col-xs-6 col-sm-6"
@@ -117,7 +98,7 @@ $menu_item_second_sub = "list_order_report_branch";
                             value="-">
                             <span class="mdi mdi-filter"></span> Apply Filter
                         </button>
-                        <a href="{{ route('admin_list_order_report_branch') }}"
+                        <a href="{{ route('list_total_sale_branch') }}"
                             class="btn btn-gradient-danger m-1"
                             value="-">
                             <span class="mdi mdi-filter"></span> Reset Filter
@@ -128,32 +109,22 @@ $menu_item_second_sub = "list_order_report_branch";
                             $exportParameter = request()->input(); 
                             $exportParameter['export_type'] = "print";
                         @endphp
-                        <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"
+                        <a href="{{ route('list_total_sale_branch', $exportParameter) }}"
                             target="_blank"
                             class="btn btn-gradient-info m-1">
                             <span class="mdi mdi-file-document"></span>
-                            Print Total Sale
+                            Print Order Report
                         </a>
                         @php 
                             $exportParameter['export_type'] = "xls";
                         @endphp
-                        <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"
+                        <a href="{{ route('list_total_sale_branch', $exportParameter) }}"
                             class="btn btn-gradient-info m-1">
                             <span class="mdi mdi-file-document"></span>
-                            Export Total Sale
+                            Export Order Report
                         </a>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-sm-12 col-md-12"
-                style="padding: 0; border: 1px solid #ebedf2;">
-                <div class="col-xs-12 col-sm-11 col-md-6 table-responsive"
-                    id="calendarContainer"
-                    style="padding: 0; float: left;"></div>
-                <div class="col-xs-12 col-sm-11 col-md-6"
-                    id="organizerContainer"
-                    style="padding: 0; float: left;"></div>
             </div>
         </div>
 
@@ -165,55 +136,71 @@ $menu_item_second_sub = "list_order_report_branch";
                     </div>
                     <h5>Date: {{ date("d/m/Y", strtotime($startDate)) }} - {{ date("d/m/Y", strtotime($endDate)) }}</h5>
                     <h5 style="margin-bottom: 0.5em;">
-                        Total : {{ $countOrderReports }} data
+                        Total : {{ $countTotalSales }} data
                     </h5>
                     <div class="table-responsive" style="border: 1px solid #ebedf2;">
                         <table class="table table-bordered">
                             <thead>
                                 <tr class="text-center">
                                     <th> No. </th>
-                                    <th class="text-left"> CSO </th>
-                                    <th> Sales Until Yesterday</th>
-                                    <th> Sales Today </th>
-                                    <th> Total Sales </th>
+                                    <th class="text-left"> Cso </th>
+                                    <th> Bank In </th>
+                                    <th> Debit</th>
+                                    <th> Netto Debit</th>
+                                    <th> Card</th>
+                                    <th> Netto Card</th>
                                     <th> Detail </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
-                                    $total_sale_untilYesterday = 0;
-                                    $total_sale_today = 0;
-                                    $totalSales = 0;
+                                    $totalSaleGross = 0;
+                                    $totalSaleNetto = 0;
                                 @endphp
-                                @foreach ($order_reports as $key => $order_report)
+                                @foreach ($total_sales as $key => $total_sale)
+                                @php
+                                    $totalSaleGross += $total_sale['sum_ts_bank_in'] + $total_sale['sum_ts_debit'] + $total_sale['sum_ts_card'];
+                                    $totalSaleNetto += $total_sale['sum_ts_netto_debit'] + $total_sale['sum_ts_netto_card'];
+                                @endphp
                                 <tr>
                                     <td class="text-center">{{ $key+1 }}</td>
-                                    <td>{{ $order_report['code'] }} - {{ $order_report['name'] }}</td>
-                                    <td class="text-right">Rp. {{ number_format($order_report['total_sale_untilYesterday']) }}</td>
-                                    <td class="text-right">Rp. {{ number_format($order_report['total_sale_today']) }}</td>
-                                    <td class="text-right">Rp. {{ number_format($order_report['total_sale_untilYesterday'] + $order_report['total_sale_today']) }}</td>
+                                    <td>{{ $total_sale['code'] }} - {{ $total_sale['name'] }}</td>
+                                    <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_bank_in']) }}</td>
+                                    <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_debit']) }}</td>
+                                    <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_netto_debit']) }}</td>
+                                    <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_card']) }}</td>
+                                    <td class="text-right">Rp. {{ number_format($total_sale['sum_ts_netto_card']) }}</td>
                                     <td class="text-center">
                                         @php
                                             $paramReportCso = request()->input();
-                                            $paramReportCso['filter_cso'] = $order_report['code'];
+                                            $paramReportCso['filter_cso'] = $total_sale['code'];
                                         @endphp
-                                        <a href="{{ route('admin_list_order_report_cso', $paramReportCso) }}" target="_blank">
+                                        <a href="{{ route('list_total_sale_cso', $paramReportCso) }}" target="_blank">
                                             <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(99, 110, 114);"></i>
                                         </a>
                                     </td>
                                 </tr>
-                                @php
-                                    $total_sale_untilYesterday += $order_report['total_sale_untilYesterday'];
-                                    $total_sale_today += $order_report['total_sale_today'];
-                                    // $totalSales += ($order_report['total_sale_untilYesterday'] + $order_report['total_sale_today']);
-                                @endphp
                                 @endforeach
                                 <tr class="text-right">
-                                    <th colspan="2">TOTAL SALES</th>
-                                    <th>Rp. {{ number_format($total_sale_untilYesterday) }}</th>
-                                    <th>Rp. {{ number_format($total_sale_today) }}</th>
-                                    <th>Rp. {{ number_format($total_sale_untilYesterday + $total_sale_today) }}</th>
+                                    <th colspan="2">SUB TOTAL</th>
+                                    <th>Rp. {{ number_format($total_sales->sum('sum_ts_bank_in')) }}</th>
+                                    <th>Rp. {{ number_format($total_sales->sum('sum_ts_debit')) }}</th>
+                                    <th>Rp. {{ number_format($total_sales->sum('sum_ts_netto_debit')) }}</th>
+                                    <th>Rp. {{ number_format($total_sales->sum('sum_ts_card')) }}</th>
+                                    <th>Rp. {{ number_format($total_sales->sum('sum_ts_netto_card')) }}</th>
                                     <td></td>
+                                </tr>
+                                <tr class="text-right">
+                                    <th colspan="2">TOTAL SALES GROSS</th>
+                                    <th>Rp. {{ number_format($totalSaleGross) }}</th>
+                                </tr>
+                                <tr class="text-right">
+                                    <th colspan="2">TOTAL CHARGE</th>
+                                    <th>Rp. {{ number_format($totalSaleGross - $totalSaleNetto) }}</th>
+                                </tr>
+                                <tr class="text-right">
+                                    <th colspan="2">TOTAL SALES NETTO</th>
+                                    <th>Rp. {{ number_format($totalSaleNetto) }}</th>
                                 </tr>
                             </tbody>
                         </table>
@@ -252,7 +239,7 @@ $(document).on("click", "#btn-filter", function (e) {
         }
     }
 
-    window.location.href = "{{route('admin_list_order_report_branch')}}" + urlParamStr;
+    window.location.href = "{{route('list_total_sale_branch')}}" + urlParamStr;
 });
 </script>
 @endsection

@@ -14,4 +14,9 @@ class BankAccount extends Model
     {
         return $this->belongsTo("App\Bank");
     }
+
+    public function branch()
+    {
+        return $this->hasOne('App\Branch');
+    }
 }

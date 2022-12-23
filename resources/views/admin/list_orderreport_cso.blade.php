@@ -8,7 +8,7 @@ $menu_item_second_sub = "list_order_report_cso";
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">List Order Report By Cso</h3>
+            <h3 class="page-title">List Total Sale By Cso</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -20,7 +20,7 @@ $menu_item_second_sub = "list_order_report_cso";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        List Order Report By Cso
+                        List Total Sale By Cso
                     </li>
                 </ol>
             </nav>
@@ -163,7 +163,7 @@ $menu_item_second_sub = "list_order_report_cso";
                             target="_blank"
                             class="btn btn-gradient-info m-1">
                             <span class="mdi mdi-file-document"></span>
-                            Print Order Report
+                            Print Total Sale
                         </a>
                         @php 
                             $exportParameter['export_type'] = "xls";
@@ -171,7 +171,7 @@ $menu_item_second_sub = "list_order_report_cso";
                         <a href="{{ route('admin_export_order_report_cso', $exportParameter) }}"
                             class="btn btn-gradient-info m-1">
                             <span class="mdi mdi-file-document"></span>
-                            Export Order Report
+                            Export Total Sale
                         </a>
                     </div>
                 </div>
