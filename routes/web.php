@@ -122,10 +122,10 @@ Route::group(['prefix' => 'api-apps'], function () {
         return RajaOngkir::FetchAllDistrictAPI($city);
     }); //fetching all district from province
 	Route::group(['prefix' => 'homeservice'], function () {
-	    Route::post('add','HomeServiceController@addApi'); //add home service
-		Route::post('update','HomeServiceController@updateApi'); //update home service
+	    // Route::post('add','HomeServiceController@addApi'); //add home service
+		// Route::post('update','HomeServiceController@updateApi'); //update home service
 		Route::post('reportHomeService','HomeServiceController@reportHomeService'); //reportHomeService home service
-	    Route::post('delete','HomeServiceController@deleteApi'); //delete home service
+	    // Route::post('delete','HomeServiceController@deleteApi'); //delete home service
 	    Route::post('list','HomeServiceController@listApi'); //list home service
 		Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
 		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
@@ -135,33 +135,33 @@ Route::group(['prefix' => 'api-apps'], function () {
 	});
 
 	Route::group(['prefix' => 'register'], function () {
-	    Route::post('add','DeliveryOrderController@addApi'); //add register DO
+	    // Route::post('add','DeliveryOrderController@addApi'); //add register DO
 	    Route::post('list','DeliveryOrderController@listApi'); //list register DO
-		Route::post('update','DeliveryOrderController@updateApi'); //update register DO
+		// Route::post('update','DeliveryOrderController@updateApi'); //update register DO
 		Route::get('view/{id}','DeliveryOrderController@viewApi'); //view single register DO
-		Route::post('delete','DeliveryOrderController@deleteApi'); //delete register DO
+		// Route::post('delete','DeliveryOrderController@deleteApi'); //delete register DO
 	});
 
 	Route::group(['prefix' => 'order'], function () {
-	    Route::post('add','OrderController@addApi'); //add order
+	    // Route::post('add','OrderController@addApi'); //add order
 		Route::post('list','OrderController@listApi'); //list order
-		Route::post('update','OrderController@updateApi'); //update order
+		// Route::post('update','OrderController@updateApi'); //update order
 		Route::get('view/{id}','OrderController@viewApi'); //view single order
-		Route::post('delete','OrderController@deleteApi'); //delete order
+		// Route::post('delete','OrderController@deleteApi'); //delete order
 	});
 
 	Route::group(['prefix' => 'acceptance'], function () {
-	    Route::post('add','AcceptanceController@addApi'); //add acceptance
+	    // Route::post('add','AcceptanceController@addApi'); //add acceptance
 		Route::post('list','AcceptanceController@listApi'); //list acceptance
-		Route::post('update','AcceptanceController@updateApi'); //update acceptance
+		// Route::post('update','AcceptanceController@updateApi'); //update acceptance
 		Route::get('view/{id}','AcceptanceController@viewApi'); //view single acceptance
-		Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
+		// Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
 	});
 
     // Submission form API
     Route::group(["prefix" => "submission"], function () {
         // Create submission API
-        Route::post("add", "SubmissionController@addApi");
+        // Route::post("add", "SubmissionController@addApi");
 
         // Show submission list API
         Route::post("list_submission", "SubmissionController@listApi");
@@ -170,24 +170,24 @@ Route::group(['prefix' => 'api-apps'], function () {
         Route::post("detail", "SubmissionController@detailApi");
 
         // Update submission API
-        Route::post("update", "SubmissionController@updateApi");
+        // Route::post("update", "SubmissionController@updateApi");
 
         // Delete submission API
-        Route::post("delete", "SubmissionController@deleteApi");
+        // Route::post("delete", "SubmissionController@deleteApi");
     });
 
     // Reference API
     Route::group(["prefix" => "reference"], function () {
         // Create reference API
-        Route::post("/add/mgm", "ReferenceController@storeReferenceMGM");
-        Route::post("/add/referensi", "ReferenceController@storeReferensi");
+        // Route::post("/add/mgm", "ReferenceController@storeReferenceMGM");
+        // Route::post("/add/referensi", "ReferenceController@storeReferensi");
 
         // List reference API
         Route::post("list_reference", "ReferenceController@listApi");
 
         // Update reference API
-        Route::post("/update/mmg", "ReferenceController@updateMGMApi");
-        Route::post("/update/referensi", "ReferenceController@updateApi");
+        // Route::post("/update/mmg", "ReferenceController@updateMGMApi");
+        // Route::post("/update/referensi", "ReferenceController@updateApi");
     });
 
     // Promo API

@@ -1026,6 +1026,8 @@
             });
         });
 
+        // callback for find waki-indonesia 0ffline (local or ngrok)
+
         var networkValue
         function testNetwork(networkValue, response){
             // response();
@@ -1109,6 +1111,10 @@
                     method: "post",
                     url: "https://{{ $offlineURL }}/api/replicate-order-data",
                     data: order,
+                    beforeSend: function() {
+                        $('#btn-edit-status-order').html('loading...');
+                        $('#btn-edit-status-order').attr('disabled', true);
+                    },
                     success: function(res){
                         if(res.status == 'success'){
                             $('#actionAdd').submit();
@@ -1124,6 +1130,9 @@
                             $('.modal-backdrop').remove();
                             $('#error-modal-desc').html(modal)
                             $('#error-modal').modal("show")
+
+                            $('#btn-edit-status-order').html('Yes');
+                            $('#btn-edit-status-order').attr('disabled', false);
                         }
                     },
                     error: function(xhr){
@@ -1138,6 +1147,9 @@
                         $('.modal-backdrop').remove();
                         $('#error-modal-desc').html(modal)
                         $('#error-modal').modal("show")
+
+                        $('#btn-edit-status-order').html('Yes');
+                        $('#btn-edit-status-order').attr('disabled', false);
                     }
 
                 })
@@ -1184,6 +1196,9 @@
                         method: "post",
                         url: "https://{{ $offlineURL }}/api/replicate-order-payment-data",
                         data: orderPaymentData,
+                        beforeSend: function() {
+                            $('#btn-update-status-payment-true, #btn-update-status-payment-false').html('loading...').attr('disabled', true);
+                        },
                         success: function(res){
                             $('#frmUpdateStatusPayment').submit();
                         },
@@ -1197,6 +1212,10 @@
                             `
                             $('#error-modal-desc').html(modal)
                             $('#error-modal').modal("show")
+
+                            $('#btn-update-status-payment-true').html('Verified');
+                            $('#btn-update-status-payment-false').html('Rejected');
+                            $('#btn-update-status-payment-true, #btn-update-status-payment-false').attr('disabled', false);
                         }
 
                     })
