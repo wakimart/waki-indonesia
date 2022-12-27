@@ -1085,6 +1085,15 @@ $menu_item_page = "user";
                                             Delete Stock In Out
                                         </label>
                                     </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-stock_order_request">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-stock_order_request" />
+                                            Browse Stock Order Request
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 

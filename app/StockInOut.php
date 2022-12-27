@@ -8,7 +8,7 @@ class StockInOut extends Model
 {
     protected $fillable = [
         'warehouse_from_id', 'warehouse_to_id', 'code', 'temp_no',
-        'date', 'type', 'description', 'user_id', 'active',
+        'date', 'type', 'description', 'user_id', 'active', 'stock_order_request_id',
     ];
 
     public function warehouseFrom()
@@ -30,5 +30,10 @@ class StockInOut extends Model
     {
         return $this->hasMany('App\StockInOutProduct', 'stock_in_out_id', 'id')
             ->where('stock_in_out_products.active', true);
+    }
+
+    public function stockOrderRequest()
+    {
+        return $this->belongsTo('App\StockOrderRequest');
     }
 }

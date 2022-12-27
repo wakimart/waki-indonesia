@@ -1044,6 +1044,13 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->middleware('can:delete-stock_in_out');
     });
 
+    Route::group(['prefix' => 'stock_order_request', 'middleware' => 'auth'], function() {
+        //List Stock
+        Route::get('/list', 'StockOrderRequestController@index')
+            ->name('list_stock_order_request')
+            ->middleware('can:browse-stock_order_request');
+    });
+
     Route::group(["prefix" => "warehouse", "middleware" => "auth"], function () {
         Route::get("add", "WarehouseController@create")
             ->name("add_warehouse")

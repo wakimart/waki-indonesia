@@ -133,6 +133,9 @@ class RolesSeeder extends Seeder
                 'edit-stock_out' => true,
                 'delete-stock_in_out' => true,
 
+                // Stock Order Request
+                'browse-stock_order_request' => true,
+
                 //Warehouse
         		'add-warehouse' => true,
                 'browse-warehouse' => true,
@@ -372,6 +375,9 @@ class RolesSeeder extends Seeder
                 'edit-stock_in' => true,
                 'edit-stock_out' => true,
                 'delete-stock_in_out' => true,
+
+                // Stock Order Request
+                'browse-stock_order_request' => false,
 
                 //Warehouse
         		'add-warehouse' => false,
@@ -613,6 +619,9 @@ class RolesSeeder extends Seeder
                 'edit-stock_out' => false,
                 'delete-stock_in_out' => false,
 
+                // Stock Order Request
+                'browse-stock_order_request' => false,
+
                 //Warehouse
         		'add-warehouse' => false,
                 'browse-warehouse' => false,
@@ -848,6 +857,9 @@ class RolesSeeder extends Seeder
                 'edit-stock_out' => false,
                 'delete-stock_in_out' => false,
 
+                // Stock Order Request
+                'browse-stock_order_request' => false,
+
                 //Warehouse
         		'add-warehouse' => false,
                 'browse-warehouse' => false,
@@ -1081,6 +1093,9 @@ class RolesSeeder extends Seeder
                 'edit-stock_in' => false,
                 'edit-stock_out' => false,
                 'delete-stock_in_out' => false,
+
+                // Stock Order Request
+                'browse-stock_order_request' => false,
 
                 //Warehouse
         		'add-warehouse' => false,
@@ -1316,6 +1331,9 @@ class RolesSeeder extends Seeder
                 'edit-stock_out' => false,
                 'delete-stock_in_out' => false,
 
+                // Stock Order Request
+                'browse-stock_order_request' => false,
+
                 //Warehouse
         		'add-warehouse' => false,
                 'browse-warehouse' => false,
@@ -1549,6 +1567,9 @@ class RolesSeeder extends Seeder
                 'edit-stock_in' => false,
                 'edit-stock_out' => false,
                 'delete-stock_in_out' => false,
+
+                // Stock Order Request
+                'browse-stock_order_request' => false,
 
                 //Warehouse
         		'add-warehouse' => false,

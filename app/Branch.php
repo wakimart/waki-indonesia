@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Branch extends Model
 {
     protected $fillable = [
-        'code', 'name',  'active', 'color',
+        'code', 'name',  'active', 'color', 'warehouse_id',
     ];
 
 
@@ -34,5 +34,10 @@ class Branch extends Model
     public function personalHomecareProduct()
     {
         return $this->hasMany('App\PersonalHomecareProduct');
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo('App\Warehouse');
     }
 }

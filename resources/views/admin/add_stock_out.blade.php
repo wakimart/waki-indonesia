@@ -93,7 +93,7 @@ $menu_item_second = "add_stock_out";
 
                             <div class="form-group">
                                 <label for="temp_no">Temp. No (Optional)</label>
-                                <input type="text" name="temp_no" class="form-control">
+                                <input type="text" id="temp_no" name="temp_no" class="form-control">
                             </div>
 
                             <div class="form-group">
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // $("#type").select2();
 });
 function getProduct() {
-    fetch(
+    return fetch(
         '{{ route("stock_in_out_get_product") }}',
         {
             method: "GET",
@@ -349,6 +349,7 @@ function addProduct() {
     inputQuantity.placeholder = "Quantity";
     inputQuantity.required = true;
     inputQuantity.min = 0;
+    inputQuantity.setAttribute("oninput", "checkStock(this)");
     const smallAlertQuantity = document.createElement("small");
     smallAlertQuantity.id = `alert-quantity_${counter}`;
     smallAlertQuantity.className = "form-text text-danger";
@@ -464,6 +465,9 @@ function getWarehouse(warehouse_type, check_parent, target_element) {
 }
 
 $(document).on('change', '#date, #to_warehouse_type', function() {
+    getGenerateCode();
+});
+function getGenerateCode() {
     const type = $("#type").val();
     const date = $("#date").val();
     const warehouse_type = $("#to_warehouse_type").val();
@@ -481,7 +485,7 @@ $(document).on('change', '#date, #to_warehouse_type', function() {
             },
         });
     }
-})
+}
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
@@ -544,4 +548,27 @@ $(document).on('change', '#date, #to_warehouse_type', function() {
         }
     })
 </script>
+@if($stockOrderRequest)
+<script>
+    // Fill Stock Out From Stock Order Request
+    $(document).ready(function() {
+        $("#actionAdd").append(`<input type="hidden" name="stock_order_request_id" value="{{ $stockOrderRequest['id'] }}">`);
+        $("#date").val("{{ $stockOrderRequest->order['orderDate'] }}");
+        $("#temp_no").val("{{ $stockOrderRequest->order['temp_no'] }}");
+        $("#to_warehouse_type").val("{{ $stockOrderRequest->order->branch->warehouse['type'] ?? '' }}");
+        getWarehouse($("#to_warehouse_type").val(), null, "#to_warehouse_id").then(function() {
+            $("#to_warehouse_id").val("{{ $stockOrderRequest->order->branch['warehouse_id'] ?? '' }}").trigger("change");
+        });
+        getGenerateCode();
+
+        getProduct().then(function() {
+            @foreach ((json_decode($stockOrderRequest['product_qty'], true) ?? []) as $key => $sor)
+                @if($key != 0) addProduct(); @endif
+                $("#product_{{ $key }}").val("{{ $sor['product_id'] }}").trigger('change');
+                $("#quantity_{{ $key }}").val("{{ $sor['qty'] }}");
+            @endforeach
+        });
+    });
+</script>
+@endif
 @endsection

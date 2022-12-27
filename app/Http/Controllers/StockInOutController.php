@@ -7,6 +7,7 @@ use App\Product;
 use App\Stock;
 use App\StockInOut;
 use App\StockInOutProduct;
+use App\StockOrderRequest;
 use App\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -161,15 +162,21 @@ class StockInOutController extends Controller
         ));
     }
 
-    public function createOut()
+    public function createOut(Request $request)
     {
         $products = Product::select("id", "code", "name")
             ->where("active", true)
             ->orderBy("code")
             ->get();
+        $stockOrderRequest = null;
+        if ($request->sor) {
+            $stockOrderRequest = StockOrderRequest::where('id', $request->sor)
+                ->where('status', StockOrderRequest::$status['1'])->first();
+        }
 
         return view("admin.add_stock_out", compact(
             "products",
+            "stockOrderRequest",
         ));
     }
 
@@ -250,6 +257,7 @@ class StockInOutController extends Controller
             $stockInOut->type = $request->type;
             $stockInOut->description = $request->description;
             $stockInOut->user_id = Auth::user()->id;
+            $stockInOut->stock_order_request_id = $request->stock_order_request_id;
             $stockInOut->save();
             
             $products = $request->product;
@@ -303,6 +311,17 @@ class StockInOutController extends Controller
                 $stockInOutProduct->quantity = $request->quantity[$i];
                 $stockInOutProduct->koli = $request->koli[$i] ?? 0;
                 $stockInOutProduct->save();
+            }
+
+            if ($stockInOut->stock_order_request_id) {
+                $stockOrderRequest = $stockInOut->stockOrderRequest;
+                $stockOrderRequest->status = StockOrderRequest::$status['2']; //Approved
+                $stockOrderRequest->save();
+
+                // Update Order Status
+                $order = $stockOrderRequest->order;
+                $order->status = 'stock_request_success';
+                $order->save();
             }
 
             DB::commit();
@@ -413,7 +432,7 @@ class StockInOutController extends Controller
             'to_warehouse_id' => 'required|different:from_warehouse_id|exists:warehouses,id',
             'code' => [
                 'required',
-                Rule::unique('history_stocks')
+                Rule::unique('stock_in_outs')
                     ->whereNot('id', $request->stock_in_out_id)
                     ->where('code', $request->code)
                     ->where('active', true)

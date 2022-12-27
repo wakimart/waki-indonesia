@@ -499,6 +499,9 @@
       @if(Gate::check('browse-stock_in_out'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_stock_in_out'? 'active': '' }}" href="{{route('list_stock_in_out')}}">List Stock In/Out</a></li>
       @endif
+      @if(Gate::check('browse-stock_order_request'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_stock_order_request'? 'active': '' }}" href="{{route('list_stock_order_request')}}">Stock Order Request</a></li>
+      @endif
     </ul>
   </div>
 </li>
