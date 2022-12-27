@@ -1,25 +1,5 @@
 <?php
-    $menu_item_page = "order";    
-
-    // for multiple offline url
-    stream_context_set_default( [
-        'ssl' => [
-            'verify_peer' => false,
-            'verify_peer_name' => false,
-        ],
-    ]);
-    $offlineURL = '';
-    try {
-        $url = 'https://waki-indonesia-offline.office/cms-admin/login';
-        $headers = get_headers($url, 1);
-        if($headers[0] == 'HTTP/1.0 200 OK'){
-            $offlineURL = env('OFFLINE_URL');
-        }else{
-            $offlineURL = env('OFFLINE_URL_2');
-        }
-    } catch (\Throwable $th) {
-        $offlineURL = env('OFFLINE_URL_2');
-    }
+    $menu_item_page = "order";
 ?>
 @extends('admin.layouts.template')
 
@@ -834,6 +814,18 @@
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script>
+    // callback for find waki-indonesia 0ffline (local or ngrok)
+    var urlOffline = "{{ env('OFFLINE_URL_2') }}"
+    $.ajax({
+        url:'https://waki-indonesia-offline.office/cms-admin/login',
+        error: function(){
+            urlOffline = "{{ env('OFFLINE_URL_2') }}"
+        },
+        success: function(){
+            urlOffline = "{{ env('OFFLINE_URL') }}"
+        }
+    });
+
     $(document).ready(function() {
         $(".delivery-cso-id").select2({
             theme: "bootstrap4",
@@ -1026,14 +1018,12 @@
             });
         });
 
-        // callback for find waki-indonesia 0ffline (local or ngrok)
-
         var networkValue
         function testNetwork(networkValue, response){
             // response();
             $.ajax({
                 method: "post",
-                url: "https://{{ $offlineURL }}/api/end-point-for-check-status-network",
+                url: `${urlOffline}/api/end-point-for-check-status-network`,
                 dataType: 'json',
                 contentType: 'application/json',
                 processData: false,
@@ -1109,7 +1099,7 @@
 
                 $.ajax({
                     method: "post",
-                    url: "https://{{ $offlineURL }}/api/replicate-order-data",
+                    url: `${urlOffline}/api/replicate-order-data`,
                     data: order,
                     beforeSend: function() {
                         $('#btn-edit-status-order').html('loading...');
@@ -1194,7 +1184,7 @@
 
                     $.ajax({
                         method: "post",
-                        url: "https://{{ $offlineURL }}/api/replicate-order-payment-data",
+                        url: `${urlOffline}/api/replicate-order-payment-data`,
                         data: orderPaymentData,
                         beforeSend: function() {
                             $('#btn-update-status-payment-true, #btn-update-status-payment-false').html('loading...').attr('disabled', true);
