@@ -35,7 +35,7 @@ class UserAdminController extends Controller
             $users = $users->where("username", "like", "%" . $request->username . "%");
         }
 
-        $users = $users->paginate(10);
+        $users = $users->paginate(20);
         return view(
             'admin.list_useradmin',
             compact(
@@ -330,7 +330,7 @@ class UserAdminController extends Controller
             $createData = HistoryUpdate::create($historyUpdate);
 
             DB::commit();
-            return redirect()->route('list_useradmin');
+            return redirect()->back();
         }
         catch (Exception $e) {
             DB::rollback();
