@@ -294,6 +294,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update', 'UserAdminController@update')
             ->name('update_useradmin')
             ->middleware('can:edit-user');
+        Route::post('/delete_multiple', 'UserAdminController@deleteMultiple')
+            ->name('delete_multiple');
         //Delete UserAdmin
         Route::post('/{userAdminNya}', 'UserAdminController@destroy')
             ->name('delete_useradmin');
