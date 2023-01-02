@@ -814,7 +814,7 @@ $menu_item_second = "list_homeservice";
               </table>
           </div>
           <div class="modal-footer">
-              @if(isset($_GET['id_hs']) && Auth::user()->inRole("head-admin"))
+              @if(isset($_GET['id_hs']) && Gate::check('acc-cancel-home_service'))
                   <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
                       @csrf
                       <div class="form-group">
@@ -1835,13 +1835,11 @@ function clickView(btn) {
             }
         @endif
 
-        @if(isset($_GET['id_hs']))
+        @if(isset($_GET['id_hs']) && Gate::check('acc-cancel-home_service'))
             $("#input_id_hs_hidden").val(id_hs);
             document.getElementById("cancel_desc_view").innerHTML = result.cancel_desc;
             $("#viewHomeServiceModal").modal("show");
-        @elseif(isset($_GET['id_detail_hs']))
-            $("#viewHomeServiceModal").modal("show");
-        @else
+        @elseif(Gate::check('view-type-home_service') && Gate::check('view-phone-home_service'))
             document.getElementById("url_share").setAttribute(
                 "href",
                 "whatsapp://send?text=<?php echo route('homeServices_success'); ?>"
@@ -1849,6 +1847,7 @@ function clickView(btn) {
                 + result.code
             );
         @endif
+        $("#viewHomeServiceModal").modal("show");
     }).catch(function (error) {
         console.error(error);
     });

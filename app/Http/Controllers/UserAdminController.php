@@ -322,6 +322,9 @@ class UserAdminController extends Controller
             $user['active'] = false;
             $user->save();
 
+            $user->cso['active'] = false;
+            $user->cso->save();
+
             $historyUpdate['type_menu'] = "User Admin";
             $historyUpdate['method'] = "Update";
             $historyUpdate["meta"] = json_encode(["dataChange" => $user->getChanges()]);
@@ -353,6 +356,9 @@ class UserAdminController extends Controller
                 $user = User::find($id);
                 $user['active'] = false;
                 $user->save();
+
+                $user->cso['active'] = false;
+                $user->cso->save();
     
                 $historyUpdate['type_menu'] = "User Admin";
                 $historyUpdate['method'] = "Update";
