@@ -30,6 +30,13 @@ $menu_item_second = "add_home_service";
 @endsection
 
 @section('content')
+{{-- @php
+    foreach ($branches as $key => $value) {
+        if($value['region_id']){
+            dd($value->region());
+        }
+    }
+@endphp --}}
 <div class="main-panel">
   	<div class="content-wrapper">
     	<div class="page-header">
@@ -85,6 +92,46 @@ $menu_item_second = "add_home_service";
 									<strong></strong>
 								</span>
 							</div>
+                            <br>
+                    <div class="form-group">
+                        <label for=""><h2>Data CSO</h2></label><br/>
+                        <label for="">Cabang</label>
+                        <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
+                            <option selected disabled value="">Pilihan Cabang</option>
+                            @foreach($branches as $branch)
+                            @php
+                            if(isset($autofill) && $branch['id'] == $autofill->submission->branch['id']){
+                                echo "<option selected value=\"". $branch['id']."\">".$branch['code']." - ".$branch['name']."</option>";
+                                continue;
+                            }
+                            @endphp
+                            <option data-district="{{ $branch->region() ? implode(",", $branch->regionDistrict()['district']) : '' }}" data-city="{{ $branch->region() ? $branch->regionDistrict()['city'] : '' }}" data-city-type="{{ $branch->region() ? $branch->regionDistrict()['cityType'] : '' }}" data-province="{{ $branch->region() ? $branch->regionDistrict()['province'] : '' }}" value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                            @endforeach
+                        </select>
+                        <div class="validation"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Kode CSO</label>
+                        <input type="text" class="form-control" name="cso_id" id="cso" placeholder="Kode CSO" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['code'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
+                        <div class="validation" id="validation_cso"></div>
+                        <span class="invalid-feedback">
+                            <strong></strong>
+                        </span>
+                        <div class="validation"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Kode Partner CSO(Optional)</label>
+                        <input type="text" class="form-control" name="cso2_id" id="cso2" placeholder="Kode Partner CSO (opsional)" style="text-transform:uppercase"/>
+                        <div class="validation"></div>
+                        <span class="invalid-feedback">
+                            <strong></strong>
+                        </span>
+                        <div class="validation"></div>
+                    </div>
+                    <br>
+
           			<div class="form-group">
                   <label for=""><h2>Data Pelanggan</h2></label><br/>
             			<label for="">No. Member (optional)</label>
@@ -141,55 +188,7 @@ $menu_item_second = "add_home_service";
                 <div class="validation"></div>
         			</div>
         			<br>
-
-        			<div class="form-group">
-								<label for=""><h2>Data CSO</h2></label><br/>
-                  				<label for="">Cabang</label>
-								<select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-                                    <option selected disabled value="">Pilihan Cabang</option>
-                                    @foreach($branches as $branch)
-                                        @php
-                                            if(isset($autofill) && $branch['id'] == $autofill->submission->branch['id']){
-                                                echo "<option selected value=\"". $branch['id']."\">".$branch['code']." - ".$branch['name']."</option>";
-                                                continue;
-                                            }
-                                        @endphp
-										<option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
-                                    @endforeach
-					        </select>
-			            <div class="validation"></div>
-							</div>
-
-							<div class="form-group">
-								<label for="">Kode CSO</label>
-									<input type="text" class="form-control" name="cso_id" id="cso" placeholder="Kode CSO" required data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['code'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
-									<div class="validation" id="validation_cso"></div>
-									<span class="invalid-feedback">
-										<strong></strong>
-									</span>
-			            <div class="validation"></div>
-							</div>
-
-							<div class="form-group d-none">
-								<label for="">No Telepon CSO</label>
-									<input type="number" class="form-control" name="cso_phone" id="cso_phone" placeholder="No. Telepon CSO" data-msg="Mohon Isi Nomor Telepon" {{ Auth::user()->roles[0]['slug'] == 'cso' ? "value=".Auth::user()->cso['phone'] : "" }}  {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly=\"\"" : "" }}/>
-									<div class="validation"></div>
-									<span class="invalid-feedback">
-										<strong></strong>
-									</span>
-			            <div class="validation"></div>
-							</div>
-
-							<div class="form-group">
-								<label for="">Kode Partner CSO(Optional)</label>
-								<input type="text" class="form-control" name="cso2_id" id="cso2" placeholder="Kode Partner CSO (opsional)" style="text-transform:uppercase"/>
-								<div class="validation"></div>
-								<span class="invalid-feedback">
-									<strong></strong>
-								</span>
-                  <div class="validation"></div>
-                </div>
-
+                    
               <label for=""><h2>Waktu Home Service</h2></label><br/>
 
               <div class="text-center"><button id="tambah_appointment" type="button" style="display: none;background: #4caf3ab3">Tambah Appointment</button></div>
@@ -578,6 +577,45 @@ function setMinAppointmentTime(e) {
                 }
             });
         });
+
+        $("#branch").on("change", function(){
+            let dataDistrictNya = $(this).find(':selected').attr('data-district');
+            let dataCityNya = $(this).find(':selected').attr('data-city');
+            let dataCityTypeNya = $(this).find(':selected').attr('data-city-type');
+            let dataProvinceNya = $(this).find(':selected').attr('data-province');
+            if(dataProvinceNya && dataCityNya && dataDistrictNya){
+                $("#province").val(dataProvinceNya);
+                $("#province option:not(:selected)").attr('disabled', 'disabled');
+
+                // khusus untuk kota kecamatan only
+                $( "#city" ).html("");
+                $( "#subDistrict" ).html("");
+                $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+dataCityNya )
+                .done(function( result ) {
+                    result = result['rajaongkir']['results'];
+                    let arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
+                    let arrCity = "";
+
+                    if(result.length > 0){
+                        $.each( result, function( key, value ) {
+                            if(dataDistrictNya.split(",").includes(value['subdistrict_id'].toString())){
+                                arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
+                                arrCity = "<option selected disabled value=\"\">Pilihan Kota</option><option selected value=\""+value['city_id']+"\">"+dataCityTypeNya+" "+value['city']+"</option>";
+                            }
+                        });
+                        $( "#subDistrict" ).append(arrSubDistsrict);
+                        $( "#city" ).html(arrCity);
+                    }
+                });
+            }
+            else{
+                $("#province option").removeAttr('disabled');
+                $("#province").val("");
+                $("#province").find(':selected').attr('disabled', 'disabled');
+                $( "#city" ).html("<option selected disabled value=\"\">Pilihan Kota</option>");
+                $( "#subDistrict" ).html("<option selected disabled value=\"\">Pilihan Kecamatan</option>");
+            }
+        });
     });
 
     @if(isset($autofill))
@@ -585,18 +623,26 @@ function setMinAppointmentTime(e) {
         $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+{{ $autofill['province'] }} )
         .done(function( result ) {
             result = result['rajaongkir']['results'];
-            var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
+            let arrKabupaten = "<option disabled value=\"\">Pilihan Kabupaten</option>";
+            let arrKota = "<option disabled value=\"\">Pilihan Kota</option>";
             if(result.length > 0){
                 $.each( result, function( key, value ) {
+                    if(value['type'] == "Kabupaten"){
+                        let selected = "";
+                        if({{ $autofill['city'] }} == value['city_id']){
+                            selected = "selected";
+                        }
+                        arrKabupaten += "<option "+selected+" value=\""+value['city_id']+"\">Kabupaten "+value['city_name']+"</option>";
+                    }
                     if(value['type'] == "Kota"){
                         let selected = "";
                         if({{ $autofill['city'] }} == value['city_id']){
                             selected = "selected";
                         }
-                        arrCity += "<option "+selected+" value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
+                        arrKota += "<option "+selected+" value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                     }
                 });
-                $( "#city" ).append(arrCity);
+                $( "#city" ).append(arrKabupaten+arrKota);
             }
         });
 
