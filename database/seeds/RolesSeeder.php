@@ -46,6 +46,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => true,
                 'change-status_order_success' => true,
                 'change-status_order_reject' => true,
+                'change-status_order_stock_request_pending' => true,
+                'change-status_order_stock_request_success' => true,
+                'change-status_order_delivered' => true,
 
                 //Update Order Payment Status
                 'change-status_payment' => true,
@@ -289,6 +292,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -532,6 +538,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -770,6 +779,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
                 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -1007,6 +1019,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -1244,6 +1259,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -1481,6 +1499,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,

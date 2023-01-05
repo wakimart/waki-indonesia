@@ -9,6 +9,7 @@ use App\Order;
 use App\OrderDetail;
 use App\OrderPayment;
 use App\HistoryUpdate;
+use App\Http\Controllers\StockOrderRequestController;
 use App\User;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -98,8 +99,18 @@ class OfflineSideController extends Controller
                 $dataBefore = Order::where('code', $request->code)->first();
                 if(isset($order)){
                     $order->status = $request->status;
-                    if($order->status == Order::$status['3']){
+                    if ($order->status == Order::$status['6']) {
+                        StockOrderRequestController::inserStockOrderRequest($order->id, $request->prodIdNya, $request->prodQty);
+                    } if($order->status == Order::$status['3']){
                         $order->delivery_cso_id = json_encode($request->delivery_cso_id);
+                    } else if ($order->status == Order::$status['4']) {
+                        foreach($request->delivered_image as $index => $image){
+                            $path = $request['delivered_image_file_' . $index];
+                            $filename = basename($path);
+            
+                            Image::make($path)->save('/var/www/public_html/waki-indonesia/sources/order/' . $filename);
+                        }
+                        $order->delivered_image = json_encode($request->delivered_image);
                     }
                     $order->update();
                     
@@ -196,6 +207,28 @@ class OfflineSideController extends Controller
                 'status' => 'error',
                 'message' => $ex->getMessage()
             ], 500);
+        }
+    }
+
+    public function sendUpdateOrderStatus($code, $status, $user_id)
+    {
+        $data = [
+            'code' => $code,
+            'status' => $status,
+            'user_id' => $user_id,
+        ];
+        $ch = curl_init(env('ONLINE_URL').'/api/update-order-status');
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json', "api-key:".env('API_KEY')));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $response = json_decode($response, true);
+        if (isset($response['status']) && $response['status'] == 'success') {
+            return $response;
+        } else {
+            throw new \Exception($response['message'] ?? 'Network Error!');
         }
     }
 }

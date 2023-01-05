@@ -290,8 +290,14 @@
                                 <span class="badge badge-secondary">New</span>
                             @elseif ($order['status'] == \App\Order::$status['2'])
                                 <span class="badge badge-primary">Process</span>
+                            @elseif($order['status'] == \App\Order::$status['6'])
+                                <span class="badge" style="background-color: #FFD495">Request Stock</span>
+                            @elseif($order['status'] == \App\Order::$status['7'])
+                                <span class="badge text-white" style="background-color: #C147E9">Stock Approved</span>
                             @elseif ($order['status'] == \App\Order::$status['3'])
                                 <span class="badge badge-warning">Delivery</span>
+                            @elseif($order['status'] == \App\Order::$status['8'])
+                                <span class="badge text-white" style="background-color: #FF6E31">Delivered</span>
                             @elseif ($order['status'] == \App\Order::$status['4'])
                                 <span class="badge badge-success">Success</span>
                             @elseif ($order['status'] == \App\Order::$status['5'])
@@ -309,6 +315,30 @@
                         </tr>
                     @endforeach
                     @endif
+                    @if (count(json_decode($order->delivered_image, true)) > 0)
+                    <tr><td></td></tr>
+                    <tr>
+                        <td>Delivered Image : </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @foreach (json_decode($order->delivered_image, true) as $orderDeliveredImage)
+                            <a href="{{ asset("sources/order/$orderDeliveredImage") }}"
+                                target="_blank">
+                                <i class="mdi mdi-numeric-{{ $loop->iteration }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                            </a>
+                            @endforeach
+                            @if($order['status'] != \App\Order::$status['4'] && Gate::check('change-status_order') && Gate::check('change-status_order_delivered'))
+                            <button value="{{ $order['id'] }}"
+                                data-toggle="modal"
+                                data-target="#editDeliveredImageModal"
+                                class="btn btn-delete ml-2">
+                                <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                            </button>
+                            @endif
+                        </td>
+                    </tr>
+                    @endif
                     @if (Gate::check('change-status_order'))
                         <tr>
                             <td>
@@ -318,12 +348,22 @@
                                         class="btn btn-gradient-success mr-2 btn-lg btn-change-status-order">
                                         Process Order
                                     </button>
-                                    @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_delivery'))
+                                    @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_stock_request_pending'))
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['6']}}"
+                                        class="btn mr-2 btn-change-status-order" style="background-color: #FFD495;">
+                                        Request Stock
+                                    </button>
+                                    @elseif ($order['status'] == \App\Order::$status['7'] && Gate::check('change-status_order_delivery'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}"
                                         class="btn btn-gradient-warning mr-2 btn-lg btn-change-status-order">
                                         Delivery Order
                                     </button>
-                                    @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_success'))
+                                    @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_delivered'))
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['8']}}"
+                                        class="btn mr-2 btn-change-status-order" style="background-color: #FF6E31; color: #FFF">
+                                        Delivered Order
+                                    </button>
+                                    @elseif ($order['status'] == \App\Order::$status['8'] && Gate::check('change-status_order_success'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['4']}}"
                                         class="btn btn-gradient-primary mr-2 btn-lg btn-change-status-order">
                                         Success Order
@@ -352,6 +392,42 @@
                 <div class="clearfix"></div>
                 @endif
             </div>
+
+            @if($order->stockOrderRequest && $order->stockOrderRequest->stockInOut)
+                <div class="col-md-12 my-3">
+                    <h2 class="text-center">Out Stock</h2>
+                    <table class="w-100">
+                        <thead>
+                            <td colspan="3">Warehouse (From-To)</td>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">{{ $order->stockOrderRequest->stockInOut->warehouseFrom['code'] }} - {{ $order->stockOrderRequest->stockInOut->warehouseFrom['name'] }}</td>
+                                <td class="text-center">=></td>
+                                <td class="text-center">{{ $order->stockOrderRequest->stockInOut->warehouseTo['code'] }} - {{ $order->stockOrderRequest->stockInOut->warehouseTo['name'] }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="w-100">
+                        <thead>
+                            <tr>
+                                <th>Item Code</th>
+                                <th>Item Name</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($order->stockOrderRequest->stockInout->stockInOutProduct as $sioProduct)
+                            <tr>
+                                <td>{{ $sioProduct->product['code'] }}</td>
+                                <td>{{ $sioProduct->product['name'] }}</td>
+                                <td>{{ $sioProduct->quantity }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
 
             <div class="col-md-12">
                 <h2 class="text-center">ORDER HISTORY LOG</h2>
@@ -980,15 +1056,27 @@
         $(".btn-change-status-order").click(function(){
             statusOrder = $(this).attr('status-order');
             $('#delivery-cso').hide();
+            $('#request-stock').hide();
+            $('#delivered-image').hide();
             $('.delivery-cso-id').attr('disabled', true);
+            $('.prodCodeName, .prodQty').attr('disabled', true);
+            $('.addDelivered-productimg').attr('disabled', true);
             $('#status-order').val(statusOrder);
             if (statusOrder == "{{\App\Order::$status['2']}}") {
                 $("#modal-change-status-question").html('Process This Order?');
-            } else if (statusOrder == "{{\App\Order::$status['3']}}") {
+            } else if (statusOrder == "{{\App\Order::$status['6']}}")  {
+                $('#request-stock').show();
+                $('.prodCodeName, .prodQty').attr('disabled', false);
+                $("#modal-change-status-question").html('Request Stock? \n Choose Product');
+            } else if (statusOrder == "{{\App\Order::$status['3']}}")  {
                 $('#delivery-cso').show();
                 $('.delivery-cso-id').attr('disabled', false);
                 $("#modal-change-status-question").html('Delivery This Order? \n Choose CSO');
-            } else if (statusOrder == "{{\App\Order::$status['4']}}") {
+            } else if (statusOrder == "{{\App\Order::$status['8']}}") {
+                $('#delivered-image').show();
+                $('.addDelivered-productimg').attr('disabled', false);
+                $("#modal-change-status-question").html('Delivered This Order?');
+            } else if (statusOrder == "{{\App\Order::$status['4']}}") { 
                 $("#modal-change-status-question").html('Success This Order?');
             } else if (statusOrder == "{{\App\Order::$status['5']}}") {
                 $("#modal-change-status-question").html('Reject This Order?');

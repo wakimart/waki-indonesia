@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HistoryUpdate;
+use App\Http\Controllers\Api\OfflineSideController;
 use App\Product;
 use App\Stock;
 use App\StockInOut;
@@ -322,12 +323,14 @@ class StockInOutController extends Controller
                 $order = $stockOrderRequest->order;
                 $order->status = 'stock_request_success';
                 $order->save();
+
+                (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'stock_request_success', Auth::user()->code);
             }
 
             DB::commit();
 
             return response()->json(['success' => "Stocck ".ucwords($request->type)." successfully added."]);
-        } catch (Throwable $th) {
+        } catch (\Exception $th) {
             DB::rollBack();
 
             return response()->json(["errors" => $th->getMessage()], 500);
