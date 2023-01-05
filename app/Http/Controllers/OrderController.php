@@ -384,13 +384,14 @@ class OrderController extends Controller
     {
         $csos = Cso::where('active', true)->orderBy('code')->get();
         $banks = Bank::all();
+        $products = Product::where('active', true)->orderBy("code")->get();
         $order = Order::where('code', $request['code'])->first();
         $csoDeliveryOrders = Cso::whereIn('id', json_decode($order['delivery_cso_id']) ?? [])->get();
         $order['district'] = $order->getDistrict();
         $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
         ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
-        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders'));
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'products', 'csoDeliveryOrders'));
     }
 
     /**
@@ -799,7 +800,35 @@ class OrderController extends Controller
                 if ($request->index_order_home_service != null || ($request->request_hs_date && $request->request_hs_time)) {
                     HomeServiceController::addHomeServiceFromOrderDelivery($order, $request->index_order_home_service, $request->request_hs_date, $request->request_hs_time);
                 }
-            }        
+            } else if ($order->status == Order::$status['8']) {
+                // Save Delivered Image
+                // save image
+                $arrImage = [];
+                $idxImg = 1;
+                for ($i = 0; $i < 3; $i++) {
+                    if ($request->hasFile('images_' . $i)) {
+                        $path = "sources/order";
+                        $file = $request->file('images_' . $i);
+                        $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $idxImg . "_delivered_order." . $file->getClientOriginalExtension();
+
+                        // Cek ada folder tidak
+                        if (!is_dir($path)) {
+                            File::makeDirectory($path, 0777, true, true);
+                        }
+
+                        //compressed img
+                        $compres = Image::make($file->getRealPath());
+                        $compres->resize(540, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })->save($path.'/'.$fileName);
+
+                        //array_push($data['image'], $fileName);
+                        $arrImage[] = $fileName;
+                        $idxImg++;
+                    }
+                }
+                $order->delivered_image = json_encode($arrImage);
+            }
             $order->save();
             
             $user = Auth::user();
@@ -817,6 +846,81 @@ class OrderController extends Controller
             
             DB::commit();
             return redirect()->back()->with('success', 'Status Order Berhasil Di Ubah');
+        }catch(\Exception $ex){
+            DB::rollback();
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
+    public function updateDeliveredImage(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $order = Order::find($request->input('order_id'));
+            $dataBefore = Order::find($request->input('order_id'));
+            
+            // save image
+            $arrImage = [];
+            $idxImg = 1;
+            for ($i = 0; $i < 3; $i++) {
+                $orderDeliveredImages = json_decode($order->delivered_image, true) ?? [];
+                // Jika Hapus Gambar Lama
+                if (isset($orderDeliveredImages[$i]) && $request->input('dltimg-'.$i) != null) {
+                    if (File::exists("sources/order/" . $orderDeliveredImages[$i])) {
+                        File::delete("sources/order/" . $orderDeliveredImages[$i]);
+                    }
+                    unset($orderDeliveredImages[$i]);
+                }
+                if ($request->hasFile('images_' . $i)) {
+                    $path = "sources/order";
+
+                    // Hapus Img Lama Jika Update Image
+                    if (isset($orderDeliveredImages[$i])) {
+                        if (File::exists("sources/order/" . $orderDeliveredImages[$i])) {
+                            File::delete("sources/order/" . $orderDeliveredImages[$i]);
+                        }
+                    }
+
+                    $file = $request->file('images_' . $i);
+                    $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $idxImg . "_delivered_order." . $file->getClientOriginalExtension();
+
+                    // Cek ada folder tidak
+                    if (!is_dir($path)) {
+                        File::makeDirectory($path, 0777, true, true);
+                    }
+
+                    //compressed img
+                    $compres = Image::make($file->getRealPath());
+                    $compres->resize(540, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save($path.'/'.$fileName);
+
+                    //array_push($data['image'], $fileName);
+                    $arrImage[] = $fileName;
+                    $idxImg++;
+                } else if (isset($orderDeliveredImages[$i])) {
+                    $arrImage[] = $orderDeliveredImages[$i];
+                    $idxImg++;
+                }
+            }
+            $order->delivered_image = json_encode($arrImage);
+            $order->save();
+            
+            $user = Auth::user();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Update Order Delivered Image";
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> array_diff(json_decode($order, true), json_decode($dataBefore,true))
+            ]);
+
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $order->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+            
+            DB::commit();
+            return redirect()->back()->with('success', 'Bukti Order Delivered Berhasil Di Ubah');
         }catch(\Exception $ex){
             DB::rollback();
             return redirect()->back()->withErrors($ex->getMessage());

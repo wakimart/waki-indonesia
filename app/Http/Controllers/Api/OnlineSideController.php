@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\HistoryUpdate;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Order;
 use App\OrderDetail;
 use App\OrderPayment;
-use DB;
+use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OnlineSideController extends Controller
 {
@@ -79,5 +81,55 @@ class OnlineSideController extends Controller
         $response = curl_exec($ch);
         curl_close($ch);
         return json_decode($response, true);
+    }
+
+    public function updateOrderStatus(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            if($request->header('api-key') == env('API_KEY')) {
+                $order = Order::where('code', $request->code)->first();
+                $dataBefore = Order::where('code', $request->code)->first();
+                if(isset($order)){
+                    $order->status = $request->status;
+                    $order->update();
+
+                    $user = User::where('code', $request->user_id)->first();
+                    $historyUpdate['type_menu'] = "Order";
+                    $historyUpdate['method'] = "Update Status";
+                    $historyUpdate['meta'] = json_encode([
+                        'user'=>$user['id'],
+                        'createdAt' => date("Y-m-d h:i:s"),
+                        'dataChange'=> array_diff(json_decode($order, true), json_decode($dataBefore,true))
+                    ]);
+
+                    $historyUpdate['user_id'] = $user['id'];
+                    $historyUpdate['menu_id'] = $order->id;
+                    $createData = HistoryUpdate::create($historyUpdate);
+
+                    DB::commit();
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'data successfully updated'
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'data order not found'
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    "status" => "unauthenticated",
+                    "message" => "you don't have access"
+                ], 401);
+            }
+        }catch(\Exception $ex){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ]);
+        }
     }
 }

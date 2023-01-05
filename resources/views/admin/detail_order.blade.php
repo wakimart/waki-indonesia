@@ -275,8 +275,14 @@
                                 <span class="badge badge-secondary">New</span>
                             @elseif ($order['status'] == \App\Order::$status['2'])
                                 <span class="badge badge-primary">Process</span>
+                            @elseif($order['status'] == \App\Order::$status['6'])
+                                <span class="badge" style="background-color: #FFD495">Request Stock</span>
+                            @elseif($order['status'] == \App\Order::$status['7'])
+                                <span class="badge text-white" style="background-color: #C147E9">Stock Approved</span>
                             @elseif ($order['status'] == \App\Order::$status['3'])
                                 <span class="badge badge-warning">Delivery</span>
+                            @elseif($order['status'] == \App\Order::$status['8'])
+                                <span class="badge text-white" style="background-color: #FF6E31">Delivered</span>
                             @elseif ($order['status'] == \App\Order::$status['4'])
                                 <span class="badge badge-success">Success</span>
                             @elseif ($order['status'] == \App\Order::$status['5'])
@@ -307,6 +313,30 @@
                         </td>
                     </tr>
                     @endif
+                    @if (count(json_decode($order->delivered_image, true)) > 0)
+                    <tr><td></td></tr>
+                    <tr>
+                        <td>Delivered Image : </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @foreach (json_decode($order->delivered_image, true) as $orderDeliveredImage)
+                            <a href="{{ asset("sources/order/$orderDeliveredImage") }}"
+                                target="_blank">
+                                <i class="mdi mdi-numeric-{{ $loop->iteration }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                            </a>
+                            @endforeach
+                            @if($order['status'] != \App\Order::$status['4'] && Gate::check('change-status_order') && Gate::check('change-status_order_delivered'))
+                            <button value="{{ $order['id'] }}"
+                                data-toggle="modal"
+                                data-target="#editDeliveredImageModal"
+                                class="btn btn-delete ml-2">
+                                <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                            </button>
+                            @endif
+                        </td>
+                    </tr>
+                    @endif
                     @if (Gate::check('change-status_order'))
                         <tr>
                             <td>
@@ -316,12 +346,22 @@
                                         class="btn btn-gradient-success mr-2 btn-change-status-order">
                                         Process Order
                                     </button>
-                                    @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_delivery'))
+                                    @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_stock_request_pending'))
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['6']}}"
+                                        class="btn mr-2 btn-change-status-order" style="background-color: #FFD495;">
+                                        Request Stock
+                                    </button>
+                                    @elseif ($order['status'] == \App\Order::$status['7'] && Gate::check('change-status_order_delivery'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}"
                                         class="btn btn-gradient-warning mr-2 btn-change-status-order">
                                         Delivery Order
                                     </button>
-                                    @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_success'))
+                                    @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_delivered'))
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['8']}}"
+                                        class="btn mr-2 btn-change-status-order" style="background-color: #FF6E31; color: #FFF">
+                                        Delivered Order
+                                    </button>
+                                    @elseif ($order['status'] == \App\Order::$status['8'] && Gate::check('change-status_order_success'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['4']}}"
                                         class="btn btn-gradient-primary mr-2 btn-change-status-order">
                                         Success Order
@@ -390,12 +430,13 @@
                 tabindex="-1"
                 role="dialog"
                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-dialog modal-dialog-centered @if($order['status'] == \App\Order::$status['2']) modal-xl @endif" role="document">
                     <div class="modal-content">
                         <form id="actionAdd"
                             class="forms-sample"
                             method="POST"
-                            action="{{ route('update_status_order') }}">
+                            action="{{ route('update_status_order') }}"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="modal-header">
                                 <button type="button"
@@ -408,53 +449,145 @@
                             <div class="modal-body">
                                 <h5 id="modal-change-status-question" class="modal-title text-center">Process This Order?</h5>
                                 <hr>
-                                {{-- Pilih CSO Untuk Delivery --}}
+                                {{-- Pilih Product Untuk Stock --}}
                                 @if ($order['status'] == \App\Order::$status['2'])
-                                <div id="delivery-cso">
-                                    <div id="form-cso" class="row">
-                                        <div class="form-group mb-3 col-10">
-                                            <label>Select CSO Delivery</label>
-                                            <select id="delivery-cso-id" class="form-control delivery-cso-id" name="delivery_cso_id[]" style="width: 100%" required>
-                                                <option value="">Choose CSO Delivery</option>
-                                                @foreach ($csos as $cso)
-                                                <option value="{{ $cso['id'] }}">{{ $cso['code'] }} - {{ $cso['name'] }}</option>
+                                    <div id="request-stock">
+                                        <table class="w-100 table-responsive">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-4">Items</th>
+                                                    <th class="col-md-6">Code - Product</th>
+                                                    <th class="col-md-2">Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <datalist id="data-product">
+                                                    @foreach ($products as $product)
+                                                    <option value="<{{ $product['code'] }}> {{ $product['name'] }}">
+                                                    @endforeach
+                                                </datalist>
+                                                @foreach ($order->orderDetail as $orderDetail)
+                                                    @if ($orderDetail->type != "upgrade" && ($orderDetail->product_id != null || $orderDetail->promo_id != null))
+                                                    <tr>
+                                                        @php $productNyas = []; $productIdNyas = []; @endphp
+                                                        @if ($orderDetail->product_id != null)
+                                                            <td>{{ $orderDetail->product['code'] }} - {{ $orderDetail->product['name'] }}</td>
+                                                            @php array_push($productNyas, "<".$orderDetail->product['code']."> ".$orderDetail->product['name']);
+                                                                array_push($productIdNyas, $orderDetail->product['id']);
+                                                            @endphp
+                                                        @elseif ($orderDetail->promo_id != null)
+                                                            <td>{{ $orderDetail->promo['code'] }}</td>
+                                                            @php
+                                                                foreach ($orderDetail->promo->product_list() as $promoProdList) {
+                                                                    array_push($productNyas, "<".$promoProdList['code']."> ".$promoProdList['name']);
+                                                                    array_push($productIdNyas, $promoProdList['id']);
+                                                                }
+                                                            @endphp
+                                                        @endif
+                                                        <td>
+                                                            @foreach ($productNyas as $key=>$prodNya)
+                                                                <div class="form-group mb-2">
+                                                                    <input name="prodCodeName[]" list="data-product" class="form-control prodCodeName" 
+                                                                        value="{{$prodNya}}" required />
+                                                                    <input type="hidden" name="prodIdNya[]" class="prodIdNya"
+                                                                        value="{{$productIdNyas[$key]??''}}">
+                                                                    <div class="invalid-feedback">Wrong Product</div>
+                                                                </div>
+                                                            @endforeach
+                                                        </td>
+                                                        <td>
+                                                            @foreach ($productNyas as $prodNya)
+                                                                <div class="form-group mb-2">
+                                                                    <input type="number" name="prodQty[]" class="form-control mb-2 prodQty" 
+                                                                        value="{{$orderDetail->qty}}" required>
+                                                                    <div class="invalid-feedback">Quantity Min 1</div>
+                                                                </div>
+                                                            @endforeach
+                                                        </td>
+                                                    </tr>
+                                                    @endif
                                                 @endforeach
-                                            </select>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {{-- Pilih CSO Untuk Delivery --}}
+                                @elseif ($order['status'] == \App\Order::$status['7'])
+                                    <div id="delivery-cso">
+                                        <div id="form-cso" class="row">
+                                            <div class="form-group mb-3 col-10">
+                                                <label>Select CSO Delivery</label>
+                                                <select id="delivery-cso-id" class="form-control delivery-cso-id" name="delivery_cso_id[]" style="width: 100%" required>
+                                                    <option value="">Choose CSO Delivery</option>
+                                                    @foreach ($csos as $cso)
+                                                    <option value="{{ $cso['id'] }}">{{ $cso['code'] }} - {{ $cso['name'] }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="text-center"
+                                                style="display: inline-block; float: right;">
+                                                <button id="tambah_cso"
+                                                    title="Add Cso"
+                                                    style="padding: 0.4em 0.7em;">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="text-center"
-                                            style="display: inline-block; float: right;">
-                                            <button id="tambah_cso"
-                                                title="Add Cso"
-                                                style="padding: 0.4em 0.7em;">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
+                                        <div id="tambahan_cso"></div>
+                                    </div>
+                                    @php $order_request_hs = json_decode($order['request_hs'], true) ?? []; @endphp
+                                    @if($order_request_hs)
+                                    <div class="form-group mb-3">
+                                        <label>Pilihan Homeservice</label>
+                                        <select class="form-control" name="index_order_home_service">
+                                            <option value="">No Request Homeservice</option>
+                                            @foreach ($order_request_hs as $key => $order_r_hs)
+                                            <option value="{{ $key }}">{{ date('d-m-Y H:i', strtotime($order_r_hs)) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @else
+                                    <div class="form-group mb-3">
+                                        <label for="">Tanggal Janjian</label>
+                                        <input type="date" class="form-control" id="request_hs_date" name="request_hs_date"
+                                            value="" required="" />
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="">Jam Janjian</label>
+                                        <input type="time" class="form-control" name="request_hs_time" id="request_hs_time"
+                                            value="" required="" />
+                                    </div>
+                                    @endif
+                                {{--  Upload Delivered Image--}}
+                                @elseif ($order['status'] == \App\Order::$status['3'])
+                                    <div id="delivered-image">
+                                        <div class="form-group">
+                                            <label for="">Bukti Terima Barang</label>
+                                            <label style="float: right">(Min: 1) (Max: 3)</label>
+                                            <div class="clearfix"></div>
+                                            @for ($i = 0; $i < 3; $i++)
+                                                <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                                    style="padding: 15px; float: left;">
+                                                    <label>Image {{ $i + 1 }}</label>
+                                                    <div class="imagePreview"
+                                                        style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
+                                                    </div>
+                                                    <label class="file-upload-browse btn btn-gradient-primary"
+                                                        style="margin-top: 15px; padding: 10px">
+                                                        Upload
+                                                        <input name="images_{{ $i }}"
+                                                            id="addDelivered-productimg-{{ $i }}"
+                                                            type="file"
+                                                            accept=".jpg,.jpeg,.png"
+                                                            class="uploadFile img addDelivered-productimg"
+                                                            value="Upload Photo"
+                                                            style="width: 0px; height: 0px; overflow: hidden; border: none !important;"
+                                                            @if($i == 0) required @endif />
+                                                    </label>
+                                                    <i class="mdi mdi-window-close del"></i>
+                                                </div>
+                                            @endfor
                                         </div>
                                     </div>
-                                    <div id="tambahan_cso"></div>
-                                </div>
-                                @php $order_request_hs = json_decode($order['request_hs'], true) ?? []; @endphp
-                                @if($order_request_hs)
-                                <div class="form-group mb-3">
-                                    <label>Pilihan Homeservice</label>
-                                    <select class="form-control" name="index_order_home_service">
-                                        <option value="">No Request Homeservice</option>
-                                        @foreach ($order_request_hs as $key => $order_r_hs)
-                                        <option value="{{ $key }}">{{ date('d-m-Y H:i', strtotime($order_r_hs)) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @else
-                                <div class="form-group mb-3">
-                                    <label for="">Tanggal Janjian</label>
-                                    <input type="date" class="form-control" id="request_hs_date" name="request_hs_date"
-                                        value="" required="" />
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="">Jam Janjian</label>
-                                    <input type="time" class="form-control" name="request_hs_time" id="request_hs_time"
-                                        value="" required="" />
-                                </div>
-                                @endif
                                 @endif
                             </div>
                             <div class="modal-footer">
@@ -700,7 +833,7 @@
                                                     value="Upload Photo"
                                                     style="width: 0px; height: 0px; overflow: hidden; border: none !important;" />
                                             </label>
-                                            <i class="mdi mdi-window-close del"></i>
+                                            <i class="mdi mdi-window-close del del-editPayment"></i>
                                         </div>
                                     @endfor
                                 </div>
@@ -797,6 +930,72 @@
                 </div>
             </div>
             <!-- End Modal View -->
+            <!-- Modal Edit Delivered Image -->
+            <div class="modal fade"
+                id="editDeliveredImageModal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="frmEditDeliveredImage"
+                                method="post"
+                                action="{{ route('update_delivered_image_order') }}"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="order_id" value="{{ $order['id'] }}">
+                                <h5 style="text-align: center;">
+                                    Edit Order Delivered Image 
+                                </h5>
+                                <br>
+                                <div class="form-group">
+                                    <label for="">Bukti Terima Barang</label>
+                                    <label style="float: right">(Min: 1) (Max: 3)</label>
+                                    <div class="clearfix"></div>
+                                    @for ($i = 0; $i < 3; $i++)
+                                        <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                            style="padding: 15px; float: left;">
+                                            <label>Image {{ $i + 1 }}</label>
+                                            <div class="imagePreview"
+                                                style="background-image: url({{ isset(json_decode($order->delivered_image, true)[$i]) ? asset('sources/order/'.json_decode($order->delivered_image, true)[$i]) : asset('sources/dashboard/no-img-banner.jpg') }});">
+                                            </div>
+                                            <label class="file-upload-browse btn btn-gradient-primary"
+                                                style="margin-top: 15px; padding: 10px">
+                                                Upload
+                                                <input name="images_{{ $i }}"
+                                                    id="editDelivered-productimg-{{ $i }}"
+                                                    type="file"
+                                                    accept=".jpg,.jpeg,.png"
+                                                    class="uploadFile img"
+                                                    value="Upload Photo"
+                                                    style="width: 0px; height: 0px; overflow: hidden; border: none !important;" />
+                                            </label>
+                                            <i class="mdi mdi-window-close del del-editDelivered"></i>
+                                        </div>
+                                    @endfor
+                                </div>
+                            </form>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="modal-footer footer-cash">
+                            <button type="submit" form="frmEditDeliveredImage"
+                                class="btn btn-gradient-success mr-2">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Edit Delivered Image -->
             @endif
 
             @else
@@ -839,15 +1038,27 @@
         $(".btn-change-status-order").click(function(){
             statusOrder = $(this).attr('status-order');
             $('#delivery-cso').hide();
+            $('#request-stock').hide();
+            $('#delivered-image').hide();
             $('.delivery-cso-id').attr('disabled', true);
+            $('.prodCodeName, .prodQty').attr('disabled', true);
+            $('.addDelivered-productimg').attr('disabled', true);
             $('#status-order').val(statusOrder);
             if (statusOrder == "{{\App\Order::$status['2']}}") {
                 $("#modal-change-status-question").html('Process This Order?');
-            } else if (statusOrder == "{{\App\Order::$status['3']}}") {
+            } else if (statusOrder == "{{\App\Order::$status['6']}}")  {
+                $('#request-stock').show();
+                $('.prodCodeName, .prodQty').attr('disabled', false);
+                $("#modal-change-status-question").html('Request Stock? \n Choose Product');
+            } else if (statusOrder == "{{\App\Order::$status['3']}}")  {
                 $('#delivery-cso').show();
                 $('.delivery-cso-id').attr('disabled', false);
                 $("#modal-change-status-question").html('Delivery This Order? \n Choose CSO');
-            } else if (statusOrder == "{{\App\Order::$status['4']}}") {
+            } else if (statusOrder == "{{\App\Order::$status['8']}}") {
+                $('#delivered-image').show();
+                $('.addDelivered-productimg').attr('disabled', false);
+                $("#modal-change-status-question").html('Delivered This Order?');
+            } else if (statusOrder == "{{\App\Order::$status['4']}}") { 
                 $("#modal-change-status-question").html('Success This Order?');
             } else if (statusOrder == "{{\App\Order::$status['5']}}") {
                 $("#modal-change-status-question").html('Reject This Order?');
@@ -882,6 +1093,51 @@
                 placeholder: "Choose CSO Delivery",
                 dropdownParent: $('#modal-change-status .modal-body')
             });
+        });
+
+        const allProdCode = <?php echo $products; ?>;
+        function validateProdCodeName(el) {
+            var thisProdCode = el.val().substring(1);
+            thisProdCode = thisProdCode.split(">")[0];
+
+            const checkedValidate = allProdCode.find(item => item.code == thisProdCode);
+            if(checkedValidate){
+                el.siblings(".prodIdNya").val(checkedValidate.id);
+                el.removeClass("is-invalid");
+            } else {
+                el.siblings(".prodIdNya").val("");
+                el.addClass("is-invalid");
+            }
+            return checkedValidate;
+        }
+
+        function validateProdQty(el) {
+            const checkedValidate = el.val() > 0;
+            if (checkedValidate) {
+                el.removeClass("is-invalid");
+            } else {
+                el.addClass("is-invalid");
+            }
+            return checkedValidate;
+        }
+
+        function validateProductStockBeforeSubmit() {
+            var checkedValidate = true;
+            $(".prodCodeName").each(function() {
+                if (! validateProdCodeName($(this))) checkedValidate = false;
+            })
+            $(".prodQty").each(function() {
+                if (! validateProdQty($(this))) checkedValidate = false;
+            })
+            return checkedValidate;
+        }
+
+        $(document).on("change", ".prodCodeName", function() {
+            validateProdCodeName($(this));
+        });
+
+        $(document).on("change", ".prodQty", function() {
+            validateProdQty($(this));
         });
 
         $(document).on("click", ".hapus_cso", function (e) {
@@ -985,11 +1241,19 @@
             if (inputImageId == "0") {
                 inputImage.attr("required", "");
             }
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'dltimg-' + inputImageId,
-                value: inputImageId
-            }).appendTo('#frmEditPayment');
+            if ($(this).hasClass("del-editPayment")) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'dltimg-' + inputImageId,
+                    value: inputImageId
+                }).appendTo('#frmEditPayment');
+            } else if ($(this).hasClass("del-editDelivered")) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'dltimg-' + inputImageId,
+                    value: inputImageId
+                }).appendTo('#frmEditDeliveredImage');
+            }
         });
 
         $(function () {
@@ -1048,6 +1312,16 @@
         };
 
         $('#btn-edit-status-order').on('click', function() {
+            // Check Required Form
+            if ($("#actionAdd [required]:not(:disabled)").filter(function() { return $(this).val() == "" }).length > 0) {
+                return alert('Input Field can\'t be empty');
+            }
+
+            // Check For Product Stock
+            @if ($order['status'] == \App\Order::$status['2'])
+            if (! validateProductStockBeforeSubmit()) return alert('Input Error!');
+            @endif
+
             testNetwork(networkValue, function(val){
                 console.log("masuk");
                 var order_details = []
@@ -1062,10 +1336,18 @@
                     order_details.push(row)
                 @endforeach
                 var formSerialize = $('#actionAdd').serializeArray()
-                var deliveryCSOID = []
+                var deliveryCSOID = [];
+                var prodIdNya = [];
+                var prodQty = [];
                 for(var i = 0; i < formSerialize.length; i++){
                     if(formSerialize[i].name == 'delivery_cso_id[]'){
                         deliveryCSOID.push(formSerialize[i].value)
+                    }
+                    if(formSerialize[i].name == 'prodIdNya[]'){
+                        prodIdNya.push(formSerialize[i].value)
+                    }
+                    if(formSerialize[i].name == 'prodQty[]'){
+                        prodQty.push(formSerialize[i].value)
                     }
                 }
                 var order = {
@@ -1091,9 +1373,15 @@
                     'distric':'{{$order->distric}}',
                     'status':$('#status-order').val(),
                     'delivery_cso_id':deliveryCSOID,
+                    'prodIdNya': prodIdNya,
+                    'prodQty': prodQty,
+                    'delivered_image': <?= $order->delivered_image ?>,
                     'order_details':order_details,
                     'user_id':'{{Auth::user()->code}}',
                     'temp_no':'{{$order->temp_no}}'
+                }
+                for(var i = 0; i < order.delivered_image.length; i++){
+                    order['delivered_image_file_'+i] = `{{ asset('sources/order/${order.delivered_image[i]}') }}`;
                 }
                 // $('#actionAdd').submit();
 
