@@ -83,6 +83,23 @@ $menu_item_page = "order";
                                 <input type="text" class="form-control" id="order-code" name="order_code" value="{{ $orders['code'] }}" readonly="">
                                 <div class="validation"></div>
                             </div>
+                            @if(Auth::user()->inRole("head-admin"))
+                            <div class="form-group">
+                                <label for="orderDate">Waktu Order</label>
+                                <input type="date"
+                                    class="form-control"
+                                    name="orderDate"
+                                    id="orderDate"
+                                    placeholder="Tanggal Order"
+                                    value="{{ $orders['orderDate'] }}"
+                                    required
+                                    data-msg="Mohon Isi Tanggal" />
+                                <div class="validation"></div>
+                                <span class="invalid-feedback">
+                                    <strong></strong>
+                                </span>
+                            </div>
+                            @endif
                             <div class="form-group">
                                 <label for="temp no">Temp No</label>
                                 <input type="text" class="form-control" name="temp_no" value="{{ $orders['temp_no'] }}">

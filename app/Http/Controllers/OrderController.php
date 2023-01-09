@@ -444,6 +444,7 @@ class OrderController extends Controller
             $orders['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
             $orders['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
 
+            $orders['orderDate'] = $data['orderDate'] ?? $orders['orderDate'];
             $orders['no_member'] = $data['no_member'];
             $orders['name'] = $data['name'];
             $orders['address'] = $data['address'];
