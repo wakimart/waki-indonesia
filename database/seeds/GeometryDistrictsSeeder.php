@@ -22,14 +22,25 @@ class GeometryDistrictsSeeder extends Seeder
                 return $geom;
             });
             $geoms = $geoms->keyBy('subdistrict_name')->toArray();
-            $districs = \App\RajaOngkir_Subdistrict::where('city_id', 444)->get()->keyBy('subdistrict_name')->toArray();
+            $districs = \App\RajaOngkir_Subdistrict::whereIn('city_id', [
+                    444, //Surabaya
+                    22, 23, 24, //Bandung
+                    255, 256, //Malang
+                    153, //Jakarta Selatan
+                    155, //Jakarta Utara
+                    151, //Jakarta Barat
+                    154, //Jakarta Timur
+                    152, //Jakarta Pusat
+                    455, 456, 457, //Tangerang
+                ])
+                ->get()->keyBy('subdistrict_name')->toArray();
 
             if (!array_diff_key($geoms, $districs)) {
                 foreach ($districs as $key => $district) {
-                    if (isset($geoms[$key])) {
-                        $geomDistrict = new GeometryDistrict;
+                    $geomDistrict = GeometryDistrict::where('distric', $district['id'])->first() ?? new GeometryDistrict;
+                    if ($geomDistrict->geom == null || $geomDistrict->geom == 'POLYGON()') {
                         $geomDistrict->distric = $district['id'];
-                        $geomDistrict->geom = $geoms[$key]['properties']['WKT'];
+                        $geomDistrict->geom = $geoms[$key]['properties']['WKT'] ?? 'POLYGON()';
                         $geomDistrict->save();
                     }
                 }
