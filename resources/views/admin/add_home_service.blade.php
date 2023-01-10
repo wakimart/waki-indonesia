@@ -105,7 +105,7 @@ $menu_item_second = "add_home_service";
                                 continue;
                             }
                             @endphp
-                            <option data-district="{{ $branch->region() ? implode(",", $branch->regionDistrict()['district']) : '' }}" data-city="{{ $branch->region() ? $branch->regionDistrict()['city'] : '' }}" data-city-type="{{ $branch->region() ? $branch->regionDistrict()['cityType'] : '' }}" data-province="{{ $branch->region() ? $branch->regionDistrict()['province'] : '' }}" value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                            <option data-district="{{ $branch->region() ? implode(",", $branch->regionDistrict()['district']) : '' }}" data-city="{{ $branch->region() ? implode(",", $branch->regionDistrict()['city']) : '' }}" data-city-type="{{ $branch->region() ? implode(",", $branch->regionDistrict()['cityType']) : '' }}" data-province="{{ $branch->region() ? $branch->regionDistrict()['province'] : '' }}" value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
                             @endforeach
                         </select>
                         <div class="validation"></div>
@@ -528,6 +528,10 @@ function setMinAppointmentTime(e) {
         });
 
         $("#province").on("change", function(){
+            //cek branch
+            let dataCityNya = $("#branch").find(':selected').attr('data-city');
+            let arrdataCityNya = dataCityNya.split(",");
+
             var id = $(this).val();
             $( "#city" ).html("");
             $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
@@ -536,6 +540,12 @@ function setMinAppointmentTime(e) {
                 var arrCity = "<option selected disabled value=\"\">Pilihan Kabupaten</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
+                        if(dataCityNya){
+                            console.log([arrdataCityNya.includes(value['city_id']), value['city_id']]);
+                            if(!arrdataCityNya.includes(value['city_id'].toString())){
+                                return;
+                            }
+                        }
 						if(value['type'] == "Kabupaten"){
 							arrCity += "<option value=\""+value['city_id']+"\">"+value['type']+" "+value['city_name']+"</option>";
 						}
@@ -546,6 +556,10 @@ function setMinAppointmentTime(e) {
         });
 
         $("#province").on("change", function(){
+            //cek branch
+            let dataCityNya = $("#branch").find(':selected').attr('data-city');
+            let arrdataCityNya = dataCityNya.split(",");
+
             var id = $(this).val();
             $( "#city" ).html("");
             $.get( '{{ route("fetchCity", ['province' => ""]) }}/'+id )
@@ -554,6 +568,11 @@ function setMinAppointmentTime(e) {
                 var arrCity = "<option selected disabled value=\"\">Pilihan Kota</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
+                        if(dataCityNya){
+                            if(!arrdataCityNya.includes(value['city_id'].toString())){
+                                return;
+                            }
+                        }
                         if(value['type'] == "Kota"){
                             arrCity += "<option value=\""+value['city_id']+"\">Kota "+value['city_name']+"</option>";
                         }
@@ -563,6 +582,10 @@ function setMinAppointmentTime(e) {
             });
 		});
 		$("#city").on("change", function(){
+            //cek branch
+            let dataDistrictNya = $("#branch").find(':selected').attr('data-district');
+            let arrdataDistrictNya = dataDistrictNya.split(",");
+
             var id = $(this).val();
 			$( "#subDistrict" ).html("");
             $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+id )
@@ -571,6 +594,11 @@ function setMinAppointmentTime(e) {
                 var arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
                 if(result.length > 0){
                     $.each( result, function( key, value ) {
+                        if(dataDistrictNya){
+                            if(!arrdataDistrictNya.includes(value['subdistrict_id'].toString())){
+                                return;
+                            }
+                        }
                         arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
                     });
                     $( "#subDistrict" ).append(arrSubDistsrict);
@@ -579,41 +607,21 @@ function setMinAppointmentTime(e) {
         });
 
         $("#branch").on("change", function(){
-            let dataDistrictNya = $(this).find(':selected').attr('data-district');
-            let dataCityNya = $(this).find(':selected').attr('data-city');
-            let dataCityTypeNya = $(this).find(':selected').attr('data-city-type');
+            // let dataDistrictNya = $(this).find(':selected').attr('data-district');
+            // let dataCityNya = $(this).find(':selected').attr('data-city');
+            // let dataCityTypeNya = $(this).find(':selected').attr('data-city-type');
             let dataProvinceNya = $(this).find(':selected').attr('data-province');
-            if(dataProvinceNya && dataCityNya && dataDistrictNya){
+
+            if(dataProvinceNya){
+                $("#province option").removeAttr('disabled');
                 $("#province").val(dataProvinceNya);
                 $("#province option:not(:selected)").attr('disabled', 'disabled');
-
-                // khusus untuk kota kecamatan only
-                $( "#city" ).html("");
-                $( "#subDistrict" ).html("");
-                $.get( '{{ route("fetchDistrict", ['city' => ""]) }}/'+dataCityNya )
-                .done(function( result ) {
-                    result = result['rajaongkir']['results'];
-                    let arrSubDistsrict = "<option selected disabled value=\"\">Pilihan Kecamatan</option>";
-                    let arrCity = "";
-
-                    if(result.length > 0){
-                        $.each( result, function( key, value ) {
-                            if(dataDistrictNya.split(",").includes(value['subdistrict_id'].toString())){
-                                arrSubDistsrict += "<option value=\""+value['subdistrict_id']+"\">"+value['subdistrict_name']+"</option>";
-                                arrCity = "<option selected disabled value=\"\">Pilihan Kota</option><option selected value=\""+value['city_id']+"\">"+dataCityTypeNya+" "+value['city']+"</option>";
-                            }
-                        });
-                        $( "#subDistrict" ).append(arrSubDistsrict);
-                        $( "#city" ).html(arrCity);
-                    }
-                });
+                $("#province").trigger("change");
             }
             else{
                 $("#province option").removeAttr('disabled');
                 $("#province").val("");
                 $("#province").find(':selected').attr('disabled', 'disabled');
-                $( "#city" ).html("<option selected disabled value=\"\">Pilihan Kota</option>");
-                $( "#subDistrict" ).html("<option selected disabled value=\"\">Pilihan Kecamatan</option>");
             }
         });
     });

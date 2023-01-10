@@ -49,17 +49,19 @@ class Branch extends Model
     {
         $allRegion = Region::whereIn('id', $this->region_id)->get();
         $districtList = [];
-        $cityNya = "";
-        $cityTypeNya = "";
+        $cityNya = [];
+        $cityTypeNya = [];
         $provinceNya = "";
 
         foreach ($allRegion as $regionNya) {
             $geoNya = $regionNya->hasMany('App\GeometryDistrict')->get();
             foreach ($geoNya as $key => $value) {
                 array_push($districtList, $value['distric']);
-                $cityNya = $value->getDistrict()['city_id'];
+                if(!in_array($value->getDistrict()['city_id'], $cityNya)){
+                    array_push($cityNya, $value->getDistrict()['city_id']);
+                    array_push($cityTypeNya, $value->getDistrict()['type_city']);
+                }
                 $provinceNya = $value->getDistrict()['province_id'];
-                $cityTypeNya = $value->getDistrict()['type_city'];
             }
         }
         
