@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Region;
+use Auth;
 
 class Branch extends Model
 {
@@ -42,7 +43,7 @@ class Branch extends Model
 
     public function region()
     {
-        return $this->region_id ? Region::whereIn('id', $this->region_id)->get() : null;
+        return $this->region_id && !Auth::user()->inRole('head-admin') && !Auth::user()->inRole('area-manager') ? Region::whereIn('id', $this->region_id)->get() : null;
     }
 
     public function regionDistrict()
