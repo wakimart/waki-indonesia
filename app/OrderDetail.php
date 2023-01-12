@@ -9,8 +9,13 @@ class OrderDetail extends Model
     static $Type = ['1' => 'pembelian', '2' => 'prize', '3' => 'upgrade'];
 
     protected $fillable = [
-        'order_id', 'product_id', 'promo_id', 'qty', 'type', 'other'
+        'order_id', 'product_id', 'promo_id', 'qty', 'type', 'other', 'home_service_id', 'delivery_cso_id',
     ];
+
+    public function homeService()
+    {
+        return $this->belongsTo('App\HomeService');
+    }
 
     public function order()
     {

@@ -265,6 +265,11 @@
                     </table>
                 @endif
 
+                @php 
+                    $checkDeliveredOrderDetail = $order['status'] == \App\Order::$status['3'] && $order->orderDetail->where('home_service_id', null)->where('delivery_cso_id', null)->count() > 0; 
+                    $orderDetailHs = $order->orderDetail->where('home_service_id', '!=', null);
+                    $orderDetailNoHs = $order->orderDetail->where('delivery_cso_id', '!=', null);
+                @endphp
                 <table class="w-100">
                     <thead>
                         <td>Status Order</td>
@@ -284,7 +289,7 @@
                             @endif
                         </td>
                     </tr>
-                    @if (count($csoDeliveryOrders) > 0)
+                    @if (count($csoDeliveryOrders) > 0 && ($orderDetailHs->count() < 0 && $orderDetailNoHs->count() < 0))
                     <tr>
                         <td>Cso Delivery Order : </td>
                     </tr>
@@ -316,7 +321,7 @@
                                         class="btn btn-gradient-success mr-2 btn-change-status-order">
                                         Process Order
                                     </button>
-                                    @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_delivery'))
+                                    @elseif (($order['status'] == \App\Order::$status['2'] || $checkDeliveredOrderDetail == true) && Gate::check('change-status_order_delivery'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}"
                                         class="btn btn-gradient-warning mr-2 btn-change-status-order">
                                         Delivery Order
@@ -347,6 +352,63 @@
                 </button>
                 @endif
             </div>
+
+            {{-- New Home Serice Order --}}
+            @if($orderDetailHs->count() > 0 || $orderDetailNoHs->count() > 0)
+                <div class="row justify-content-center" style="margin-top: 2em;">
+                    <h2>ORDER DELIVERY</h2>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="table-responsive">
+                        <table class="w-100">
+                            <thead>
+                                <td>Home Service</td>
+                                <td>Cso</td>
+                                <td>Product</td>
+                            </thead>
+                            @php 
+                                $orderDetailGroupBys = $orderDetailHs->sortBy('updated_at')->groupBy('home_service_id');
+                                $orderDetailGroupBys = $orderDetailGroupBys->union($orderDetailNoHs->sortBy('updated_at')->groupBy('delivery_cso_id'));
+                            @endphp
+                            @foreach ($orderDetailGroupBys as $orderDetailByHs)
+                                <tr>
+                                    @if ($orderDetailByHs[0]->home_service_id != null)
+                                        <td>
+                                            <a href="{{ route("homeServices_success", ['code' => $orderDetailByHs[0]->homeService['code']]) }}">
+                                                {{ $orderDetailByHs[0]->homeService['code'] }} <br> {{ date('Y-m-d H:i', strtotime($orderDetailByHs[0]->homeService['appointment'])) }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ $orderDetailByHs[0]->homeService->cso['code'] }} - {{ $orderDetailByHs[0]->homeService->cso['name'] }}
+                                            @if($orderDetailByHs[0]->homeService->cso2_id != null)
+                                                <br>{{ $orderDetailByHs[0]->homeService->cso2['code'] }} - {{ $orderDetailByHs[0]->homeService->cso2['name'] }}
+                                            @endif
+                                        </td>
+                                    @elseif($orderDetailByHs[0]->delivery_cso_id != null)
+                                        @php $csoDeliveryHs = App\Cso::whereIn('id', json_decode($orderDetailByHs[0]->delivery_cso_id) ?? [])->get(); @endphp
+                                        <td>-</td>
+                                        <td>
+                                            @foreach ($csoDeliveryHs as $csoDelivHs)
+                                                {{ $csoDelivHs['code'] }} - {{ $csoDelivHs['name'] }}<br>
+                                            @endforeach
+                                        </td>
+                                    @endif
+                                    <td>
+                                        <ul>
+                                            @foreach ($orderDetailByHs as $odByHs)
+                                                <li>
+                                                    {{ $odByHs->product['code'] ?? $odByHs->promo['code'] ?? 'OTHER' }} -
+                                                    {{ $odByHs->product['name'] ?? (($odByHs->promo) ? implode(", ", $odByHs->promo->productName()) : $odByHs->other) }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                </tr>
+                            @endforeach
+                      </table>
+                    </div>
+                </div>
+            @endif
 
             <div class="row justify-content-center" style="margin-top: 2em;">
                 <h2>ORDER HISTORY LOG</h2>
@@ -409,12 +471,14 @@
                                 <h5 id="modal-change-status-question" class="modal-title text-center">Process This Order?</h5>
                                 <hr>
                                 {{-- Pilih CSO Untuk Delivery --}}
-                                @if ($order['status'] == \App\Order::$status['2'])
+                                @php $order_request_hs = json_decode($order['request_hs'], true) ?? []; @endphp
+                                @if ($order['status'] == \App\Order::$status['2'] || $checkDeliveredOrderDetail == true)
                                 <div id="delivery-cso">
                                     <div id="form-cso" class="row">
                                         <div class="form-group mb-3 col-10">
                                             <label>Select CSO Delivery</label>
-                                            <select id="delivery-cso-id" class="form-control delivery-cso-id" name="delivery_cso_id[]" style="width: 100%" required>
+                                            <select id="delivery-cso-id" class="form-control delivery-cso-id" name="delivery_cso_id[]" style="width: 100%" 
+                                                required>
                                                 <option value="">Choose CSO Delivery</option>
                                                 @foreach ($csos as $cso)
                                                 <option value="{{ $cso['id'] }}">{{ $cso['code'] }} - {{ $cso['name'] }}</option>
@@ -432,7 +496,6 @@
                                     </div>
                                     <div id="tambahan_cso"></div>
                                 </div>
-                                @php $order_request_hs = json_decode($order['request_hs'], true) ?? []; @endphp
                                 @if($order_request_hs)
                                 <div class="form-group mb-3">
                                     <label>Pilihan Homeservice</label>
@@ -445,16 +508,40 @@
                                 </div>
                                 @else
                                 <div class="form-group mb-3">
-                                    <label for="">Tanggal Janjian</label>
+                                    <label for="">Tanggal Janjian (Optional)</label>
                                     <input type="date" class="form-control" id="request_hs_date" name="request_hs_date"
-                                        value="" required="" />
+                                        value="" />
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="">Jam Janjian</label>
+                                    <label for="">Jam Janjian (Optional)</label>
                                     <input type="time" class="form-control" name="request_hs_time" id="request_hs_time"
-                                        value="" required="" />
+                                        value="" />
                                 </div>
                                 @endif
+
+                                {{-- Delivery Poduk Order --}}
+                                <div class="form-group mb-3">
+                                    <label>Pilihan Produk</label>
+                                    <label style="float: right">(Min: 1)</label>
+                                    <table>
+                                        <tr>
+                                            <th></th>
+                                            <th>Code</th>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                        @foreach ($order->orderDetail as $orderDetail)
+                                            @if($orderDetail->home_service_id == null && $orderDetail->delivery_cso_id == null)
+                                            <tr>
+                                                <td><input type="checkbox" class="form-control orderDetail-product" name="orderDetail_product[]" value="{{ $orderDetail->id }}"></td>
+                                                <td>{{ $orderDetail->product['code'] ?? $orderDetail->promo['code'] ?? 'OTHER' }}</td>
+                                                <td>{{ $orderDetail->product['name'] ?? (($orderDetail->promo) ? implode(", ", $orderDetail->promo->productName()) : $orderDetail->other) }}</td>
+                                                <td>{{ $orderDetail->qty }}</td>
+                                            </tr>
+                                            @endif
+                                        @endforeach
+                                    </table>
+                                </div>
                                 @endif
                             </div>
                             <div class="modal-footer">
@@ -917,6 +1004,11 @@
             }
         });
 
+        $(document).on('change', 'select[name="index_order_home_service"]', function() {
+            $("#delivery-cso").toggle($(this).val() == "");
+            $(".delivery-cso-id").attr('required', $(this).val() == "");
+        });
+
         // Edit Order Payment
         $(".btn-edit_order_payment").click(function() {
             $("#submitFrmEditPayment").hide();
@@ -1048,6 +1140,16 @@
         };
 
         $('#btn-edit-status-order').on('click', function() {
+            // Check Required Form
+            if ($("#actionAdd [required]:not(:disabled)").filter(function() { return $(this).val() == "" }).length > 0) {
+                return alert('Input Field can\'t be empty');
+            }
+
+            // Check Min 1 Delivery Product 
+            @if ($order['status'] == \App\Order::$status['2'] || $checkDeliveredOrderDetail == true)
+            if ($(".orderDetail-product:checked").length < 1) return alert('Choose min 1 product.');
+            @endif
+
             testNetwork(networkValue, function(val){
                 console.log("masuk");
                 var order_details = []
