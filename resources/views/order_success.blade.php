@@ -99,7 +99,7 @@
                         </tr>
                     @endforeach
 
-                    @if($order->orderDetail->where('type', 'upgrade'))
+                    @if(count($order->orderDetail->where('type', 'upgrade')) > 0)
                         <thead style="background-color: #80808012 !important">
                             <td>Barang Lama</td>
                             <td>Jumlah</td>
@@ -116,7 +116,7 @@
                         </tr>
                     @endforeach
 
-                    @if($order->orderDetail->where('type', 'prize'))
+                    @if(count($order->orderDetail->where('type', 'prize')) > 0)
                         <thead style="background-color: #80808012 !important">
                             <td>Barang Hadiah</td>
                             <td>Jumlah</td>
@@ -269,7 +269,7 @@
                         </tr>
                     @endforeach
 
-                    @if($order->orderDetail->where('type', 'upgrade'))
+                    @if(count($order->orderDetail->where('type', 'upgrade')) > 0)
                         <thead style="background-color: #80808012 !important">
                             <td>Barang Lama</td>
                             <td>Jumlah</td>
@@ -286,7 +286,7 @@
                         </tr>
                     @endforeach
 
-                    @if($order->orderDetail->where('type', 'prize'))
+                    @if(count($order->orderDetail->where('type', 'prize')) > 0)
                         <thead style="background-color: #80808012 !important">
                             <td>Barang Hadiah</td>
                             <td>Jumlah</td>
