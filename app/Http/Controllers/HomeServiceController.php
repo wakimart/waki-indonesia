@@ -747,7 +747,7 @@ class HomeServiceController extends Controller
             $isAdminManagement = true;
         }
 
-        $display_tab_hss = ["all", "reschedule"];
+        $display_tab_hss = ["all", "reschedule", "cancel"];
         $result_tab_hss = [];    
         foreach ($display_tab_hss as $display_tab_hs) {
             $currentDayData = $this->getDayData(
@@ -870,6 +870,21 @@ class HomeServiceController extends Controller
                         }
                         $result .= "</p>";
                         $result .= $currentRescheduleAppointment;
+                        
+                        // cancel description
+                        $result .= "<p style='color:red'>";
+                        $lastCancelData = HistoryUpdate::where([['type_menu', 'Home Service Cancel'], ['menu_id', $dayData['hs_id']]])->orderBy('id', 'desc')->first();
+                        if(!empty($lastCancelData)){
+                            $result .= '<br>Request Cancel Appointment ('. $lastCancelData['meta']['createdAt'] . ')<br>';
+                        }
+                        $cancelAllData = HistoryUpdate::where([['type_menu', 'Home Service Cancel'], ['menu_id', $dayData['hs_id']]])->orderBy('id', 'desc')->get();
+                        foreach($cancelAllData as $index => $cancel){
+                            if(isset($cancel['meta']['acc_by'])){
+                                $userCancel = User::where('id', $cancel['meta']['acc_by'])->value('name');
+                                $result .= "Cancel Appointment Rejected (" . $cancel['meta']['updated_at'] . " by " . $userCancel . ")<br>";
+                            }
+                        }
+                        $result .= "</p>";
                     }
 
                     $result .= '</p>'
@@ -1231,6 +1246,15 @@ class HomeServiceController extends Controller
                 }
                 $homeService->is_acc = false;
                 $homeService->save();
+
+                $before = HistoryUpdate::where([['type_menu', 'Home Service Cancel'], ['menu_id', $homeService->id]])->orderBy('id', 'desc')->first();
+                $before_meta = $before['meta'];
+                $before_meta['acc_by'] = Auth::user()['id'];
+                $before_meta['status_acc'] = $request->status_acc;
+                $before_meta['updated_at'] = date("Y-m-d H:i:s");
+                $before->meta = $before_meta;
+                $before->save();
+
             } else if ($acc_hs_type == "reschedulehs") {
                 $titleNya = "Rejected - ACC Reschedule [Home Service]";
                 $messagesNya = "Acc Reschedule Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Rejected";
@@ -1541,6 +1565,16 @@ class HomeServiceController extends Controller
         $homeserviceNya->cancel_desc = $request->cancel_desc;
         $homeserviceNya->save();
         //end update is_acc
+
+        $user = Auth::user();
+        $historyUpdate= [];
+        $historyUpdate['type_menu'] = "Home Service Cancel";
+        $historyUpdate['method'] = "Cancel";
+        $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d H:i:s")];
+        $historyUpdate['user_id'] = $user['id'];
+        $historyUpdate['menu_id'] = $homeserviceNya->id;
+
+        $createData = HistoryUpdate::create($historyUpdate);
 
         if(sizeof($fcm_tokenNya) > 0)
         {
