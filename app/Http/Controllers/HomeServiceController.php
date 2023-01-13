@@ -574,7 +574,9 @@ class HomeServiceController extends Controller
             "c.name AS cso_name",
             "r.slug AS role_slug",
             "h.created_at AS created_at",
-            "h.updated_at AS updated_at"
+            "h.updated_at AS updated_at",
+            "o.code as order_code",
+            "o.id as order_id",
         )
         ->from("home_services AS h")
         ->leftJoin(
@@ -606,6 +608,19 @@ class HomeServiceController extends Controller
             "r.id",
             "=",
             "ru.role_id"
+        )
+        ->leftJoin(
+            "order_details as od",
+            "od.home_service_id",
+            "=",
+            "h.id"
+        )
+        ->leftJoin(
+            "orders AS o",
+            function ($join){
+                $join->orOn('od.order_id', '=', 'o.id');
+                $join->orOn('o.home_service_id', '=', 'h.id');
+            }
         )
         ->where("h.active", true);
 
@@ -809,7 +824,19 @@ class HomeServiceController extends Controller
                                 . $dayData->hs_code
                                 . '</p>';
                         }
-                        
+                    }
+
+                    if($dayData->order_id){
+                        $result .= '<p class="titleAppoin mt-0">'
+                                . '<a href="'
+                                . route('order_success')
+                                . '?code='
+                                . $dayData->order_code
+                                . '" target="_blank">'
+                                . 'Order: '
+                                . $dayData->order_code
+                                . '</a>'
+                                . '</p>';
                     }
 
                     $result .= '<p class="descAppoin">';
