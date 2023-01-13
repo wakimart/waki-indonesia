@@ -609,16 +609,16 @@ class HomeServiceController extends Controller
             "=",
             "ru.role_id"
         )
-        ->leftJoin(
-            "order_details as od",
-            "od.home_service_id",
-            "=",
-            "h.id"
-        )
+        // ->leftJoin(
+        //     "order_details as od",
+        //     "od.home_service_id",
+        //     "=",
+        //     "h.id"
+        // )
         ->leftJoin(
             "orders AS o",
             function ($join){
-                $join->orOn('od.order_id', '=', 'o.id');
+                // $join->orOn('od.order_id', '=', 'o.id');
                 $join->orOn('o.home_service_id', '=', 'h.id');
             }
         )
