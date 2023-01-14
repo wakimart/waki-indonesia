@@ -48,7 +48,7 @@ class Branch extends Model
 
     public function regionDistrict()
     {
-        $allRegion = Region::whereIn('id', $this->region_id)->get();
+        $allRegion = Region::whereIn('id', $this->region_id ?? [])->get();
         $districtList = [];
         $cityNya = [];
         $cityTypeNya = [];

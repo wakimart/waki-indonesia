@@ -387,6 +387,13 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update_status_order', 'OrderController@updateStatusOrder')
             ->name('update_status_order')
             ->middleware('can:change-status_order');
+        //Add Order Home Service
+        Route::post('/order_hs', 'OrderController@orderHS')
+            ->name('order_hs')
+            ->middleware('can:order_hs');
+        Route::post('/acc_order_hs', 'OrderController@accOrderHs')
+            ->name('acc_order_hs')
+            ->middleware('can:acc-order_hs');
         //Store Order Payment
         Route::post('/store_order_payment', 'OrderController@storeOrderPayment')
             ->name('store_order_payment')
