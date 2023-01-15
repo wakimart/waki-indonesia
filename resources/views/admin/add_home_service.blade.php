@@ -84,7 +84,9 @@ $menu_item_second = "add_home_service";
                                     <option value="Home Voucher">Home Voucher</option>
                                     <option value="Home Tele Free Gift">Home Tele Free Gift</option>
                                     <option value="Home Refrensi Product">Home Refrensi Product</option>
-                                    <option value="Home Delivery">Home Delivery</option>
+                                    @if(Auth::user()->inRole('head-admin') || Auth::user()->inRole('area-manager') || Auth::user()->inRole('head-manager'))
+                                        <option value="Home Delivery">Home Delivery</option>
+                                    @endif
                                     <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
                                     <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
 								</select>
