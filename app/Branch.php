@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Region;
+use Auth;
 
 class Branch extends Model
 {
@@ -42,24 +43,26 @@ class Branch extends Model
 
     public function region()
     {
-        return $this->region_id ? Region::whereIn('id', $this->region_id)->get() : null;
+        return $this->region_id && !Auth::user()->inRole('head-admin') && !Auth::user()->inRole('area-manager') && !Auth::user()->inRole('head-manager') ? Region::whereIn('id', $this->region_id)->get() : null;
     }
 
     public function regionDistrict()
     {
-        $allRegion = Region::whereIn('id', $this->region_id)->get();
+        $allRegion = Region::whereIn('id', $this->region_id ?? [])->get();
         $districtList = [];
-        $cityNya = "";
-        $cityTypeNya = "";
+        $cityNya = [];
+        $cityTypeNya = [];
         $provinceNya = "";
 
         foreach ($allRegion as $regionNya) {
             $geoNya = $regionNya->hasMany('App\GeometryDistrict')->get();
             foreach ($geoNya as $key => $value) {
                 array_push($districtList, $value['distric']);
-                $cityNya = $value->getDistrict()['city_id'];
+                if(!in_array($value->getDistrict()['city_id'], $cityNya)){
+                    array_push($cityNya, $value->getDistrict()['city_id']);
+                    array_push($cityTypeNya, $value->getDistrict()['type_city']);
+                }
                 $provinceNya = $value->getDistrict()['province_id'];
-                $cityTypeNya = $value->getDistrict()['type_city'];
             }
         }
         

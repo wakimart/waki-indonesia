@@ -574,7 +574,9 @@ class HomeServiceController extends Controller
             "c.name AS cso_name",
             "r.slug AS role_slug",
             "h.created_at AS created_at",
-            "h.updated_at AS updated_at"
+            "h.updated_at AS updated_at",
+            "o.code as order_code",
+            "o.id as order_id",
         )
         ->from("home_services AS h")
         ->leftJoin(
@@ -606,6 +608,19 @@ class HomeServiceController extends Controller
             "r.id",
             "=",
             "ru.role_id"
+        )
+        ->leftJoin(
+            "order_details as od",
+            "od.home_service_id",
+            "=",
+            "h.id"
+        )
+        ->leftJoin(
+            "orders AS o",
+            function ($join){
+                $join->orOn('od.order_id', '=', 'o.id');
+                $join->orOn('o.home_service_id', '=', 'h.id');
+            }
         )
         ->where("h.active", true);
 
@@ -809,7 +824,19 @@ class HomeServiceController extends Controller
                                 . $dayData->hs_code
                                 . '</p>';
                         }
-                        
+                    }
+
+                    if($dayData->order_id){
+                        $result .= '<p class="titleAppoin mt-0">'
+                                . '<a href="'
+                                . route('order_success')
+                                . '?code='
+                                . $dayData->order_code
+                                . '" target="_blank">'
+                                . 'Order: '
+                                . $dayData->order_code
+                                . '</a>'
+                                . '</p>';
                     }
 
                     $result .= '<p class="descAppoin">';
@@ -1914,14 +1941,8 @@ class HomeServiceController extends Controller
     }
 
     //Add Home Service From Order Delivery
-    public static function addHomeServiceFromOrderDelivery($order, $index_request_hs, $request_hs_date, $request_hs_time)
+    public static function addHomeServiceFromOrderDelivery($order, $index_request_hs, $getAppointment, $homeservice_cso_id)
     {
-        if ($index_request_hs != null) {
-            $getAppointment = json_decode($order['request_hs'], true)[$index_request_hs];
-        } else if ($request_hs_date && $request_hs_time) {
-            $getAppointment = $request_hs_date." ".$request_hs_time;
-        }
-        
         $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($order['phone'], -4);
         $data['no_member'] = $order['no_member'];
         $data['name'] = $order['name'];
@@ -1935,19 +1956,18 @@ class HomeServiceController extends Controller
         if ($index_request_hs != null && $order['70_cso_id'] != $order['30_cso_id']) {
             $data['cso_id'] = $order['70_cso_id'];
             $data['cso2_id'] = $order['30_cso_id'];
-        } else if ($request_hs_date && $request_hs_time) {
-            $delivery_cso_id = json_decode($order->delivery_cso_id, true);
-            if (isset($delivery_cso_id[0])) $data['cso_id'] = $delivery_cso_id[0];
-            if (isset($delivery_cso_id[1])) { $data['cso2_id'] = $delivery_cso_id[1]; }
+        } else if ($homeservice_cso_id) {
+            if (isset($homeservice_cso_id[0])) $data['cso_id'] = $homeservice_cso_id[0];
+            if (isset($homeservice_cso_id[1])) { $data['cso2_id'] = $homeservice_cso_id[1]; }
         }
         $data['cso_phone'] = Cso::where('id', $data['cso_id'])->first()['phone'];
         $data['appointment'] = $getAppointment;
         $data['type_homeservices'] = 'Home Delivery';
         $data['type_customer'] = $order['customer_type'];
         $homeservice = HomeService::create($data);
-        
-        $order->home_service_id = $homeservice['id'];
-        $order->save();
+        return $homeservice;
+        // $order->home_service_id = $homeservice['id'];
+        // $order->save();
     }
 
     //KHUSUS API APPS

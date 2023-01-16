@@ -786,7 +786,7 @@ $menu_item_page = "order";
             </div>
             <div class="modal-body">
                 @php $order_request_hs = json_decode($orders['request_hs'], true) ?? []; @endphp
-                @for($i=0; $i<3; $i++)
+                @for($i=0; $i<5; $i++)
                 <div class="form-group">
                     <label for=""><b>Option HS {{ $i+1 }}</b></label><br/>
                     <label for="">Tanggal Janjian</label>

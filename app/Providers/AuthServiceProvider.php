@@ -74,6 +74,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-order', function ($user) {
             return $user->hasAccess(['delete-order']);
         });
+        Gate::define('order_hs', function ($user) {
+            return $user->hasAccess(['order_hs']);
+        });
+        Gate::define('acc-order_hs', function ($user) {
+            return $user->hasAccess(['acc-order_hs']);
+        });
 
         //-- UPDATE ORDER STATUS --//
         Gate::define('change-status_order', function ($user) {
