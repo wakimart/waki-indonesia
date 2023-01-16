@@ -266,6 +266,19 @@ class OrderController extends Controller
             // Set Order Down Payment
             $order->down_payment = OrderPayment::where("order_id", $order['id'])->sum('total_payment');
             $order->save();
+
+            $user = Auth::user();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Create Order";
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> ["created_at" => $order['created_at']]
+            ]);
+
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $order->id;
+            $createData = HistoryUpdate::create($historyUpdate);
             
             DB::commit();
 

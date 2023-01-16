@@ -505,17 +505,10 @@
                         <td>Change</td>
                         <td>Time</td>
                     </thead>
-                    <tr>
-                        <td>1</td>
-                        <td>Create</td>
-                        <td>{{ $order->cso['name'] }}</td>
-                        <td><b>create_at</b>: {{ $order['created_at'] }}<br/></td>
-                        <td>{{ date("d/m/Y H:i:s", strtotime($order['created_at'])) }}</td>
-                    </tr>
                     @if($historyUpdateOrder != null)
                     @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
                     <tr>
-                        <td>{{$key+2}}</td>
+                        <td>{{$key+1}}</td>
                         <td>{{$historyUpdateOrder->method}}</td>
                         <td>{{$historyUpdateOrder->name}}</td>
                         <?php $dataChange = json_decode($historyUpdateOrder->meta, true);?>
