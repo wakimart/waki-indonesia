@@ -507,6 +507,15 @@
                     </thead>
                     @if($historyUpdateOrder != null)
                     @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
+                      @if($historyUpdateOrder->method != "Create Order" && $key < 1)
+                        <tr>
+                          <td>-</td>
+                          <td>Create Order</td>
+                          <td>{{ $order->cso['name'] }}</td>
+                          <td><b>created_at</b>: {{ $order['created_at'] }}<br/></td>
+                          <td>{{ date("d/m/Y H:i:s", strtotime($order['created_at'])) }}</td>
+                      </tr>
+                      @endif
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$historyUpdateOrder->method}}</td>

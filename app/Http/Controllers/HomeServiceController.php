@@ -622,6 +622,7 @@ class HomeServiceController extends Controller
                 $join->orOn('o.home_service_id', '=', 'h.id');
             }
         )
+        ->groupBy("h.id")
         ->where("h.active", true);
 
         if ($isAdminManagement) {
