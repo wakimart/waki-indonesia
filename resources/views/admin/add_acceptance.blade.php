@@ -477,6 +477,7 @@ $menu_item_second = "add_acceptance_form";
         				$("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
         			}
         		}
+        		console.log(hasil);
                 alert("Terdapat kesalahan pada inputan ! \n"+hasil['errors']['errorInfo'][2]);
         	}
         	else{
