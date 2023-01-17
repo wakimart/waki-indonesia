@@ -83,6 +83,23 @@ $menu_item_page = "order";
                                 <input type="text" class="form-control" id="order-code" name="order_code" value="{{ $orders['code'] }}" readonly="">
                                 <div class="validation"></div>
                             </div>
+                            @if(Auth::user()->inRole("head-admin"))
+                            <div class="form-group">
+                                <label for="orderDate">Waktu Order</label>
+                                <input type="date"
+                                    class="form-control"
+                                    name="orderDate"
+                                    id="orderDate"
+                                    placeholder="Tanggal Order"
+                                    value="{{ $orders['orderDate'] }}"
+                                    required
+                                    data-msg="Mohon Isi Tanggal" />
+                                <div class="validation"></div>
+                                <span class="invalid-feedback">
+                                    <strong></strong>
+                                </span>
+                            </div>
+                            @endif
                             <div class="form-group">
                                 <label for="temp no">Temp No</label>
                                 <input type="text" class="form-control" name="temp_no" value="{{ $orders['temp_no'] }}">
@@ -769,7 +786,7 @@ $menu_item_page = "order";
             </div>
             <div class="modal-body">
                 @php $order_request_hs = json_decode($orders['request_hs'], true) ?? []; @endphp
-                @for($i=0; $i<3; $i++)
+                @for($i=0; $i<5; $i++)
                 <div class="form-group">
                     <label for=""><b>Option HS {{ $i+1 }}</b></label><br/>
                     <label for="">Tanggal Janjian</label>

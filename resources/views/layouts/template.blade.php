@@ -83,20 +83,30 @@
 	      </div>
 	      <nav class="main-nav float-left d-none d-lg-block scrollto">
 	        <ul>
-	          @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#hero">Beranda</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#hero">Home</a></li>
-	          @endif
 
-			  @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#about">Tentang</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#about">About Us</a></li>
-	          @endif
+	          <li><a href="{{route('index')}}#hero">
+							@if(Utils::$lang=='id')
+								Beranda
+		          @elseif(Utils::$lang=='eng')
+								Home
+		          @endif</a>
+						</li>
 
-						@if(Utils::$lang=='id' || Utils::$lang=='eng')
-	          <li class="drop-down"><span class="mm">Produk<i class="fa fa-angle-down"></i></span>
+	          <li><a href="{{route('index')}}#about">
+							@if(Utils::$lang=='id')
+								Tentang
+							@elseif(Utils::$lang=='eng')
+								About Us
+							@endif</a>
+						</li>
+
+	          <li class="drop-down">
+							<span class="mm">
+								@if(Utils::$lang=='id')
+									Produk
+								@elseif(Utils::$lang=='eng')
+									Product
+								@endif<i class="fa fa-angle-down"></i></span>
 	            <ul>
 								@foreach (App\CategoryProduct::all() as $categoryProduct)
 								<li class="drop-down"><a href="{{route('product_category',['id'=> $categoryProduct->id])}}" value="{{$categoryProduct->id}}">{{$categoryProduct->name}}</a>
@@ -112,55 +122,32 @@
 								@endforeach
 	            </ul>
 	          </li>
-						@endif
 
-	          @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#portfolio">Galeri</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#portfolio">Gallery</a></li>
-	          @endif
-
-
-						{{-- @if(Utils::$lang=='id')
-						<li class="drop-down {{isset($menu_item_page) && $menu_item_page == 'form'? 'active': '' }}"><a href="#product">Form</a>
-	            <ul>
-	              <li class="{{isset($menu_item_second) && $menu_item_second == 'formregistrasi'? 'active': '' }}"><a href="{{ route('delivery_order') }}">REGISTRASI</a></li>
-								<li class="{{isset($menu_item_second) && $menu_item_second == 'formorder'? 'active': '' }}"><a href="{{ route('add_order') }}">ORDER</a></li>
-								<li class="{{isset($menu_item_second) && $menu_item_second == 'formhomeservice'? 'active': '' }}"><a href="{{ route('add_homeServices') }}">HOME SERVICE</a></li>
-							</ul>
+	          <li><a href="{{route('index')}}#portfolio">
+							@if(Utils::$lang=='id')
+								Galeri
+							@elseif(Utils::$lang=='eng')
+								Gallery
+							@endif</a>
 						</li>
-						@endif --}}
 
-					{{-- 	@if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#team">World Peace</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#team">World Peace</a></li>
-	          @endif --}}
+				{{--<li><a href="{{route('index')}}#team">
+							@if(Utils::$lang=='id')
+								World Peace
+							@elseif(Utils::$lang=='eng')
+								World Peace
+							@endi</a>
+						</li> --}}
 
-	          @if(Utils::$lang=='id')
-	          <li><a href="{{route('index')}}#footer">Kontak</a></li>
-	          @elseif(Utils::$lang=='eng')
-	          <li><a href="{{route('index')}}#footer">Contact Us</a></li>
-	          @endif
+	          <li><a href="{{route('index')}}#footer">
+							@if(Utils::$lang=='id')
+								Kontak
+							@elseif(Utils::$lang=='eng')
+								Contact
+							@endif</a>
+						</li>
 
 
-	          <li><a href="#" class="searchtxtmob"> </a>
-	            <div class="searchicon">
-	                <i id="searchicn" class="fa fa-search hidden-sm"></i>
-	              </div>
-	              <div class="searchbox" style="display: none;" >
-	                <form role="search" method="get" class="searchform" action="">
-	                    <input type="search" class="search-field" placeholder="Search …" value="" name="s">
-	                  <button id="searchbtn" type="submit" class="search-submit btn search-btn"><i class="fa fa-search"></i></button>
-	                </form>
-	              </div>
-	              <div class="searchboxmob" style="display: none;" >
-	                <form role="search" method="get" class="searchform" action="">
-	                    <input type="search" class="search-field" placeholder="Search …" value="" name="s">
-	                  <button id="searchbtn" type="submit" class="search-submit btn search-btn"><i class="fa fa-search"></i></button>
-	                </form>
-	              </div>
-	          </li>
 	        </ul>
 	      </nav><!-- .main-nav -->
 

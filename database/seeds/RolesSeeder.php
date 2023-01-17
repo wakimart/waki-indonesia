@@ -39,6 +39,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
         		'edit-order' => true,
                 'delete-order' => true,
+                'order_hs' => true,
+                'acc-order_hs' => true,
 
                 //Update Order Status
                 'change-status_order'=> true,
@@ -287,6 +289,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
         		'edit-order' => true,
                 'delete-order' => true,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -535,6 +539,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => true,
                 'delete-order' => true,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -778,6 +784,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => true,
                 'delete-order' => true,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -1020,6 +1028,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => false,
                 'delete-order' => false,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -1262,6 +1272,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => false,
                 'delete-order' => false,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -1504,6 +1516,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => false,
                 'delete-order' => false,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,

@@ -411,6 +411,24 @@ $menu_item_page = "user";
                                             Delete Order
                                         </label>
                                     </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="order_hs">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="order_hs" />
+                                            Order Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="acc-order_hs">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-order_hs" />
+                                            Acc Order Home Service
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 

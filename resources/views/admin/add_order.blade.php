@@ -841,7 +841,7 @@ $menu_item_second = "add_order";
                 </button>
             </div>
             <div class="modal-body">
-                @for($i=0; $i<3; $i++)
+                @for($i=0; $i<5; $i++)
                 <div class="form-group">
                     <label for=""><b>Option HS {{ $i+1 }}</b></label><br/>
                     <label for="">Tanggal Janjian</label>

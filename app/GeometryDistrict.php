@@ -8,7 +8,7 @@ class GeometryDistrict extends Model
 {
     protected $table = 'geometry_districts';
     protected $fillable = [
-        'district', 'region_od', 'geom'
+        'distric', 'region_od', 'geom'
     ];
 
     public function getDistrict()

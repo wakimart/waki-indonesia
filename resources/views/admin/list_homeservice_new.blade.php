@@ -1507,6 +1507,12 @@ $(document).ready(function(){
     //end load modal Acc Cancel HS
 
     $('#frmReschedule').on('submit', function(event){
+        if($('#reschedule_desc').val().length < 160){
+            alert('You need to enter at least 160 characters')
+            event.preventDefault();
+            return false
+        }
+
         if ($("#edit-date-old").val() == $("#edit-date").val() && $("#edit-time-old").val() == $("#edit-time").val()) {
             event.preventDefault();
             alert("Please change reschedule date and time");
@@ -2209,5 +2215,25 @@ function setDistrict(e) {
         consol.error(error);
     })
 }
+
+$('#frmCancel').on('submit', function(event){
+    if($('#cancel_desc').val().length < 160){
+        alert('You need to enter at least 160 characters')
+        event.preventDefault();
+        return false
+    }
+})
+
+processKeyUp = function(event) {
+    if (window.event){
+        event = window.event;
+    }
+    if(event.keyCode==32){
+        var val = document.getElementById(event.explicitOriginalTarget.id);
+        val.value = val.value.replace(/ +(?= )/g,'');
+    }
+}; 
+document.getElementById("cancel_desc").onkeyup=processKeyUp;
+document.getElementById("reschedule_desc").onkeyup=processKeyUp;
 </script>
 @endsection
