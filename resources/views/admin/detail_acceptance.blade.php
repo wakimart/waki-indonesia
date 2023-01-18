@@ -144,6 +144,11 @@ $menu_item_second = "list_acceptance_form";
                         <div class="row justify-content-center">
                             <h2>Detail Acceptance (Upgrade)</h2>
                         </div>
+                        @if($acceptance['without_commission'])
+                            <div class="row justify-content-center">
+                                <h3 style="color: red; display: block">Without Bonus</h3>
+                            </div>
+                        @endif
                         <div class="row justify-content-center">
                             <div class="table-responsive">
                                 <table class="col-md-12">
@@ -336,6 +341,13 @@ $menu_item_second = "list_acceptance_form";
                                         name="status"
                                         value="approved">
                                         Approved
+                                    </button>
+                                    <button id="upgradeProcess"
+                                        type="submit"
+                                        class="btn btn-gradient-warning mr-2 btn-lg"
+                                        name="status"
+                                        value="approved_no_commission">
+                                        Approved without Commission
                                     </button>
                                     <button id="upgradeProcess"
                                         type="submit"

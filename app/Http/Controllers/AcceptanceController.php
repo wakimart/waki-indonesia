@@ -155,16 +155,22 @@ class AcceptanceController extends Controller
             DB::beginTransaction();
             try{
                 $acceptance = Acceptance::find($data['id']);
-                $acceptance['status'] = $data['status'];
+                if(strtolower($data['status']) == "approved_no_commission"){
+                    $acceptance['status'] = "approved";
+                    $acceptance['without_commission'] = true;
+                    $accStatusLog['status'] =  "approved";
+                }
+                else {
+                    $acceptance['status'] = $data['status'];
+                }
                 $acceptance->save();
 
 
                 $accStatusLog['acceptance_id'] = $data['id'];
                 $accStatusLog['user_id'] =  Auth::user()['id'];
-                $accStatusLog['status'] =  $data['status'];
                 $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
 
-                if(strtolower($data['status']) == "approved"){
+                if(strtolower($data['status']) == "approved" || strtolower($data['status']) == "approved_no_commission"){
                     $upgrade['acceptance_id'] = $data['id'];
                     $upgrade['status'] = "New";
                     $upgrade['due_date'] = date("Y-m-d H:i:s");
@@ -358,7 +364,7 @@ class AcceptanceController extends Controller
         $cso = $acceptance->cso['code'];
 
         $txtNotif = "New ";
-        if(strtolower($acceptance['status']) == "approved"){
+        if(strtolower($acceptance['status']) == "approved" || strtolower($acceptance['status']) == "approved_no_commission"){
             $txtNotif = "Approved ";
             if($acceptance->cso->user != null){
                 if($acceptance->cso->user['fmc_token'] != null){
@@ -585,7 +591,14 @@ class AcceptanceController extends Controller
 
                 $acceptance["branch_id"] = $branch["id"];
                 $acceptance["cso_id"] = $cso["id"];
-                $acceptance['status'] = $data['status'];
+                if(strtolower($data['status']) == "approved_no_commission"){
+                    $acceptance['status'] = "approved";
+                    $acceptance['without_commission'] = true;
+                    $accStatusLog['status'] =  "approved";
+                }
+                else {
+                    $acceptance['status'] = $data['status'];
+                }
                 $acceptance["province"] = $data["province"];
                 $acceptance["city"] = $data["city"];
                 $acceptance["district"] = $data["district"];
@@ -610,10 +623,9 @@ class AcceptanceController extends Controller
 
                 $accStatusLog['acceptance_id'] = $data['id'];
                 $accStatusLog['user_id'] =  $data["user_id"];
-                $accStatusLog['status'] =  $data['status'];
                 $acceptanceStatusLog = AcceptanceStatusLog::create($accStatusLog);
 
-                if(strtolower($data['status']) == "approved"){
+                if(strtolower($data['status']) == "approved" || strtolower($data['status']) == "approved_no_commission"){
                     $upgrade['acceptance_id'] = $data['id'];
                     $upgrade['status'] = "new";
                     $upgrade['due_date'] = date("Y-m-d H:i:s");
