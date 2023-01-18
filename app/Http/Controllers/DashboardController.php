@@ -24,7 +24,7 @@ class DashboardController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {dd(env('ONLINE_URL'));
         try {
             // Update role user yg baru
             $role = Role::where('slug', Auth::user()->roles[0]['slug'])->first();
