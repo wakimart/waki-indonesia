@@ -14,7 +14,7 @@ class AddDeliveredImageToOrdersTable extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->longText('delivered_image')->default("[]");
+            $table->string('delivered_image', 363)->default("[]");
         });
     }
 
