@@ -146,7 +146,7 @@ $menu_item_second = "list_acceptance_form";
                         </div>
                         @if($acceptance['without_commission'])
                             <div class="row justify-content-center">
-                                <h3 style="color: red; display: block">Without Commission</h3>
+                                <h3 style="color: red; display: block">Without Bonus</h3>
                             </div>
                         @endif
                         <div class="row justify-content-center">
