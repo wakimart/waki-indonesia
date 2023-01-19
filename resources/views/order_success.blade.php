@@ -44,11 +44,25 @@
             <div class="row justify-content-center">
                 <table class="col-md-12">
                     <thead>
+                        <td>Status Pesanan</td>
                         <td>Kode Pesanan</td>
                         <td>Tanggal Pesanan</td>
                     </thead>
                     <tr>
-                        <td>{{ $order['code'] }}</td>
+                        <td class="text-center">
+                            @if ($order['status'] == \App\Order::$status['1'])
+                                <span class="badge badge-secondary">New</span>
+                            @elseif ($order['status'] == \App\Order::$status['2'])
+                                <span class="badge badge-primary">Process</span>
+                            @elseif ($order['status'] == \App\Order::$status['3'])
+                                <span class="badge badge-warning">Delivery</span>
+                            @elseif ($order['status'] == \App\Order::$status['4'])
+                                <span class="badge badge-success">Success</span>
+                            @elseif ($order['status'] == \App\Order::$status['5'])
+                                <span class="badge badge-danger">Reject</span>
+                            @endif
+                        </td>
+                        <td class="text-center">{{ $order['code'] }}</td>
                         <td class="right">{{ date("d/m/Y", strtotime($order['orderDate'])) }}</td>
                     </tr>
                 </table>
