@@ -222,6 +222,8 @@ class OfflineSideController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json', "api-key:".env('API_KEY')));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         $response = curl_exec($ch);
         if (curl_errno($ch)) {
             $error_msg = curl_error($ch);
