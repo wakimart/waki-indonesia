@@ -25,11 +25,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $ch = curl_init("http://google.com");    // initialize curl handle
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        $data = curl_exec($ch);
-        print($data);
-        dd('aw');
         try {
             // Update role user yg baru
             $role = Role::where('slug', Auth::user()->roles[0]['slug'])->first();

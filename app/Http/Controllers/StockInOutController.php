@@ -324,7 +324,7 @@ class StockInOutController extends Controller
                 $order->status = 'stock_request_success';
                 $order->save();
 
-                (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'stock_request_success', Auth::user()->code);
+                // (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'stock_request_success', Auth::user()->code);
             }
 
             DB::commit();
