@@ -224,14 +224,13 @@ class OfflineSideController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17');
         curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_VERBOSE, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         $response = curl_exec($ch);
         if (curl_errno($ch)) {
-            $error_msg = curl_error($ch) . "curlnya";
+            $error_msg = curl_error($ch) . " curl_errno: " . curl_errno($ch) . " response: " . $response;
         }
         curl_close($ch);
         $response = json_decode($response, true);
