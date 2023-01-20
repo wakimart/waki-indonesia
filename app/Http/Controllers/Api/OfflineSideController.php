@@ -226,7 +226,7 @@ class OfflineSideController extends Controller
         curl_setopt($ch, CURLOPT_AUTOREFERER, true); 
         $response = curl_exec($ch);
         if (curl_errno($ch)) {
-            $error_msg = curl_error($ch);
+            $error_msg = curl_error($ch) . "curlnya";
         }
         curl_close($ch);
         $response = json_decode($response, true);
