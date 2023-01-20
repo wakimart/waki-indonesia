@@ -228,7 +228,7 @@ class OfflineSideController extends Controller
         if (isset($response['status']) && $response['status'] == 'success') {
             return $response;
         } else {
-            throw new \Exception($response['message'] ?? 'Network Error!');
+            throw new \Exception($response['message'] ?? $response ?? 'Network Error!');
         }
     }
 }
