@@ -483,7 +483,7 @@ class StockInOutController extends Controller
                     if ($stockInOut->type == "in") {
                         $stock = Stock::where('id', $diff_soi_id->stock_to_id)->first();
                         $stock->quantity -= $diff_soi_id->quantity;
-                    } else if ($diff_soi_id->type == "out") {
+                    } else if ($stockInOut->type == "out") {
                         $stock = Stock::where('id', $diff_soi_id->stock_from_id)->first();
                         $stock->quantity += $diff_soi_id->quantity;
                     }
