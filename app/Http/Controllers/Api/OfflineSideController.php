@@ -223,12 +223,15 @@ class OfflineSideController extends Controller
         curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json', "api-key:".env('API_KEY')));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch);
+        }
         curl_close($ch);
         $response = json_decode($response, true);
         if (isset($response['status']) && $response['status'] == 'success') {
             return $response;
         } else {
-            throw new \Exception($response['message'] ?? $response ?? 'Network Error!');
+            throw new \Exception($error_msg ?? $response['message'] ?? $response ?? 'Network Error!');
         }
     }
 }
