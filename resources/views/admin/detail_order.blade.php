@@ -363,10 +363,10 @@
                             <td>
                                 <div class="form-group row justify-content-center">
                                     @php
-                                      // dd([$order['status'] == \App\Order::$status['2'],  $checkDeliveredOrderDetail == true, $orderDetailHs->count() > 0]);
+                                      // dd($order->orderDetail->where('offline_stock_id', '!=', null)->where('home_service_id', null)->where('request_hs_acc', null)->count());
                                     @endphp
 
-                                    @if( $order->orderDetail()->whereNotNull('offline_stock_id')->where('home_service_id', null)->where('request_hs_acc', null)->count() > 0 && Gate::check('order_hs'))
+                                    @if( $order->orderDetail->where('offline_stock_id', '!=', null)->where('home_service_id', null)->where('request_hs_acc', null)->count() > 0 && Gate::check('order_hs'))
                                     <button type="button" data-toggle="modal" data-target="#modal-add-home-service"
                                         class="btn mr-2" style="background-color: #8D72E1; color: #fff">
                                         Add Order Home Service
@@ -598,7 +598,7 @@
                                 <h5 id="modal-change-status-question" class="modal-title text-center">Process This Order?</h5>
                                 <hr>
                                 {{-- Pilih Product Untuk Stock --}}
-                                @if ($order['status'] == \App\Order::$status['2'])
+                                @if ($order['status'] == \App\Order::$status['2'] && false)
                                     <div id="request-stock">
                                         <table class="w-100 table-responsive">
                                             <thead>
@@ -660,7 +660,7 @@
                                     </div>
                                 {{-- Pilih CSO Untuk Delivery --}}
                                 @php $order_request_hs = json_decode($order['request_hs'], true) ?? []; @endphp
-                                @elseif ($order['status'] == \App\Order::$status['7'] || $checkDeliveredOrderDetail == true)
+                                @elseif (($order['status'] == \App\Order::$status['2'] || $checkDeliveredOrderDetail == true) && ($orderDetailHs->count() > 0))
                                     <div id="delivery-cso">
                                         <div id="form-cso" class="row">
                                             <div class="form-group mb-3 col-10">
@@ -825,7 +825,7 @@
                                 @endif
 
                                 {{-- Delivery Poduk Order --}}
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-3 d-none">
                                     <label>Pilihan Produk</label>
                                     <label style="float: right">(Min: 1)</label>
                                     <table>
@@ -838,7 +838,7 @@
                                         @foreach ($order->orderDetail as $orderDetail)
                                             @if($orderDetail->home_service_id == null && $orderDetail->delivery_cso_id == null && $orderDetail->request_hs_acc == null)
                                             <tr>
-                                                <td><input type="checkbox" class="form-control orderDetail-product" name="orderDetail_product[]" value="{{ $orderDetail->id }}"></td>
+                                                <td><input type="checkbox" class="form-control orderDetail-product" name="orderDetail_product[]" value="{{ $orderDetail->id }}" {{ isset($orderDetail->offline_stock_id) ? 'checked' : '' }}></td>
                                                 <td>{{ $orderDetail->product['code'] ?? $orderDetail->promo['code'] ?? 'OTHER' }}</td>
                                                 <td>{{ $orderDetail->product['name'] ?? (($orderDetail->promo) ? implode(", ", $orderDetail->promo->productName()) : $orderDetail->other) }}</td>
                                                 <td>{{ $orderDetail->qty }}</td>
