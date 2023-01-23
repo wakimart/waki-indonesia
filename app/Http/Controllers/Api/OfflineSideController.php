@@ -86,6 +86,7 @@ class OfflineSideController extends Controller
                     $dataDetail->qty = $detail['qty'];
                     $dataDetail->type = $detail['type'];
                     $dataDetail->other = $detail['other'];
+                    $dataDetail->order_detail_id = $detail['order_detail_id'];
                     $dataDetail->save();
                 }
 
@@ -210,12 +211,13 @@ class OfflineSideController extends Controller
         }
     }
 
-    public function sendUpdateOrderStatus($code, $status, $user_id)
+    public function sendUpdateOrderStatus($code, $status, $user_id, $order_details)
     {
         $data = [
             'code' => $code,
             'status' => $status,
             'user_id' => $user_id,
+            'order_details' => $order_details,
         ];
         $ch = curl_init(env('ONLINE_URL').'/api/update-order-status');
         curl_setopt($ch, CURLOPT_POST, 1);

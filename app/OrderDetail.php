@@ -9,7 +9,7 @@ class OrderDetail extends Model
     static $Type = ['1' => 'pembelian', '2' => 'prize', '3' => 'upgrade'];
 
     protected $fillable = [
-        'order_id', 'product_id', 'promo_id', 'qty', 'type', 'other'
+        'order_id', 'product_id', 'promo_id', 'qty', 'type', 'other', 'stock_id', 'order_detail_id'
     ];
 
     public function order()
@@ -37,5 +37,10 @@ class OrderDetail extends Model
         } else {
             return $this->other;
         }
+    }
+
+    public function stockInOut()
+    {
+        return $this->belongsTo('App\StockInOut', 'stock_id');
     }
 }

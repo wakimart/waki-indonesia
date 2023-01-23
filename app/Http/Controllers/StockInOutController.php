@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\HistoryUpdate;
 use App\Http\Controllers\Api\OfflineSideController;
+use App\OrderDetail;
 use App\Product;
 use App\Stock;
 use App\StockInOut;
@@ -335,6 +336,97 @@ class StockInOutController extends Controller
 
             return response()->json(["errors" => $th->getMessage()], 500);
         }
+    }
+
+    public function storeOutFromOrder($request, $order)
+    {
+        if ($request->to_warehou_type == null && $request->to_warehouse_id == null) {
+            throw new \Exception('To Warehouse can\'t be empty.');
+        }
+        
+        // Generate Code
+        $getGenerateCode = $this->generateCode(new Request([
+            'type' => $request->type,
+            'date' => $request->date,
+            'warehouse_type' => $request->to_warehouse_type,
+        ]));
+        $code = json_decode($getGenerateCode->getContent(), true)['data'];
+
+        $stockInOut = new StockInOut();
+        $stockInOut->warehouse_from_id = $request->from_warehouse_id;
+        $stockInOut->warehouse_to_id = $request->to_warehouse_id;
+        $stockInOut->code = $code;
+        $stockInOut->temp_no = $request->temp_no;
+        $stockInOut->date = $request->date;
+        $stockInOut->type = $request->type;
+        $stockInOut->description = $request->description;
+        $stockInOut->user_id = Auth::user()->id;
+        $stockInOut->save();
+
+        $products = [];
+        $qtys = [];
+        foreach ($request->orderDetail_product as $odProduct) {
+            $orderDetail = OrderDetail::find($odProduct);
+            if ($orderDetail->product_id != null) {
+                array_push($products, $orderDetail->product_id);
+                array_push($qtys, $orderDetail->qty);
+            } else if ($orderDetail->promo_id != null) {
+                foreach ($orderDetail->promo->product_list() as $promoProdList) {
+                    array_push($products, $promoProdList['id']);
+                    array_push($qtys, $orderDetail->qty);
+                }
+            }
+        }
+        $countProduct = count($products);
+
+        for ($i = 0; $i < $countProduct; $i++) {
+            $stock_from = Stock::where("warehouse_id", $request->from_warehouse_id)
+                ->where("product_id", $products[$i])
+                ->where("type_warehouse", null)
+                ->first();
+            $stock_to = Stock::where("warehouse_id", $request->to_warehouse_id)
+                ->where("product_id", $products[$i])
+                ->where("type_warehouse", null)
+                ->first();
+
+            if (empty($stock_from)) {
+                $stock_from = new Stock();
+                $stock_from->warehouse_id = $request->from_warehouse_id;
+                $stock_from->product_id = $products[$i];
+                $stock_from->quantity = 0;
+                $stock_from->save();
+            }
+            if (empty($stock_to)) {
+                $stock_to = new Stock();
+                $stock_to->warehouse_id = $request->to_warehouse_id;
+                $stock_to->product_id = $products[$i];
+                $stock_to->quantity = 0;
+                $stock_to->save();
+            }
+
+            if ($request->type === "in") {
+                $stock_to->quantity += $qtys[$i];
+                $stock_to->save();
+            } elseif ($request->type === "out") {
+                if (($stock_from->quantity - $qtys[$i]) >= 0) {
+                    $stock_from->quantity -= $qtys[$i];
+                    $stock_from->save();
+                } else {
+                    // Validation Out Of Stock
+                    throw new \Exception('Stock ' . ($i + 1) . ' is not enough');
+                }
+            }
+
+            $stockInOutProduct = new StockInOutProduct();
+            $stockInOutProduct->stock_in_out_id = $stockInOut->id;
+            $stockInOutProduct->stock_from_id = $stock_from->id;
+            $stockInOutProduct->stock_to_id = $stock_to->id;
+            $stockInOutProduct->product_id = $products[$i];
+            $stockInOutProduct->quantity = $qtys[$i];
+            $stockInOutProduct->save();
+        }
+
+        return $stockInOut;
     }
 
     public function getProduct()
