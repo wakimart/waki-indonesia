@@ -66,6 +66,55 @@ $menu_item_second = "list_homeservice";
     .table-bordered th, .table-bordered td {
         border: 1px solid darkgray !important;
     }
+
+    .cancel-template {
+        list-style-type: none;
+        margin: 25px 0 0 0;
+    }
+
+    .cancel-template li {
+        margin: 0 5px 0 0;
+        width: auto;
+        height: 45px;
+        position: relative;
+    }
+
+    .cancel-template label,
+    .cancel-template input {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .cancel-template input[type="radio"] {
+        opacity: 0.01;
+        z-index: 100;
+    }
+
+    .cancel-template input[type="radio"]:checked+label,
+    .Checked+label {
+        background: #2ecc71;
+    }
+
+    .cancel-template label {
+        padding: 5px;
+        border: 1px solid #CCC;
+        cursor: pointer;
+        z-index: 90;
+    }
+
+    .cancel-template label:hover {
+        background: #DDD;
+    }
+    
+    .ellipsis {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 </style>
 @endsection
 
@@ -1236,7 +1285,14 @@ $menu_item_second = "list_homeservice";
                     <h5 style="text-align: center;">
                         Are you sure to Share Acc to Cancel this appointment?
                     </h5>
-
+                    <ul class="cancel-template d-none">
+                        @foreach($cancelTemplates as $index => $val)
+                            <li>
+                                <input type="radio" id="{{$index}}" name="cancel_template" />
+                                <label for="{{$index}}">{{strlen($index . $val) > 40 ? substr($index . $val,0,40)."..." : $index . $val}}</label>
+                            </li>
+                        @endforeach
+                    </ul>
                     <textarea class="form-control mt-3"
                         form="frmCancel"
                         name="cancel_desc"
@@ -2235,5 +2291,14 @@ processKeyUp = function(event) {
 }; 
 document.getElementById("cancel_desc").onkeyup=processKeyUp;
 document.getElementById("reschedule_desc").onkeyup=processKeyUp;
+
+$('input[type=radio][name=bedStatus]').change(function() {
+    if (this.value == 'allot') {
+        // ...
+    }
+    else if (this.value == 'transfer') {
+        // ...
+    }
+});
 </script>
 @endsection
