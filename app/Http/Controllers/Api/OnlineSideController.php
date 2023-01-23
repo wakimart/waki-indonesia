@@ -91,6 +91,15 @@ class OnlineSideController extends Controller
                 $order = Order::where('code', $request->code)->first();
                 $dataBefore = Order::where('code', $request->code)->first();
                 if(isset($order)){
+                    if($request->has('order_details')){
+                        $orderDetails = json_decode($request->order_details);
+                        foreach ($orderDetails as $orderDetailNya) {
+                            $orderDetail = OrderDetail::find($orderDetailNya->order_detail_id);
+                            $orderDetail->offline_stock_id = $orderDetailNya->stock_id;
+                            $orderDetail->save();
+                        }
+                    }
+
                     $order->status = $request->status;
                     $order->update();
 

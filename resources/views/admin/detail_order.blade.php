@@ -362,8 +362,11 @@
                         <tr>
                             <td>
                                 <div class="form-group row justify-content-center">
-                                    @if( (in_array($order['status'], [\App\Order::$status['2'], \App\Order::$status['6'], \App\Order::$status['7'], \App\Order::$status['3']])) 
-                                        && $order->orderDetail->where('home_service_id', null)->where('request_hs_acc', null)->count() > 0 && Gate::check('order_hs'))
+                                    @php
+                                      // dd([$order['status'] == \App\Order::$status['2'],  $checkDeliveredOrderDetail == true, $orderDetailHs->count() > 0]);
+                                    @endphp
+
+                                    @if( $order->orderDetail()->whereNotNull('offline_stock_id')->where('home_service_id', null)->where('request_hs_acc', null)->count() > 0 && Gate::check('order_hs'))
                                     <button type="button" data-toggle="modal" data-target="#modal-add-home-service"
                                         class="btn mr-2" style="background-color: #8D72E1; color: #fff">
                                         Add Order Home Service
@@ -374,12 +377,7 @@
                                         class="btn btn-gradient-success mr-2 btn-change-status-order">
                                         Process Order
                                     </button>
-                                    @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_stock_request_pending'))
-                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['6']}}"
-                                        class="btn mr-2 btn-change-status-order" style="background-color: #FFD495;">
-                                        Request Stock
-                                    </button>
-                                    @elseif (($order['status'] == \App\Order::$status['7'] || $checkDeliveredOrderDetail == true) && $orderDetailHs->count() > 0 && Gate::check('change-status_order_delivery'))
+                                    @elseif (($order['status'] == \App\Order::$status['2'] || $checkDeliveredOrderDetail == true) && $orderDetailHs->count() > 0 && Gate::check('change-status_order_delivery'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}"
                                         class="btn btn-gradient-warning mr-2 btn-change-status-order">
                                         Delivery Order
@@ -1649,6 +1647,7 @@
                 var order_details = []
                 @foreach($order->orderDetail as $detail)
                     var row = {
+                        'order_detail_id':'{{$detail->id}}',
                         'product_id':'{{$detail->product_id}}',
                         'promo_id':'{{$detail->promo_id}}',
                         'qty':'{{$detail->qty}}',
