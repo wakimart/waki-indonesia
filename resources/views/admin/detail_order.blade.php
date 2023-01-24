@@ -428,7 +428,7 @@
                                 <td>Acc</td>
                                 @endif
                                 <td>Time</td>
-                                <td>Product</td>
+                                <td>CSO - BRANCH</td>
                             </thead>
                             @foreach ($orderDetailReqHsAcc->sortBy('request_hs_acc')->groupBy('request_hs_acc') as $orderDetailByReqHsAcc)
                                 <tr>
@@ -453,14 +453,7 @@
                                         <br>{{ $orderDetailByReqHsAcc[0]->request_hs_acc }}
                                     </td>
                                     <td>
-                                        <ul class="mb-0">
-                                            @foreach ($orderDetailByReqHsAcc as $odByReqHsAcc)
-                                                <li>
-                                                    {{ $odByReqHsAcc->product['code'] ?? $odByReqHsAcc->promo['code'] ?? 'OTHER' }} -
-                                                    {{ $odByReqHsAcc->product['name'] ?? (($odByReqHsAcc->promo) ? implode(", ", $odByReqHsAcc->promo->productName()) : $odByReqHsAcc->other) }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
+                                      ({{ $order->cso['code'] }}) {{ $order->cso['name'] }} - ({{ $order->branch['code'] }}) {{ $order->branch['name'] }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -481,7 +474,6 @@
                                 <td>Home Service</td>
                                 <td>Cso</td>
                                 <td>Cso Delivery</td>
-                                <td>Product</td>
                             </thead>
                             @php 
                                 $orderDetailGroupBys = $orderDetailHs->sortBy('updated_at')->groupBy('home_service_id');
@@ -512,16 +504,6 @@
                                                 {{ $csoDelivHs['code'] }} - {{ $csoDelivHs['name'] }}<br>
                                             @endforeach
                                         @endif
-                                    </td>
-                                    <td>
-                                        <ul class="mb-0">
-                                            @foreach ($orderDetailByHs as $odByHs)
-                                                <li>
-                                                    {{ $odByHs->product['code'] ?? $odByHs->promo['code'] ?? 'OTHER' }} -
-                                                    {{ $odByHs->product['name'] ?? (($odByHs->promo) ? implode(", ", $odByHs->promo->productName()) : $odByHs->other) }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
                                     </td>
                                 </tr>
                             @endforeach
@@ -838,7 +820,7 @@
                                         @foreach ($order->orderDetail as $orderDetail)
                                             @if($orderDetail->home_service_id == null && $orderDetail->delivery_cso_id == null && $orderDetail->request_hs_acc == null)
                                             <tr>
-                                                <td><input type="checkbox" class="form-control orderDetail-product" name="orderDetail_product[]" value="{{ $orderDetail->id }}" {{ isset($orderDetail->offline_stock_id) ? 'checked' : '' }}></td>
+                                                <td><input type="checkbox" class="form-control orderDetail-product" name="orderDetail_product[]" value="{{ $orderDetail->id }}" {{ isset($orderDetail->offline_stock_id) || $orderDetail->type == 'upgrade' ? 'checked' : '' }}></td>
                                                 <td>{{ $orderDetail->product['code'] ?? $orderDetail->promo['code'] ?? 'OTHER' }}</td>
                                                 <td>{{ $orderDetail->product['name'] ?? (($orderDetail->promo) ? implode(", ", $orderDetail->promo->productName()) : $orderDetail->other) }}</td>
                                                 <td>{{ $orderDetail->qty }}</td>

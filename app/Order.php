@@ -63,6 +63,10 @@ class Order extends Model
     {
         return $this->hasMany("App\OrderPayment");
     }
+    public function allHomeService()
+    {
+        return $this->belongsToMany(HomeService::class, 'order_homeservices');
+    }
     public function getCSO()
     {
         return Cso::where('id', $this->cso_id)->first();

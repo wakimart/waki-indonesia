@@ -100,8 +100,8 @@ class OnlineSideController extends Controller
                         }
                     }
 
-                    $order->status = $request->status;
-                    $order->update();
+                    // $order->status = $request->status;
+                    // $order->update();
 
                     $user = User::where('code', $request->user_id)->first();
                     $historyUpdate['type_menu'] = "Order";
