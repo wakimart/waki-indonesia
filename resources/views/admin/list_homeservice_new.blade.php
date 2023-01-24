@@ -1231,8 +1231,15 @@ $menu_item_second = "list_homeservice";
                             data-msg="Mohon Isi Jam" />
                         <div class="validation"></div>
                     </div>
-
-                    <textarea class="form-control mt-3"
+                    <ul class="cancel-template">
+                        @foreach($rescheduleTemplates as $index => $val)
+                            <li>
+                                <input type="radio" id="{{$index}}" name="reschedule_template" value="{{$index.$val}}"/>
+                                <label for="{{$index}}">{{strlen($index . $val) > 40 ? substr($index . $val,0,40)."..." : $index . $val}}</label>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <textarea class="form-control mt-3 d-none"
                         form="frmReschedule"
                         name="reschedule_desc"
                         id="reschedule_desc"
@@ -1285,15 +1292,15 @@ $menu_item_second = "list_homeservice";
                     <h5 style="text-align: center;">
                         Are you sure to Share Acc to Cancel this appointment?
                     </h5>
-                    <ul class="cancel-template d-none">
+                    <ul class="cancel-template">
                         @foreach($cancelTemplates as $index => $val)
                             <li>
-                                <input type="radio" id="{{$index}}" name="cancel_template" />
+                                <input type="radio" id="{{$index}}" name="cancel_template" value="{{$index.$val}}"/>
                                 <label for="{{$index}}">{{strlen($index . $val) > 40 ? substr($index . $val,0,40)."..." : $index . $val}}</label>
                             </li>
                         @endforeach
                     </ul>
-                    <textarea class="form-control mt-3"
+                    <textarea class="form-control mt-3 d-none"
                         form="frmCancel"
                         name="cancel_desc"
                         id="cancel_desc"
@@ -1563,7 +1570,17 @@ $(document).ready(function(){
     //end load modal Acc Cancel HS
 
     $('#frmReschedule').on('submit', function(event){
-        if($('#reschedule_desc').val().length < 160){
+        var textarea = $('#reschedule_desc').val()
+        var indexReschedule = []
+        @foreach($rescheduleTemplates as $index => $val)
+            if('{{$index}}' !== 'Other'){
+                indexReschedule.push('{{$index}}')
+            }
+        @endforeach
+        if(indexReschedule.includes(textarea.substr(0,3))){
+            return true
+        }
+        if(textarea.length < 160){
             alert('You need to enter at least 160 characters')
             event.preventDefault();
             return false
@@ -2273,7 +2290,17 @@ function setDistrict(e) {
 }
 
 $('#frmCancel').on('submit', function(event){
-    if($('#cancel_desc').val().length < 160){
+    var textarea = $('#cancel_desc').val()
+    var indexCancel = []
+    @foreach($cancelTemplates as $index => $val)
+        if('{{$index}}' !== 'Other'){
+            indexCancel.push('{{$index}}')
+        }
+    @endforeach
+    if(indexCancel.includes(textarea.substr(0,3))){
+        return true
+    }
+    if(textarea.length < 160){
         alert('You need to enter at least 160 characters')
         event.preventDefault();
         return false
@@ -2292,12 +2319,19 @@ processKeyUp = function(event) {
 document.getElementById("cancel_desc").onkeyup=processKeyUp;
 document.getElementById("reschedule_desc").onkeyup=processKeyUp;
 
-$('input[type=radio][name=bedStatus]').change(function() {
-    if (this.value == 'allot') {
-        // ...
+$('input[type=radio][name=cancel_template]').change(function() {
+    if(this.value == "Other"){
+        $('#cancel_desc').removeClass('d-none').val('')
+    }else{
+        $('#cancel_desc').addClass('d-none').val(this.value)
     }
-    else if (this.value == 'transfer') {
-        // ...
+});
+
+$('input[type=radio][name=reschedule_template]').change(function() {
+    if(this.value == "Other"){
+        $('#reschedule_desc').removeClass('d-none').val('')
+    }else{
+        $('#reschedule_desc').addClass('d-none').val(this.value)
     }
 });
 </script>

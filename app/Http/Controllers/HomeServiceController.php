@@ -255,6 +255,7 @@ class HomeServiceController extends Controller
         $currentDayData = $this->printDayData($request);
         $currentDayData = json_decode($currentDayData->getContent(), true)['msg'];
         $cancelTemplates = HomeService::$cancelTemplates;
+        $rescheduleTemplates = HomeService::$rescheduleTemplates;
 
         return view(
             "admin.list_homeservice_new",
@@ -263,7 +264,8 @@ class HomeServiceController extends Controller
                 "currentDayData",
                 "branches",
                 "csos",
-                "cancelTemplates"
+                "cancelTemplates",
+                "rescheduleTemplates"
             )
         );
     }
@@ -1559,6 +1561,7 @@ class HomeServiceController extends Controller
 
     public function accNotif(Request $request)
     {
+        return response()->json($request->all());
         $fcm_tokenNya = [];
         $userNya = User::where('users.fmc_token', '!=', null)
                     ->whereIn('role_users.role_id', [1,2,7])
@@ -1614,6 +1617,7 @@ class HomeServiceController extends Controller
 
     public function accRescheduleNotif(Request $request)
     {
+        return response()->json($request->all());
         $resc_acc = $request->date." ".$request->time;
 
         $homeserviceNya = HomeService::find($request->id);
