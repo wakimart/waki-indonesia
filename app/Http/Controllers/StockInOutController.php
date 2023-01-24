@@ -440,9 +440,11 @@ class StockInOutController extends Controller
         foreach ($order->orderDetail as $orderDetail) {
             $status = "OUT";
             $quantity = $orderDetail->stock_id == $stockInOut->id ? $orderDetail->qty : 0;
-            if ($orderDetail->type == "upgrade" && $request->upgrade == 1) {
+            if ($orderDetail->type == "upgrade") {
                 $status = "IN-UPGRADE**";
-                $quantity = $orderDetail->qty;
+                if ($request->upgrade == 1) {
+                    $quantity = $orderDetail->qty;
+                }
             }
             if ($orderDetail->product_id != null) {
                 $products[] = [
