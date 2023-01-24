@@ -62,9 +62,13 @@ class Order extends Model
     {
         return $this->hasMany("App\OrderPayment");
     }
-    public function allHomeService()
+    public function allHomeService_delivery()
     {
-        return $this->belongsToMany(HomeService::class, 'order_homeservices');
+        return $this->belongsToMany(HomeService::class, 'order_homeservices')->where('delivery', true);
+    }
+    public function allHomeService_nonDelivery()
+    {
+        return $this->belongsToMany(HomeService::class, 'order_homeservices')->where('delivery', false);;
     }
     public function getCSO()
     {

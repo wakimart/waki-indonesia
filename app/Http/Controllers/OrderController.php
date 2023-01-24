@@ -810,12 +810,13 @@ class OrderController extends Controller
             $order->status = $request->input('status_order');
             
             // Save Delivery CSO
-            $checkDeliveredOrderDetail = OrderDetail::where('order_id', $order['id'])->where('delivery_cso_id', null)->count() > 0;
+            $checkDeliveredOrderDetail = OrderDetail::where('order_id', $order['id'])->where('home_service_id', null)->where('offline_stock_id', '!=', null)->count() > 0;
             if ($order->status == Order::$status['3'] && $checkDeliveredOrderDetail == true) {
                 // $order->delivery_cso_id = json_encode($request->delivery_cso_id);
-
                 if ($request->delivery_cso_id != null && $request->home_service_id != null) {
-                    OrderDetail::where('home_service_id', $request->home_service_id)->update(['delivery_cso_id' => json_encode($request->delivery_cso_id)]);
+                    $orderDetailHS = OrderDetail::where([['order_id', $order['id']], ['offline_stock_id', '!=', null], ['home_service_id', null]])->groupBy('offline_stock_id')->first();
+                    OrderDetail::where('offline_stock_id', $orderDetailHS['offline_stock_id'])->update(['delivery_cso_id' => json_encode($request->delivery_cso_id), 'home_service_id' => $request->home_service_id]);
+                    OrderHomeservice::where([['order_id', $request->orderId], ['home_service_id', $request->home_service_id]])->update(['delivery' => true]);
                 }
             } else if ($order->status == Order::$status['8']) {
                 // Save Delivered Image
@@ -1022,6 +1023,43 @@ class OrderController extends Controller
         }
     }
 
+    public function accOrderHs(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $order = Order::find($request->input('orderId'));
+            $status_acc = $request->status_acc;
+            $getAppointment = $request->appointment;
+            if ($status_acc == "true") {
+                // Add Home Delivery
+                $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, true, $getAppointment, null);
+                OrderHomeservice::create(['order_id' => $order->id, 'home_service_id' => $homeservice->id]);
+                $order->update(['request_hs_acc' => null]);
+            } else {
+                $order->update(['request_hs_acc' => null]);
+            }
+
+            $user = Auth::user();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Acc Order HS";
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> ["status_acc" => $status_acc, "appointment" => $getAppointment]
+            ]);
+
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $order->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Status Acc '. ($status_acc == "true" ? 'Approve' : 'Reject') . ' berhasil Di simpan');
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
     public function orderHS_old(Request $request)
     {
         DB::beginTransaction();
@@ -1101,7 +1139,7 @@ class OrderController extends Controller
         }
     }
 
-    public function accOrderHs(Request $request)
+    public function accOrderHs_old(Request $request)
     {
         dd($request->all());
         DB::beginTransaction();

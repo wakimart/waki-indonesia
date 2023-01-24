@@ -362,11 +362,7 @@
                         <tr>
                             <td>
                                 <div class="form-group row justify-content-center">
-                                    @php
-                                      // dd($order->orderDetail->where('offline_stock_id', '!=', null)->where('home_service_id', null)->where('request_hs_acc', null)->count());
-                                    @endphp
-
-                                    @if( $order->orderDetail->where('home_service_id', null)->where('request_hs_acc', null)->count() > 0 && Gate::check('order_hs'))
+                                    @if(($order['status'] == \App\Order::$status['2'] || $order['status'] == \App\Order::$status['3']) && !$order['request_hs_acc'] && $order->allHomeService_nonDelivery->count() < 1 && $order->orderDetail->where('type', '!=', 'upgrade')->where('home_service_id', null)->count() > 0 && Gate::check('order_hs'))
                                     <button type="button" data-toggle="modal" data-target="#modal-add-home-service"
                                         class="btn mr-2" style="background-color: #8D72E1; color: #fff">
                                         Add Order Home Service
@@ -377,12 +373,12 @@
                                         class="btn btn-gradient-success mr-2 btn-change-status-order">
                                         Process Order
                                     </button>
-                                    @elseif (($order['status'] == \App\Order::$status['2'] || $checkDeliveredOrderDetail == true) && $orderDetailHs->count() > 0 && Gate::check('change-status_order_delivery'))
+                                    @elseif ($order->allHomeService_nonDelivery->count() > 0 && $order->orderDetail->where('offline_stock_id', '!=', null)->where('home_service_id', null)->count() > 0 && Gate::check('change-status_order_delivery'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}"
                                         class="btn btn-gradient-warning mr-2 btn-change-status-order">
                                         Delivery Order
                                     </button>
-                                    @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_delivered'))
+                                    @elseif ($order['status'] == \App\Order::$status['3'] && $order->allHomeService_nonDelivery->count() < 1 && $order->orderDetail->where('type', '!=', 'upgrade')->where('home_service_id', null)->count() < 1 && $order->orderDetail->where('type', '!=', 'upgrade')->where('offline_stock_id', null)->count() < 1 && Gate::check('change-status_order_delivered'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['8']}}"
                                         class="btn mr-2 btn-change-status-order" style="background-color: #FF6E31; color: #FFF">
                                         Delivered Order
@@ -424,9 +420,7 @@
                     <div class="table-responsive">
                         <table class="w-100">
                             <thead>
-                                @if (Gate::check('acc-order_hs'))
                                 <td>Acc</td>
-                                @endif
                                 <td>Time</td>
                                 <td>CSO - BRANCH</td>
                             </thead>
@@ -443,6 +437,8 @@
                                         </div>
                                     </form>
                                 </td>
+                              @else
+                                <td>Waiting for Acc</td>
                               @endif
                               <td>
                                   {{ date('l', strtotime($order['request_hs_acc'])) }}
@@ -637,7 +633,7 @@
                                     </div>
                                 {{-- Pilih CSO Untuk Delivery --}}
                                 @php $order_request_hs = json_decode($order['request_hs'], true) ?? []; @endphp
-                                @elseif (($order['status'] == \App\Order::$status['2'] || $checkDeliveredOrderDetail == true) && ($orderDetailHs->count() > 0))
+                                @elseif (($order->allHomeService_nonDelivery->count() > 0))
                                     <div id="delivery-cso">
                                         <div id="form-cso" class="row">
                                             <div class="form-group mb-3 col-10">
@@ -665,12 +661,10 @@
                                         <label>Pilihan Home Service</label>
                                         <select name="home_service_id" class="form-control home-service-id" required>
                                             <option value="">Choose Home Service</option>
-                                            @foreach ($orderDetailHs->sortBy('updated_at')->groupBy('home_service_id') as $orderDetailByHs)
-                                                @if ($orderDetailByHs[0]['delivery_cso_id'] == null)
-                                                <option value="{{ $orderDetailByHs[0]['home_service_id'] }}">
-                                                    {{ $orderDetailByHs[0]->homeService['code'] }} ({{ date('Y-m-d H:i', strtotime($orderDetailByHs[0]->homeService['appointment'])) }})
+                                            @foreach ($order->allHomeService_nonDelivery->sortBy('appointment') as $orderByHs)
+                                                <option value="{{ $orderByHs['id'] }}">
+                                                    {{ $orderByHs['code'] }} ({{ date('Y-m-d H:i', strtotime($orderByHs['appointment'])) }})
                                                 </option>
-                                                @endif
                                             @endforeach
                                         </select>
                                     </div>

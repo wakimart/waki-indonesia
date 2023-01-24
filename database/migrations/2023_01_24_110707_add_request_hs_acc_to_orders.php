@@ -16,6 +16,10 @@ class AddRequestHsAccToOrders extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->string('request_hs_acc')->nullable();
         });
+
+        Schema::table('order_homeservices', function (Blueprint $table) {
+            $table->boolean('delivery', false);
+        });
     }
 
     /**
@@ -27,6 +31,10 @@ class AddRequestHsAccToOrders extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn('request_hs_acc');
+        });
+
+        Schema::table('order_homeservices', function (Blueprint $table) {
+            $table->dropColumn('delivery');
         });
     }
 }
