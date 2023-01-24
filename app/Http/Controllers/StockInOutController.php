@@ -470,7 +470,7 @@ class StockInOutController extends Controller
         ];
 
         $pdf = PDF::loadView('admin.pdf_stock_out_order', $data);
-        return $pdf->download('invoice.pdf');
+        return $pdf->download('pdf_surat_jalan_'.$stockInOut->code.'.pdf');
     }
 
     public function getProduct()
