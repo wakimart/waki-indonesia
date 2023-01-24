@@ -24,8 +24,7 @@ class Order extends Model
     ];
 
     protected $fillable = [
-        'code', 'no_member', 'name', 'address', 'phone', 'cash_upgrade', 'payment_type', 'total_payment', 'down_payment', 'remaining_payment', 'customer_type', 'description', '30_cso_id', '70_cso_id', 'cso_id', 'branch_id', 'city', 'active','orderDate', 'distric', 'province', 'know_from', 'status', 'delivery_cso_id', 'temp_no',
-        'request_hs', 'home_service_id', 'delivered_image',
+        'code', 'no_member', 'name', 'address', 'phone', 'cash_upgrade', 'payment_type', 'total_payment', 'down_payment', 'remaining_payment', 'customer_type', 'description', '30_cso_id', '70_cso_id', 'cso_id', 'branch_id', 'city', 'active','orderDate', 'distric', 'province', 'know_from', 'status', 'delivery_cso_id', 'temp_no', 'request_hs_acc', 'request_hs', 'home_service_id', 'delivered_image',
     ];
     public $sortable = [
         'name', 'code', 'created_at', 'name', 'orderDate',

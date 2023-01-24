@@ -366,7 +366,7 @@
                                       // dd($order->orderDetail->where('offline_stock_id', '!=', null)->where('home_service_id', null)->where('request_hs_acc', null)->count());
                                     @endphp
 
-                                    @if( $order->orderDetail->where('offline_stock_id', '!=', null)->where('home_service_id', null)->where('request_hs_acc', null)->count() > 0 && Gate::check('order_hs'))
+                                    @if( $order->orderDetail->where('home_service_id', null)->where('request_hs_acc', null)->count() > 0 && Gate::check('order_hs'))
                                     <button type="button" data-toggle="modal" data-target="#modal-add-home-service"
                                         class="btn mr-2" style="background-color: #8D72E1; color: #fff">
                                         Add Order Home Service
@@ -416,7 +416,7 @@
 
 
             {{-- Acc Request Order Home Service --}}
-            @if($orderDetailReqHsAcc->count() > 0)
+            @if(isset($order['request_hs_acc']))
                 <div class="row justify-content-center" style="margin-top: 2em;">
                     <h2>Acc Request Order Home Service</h2>
                 </div>
@@ -430,33 +430,28 @@
                                 <td>Time</td>
                                 <td>CSO - BRANCH</td>
                             </thead>
-                            @foreach ($orderDetailReqHsAcc->sortBy('request_hs_acc')->groupBy('request_hs_acc') as $orderDetailByReqHsAcc)
-                                <tr>
-                                    @if (Gate::check('acc-order_hs'))
-                                        <td>
-                                            <form method="POST" action="{{ route('acc_order_hs') }}">
-                                                @csrf
-                                                <input type="hidden" name="orderId" value="{{ $order['id'] }}">
-                                                <input type="hidden" name="appointment" value="{{ $orderDetailByReqHsAcc[0]->request_hs_acc }}">
-                                                @foreach ($orderDetailByReqHsAcc as $odByReqHsAcc)
-                                                <input type="hidden" name="orderDetail_product[]" value="{{ $odByReqHsAcc['id'] }}">
-                                                @endforeach
-                                                <div class="d-flex align-item-center">
-                                                    <button type="submit" class="btn btn-gradient-primary mr-2" name="status_acc" value="true">Aprove</button>
-                                                    <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">Reject</button>
-                                                </div>
-                                            </form>
-                                        </td>
-                                    @endif
-                                    <td>
-                                        {{ date('l', strtotime($orderDetailByReqHsAcc[0]->request_hs_acc)) }}
-                                        <br>{{ $orderDetailByReqHsAcc[0]->request_hs_acc }}
-                                    </td>
-                                    <td>
-                                      ({{ $order->cso['code'] }}) {{ $order->cso['name'] }} - ({{ $order->branch['code'] }}) {{ $order->branch['name'] }}
-                                    </td>
-                                </tr>
-                            @endforeach
+                            <tr>
+                              @if (Gate::check('acc-order_hs'))
+                                <td>
+                                    <form method="POST" action="{{ route('acc_order_hs') }}">
+                                        @csrf
+                                        <input type="hidden" name="orderId" value="{{ $order['id'] }}">
+                                        <input type="hidden" name="appointment" value="{{ $order['request_hs_acc'] }}">
+                                        <div class="d-flex align-item-center">
+                                            <button type="submit" class="btn btn-gradient-primary mr-2" name="status_acc" value="true">Aprove</button>
+                                            <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">Reject</button>
+                                        </div>
+                                    </form>
+                                </td>
+                              @endif
+                              <td>
+                                  {{ date('l', strtotime($order['request_hs_acc'])) }}
+                                  <br>{{ $order['request_hs_acc'] }}
+                              </td>
+                              <td>
+                                ({{ $order->cso['code'] }}) {{ $order->cso['name'] }} - ({{ $order->branch['code'] }}) {{ $order->branch['name'] }}
+                              </td>
+                            </tr>
                     </table>
                     </div>
                 </div>

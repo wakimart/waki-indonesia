@@ -20,6 +20,7 @@ use App\OrderPayment;
 use App\Promo;
 use App\Product;
 use App\Utils;
+use App\OrderHomeservice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -983,6 +984,61 @@ class OrderController extends Controller
 
             if (isset($checkRegionOrder) && $checkRegionOrder == false) {
                 // Request Acc Home Service
+                $order->update(['request_hs_acc' => $getAppointment]);
+            } else {
+                // Add Home Delivery
+                $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, $request->index_order_home_service, $getAppointment, $request->homeservice_cso_id);
+                OrderHomeservice::create(['order_id' => $order->id, 'home_service_id' => $homeservice->id]);
+            }
+
+            if ($request->index_order_home_service != null) {
+                // Remove Used Request Home Service
+                $request_hs = json_decode($order->request_hs, true);
+                if(isset($request_hs[$request->index_order_home_service])) unset($request_hs[$request->index_order_home_service]);
+                $order['request_hs'] = json_encode(array_values($request_hs));
+                $order->save();
+            }
+
+            $dataChanges = array_diff(json_decode($order, true), json_decode($dataBefore, true));
+                        
+            $user = Auth::user();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Add Order HS";
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> $dataChanges
+            ]);
+
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $order->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+            
+            DB::commit();
+            return redirect()->back()->with('success', 'Order Home Service berhasil Di simpan');
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
+    public function orderHS_old(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $order = Order::find($request->input('orderId'));
+            $dataBefore = Order::find($request->input('orderId'));
+            $orderDetailOlds = OrderDetail::where('order_id', $order['id'])->get();
+
+            if ($request->index_order_home_service != null) {
+                $checkRegionOrder = in_array($order['distric'], Branch::where('id', $order->branch_id)->first()->regionDistrict()['district']);
+                $getAppointment = json_decode($order['request_hs'], true)[$request->index_order_home_service];
+            } else if ($request->request_hs_date && $request->request_hs_time) {
+                $getAppointment = $request->request_hs_date." ".$request->request_hs_time;
+            }
+
+            if (isset($checkRegionOrder) && $checkRegionOrder == false) {
+                // Request Acc Home Service
                 OrderDetail::whereIn('id', $request->orderDetail_product)->update(['request_hs_acc' => $getAppointment]);
             } else {
                 // Add Home Delivery
@@ -1047,6 +1103,7 @@ class OrderController extends Controller
 
     public function accOrderHs(Request $request)
     {
+        dd($request->all());
         DB::beginTransaction();
         try {
             $order = Order::find($request->input('orderId'));
