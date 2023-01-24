@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\HistoryUpdate;
 use App\Http\Controllers\Api\OfflineSideController;
+use App\Order;
 use App\OrderDetail;
 use App\Product;
 use App\Stock;
@@ -15,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use PDF;
 
 class StockInOutController extends Controller
 {
@@ -427,6 +429,48 @@ class StockInOutController extends Controller
         }
 
         return $stockInOut;
+    }
+
+    public function pdfOutFromOrder(Request $request)
+    {
+        $order = Order::where('code', $request->code)->first();
+        $stockInOut = StockInOut::find($request->stock_in_out);
+
+        $products = [];
+        foreach ($order->orderDetail as $orderDetail) {
+            $status = "OUT";
+            $quantity = $orderDetail->stock_id == $stockInOut->id ? $orderDetail->qty : 0;
+            if ($orderDetail->type == "upgrade" && $request->upgrade == 1) {
+                $status = "IN-UPGRADE**";
+                $quantity = $orderDetail->qty;
+            }
+            if ($orderDetail->product_id != null) {
+                $products[] = [
+                    'code' => $orderDetail->product['code'],
+                    'name' => $orderDetail->product['name'],
+                    'status' => $status,
+                    'quantity' => $quantity,
+                ];
+            } elseif ($orderDetail->promo_id != null) {
+                foreach ($orderDetail->promo->product_list() as $promoProdList) {
+                    $products[] = [
+                        'code' => $promoProdList['code'],
+                        'name' => $promoProdList['name'],
+                        'status' => $status,
+                        'quantity' => $quantity,
+                    ];
+                }
+            }
+        }
+
+        $data = [
+            'order' => $order,
+            'stockInOut' => $stockInOut,
+            'products' => $products,
+        ];
+
+        $pdf = PDF::loadView('admin.pdf_stock_out_order', $data);
+        return $pdf->download('invoice.pdf');
     }
 
     public function getProduct()

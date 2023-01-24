@@ -436,7 +436,10 @@
 
             {{-- New Out Stock From Delivery --}}
             @php
-                $orderDetailStock = $order->orderDetail->where('stock_id', '!=', null);
+                $orderDetailStock = $order->orderDetail->where('stock_id', '!=', null)->sortBy(function($item) {
+                    return strtotime($item->stockInOut->date);
+                });
+                $orderDetailUpgrades = $order->orderDetail->where('type', 'upgrade');
             @endphp
             @if($orderDetailStock->count() > 0)
                 <div class="col-md-12 my-3">
@@ -470,6 +473,26 @@
                                     <td>{{ $sioProduct->quantity }}</td>
                                 </tr>
                                 @endforeach
+                                @if ($loop->iteration == 1 && count($orderDetailUpgrades) > 0)
+                                    @foreach ($orderDetailUpgrades as $odUpgrade)
+                                        <tr>
+                                            <td>{{ $odUpgrade->product['code'] ?? $odUpgrade->promo['code'] ?? 'OTHER'  }}</td>
+                                            <td>Upgrade : {{ $odUpgrade->product['name'] ?? (($odUpgrade->promo) ? implode(", ", $odUpgrade->promo->productName()) : $odUpgrade->other) }}</td>
+                                            <td>{{ $odUpgrade->qty }}</td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        <a href="{{ route('pdf_out_from_order', [
+                                                'code' => $order['code'], 
+                                                'stock_in_out' => $oDStockGroupBy[0]->stockInout['id'],
+                                                'upgrade' => ($loop->iteration == 1 && count($orderDetailUpgrades) > 0)
+                                            ]) }}" class="btn btn-gradient-info">
+                                            <span><i class="mdi mdi-file-document"></i></span> PDF
+                                        </a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     @endforeach

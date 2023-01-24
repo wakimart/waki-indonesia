@@ -1042,6 +1042,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'StockInOutController@destroy')
             ->name('delete_stock_in_out')
             ->middleware('can:delete-stock_in_out');
+
+        Route::get('/pdfOutFromOrder', 'StockInOutController@pdfOutFromOrder')
+            ->name('pdf_out_from_order');
     });
 
     Route::group(['prefix' => 'stock_order_request', 'middleware' => 'auth'], function() {
