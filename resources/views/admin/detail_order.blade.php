@@ -462,6 +462,11 @@
                                     <td class="text-center">=></td>
                                     <td class="text-center">{{ $oDStockGroupBy[0]->stockInOut->warehouseTo['code'] }} - {{ $oDStockGroupBy[0]->stockInOut->warehouseTo['name'] }}</td>
                                 </tr>
+                                @if($oDStockGroupBy[0]->stockInOut['description'] != null)
+                                <tr>
+                                    <td colspan="3">{{ $oDStockGroupBy[0]->stockInOut['description'] }}</td>
+                                </tr>
+                                @endif
                             </tbody>
                         </table>
                         <table class="w-100">
@@ -572,6 +577,10 @@
                                         <select id="from_warehouse_id" class="form-control" name="from_warehouse_id" style="width: 100%" required>
                                             <option value="">Select Warehouse</option>
                                         </select>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label>Description (Optional)</label>
+                                        <textarea id="delivery_description" class="form-control" name="description"></textarea>
                                     </div>
                                     {{-- Delivery Poduk Order --}}
                                     <div id="orderDetail-product" class="form-group mb-3">
@@ -1179,7 +1188,7 @@
             $('#delivery-cso').hide();
             $('#request-stock').hide();
             $('#delivered-image').hide();
-            $('#delivery-stock, #delivery_date, #from_warehouse_id, #orderDetail-product').hide();
+            $('#delivery-stock, #delivery_date, #from_warehouse_id, #delivery_description, #orderDetail-product').hide();
             $('.delivery-cso-id').attr('disabled', true);
             $('#delivery-stock input[type=hidden]').attr('disabled', true);
             $('#delivery_date, #from_warehouse_id, .orderDetail-product').attr('disabled', true);
@@ -1195,7 +1204,7 @@
             } else if (statusOrder == "{{\App\Order::$status['3']}}")  {
                 $('#delivery-cso').show();
                 $('.delivery-cso-id').attr('disabled', false);
-                $('#delivery-stock, #delivery_date, #from_warehouse_id, #orderDetail-product').show();
+                $('#delivery-stock, #delivery_date, #from_warehouse_id, #delivery_description, #orderDetail-product').show();
                 $('#delivery-stock input[type=hidden]').attr('disabled', false);
                 $('#delivery_date, #from_warehouse_id, .orderDetail-product').attr('disabled', false);
                 $("#modal-change-status-question").html('Delivery This Order?');

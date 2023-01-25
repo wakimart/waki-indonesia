@@ -434,6 +434,7 @@ class StockInOutController extends Controller
     public function pdfOutFromOrder(Request $request)
     {
         $order = Order::where('code', $request->code)->first();
+        $order['district'] = $order->getDistrict();
         $stockInOut = StockInOut::find($request->stock_in_out);
 
         $products = [];

@@ -48,6 +48,8 @@
         <tr>
             <td style="text-align: right;">Cabang :</td>
             <td>{{ $order->branch['name'] }}</td>
+            <td></td>
+            <td colspan="4">{{ $order['district']['province'] }}, {{ $order['district']['kota_kab'] }}, {{ $order['district']['subdistrict_name'] }}</td>
         </tr>
         <tr>
             <td style="text-align: right;">Sales :</td>
@@ -57,7 +59,7 @@
         </tr>
         <tr>
             <td style="text-align: right;">Keterangan :</td>
-            <td>{{ $order->description }}</td>
+            <td>{{ $stockInOut->description }}</td>
         </tr>
 
         <tr>
