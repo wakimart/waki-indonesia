@@ -1446,7 +1446,7 @@
                 $(this).submit();
             }
         };
-        $('#frmAddOrderHomeService').on('submit', on_submit_orderHomeService);
+        // $('#frmAddOrderHomeService').on('submit', on_submit_orderHomeService);
 
         $("#submitFrmAddPayment").on("click", function(e) {
             // Change numberWithComma before submit
