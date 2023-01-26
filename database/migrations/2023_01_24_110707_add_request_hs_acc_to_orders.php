@@ -18,7 +18,7 @@ class AddRequestHsAccToOrders extends Migration
         });
 
         Schema::table('order_homeservices', function (Blueprint $table) {
-            $table->boolean('delivery', false);
+            $table->boolean('delivery')->default(0);
         });
     }
 
