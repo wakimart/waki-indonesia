@@ -901,6 +901,26 @@
                                 </h5>
                                 <br>
                                 <div class="form-group">
+                                    <label for="">Charge (%)</label>
+                                    <div class="row">
+                                        <div class="col-lg-5">
+                                            <input type="number" step="any" 
+                                                class="form-control"
+                                                id="editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_company" 
+                                                name="charge_percentage_company"
+                                                required>
+                                        </div>
+                                        <div class="col-lg-2 text-center"><h3>+</h3></div>
+                                        <div class="col-lg-5">
+                                            <input type="number" step="any" 
+                                                class="form-control"
+                                                id="editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_bank" 
+                                                name="charge_percentage_bank"
+                                                required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="">Estimate Transfer Date</label>
                                     <input type="date" id="editPaymentForThoseWhoAreNotHeadAdmin-estimate_transfer_date"
                                         class="form-control"
@@ -1436,6 +1456,8 @@
                     var urlForm = '{{route("update_order_payment_for_those_who_are_not_head_admin", ":paymentID")}}'
                     urlForm = urlForm.replace(':paymentID', id)
                     $('#editFormPaymentForThoseWhoAreNotHeadAdmin').attr('action', urlForm)
+                    $('#editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_company').val(data.charge_percentage_company)
+                    $('#editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_bank').val(data.charge_percentage_bank)
                     $('#editPaymentForThoseWhoAreNotHeadAdmin-estimate_transfer_date').val(data.estimate_transfer_date)
                 },
                 error: function(data) {

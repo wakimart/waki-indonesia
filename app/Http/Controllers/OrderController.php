@@ -2119,6 +2119,8 @@ class OrderController extends Controller
                 DB::beginTransaction();
                 try {
                     $orderPayment->estimate_transfer_date = $request->estimate_transfer_date;
+                    $orderPayment->charge_percentage_bank = $request->charge_percentage_bank;
+                    $orderPayment->charge_percentage_company = $request->charge_percentage_company;
                     $orderPayment->update();
                     DB::commit();
                     return redirect()->back()->with('success', 'Order Payment Berhasil Di Ubah');
