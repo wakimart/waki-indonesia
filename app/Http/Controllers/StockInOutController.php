@@ -363,19 +363,23 @@ class StockInOutController extends Controller
         $stockInOut->type = $request->type;
         $stockInOut->description = $request->description;
         $stockInOut->user_id = Auth::user()->id;
+        $stockInOut->order_id = $order->id;
         $stockInOut->save();
 
         $products = [];
         $qtys = [];
+        $orderDetails = [];
         foreach ($request->orderDetail_product as $odProduct) {
             $orderDetail = OrderDetail::find($odProduct);
             if ($orderDetail->product_id != null) {
                 array_push($products, $orderDetail->product_id);
                 array_push($qtys, $orderDetail->qty);
+                array_push($orderDetails, $orderDetail->id);
             } else if ($orderDetail->promo_id != null) {
                 foreach ($orderDetail->promo->product_list() as $promoProdList) {
                     array_push($products, $promoProdList['id']);
                     array_push($qtys, $orderDetail->qty);
+                    array_push($orderDetails, $orderDetail->id);
                 }
             }
         }
@@ -425,6 +429,7 @@ class StockInOutController extends Controller
             $stockInOutProduct->stock_to_id = $stock_to->id;
             $stockInOutProduct->product_id = $products[$i];
             $stockInOutProduct->quantity = $qtys[$i];
+            $stockInOutProduct->order_detail_id = $orderDetails[$i];
             $stockInOutProduct->save();
         }
 

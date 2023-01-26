@@ -9,7 +9,13 @@ class StockInOut extends Model
     protected $fillable = [
         'warehouse_from_id', 'warehouse_to_id', 'code', 'temp_no',
         'date', 'type', 'description', 'user_id', 'active', 'stock_order_request_id',
+        'order_id',
     ];
+
+    public function order()
+    {
+        return $this->belongsTo('App\Order');
+    }
 
     public function warehouseFrom()
     {
