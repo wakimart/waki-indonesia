@@ -24,42 +24,42 @@
     <div style="text-align: center; margin-top: 3px; margin-bottom: 5px;">TANDA TERIMA PENGIRIMAN BARANG</div>
 
     <table style="width: 100%; border-collapse: collapse;">
-        <colgroup>
-            <col style="width: 10%;">
-            <col style="width: 40%;">
-            <col style="width: 10%;">
-            <col style="width: 10%;">
-            <col style="width: 5%;">
-            <col style="width: 15%;">
-            <col style="width: 10%;">
-        </colgroup>
         <tr>
-            <td style="text-align: right;">Tanggal :</td>
+            <td style="width: 10%;"></td>
+            <td style="width: 35%;"></td>
+            <td style="width: 10%;"></td>
+            <td style="width: 15%;"></td>
+            <td style="width: 5%;"></td>
+            <td style="width: 15%;"></td>
+            <td style="width: 10%;"></td>
+        </tr>
+        <tr>
+            <td style="text-align: right; vertical-align: top;">Tanggal :</td>
             <td>{{ date('d/m/Y', strtotime($order->orderDate)) }}</td>
-            <td style="text-align: right;">Customer :</td>
+            <td style="text-align: right; vertical-align: top;">Customer :</td>
             <td colspan="4">{{ $order->name }}</td>
         </tr>
         <tr>
-            <td style="text-align: right;">No SP :</td>
+            <td style="text-align: right; vertical-align: top;">No SP :</td>
             <td>{{ $order->code }} Temp No : {{ $order->temp_no }}</td>
             <td></td>
             <td colspan="4">{{ $order->address }}</td>
         </tr>
         <tr>
-            <td style="text-align: right;">Cabang :</td>
+            <td style="text-align: right; vertical-align: top;">Cabang :</td>
             <td>{{ $order->branch['name'] }}</td>
             <td></td>
             <td colspan="4">{{ $order['district']['province'] }}, {{ $order['district']['kota_kab'] }}, {{ $order['district']['subdistrict_name'] }}</td>
         </tr>
         <tr>
-            <td style="text-align: right;">Sales :</td>
+            <td style="text-align: right; vertical-align: top;">Sales :</td>
             <td>{{ $order->cso['name'] }}</td>
             <td></td>
-            <td>{{ $order->phone }}</td>
+            <td colspan="4">{{ $order->phone }}</td>
         </tr>
         <tr>
-            <td style="text-align: right;">Keterangan :</td>
-            <td>{{ $stockInOut->description }}</td>
+            <td style="text-align: right; vertical-align: top;">Keterangan :</td>
+            <td colspan="2">{{ $stockInOut->description }}</td>
         </tr>
 
         <tr>
