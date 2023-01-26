@@ -518,9 +518,9 @@ function getGenerateCode() {
                 $("#actionAdd").find("input[name='"+key.name+"']").removeClass("is-invalid");
                 $("#actionAdd").find("select[name='"+key.name+"']").removeClass("is-invalid");
                 $("#actionAdd").find("textarea[name='"+key.name+"']").removeClass("is-invalid");
-                $("#actionAdd").find("input[name='"+key.name+"']").next().find("strong").text("");
+                $("#actionAdd").find("input[name='"+key.name+"']").siblings().find("strong").text("");
                 $("#actionAdd").find("select[name='"+key.name+"']").siblings().find("strong").text("");
-                $("#actionAdd").find("textarea[name='"+key.name+"']").next().find("strong").text("");
+                $("#actionAdd").find("textarea[name='"+key.name+"']").siblings().find("strong").text("");
             }
             if(hasil['errors'] != null){
                 for (var key of frmAdd.keys()) {
@@ -530,9 +530,9 @@ function getGenerateCode() {
                         $("#actionAdd").find("input[name='"+key+"']").addClass("is-invalid");
                         $("#actionAdd").find("select[name='"+key+"']").addClass("is-invalid");
                         $("#actionAdd").find("textarea[name='"+key+"']").addClass("is-invalid");
-                        $("#actionAdd").find("input[name='"+key+"']").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionAdd").find("input[name='"+key+"']").siblings().find("strong").text(hasil['errors'][key]);
                         $("#actionAdd").find("select[name='"+key+"']").siblings().find("strong").text(hasil['errors'][key]);
-                        $("#actionAdd").find("textarea[name='"+key+"']").next().find("strong").text(hasil['errors'][key]);
+                        $("#actionAdd").find("textarea[name='"+key+"']").siblings().find("strong").text(hasil['errors'][key]);
                     }
                 }
                 alert("Input Error !!!");

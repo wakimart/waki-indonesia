@@ -596,6 +596,10 @@ class StockInOutController extends Controller
             $dataChanges = [];
 
             $stockInOut = StockInOut::find($request->stock_in_out_id);
+
+            $old_warehouse_from_id = $stockInOut->warehouse_from_id;
+            $old_warehouse_to_id = $stockInOut->warehouse_to_id;
+
             $stockInOut->warehouse_from_id = $request->from_warehouse_id;
             $stockInOut->warehouse_to_id = $request->to_warehouse_id;
             $stockInOut->code = $request->code;
@@ -667,12 +671,40 @@ class StockInOutController extends Controller
                 }
 
                 if ($request->type === "in") {
-                    $stock_to->quantity += ($request->quantity[$i] - $stockInOutProduct->quantity);
-                    $stock_to->save();
+                    if ($stockInOut->warehouse_to_id != $old_warehouse_to_id) {
+                        $old_stock_to = Stock::where("warehouse_id", $old_warehouse_to_id)
+                            ->where("product_id", $products[$i])
+                            ->where("type_warehouse", null)
+                            ->first();
+                        $old_stock_to->quantity -= $stockInOutProduct->quantity;
+                        $old_stock_to->save();
+                        
+                        $stock_to->quantity += $request->quantity[$i];
+                        $stock_to->save();
+                    } else {
+                        $stock_to->quantity += ($request->quantity[$i] - $stockInOutProduct->quantity);
+                        $stock_to->save();
+                    }
                 } elseif ($request->type === "out") {
-                    if (($stock_from->quantity - ($request->quantity[$i] - $stockInOutProduct->quantity)) >= 0) {
-                        $stock_from->quantity -= ($request->quantity[$i] - $stockInOutProduct->quantity);
-                        $stock_from->save();
+                    $check_available_stock = $stockInOut->warehouse_from_id != $old_warehouse_from_id
+                        ? $stock_from->quantity - $request->quantity[$i] >= 0
+                        : ($stock_from->quantity - ($request->quantity[$i] - $stockInOutProduct->quantity)) >= 0;
+
+                    if ($check_available_stock == true) {
+                        if ($stockInOut->warehouse_from_id != $old_warehouse_from_id) {
+                            $old_stock_from = Stock::where("warehouse_id", $old_warehouse_from_id)
+                                ->where("product_id", $products[$i])
+                                ->where("type_warehouse", null)
+                                ->first();
+                            $old_stock_from->quantity += $stockInOutProduct->quantity;
+                            $old_stock_from->save();
+
+                            $stock_from->quantity -= $request->quantity[$i];
+                            $stock_from->save();
+                        } else {
+                            $stock_from->quantity -= ($request->quantity[$i] - $stockInOutProduct->quantity);
+                            $stock_from->save();
+                        }
                     } else {
                         // Validation Out Of Stock
                         $arr_Hasil = [];
