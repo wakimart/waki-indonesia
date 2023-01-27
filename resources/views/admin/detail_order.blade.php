@@ -411,10 +411,10 @@
             </div>
 
 
-            {{-- Acc Request Order Home Service --}}
+            {{-- Acc Order Home Service --}}
             @if(isset($order['request_hs_acc']))
                 <div class="row justify-content-center" style="margin-top: 2em;">
-                    <h2>Acc Request Order Home Service</h2>
+                    <h2>Acc Order Home Service</h2>
                 </div>
                 <div class="row justify-content-center">
                     <div class="table-responsive">
@@ -445,7 +445,15 @@
                                   <br>{{ $order['request_hs_acc'] }}
                               </td>
                               <td>
-                                ({{ $order->cso['code'] }}) {{ $order->cso['name'] }} - ({{ $order->branch['code'] }}) {{ $order->branch['name'] }}
+                                @if($order->request_hs_cso_acc != null)
+                                    @php $request_hs_cso_acc = App\Cso::whereIn('id', json_decode($order['request_hs_cso_acc']) ?? [])->get(); @endphp
+                                    @foreach ($request_hs_cso_acc as $rhs_cso)
+                                        ({{ $rhs_cso['code'] }}) {{ $rhs_cso['name'] }} - ({{ $rhs_cso->branch['code'] }}) {{ $rhs_cso->branch['name'] }}
+                                        <br>
+                                    @endforeach
+                                @else
+                                    ({{ $order->cso['code'] }}) {{ $order->cso['name'] }} - ({{ $order->branch['code'] }}) {{ $order->branch['name'] }}
+                                @endif
                               </td>
                             </tr>
                     </table>
@@ -745,11 +753,11 @@
                             <div class="modal-body">
                                 <h5 class="modal-title text-center">Add Order Home Service?</h5>
                                 <hr>
+                                @php $checkRegionOrder = in_array($order['distric'], $order->branch->regionDistrict()['district']); @endphp
+                                @if ($checkRegionOrder == false) 
+                                    <p class="text-danger">Different Region !!. This Order Home Service need Acc.</p>
+                                @endif
                                 @if($order_request_hs)
-                                    @php $checkRegionOrder = in_array($order['distric'], $order->branch->regionDistrict()['district']); @endphp
-                                    @if ($checkRegionOrder == false) 
-                                        <p class="text-danger">Different Region !!. This Order Home Service need Acc.</p>
-                                    @endif
                                     <div class="form-group mb-3">
                                         <label>Pilihan Request Home Service</label>
                                         <select class="form-control" name="index_order_home_service" required>
@@ -821,7 +829,7 @@
                             </div>
                             <div class="modal-footer">
                                 <input name="orderId" hidden="hidden" value="{{ $order['id'] }}">
-                                @if(isset($checkRegionOrder) && $checkRegionOrder == false)
+                                @if($checkRegionOrder == false)
                                     <button type="submit"
                                         class="btn btn-gradient-warning mr-2">
                                         Request Acc

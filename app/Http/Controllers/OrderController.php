@@ -976,16 +976,16 @@ class OrderController extends Controller
             $dataBefore = Order::find($request->input('orderId'));
             $orderDetailOlds = OrderDetail::where('order_id', $order['id'])->get();
 
+            $checkRegionOrder = in_array($order['distric'], Branch::where('id', $order->branch_id)->first()->regionDistrict()['district']);
             if ($request->index_order_home_service != null) {
-                $checkRegionOrder = in_array($order['distric'], Branch::where('id', $order->branch_id)->first()->regionDistrict()['district']);
                 $getAppointment = json_decode($order['request_hs'], true)[$request->index_order_home_service];
             } else if ($request->request_hs_date && $request->request_hs_time) {
                 $getAppointment = $request->request_hs_date." ".$request->request_hs_time;
             }
 
-            if (isset($checkRegionOrder) && $checkRegionOrder == false) {
+            if ($checkRegionOrder == false) {
                 // Request Acc Home Service
-                $order->update(['request_hs_acc' => $getAppointment]);
+                $order->update(['request_hs_acc' => $getAppointment, 'request_hs_cso_acc' => $request->homeservice_cso_id ? json_encode($request->homeservice_cso_id) : null]);
             } else {
                 // Add Home Delivery
                 $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, $request->index_order_home_service, $getAppointment, $request->homeservice_cso_id);
@@ -1032,11 +1032,11 @@ class OrderController extends Controller
             $getAppointment = $request->appointment;
             if ($status_acc == "true") {
                 // Add Home Delivery
-                $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, true, $getAppointment, null);
+                $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, $order->request_hs_cso_acc == null, $getAppointment, json_decode($order->request_hs_cso_acc, true));
                 OrderHomeservice::create(['order_id' => $order->id, 'home_service_id' => $homeservice->id]);
-                $order->update(['request_hs_acc' => null]);
+                $order->update(['request_hs_acc' => null, 'request_hs_cso_acc' => null]);
             } else {
-                $order->update(['request_hs_acc' => null]);
+                $order->update(['request_hs_acc' => null, 'request_hs_cso_acc' => null]);
             }
 
             $user = Auth::user();
