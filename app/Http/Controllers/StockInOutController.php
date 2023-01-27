@@ -473,7 +473,8 @@ class StockInOutController extends Controller
         ];
 
         $pdf = PDF::loadView('admin.pdf_stock_out_order', $data);
-        return $pdf->download('pdf_surat_jalan_'.$stockInOut->code.'.pdf');
+        $orderCode = isset($order['temp_no']) ? $order['temp_no'] : $order['code'];
+        return $pdf->download($order->branch['code'].'_'.$orderCode.'_surat_jalan.pdf');
     }
 
     public function getProduct()
