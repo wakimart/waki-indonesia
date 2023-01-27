@@ -148,6 +148,9 @@ $menu_item_second_sub = "list_order_report";
                                     $total_sale_untilYesterday = 0;
                                     $total_sale_today = 0;
                                     $totalSales = 0;
+                                    $order_reports = $order_reports->sortByDesc(function($salesNya){
+                                        return ($salesNya['total_sale_untilYesterday'] + $salesNya['total_sale_today']);
+                                    });
                                 @endphp
                                 @foreach ($order_reports as $key => $order_report)
                                 <tr>
