@@ -1617,7 +1617,7 @@ class OrderController extends Controller
             ->select('b.*')
             ->selectRaw("($query_total_sale_untilYesterday) as total_sale_untilYesterday")
             ->selectRaw("($query_total_sale_today) as total_sale_today")
-            ->where('active', true)->orderBy('code')->get();
+            ->where('active', true)->orderBy('total_sale_untilYesterday', 'DESC')->get();
         $countOrderReports = $order_reports->count();
 
         return view('admin.list_orderreport', compact('startDate', 'endDate', 'order_reports', 'countOrderReports'));
