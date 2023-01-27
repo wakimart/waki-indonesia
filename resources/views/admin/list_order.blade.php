@@ -1002,7 +1002,7 @@ $(document).on("click", "#btn-filter", function (e) {
         urlParamArray.push("filter_branch=" + $('#filter_branch').val());
     }
 
-    if ($('#filter_cso').val() != "") {
+    if ($('#filter_cso').val() != "" && $("#filter_cso").val() != null) {
         urlParamArray.push("filter_cso=" + $('#filter_cso').val());
     }
 
