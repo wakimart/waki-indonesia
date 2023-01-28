@@ -619,7 +619,35 @@ class StockInOutController extends Controller
             $products = $request->product;
             $countProduct = count($products);
             $old_stock_in_out_products_id = $request->old_stock_in_out_products_id;
-            $stock_in_out_product_id = $request->stock_in_out_product_id;
+            $stock_in_out_product_id = $request->stock_in_out_product_id ?? [];
+
+            //==== Validation Out Of Stock ===//
+            if ($request->type === "out") {
+                for ($i = 0; $i < $countProduct; $i++) {
+                    $stock_from = Stock::where("warehouse_id", $request->from_warehouse_id)
+                        ->where("product_id", $products[$i])
+                        ->where("type_warehouse", null)
+                        ->first();
+
+                    if (isset($stock_in_out_product_id[$i])) {
+                        $stockInOutProduct = StockInOutProduct::where('id', $stock_in_out_product_id[$i])->first();
+                    } else {
+                        $stockInOutProduct = new StockInOutProduct();
+                        $stockInOutProduct->product_id = $products[$i];
+                        $stockInOutProduct->quantity = 0;
+                    }
+
+                    $check_available_stock = $stockInOut->warehouse_from_id != $old_warehouse_from_id || $stockInOutProduct->product_id != $products[$i]
+                        ? $stock_from->quantity - $request->quantity[$i]
+                        : ($stock_from->quantity - ($request->quantity[$i] - $stockInOutProduct->quantity));
+                    if ($check_available_stock < 0) {
+                        $arr_Hasil = [];
+                        $arr_Hasil['quantity[]'] = 'Stock ' . ($i + 1) . ' is not enough';
+                        return response()->json(['errors' => $arr_Hasil]);
+                    }
+                }
+            }
+            //==== Validation Out Of Stock ===//
 
             // Delete Stock In Out Product
             $diff_stock_in_out_id_arr = array_diff($old_stock_in_out_products_id, $stock_in_out_product_id);
@@ -636,6 +664,11 @@ class StockInOutController extends Controller
                         $stock->quantity += $diff_soi_id->quantity;
                     }
                     $stock->save();
+
+                    // Delete Order Detail Stock
+                    if ($diff_soi_id->order_detail_id != null) {
+                        $this->deleteOrderDetailStock($stockInOut, $diff_soi_id);
+                    }
                 }
 
                 // History Update
@@ -644,6 +677,34 @@ class StockInOutController extends Controller
 
             // Update Stock In Out Product
             for ($i = 0; $i < $countProduct; $i++) {
+                if (isset($stock_in_out_product_id[$i])) {
+                    $stockInOutProduct = StockInOutProduct::where('id', $stock_in_out_product_id[$i])->first();
+                } else {
+                    $stockInOutProduct = new StockInOutProduct();
+                    $stockInOutProduct->product_id = $products[$i];
+                    $stockInOutProduct->quantity = 0;
+                }
+                $old_product_id = $stockInOutProduct->product_id;
+
+                // Update Quantity Old Stock In Out Product
+                if ($stockInOutProduct->id != null) {
+                    if ($request->type === "in") {
+                        $old_stock_to = Stock::where("warehouse_id", $old_warehouse_to_id)
+                            ->where("product_id", $old_product_id)
+                            ->where("type_warehouse", null)
+                            ->first();
+                        $old_stock_to->quantity -= $stockInOutProduct->quantity;
+                        $old_stock_to->save();
+                    } elseif ($request->type === "out") {
+                        $old_stock_from = Stock::where("warehouse_id", $old_warehouse_from_id)
+                            ->where("product_id", $old_product_id)
+                            ->where("type_warehouse", null)
+                            ->first();
+                        $old_stock_from->quantity += $stockInOutProduct->quantity;
+                        $old_stock_from->save();
+                    }
+                }
+
                 $stock_from = Stock::where("warehouse_id", $request->from_warehouse_id)
                     ->where("product_id", $products[$i])
                     ->where("type_warehouse", null)
@@ -668,54 +729,13 @@ class StockInOutController extends Controller
                     $stock_to->save();
                 }
 
-                if (isset($stock_in_out_product_id[$i])) {
-                    $stockInOutProduct = StockInOutProduct::where('id', $stock_in_out_product_id[$i])->first();
-                } else {
-                    $stockInOutProduct = new StockInOutProduct();
-                    $stockInOutProduct->quantity = 0;
-                }
-
+                // Update Quantity New Stock In Out Product
                 if ($request->type === "in") {
-                    if ($stockInOut->warehouse_to_id != $old_warehouse_to_id) {
-                        $old_stock_to = Stock::where("warehouse_id", $old_warehouse_to_id)
-                            ->where("product_id", $products[$i])
-                            ->where("type_warehouse", null)
-                            ->first();
-                        $old_stock_to->quantity -= $stockInOutProduct->quantity;
-                        $old_stock_to->save();
-                        
-                        $stock_to->quantity += $request->quantity[$i];
-                        $stock_to->save();
-                    } else {
-                        $stock_to->quantity += ($request->quantity[$i] - $stockInOutProduct->quantity);
-                        $stock_to->save();
-                    }
+                    $stock_to->quantity += $request->quantity[$i];
+                    $stock_to->save();
                 } elseif ($request->type === "out") {
-                    $check_available_stock = $stockInOut->warehouse_from_id != $old_warehouse_from_id
-                        ? $stock_from->quantity - $request->quantity[$i] >= 0
-                        : ($stock_from->quantity - ($request->quantity[$i] - $stockInOutProduct->quantity)) >= 0;
-
-                    if ($check_available_stock == true) {
-                        if ($stockInOut->warehouse_from_id != $old_warehouse_from_id) {
-                            $old_stock_from = Stock::where("warehouse_id", $old_warehouse_from_id)
-                                ->where("product_id", $products[$i])
-                                ->where("type_warehouse", null)
-                                ->first();
-                            $old_stock_from->quantity += $stockInOutProduct->quantity;
-                            $old_stock_from->save();
-
-                            $stock_from->quantity -= $request->quantity[$i];
-                            $stock_from->save();
-                        } else {
-                            $stock_from->quantity -= ($request->quantity[$i] - $stockInOutProduct->quantity);
-                            $stock_from->save();
-                        }
-                    } else {
-                        // Validation Out Of Stock
-                        $arr_Hasil = [];
-                        $arr_Hasil['quantity[]'] = 'Stock ' . ($i + 1) . ' is not enough';
-                        return response()->json(['errors' => $arr_Hasil]);
-                    }
+                    $stock_from->quantity -= $request->quantity[$i];
+                    $stock_from->save();
                 }
 
                 $stockInOutProduct->stock_in_out_id = $stockInOut->id;
@@ -725,6 +745,18 @@ class StockInOutController extends Controller
                 $stockInOutProduct->quantity = $request->quantity[$i];
                 $stockInOutProduct->koli = $request->koli[$i] ?? 0;
                 $stockInOutProduct->save();
+
+                // Update Stock Out Order Detail Product
+                if ($stockInOut->order_id != null && $request->type === "out") {
+                    // Delete Order Detail Stock when different product
+                    if ($stockInOutProduct->order_detail_id != null && $old_product_id != $products[$i]) {
+                        $this->deleteOrderDetailStock($stockInOut, $stockInOutProduct);
+                    }
+                    // Add Order Detail Stock
+                    if ($stockInOutProduct->order_detail_id == null) {
+                        $this->updateOrderDetailStock($stockInOut, $stockInOutProduct, $products[$i]);
+                    }
+                }
 
                 // History Update
                 if ((isset($stock_in_out_product_id[$i]) && $stockInOutProduct->getChanges()) || !isset($stock_in_out_product_id[$i])) {
@@ -792,6 +824,11 @@ class StockInOutController extends Controller
                 }
                 $stock->save();
 
+                // Delete Order Detail Stock
+                if ($stockInOutProduct->order_detail_id != null) {
+                    $this->deleteOrderDetailStock($stockInOut, $stockInOutProduct);
+                }
+
                 // History (Stock)
                 $history["type_menu"] = "Stock (Stock In Out)";
                 $history["method"] = "Delete";
@@ -838,6 +875,52 @@ class StockInOutController extends Controller
             DB::rollBack();
 
             return response()->json(["error" => $th->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @param App\StockInOut $stockInOut
+     * @param App\StockInOutProduct $stockInOutProduct
+     */
+    public function deleteOrderDetailStock($stockInOut, $stockInOutProduct)
+    {
+        $order = Order::find($stockInOut->order_id);
+        $order_detail_id = $stockInOutProduct->order_detail_id;
+
+        OrderDetail::where('id', $order_detail_id)
+            ->where('product_id', '!=', null)
+            ->update(['stock_id' => null]);
+
+        $stockInOutProduct->order_detail_id = null;
+        $stockInOutProduct->save();
+        
+        $order_details = OrderDetail::where('id', $order_detail_id)->get();
+        (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'delivery', Auth::user()->code, json_encode($order_details));
+    }
+
+    /**
+     * @param App\StockInOut $stockInOut
+     * @param App\StockInOutProduct $stockInOutProduct
+     * @param int $product_id
+     */
+    public function updateOrderDetailStock($stockInOut, $stockInOutProduct, $product_id)
+    {
+        $order = Order::find($stockInOut->order_id);
+        $orderDetail = OrderDetail::where('order_id', $stockInOut->order_id)
+            ->where('product_id', $product_id)
+            ->where('stock_id', null)
+            ->where('type', '!=', 'upgrade')
+            ->first();
+
+        if ($orderDetail) {
+            $orderDetail->stock_id = $stockInOut->id;
+            $orderDetail->save();
+
+            $stockInOutProduct->order_detail_id = $orderDetail->id;
+            $stockInOutProduct->save();
+            
+            $order_details = OrderDetail::where('id', $orderDetail->id)->get();
+            (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'delivery', Auth::user()->code, json_encode($order_details));
         }
     }
 }
