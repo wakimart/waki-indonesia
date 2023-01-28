@@ -76,7 +76,7 @@
                 <td style="padding: 3px;" colspan="3">{{ $product['name'] }}</td>
                 <td style="padding: 3px; text-align:right;">{{ $product['quantity'] }}</td>
                 <td style="padding: 3px;" >{{ $product['status'] }}</td>
-                <td style="padding: 3px;" >{{ date('d/m/Y', strtotime($stockInOut->date)) }}</td>
+                <td style="padding: 3px;" >{{ date('d/m/Y', strtotime($product['outStockDate'])) }}</td>
             </tr>
         @endforeach
     </table>
@@ -94,12 +94,31 @@
                     @endif
                 </small>
             </td>
-            <td style="text-align: right; color: darkblue; font-style: italic; font-size: 22px; font-weight: bold;" rowspan="2">
-                LUNAS
-            </td>
+
+            @if($order->remaining_payment == 0)
+                <td style="text-align: right; color: darkblue; font-style: italic; font-size: 22px; font-weight: bold;" rowspan="2">
+                    LUNAS
+                </td>
+            @else
+                <td style="text-align: right; font-weight: : 600;">
+                    Uang Muka : Rp
+                </td>
+                <td style="text-align: right;font-weight: : 600;padding-right: 7em;width: 70px;">
+                    {{ number_format($order->down_payment) }}
+                </td>
+            @endif
         </tr>
         <tr>
             <td><small style="font-style: italic;">Printed : {{ date('d/m/Y') }} Time : {{ date('H:i:s') }}</small></td>
+
+            @if($order->remaining_payment > 0)
+                <td style="text-align: right; font-weight: : 600;">
+                    Sisa Pembayaran : Rp
+                </td>
+                <td style="text-align: right;font-weight: : 600;padding-right: 7em;width: 70px;">
+                    {{ number_format($order->remaining_payment) }}
+                </td>
+            @endif
         </tr>
     </table>
 

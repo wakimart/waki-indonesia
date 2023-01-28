@@ -440,12 +440,13 @@ class StockInOutController extends Controller
         $products = [];
         foreach ($order->orderDetail as $orderDetail) {
             $status = "OUT";
-            $quantity = $orderDetail->stock_id == $stockInOut->id ? $orderDetail->qty : 0;
+            $quantity = $orderDetail->stock_id == $stockInOut->id ? $orderDetail->qty : (isset($orderDetail->stock_id) ? $orderDetail->qty : 0);
+            $outStockDate = isset($orderDetail->stock_id) ? $orderDetail->stockInOut['date'] : $order->orderDetail->where('stock_id', '!=', null)->sortByDesc(function($item) {return strtotime($item->stockInOut->date);})->first()->stockInOut['date'];
+
             if ($orderDetail->type == "upgrade") {
                 $status = "IN-UPGRADE**";
-                if ($request->upgrade == 1) {
-                    $quantity = $orderDetail->qty;
-                }
+                $outStockDate = $order->orderDetail->where('stock_id', '!=', null)->sortBy(function($item) {return strtotime($item->stockInOut->date);})->first()->stockInOut['date'];
+                $quantity = 1;
             }
             if ($orderDetail->product_id != null) {
                 $products[] = [
@@ -453,6 +454,7 @@ class StockInOutController extends Controller
                     'name' => $orderDetail->product['name'],
                     'status' => $status,
                     'quantity' => $quantity,
+                    'outStockDate' => $outStockDate,
                 ];
             } elseif ($orderDetail->promo_id != null) {
                 foreach ($orderDetail->promo->product_list() as $promoProdList) {
@@ -461,6 +463,7 @@ class StockInOutController extends Controller
                         'name' => $promoProdList['name'],
                         'status' => $status,
                         'quantity' => $quantity,
+                        'outStockDate' => $outStockDate,
                     ];
                 }
             }
@@ -471,7 +474,7 @@ class StockInOutController extends Controller
             'stockInOut' => $stockInOut,
             'products' => $products,
         ];
-
+        
         $pdf = PDF::loadView('admin.pdf_stock_out_order', $data);
         $orderCode = isset($order['temp_no']) ? $order['temp_no'] : $order['code'];
         return $pdf->download($order->branch['code'].'_'.$orderCode.'_surat_jalan.pdf');
