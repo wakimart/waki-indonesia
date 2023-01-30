@@ -130,6 +130,8 @@ class DashboardController extends Controller
         $absentOffs["coordinator"] = AbsentOff::where('status', AbsentOff::$status['1'])
             ->whereNull('coordinator_id')->orderBy('created_at', 'desc')->get();
 
+        $ordersOutsideRegion = Order::where('active', true)->whereNotNull('request_hs_acc')->get();
+
         return view(
             "admin.dashboard",
             compact(
@@ -141,7 +143,8 @@ class DashboardController extends Controller
                 "personalHomecares",
                 "accRescheduleHS",
                 "accDeleteHS",
-                "absentOffs"
+                "absentOffs",
+                "ordersOutsideRegion"
             )
         );
     }
