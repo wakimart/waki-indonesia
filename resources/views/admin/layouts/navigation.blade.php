@@ -133,13 +133,13 @@
 @endif
 
 @if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing') || Gate::check('add-data_therapy') || Gate::check('browse-data_therapy'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' ? 'active': '' }}">
-  <a class="nav-link" data-toggle="collapse" href="#masterData-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' ? 'true': '' }}" aria-controls="masterData-dd">
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' ? 'active': '' }}">
+  <a class="nav-link" data-toggle="collapse" href="#masterData-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' ? 'true': '' }}" aria-controls="masterData-dd">
     <span class="menu-title">Master Data</span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-table-edit menu-icon"></i>
   </a>
-  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' ? 'show': '' }}" id="masterData-dd">
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' ? 'show': '' }}" id="masterData-dd">
     <ul class="nav flex-column">
 
 		@if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing'))
@@ -181,6 +181,20 @@
 		    </ul>
 		  </div>
 		</li>
+		@endif
+
+		@if(Gate::check('add-data_sourcing'))
+		<li class="{{isset($menu_item_page) && $menu_item_page == 'data_stock'? 'active': '' }} nav-item">
+			<a class="nav-link" data-toggle="collapse" href="#data_stock-dd" aria-expanded="false" aria-controls="data_stock-dd">
+			  <span class="menu-title">Data Stock</span>
+			  <i class="menu-arrow"></i>
+			</a>
+			<div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_stock'? 'show': '' }}" id="data_stock-dd">
+			  <ul class="nav flex-column sub-menu">
+				<li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'import_data_stock'? 'active': '' }}" href="{{route('import_data_stock')}}">Import Data</a></li>
+			  </ul>
+			</div>
+		  </li>
 		@endif
 
 	</ul>

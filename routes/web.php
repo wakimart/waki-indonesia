@@ -1285,6 +1285,18 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
     });
 
+    Route::group(["prefix" => "data_stock", "middleware" => "auth"], function () {
+        // Form Import Data Stock
+        Route::get('/import_data_stock', 'DataStockController@importDataStock')
+            ->name('import_data_stock')
+            ->middleware('can:add-data_sourcing');
+        
+        // Create Import Data Stock
+        Route::post('/import_data_stock', 'DataStockController@storeImportDataStock')
+            ->name('store_import_data_stock')
+            ->middleware('can:add-data_sourcing');
+    });
+
     Route::group(["prefix" => "submission_form", "middleware" => "auth"], function () {
         // Convert Link_HS in ReferenceSouvenirs to JSON
         Route::get("/converths", "SubmissionController@convertHsToForeign")
