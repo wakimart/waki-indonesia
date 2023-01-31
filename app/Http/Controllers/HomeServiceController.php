@@ -1561,7 +1561,6 @@ class HomeServiceController extends Controller
 
     public function accNotif(Request $request)
     {
-        return response()->json($request->all());
         $fcm_tokenNya = [];
         $userNya = User::where('users.fmc_token', '!=', null)
                     ->whereIn('role_users.role_id', [1,2,7])
@@ -1617,7 +1616,6 @@ class HomeServiceController extends Controller
 
     public function accRescheduleNotif(Request $request)
     {
-        return response()->json($request->all());
         $resc_acc = $request->date." ".$request->time;
 
         $homeserviceNya = HomeService::find($request->id);

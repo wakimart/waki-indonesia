@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class HomeService extends Model
 {
-    static $cancelTemplates = ['A. ' => 'alasan cancel A Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id impedit harum iusto illo a! Aliquid placeat nisi repellat at doloribus mollitia. Aspernatur ea rerum voluptate alias. Pariatur voluptate autem rem!', 'B. ' => 'cancel B', 'C. ' => 'cancel hs alasan C', 'Other' => ''];
-    static $rescheduleTemplates = ['A. ' => 'alasan reschedule A Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id impedit harum iusto illo a! Aliquid placeat nisi repellat at doloribus mollitia. Aspernatur ea rerum voluptate alias. Pariatur voluptate autem rem!', 'B. ' => 'reschedule B', 'C. ' => 'reschedule hs alasan C', 'Other' => ''];
+    static $cancelTemplates = ['A. ' => 'Customer sudah di closing', 'B. ' => 'Customer tidak berminat', 'C. ' => 'Customer keluar kota', 'D. ' => 'Customer sakit', 'Other' => ''];
+    static $rescheduleTemplates = ['A. ' => 'Customer keluar kota', 'B. ' => 'Customer sakit', 'Other' => ''];
 
     protected $fillable = [
         'code', 'no_member', 'name', 'address', 'phone', 'city', 'cso_id', 'branch_id', 'cso_phone', 'appointment', 'cso2_id', 'active', 'cash', 'cash_description', 'description', 'type_customer', 'type_homeservices', 'distric', 'province','image', 'personalhomecare_id',

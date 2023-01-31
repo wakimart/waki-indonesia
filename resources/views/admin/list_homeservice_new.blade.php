@@ -1234,8 +1234,8 @@ $menu_item_second = "list_homeservice";
                     <ul class="cancel-template">
                         @foreach($rescheduleTemplates as $index => $val)
                             <li>
-                                <input type="radio" id="{{$index}}" name="reschedule_template" value="{{$index.$val}}"/>
-                                <label for="{{$index}}">{{strlen($index . $val) > 40 ? substr($index . $val,0,40)."..." : $index . $val}}</label>
+                                <input type="radio" id="reschedule_{{$index}}" name="reschedule_template" value="{{$index.$val}}"/>
+                                <label for="reschedule_{{$index}}">{{strlen($index . $val) > 40 ? substr($index . $val,0,40)."..." : $index . $val}}</label>
                             </li>
                         @endforeach
                     </ul>
@@ -1295,8 +1295,8 @@ $menu_item_second = "list_homeservice";
                     <ul class="cancel-template">
                         @foreach($cancelTemplates as $index => $val)
                             <li>
-                                <input type="radio" id="{{$index}}" name="cancel_template" value="{{$index.$val}}"/>
-                                <label for="{{$index}}">{{strlen($index . $val) > 40 ? substr($index . $val,0,40)."..." : $index . $val}}</label>
+                                <input type="radio" id="cancel_{{$index}}" name="cancel_template" value="{{$index.$val}}"/>
+                                <label for="cancel_{{$index}}">{{strlen($index . $val) > 40 ? substr($index . $val,0,40)."..." : $index . $val}}</label>
                             </li>
                         @endforeach
                     </ul>
