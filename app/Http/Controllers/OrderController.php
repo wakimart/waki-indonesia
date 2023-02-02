@@ -806,12 +806,16 @@ class OrderController extends Controller
             $order = Order::find($request->input('orderId'));
             $dataBefore = Order::find($request->input('orderId'));
             $orderDetailOlds = OrderDetail::where('order_id', $order['id'])->get();
+            $orderPaymentOlds = OrderPayment::where('order_id', $order['id'])->get();
             $last_status_order = $order->status;
             $order->status = $request->input('status_order');
             
             // Save Delivery CSO
             $checkDeliveredOrderDetail = OrderDetail::where('order_id', $order['id'])->where('home_service_id', null)->where('offline_stock_id', '!=', null)->count() > 0;
-            if ($order->status == Order::$status['3'] && $checkDeliveredOrderDetail == true) {
+            if ($order->status == Order::$status['2'] && $request->optional_order_code != null) {
+                $optional_order_code = Order::where('code', $request->optional_order_code)->first();
+                $order->order_id = $optional_order_code['id'] ?? null;
+            } else if ($order->status == Order::$status['3'] && $checkDeliveredOrderDetail == true) {
                 // $order->delivery_cso_id = json_encode($request->delivery_cso_id);
                 if ($request->delivery_cso_id != null && $request->home_service_id != null) {
                     $orderDetailHS = OrderDetail::where([['order_id', $order['id']], ['offline_stock_id', '!=', null], ['home_service_id', null]])->groupBy('offline_stock_id')->first();
@@ -846,11 +850,14 @@ class OrderController extends Controller
                     }
                 }
                 $order->delivered_image = json_encode($arrImage);
+            } else if ($order->status == Order::$status['5']) {
+                OrderPayment::Where('order_id', $order->id)->update(['status' => 'rejected']);
+                $order->reject_reason = $request->reject_reason;
             }
             $order->save();
             
             $dataChanges = array_diff(json_decode($order, true), json_decode($dataBefore, true));
-            $childs = ["orderDetail" => $orderDetailOlds];
+            $childs = ["orderDetail" => $orderDetailOlds, 'orderPayment' => $orderPaymentOlds];
             foreach ($childs as $key => $child) {
                 $orderChild = $order->$key->keyBy('id');
                 $child = $child->keyBy('id');
@@ -2381,5 +2388,17 @@ class OrderController extends Controller
             ->first();
 
         return response()->json(["data" => $customer]);
+    }
+
+    public function checkOrderCode(Request $request)
+    {
+        if ($request->optional_order_code != null) {
+            $order = Order::where('code', $request->optional_order_code)->first();
+            if ($order) {
+                return response()->json(["data" => $order], 200);
+            }
+        }
+
+        return response()->json(["errors" => "Order Code is Invalid."], 404);
     }
 }

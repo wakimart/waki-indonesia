@@ -457,6 +457,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/export_order_report_cso', 'OrderController@admin_ExportOrderReportCso')
             ->name('admin_export_order_report_cso')
             ->middleware('can:browse-order_report_cso');
+        
+        Route::get('/check_order_code', 'OrderController@checkOrderCode')
+            ->name('check_order_code');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {

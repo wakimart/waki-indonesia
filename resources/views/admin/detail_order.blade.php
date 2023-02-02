@@ -58,6 +58,49 @@
         background-color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
     }
+
+    .cancel-template {
+        list-style-type: none;
+        margin: 25px 0 0 0;
+    }
+    .cancel-template li {
+        margin: 0 5px 0 0;
+        width: auto;
+        height: 45px;
+        position: relative;
+    }
+    .cancel-template label,
+    .cancel-template input {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    .cancel-template input[type="radio"] {
+        opacity: 0.01;
+        z-index: 100;
+    }
+    .cancel-template input[type="radio"]:checked+label,
+    .Checked+label {
+        background: #2ecc71;
+    }
+    .cancel-template label {
+        padding: 5px;
+        border: 1px solid #CCC;
+        cursor: pointer;
+        z-index: 90;
+    }
+    .cancel-template label:hover {
+        background: #DDD;
+    }
+    
+    .ellipsis {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 </style>
 @endsection
 
@@ -296,6 +339,11 @@
                             @endif
                         </td>
                     </tr>
+                    @if($order['order_id'] != null)
+                    <tr>
+                        <td>Optional Order Code: <a href="{{ route('detail_order') }}?code={{ $order->order['code'] }}">{{ $order->order['code'] }}</a></td>
+                    </tr>
+                    @endif
                     @if (count($csoDeliveryOrders) > 0 && ($orderDetailHs->count() < 0 && $orderDetailNoHs->count() < 0))
                     <tr>
                         <td>Cso Delivery Order : </td>
@@ -358,6 +406,11 @@
                         </td>
                     </tr>
                     @endif
+                    @if ($order['status'] == \App\Order::$status['5'] && $order->reject_reason != null)
+                        <tr>
+                            <td class="text-danger">{{ $order->reject_reason }}</td>
+                        </tr>
+                    @endif
                     @if (Gate::check('change-status_order'))
                         <tr>
                             <td>
@@ -389,7 +442,7 @@
                                         Success Order
                                     </button>
                                     @endif
-                                    @if (($order['status'] == \App\Order::$status['1'] || $order['status'] == \App\Order::$status['2']) && Gate::check('change-status_order_reject'))
+                                    @if (($order['status'] == \App\Order::$status['1'] || $order['status'] == \App\Order::$status['2'] || $order['status'] == \App\Order::$status['3']) && Gate::check('change-status_order_reject'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['5']}}"
                                         class="btn btn-gradient-danger mr-2 btn-change-status-order">
                                         Reject Order
@@ -559,7 +612,7 @@
                 tabindex="-1"
                 role="dialog"
                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered @if($order['status'] == \App\Order::$status['2']) modal-xl @endif" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <form id="actionAdd"
                             class="forms-sample"
@@ -578,8 +631,17 @@
                             <div class="modal-body">
                                 <h5 id="modal-change-status-question" class="modal-title text-center">Process This Order?</h5>
                                 <hr>
+                                {{-- Order Code Optional --}}
+                                @if ($order['status'] == \App\Order::$status['1'] && Gate::check('change-status_order_process'))
+                                    <div id="process-order_code">
+                                        <div class="form-group">
+                                            <label>Order Code (Optional)</label>
+                                            <input type="text" id="optional_order_code" name="optional_order_code" class="form-control">
+                                            <div id="msg_optional_order_code" style="font-size: 9pt;"></div>
+                                        </div>
+                                    </div>
                                 {{-- Pilih Product Untuk Stock --}}
-                                @if ($order['status'] == \App\Order::$status['2'] && false)
+                                @elseif ($order['status'] == \App\Order::$status['2'] && false)
                                     <div id="request-stock">
                                         <table class="w-100 table-responsive">
                                             <thead>
@@ -706,6 +768,26 @@
                                                 </div>
                                             @endfor
                                         </div>
+                                    </div>
+                                @endif
+
+                                {{-- Reject Order --}}
+                                @if (($order['status'] == \App\Order::$status['1'] || $order['status'] == \App\Order::$status['2'] || $order['status'] == \App\Order::$status['3']) && Gate::check('change-status_order_reject'))
+                                    <div id="reject_template_reason">
+                                        <ul class="cancel-template">
+                                            @foreach(\App\Order::$rejectTemplates as $index => $val)
+                                                <li>
+                                                    <input type="radio" id="reject_{{$index}}" name="reject_template" value="{{$index.$val}}"/>
+                                                    <label for="reject_{{$index}}">{{strlen($index . $val) > 40 ? substr($index . $val,0,40)."..." : $index . $val}}</label>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                        <textarea class="form-control mt-3 d-none"
+                                            name="reject_reason"
+                                            id="reject_reason"
+                                            rows="5"
+                                            required
+                                            placeholder="Reject Reason (Alasan Reject)"></textarea>
                                     </div>
                                 @endif
                             </div>
@@ -1284,6 +1366,8 @@
         var statusOrder = "{{ $order['status'] }}";
         $(".btn-change-status-order").click(function(){
             statusOrder = $(this).attr('status-order');
+            $("#btn-edit-status-order").attr('disabled', false);
+            $("#process-order_code").hide();
             $('#delivery-cso').hide();
             $('#request-stock').hide();
             $('#delivered-image').hide();
@@ -1292,8 +1376,12 @@
             $('.addDelivered-productimg').attr('disabled', true);
             $('#home-service-id').hide();
             $('.home-service-id').attr('disabled', true);
+            $("#reject_template_reason").hide();
+            $("#reject_reason").attr('disabled', true);
             $('#status-order').val(statusOrder);
             if (statusOrder == "{{\App\Order::$status['2']}}") {
+                $("#process-order_code").show();
+                $("#optional_order_code").trigger("input");
                 $("#modal-change-status-question").html('Process This Order?');
             } else if (statusOrder == "{{\App\Order::$status['6']}}")  {
                 $('#request-stock').show();
@@ -1312,7 +1400,42 @@
             } else if (statusOrder == "{{\App\Order::$status['4']}}") { 
                 $("#modal-change-status-question").html('Success This Order?');
             } else if (statusOrder == "{{\App\Order::$status['5']}}") {
+                $("#reject_template_reason").show();
+                $("#reject_reason").attr('disabled', false);
                 $("#modal-change-status-question").html('Reject This Order?');
+            }
+        });
+
+        var debounce;
+        $(document).on('input', "#optional_order_code", function() {
+            var optional_order_code = $(this).val();
+            clearTimeout(debounce);
+            if (optional_order_code != "") {
+                debounce = setTimeout(() => {
+                    $.ajax({
+                        method: "GET",
+                        url: "{{ route('check_order_code') }}",
+                        data: {optional_order_code},
+                        beforeSend: function() {
+                            $("#btn-edit-status-order").attr('disabled', true);
+                            $("#msg_optional_order_code").html("");
+                        },
+                        success: function(res) {
+                            if (res.data != null) {
+                                $("#msg_optional_order_code").css("color", "green");
+                                $("#msg_optional_order_code").html("Order Code is valid.");
+                                $("#btn-edit-status-order").attr('disabled', false);
+                            }
+                        },
+                        error: function(xhr) {
+                            $("#msg_optional_order_code").css("color", "red");
+                            $("#msg_optional_order_code").html(xhr.responseJSON.errors);
+                        },
+                    });
+                }, 300);
+            } else {
+                $("#msg_optional_order_code").html("");
+                $("#btn-edit-status-order").attr('disabled', false);
             }
         });
 
@@ -1431,6 +1554,14 @@
             $(this).parents(".form-homeservice-cso")[0].remove();
         });
 
+        $('input[type=radio][name=reject_template]').change(function() {
+            if(this.value == "Other"){
+                $('#reject_reason').removeClass('d-none').val('')
+            }else{
+                $('#reject_reason').addClass('d-none').val(this.value)
+            }
+        });
+
         function numberWithCommas(x) {
             var parts = x.toString().split(".");
             parts[0] = parts[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -1500,7 +1631,7 @@
                                 .css('background-image', 'url(' + mainUrlImage + "/" +image + ')');
                         });
 
-                        @if (Gate::check('change-status_payment'))
+                        @if ($order['status'] != \App\Order::$status['5'] && Gate::check('change-status_payment'))
                         if (result.status != "verified") {
                             $("#updateStatusPayment-order_payment_id").val(order_payment_id);
                             $("#divUpdateStatusPayment").show();
@@ -1683,25 +1814,45 @@
                 for(var i = 0; i < order.delivered_image.length; i++){
                     order['delivered_image_file_'+i] = `{{ asset('sources/order/${order.delivered_image[i]}') }}`;
                 }
-                // $('#actionAdd').submit();
 
-                $.ajax({
-                    method: "post",
-                    url: `${urlOffline}/api/replicate-order-data`,
-                    data: order,
-                    beforeSend: function() {
-                        $('#btn-edit-status-order').html('loading...');
-                        $('#btn-edit-status-order').attr('disabled', true);
-                    },
-                    success: function(res){
-                        if(res.status == 'success'){
-                            $('#actionAdd').submit();
-                        }else{
+                if (order.status == "{{\App\Order::$status['5']}}" && "1" == "{{ $order['status'] == \App\Order::$status['1'] }}") {
+                    // Reject New Order
+                    $('#actionAdd').submit();
+                } else {
+                    $.ajax({
+                        method: "post",
+                        url: `${urlOffline}/api/replicate-order-data`,
+                        data: order,
+                        beforeSend: function() {
+                            $('#btn-edit-status-order').html('loading...');
+                            $('#btn-edit-status-order').attr('disabled', true);
+                        },
+                        success: function(res){
+                            if(res.status == 'success'){
+                                $('#actionAdd').submit();
+                            }else{
+                                var modal = `
+                                    <div class="modal-body">
+                                        <h5 class="modal-title text-center">${res.status}</h5>
+                                        <hr>
+                                        <p class="text-center">${res.message}</p>
+                                    </div>
+                                `
+                                $('#modal-change-status').modal("hide")
+                                $('.modal-backdrop').remove();
+                                $('#error-modal-desc').html(modal)
+                                $('#error-modal').modal("show")
+
+                                $('#btn-edit-status-order').html('Yes');
+                                $('#btn-edit-status-order').attr('disabled', false);
+                            }
+                        },
+                        error: function(xhr){
                             var modal = `
                                 <div class="modal-body">
-                                    <h5 class="modal-title text-center">${res.status}</h5>
+                                    <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
                                     <hr>
-                                    <p class="text-center">${res.message}</p>
+                                    <p class="text-center">${xhr.responseJSON.message}</p>
                                 </div>
                             `
                             $('#modal-change-status').modal("hide")
@@ -1712,25 +1863,9 @@
                             $('#btn-edit-status-order').html('Yes');
                             $('#btn-edit-status-order').attr('disabled', false);
                         }
-                    },
-                    error: function(xhr){
-                        var modal = `
-                            <div class="modal-body">
-                                <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
-                                <hr>
-                                <p class="text-center">${xhr.responseJSON.message}</p>
-                            </div>
-                        `
-                        $('#modal-change-status').modal("hide")
-                        $('.modal-backdrop').remove();
-                        $('#error-modal-desc').html(modal)
-                        $('#error-modal').modal("show")
 
-                        $('#btn-edit-status-order').html('Yes');
-                        $('#btn-edit-status-order').attr('disabled', false);
-                    }
-
-                })
+                    })  
+                }
             })
             return false
         });

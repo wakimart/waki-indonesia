@@ -22,9 +22,11 @@ class Order extends Model
         '4' => 'success', 
         '5' => 'reject', 
     ];
+    static $rejectTemplates = ['A. ' => 'Template A', 'B. ' => 'Template B', 'Other' => ''];
 
     protected $fillable = [
-        'code', 'no_member', 'name', 'address', 'phone', 'cash_upgrade', 'payment_type', 'total_payment', 'down_payment', 'remaining_payment', 'customer_type', 'description', '30_cso_id', '70_cso_id', 'cso_id', 'branch_id', 'city', 'active','orderDate', 'distric', 'province', 'know_from', 'status', 'delivery_cso_id', 'temp_no', 'request_hs_acc', 'request_hs', 'home_service_id', 'delivered_image', 'request_hs_cso_acc'
+        'code', 'no_member', 'name', 'address', 'phone', 'cash_upgrade', 'payment_type', 'total_payment', 'down_payment', 'remaining_payment', 'customer_type', 'description', '30_cso_id', '70_cso_id', 'cso_id', 'branch_id', 'city', 'active','orderDate', 'distric', 'province', 'know_from', 'status', 'delivery_cso_id', 'temp_no', 'request_hs_acc', 'request_hs', 'home_service_id', 'delivered_image', 'request_hs_cso_acc',
+        'reject_reason', 'order_id',
     ];
     public $sortable = [
         'name', 'code', 'created_at', 'name', 'orderDate',
@@ -53,6 +55,10 @@ class Order extends Model
     public function homeService()
     {
         return $this->belongsTo('App\HomeService');
+    }
+    public function order()
+    {
+        return $this->belongsTo('\App\Order');
     }
     public function orderDetail()
     {
