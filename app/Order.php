@@ -25,6 +25,7 @@ class Order extends Model
 
     protected $fillable = [
         'code', 'no_member', 'name', 'address', 'phone', 'cash_upgrade', 'payment_type', 'total_payment', 'down_payment', 'remaining_payment', 'customer_type', 'description', '30_cso_id', '70_cso_id', 'cso_id', 'branch_id', 'city', 'active','orderDate', 'distric', 'province', 'know_from', 'status', 'delivery_cso_id', 'temp_no', 'deivered_image',
+        'reject_stock_id'
     ];
     public $sortable = [
         'name', 'code', 'created_at', 'name', 'orderDate',
@@ -61,6 +62,10 @@ class Order extends Model
     public function stockOrderRequest()
     {
         return $this->hasOne('\App\StockOrderRequest');
+    }
+    public function rejectStock()
+    {
+        return $this->hasOne('\App\StockInOut', 'id', 'reject_stock_id');
     }
     public function getCSO()
     {

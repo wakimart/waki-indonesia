@@ -31,6 +31,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 use App\CreditCard;
 use App\BankAccount;
 use App\Http\Controllers\Api\OfflineSideController;
+use App\TotalSale;
 
 class OrderController extends Controller
 {
@@ -773,6 +774,7 @@ class OrderController extends Controller
             $order = Order::find($request->input('orderId'));
             $dataBefore = Order::find($request->input('orderId'));
             $orderDetailOlds = OrderDetail::where('order_id', $request->input('orderId'))->get();
+            $orderPaymentOlds = OrderPayment::where('order_id', $request->input('orderId'))->get();
             $last_status_order = $order->status;
             $order->status = $request->input('status_order');
             
@@ -787,11 +789,22 @@ class OrderController extends Controller
                 // Update Order Detail Online stock
                 $order_details = OrderDetail::whereIn('id', $request->orderDetail_product)->get();
                 (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'delivery', Auth::user()->code, json_encode($order_details));
+            } else if ($order->status == Order::$status['5']) {
+                // Order Reject
+                OrderPayment::Where('order_id', $order->id)->update(['status' => 'rejected']);
+                $orderPayments = OrderPayment::where('order_id', $order->id)->get();
+                TotalSale::whereIn('order_payment_id', $orderPayments->pluck('id')->toArray())->delete();
+                
+                // Stock In
+                if (count($request->orderDetail_product ?? []) > 0) {
+                    $stockInOut = (new StockInOutController)->storeOutFromOrder($request, $order);
+                    $order->reject_stock_id = $stockInOut->id;
+                }
             }
             $order->save();
 
             $dataChanges = array_diff(json_decode($order, true), json_decode($dataBefore, true));
-            $childs = ["orderDetail" => $orderDetailOlds];
+            $childs = ["orderDetail" => $orderDetailOlds, "orderPayment" => $orderPaymentOlds];
             foreach ($childs as $key => $child) {
                 $orderChild = $order->$key->keyBy('id');
                 $child = $child->keyBy('id');

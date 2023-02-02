@@ -342,16 +342,24 @@ class StockInOutController extends Controller
 
     public function storeOutFromOrder($request, $order)
     {
-        if ($request->to_warehou_type == null && $request->to_warehouse_id == null) {
-            throw new \Exception('To Warehouse can\'t be empty.');
+        $code_warehouse_type = "";
+        if ($request->type === "in") {
+            if ($request->from_warehouse_type == null && $request->from_warehouse_id == null) {
+                throw new \Exception('From Warehouse can\'t be empty.');
+            }
+            $code_warehouse_type = $request->from_warehouse_type;
+        } elseif ($request->type === "out") {
+            if ($request->to_warehouse_type == null && $request->to_warehouse_id == null) {
+                throw new \Exception('To Warehouse can\'t be empty.');
+            }
+            $code_warehouse_type = $request->to_warehouse_type;
         }
-        
         // Generate Code
         $getGenerateCode = $this->generateCode(new Request([
             'type' => $request->type,
             'date' => $request->date,
-            'warehouse_type' => $request->to_warehouse_type,
-        ]));
+            'warehouse_type' => $code_warehouse_type,
+        ])); 
         $code = json_decode($getGenerateCode->getContent(), true)['data'];
 
         $stockInOut = new StockInOut();
