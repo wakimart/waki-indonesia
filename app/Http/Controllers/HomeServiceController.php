@@ -620,12 +620,20 @@ class HomeServiceController extends Controller
             "h.id"
         )
         ->leftJoin(
+            "order_homeservices as oh",
+            "oh.home_service_id",
+            "=",
+            "h.id"
+        )
+        ->leftJoin(
             "orders AS o",
             function ($join){
                 $join->orOn('od.order_id', '=', 'o.id');
                 $join->orOn('o.home_service_id', '=', 'h.id');
+                $join->orOn('oh.order_id', '=', 'o.id');
             }
         )
+        ->groupBy("h.id")
         ->where("h.active", true);
 
         if ($isAdminManagement) {

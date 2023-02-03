@@ -20,6 +20,7 @@ use App\OrderPayment;
 use App\Promo;
 use App\Product;
 use App\Utils;
+use App\OrderHomeservice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -397,13 +398,14 @@ class OrderController extends Controller
     {
         $csos = Cso::where('active', true)->orderBy('code')->get();
         $banks = Bank::all();
+        $products = Product::where('active', true)->orderBy("code")->get();
         $order = Order::where('code', $request['code'])->first();
         $csoDeliveryOrders = Cso::whereIn('id', json_decode($order['delivery_cso_id']) ?? [])->get();
         $order['district'] = $order->getDistrict();
         $historyUpdateOrder = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
         ->select('history_updates.method', 'history_updates.created_at','history_updates.meta as meta' ,'users.name as name')
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
-        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders'));
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'products', 'csoDeliveryOrders'));
     }
 
     /**
@@ -808,14 +810,43 @@ class OrderController extends Controller
             $order->status = $request->input('status_order');
             
             // Save Delivery CSO
-            $checkDeliveredOrderDetail = OrderDetail::where('order_id', $order['id'])->where('delivery_cso_id', null)->count() > 0;
+            $checkDeliveredOrderDetail = OrderDetail::where('order_id', $order['id'])->where('home_service_id', null)->where('offline_stock_id', '!=', null)->count() > 0;
             if ($order->status == Order::$status['3'] && $checkDeliveredOrderDetail == true) {
                 // $order->delivery_cso_id = json_encode($request->delivery_cso_id);
-
                 if ($request->delivery_cso_id != null && $request->home_service_id != null) {
-                    OrderDetail::where('home_service_id', $request->home_service_id)->update(['delivery_cso_id' => json_encode($request->delivery_cso_id)]);
+                    $orderDetailHS = OrderDetail::where([['order_id', $order['id']], ['offline_stock_id', '!=', null], ['home_service_id', null]])->groupBy('offline_stock_id')->first();
+                    OrderDetail::where('offline_stock_id', $orderDetailHS['offline_stock_id'])->update(['delivery_cso_id' => json_encode($request->delivery_cso_id), 'home_service_id' => $request->home_service_id]);
+                    OrderHomeservice::where([['order_id', $request->orderId], ['home_service_id', $request->home_service_id]])->update(['delivery' => true]);
                 }
-            }        
+            } else if ($order->status == Order::$status['8']) {
+                // Save Delivered Image
+                // save image
+                $arrImage = [];
+                $idxImg = 1;
+                for ($i = 0; $i < 3; $i++) {
+                    if ($request->hasFile('images_' . $i)) {
+                        $path = "sources/order";
+                        $file = $request->file('images_' . $i);
+                        $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $idxImg . "_delivered_order." . $file->getClientOriginalExtension();
+
+                        // Cek ada folder tidak
+                        if (!is_dir($path)) {
+                            File::makeDirectory($path, 0777, true, true);
+                        }
+
+                        //compressed img
+                        $compres = Image::make($file->getRealPath());
+                        $compres->resize(540, null, function ($constraint) {
+                            $constraint->aspectRatio();
+                        })->save($path.'/'.$fileName);
+
+                        //array_push($data['image'], $fileName);
+                        $arrImage[] = $fileName;
+                        $idxImg++;
+                    }
+                }
+                $order->delivered_image = json_encode($arrImage);
+            }
             $order->save();
             
             $dataChanges = array_diff(json_decode($order, true), json_decode($dataBefore, true));
@@ -862,7 +893,174 @@ class OrderController extends Controller
         }
     }
 
+    public function updateDeliveredImage(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $order = Order::find($request->input('order_id'));
+            $dataBefore = Order::find($request->input('order_id'));
+            
+            // save image
+            $arrImage = [];
+            $idxImg = 1;
+            for ($i = 0; $i < 3; $i++) {
+                $orderDeliveredImages = json_decode($order->delivered_image, true) ?? [];
+                // Jika Hapus Gambar Lama
+                if (isset($orderDeliveredImages[$i]) && $request->input('dltimg-'.$i) != null) {
+                    if (File::exists("sources/order/" . $orderDeliveredImages[$i])) {
+                        File::delete("sources/order/" . $orderDeliveredImages[$i]);
+                    }
+                    unset($orderDeliveredImages[$i]);
+                }
+                if ($request->hasFile('images_' . $i)) {
+                    $path = "sources/order";
+
+                    // Hapus Img Lama Jika Update Image
+                    if (isset($orderDeliveredImages[$i])) {
+                        if (File::exists("sources/order/" . $orderDeliveredImages[$i])) {
+                            File::delete("sources/order/" . $orderDeliveredImages[$i]);
+                        }
+                    }
+
+                    $file = $request->file('images_' . $i);
+                    $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $idxImg . "_delivered_order." . $file->getClientOriginalExtension();
+
+                    // Cek ada folder tidak
+                    if (!is_dir($path)) {
+                        File::makeDirectory($path, 0777, true, true);
+                    }
+
+                    //compressed img
+                    $compres = Image::make($file->getRealPath());
+                    $compres->resize(540, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->save($path.'/'.$fileName);
+
+                    //array_push($data['image'], $fileName);
+                    $arrImage[] = $fileName;
+                    $idxImg++;
+                } else if (isset($orderDeliveredImages[$i])) {
+                    $arrImage[] = $orderDeliveredImages[$i];
+                    $idxImg++;
+                }
+            }
+            $order->delivered_image = json_encode($arrImage);
+            $order->save();
+            
+            $user = Auth::user();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Update Order Delivered Image";
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> array_diff(json_decode($order, true), json_decode($dataBefore,true))
+            ]);
+
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $order->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+            
+            DB::commit();
+            return redirect()->back()->with('success', 'Bukti Order Delivered Berhasil Di Ubah');
+        }catch(\Exception $ex){
+            DB::rollback();
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
     public function orderHS(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $order = Order::find($request->input('orderId'));
+            $dataBefore = Order::find($request->input('orderId'));
+            $orderDetailOlds = OrderDetail::where('order_id', $order['id'])->get();
+
+            $checkRegionOrder = in_array($order['distric'], Branch::where('id', $order->branch_id)->first()->regionDistrict()['district']);
+            if ($request->index_order_home_service != null) {
+                $getAppointment = json_decode($order['request_hs'], true)[$request->index_order_home_service];
+            } else if ($request->request_hs_date && $request->request_hs_time) {
+                $getAppointment = $request->request_hs_date." ".$request->request_hs_time;
+            }
+
+            if ($checkRegionOrder == false) {
+                // Request Acc Home Service
+                $order->update(['request_hs_acc' => $getAppointment, 'request_hs_cso_acc' => $request->homeservice_cso_id ? json_encode($request->homeservice_cso_id) : null]);
+            } else {
+                // Add Home Delivery
+                $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, $request->index_order_home_service, $getAppointment, $request->homeservice_cso_id);
+                OrderHomeservice::create(['order_id' => $order->id, 'home_service_id' => $homeservice->id]);
+            }
+
+            if ($request->index_order_home_service != null) {
+                // Remove Used Request Home Service
+                $request_hs = json_decode($order->request_hs, true);
+                if(isset($request_hs[$request->index_order_home_service])) unset($request_hs[$request->index_order_home_service]);
+                $order['request_hs'] = json_encode(array_values($request_hs));
+                $order->save();
+            }
+
+            $dataChanges = array_diff(json_decode($order, true), json_decode($dataBefore, true));
+                        
+            $user = Auth::user();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Add Order HS";
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> $dataChanges
+            ]);
+
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $order->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+            
+            DB::commit();
+            return redirect()->back()->with('success', 'Order Home Service berhasil Di simpan');
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
+    public function accOrderHs(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $order = Order::find($request->input('orderId'));
+            $status_acc = $request->status_acc;
+            $getAppointment = $request->appointment;
+            if ($status_acc == "true") {
+                // Add Home Delivery
+                $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, $order->request_hs_cso_acc == null, $getAppointment, json_decode($order->request_hs_cso_acc, true));
+                OrderHomeservice::create(['order_id' => $order->id, 'home_service_id' => $homeservice->id]);
+                $order->update(['request_hs_acc' => null, 'request_hs_cso_acc' => null]);
+            } else {
+                $order->update(['request_hs_acc' => null, 'request_hs_cso_acc' => null]);
+            }
+
+            $user = Auth::user();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Acc Order HS";
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> ["status_acc" => $status_acc, "appointment" => $getAppointment]
+            ]);
+
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $order->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Status Acc '. ($status_acc == "true" ? 'Approve' : 'Reject') . ' berhasil Di simpan');
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return redirect()->back()->withErrors($ex->getMessage());
+        }
+    }
+
+    public function orderHS_old(Request $request)
     {
         DB::beginTransaction();
         try{
@@ -941,8 +1139,9 @@ class OrderController extends Controller
         }
     }
 
-    public function accOrderHs(Request $request)
+    public function accOrderHs_old(Request $request)
     {
+        dd($request->all());
         DB::beginTransaction();
         try {
             $order = Order::find($request->input('orderId'));
@@ -1386,6 +1585,7 @@ class OrderController extends Controller
             AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "'
             OR o.status = '" . Order::$status['3'] . "' 
+            OR o.status = '" . Order::$status['8'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(op.total_payment) 
             FROM order_payments as op
@@ -1396,6 +1596,7 @@ class OrderController extends Controller
             AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         // $query_total_sale_untilYesterday = "SELECT SUM(o.down_payment) 
@@ -1418,7 +1619,7 @@ class OrderController extends Controller
             ->select('b.*')
             ->selectRaw("($query_total_sale_untilYesterday) as total_sale_untilYesterday")
             ->selectRaw("($query_total_sale_today) as total_sale_today")
-            ->where('active', true)->orderBy('code')->get();
+            ->where('active', true)->orderBy('total_sale_untilYesterday', 'DESC')->get();
         $countOrderReports = $order_reports->count();
 
         return view('admin.list_orderreport', compact('startDate', 'endDate', 'order_reports', 'countOrderReports'));
@@ -1448,6 +1649,7 @@ class OrderController extends Controller
             AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "'
             OR o.status = '" . Order::$status['3'] . "' 
+            OR o.status = '" . Order::$status['8'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(op.total_payment) 
             FROM order_payments as op
@@ -1458,6 +1660,7 @@ class OrderController extends Controller
             AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         $currentBranch = null;
@@ -1512,6 +1715,7 @@ class OrderController extends Controller
         $order_reports = $order_reports->where(function($query) {
                 $query->where('orders.status', Order::$status['2'])
                     ->orWhere('orders.status', Order::$status['3'])
+                    ->orWhere('orders.status', Order::$status['8'])
                     ->orWhere('orders.status', Order::$status['4']);
             })
             ->where('order_payments.status', 'verified')
@@ -1541,6 +1745,7 @@ class OrderController extends Controller
             AND o.orderDate <= '$yesterdayDate'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
@@ -1548,6 +1753,7 @@ class OrderController extends Controller
             AND o.orderDate = '$endDate'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         $order_reports = Branch::from('branches as b')
@@ -1583,6 +1789,7 @@ class OrderController extends Controller
             AND o.orderDate <= '$yesterdayDate'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
@@ -1590,6 +1797,7 @@ class OrderController extends Controller
             AND o.orderDate = '$endDate'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         $currentBranch = null;
@@ -1644,6 +1852,7 @@ class OrderController extends Controller
         $order_reports = $order_reports->where(function($query) {
                 $query->where('status', Order::$status['2'])
                     ->orWhere('status', Order::$status['3'])
+                    ->orWhere('status', Order::$status['8'])
                     ->orWhere('status', Order::$status['4']);
             })
             ->orderBy('orderDate', 'desc')->get();

@@ -281,8 +281,14 @@
                                 <span class="badge badge-secondary">New</span>
                             @elseif ($order['status'] == \App\Order::$status['2'])
                                 <span class="badge badge-primary">Process</span>
+                            @elseif($order['status'] == \App\Order::$status['6'])
+                                <span class="badge" style="background-color: #FFD495">Request Stock</span>
+                            @elseif($order['status'] == \App\Order::$status['7'])
+                                <span class="badge text-white" style="background-color: #C147E9">Stock Approved</span>
                             @elseif ($order['status'] == \App\Order::$status['3'])
                                 <span class="badge badge-warning">Delivery</span>
+                            @elseif($order['status'] == \App\Order::$status['8'])
+                                <span class="badge text-white" style="background-color: #FF6E31">Delivered</span>
                             @elseif ($order['status'] == \App\Order::$status['4'])
                                 <span class="badge badge-success">Success</span>
                             @elseif ($order['status'] == \App\Order::$status['5'])
@@ -328,12 +334,35 @@
                         </td>
                     </tr>
                     @endif
+                    @if (count(json_decode($order->delivered_image, true)) > 0)
+                    <tr><td></td></tr>
+                    <tr>
+                        <td>Delivered Image : </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @foreach (json_decode($order->delivered_image, true) as $orderDeliveredImage)
+                            <a href="{{ asset("sources/order/$orderDeliveredImage") }}"
+                                target="_blank">
+                                <i class="mdi mdi-numeric-{{ $loop->iteration }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                            </a>
+                            @endforeach
+                            @if($order['status'] != \App\Order::$status['4'] && Gate::check('change-status_order') && Gate::check('change-status_order_delivered'))
+                            <button value="{{ $order['id'] }}"
+                                data-toggle="modal"
+                                data-target="#editDeliveredImageModal"
+                                class="btn btn-delete ml-2">
+                                <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                            </button>
+                            @endif
+                        </td>
+                    </tr>
+                    @endif
                     @if (Gate::check('change-status_order'))
                         <tr>
                             <td>
                                 <div class="form-group row justify-content-center">
-                                    @if( ($order['status'] == \App\Order::$status['2'] || $order['status'] == \App\Order::$status['3']) 
-                                        && $order->orderDetail->where('home_service_id', null)->where('request_hs_acc', null)->count() > 0 && Gate::check('order_hs'))
+                                    @if(($order['status'] == \App\Order::$status['2'] || $order['status'] == \App\Order::$status['3']) && !$order['request_hs_acc'] && $order->allHomeService_nonDelivery->count() < 1 && $order->orderDetail->where('type', '!=', 'upgrade')->where('home_service_id', null)->count() > 0 && Gate::check('order_hs'))
                                     <button type="button" data-toggle="modal" data-target="#modal-add-home-service"
                                         class="btn mr-2" style="background-color: #8D72E1; color: #fff">
                                         Add Order Home Service
@@ -344,12 +373,17 @@
                                         class="btn btn-gradient-success mr-2 btn-change-status-order">
                                         Process Order
                                     </button>
-                                    @elseif (($order['status'] == \App\Order::$status['2'] || $checkDeliveredOrderDetail == true) && $orderDetailHs->count() > 0 && Gate::check('change-status_order_delivery'))
+                                    @elseif (($order->allHomeService_nonDelivery->count() > 0 && $order->orderDetail->where('offline_stock_id', '!=', null)->where('home_service_id', null)->count() > 0 && Gate::check('change-status_order_delivery')) || ($order->branch['code'] == "F88" && $order['status'] == \App\Order::$status['2'] && Auth::user()->inRole("head-admin")))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}"
                                         class="btn btn-gradient-warning mr-2 btn-change-status-order">
                                         Delivery Order
                                     </button>
-                                    @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_success'))
+                                    @elseif (($order['status'] == \App\Order::$status['3'] && $order->allHomeService_nonDelivery->count() < 1 && $order->orderDetail->where('type', '!=', 'upgrade')->where('home_service_id', null)->count() < 1 && $order->orderDetail->where('type', '!=', 'upgrade')->where('offline_stock_id', null)->count() < 1 && Gate::check('change-status_order_delivered')) || (Gate::check('change-status_order_delivered') && $order['status'] == \App\Order::$status['3'] && Auth::user()->inRole("head-admin")))
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['8']}}"
+                                        class="btn mr-2 btn-change-status-order" style="background-color: #FF6E31; color: #FFF">
+                                        Delivered Order
+                                    </button>
+                                    @elseif ($order['status'] == \App\Order::$status['8'] && Gate::check('change-status_order_success'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['4']}}"
                                         class="btn btn-gradient-primary mr-2 btn-change-status-order">
                                         Success Order
@@ -377,55 +411,51 @@
             </div>
 
 
-            {{-- Acc Request Order Home Service --}}
-            @if($orderDetailReqHsAcc->count() > 0)
+            {{-- Acc Order Home Service --}}
+            @if(isset($order['request_hs_acc']))
                 <div class="row justify-content-center" style="margin-top: 2em;">
-                    <h2>Acc Request Order Home Service</h2>
+                    <h2>Acc Order Home Service</h2>
                 </div>
                 <div class="row justify-content-center">
                     <div class="table-responsive">
                         <table class="w-100">
                             <thead>
-                                @if (Gate::check('acc-order_hs'))
                                 <td>Acc</td>
-                                @endif
                                 <td>Time</td>
-                                <td>Product</td>
+                                <td>CSO - BRANCH</td>
                             </thead>
-                            @foreach ($orderDetailReqHsAcc->sortBy('request_hs_acc')->groupBy('request_hs_acc') as $orderDetailByReqHsAcc)
-                                <tr>
-                                    @if (Gate::check('acc-order_hs'))
-                                        <td>
-                                            <form method="POST" action="{{ route('acc_order_hs') }}">
-                                                @csrf
-                                                <input type="hidden" name="orderId" value="{{ $order['id'] }}">
-                                                <input type="hidden" name="appointment" value="{{ $orderDetailByReqHsAcc[0]->request_hs_acc }}">
-                                                @foreach ($orderDetailByReqHsAcc as $odByReqHsAcc)
-                                                <input type="hidden" name="orderDetail_product[]" value="{{ $odByReqHsAcc['id'] }}">
-                                                @endforeach
-                                                <div class="d-flex align-item-center">
-                                                    <button type="submit" class="btn btn-gradient-primary mr-2" name="status_acc" value="true">Aprove</button>
-                                                    <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">Reject</button>
-                                                </div>
-                                            </form>
-                                        </td>
-                                    @endif
-                                    <td>
-                                        {{ date('l', strtotime($orderDetailByReqHsAcc[0]->request_hs_acc)) }}
-                                        <br>{{ $orderDetailByReqHsAcc[0]->request_hs_acc }}
-                                    </td>
-                                    <td>
-                                        <ul class="mb-0">
-                                            @foreach ($orderDetailByReqHsAcc as $odByReqHsAcc)
-                                                <li>
-                                                    {{ $odByReqHsAcc->product['code'] ?? $odByReqHsAcc->promo['code'] ?? 'OTHER' }} -
-                                                    {{ $odByReqHsAcc->product['name'] ?? (($odByReqHsAcc->promo) ? implode(", ", $odByReqHsAcc->promo->productName()) : $odByReqHsAcc->other) }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </td>
-                                </tr>
-                            @endforeach
+                            <tr>
+                              @if (Gate::check('acc-order_hs'))
+                                <td>
+                                    <form method="POST" action="{{ route('acc_order_hs') }}">
+                                        @csrf
+                                        <input type="hidden" name="orderId" value="{{ $order['id'] }}">
+                                        <input type="hidden" name="appointment" value="{{ $order['request_hs_acc'] }}">
+                                        <div class="d-flex align-item-center">
+                                            <button type="submit" class="btn btn-gradient-primary mr-2" name="status_acc" value="true">Aprove</button>
+                                            <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">Reject</button>
+                                        </div>
+                                    </form>
+                                </td>
+                              @else
+                                <td>Waiting for Acc</td>
+                              @endif
+                              <td>
+                                  {{ date('l', strtotime($order['request_hs_acc'])) }}
+                                  <br>{{ $order['request_hs_acc'] }}
+                              </td>
+                              <td>
+                                @if($order->request_hs_cso_acc != null)
+                                    @php $request_hs_cso_acc = App\Cso::whereIn('id', json_decode($order['request_hs_cso_acc']) ?? [])->get(); @endphp
+                                    @foreach ($request_hs_cso_acc as $rhs_cso)
+                                        ({{ $rhs_cso['code'] }}) {{ $rhs_cso['name'] }} - ({{ $rhs_cso->branch['code'] }}) {{ $rhs_cso->branch['name'] }}
+                                        <br>
+                                    @endforeach
+                                @else
+                                    ({{ $order->cso['code'] }}) {{ $order->cso['name'] }} - ({{ $order->branch['code'] }}) {{ $order->branch['name'] }}
+                                @endif
+                              </td>
+                            </tr>
                     </table>
                     </div>
                 </div>
@@ -443,7 +473,6 @@
                                 <td>Home Service</td>
                                 <td>Cso</td>
                                 <td>Cso Delivery</td>
-                                <td>Product</td>
                             </thead>
                             @php 
                                 $orderDetailGroupBys = $orderDetailHs->sortBy('updated_at')->groupBy('home_service_id');
@@ -475,16 +504,6 @@
                                             @endforeach
                                         @endif
                                     </td>
-                                    <td>
-                                        <ul class="mb-0">
-                                            @foreach ($orderDetailByHs as $odByHs)
-                                                <li>
-                                                    {{ $odByHs->product['code'] ?? $odByHs->promo['code'] ?? 'OTHER' }} -
-                                                    {{ $odByHs->product['name'] ?? (($odByHs->promo) ? implode(", ", $odByHs->promo->productName()) : $odByHs->other) }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </td>
                                 </tr>
                             @endforeach
                       </table>
@@ -507,6 +526,15 @@
                     </thead>
                     @if($historyUpdateOrder != null)
                     @foreach($historyUpdateOrder as $key => $historyUpdateOrder)
+                      @if($historyUpdateOrder->method != "Create Order" && $key < 1)
+                        <tr>
+                          <td>-</td>
+                          <td>Create Order</td>
+                          <td>{{ $order->cso['name'] }}</td>
+                          <td><b>created_at</b>: {{ $order['created_at'] }}<br/></td>
+                          <td>{{ date("d/m/Y H:i:s", strtotime($order['created_at'])) }}</td>
+                      </tr>
+                      @endif
                     <tr>
                         <td>{{$key+1}}</td>
                         <td>{{$historyUpdateOrder->method}}</td>
@@ -531,12 +559,13 @@
                 tabindex="-1"
                 role="dialog"
                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-dialog modal-dialog-centered @if($order['status'] == \App\Order::$status['2']) modal-xl @endif" role="document">
                     <div class="modal-content">
                         <form id="actionAdd"
                             class="forms-sample"
                             method="POST"
-                            action="{{ route('update_status_order') }}">
+                            action="{{ route('update_status_order') }}"
+                            enctype="multipart/form-data">
                             @csrf
                             <div class="modal-header">
                                 <button type="button"
@@ -549,9 +578,70 @@
                             <div class="modal-body">
                                 <h5 id="modal-change-status-question" class="modal-title text-center">Process This Order?</h5>
                                 <hr>
+                                {{-- Pilih Product Untuk Stock --}}
+                                @if ($order['status'] == \App\Order::$status['2'] && false)
+                                    <div id="request-stock">
+                                        <table class="w-100 table-responsive">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-md-4">Items</th>
+                                                    <th class="col-md-6">Code - Product</th>
+                                                    <th class="col-md-2">Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <datalist id="data-product">
+                                                    @foreach ($products as $product)
+                                                    <option value="<{{ $product['code'] }}> {{ $product['name'] }}">
+                                                    @endforeach
+                                                </datalist>
+                                                @foreach ($order->orderDetail as $orderDetail)
+                                                    @if ($orderDetail->type != "upgrade" && ($orderDetail->product_id != null || $orderDetail->promo_id != null))
+                                                    <tr>
+                                                        @php $productNyas = []; $productIdNyas = []; @endphp
+                                                        @if ($orderDetail->product_id != null)
+                                                            <td>{{ $orderDetail->product['code'] }} - {{ $orderDetail->product['name'] }}</td>
+                                                            @php array_push($productNyas, "<".$orderDetail->product['code']."> ".$orderDetail->product['name']);
+                                                                array_push($productIdNyas, $orderDetail->product['id']);
+                                                            @endphp
+                                                        @elseif ($orderDetail->promo_id != null)
+                                                            <td>{{ $orderDetail->promo['code'] }}</td>
+                                                            @php
+                                                                foreach ($orderDetail->promo->product_list() as $promoProdList) {
+                                                                    array_push($productNyas, "<".$promoProdList['code']."> ".$promoProdList['name']);
+                                                                    array_push($productIdNyas, $promoProdList['id']);
+                                                                }
+                                                            @endphp
+                                                        @endif
+                                                        <td>
+                                                            @foreach ($productNyas as $key=>$prodNya)
+                                                                <div class="form-group mb-2">
+                                                                    <input name="prodCodeName[]" list="data-product" class="form-control prodCodeName" 
+                                                                        value="{{$prodNya}}" required />
+                                                                    <input type="hidden" name="prodIdNya[]" class="prodIdNya"
+                                                                        value="{{$productIdNyas[$key]??''}}">
+                                                                    <div class="invalid-feedback">Wrong Product</div>
+                                                                </div>
+                                                            @endforeach
+                                                        </td>
+                                                        <td>
+                                                            @foreach ($productNyas as $prodNya)
+                                                                <div class="form-group mb-2">
+                                                                    <input type="number" name="prodQty[]" class="form-control mb-2 prodQty" 
+                                                                        value="{{$orderDetail->qty}}" required>
+                                                                    <div class="invalid-feedback">Quantity Min 1</div>
+                                                                </div>
+                                                            @endforeach
+                                                        </td>
+                                                    </tr>
+                                                    @endif
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 {{-- Pilih CSO Untuk Delivery --}}
                                 @php $order_request_hs = json_decode($order['request_hs'], true) ?? []; @endphp
-                                @if ($order['status'] == \App\Order::$status['2'] || $checkDeliveredOrderDetail == true)
+                                @elseif (($order->allHomeService_nonDelivery->count() > 0))
                                     <div id="delivery-cso">
                                         <div id="form-cso" class="row">
                                             <div class="form-group mb-3 col-10">
@@ -579,14 +669,43 @@
                                         <label>Pilihan Home Service</label>
                                         <select name="home_service_id" class="form-control home-service-id" required>
                                             <option value="">Choose Home Service</option>
-                                            @foreach ($orderDetailHs->sortBy('updated_at')->groupBy('home_service_id') as $orderDetailByHs)
-                                                @if ($orderDetailByHs[0]['delivery_cso_id'] == null)
-                                                <option value="{{ $orderDetailByHs[0]['home_service_id'] }}">
-                                                    {{ $orderDetailByHs[0]->homeService['code'] }} ({{ date('Y-m-d H:i', strtotime($orderDetailByHs[0]->homeService['appointment'])) }})
+                                            @foreach ($order->allHomeService_nonDelivery->sortBy('appointment') as $orderByHs)
+                                                <option value="{{ $orderByHs['id'] }}">
+                                                    {{ $orderByHs['code'] }} ({{ date('Y-m-d H:i', strtotime($orderByHs['appointment'])) }})
                                                 </option>
-                                                @endif
                                             @endforeach
                                         </select>
+                                    </div>
+                                {{--  Upload Delivered Image--}}
+                                @elseif ($order['status'] == \App\Order::$status['3'])
+                                    <div id="delivered-image">
+                                        <div class="form-group">
+                                            <label for="">Bukti Terima Barang</label>
+                                            <label style="float: right">(Min: 1) (Max: 3)</label>
+                                            <div class="clearfix"></div>
+                                            @for ($i = 0; $i < 3; $i++)
+                                                <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                                    style="padding: 15px; float: left;">
+                                                    <label>Image {{ $i + 1 }}</label>
+                                                    <div class="imagePreview"
+                                                        style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
+                                                    </div>
+                                                    <label class="file-upload-browse btn btn-gradient-primary"
+                                                        style="margin-top: 15px; padding: 10px">
+                                                        Upload
+                                                        <input name="images_{{ $i }}"
+                                                            id="addDelivered-productimg-{{ $i }}"
+                                                            type="file"
+                                                            accept=".jpg,.jpeg,.png"
+                                                            class="uploadFile img addDelivered-productimg"
+                                                            value="Upload Photo"
+                                                            style="width: 0px; height: 0px; overflow: hidden; border: none !important;"
+                                                            @if($i == 0) required @endif />
+                                                    </label>
+                                                    <i class="mdi mdi-window-close del"></i>
+                                                </div>
+                                            @endfor
+                                        </div>
                                     </div>
                                 @endif
                             </div>
@@ -634,11 +753,11 @@
                             <div class="modal-body">
                                 <h5 class="modal-title text-center">Add Order Home Service?</h5>
                                 <hr>
+                                @php $checkRegionOrder = in_array($order['distric'], $order->branch->regionDistrict()['district']); @endphp
+                                @if ($checkRegionOrder == false) 
+                                    <p class="text-danger">Different Region !!. This Order Home Service need Acc.</p>
+                                @endif
                                 @if($order_request_hs)
-                                    @php $checkRegionOrder = in_array($order['distric'], $order->branch->regionDistrict()['district']); @endphp
-                                    @if ($checkRegionOrder == false) 
-                                        <p class="text-danger">Different Region !!. This Order Home Service need Acc.</p>
-                                    @endif
                                     <div class="form-group mb-3">
                                         <label>Pilihan Request Home Service</label>
                                         <select class="form-control" name="index_order_home_service" required>
@@ -685,7 +804,7 @@
                                 @endif
 
                                 {{-- Delivery Poduk Order --}}
-                                <div class="form-group mb-3">
+                                <div class="form-group mb-3 d-none">
                                     <label>Pilihan Produk</label>
                                     <label style="float: right">(Min: 1)</label>
                                     <table>
@@ -698,7 +817,7 @@
                                         @foreach ($order->orderDetail as $orderDetail)
                                             @if($orderDetail->home_service_id == null && $orderDetail->delivery_cso_id == null && $orderDetail->request_hs_acc == null)
                                             <tr>
-                                                <td><input type="checkbox" class="form-control orderDetail-product" name="orderDetail_product[]" value="{{ $orderDetail->id }}"></td>
+                                                <td><input type="checkbox" class="form-control orderDetail-product" name="orderDetail_product[]" value="{{ $orderDetail->id }}" {{ isset($orderDetail->offline_stock_id) || $orderDetail->type == 'upgrade' ? 'checked' : '' }}></td>
                                                 <td>{{ $orderDetail->product['code'] ?? $orderDetail->promo['code'] ?? 'OTHER' }}</td>
                                                 <td>{{ $orderDetail->product['name'] ?? (($orderDetail->promo) ? implode(", ", $orderDetail->promo->productName()) : $orderDetail->other) }}</td>
                                                 <td>{{ $orderDetail->qty }}</td>
@@ -710,7 +829,7 @@
                             </div>
                             <div class="modal-footer">
                                 <input name="orderId" hidden="hidden" value="{{ $order['id'] }}">
-                                @if(isset($checkRegionOrder) && $checkRegionOrder == false)
+                                @if($checkRegionOrder == false)
                                     <button type="submit"
                                         class="btn btn-gradient-warning mr-2">
                                         Request Acc
@@ -956,7 +1075,7 @@
                                                     value="Upload Photo"
                                                     style="width: 0px; height: 0px; overflow: hidden; border: none !important;" />
                                             </label>
-                                            <i class="mdi mdi-window-close del"></i>
+                                            <i class="mdi mdi-window-close del del-editPayment"></i>
                                         </div>
                                     @endfor
                                 </div>
@@ -1053,6 +1172,72 @@
                 </div>
             </div>
             <!-- End Modal View -->
+            <!-- Modal Edit Delivered Image -->
+            <div class="modal fade"
+                id="editDeliveredImageModal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="frmEditDeliveredImage"
+                                method="post"
+                                action="{{ route('update_delivered_image_order') }}"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <input type="hidden" name="order_id" value="{{ $order['id'] }}">
+                                <h5 style="text-align: center;">
+                                    Edit Order Delivered Image 
+                                </h5>
+                                <br>
+                                <div class="form-group">
+                                    <label for="">Bukti Terima Barang</label>
+                                    <label style="float: right">(Min: 1) (Max: 3)</label>
+                                    <div class="clearfix"></div>
+                                    @for ($i = 0; $i < 3; $i++)
+                                        <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                            style="padding: 15px; float: left;">
+                                            <label>Image {{ $i + 1 }}</label>
+                                            <div class="imagePreview"
+                                                style="background-image: url({{ isset(json_decode($order->delivered_image, true)[$i]) ? asset('sources/order/'.json_decode($order->delivered_image, true)[$i]) : asset('sources/dashboard/no-img-banner.jpg') }});">
+                                            </div>
+                                            <label class="file-upload-browse btn btn-gradient-primary"
+                                                style="margin-top: 15px; padding: 10px">
+                                                Upload
+                                                <input name="images_{{ $i }}"
+                                                    id="editDelivered-productimg-{{ $i }}"
+                                                    type="file"
+                                                    accept=".jpg,.jpeg,.png"
+                                                    class="uploadFile img"
+                                                    value="Upload Photo"
+                                                    style="width: 0px; height: 0px; overflow: hidden; border: none !important;" />
+                                            </label>
+                                            <i class="mdi mdi-window-close del del-editDelivered"></i>
+                                        </div>
+                                    @endfor
+                                </div>
+                            </form>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="modal-footer footer-cash">
+                            <button type="submit" form="frmEditDeliveredImage"
+                                class="btn btn-gradient-success mr-2">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Edit Delivered Image -->
             @endif
 
             @else
@@ -1100,19 +1285,31 @@
         $(".btn-change-status-order").click(function(){
             statusOrder = $(this).attr('status-order');
             $('#delivery-cso').hide();
+            $('#request-stock').hide();
+            $('#delivered-image').hide();
             $('.delivery-cso-id').attr('disabled', true);
+            $('.prodCodeName, .prodQty').attr('disabled', true);
+            $('.addDelivered-productimg').attr('disabled', true);
             $('#home-service-id').hide();
             $('.home-service-id').attr('disabled', true);
             $('#status-order').val(statusOrder);
             if (statusOrder == "{{\App\Order::$status['2']}}") {
                 $("#modal-change-status-question").html('Process This Order?');
-            } else if (statusOrder == "{{\App\Order::$status['3']}}") {
+            } else if (statusOrder == "{{\App\Order::$status['6']}}")  {
+                $('#request-stock').show();
+                $('.prodCodeName, .prodQty').attr('disabled', false);
+                $("#modal-change-status-question").html('Request Stock? \n Choose Product');
+            } else if (statusOrder == "{{\App\Order::$status['3']}}")  {
                 $('#delivery-cso').show();
                 $('.delivery-cso-id').attr('disabled', false);
                 $('#home-service-id').show();
                 $('.home-service-id').attr('disabled', false);
                 $("#modal-change-status-question").html('Delivery This Order? \n Choose CSO');
-            } else if (statusOrder == "{{\App\Order::$status['4']}}") {
+            } else if (statusOrder == "{{\App\Order::$status['8']}}") {
+                $('#delivered-image').show();
+                $('.addDelivered-productimg').attr('disabled', false);
+                $("#modal-change-status-question").html('Delivered This Order?');
+            } else if (statusOrder == "{{\App\Order::$status['4']}}") { 
                 $("#modal-change-status-question").html('Success This Order?');
             } else if (statusOrder == "{{\App\Order::$status['5']}}") {
                 $("#modal-change-status-question").html('Reject This Order?');
@@ -1147,6 +1344,51 @@
                 placeholder: "Choose CSO Delivery",
                 dropdownParent: $('#modal-change-status .modal-body')
             });
+        });
+
+        const allProdCode = <?php echo $products; ?>;
+        function validateProdCodeName(el) {
+            var thisProdCode = el.val().substring(1);
+            thisProdCode = thisProdCode.split(">")[0];
+
+            const checkedValidate = allProdCode.find(item => item.code == thisProdCode);
+            if(checkedValidate){
+                el.siblings(".prodIdNya").val(checkedValidate.id);
+                el.removeClass("is-invalid");
+            } else {
+                el.siblings(".prodIdNya").val("");
+                el.addClass("is-invalid");
+            }
+            return checkedValidate;
+        }
+
+        function validateProdQty(el) {
+            const checkedValidate = el.val() > 0;
+            if (checkedValidate) {
+                el.removeClass("is-invalid");
+            } else {
+                el.addClass("is-invalid");
+            }
+            return checkedValidate;
+        }
+
+        function validateProductStockBeforeSubmit() {
+            var checkedValidate = true;
+            $(".prodCodeName").each(function() {
+                if (! validateProdCodeName($(this))) checkedValidate = false;
+            })
+            $(".prodQty").each(function() {
+                if (! validateProdQty($(this))) checkedValidate = false;
+            })
+            return checkedValidate;
+        }
+
+        $(document).on("change", ".prodCodeName", function() {
+            validateProdCodeName($(this));
+        });
+
+        $(document).on("change", ".prodQty", function() {
+            validateProdQty($(this));
         });
 
         $(document).on("click", ".hapus_cso", function (e) {
@@ -1212,7 +1454,7 @@
                 $(this).submit();
             }
         };
-        $('#frmAddOrderHomeService').on('submit', on_submit_orderHomeService);
+        // $('#frmAddOrderHomeService').on('submit', on_submit_orderHomeService);
 
         $("#submitFrmAddPayment").on("click", function(e) {
             // Change numberWithComma before submit
@@ -1298,11 +1540,19 @@
             if (inputImageId == "0") {
                 inputImage.attr("required", "");
             }
-            $('<input>').attr({
-                type: 'hidden',
-                name: 'dltimg-' + inputImageId,
-                value: inputImageId
-            }).appendTo('#frmEditPayment');
+            if ($(this).hasClass("del-editPayment")) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'dltimg-' + inputImageId,
+                    value: inputImageId
+                }).appendTo('#frmEditPayment');
+            } else if ($(this).hasClass("del-editDelivered")) {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'dltimg-' + inputImageId,
+                    value: inputImageId
+                }).appendTo('#frmEditDeliveredImage');
+            }
         });
 
         $(function () {
@@ -1366,11 +1616,17 @@
                 return alert('Input Field can\'t be empty');
             }
 
+            // Check For Product Stock
+            @if ($order['status'] == \App\Order::$status['2'])
+            if (! validateProductStockBeforeSubmit()) return alert('Input Error!');
+            @endif
+
             testNetwork(networkValue, function(val){
                 console.log("masuk");
                 var order_details = []
                 @foreach($order->orderDetail as $detail)
                     var row = {
+                        'order_detail_id':'{{$detail->id}}',
                         'product_id':'{{$detail->product_id}}',
                         'promo_id':'{{$detail->promo_id}}',
                         'qty':'{{$detail->qty}}',
@@ -1380,17 +1636,25 @@
                     order_details.push(row)
                 @endforeach
                 var formSerialize = $('#actionAdd').serializeArray()
-                var deliveryCSOID = []
+                var deliveryCSOID = [];
+                var prodIdNya = [];
+                var prodQty = [];
                 for(var i = 0; i < formSerialize.length; i++){
                     if(formSerialize[i].name == 'delivery_cso_id[]'){
                         deliveryCSOID.push(formSerialize[i].value)
+                    }
+                    if(formSerialize[i].name == 'prodIdNya[]'){
+                        prodIdNya.push(formSerialize[i].value)
+                    }
+                    if(formSerialize[i].name == 'prodQty[]'){
+                        prodQty.push(formSerialize[i].value)
                     }
                 }
                 var order = {
                     'code':'{{$order->code}}',
                     'no_member':'{{$order->no_member}}',
                     'name':'{{$order->name}}',
-                    'address':'{{$order->address}}',
+                    'address':`<?= str_replace("`", "\`", $order->address) ?>`,
                     'cash_upgrade':'{{$order->cash_upgrade}}',
                     'total_payment':'{{$order->total_payment}}',
                     'down_payment':'{{$order->down_payment}}',
@@ -1400,7 +1664,7 @@
                     '30_cso_id':"{{$order['30_cso_id']}}",
                     '70_cso_id':"{{$order['70_cso_id']}}",
                     'customer_type':'{{$order->customer_type}}',
-                    'description':'{{$order->description}}',
+                    'description':`<?= str_replace("`", "\`", $order->description) ?>`,
                     'phone':'{{$order->phone}}',
                     'orderDate':'{{$order->orderDate}}',
                     'know_from':'{{$order->know_from}}',
@@ -1409,9 +1673,15 @@
                     'distric':'{{$order->distric}}',
                     'status':$('#status-order').val(),
                     'delivery_cso_id':deliveryCSOID,
+                    'prodIdNya': prodIdNya,
+                    'prodQty': prodQty,
+                    'delivered_image': <?= $order->delivered_image ?>,
                     'order_details':order_details,
                     'user_id':'{{Auth::user()->code}}',
                     'temp_no':'{{$order->temp_no}}'
+                }
+                for(var i = 0; i < order.delivered_image.length; i++){
+                    order['delivered_image_file_'+i] = `{{ asset('sources/order/${order.delivered_image[i]}') }}`;
                 }
                 // $('#actionAdd').submit();
 

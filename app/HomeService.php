@@ -69,4 +69,8 @@ class HomeService extends Model
     {
         return $this->hasOne('App\TechnicianSchedule');
     }
+    public function allOrder()
+    {
+        return $this->belongsToMany(Order::class, 'order_homeservices');
+    }
 }

@@ -454,12 +454,30 @@ $menu_item_page = "user";
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-primary"
+                                            for="change-status_order_stock_request_pending">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_stock_request_pending" />
+                                            Change Status Order Request Stock
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
                                         <label class="form-check-label text-warning"
                                             for="change-status_order_delivery">
                                             <input class="form-check-input"
                                                 type="checkbox"
                                                 id="change-status_order_delivery" />
                                             Change Status Order Delivery
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-primary"
+                                            for="change-status_order_delivered">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_delivered" />
+                                            Change Status Order Delivered
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">

@@ -736,6 +736,72 @@
         </div>
         @endif
 
+        @if (Gate::check('acc-order_hs'))
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body wrapper">
+                        <div class="clearfix">
+                            <h4 class="card-title float-left">
+                                Approve orders outside region (total : {{ count($ordersOutsideRegion) }})
+                            </h4>
+                        </div>
+                        <div class="table-responsive wrapper" style="border: 1px solid #ebedf2;">
+                            <table class="table table-bordered">
+                                <thead style="text-align: center; background-color: aliceblue;">
+                                    <tr>
+                                        <th>Order Code</th>
+                                        <th>Date & Time</th>
+                                        <th>CSO - Branch</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(count($ordersOutsideRegion) > 0)
+                                        @foreach($ordersOutsideRegion as $orderOut)
+                                            <tr class="text-center">
+                                                <td>
+                                                    <a href="{{ route('detail_order') }}?code={{ $orderOut['code'] }}">
+                                                        {{ $orderOut['code'] }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ date('l', strtotime($orderOut['request_hs_acc'])) . ", " . $orderOut['request_hs_acc'] }}</td>
+                                                <td>
+                                                    @if($orderOut->request_hs_cso_acc != null)
+                                                        @php $request_hs_cso_acc = App\Cso::whereIn('id', json_decode($orderOut['request_hs_cso_acc']) ?? [])->get(); @endphp
+                                                        @foreach ($request_hs_cso_acc as $rhs_cso)
+                                                            ({{ $rhs_cso['code'] }}) {{ $rhs_cso['name'] }} - ({{ $rhs_cso->branch['code'] }}) {{ $rhs_cso->branch['name'] }}
+                                                            <br>
+                                                        @endforeach
+                                                    @else
+                                                        ({{ $orderOut->cso['code'] }}) {{ $orderOut->cso['name'] }} - ({{ $orderOut->branch['code'] }}) {{ $orderOut->branch['name'] }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <form method="POST" action="{{ route('acc_order_hs') }}">
+                                                        @csrf
+                                                        <input type="hidden" name="orderId" value="{{ $orderOut['id'] }}">
+                                                        <input type="hidden" name="appointment" value="{{ $orderOut['request_hs_acc'] }}">
+                                                        <button type="submit" class="btn btn-gradient-primary mr-2" name="status_acc" value="true">Aprove</button>
+                                                        <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">Reject</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan=4>No data</td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
         @if(Auth::id() == 1)
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">

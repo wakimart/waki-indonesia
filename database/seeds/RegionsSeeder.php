@@ -28,6 +28,7 @@ class RegionsSeeder extends Seeder
             ["id" => 11, "name" => "Jakarta Timur", "bg_color" => "#FFD700", "districts" => \App\RajaOngkir_Subdistrict::whereIn('city_id', [154])->get()->pluck('subdistrict_id')->toArray()],
             ["id" => 12, "name" => "Jakarta Pusat", "bg_color" => "#660000", "districts" => \App\RajaOngkir_Subdistrict::whereIn('city_id', [152])->get()->pluck('subdistrict_id')->toArray()],
             ["id" => 13, "name" => "Tangerang", "bg_color" => "#808000", "districts" => \App\RajaOngkir_Subdistrict::whereIn('city_id', [455, 456, 457])->get()->pluck('subdistrict_id')->toArray()],
+            ["id" => 14, "name" => "Semarang", "bg_color" => "#2596be", "districts" => \App\RajaOngkir_Subdistrict::whereIn('city_id', [398, 399])->get()->pluck('subdistrict_id')->toArray()],
         ];
 
         foreach ($regionSeeders as $regionSeeder){

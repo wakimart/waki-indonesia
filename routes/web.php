@@ -387,6 +387,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update_status_order', 'OrderController@updateStatusOrder')
             ->name('update_status_order')
             ->middleware('can:change-status_order');
+        //Update Order Delivered Image
+        Route::post('/update_delivered_image_order', 'OrderController@updateDeliveredImage')
+            ->name('update_delivered_image_order')
+            ->middleware('can:change-status_order');
         //Add Order Home Service
         Route::post('/order_hs', 'OrderController@orderHS')
             ->name('order_hs')

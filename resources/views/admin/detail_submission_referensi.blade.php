@@ -254,8 +254,8 @@ if (
                                                 <td>Province</td>
                                                 <td>City</td>
                                                 <td>Link HS</td>
-                                                <td>Order</td>
-                                                <td>Wakimart Link</td>
+                                                {{-- <td>Order</td> --}}
+                                                {{-- <td>Wakimart Link</td> --}}
                                                 <td>Souvenir</td>
                                                 <td>Status</td>
                                                 <td>Deliv. Status</td>
@@ -264,7 +264,7 @@ if (
                                                 @endif
                                                 <td>Edit</td>
                                                 <td>Delete</td>
-                                                <td>Signature</td>
+                                                {{-- <td>Signature</td> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -338,7 +338,7 @@ if (
                                                         @endif
                                                     </td>
 
-                                                    <td class="text-center"
+                                                    <td class="text-center d-none"
                                                         id="order_{{ $key }}"
                                                         data-order="{{ $reference->order_id }}"
                                                         data-ordercode="{{ $reference->order_code }}"
@@ -378,7 +378,7 @@ if (
                                                         }
                                                         @endphp
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="text-center d-none">
                                                         <a href="{{ $reference->wakimart_link }}" target="_blank">{{ $reference->wakimart_link }}</a>
                                                     </td>
                                                     <td id="souvenir_{{ $key }}"
@@ -435,7 +435,7 @@ if (
                                                             <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                         </button>
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="text-center d-none">
                                                         @if($reference->reference_souvenir->status == 'success' &&  $reference->online_signature == '')
                                                             <button class="btn" style="padding: 0" onclick="createSignature({{ $reference->id }})">
                                                                 <i class="mdi mdi-pencil-box-outline" style="font-size: 24px; color: #32a852;"></i>                                                
@@ -774,7 +774,7 @@ if (
                         </button>
                         <input type="hidden" id="hs-row-count" value="0" />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <label for="edit-order">Order</label>
                         <input type="hidden"
                             id="edit-order"
@@ -796,7 +796,7 @@ if (
                             value=""
                             placeholder="Order DO" />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <label for="edit-order">Upload Images</label>
                         <label style="float: right">(Max: 3)</label>
                         <div class="clearfix"></div>
@@ -824,7 +824,7 @@ if (
                         @endfor
                         <div id="edit-order-image-del"></div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <input type="text"
                             class="form-control"
                             id="edit-wakimart-link"
