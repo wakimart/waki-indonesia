@@ -786,7 +786,7 @@ class OrderController extends Controller
 
                 // Update Order Detail Online stock
                 $order_details = OrderDetail::whereIn('id', $request->orderDetail_product)->get();
-                (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'delivery', Auth::user()->code, json_encode($order_details));
+                // (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'delivery', Auth::user()->code, json_encode($order_details));
             }
             $order->save();
 
