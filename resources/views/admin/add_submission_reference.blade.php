@@ -73,7 +73,7 @@ $menu_item_second = "add_submission_reference";
     <div class="content-wrapper">
         <div class="page-header">
             <h3 class="page-title">
-                Add Submission - Referensi BERBAGI KASIH SAYANG HAPPY WITH WAKI
+                Add Submission - Referensi Terapi Sehat Bersama WAKi Bersama-sama
             </h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -111,7 +111,7 @@ $menu_item_second = "add_submission_reference";
                                 <input type="text"
                                     readonly
                                     disabled
-                                    value="Referensi BERBAGI KASIH SAYANG HAPPY WITH WAKI" />
+                                    value="Referensi Terapi Sehat Bersama WAKi Bersama-sama" />
                             </div>
 
                             <div class="form-group">

@@ -431,7 +431,7 @@
                                         class="btn btn-gradient-warning mr-2 btn-change-status-order">
                                         Delivery Order
                                     </button>
-                                    @elseif (($order['status'] == \App\Order::$status['3'] && $order->allHomeService_nonDelivery->count() < 1 && $order->orderDetail->where('type', '!=', 'upgrade')->where('home_service_id', null)->count() < 1 && $order->orderDetail->where('type', '!=', 'upgrade')->where('offline_stock_id', null)->count() < 1 && Gate::check('change-status_order_delivered')) || ($order->branch['code'] == "F88" && $order['status'] == \App\Order::$status['3'] && Auth::user()->inRole("head-admin")))
+                                    @elseif (($order['status'] == \App\Order::$status['3'] && $order->allHomeService_nonDelivery->count() < 1 && $order->orderDetail->where('type', '!=', 'upgrade')->where('home_service_id', null)->count() < 1 && $order->orderDetail->where('type', '!=', 'upgrade')->where('offline_stock_id', null)->count() < 1 && Gate::check('change-status_order_delivered')) || (Gate::check('change-status_order_delivered') && $order['status'] == \App\Order::$status['3'] && Auth::user()->inRole("head-admin")))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['8']}}"
                                         class="btn mr-2 btn-change-status-order" style="background-color: #FF6E31; color: #FFF">
                                         Delivered Order

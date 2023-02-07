@@ -87,7 +87,7 @@ $menu_item_second = "add_home_service";
                                     @if(Auth::user()->inRole('head-admin') || Auth::user()->inRole('area-manager') || Auth::user()->inRole('head-manager'))
                                         <option value="Home Delivery">Home Delivery</option>
                                     @endif
-                                    <option value="Home Free Refrensi Therapy VIP">Home Free Refrensi Therapy VIP</option>
+                                    <option value="Home Free Refrensi Therapy VIP" {{ isset($autofill) ? "selected" : "" }}>Home Free Refrensi Therapy VIP</option>
                                     <option value="Home WAKi di Rumah Aja">Home WAKi di Rumah Aja</option>
 								</select>
 								<span class="invalid-feedback">
