@@ -212,6 +212,7 @@ $menu_item_page = "petty_cash";
                                                 @endforeach
                                             </td>
                                             @can('edit-petty_cash_out')
+                                            @if(!$pettyCash->petty_cash_closed_book_id)
                                                 <td style="text-align: center;">
                                                     <button value="{{ $ptcDetail['id'] }}"
                                                         type="button"
@@ -221,8 +222,10 @@ $menu_item_page = "petty_cash";
                                                         <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
                                                     </button>
                                                 </td>
+                                            @endif
                                             @endcan
                                             @can('delete-petty_cash')
+                                            @if(!$pettyCash->petty_cash_closed_book_id)
                                                 <td style="text-align: center;">
                                                     <button value="{{ route('delete_petty_cash_detail', ['id' => $ptcDetail['id']])}}"
                                                         type="button"
@@ -232,6 +235,7 @@ $menu_item_page = "petty_cash";
                                                         <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
                                                     </button>
                                                 </td>
+                                            @endif
                                             @endcan
                                         </tr>
                                         @php $sub_total_ptc_details += $ptcDetail->nominal; @endphp
@@ -242,6 +246,7 @@ $menu_item_page = "petty_cash";
                                             <td colspan="4" style="background-color: #f2f2f2;" rowspan="3"></td>
                                         </tr>
                                     </table>
+                                    @if(!$pettyCash->petty_cash_closed_book_id)
                                     <div class="mb-3">
                                         <button type="button" class="btn btn-gradient-success" 
                                             data-toggle="modal"
@@ -249,6 +254,7 @@ $menu_item_page = "petty_cash";
                                             Add Detail
                                         </button>
                                     </div>
+                                    @endif
                                 @endif
 
                             </div>

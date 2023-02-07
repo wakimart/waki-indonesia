@@ -80,6 +80,9 @@ class RolesSeeder extends Seeder
                 'edit-petty_cash_type' => true,
                 'delete-petty_cash_type' => true,
 
+                //Posting Petty Cash
+                'add-posting_petty_cash' => true,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -318,6 +321,9 @@ class RolesSeeder extends Seeder
                 'add-petty_cash_type' => false,
                 'edit-petty_cash_type' => false,
                 'delete-petty_cash_type' => false,
+
+                //Posting Petty Cash
+                'add-posting_petty_cash' => false,
 
                 //Home Service
                 'add-home_service' => true,
@@ -558,6 +564,9 @@ class RolesSeeder extends Seeder
                 'edit-petty_cash_type' => false,
                 'delete-petty_cash_type' => false,
 
+                //Posting Petty Cash
+                'add-posting_petty_cash' => false,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -792,6 +801,9 @@ class RolesSeeder extends Seeder
                 'edit-petty_cash_type' => false,
                 'delete-petty_cash_type' => false,
 
+                //Posting Petty Cash
+                'add-posting_petty_cash' => false,
+
                 //Home Service
                 'add-home_service' => true,
                 'browse-home_service' => true,
@@ -1024,6 +1036,9 @@ class RolesSeeder extends Seeder
                 'add-petty_cash_type' => false,
                 'edit-petty_cash_type' => false,
                 'delete-petty_cash_type' => false,
+
+                //Posting Petty Cash
+                'add-posting_petty_cash' => false,
 
                 //Home Service
                 'add-home_service' => false,
@@ -1258,6 +1273,9 @@ class RolesSeeder extends Seeder
                 'edit-petty_cash_type' => false,
                 'delete-petty_cash_type' => false,
 
+                //Posting Petty Cash
+                'add-posting_petty_cash' => false,
+
                 //Home Service
                 'add-home_service' => false,
                 'browse-home_service' => true,
@@ -1490,6 +1508,9 @@ class RolesSeeder extends Seeder
                 'add-petty_cash_type' => false,
                 'edit-petty_cash_type' => false,
                 'delete-petty_cash_type' => false,
+
+                //Posting Petty Cash
+                'add-posting_petty_cash' => false,
 
                 //Home Service
                 'add-home_service' => false,

@@ -650,6 +650,18 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('delete_petty_cash_detail');
     });
 
+    Route::group(['prefix' => 'posting_petty_cash', 'middleware' => 'auth'], function() {
+        // Add Form Posting Petty Cash
+        Route::get('/add', 'PettyCashClosedBookController@create')
+            ->name('add_posting_petty_cash')
+            ->middleware("can:add-posting_petty_cash");
+
+        // Create Petty Cash Account
+        Route::post('/store', 'PettyCashClosedBookController@store')
+            ->name('store_posting_petty_cash')
+            ->middleware("can:add-posting_petty_cash");
+    });
+
     Route::group(['prefix' => 'petty_cash_type', 'middleware' => 'auth'], function() {
         // Add Form Petty Cash Type
         Route::get('/add', 'PettyCashOutTypeController@create')

@@ -171,6 +171,11 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-petty_cash_type']);
         });
 
+        //-- POSTING PETTY CASH --//
+        Gate::define('add-posting_petty_cash', function ($user) {
+            return $user->hasAccess(['add-posting_petty_cash']);
+        });
+
         //-- HOME SERVICE --//
         Gate::define('add-home_service', function ($user) {
             return $user->hasAccess(['add-home_service']);

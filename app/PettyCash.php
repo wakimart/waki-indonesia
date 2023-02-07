@@ -8,6 +8,7 @@ class PettyCash extends Model
 {
     protected $fillable = [
         'code', 'temp_no', 'transaction_date', 'type', 'bank_account_id', 'user_id', 'active',
+        'petty_cash_closed_book_id'
     ];
 
     public function bankAccount()
@@ -18,6 +19,11 @@ class PettyCash extends Model
     public function user()
     {
         return $this->belongsTo('App\User', 'user_id', 'id');
+    }
+
+    public function pettyCashClosedBook()
+    {
+        return $this->belongsTo('App\PettyCashClosedBook');
     }
 
     public function pettyCashDetail()

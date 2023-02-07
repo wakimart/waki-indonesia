@@ -235,6 +235,20 @@ $menu_item_second = "list_petty_cash";
                                                         $total_nominal_out = 0;
                                                         $total_nominal_saldo = 0;
                                                     @endphp
+                                                    @if($lastPTCClosedBook)
+                                                        <tr>
+                                                            <td>
+                                                                {{ date('01/m/Y', strtotime($startDate)) }}
+                                                            </td>
+                                                            <td>-</td>
+                                                            <td>SALDO</td>
+                                                            <td class="text-right">0</td>
+                                                            <td class="text-right">0</td>
+                                                            <td class="text-right">{{ number_format($lastPTCClosedBook->nominal) }}</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        @php $total_nominal_saldo += $lastPTCClosedBook->nominal; @endphp
+                                                    @endif
                                                     @foreach($pettyCashes as $pettyCash)
                                                     @php 
                                                         $bank_petty_cash_type = $pettyCash->petty_cash_out_bank_account_id ? "bank" : "account";
@@ -323,7 +337,8 @@ $menu_item_second = "list_petty_cash";
                                                     @foreach($pettyCashes as $pettyCash)
                                                     @php 
                                                         $count_ptcd = $pettyCash->pettyCashDetail->count();
-                                                        $bank_petty_cash_type = $pettyCash->pettyCashDetail[0]->petty_cash_out_bank_account_id ? "bank" : "account";
+                                                        $bank_petty_cash_type = $pettyCash->pettyCashDetail->count() > 0 ? $pettyCash->pettyCashDetail[0]->petty_cash_out_bank_account_id ? "bank" : "account" : "";
+                                                        if ($count_ptcd == 0) $count_ptcd = 1;
                                                     @endphp
                                                     <tr>
                                                         <td rowspan="{{ $count_ptcd }}">
@@ -332,17 +347,21 @@ $menu_item_second = "list_petty_cash";
                                                         <td rowspan="{{ $count_ptcd }}">
                                                             {{ $pettyCash->code }}
                                                         </td>
+                                                        @if($bank_petty_cash_type)
                                                         @if($keyType == "out")
                                                         <td>{{ $bank_petty_cash_type == "bank" 
                                                             ? $pettyCash->pettyCashDetail[0]->pettyCashOutBankAccount['code'] . ' - ' . $pettyCash->pettyCashDetail[0]->pettyCashOutBankAccount['name']
                                                             : $pettyCash->pettyCashDetail[0]->pettyCashOutType['code'] . ' - ' . $pettyCash->pettyCashDetail[0]->pettyCashOutType['name'] }}
                                                         </td>
                                                         @endif
+                                                        @else
+                                                        <td></td>
+                                                        @endif
                                                         <td>
-                                                            <?php echo $pettyCash->pettyCashDetail[0]->description ?>
+                                                            <?php echo $pettyCash->pettyCashDetail[0]->description ?? '' ?>
                                                         </td>
                                                         <td class="text-right">
-                                                            {{ number_format($pettyCash->pettyCashDetail[0]->nominal) }}
+                                                            {{ number_format($pettyCash->pettyCashDetail[0]->nominal ?? 0) }}
                                                         </td>
                                                         <td class="text-center" rowspan="{{ $count_ptcd }}">
                                                             @if (Gate::check('detail-petty_cash'))
@@ -378,7 +397,7 @@ $menu_item_second = "list_petty_cash";
                                                             @endif
                                                         </td>
                                                     </tr>
-                                                    @php $total_nominal += $pettyCash->pettyCashDetail[0]->nominal; @endphp
+                                                    @php $total_nominal += $pettyCash->pettyCashDetail[0]->nominal ?? 0; @endphp
                                                         @if ($count_ptcd > 1)
                                                             @for ($i = 1; $i < $count_ptcd; $i++)
                                                                 @php

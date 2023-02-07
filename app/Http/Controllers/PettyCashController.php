@@ -6,6 +6,7 @@ use App\Bank;
 use App\BankAccount;
 use App\HistoryUpdate;
 use App\PettyCash;
+use App\PettyCashClosedBook;
 use App\PettyCashDetail;
 use App\PettyCashOutType;
 use Illuminate\Http\Request;
@@ -32,7 +33,8 @@ class PettyCashController extends Controller
         $banks = self::getUserBank();
         $pettyCashOutTypes = PettyCashOutType::where('active', true)->get();
 
-        $startDate = date('y-m-01');
+        $lastPTCClosedBook = null;
+        $startDate = date('Y-m-01');
         if ($request->has('filter_start_date')) {
             $startDate = date('Y-m-d', strtotime($request->filter_start_date));
         }
@@ -75,8 +77,16 @@ class PettyCashController extends Controller
                 }
                 $pettyCashTypes[$type] = $pettyCashTypes[$type]->get();
             }
+
+            // Get Last Month Petty Cash Closed Book
+            $lastMonth = date('Y-m-d', strtotime($startDate . " first day of last month"));
+            $lastPTCClosedBook = PettyCashClosedBook::where('bank_account_id', $currentBank->id)
+                ->whereBetween('date', [
+                    date('Y-m-01', strtotime($lastMonth)),
+                    date('Y-m-t', strtotime($lastMonth)),
+                ])->first();
         }
-        return view("admin.list_pettycash", compact('banks', 'pettyCashOutTypes', 'startDate', 'endDate', 'currentBank', 'pettyCashTypes')); 
+        return view("admin.list_pettycash", compact('banks', 'pettyCashOutTypes', 'startDate', 'endDate', 'currentBank', 'pettyCashTypes', 'lastPTCClosedBook')); 
     }
 
     public function print(Request $request)
@@ -115,6 +125,14 @@ class PettyCashController extends Controller
                     $pettyCashes->where('ptcd.petty_cash_out_type_id', $request->filter_acc);
                 }
                 $pettyCashes = $pettyCashes->get();
+
+                // Get Last Month Petty Cash Closed Book
+                $lastMonth = date('Y-m-d', strtotime($startDate . " first day of last month"));
+                $lastPTCClosedBook = PettyCashClosedBook::where('bank_account_id', $currentBank->id)
+                    ->whereBetween('date', [
+                        date('Y-m-01', strtotime($lastMonth)),
+                        date('Y-m-t', strtotime($lastMonth)),
+                    ])->first();
             } else {
                 $pettyCashes = PettyCash::where('active', true)
                     ->whereBetween('transaction_date', [$startDate, $endDate])
@@ -130,7 +148,7 @@ class PettyCashController extends Controller
                 $pettyCashes = $pettyCashes->get();
             }
         }
-        return view("admin.print_pettycash", compact('banks', 'startDate', 'endDate', 'currentBank', 'pettyCashes', 'keyType'));   
+        return view("admin.print_pettycash", compact('banks', 'startDate', 'endDate', 'currentBank', 'pettyCashes', 'keyType', 'lastPTCClosedBook'));   
     }
 
     public function createIn(Request $request)
@@ -279,6 +297,7 @@ class PettyCashController extends Controller
 
         $banks = self::getUserBank();
         $pettyCash = PettyCash::where('id', $request->id)
+            ->whereNull('petty_cash_closed_book_id')
             ->where('type', 'in')->firstorFail();
         return view('admin.edit_pettycash_in', compact('banks', 'pettyCash'));
     }
@@ -293,6 +312,7 @@ class PettyCashController extends Controller
 
         $banks = self::getUserBank();
         $pettyCash = PettyCash::where('id', $request->id)
+            ->whereNull('petty_cash_closed_book_id')
             ->where('type', 'out')->firstOrFail();
         $pettyCashBanks = PettyCashOutTypeController::fnGetBankByPettyCashType($pettyCash->bankAccount->id);
         return view('admin.edit_pettycash_out', compact('banks', 'pettyCash', 'pettyCashBanks'));
@@ -305,7 +325,7 @@ class PettyCashController extends Controller
             'type' => 'required',
             'transaction_date' => 'required',
             'code' => 'required|unique:petty_cashes,code,'.$request->id,
-            'bank' => 'required|exists:banks,id',
+            'bank' => 'required|exists:bank_accounts,id',
             'nominal' => 'sometimes|required',
         ]);
         if($validator->fails()){
@@ -455,7 +475,8 @@ class PettyCashController extends Controller
         DB::beginTransaction();
 
         try {
-            $pettyCash = PettyCash::where("id", $request->id)->first();
+            $pettyCash = PettyCash::where("id", $request->id)
+                ->whereNull('petty_cash_closed_book_id')->first();
             $pettyCash->active = false;
             $pettyCash->save();
             

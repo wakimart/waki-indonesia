@@ -91,7 +91,7 @@ $menu_item_page = "petty_cash";
                                     <option value="" disabled selected>Choose Bank</option>
                                     @foreach ($banks as $bank)
                                     <option value="{{ $bank->id }}"
-                                        @if($bank->id == $pettyCash->bank_id) selected @endif>
+                                        @if($bank->id == $pettyCash->bank_account_id) selected @endif>
                                         {{ $bank->code }} - {{ $bank->name }} ({{ ucwords($bank->type) }})
                                     </option>
                                     @endforeach
