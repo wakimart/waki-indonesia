@@ -28,7 +28,7 @@ class TotalSaleController extends Controller
             $totalSale->bank_in = $orderPayment->total_payment;
         } else if ($orderPayment->type_payment == "debit") {
             $totalSale->debit = $orderPayment->total_payment;
-            $totalSale->netto_debit = $orderPayment->total_payment;
+            $totalSale->netto_debit = $orderPayment->total_payment - ($orderPayment->total_payment * ($orderPayment->charge_percentage_company + $orderPayment->charge_percentage_bank) / 100);
         } else if ($orderPayment->type_payment == "card" || $orderPayment->type_payment == "card installment") {
             $totalSale->card = $orderPayment->total_payment;
             $totalSale->netto_card = $orderPayment->total_payment - ($orderPayment->total_payment * ($orderPayment->charge_percentage_company + $orderPayment->charge_percentage_bank) / 100);
@@ -54,7 +54,7 @@ class TotalSaleController extends Controller
             $totalSale->bank_in = $orderPayment->total_payment;
         } else if ($orderPayment->type_payment == "debit") {
             $totalSale->debit = $orderPayment->total_payment;
-            $totalSale->netto_debit = $orderPayment->total_payment;
+            $totalSale->netto_debit = $orderPayment->total_payment - ($orderPayment->total_payment * ($orderPayment->charge_percentage_company + $orderPayment->charge_percentage_bank) / 100);
         } else if ($orderPayment->type_payment == "card" || $orderPayment->type_payment == "card installment") {
             $totalSale->card = $orderPayment->total_payment;
             $totalSale->netto_card = $orderPayment->total_payment - ($orderPayment->total_payment * ($orderPayment->charge_percentage_company + $orderPayment->charge_percentage_bank) / 100);

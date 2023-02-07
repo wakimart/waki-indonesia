@@ -2135,6 +2135,8 @@ class OrderController extends Controller
                     $orderPayment->charge_percentage_bank = $request->charge_percentage_bank;
                     $orderPayment->charge_percentage_company = $request->charge_percentage_company;
                     $orderPayment->update();
+
+                    TotalSaleController::updateTotalSale($orderPayment->id);
                     DB::commit();
                     return redirect()->back()->with('success', 'Order Payment Berhasil Di Ubah');
                 } catch (\Exception $ex) {

@@ -105,13 +105,15 @@ class OfflineSideController extends Controller
                     } if($order->status == Order::$status['3']){
                         $order->delivery_cso_id = json_encode($request->delivery_cso_id);
                     } else if ($order->status == Order::$status['4']) {
-                        foreach($request->delivered_image as $index => $image){
-                            $path = $request['delivered_image_file_' . $index];
-                            $filename = basename($path);
-            
-                            Image::make($path)->save('/var/www/public_html/waki-indonesia/sources/order/' . $filename);
+                        if(isset($request->delivered_image) && count($request->delivered_image) > 0){
+                            foreach($request->delivered_image as $index => $image){
+                                $path = $request['delivered_image_file_' . $index];
+                                $filename = basename($path);
+                
+                                Image::make($path)->save('/var/www/public_html/waki-indonesia/sources/order/' . $filename);
+                            }
+                            $order->delivered_image = json_encode($request->delivered_image);
                         }
-                        $order->delivered_image = json_encode($request->delivered_image);
                     }
                     $order->update();
                     
