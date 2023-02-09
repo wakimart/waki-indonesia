@@ -331,7 +331,13 @@ $menu_item_second = "list_order";
 
                                     <option {{ $selected }}
                                         value="{{ $status }}">
+                                        @if($status == \App\Order::$status['6'])
+                                        request stock
+                                        @elseif($status == \App\Order::$status['7'])
+                                        stock approved
+                                        @else
                                         {{ $status }}
+                                        @endif
                                     </option>
                                 @endforeach
                             </select>
@@ -392,6 +398,7 @@ $menu_item_second = "list_order";
                                 <tr>
                                     <th> No. </th>
                                     <th> Order Code </th>
+                                    <th> Temp No </th>
                                     <th> @sortablelink('orderDate', 'Order Date') </th>
                                     <th> Member Name </th>
                                     <th> Type Customer </th>
@@ -421,6 +428,9 @@ $menu_item_second = "list_order";
                                             </a>
                                         </td>
                                         <td {{-- rowspan="{{ $totalProduct }}" --}}>
+                                            {{ $order['temp_no'] }}
+                                        </td>
+                                        <td {{-- rowspan="{{ $totalProduct }}" --}}>
                                             {{ date("d/m/Y", strtotime($order['orderDate'])) }}
                                         </td>
                                         <td {{-- rowspan="{{ $totalProduct }}"  --}}>
@@ -441,8 +451,14 @@ $menu_item_second = "list_order";
                                                 <span class="badge badge-secondary">New</span>
                                             @elseif ($order['status'] == \App\Order::$status['2'])
                                                 <span class="badge badge-primary">Process</span>
+                                            @elseif($order['status'] == \App\Order::$status['6'])
+                                                <span class="badge" style="background-color: #FFD495">Request Stock</span>
+                                            @elseif($order['status'] == \App\Order::$status['7'])
+                                                <span class="badge text-white" style="background-color: #C147E9">Stock Approved</span>                
                                             @elseif ($order['status'] == \App\Order::$status['3'])
                                                 <span class="badge badge-warning">Delivery</span>
+                                            @elseif($order['status'] == \App\Order::$status['8'])
+                                                <span class="badge text-white" style="background-color: #FF6E31">Delivered</span>                
                                             @elseif ($order['status'] == \App\Order::$status['4'])
                                                 <span class="badge badge-success">Success</span>
                                             @elseif ($order['status'] == \App\Order::$status['5'])

@@ -46,6 +46,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => true,
                 'change-status_order_success' => true,
                 'change-status_order_reject' => true,
+                'change-status_order_stock_request_pending' => true,
+                'change-status_order_stock_request_success' => true,
+                'change-status_order_delivered' => true,
 
                 //Update Order Payment Status
                 'change-status_payment' => true,
@@ -140,6 +143,25 @@ class RolesSeeder extends Seeder
                 'browse-promo' => true,
         		'edit-promo' => true,
                 'delete-promo' => true,
+
+                //Stock In Out
+                'browse-stock' => true,
+                'add-stock_in' => true,
+                'add-stock_out' => true,
+                'detail-stock_in_out' => true,
+                'browse-stock_in_out' => true,
+                'edit-stock_in' => true,
+                'edit-stock_out' => true,
+                'delete-stock_in_out' => true,
+
+                // Stock Order Request
+                'browse-stock_order_request' => true,
+
+                //Warehouse
+        		'add-warehouse' => true,
+                'browse-warehouse' => true,
+        		'edit-warehouse' => true,
+                'delete-warehouse' => true,
 
                 //report
 
@@ -288,6 +310,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -382,6 +407,25 @@ class RolesSeeder extends Seeder
                 'browse-promo' => true,
         		'edit-promo' => true,
                 'delete-promo' => true,
+
+                //Stock In Out
+                'browse-stock' => true,
+                'add-stock_in' => true,
+                'add-stock_out' => true,
+                'detail-stock_in_out' => true,
+                'browse-stock_in_out' => true,
+                'edit-stock_in' => true,
+                'edit-stock_out' => true,
+                'delete-stock_in_out' => true,
+
+                // Stock Order Request
+                'browse-stock_order_request' => false,
+
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
 
                 //report
 
@@ -530,6 +574,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -624,6 +671,25 @@ class RolesSeeder extends Seeder
                 'browse-promo' => false,
                 'edit-promo' => false,
                 'delete-promo' => false,
+
+                //Stock In Out
+                'browse-stock' => false,
+                'add-stock_in' => false,
+                'add-stock_out' => false,
+                'detail-stock_in_out' => false,
+                'browse-stock_in_out' => false,
+                'edit-stock_in' => false,
+                'edit-stock_out' => false,
+                'delete-stock_in_out' => false,
+
+                // Stock Order Request
+                'browse-stock_order_request' => false,
+
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
 
                 //report
 
@@ -767,6 +833,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
                 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -861,6 +930,25 @@ class RolesSeeder extends Seeder
                 'browse-promo' => false,
                 'edit-promo' => false,
                 'delete-promo' => false,
+
+                //Stock In Out
+                'browse-stock' => false,
+                'add-stock_in' => false,
+                'add-stock_out' => false,
+                'detail-stock_in_out' => false,
+                'browse-stock_in_out' => false,
+                'edit-stock_in' => false,
+                'edit-stock_out' => false,
+                'delete-stock_in_out' => false,
+
+                // Stock Order Request
+                'browse-stock_order_request' => false,
+
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
 
                 //report
 
@@ -1003,6 +1091,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -1097,6 +1188,25 @@ class RolesSeeder extends Seeder
                 'browse-promo' => false,
                 'edit-promo' => false,
                 'delete-promo' => false,
+
+                //Stock In Out
+                'browse-stock' => false,
+                'add-stock_in' => false,
+                'add-stock_out' => false,
+                'detail-stock_in_out' => false,
+                'browse-stock_in_out' => false,
+                'edit-stock_in' => false,
+                'edit-stock_out' => false,
+                'delete-stock_in_out' => false,
+
+                // Stock Order Request
+                'browse-stock_order_request' => false,
+
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
 
                 //report
 
@@ -1239,6 +1349,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -1333,6 +1446,25 @@ class RolesSeeder extends Seeder
                 'browse-promo' => false,
                 'edit-promo' => false,
                 'delete-promo' => false,
+
+                //Stock In Out
+                'browse-stock' => false,
+                'add-stock_in' => false,
+                'add-stock_out' => false,
+                'detail-stock_in_out' => false,
+                'browse-stock_in_out' => false,
+                'edit-stock_in' => false,
+                'edit-stock_out' => false,
+                'delete-stock_in_out' => false,
+
+                // Stock Order Request
+                'browse-stock_order_request' => false,
+
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
 
                 //report
 
@@ -1475,6 +1607,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -1569,6 +1704,25 @@ class RolesSeeder extends Seeder
                 'browse-promo' => false,
                 'edit-promo' => false,
                 'delete-promo' => false,
+
+                //Stock In Out
+                'browse-stock' => false,
+                'add-stock_in' => false,
+                'add-stock_out' => false,
+                'detail-stock_in_out' => false,
+                'browse-stock_in_out' => false,
+                'edit-stock_in' => false,
+                'edit-stock_out' => false,
+                'delete-stock_in_out' => false,
+
+                // Stock Order Request
+                'browse-stock_order_request' => false,
+
+                //Warehouse
+        		'add-warehouse' => false,
+                'browse-warehouse' => false,
+        		'edit-warehouse' => false,
+                'delete-warehouse' => false,
 
                 //report
 

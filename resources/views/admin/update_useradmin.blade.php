@@ -456,12 +456,30 @@ $menu_item_page = "user";
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-primary"
+                                            for="change-status_order_stock_request_pending">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_stock_request_pending" />
+                                            Change Status Order Request Stock
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
                                         <label class="form-check-label text-warning"
                                             for="change-status_order_delivery">
                                             <input class="form-check-input"
                                                 type="checkbox"
                                                 id="change-status_order_delivery" />
                                             Change Status Order Delivery
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-primary"
+                                            for="change-status_order_delivered">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_delivered" />
+                                            Change Status Order Delivered
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -1136,6 +1154,135 @@ $menu_item_page = "user";
                                                 type="checkbox"
                                                 id="delete-promo" />
                                             Delete Promo
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">STOCK</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-stock_in">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-stock_in" />
+                                            Add Stock In
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-stock_out">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-stock_out" />
+                                            Add Stock Out
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-stock_in_out">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-stock_in_out" />
+                                            Detail Stock In/Out
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-stock">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-stock" />
+                                            Browse Stock
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-stock_in_out">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-stock_in_out" />
+                                            Browse Stock In/Out
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-stock_in">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-stock_in" />
+                                            Edit Stock In
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-stock_out">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-stock_out" />
+                                            Edit Stock Out
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-stock_in_out">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-stock_in_out" />
+                                            Delete Stock In Out
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-stock_order_request">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-stock_order_request" />
+                                            Browse Stock Order Request
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">WAREHOUSE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-warehouse">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-warehouse" />
+                                            Add Warehouse
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-warehouse">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-warehouse" />
+                                            Browse Warehouse
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-warehouse">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-warehouse" />
+                                            Edit Warehouse
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-warehouse">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-warehouse" />
+                                            Delete Warehouse
                                         </label>
                                     </div>
                                 </div>

@@ -75,10 +75,12 @@
                 <table class="w-100">
                     <thead>
                         <td>Order Code</td>
+                        <td>Temp No</td>
                         <td>Order Date</td>
                     </thead>
                     <tr>
                         <td>{{ $order['code'] }}</td>
+                        <td>{{ $order['temp_no'] }}</td>
                         <td class="right">{{ date("d/m/Y", strtotime($order['orderDate'])) }}</td>
                     </tr>
                 </table>
@@ -140,6 +142,13 @@
                         </tr>
                     @endforeach
                 </table>
+                @php
+                    $checkedOrderPayment = $order['status'] == \App\Order::$status['2'] && $order->orderPayment->where('status', 'unverified')->count() == 0 
+                        && $order->orderPayment->where('status', 'verified')->count() > 0;
+                    $checkStockInOutODetail = $order['status'] == \App\Order::$status['3'] && $order->orderDetail->where('type', '!=', 'upgrade')->where('stock_id', null)->count() > 0;
+                    $totalSales = \App\TotalSale::whereIn('order_payment_id', $order->orderPayment->pluck('id')->toArray())->get();
+                    $checkTotalSales = count($totalSales) > 0;
+                @endphp
                 <table class="w-100">
                     <thead>
                         <td colspan="10">Payment Detail</td>
@@ -288,8 +297,14 @@
                                 <span class="badge badge-secondary">New</span>
                             @elseif ($order['status'] == \App\Order::$status['2'])
                                 <span class="badge badge-primary">Process</span>
+                            @elseif($order['status'] == \App\Order::$status['6'])
+                                <span class="badge" style="background-color: #FFD495">Request Stock</span>
+                            @elseif($order['status'] == \App\Order::$status['7'])
+                                <span class="badge text-white" style="background-color: #C147E9">Stock Approved</span>
                             @elseif ($order['status'] == \App\Order::$status['3'])
                                 <span class="badge badge-warning">Delivery</span>
+                            @elseif($order['status'] == \App\Order::$status['8'])
+                                <span class="badge text-white" style="background-color: #FF6E31">Delivered</span>
                             @elseif ($order['status'] == \App\Order::$status['4'])
                                 <span class="badge badge-success">Success</span>
                             @elseif ($order['status'] == \App\Order::$status['5'])
@@ -307,27 +322,61 @@
                         </tr>
                     @endforeach
                     @endif
+                    @if (count(json_decode($order->delivered_image, true)) > 0)
+                    <tr><td></td></tr>
+                    <tr>
+                        <td>Delivered Image : </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @foreach (json_decode($order->delivered_image, true) as $orderDeliveredImage)
+                            <a href="{{ asset("sources/order/$orderDeliveredImage") }}"
+                                target="_blank">
+                                <i class="mdi mdi-numeric-{{ $loop->iteration }}-box" style="font-size: 24px; color: #2daaff;"></i>
+                            </a>
+                            @endforeach
+                            @if($order['status'] != \App\Order::$status['4'] && Gate::check('change-status_order') && Gate::check('change-status_order_delivered'))
+                            <button value="{{ $order['id'] }}"
+                                data-toggle="modal"
+                                data-target="#editDeliveredImageModal"
+                                class="btn btn-delete ml-2">
+                                <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                            </button>
+                            @endif
+                        </td>
+                    </tr>
+                    @endif
                     @if (Gate::check('change-status_order'))
                         <tr>
                             <td>
                                 <div class="form-group row justify-content-center">
                                     @if ($order['status'] == \App\Order::$status['1'] && Gate::check('change-status_order_process'))
-                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['2']}}"
+                                    {{-- <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['2']}}"
                                         class="btn btn-gradient-success mr-2 btn-lg btn-change-status-order">
                                         Process Order
-                                    </button>
-                                    @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_delivery'))
+                                    </button> --}}
+                                    {{-- @elseif ($order['status'] == \App\Order::$status['2'] && Gate::check('change-status_order_stock_request_pending'))
+                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['6']}}"
+                                        class="btn mr-2 btn-change-status-order" style="background-color: #FFD495;">
+                                        Request Stock
+                                    </button> --}}
+                                    @elseif ( ($checkedOrderPayment == true || $checkStockInOutODetail == true)  && Gate::check('change-status_order_delivery'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['3']}}"
                                         class="btn btn-gradient-warning mr-2 btn-lg btn-change-status-order">
                                         Delivery Order
                                     </button>
-                                    @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_success'))
-                                    <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['4']}}"
+                                    @elseif ($order['status'] == \App\Order::$status['3'] && Gate::check('change-status_order_delivered'))
+                                    {{-- <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['8']}}"
+                                        class="btn mr-2 btn-change-status-order" style="background-color: #FF6E31; color: #FFF">
+                                        Delivered Order
+                                    </button> --}}
+                                    @elseif ($order['status'] == \App\Order::$status['8'] && Gate::check('change-status_order_success'))
+                                    {{-- <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['4']}}"
                                         class="btn btn-gradient-primary mr-2 btn-lg btn-change-status-order">
                                         Success Order
-                                    </button>
+                                    </button> --}}
                                     @endif
-                                    @if (($order['status'] == \App\Order::$status['1'] || $order['status'] == \App\Order::$status['2']) && Gate::check('change-status_order_reject'))
+                                    @if ($order['status'] == \App\Order::$status['5'] && $checkTotalSales == true && Gate::check('change-status_order_reject'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['5']}}"
                                         class="btn btn-gradient-danger mr-2 btn-lg btn-change-status-order">
                                         Reject Order
@@ -350,6 +399,152 @@
                 <div class="clearfix"></div>
                 @endif
             </div>
+
+            @if($order->stockOrderRequest && $order->stockOrderRequest->stockInOut)
+                <div class="col-md-12 my-3">
+                    <h2 class="text-center">Out Stock</h2>
+                    <table class="w-100">
+                        <thead>
+                            <td colspan="3">Warehouse (From-To)</td>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">{{ $order->stockOrderRequest->stockInOut->warehouseFrom['code'] }} - {{ $order->stockOrderRequest->stockInOut->warehouseFrom['name'] }}</td>
+                                <td class="text-center">=></td>
+                                <td class="text-center">{{ $order->stockOrderRequest->stockInOut->warehouseTo['code'] }} - {{ $order->stockOrderRequest->stockInOut->warehouseTo['name'] }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="w-100">
+                        <thead>
+                            <tr>
+                                <th>Item Code</th>
+                                <th>Item Name</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($order->stockOrderRequest->stockInout->stockInOutProduct as $sioProduct)
+                            <tr>
+                                <td>{{ $sioProduct->product['code'] }}</td>
+                                <td>{{ $sioProduct->product['name'] }}</td>
+                                <td>{{ $sioProduct->quantity }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+
+            {{-- New Out Stock From Delivery --}}
+            @php
+                $orderDetailStock = $order->orderDetail->where('stock_id', '!=', null)->sortBy(function($item) {
+                    return strtotime($item->stockInOut->date);
+                });
+                $orderDetailUpgrades = $order->orderDetail->where('type', 'upgrade');
+            @endphp
+            @if($orderDetailStock->count() > 0)
+                <div class="col-md-12 my-3">
+                    <h2 class="text-center">Out Stock</h2>
+                    @php $oDStockGroupBys = $orderDetailStock->groupBy('stock_id'); @endphp
+                    @foreach ($oDStockGroupBys as $oDStockGroupBy)
+                        <table class="w-100">
+                            <thead>
+                                <td colspan="3">
+                                    <a href="{{ route('detail_stock_in_out', ['code' => $oDStockGroupBy[0]->stockInOut->code]) }}" target="_blank">
+                                        {{ $oDStockGroupBy[0]->stockInOut->code }}
+                                    </a>
+                                    <br>
+                                    {{ $oDStockGroupBy[0]->stockInOut->date }}
+                                </td>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">{{ $oDStockGroupBy[0]->stockInOut->warehouseFrom['code'] }} - {{ $oDStockGroupBy[0]->stockInOut->warehouseFrom['name'] }}</td>
+                                    <td class="text-center">=></td>
+                                    <td class="text-center">{{ $oDStockGroupBy[0]->stockInOut->warehouseTo['code'] }} - {{ $oDStockGroupBy[0]->stockInOut->warehouseTo['name'] }}</td>
+                                </tr>
+                                @if($oDStockGroupBy[0]->stockInOut['description'] != null)
+                                <tr>
+                                    <td colspan="3">{{ $oDStockGroupBy[0]->stockInOut['description'] }}</td>
+                                </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                        <table class="w-100">
+                            <tbody>
+                                @foreach ($oDStockGroupBy[0]->stockInout->stockInOutProduct as $sioProduct)
+                                <tr>
+                                    <td>{{ $sioProduct->product['code'] }}</td>
+                                    <td>{{ $sioProduct->product['name'] }}</td>
+                                    <td>{{ $sioProduct->quantity }}</td>
+                                </tr>
+                                @endforeach
+                                @if ($loop->iteration == 1 && count($orderDetailUpgrades) > 0)
+                                    @foreach ($orderDetailUpgrades as $odUpgrade)
+                                        <tr>
+                                            <td>{{ $odUpgrade->product['code'] ?? $odUpgrade->promo['code'] ?? 'OTHER'  }}</td>
+                                            <td>Upgrade : {{ $odUpgrade->product['name'] ?? (($odUpgrade->promo) ? implode(", ", $odUpgrade->promo->productName()) : $odUpgrade->other) }}</td>
+                                            <td>{{ $odUpgrade->qty }}</td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        <a href="{{ route('pdf_out_from_order', [
+                                                'code' => $order['code'], 
+                                                'stock_in_out' => $oDStockGroupBy[0]->stockInout['id'],
+                                                'upgrade' => ($loop->iteration == 1 && count($orderDetailUpgrades) > 0)
+                                            ]) }}" class="btn btn-gradient-info">
+                                            <span><i class="mdi mdi-file-document"></i></span> PDF
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    @endforeach
+                </div>
+            @endif
+
+            @if($order['reject_stock_id'] !=null)
+                <div class="col-md-12 my-3">
+                    <h2 class="text-center text-danger">Reject (In) Stock</h2>
+                    <table class="w-100">
+                        <thead>
+                            <td colspan="3">
+                                <a href="{{ route('detail_stock_in_out', ['code' => $order->rejectStock->code]) }}" target="_blank">
+                                    {{ $order->rejectStock->code }}
+                                </a>
+                                <br>
+                                {{ $order->rejectStock->date }}
+                            </td>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">{{ $order->rejectStock->warehouseFrom['code'] }} - {{ $order->rejectStock->warehouseFrom['name'] }}</td>
+                                <td class="text-center">=></td>
+                                <td class="text-center">{{ $order->rejectStock->warehouseTo['code'] }} - {{ $order->rejectStock->warehouseTo['name'] }}</td>
+                            </tr>
+                            @if($order->rejectStock['description'] != null)
+                            <tr>
+                                <td colspan="3">{{ $order->rejectStock['description'] }}</td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                    <table class="w-100">
+                        <tbody>
+                            @foreach ($order->rejectStock->stockInOutProduct as $sioProduct)
+                            <tr>
+                                <td>{{ $sioProduct->product['code'] }}</td>
+                                <td>{{ $sioProduct->product['name'] }}</td>
+                                <td>{{ $sioProduct->quantity }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
 
             <div class="col-md-12">
                 <h2 class="text-center">ORDER HISTORY LOG</h2>
@@ -408,30 +603,80 @@
                             <div class="modal-body">
                                 <h5 id="modal-change-status-question" class="modal-title text-center">Process This Order?</h5>
                                 <hr>
-                                {{-- Pilih CSO Untuk Delivery --}}
-                                @if ($order['status'] == \App\Order::$status['2'])
-                                <div id="delivery-cso">
-                                    <div id="form-cso" class="row">
-                                        <div class="form-group mb-3 col-10">
-                                            <label>Select CSO Delivery</label>
-                                            <select id="delivery-cso-id" class="form-control delivery-cso-id" name="delivery_cso_id[]" style="width: 100%" required>
-                                                <option value="">Choose CSO Delivery</option>
-                                                @foreach ($csos as $cso)
-                                                <option value="{{ $cso['id'] }}">{{ $cso['code'] }} - {{ $cso['name'] }}</option>
-                                                @endforeach
+                                {{-- Pilih Date, Warehouse From, Product for Delivery --}}
+                                @if (($checkedOrderPayment == true || $checkStockInOutODetail == true)  && Gate::check('change-status_order_delivery'))
+                                <div id="delivery-stock">
+                                    <input type="hidden" name="to_warehouse_type" value="{{ $order->branch->warehouse['type'] }}">
+                                    <input type="hidden" name="to_warehouse_id" value="{{ $order->branch['warehouse_id'] }}">
+                                    <input type="hidden" name="temp_no" value="{{ $order->temp_no }}">
+                                    <input type="hidden" name="type" value="out">
+                                    <div class="form-group mb-3">
+                                        <label>Delivery Date</label>
+                                        <input type="date" id="delivery_date" name="date" class="form-control" value="{{ date('Y-m-d') }}" required> 
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label>Select Warehouse From</label>
+                                        <select id="from_warehouse_id" class="form-control" name="from_warehouse_id" style="width: 100%" required>
+                                            <option value="">Select Warehouse</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label>Description (Optional)</label>
+                                        <textarea id="delivery_description" class="form-control" name="description"></textarea>
+                                    </div>
+                                    {{-- Delivery Poduk Order --}}
+                                    <div id="orderDetail-product" class="form-group mb-3">
+                                        <label>Pilihan Produk</label>
+                                        <label style="float: right">(Min: 1)</label>
+                                        <table>
+                                            <tr>
+                                                <th></th>
+                                                <th>Code</th>
+                                                <th>Product</th>
+                                                <th>Quantity</th>
+                                            </tr>
+                                            @foreach ($order->orderDetail as $orderDetail)
+                                                @if($orderDetail->type != "upgrade" && ($orderDetail->product_id != null || $orderDetail->promo_id != null) && $orderDetail->stock_id == null)
+                                                <tr>
+                                                    <td><input type="checkbox" class="form-control orderDetail-product" name="orderDetail_product[]" value="{{ $orderDetail->id }}"></td>
+                                                    <td>{{ $orderDetail->product['code'] ?? $orderDetail->promo['code'] ?? 'OTHER' }}</td>
+                                                    <td>{{ $orderDetail->product['name'] ?? (($orderDetail->promo) ? implode(", ", $orderDetail->promo->productName()) : $orderDetail->other) }}</td>
+                                                    <td>{{ $orderDetail->qty }}</td>
+                                                </tr>
+                                                @endif
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                </div>
+                                @endif
+
+                                @if($order['status'] == \App\Order::$status['5'] && $checkTotalSales == true && $orderDetailStock->count() > 0 && Gate::check('change-status_order_reject'))
+                                    <div id="reject-stock">
+                                        <h4>Stock In</h4>
+                                        <input type="hidden" name="from_warehouse_type" value="{{ $order->branch->warehouse['type'] }}">
+                                        <input type="hidden" name="from_warehouse_id" value="{{ $order->branch['warehouse_id'] }}">
+                                        <input type="hidden" name="temp_no" value="{{ $order->temp_no }}">
+                                        <input type="hidden" name="type" value="in">
+                                        <div class="form-group mb-3">
+                                            <label>Delivery Date</label>
+                                            <input type="date" id="reject_delivery_date" name="date" class="form-control" value="{{ date('Y-m-d') }}" required> 
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label>Select Warehouse To</label>
+                                            <select id="reject_to_warehouse_id" class="form-control" name="to_warehouse_id" style="width: 100%" required>
+                                                <option value="">Select Warehouse</option>
                                             </select>
                                         </div>
-                                        <div class="text-center"
-                                            style="display: inline-block; float: right;">
-                                            <button id="tambah_cso"
-                                                title="Add Cso"
-                                                style="padding: 0.4em 0.7em;">
-                                                <i class="fas fa-plus"></i>
-                                            </button>
+                                        <div class="form-group mb-3">
+                                            <label>Description (Optional)</label>
+                                            <textarea id="reject_delivery_description" class="form-control" name="description"></textarea>
                                         </div>
+                                        @foreach ($order->orderDetail as $orderDetail)
+                                            @if($orderDetail->stock_id != null)
+                                            <input type="hidden" class="form-control" name="orderDetail_product[]" value="{{ $orderDetail->id }}">
+                                            @endif
+                                        @endforeach
                                     </div>
-                                    <div id="tambahan_cso"></div>
-                                </div>
                                 @endif
                             </div>
                             <div class="modal-footer">
@@ -727,6 +972,26 @@
                                 </h5>
                                 <br>
                                 <div class="form-group">
+                                    <label for="">Charge (%)</label>
+                                    <div class="row">
+                                        <div class="col-lg-5">
+                                            <input type="number" step="any" 
+                                                class="form-control"
+                                                id="editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_company" 
+                                                name="charge_percentage_company"
+                                                required>
+                                        </div>
+                                        <div class="col-lg-2 text-center"><h3>+</h3></div>
+                                        <div class="col-lg-5">
+                                            <input type="number" step="any" 
+                                                class="form-control"
+                                                id="editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_bank" 
+                                                name="charge_percentage_bank"
+                                                required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="">Estimate Transfer Date</label>
                                     <input type="date" id="editPaymentForThoseWhoAreNotHeadAdmin-estimate_transfer_date"
                                         class="form-control"
@@ -950,6 +1215,35 @@
                 </div>
             </div>
             <!-- End Modal Delete -->
+            <!-- Error modal -->
+            <div class="modal fade"
+                id="error-modal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="error-modal-desc">
+                            @if(session('error'))
+                            <div class="modal-body">
+                                <h5 class="modal-title text-center">Error</h5>
+                                <hr>
+                                <p class="text-center">{{ session('error') }}</p>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal View -->
             @endif
 
             @else
@@ -971,6 +1265,16 @@
             placeholder: "Choose CSO Delivery",
             dropdownParent: $('#modal-change-status .modal-body')
         });
+        $("#from_warehouse_id").select2({
+            theme: "bootstrap4",
+            placeholder: "Choose Warehouse From",
+            dropdownParent: $('#modal-change-status .modal-body')
+        })
+        $("#reject_to_warehouse_id").select2({
+            theme: "bootstrap4",
+            placeholder: "Choose Warehouse To",
+            dropdownParent: $('#modal-change-status .modal-body')
+        })
         $(document).on("input", 'input[data-type="currency"]', function() {
             $(this).val(numberWithCommas($(this).val()));
         });
@@ -978,17 +1282,41 @@
         $(".btn-change-status-order").click(function(){
             statusOrder = $(this).attr('status-order');
             $('#delivery-cso').hide();
+            $('#request-stock').hide();
+            $('#delivered-image').hide();
+            $('#delivery-stock, #delivery_date, #from_warehouse_id, #delivery_description, #orderDetail-product').hide();
             $('.delivery-cso-id').attr('disabled', true);
+            $('#delivery-stock input[type=hidden]').attr('disabled', true);
+            $('#delivery_date, #from_warehouse_id, .orderDetail-product').attr('disabled', true);
+            $("#reject-stock, #reject_delivery_date, #reject_to_warehouse_id, #reject_delivery_description").hide();
+            $('#reject-stock input[type=hidden]').attr('disabled', true);
+            $("#reject_delivery_date, #reject_to_warehouse_id, #reject_delivery_description").attr('disabled', true);
+            $('.prodCodeName, .prodQty').attr('disabled', true);
+            $('.addDelivered-productimg').attr('disabled', true);
             $('#status-order').val(statusOrder);
             if (statusOrder == "{{\App\Order::$status['2']}}") {
                 $("#modal-change-status-question").html('Process This Order?');
-            } else if (statusOrder == "{{\App\Order::$status['3']}}") {
+            } else if (statusOrder == "{{\App\Order::$status['6']}}")  {
+                $('#request-stock').show();
+                $('.prodCodeName, .prodQty').attr('disabled', false);
+                $("#modal-change-status-question").html('Request Stock? \n Choose Product');
+            } else if (statusOrder == "{{\App\Order::$status['3']}}")  {
                 $('#delivery-cso').show();
                 $('.delivery-cso-id').attr('disabled', false);
-                $("#modal-change-status-question").html('Delivery This Order? \n Choose CSO');
-            } else if (statusOrder == "{{\App\Order::$status['4']}}") {
+                $('#delivery-stock, #delivery_date, #from_warehouse_id, #delivery_description, #orderDetail-product').show();
+                $('#delivery-stock input[type=hidden]').attr('disabled', false);
+                $('#delivery_date, #from_warehouse_id, .orderDetail-product').attr('disabled', false);
+                $("#modal-change-status-question").html('Delivery This Order?');
+            } else if (statusOrder == "{{\App\Order::$status['8']}}") {
+                $('#delivered-image').show();
+                $('.addDelivered-productimg').attr('disabled', false);
+                $("#modal-change-status-question").html('Delivered This Order?');
+            } else if (statusOrder == "{{\App\Order::$status['4']}}") { 
                 $("#modal-change-status-question").html('Success This Order?');
             } else if (statusOrder == "{{\App\Order::$status['5']}}") {
+                $("#reject-stock, #reject_delivery_date, #reject_to_warehouse_id, #reject_delivery_description").show();
+                $('#reject-stock input[type=hidden]').attr('disabled', false);
+                $("#reject_delivery_date, #reject_to_warehouse_id, #reject_delivery_description").attr('disabled', false);
                 $("#modal-change-status-question").html('Reject This Order?');
             }
         });
@@ -1027,6 +1355,47 @@
             e.preventDefault();
             $(this).parents(".form-cso")[0].remove();
         });
+
+        @if(session('error'))
+            $("#error-modal").modal('show');
+        @endif
+
+        function getWarehouse(warehouse_type, check_parent, target_element) {
+            $(target_element).html("");
+            return $.ajax({
+                method: "GET",
+                url: "{{ route('fetchWarehouse') }}",
+                data: {warehouse_type, check_parent},
+                success: function(response) {
+                    var option_warehouse = `<option value="" selected disabled>Select Warehouse</option>`;
+                    response.data.forEach(function(value) {
+                        option_warehouse += `<option value="${value.id}">${value.code} - ${value.name}</option>`;
+                    })
+                    $(target_element).html(option_warehouse);
+                },
+            });
+        }
+
+        @if (($checkedOrderPayment == true || $checkStockInOutODetail == true)  && Gate::check('change-status_order_delivery'))
+            const on_submit_orderDelivery = function(e) {
+                e.preventDefault();
+
+                // Check Min 1 Delivery Product 
+                if (statusOrder == "{{\App\Order::$status['3']}}" && $(".orderDetail-product:checked").length < 1) {
+                    return alert('Choose min 1 product.');
+                } else {
+                    $(this).off('submit', on_submit_orderDelivery);
+                    $(this).submit();
+                }
+            };
+            $('#actionAdd').on('submit', on_submit_orderDelivery);
+
+            getWarehouse(null, true, '#from_warehouse_id'); 
+        @endif
+
+        @if($order['status'] == \App\Order::$status['5'] && $checkTotalSales == true && $orderDetailStock->count() > 0 && Gate::check('change-status_order_reject'))
+            getWarehouse(null, true, "#reject_to_warehouse_id");
+        @endif
 
         function numberWithCommas(x) {
             var parts = x.toString().split(".");
@@ -1143,7 +1512,7 @@
                                 .css('background-image', 'url(' + mainUrlImage + "/" +image + ')');
                         });
 
-                        @if (Gate::check('change-status_payment'))
+                        @if ($order['status'] != \App\Order::$status['5'] && Gate::check('change-status_payment'))
                         if (result.status != "verified") {
                             $("#updateStatusPayment-order_payment_id").val(order_payment_id);
                             $("#divUpdateStatusPayment").show();
@@ -1173,6 +1542,8 @@
                     var urlForm = '{{route("update_order_payment_for_those_who_are_not_head_admin", ":paymentID")}}'
                     urlForm = urlForm.replace(':paymentID', id)
                     $('#editFormPaymentForThoseWhoAreNotHeadAdmin').attr('action', urlForm)
+                    $('#editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_company').val(data.charge_percentage_company)
+                    $('#editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_bank').val(data.charge_percentage_bank)
                     $('#editPaymentForThoseWhoAreNotHeadAdmin-estimate_transfer_date').val(data.estimate_transfer_date)
                 },
                 error: function(data) {

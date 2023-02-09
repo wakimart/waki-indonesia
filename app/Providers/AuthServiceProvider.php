@@ -91,6 +91,15 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('change-status_order_reject', function ($user) {
             return $user->hasAccess(['change-status_order_reject']);
         });
+        Gate::define('change-status_order_stock_request_pending', function ($user) {
+            return $user->hasAccess(['change-status_order_stock_request_pending']);
+        });
+        Gate::define('change-status_order_stock_request_success', function ($user) {
+            return $user->hasAccess(['change-status_order_stock_request_success']);
+        });
+        Gate::define('change-status_order_delivered', function ($user) {
+            return $user->hasAccess(['change-status_order_delivered']);
+        });
 
         //-- UPDATE ORDER STATUS --//
         Gate::define('change-status_payment', function ($user) {
@@ -316,6 +325,51 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('delete-promo', function ($user) {
             return $user->hasAccess(['delete-promo']);
+        });
+
+        //-- STOCK IN OUT --//
+        Gate::define('browse-stock', function ($user) {
+            return $user->hasAccess(['browse-stock']);
+        });
+        Gate::define('add-stock_in', function ($user) {
+            return $user->hasAccess(['add-stock_in']);
+        });
+        Gate::define('add-stock_out', function ($user) {
+            return $user->hasAccess(['add-stock_out']);
+        });
+        Gate::define('detail-stock_in_out', function ($user) {
+            return $user->hasAccess(['detail-stock_in_out']);
+        });
+        Gate::define('browse-stock_in_out', function ($user) {
+            return $user->hasAccess(['browse-stock_in_out']);
+        });
+        Gate::define('edit-stock_in', function ($user) {
+            return $user->hasAccess(['edit-stock_in']);
+        });
+        Gate::define('edit-stock_out', function ($user) {
+            return $user->hasAccess(['edit-stock_out']);
+        });
+        Gate::define('delete-stock_in_out', function ($user) {
+            return $user->hasAccess(['delete-stock_in_out']);
+        });
+
+        //-- Stock Order Request --//
+        Gate::define('browse-stock_order_request', function ($user) {
+            return $user->hasAccess(['browse-stock_order_request']);
+        });
+
+        //-- WAREHOUSE --//
+        Gate::define('add-warehouse', function ($user) {
+            return $user->hasAccess(['add-warehouse']);
+        });
+        Gate::define('browse-warehouse', function ($user) {
+            return $user->hasAccess(['browse-warehouse']);
+        });
+        Gate::define('edit-warehouse', function ($user) {
+            return $user->hasAccess(['edit-warehouse']);
+        });
+        Gate::define('delete-warehouse', function ($user) {
+            return $user->hasAccess(['delete-warehouse']);
         });
 
         //-- TYPE CUSTOMER --//

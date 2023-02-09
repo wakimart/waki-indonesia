@@ -9,6 +9,7 @@ use App\Order;
 use App\OrderDetail;
 use App\OrderPayment;
 use App\HistoryUpdate;
+use App\Http\Controllers\StockOrderRequestController;
 use App\User;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -74,6 +75,7 @@ class OfflineSideController extends Controller
                 $order->distric = $request->distric;
                 $order->status = $request->status;
                 $order->delivery_cso_id = $request->delivery_cso_id;
+                $order->temp_no = $request->temp_no;
                 $order->save();
 
                 foreach($request->order_details as $detail){
@@ -84,6 +86,7 @@ class OfflineSideController extends Controller
                     $dataDetail->qty = $detail['qty'];
                     $dataDetail->type = $detail['type'];
                     $dataDetail->other = $detail['other'];
+                    $dataDetail->order_detail_id = $detail['order_detail_id'];
                     $dataDetail->save();
                 }
 
@@ -97,8 +100,20 @@ class OfflineSideController extends Controller
                 $dataBefore = Order::where('code', $request->code)->first();
                 if(isset($order)){
                     $order->status = $request->status;
-                    if($order->status == Order::$status['3']){
+                    if ($order->status == Order::$status['6']) {
+                        StockOrderRequestController::inserStockOrderRequest($order->id, $request->prodIdNya, $request->prodQty);
+                    } if($order->status == Order::$status['3']){
                         $order->delivery_cso_id = json_encode($request->delivery_cso_id);
+                    } else if ($order->status == Order::$status['4']) {
+                        if(isset($request->delivered_image) && count($request->delivered_image) > 0){
+                            foreach($request->delivered_image as $index => $image){
+                                $path = $request['delivered_image_file_' . $index];
+                                $filename = basename($path);
+                
+                                Image::make($path)->save('/var/www/public_html/waki-indonesia/sources/order/' . $filename);
+                            }
+                            $order->delivered_image = json_encode($request->delivered_image);
+                        }
                     }
                     $order->update();
                     
@@ -195,6 +210,38 @@ class OfflineSideController extends Controller
                 'status' => 'error',
                 'message' => $ex->getMessage()
             ], 500);
+        }
+    }
+
+    public function sendUpdateOrderStatus($code, $status, $user_id, $order_details)
+    {
+        $data = [
+            'code' => $code,
+            'status' => $status,
+            'user_id' => $user_id,
+            'order_details' => $order_details,
+        ];
+        $ch = curl_init(env('ONLINE_URL').'/api/update-order-status');
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json', "api-key:".env('API_KEY')));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.52 Safari/537.17');
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch) . " curl_errno: " . curl_errno($ch) . " response: " . $response;
+        }
+        curl_close($ch);
+        $response = json_decode($response, true);
+        if (isset($response['status']) && $response['status'] == 'success') {
+            return $response;
+        } else {
+            throw new \Exception($error_msg ?? $response['message'] ?? $response ?? 'Network Error!');
         }
     }
 }

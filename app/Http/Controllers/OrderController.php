@@ -30,6 +30,8 @@ use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManagerStatic as Image;
 use App\CreditCard;
 use App\BankAccount;
+use App\Http\Controllers\Api\OfflineSideController;
+use App\TotalSale;
 
 class OrderController extends Controller
 {
@@ -354,6 +356,11 @@ class OrderController extends Controller
                         "code",
                         "like",
                         "%" . $filterString . "%"
+                    )
+                    ->orWhere(
+                        "temp_no",
+                        "like",
+                        "%" . $filterString . "%"
                     );
                 }
             );
@@ -447,6 +454,7 @@ class OrderController extends Controller
             $orders['province'] = $data['province_id'];
             $orders['city'] = $data['city'];
             $orders['distric'] = $data['distric'];
+            $orders['temp_no'] = $data['temp_no'];
             $orders->save();
 
             $orderDetails = OrderDetail::where("order_id", $orders["id"])->get();
@@ -761,31 +769,82 @@ class OrderController extends Controller
 
     public function updateStatusOrder(Request $request)
     {
-        $order = Order::find($request->input('orderId'));
-        $dataBefore = Order::find($request->input('orderId'));
-        $last_status_order = $order->status;
-        $order->status = $request->input('status_order');
-        
-        // Save Delivery CSO
-        if ($order->status == Order::$status['3']) {
-            $order->delivery_cso_id = json_encode($request->delivery_cso_id);
-        }        
-        $order->save();
+        DB::beginTransaction();
+        try {
+            $order = Order::find($request->input('orderId'));
+            $dataBefore = Order::find($request->input('orderId'));
+            $orderDetailOlds = OrderDetail::where('order_id', $request->input('orderId'))->get();
+            $orderPaymentOlds = OrderPayment::where('order_id', $request->input('orderId'))->get();
+            $last_status_order = $order->status;
+            $order->status = $request->input('status_order');
+            
+            if ($order->status == Order::$status['3']) {
+                // Save Delivery CSO
+                // $order->delivery_cso_id = json_encode($request->delivery_cso_id);
+                
+                // Create Stock Out
+                $stockInOut = (new StockInOutController)->storeOutFromOrder($request, $order); 
+                OrderDetail::whereIn('id', $request->orderDetail_product)->update(['stock_id' => $stockInOut['id']]);
 
-        $user = Auth::user();
-        $historyUpdate['type_menu'] = "Order";
-        $historyUpdate['method'] = "Update Status";
-        $historyUpdate['meta'] = json_encode([
-            'user'=>$user['id'],
-            'createdAt' => date("Y-m-d h:i:s"),
-            'dataChange'=> array_diff(json_decode($order, true), json_decode($dataBefore,true))
-        ]);
+                // Update Order Detail Online stock
+                $order_details = OrderDetail::whereIn('id', $request->orderDetail_product)->get();
+                (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'delivery', Auth::user()->code, json_encode($order_details));
+            } else if ($order->status == Order::$status['5']) {
+                // Order Reject
+                OrderPayment::Where('order_id', $order->id)->update(['status' => 'rejected']);
+                $orderPayments = OrderPayment::where('order_id', $order->id)->get();
+                TotalSale::whereIn('order_payment_id', $orderPayments->pluck('id')->toArray())->delete();
+                
+                // Stock In
+                if (count($request->orderDetail_product ?? []) > 0) {
+                    $stockInOut = (new StockInOutController)->storeOutFromOrder($request, $order);
+                    $order->reject_stock_id = $stockInOut->id;
+                }
+            }
+            $order->save();
 
-        $historyUpdate['user_id'] = $user['id'];
-        $historyUpdate['menu_id'] = $order->id;
-        $createData = HistoryUpdate::create($historyUpdate);
-        
-        return redirect()->back()->with('success', 'Status Order Berhasil Di Ubah');
+            $dataChanges = array_diff(json_decode($order, true), json_decode($dataBefore, true));
+            $childs = ["orderDetail" => $orderDetailOlds, "orderPayment" => $orderPaymentOlds];
+            foreach ($childs as $key => $child) {
+                $orderChild = $order->$key->keyBy('id');
+                $child = $child->keyBy('id');
+                foreach ($child as $i=>$c) {
+                    $array_diff_c = isset($orderChild[$i]) 
+                        ? array_diff(json_decode($orderChild[$i], true), json_decode($c, true)) 
+                        : "deleted";
+                    if ($array_diff_c == "deleted") {
+                        $dataChanges[$key][$c['id']."_deleted"] = $c;
+                    } else if ($array_diff_c) {
+                        $dataChanges[$key][$c['id']] = $array_diff_c;
+                    }
+                }
+                if ($orderChild > $child) {
+                    $array_diff_c = array_diff($orderChild->pluck('id')->toArray(), $child->pluck('id')->toArray());
+                    if ($array_diff_c) {
+                        $dataChanges[$key]["added"] = $array_diff_c;
+                    }
+                }
+            }
+    
+            $user = Auth::user();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Update Status";
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> $dataChanges
+            ]);
+    
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $order->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+            
+            DB::commit();
+            return redirect()->back()->with('success', 'Status Order Berhasil Di Ubah');
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $ex->getMessage());
+        }
     }
 
     public function storeOrderPayment(Request $request)
@@ -2073,7 +2132,11 @@ class OrderController extends Controller
                 DB::beginTransaction();
                 try {
                     $orderPayment->estimate_transfer_date = $request->estimate_transfer_date;
+                    $orderPayment->charge_percentage_bank = $request->charge_percentage_bank;
+                    $orderPayment->charge_percentage_company = $request->charge_percentage_company;
                     $orderPayment->update();
+
+                    TotalSaleController::updateTotalSale($orderPayment->id);
                     DB::commit();
                     return redirect()->back()->with('success', 'Order Payment Berhasil Di Ubah');
                 } catch (\Exception $ex) {
