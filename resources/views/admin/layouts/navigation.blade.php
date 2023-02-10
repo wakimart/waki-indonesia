@@ -81,6 +81,9 @@
       @if(Gate::check('browse-financial_routine'))
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_financial_routine_branch'? 'active': '' }}" href="{{ route('list_financial_routine_branch') }}">List by Branch</a></li>
       @endif
+      @if(Gate::check('browse-financial_routine'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'report_financial_routine_all_bank_branch'? 'active': '' }}" href="{{ route('report_financial_routine_all_bank_branch') }}">Report All Bank/Branch</a></li>
+      @endif
     </ul>
   </div>
 </li>

@@ -517,6 +517,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('print_financial_routine')
             ->middleware('can:detail-financial_routine');
 
+        // Rpport Financial Routine All Bank/Branch
+        Route::get('report_financial_routine_all_bank_branch', 'FinancialRoutineController@reportAllBankBranch')
+            ->name('report_financial_routine_all_bank_branch')
+            ->middleware('can:browse-financial_routine');
+
         //Store Financial Routine Transaction
         Route::post('/store_financial_routine_transaction', 'FinancialRoutineTransactionController@store')
             ->name('store_financial_routine_transaction')

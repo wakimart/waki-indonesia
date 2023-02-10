@@ -364,6 +364,28 @@ class FinancialRoutineController extends Controller
         return view('admin.print_financialroutine', compact('financialRoutine', 'total_sales'));
     }
 
+    public function reportAllBankBranch(Request $request)
+    {
+        $financialRoutines  = [];
+        if ($request->filter_date != null && $request->filter_fr_by != null) {
+            $filter_fr_by = $request->filter_fr_by == 'bank' ? '=' : '!=';
+            $banks = BankAccount::leftjoin('branches','branches.bank_account_id', '=','bank_accounts.id' )
+                ->where([['bank_accounts.active', true], ['branches.bank_account_id', $filter_fr_by, null]])
+                ->select('bank_accounts.*')->get();
+            $financialRoutines = FinancialRoutine::select('financial_routines.*')
+                ->where('financial_routines.active', true)
+                ->whereIn('financial_routines.bank_account_id', $banks->pluck('id')->toArray())
+                ->whereBetween('financial_routines.routine_date', [
+                    date('Y-m-01', strtotime($request->filter_date)),
+                    date('Y-m-t', strtotime($request->filter_date)),
+                ])
+                ->join('bank_accounts', 'bank_accounts.id', 'financial_routines.bank_account_id')
+                ->orderBy('bank_accounts.code')
+                ->get();
+        }
+        return view('admin.report_all_bankbranch_financialroutine', compact('financialRoutines'));
+    }
+
     public function checkRoutineDate(Request $request)
     {
         if ($request->routine_date && $request->bank) {
