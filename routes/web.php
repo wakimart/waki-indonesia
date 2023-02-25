@@ -538,6 +538,22 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->middleware('can:browse-area_home_service');
     });
 
+    Route::group(['prefix' => 'therapy', 'middleware' => 'auth'], function() {
+        //Add Absent Off
+        Route::get('/', 'TheraphyServiceController@create')
+            ->name('add_theraphy_service');
+            // ->middleware('can:add-therapy_service');
+        Route::post('/', 'TheraphyServiceController@store')
+            ->name('store_theraphy_service');
+            // ->middleware('can:add-therapy_service');
+        Route::get('/check', 'TheraphyServiceController@check')
+            ->name('check_theraphy_service');
+            // ->middleware('can:check-therapy_service');
+        Route::post('/store-check-in', 'TheraphyServiceController@storeCheckIn')
+            ->name('store_check_in_theraphy_service');
+            // ->middleware('can:store_check_in-therapy_service');
+    });
+
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
         //Add Form Service
         Route::get('/', 'ServiceController@create')

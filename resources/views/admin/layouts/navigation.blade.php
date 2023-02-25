@@ -149,6 +149,20 @@
 </li>
 @endif
 
+<li class="{{isset($menu_item_page) && $menu_item_page == 'theraphy_service'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#theraphy_service-dd" aria-expanded="false" aria-controls="theraphy_service-dd">
+    <span class="menu-title">Theraphy Service</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-home-map-marker menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'theraphy_service'? 'show': '' }}" id="theraphy_service-dd">
+    <ul class="nav flex-column sub-menu">
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_theraphy_service' ? 'active': '' }}" href="{{ route('add_theraphy_service')}}">Add Theraphy Service</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'check_theraphy_service' ? 'active': '' }}" href="{{ route('check_theraphy_service')}}">Check Theraphy Service</a></li>
+    </ul>
+  </div>
+</li>
+
 @if(Gate::check('add-phc-product') || Gate::check('browse-phc-product') || Gate::check('add-personal-homecare') || Gate::check('browse-personal-homecare') || Gate::check('add-public-homecare') || Gate::check('browse-public-homecare'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'product_homecare' || isset($menu_item_page) && $menu_item_page == 'personal_homecare' || isset($menu_item_page) && $menu_item_page == 'public_homecare' ? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#homeCare-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'product_homecare' || isset($menu_item_page) && $menu_item_page == 'personal_homecare' || isset($menu_item_page) && $menu_item_page == 'public_homecare' ? 'true': '' }}" aria-controls="homeCare-dd">
