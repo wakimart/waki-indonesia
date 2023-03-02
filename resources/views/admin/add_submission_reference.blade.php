@@ -259,6 +259,18 @@ $menu_item_second = "add_submission_reference";
                                     accept=".jpg, .jpeg, .png"
                                     multiple />
                             </div>
+
+                            <div class="form-group">
+                                <label for="wakimart-link">
+                                    Wakimart Link (Optional)
+                                </label>
+                                <input type="text"
+                                    class="form-control"
+                                    id="wakimart-link"
+                                    name="wakimart_link"
+                                    placeholder="Wakimart Link" />
+                                <div class="validation"></div>
+                            </div>
                             <br>
                             <br>
                             <div id="refrensiForm" class="form-group">
@@ -411,7 +423,7 @@ $menu_item_second = "add_submission_reference";
                                             </select>
                                         </div> --}}
 
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="link-hs-{{ $x }}">
                                                 Home Service
                                             </label>
@@ -432,7 +444,7 @@ $menu_item_second = "add_submission_reference";
                                                 data-target="#choose-hs">
                                                 Choose Home Service
                                             </button>
-                                        </div>
+                                        </div> --}}
                                         {{-- <div class="form-group">
                                             <label for="member-order-{{ $x }}">
                                                 Order
@@ -709,7 +721,7 @@ function validateForm() {
         "member-province-",
         "member-city-",
         "member-souvenir-",
-        "link-hs-",
+        // "link-hs-",
     ];
 
     inputArray.forEach(function (currentValue) {

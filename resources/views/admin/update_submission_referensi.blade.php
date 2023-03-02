@@ -317,6 +317,18 @@ $menu_item_second = "add_submission_takeaway";
                                     {{ Auth::user()->roles[0]['slug'] == 'cso' ? "readonly" : "" }} />
                                 <div class="validation" id="validation_cso"></div>
                             </div>
+                            <div class="form-group">
+                                <label for="wakimart-link">
+                                    Wakimart Link (Optional)
+                                </label>
+                                <input type="text"
+                                    class="form-control"
+                                    id="wakimart-link"
+                                    name="wakimart_link"
+                                    placeholder="Wakimart Link"
+                                    value="{{ $submission->wakimart_link }}" />
+                                <div class="validation"></div>
+                            </div>
                             <br>
                             <br>
                             <div class="form-group">

@@ -1151,6 +1151,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // add online signature
         Route::post("/online_signature", "ReferenceController@addOnlineSignature")
             ->name("online_signature.add");
+
+        // List Therapy Service (Khusus untuk Submission Reference)
+        Route::get("/list_tservice_submission", "ReferenceController@ListTServiceforSubmission")
+            ->name("list_tservice_submission");
     });
 
     Route::group(['prefix' => 'submission_video_photo', 'middleware' => 'auth'], function() {

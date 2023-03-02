@@ -20,6 +20,7 @@ class Submission extends Model
         "type",
         "active",
         "status",
+        "wakimart_link",
     ];
 
     public function branch()
