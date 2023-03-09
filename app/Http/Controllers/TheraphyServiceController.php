@@ -56,7 +56,7 @@ class TheraphyServiceController extends Controller
     public function check(Request $request){
     	$meta_default = TheraphyService::$meta_default;
     	if(isset($request->code)){
-			$custTherapy = TheraphyService::where([['code', $request->code], ['active', true], ['status', 'process']])->first();
+			$custTherapy = TheraphyService::where([['code', $request->code], ['active', true]])->first();
 	        return view('admin.check_theraphy_service', compact('meta_default', 'custTherapy'));
     	}
         return view('admin.check_theraphy_service', compact('meta_default'));
@@ -67,6 +67,12 @@ class TheraphyServiceController extends Controller
     	if($custTherapy){
     		if(count($custTherapy->theraphySignIn->where('therapy_date', date('Y-m-d', strtotime('now')))) < 1){
 				$therapySignIn = TheraphySignIn::create(['theraphy_service_id' => $custTherapy['id'], 'therapy_date' => date('Y-m-d', strtotime('now')), 'user_id' => Auth::user()->id]);
+
+                if(count(TheraphyService::find($request->id)->theraphySignIn) == 30){
+                    $custTherapy->status = 'success';
+                    $custTherapy->save();
+                }
+
 	            return redirect()->route("check_theraphy_service", ['code' => $custTherapy['code']])->with('success', 'Data berhasil dimasukkan.');
     		}
 	        return redirect()->route("check_theraphy_service", ['code' => $custTherapy['code']])->with('success', 'Data sudah ada.');

@@ -81,7 +81,7 @@
                     <div class="card">
                         <div class="card-body">
                             @if($custTherapy)
-                                <h3 class="text-center" style="color: green">Data Free Therapy Found</h3>
+                                <h3 class="text-center" style="color: green">Data Free Therapy Found ({{ strtoupper($custTherapy->status) }})</h3>
                                 <div class="table-responsive">
                                     <table class="col-md-12">
                                         <thead>
@@ -112,14 +112,15 @@
                                         @endforeach
                                     </table>
                                 </div>
-
-                                <form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_check_in_theraphy_service') }}">
-                                    {{ csrf_field() }}
-                                    <input type="text" name="id" hidden="" value="{{ $custTherapy['id'] }}">
-                                    <div class="form-group text-center">                                    
-                                        <button id="addService" type="submit" class="btn btn-gradient-primary mr-2">Check In Therapy</button>
-                                    </div>
-                                </form>
+                                @if($custTherapy->status == 'process')
+                                    <form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_check_in_theraphy_service') }}">
+                                        {{ csrf_field() }}
+                                        <input type="text" name="id" hidden="" value="{{ $custTherapy['id'] }}">
+                                        <div class="form-group text-center">                                    
+                                            <button id="addService" type="submit" class="btn btn-gradient-primary mr-2">Check In Therapy</button>
+                                        </div>
+                                    </form>
+                                @endif
                             @else
                                 <h3 class="text-center" style="color: red">Data Free Therapy Not Found</h3>
                             @endif
