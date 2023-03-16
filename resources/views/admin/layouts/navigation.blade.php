@@ -159,6 +159,7 @@
     <ul class="nav flex-column sub-menu">
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_theraphy_service' ? 'active': '' }}" href="{{ route('add_theraphy_service')}}">Add Theraphy Service</a></li>
       <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'check_theraphy_service' ? 'active': '' }}" href="{{ route('check_theraphy_service')}}">Check Theraphy Service</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_theraphy_service' ? 'active': '' }}" href="{{ route('list_theraphy_service')}}">List Theraphy Service</a></li>
     </ul>
   </div>
 </li>

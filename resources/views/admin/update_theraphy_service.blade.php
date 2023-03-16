@@ -1,6 +1,6 @@
 <?php
     $menu_item_page = "theraphy_service";
-    $menu_item_second = "add_theraphy_service";
+    $menu_item_second = "list_theraphy_service";
 ?>
 @extends('admin.layouts.template')
 
@@ -47,11 +47,11 @@
 <div class="main-panel">
   	<div class="content-wrapper">
     	<div class="page-header">
-      		<h3 class="page-title">Add Therapy</h3>
+      		<h3 class="page-title">Edit Therapy</h3>
       		<nav aria-label="breadcrumb">
 	        	<ol class="breadcrumb">
-	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#service-dd" aria-expanded="false" aria-controls="service-dd">Therapy</a></li>
-	          		<li class="breadcrumb-item active" aria-current="page">Add Therapy</li>
+	          		<li class="breadcrumb-item"><a data-toggle="collapse" href="#theraphy_service-dd" aria-expanded="false" aria-controls="theraphy_service-dd">Therapy</a></li>
+	          		<li class="breadcrumb-item active" aria-current="page">Edit Therapy</li>
 	        	</ol>
       		</nav>
     	</div>
@@ -59,65 +59,71 @@
 	      	<div class="col-12 grid-margin stretch-card">
 	        	<div class="card">
 	          		<div class="card-body">
-	            		<form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_theraphy_service') }}">
+	            		<form class="forms-sample" method="POST" action="{{ route('update_theraphy_service', $theraphyService->id) }}">
 							{{ csrf_field() }}
+                            {{method_field('PUT')}}
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <div class="form-group">
                                 <label for="">Therapy Type</label>
                                 <select class="form-control" id="type" name="type" data-msg="Mohon Pilih Type" required >
-                                    <option value="sehat_bersama">Program Happy Sehat Bersama WAKi</option>
-                                    <option selected="" value="free">Free Therapy</option>
+                                    <option value="sehat_bersama" {{$theraphyService->type == 'sehat_bersama' ? 'selected' : ''}}>Program Happy Sehat Bersama WAKi</option>
+                                    <option value="free" {{$theraphyService->type == 'free' ? 'selected' : ''}}>Free Therapy</option>
                                 </select>
                                 <div class="validation"></div>
                             </div>
                             <div class="form-group">
                                 <label for="">Branch</label>
                                 <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
-                                    <option {{ old('branch_id') == null ? 'selected' : ''}} disabled value="">Choose Branch</option>
                                     @foreach($branches as $branch)
-                                        <option {{ old('branch_id') == $branch['id'] ? 'selected' : '' }} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                                        <option {{ $theraphyService->branch_id == $branch['id'] ? 'selected' : '' }} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
                                     @endforeach
                                 </select>
                                 <div class="validation"></div>
                             </div>
 							<div class="form-group">
 								<label for="">Register Date</label>
-								<input type="date" class="form-control" name="registered_date" id="registered_date" placeholder="Tanggal Daftar" value="{{ date('Y-m-j', strtotime(old('registered_date') ?? 'now')) }}" required data-msg="Mohon Isi Tanggal" />
+								<input type="date" class="form-control" name="registered_date" id="registered_date" placeholder="Tanggal Daftar" value="{{ $theraphyService->registered_date }}" required data-msg="Mohon Isi Tanggal" />
 							</div>
-                            <div class="form-group therapy_type d-none">
+                            <div class="form-group therapy_type {{ $theraphyService->type == 'free' ? 'd-none' : ''}}">
                                 <label for="">Expired Date</label>
-                                <input type="date" readonly="" class="form-control" name="expired_date" id="expired_date" placeholder="Tanggal Berlaku" value=""/>
+                                <input type="date" readonly="" class="form-control" name="expired_date" id="expired_date" placeholder="Tanggal Berlaku" value="{{$theraphyService->expired_date}}"/>
                             </div>
-                            <div class="form-group therapy_type d-none">
+                            <div class="form-group therapy_type {{ $theraphyService->type == 'free' ? 'd-none' : ''}}">
                                 <label for="">Therapy Location</label>
                                 <select class="form-control" id="therapy_location" name="therapy_location_id" data-msg="Mohon Pilih Therapy Location">
                                     @foreach($therapy_locations as $therapy_location)
-                                        <option value="{{$therapy_location->id}}">{{$therapy_location->name}}</option>
+                                        <option {{$theraphyService->therapy_location_id == $therapy_location->id ? 'selected' : ''}} value="{{$therapy_location->id}}">{{$therapy_location->name}}</option>
                                     @endforeach
                                 </select>
                                 <div class="validation"></div>
                             </div>
 	              			<div class="form-group">
 				                <label for="">Name</label>
-				                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required value="{{ old('name') }}">
+				                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required value="{{ $theraphyService->name }}">
 	              			</div>
 	              			<div class="form-group">
 				                <label for="">Phone Number</label>
-				                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required value="{{ old('phone') }}">
-				                @if($errors->has('phone'))
-					                <div class="validation">{{ $errors->first('phone') }}</div>
-								@endif
+				                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required value="{{ $theraphyService->phone }}">
 	              			</div>
 	              			<div class="form-group">
                                 <label for="province">Province</label>
                                 <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
-                                    <option {{ old('province_id') == null ? 'selected' : ''}} disabled value="" hidden>Pilihan Provinsi</option>
+                                    <option {{ $theraphyService->province_id == null ? 'selected' : ''}} disabled value="" hidden>Pilihan Provinsi</option>
                                     <?php
-	                                    $result = RajaOngkir::FetchProvince();
-	                                    $result = $result['rajaongkir']['results'];
-	                                    if (sizeof($result) > 0) {
-	                                        foreach ($result as $value) {
+	                                    $resultProvince = RajaOngkir::FetchProvince();
+	                                    $resultProvince = $resultProvince['rajaongkir']['results'];
+	                                    if (sizeof($resultProvince) > 0) {
+	                                        foreach ($resultProvince as $value) {
 	                                        	$selected = '';
-	                                        	if(old('province_id') == $value['province_id']){
+	                                        	if($theraphyService->province_id == $value['province_id']){
 	                                        		$selected = 'selected';
 	                                        	}
 
@@ -136,22 +142,57 @@
                             <div class="form-group">
                                 <label for="city">City</label>
                                 <select class="form-control" id="city" name="city_id" data-msg="Mohon Pilih Kota" required>
-                                    <option selected disabled value="" hidden>Pilihan Kota</option>
+                                    @php
+                                        $resultCity = RajaOngkir::FetchCity($theraphyService->province_id);
+                                        $resultCity = $resultCity['rajaongkir']['results'];
+                                        $arrCity = [];
+                                        $arrCity[0] = "";
+                                        $arrCity[1] = "";
+                                        if (sizeof($resultCity) > 0) {
+                                            foreach ($resultCity as $value) {
+                                                $terpilihNya = "";
+                                                if ($theraphyService->city_id == $value['city_id']) {
+                                                    $terpilihNya = "selected";
+                                                }
+
+                                                if ($value['type'] == "Kabupaten") {
+                                                    $arrCity[0] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
+                                                } else {
+                                                    $arrCity[1] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
+                                                }
+                                            }
+                                            echo $arrCity[0];
+                                            echo $arrCity[1];
+                                        }
+                                    @endphp
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="subDistrict">Sub District</label>
                                 <select class="form-control" id="subDistrict" name="subdistrict_id" data-msg="Mohon Pilih Kecamatan" required>
-                                    <option selected disabled value="" hidden>Pilihan Kecamatan</option>
+                                    @php
+                                        $resultSubDistrict = RajaOngkir::FetchDistrict($theraphyService->city_id);
+                                        $resultSubDistrict = $resultSubDistrict['rajaongkir']['results'];
+                                        if(sizeof($resultSubDistrict) > 0){
+                                            foreach ($resultSubDistrict as $value) {
+                                                $terpilihNya = "";
+                                                if($theraphyService->subdistrict_id == $value['subdistrict_id']){
+                                                    $terpilihNya = "selected";
+                                                }
+
+                                                echo "<option value=\"".$value['subdistrict_id']."\"".$terpilihNya.">".$value['subdistrict_name']."</option>";
+                                            }
+                                        }
+                                    @endphp
                                 </select>
                             </div>
 	              			<div class="form-group">
 				                <label for="exampleTextarea1">Address</label>
-				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address" required>{{ old('address') }}</textarea>
+				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address" required>{{ $theraphyService->address }}</textarea>
 	              			</div>
 	              			<div class="form-group">
 				                <label for="">Email/Facebook</label>
-				                <input type="text" class="form-control" id="email_facebook" name="email_facebook" placeholder="Email/Facebook" value="{{ old('email_facebook')  }}">
+				                <input type="text" class="form-control" id="email_facebook" name="email_facebook" placeholder="Email/Facebook" value="{{ $theraphyService->email_facebook }}">
 	              			</div>
 	              			<br>
 	              			<div class="form-group">
@@ -167,17 +208,31 @@
                                         <td>Keterangan</td>
                                     </thead>
                                     @foreach($meta_default as $idxNya => $listMeta)
+                                        @php
+                                            $checked = '';
+                                            $desc = '';
+                                        @endphp
+                                        @foreach($theraphyService->meta_condition as $meta)
+                                            @foreach($meta as $key => $val)
+                                                @php 
+                                                    if($key == $listMeta){
+                                                        $checked = $val[0];
+                                                        $desc = $val[1];
+                                                    }
+                                                @endphp
+                                            @endforeach
+                                        @endforeach
                                     	<tr>
                                     		<td class="col-1">{{ $idxNya < 6 ? ($idxNya+1).'.' : '' }}</td>
                                     		<td class="col-5 {{ $idxNya > 5 ? 'text-right' : '' }}" {{ $idxNya == 5 ? 'colspan=4' : '' }}>{{ $listMeta }}</td>
                                     		@if($idxNya != '5')
 	                                    		<td class="col-1 text-center">
-	                                    			<input style="width: 1.3em; height: 1.3em;" type="radio" name="rdaChoose-{{ $idxNya }}" value="1" required="" {{ old('rdaChoose-'.$idxNya) == '1' ? 'checked' : '' }}>
+	                                    			<input style="width: 1.3em; height: 1.3em;" type="radio" name="rdaChoose-{{ $idxNya }}" value="1" required="" {{ $checked == '1' ? 'checked' : '' }}>
 	                                    		</td>
 	                                    		<td class="col-1 text-center">
-	                                    			<input style="width: 1.3em; height: 1.3em;" type="radio" name="rdaChoose-{{ $idxNya }}" value="0" {{ old('rdaChoose-'.$idxNya) == '0' ? 'checked' : '' }}>
+	                                    			<input style="width: 1.3em; height: 1.3em;" type="radio" name="rdaChoose-{{ $idxNya }}" value="0" {{ $checked == '0' ? 'checked' : '' }}>
 	                                    		</td>
-	                                    		<td class="col-4"><textarea class="form-control" name="desc-{{ $idxNya }}" rows="2" placeholder="Keterangan (opsional)">{{ old('desc-'.$idxNya) }}</textarea></td>
+	                                    		<td class="col-4"><textarea class="form-control" name="desc-{{ $idxNya }}" rows="2" placeholder="Keterangan (opsional)">{{ $desc }}</textarea></td>
                                     		@endif
                                     	</tr>
                                     @endforeach
@@ -186,7 +241,7 @@
 
 	              			<br>
 	              			<div class="form-group">
-	              				<button id="addService" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
+	              				<button id="addService" type="submit" class="btn btn-gradient-primary mr-2">Update</button>
 	              				<button class="btn btn-light">Cancel</button>
 	              			</div>
 	            		</form>

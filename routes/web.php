@@ -552,6 +552,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/store-check-in', 'TheraphyServiceController@storeCheckIn')
             ->name('store_check_in_theraphy_service');
             // ->middleware('can:store_check_in-therapy_service');
+        Route::get('/list', 'TheraphyServiceController@list')
+            ->name('list_theraphy_service');            
+        Route::get('/detail/{id}', 'TheraphyServiceController@detail')->name('detail_theraphy_service');
+        Route::post('add-therapy-service-souvenir', 'TheraphyServiceController@addTherapyServiceSouvenir')->name('add_therapy_service_souvenir');
+        Route::get('/edit/{id}', 'TheraphyServiceController@edit')->name('edit_theraphy_service');
+        Route::match(['put', 'patch'],'/update/{id}', 'TheraphyServiceController@update')->name('update_theraphy_service');
+        Route::match(['put', 'patch'],'/update-status/{id}', 'TheraphyServiceController@updateStatus')->name('update_status_theraphy_service');
+        Route::delete('/delete/{id}', 'TheraphyServiceController@destroy')->name('delete_theraphy_service');
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
