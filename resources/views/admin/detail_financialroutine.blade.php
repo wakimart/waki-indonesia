@@ -480,7 +480,7 @@ $(document).ready(function() {
                     $("#editFRT-tdetail_date").val(result.transaction_date);
                     $("#editFRT-tdetail_bank").val(result.bank_account_id);
                     $("#editFRT-tdetail_nominal").val(numberWithCommas(result.transaction));
-                    $("#editFRT-tdetail_description").text(result.description);
+                    $("#editFRT-tdetail_description").val(result.description);
                 } else {
                     alert(data.result);
                 }
@@ -513,7 +513,7 @@ function cleareditDetailTransactionModal() {
     $("#editFRT-tdetail_date").val("");
     $("#editFRT-tdetail_bank").val("");
     $("#editFRT-tdetail_nominal").val("");
-    $("#editFRT-tdetail_description").text("");
+    $("#editFRT-tdetail_description").val("");
 }
 
 function numberWithCommas(x) {
