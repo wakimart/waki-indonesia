@@ -53,7 +53,7 @@ class TheraphyServiceController extends Controller
 			$theraphyService = TheraphyService::create($data);
 
 			$therapySignIn = TheraphySignIn::create(['theraphy_service_id' => $theraphyService['id'], 'therapy_date' => $data['registered_date'], 'user_id' => Auth::user()->id]);
-            return redirect()->route("check_theraphy_service", ['code' => $theraphyService['code']])->with('success', 'Data berhasil dimasukkan.');
+            return redirect()->route("detail_theraphy_service", ['id' => $theraphyService['id']])->with('success', 'Data berhasil dimasukkan.');
 
 		}
     }

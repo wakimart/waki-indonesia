@@ -64,8 +64,8 @@
                             <div class="form-group">
                                 <label for="">Therapy Type</label>
                                 <select class="form-control" id="type" name="type" data-msg="Mohon Pilih Type" required >
-                                    <option value="sehat_bersama">Program Happy Sehat Bersama WAKi</option>
-                                    <option selected="" value="free">Free Therapy</option>
+                                    <option selected="" value="sehat_bersama">Program Happy Sehat Bersama WAKi</option>
+                                    <option value="free">Free Therapy</option>
                                 </select>
                                 <div class="validation"></div>
                             </div>
@@ -83,13 +83,14 @@
 								<label for="">Register Date</label>
 								<input type="date" class="form-control" name="registered_date" id="registered_date" placeholder="Tanggal Daftar" value="{{ date('Y-m-j', strtotime(old('registered_date') ?? 'now')) }}" required data-msg="Mohon Isi Tanggal" />
 							</div>
-                            <div class="form-group therapy_type d-none">
+                            <div class="form-group therapy_type">
                                 <label for="">Expired Date</label>
                                 <input type="date" readonly="" class="form-control" name="expired_date" id="expired_date" placeholder="Tanggal Berlaku" value=""/>
                             </div>
-                            <div class="form-group therapy_type d-none">
+                            <div class="form-group therapy_type">
                                 <label for="">Therapy Location</label>
                                 <select class="form-control" id="therapy_location" name="therapy_location_id" data-msg="Mohon Pilih Therapy Location">
+                                    <option value="" selected disabled>Choose Location</option>
                                     @foreach($therapy_locations as $therapy_location)
                                         <option value="{{$therapy_location->id}}">{{$therapy_location->name}}</option>
                                     @endforeach
@@ -264,14 +265,19 @@
     function whenTypeChange(){
         if($('#type').val() == "free"){
             $(".therapy_type").addClass("d-none");
-            $(".therapy_type :input").each(function(){
-                $('#type')[0].removeAttr("required");
+            $(".therapy_type :input").each(function(index){
+                $(this).first().removeAttr("required");
             });
+            $('#expired_date').val('');
+            $('#therapy_location').val('');
         }else{
             $(".therapy_type").removeClass("d-none");
-            $(".therapy_type :input").each(function(){
-                $('#type')[0].prop("required");
+            $(".therapy_type :input").each(function(index){
+                $(this).first().attr("required", true);
             });
+            var registeredDate = new Date($('#registered_date').val());
+            registeredDate.setDate(registeredDate.getDate()+24);
+            $('#expired_date').val(formatDate(registeredDate));
         }
     }
 
@@ -279,8 +285,8 @@
     if(is_from_submission_reference !== ''){
         $('#type').val('sehat_bersama').change()
         $('#type').prop('disabled', true)
-        whenTypeChange()
     }
+    whenTypeChange()
 
     function formatDate(date) {
         var d = new Date(date),
@@ -297,6 +303,7 @@
     }
 
     $('#registered_date').change(function() {
+        console.log("masuk");
         var registeredDate = new Date($(this).val())
         registeredDate.setDate(registeredDate.getDate()+24)
         $('#expired_date').val(formatDate(registeredDate))
