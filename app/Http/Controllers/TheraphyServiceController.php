@@ -70,8 +70,9 @@ class TheraphyServiceController extends Controller
     public function storeCheckIn(Request $request){
     	$custTherapy = TheraphyService::find($request->id);
     	if($custTherapy){
-    		if(count($custTherapy->theraphySignIn->where('therapy_date', date('Y-m-d', strtotime('now')))) < 1){
-				$therapySignIn = TheraphySignIn::create(['theraphy_service_id' => $custTherapy['id'], 'therapy_date' => date('Y-m-d', strtotime('now')), 'user_id' => Auth::user()->id]);
+            $signInDate = $request->signInDate ?? date('Y-m-d', strtotime('now'));
+    		if(count($custTherapy->theraphySignIn->where('therapy_date', $signInDate)) < 1){
+				$therapySignIn = TheraphySignIn::create(['theraphy_service_id' => $custTherapy['id'], 'therapy_date' => $signInDate, 'user_id' => Auth::user()->id]);
 
                 if(count(TheraphyService::find($request->id)->theraphySignIn) == 30){
                     $custTherapy->status = 'success';

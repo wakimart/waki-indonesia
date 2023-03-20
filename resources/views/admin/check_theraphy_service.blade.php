@@ -116,6 +116,13 @@
                                     <form id="actionAdd" class="forms-sample" method="POST" action="{{ route('store_check_in_theraphy_service') }}">
                                         {{ csrf_field() }}
                                         <input type="text" name="id" hidden="" value="{{ $custTherapy['id'] }}">
+
+                                        @if(Auth::user()->roles[0]->slug != "branch" && Auth::user()->roles[0]->slug != "cso")
+                                            <br>
+                                            <div class="form-group text-center row">
+                                                <input class="form-control col-6 col-md-6 mx-auto" type="date" name="signInDate" value="{{ date('Y-m-d', strtotime('now')) }}">
+                                            </div>
+                                        @endif
                                         <div class="form-group text-center">                                    
                                             <button id="addService" type="submit" class="btn btn-gradient-primary mr-2">Check In Therapy</button>
                                         </div>
