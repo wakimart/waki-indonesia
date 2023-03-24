@@ -1417,7 +1417,8 @@ class OrderController extends Controller
         $order_reports = $order_reports->where(function($query) {
                 $query->where('orders.status', Order::$status['2'])
                     ->orWhere('orders.status', Order::$status['3'])
-                    ->orWhere('orders.status', Order::$status['4']);
+                    ->orWhere('orders.status', Order::$status['4'])
+                    ->orWhere('orders.status', Order::$status['8']);
             })
             ->where('order_payments.status', 'verified')
             ->orderBy('order_payments.payment_date', 'desc')->select('orders.*', DB::raw('SUM(order_payments.total_payment) as totalPaymentNya'))->groupBy('orders.id')->get();
