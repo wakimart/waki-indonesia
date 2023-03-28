@@ -8,6 +8,7 @@ use App\TherapyLocation;
 use App\TheraphyService;
 use App\TherapyServiceSouvenir;
 use App\Souvenir;
+use App\HistoryUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ class TheraphyServiceController extends Controller
     {
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
     	$meta_default = TheraphyService::$meta_default;
-		$therapy_locations = TherapyLocation::all();
+		$therapy_locations = TherapyLocation::where('status', true)->get();
         return view('admin.add_theraphy_service', compact('meta_default', 'branches', 'therapy_locations'));
     }
 
@@ -90,6 +91,10 @@ class TheraphyServiceController extends Controller
 		$url = $request->all();
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
         $theraphyServices = TheraphyService::where('active', true)->orderBy('code', 'asc');
+
+        if(Auth::user()->cso){
+            $theraphyServices = $theraphyServices->where('branch_id', Auth::user()->cso->branch->id);
+        }
 
         if ($request->has('filter_branch')) {
             $theraphyServices = $theraphyServices->where('branch_id', $request->filter_branch);
@@ -215,5 +220,115 @@ class TheraphyServiceController extends Controller
         }
 
         return redirect()->route("list_theraphy_service")->with("error", "Data not found, please contact IT");
+    }
+
+    public function createTherapyLocation(){
+        return view('admin.add_therapy_location');
+    }
+
+    public function storeTherapyLocation(Request $request){
+        $validator = Validator::make(
+            $request->all(),
+            [
+                "name" => ["required", "string"],
+            ]
+        );
+
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withErrors($validator);
+        }
+
+        TherapyLocation::create($request->only('name'));
+
+        return redirect()
+            ->route("add_therapy_location")
+            ->with("success", "Data Therapy Location berhasil ditambahkan.");
+    }
+
+    public function listTherapyLocation(Request $request){
+        $url = $request->all();
+        $therapyLocations = TherapyLocation::where("status", true);
+        $countTherapyLocations = $therapyLocations->count();
+        $therapyLocations = $therapyLocations->paginate(10);
+
+        return view(
+            "admin.list_therapy_location",
+            compact(
+                "countTherapyLocations",
+                "therapyLocations",
+                "url",
+            )
+        )
+        ->with('i', (request()->input('page', 1) - 1) * 10 + 1);
+    }
+
+    public function editTherapyLocation($id){
+        $therapyLocation = TherapyLocation::find($id);
+        return view('admin.update_therapy_location', compact('therapyLocation'));
+    }
+
+    public function updateTherapyLocation(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'name' => 'required'
+        ]);
+        if($validator->fails()){
+			return back()->withErrors($validator->errors())->withInput();
+		}else{
+            DB::beginTransaction();
+            try {
+                $therapyLocation = TherapyLocation::find($id);
+                $therapyLocation->name = $request->name;
+                $therapyLocation->save();
+
+                $user = Auth::user();
+                $historyUpdateTherapyLocation["type_menu"] = "Therapy Location";
+                $historyUpdateTherapyLocation["method"] = "Update";
+                $historyUpdateTherapyLocation["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => $therapyLocation->getChanges(),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+
+                $historyUpdateTherapyLocation["user_id"] = $user["id"];
+                $historyUpdateTherapyLocation["menu_id"] = $id;
+
+                HistoryUpdate::create($historyUpdateTherapyLocation);
+
+                DB::commit();
+
+                return redirect()->route("edit_therapy_location", $id)->with('success', 'Data berhasil diperbaharui.');
+            } catch (\Exception $ex) {
+                DB::rollback();
+                return redirect()->route("edit_therapy_location", $id)->with("error", $ex);
+            }
+		}
+    }
+
+    public function destroyTherapyLocation($id){
+        DB::beginTransaction();
+
+        if (!empty($id)) {
+            try {
+                $theraphyLocation = TherapyLocation::find($id);
+                $theraphyLocation->status = false;
+                $theraphyLocation->update();
+
+                DB::commit();
+
+                return redirect()
+                    ->route("list_therapy_location")
+                    ->with("success", "Successfully deleted!");
+            } catch (Exception $e) {
+                DB::rollback();
+                return redirect()->route("list_therapy_location")->with("error", "Something wrong, please contact IT");
+            }
+        }
+
+        return redirect()->route("list_therapy_location")->with("error", "Data not found, please contact IT");
     }
 }

@@ -560,6 +560,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::match(['put', 'patch'],'/update/{id}', 'TheraphyServiceController@update')->name('update_theraphy_service');
         Route::match(['put', 'patch'],'/update-status/{id}', 'TheraphyServiceController@updateStatus')->name('update_status_theraphy_service');
         Route::delete('/delete/{id}', 'TheraphyServiceController@destroy')->name('delete_theraphy_service');
+        
+        // therapy location
+        Route::get('/add-therapy-location', 'TheraphyServiceController@createTherapyLocation')->name('add_therapy_location');
+        Route::post('/store-therapy-location', 'TheraphyServiceController@storeTherapyLocation')->name('store_therapy_location');
+        Route::get('/list-therapy-location', 'TheraphyServiceController@listTherapyLocation')->name('list_therapy_location');
+        Route::get('/edit-therapy-location/{id}', 'TheraphyServiceController@editTherapyLocation')->name('edit_therapy_location');
+        Route::match(['put', 'patch'],'/update-therapy-location/{id}', 'TheraphyServiceController@updateTherapyLocation')->name('update_therapy_location');
+        Route::delete('/delete-therapy-location/{id}', 'TheraphyServiceController@destroyTherapyLocation')->name('delete_therapy_location');
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
