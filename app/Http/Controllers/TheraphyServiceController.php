@@ -40,7 +40,10 @@ class TheraphyServiceController extends Controller
             $data = $request->all();
 
             $nowTime = strtotime('now');
-            $data['code'] = substr($nowTime, 3, 3).'-'.substr($nowTime, -4).'-'.substr($data['phone'], -3);
+            $branchData = Branch::find($data['branch_id']);
+            $data['code'] = $branchData['code'].'-'.substr($data['phone'], -3).'-';
+            $tempNya = TheraphyService::where('code', 'LIKE', '%'.$data['code'].'%')->count();
+            $data['code'] .= str_pad($tempNya, 2, "0", STR_PAD_LEFT);
 
             $data['meta_condition'] = [];
 	    	$meta_default = TheraphyService::$meta_default;
@@ -90,7 +93,7 @@ class TheraphyServiceController extends Controller
 	public function list(Request $request){
 		$url = $request->all();
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
-        $theraphyServices = TheraphyService::where('active', true)->orderBy('code', 'asc');
+        $theraphyServices = TheraphyService::where('active', true)->orderBy('created_at', 'desc');
 
         if(Auth::user()->cso){
             $theraphyServices = $theraphyServices->where('branch_id', Auth::user()->cso->branch->id);
