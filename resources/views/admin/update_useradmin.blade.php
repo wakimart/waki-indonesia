@@ -2041,6 +2041,108 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">THERAPY SERVICE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-therapy_service" />
+                                            Add Therapy Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-therapy_service" />
+                                            Browse Therapy Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="check-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="check-therapy_service" />
+                                            Check Therapy Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-therapy_service" />
+                                            Detail Therapy Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-therapy_service" />
+                                            Edit Therapy Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-therapy_service" />
+                                            Delete Therapy Service
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">THERAPY SERVICE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-therapy_service_location">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-therapy_service_location" />
+                                            Add Therapy Service Location
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-therapy_service_location">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-therapy_service_location" />
+                                            Browse Therapy Service Location
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-therapy_service_location">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-therapy_service_location" />
+                                            Edit Therapy Service Location
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-therapy_service_location">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-therapy_service_location" />
+                                            Delete Therapy Service Location
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <input type="hidden"
                                 name="idUserAdmin"
                                 id="idUserAdmin"

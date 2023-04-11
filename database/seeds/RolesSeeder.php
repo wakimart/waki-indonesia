@@ -263,6 +263,21 @@ class RolesSeeder extends Seeder
                 'browse-bank' => true,
         		'edit-bank' => true,
                 'delete-bank' => true,
+
+                //Therapy Service (Head Admin)
+                'add-therapy_service' => true,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => true,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => true,
+                'delete-therapy_service' => true,
+
+                //Therapy Service Location (Head Admin)
+                'add-therapy_service_location' => true,
+                'browse-therapy_service_location' => true,
+                'edit-therapy_service_location' => true,
+                'delete-therapy_service_location' => true,
+
             ]),
         ]);
 
@@ -512,7 +527,21 @@ class RolesSeeder extends Seeder
                 'add-bank' => false,
                 'browse-bank' => false,
                 'edit-bank' => false,
-                'delete-bank' => false,                
+                'delete-bank' => false,
+
+                //Therapy Service (Admin)
+                'add-therapy_service' => true,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => true,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => true,
+                'delete-therapy_service' => true,
+
+                //Therapy Service Location (Admin)
+                'add-therapy_service_location' => true,
+                'browse-therapy_service_location' => true,
+                'edit-therapy_service_location' => true,
+                'delete-therapy_service_location' => true,
         	]),
         ]);
 
@@ -756,7 +785,21 @@ class RolesSeeder extends Seeder
                 'add-bank' => false,
                 'browse-bank' => false,
                 'edit-bank' => false,
-                'delete-bank' => false,                
+                'delete-bank' => false,
+
+                //Therapy Service (CSO)
+                'add-therapy_service' => true,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => true,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => true,
+                'delete-therapy_service' => true,
+
+                //Therapy Service Location (CSO)
+                'add-therapy_service_location' => false,
+                'browse-therapy_service_location' => false,
+                'edit-therapy_service_location' => false,
+                'delete-therapy_service_location' => false,
                 
             ]),
         ]);
@@ -1002,6 +1045,20 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Therapy Service (Branch)
+                'add-therapy_service' => true,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => true,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => true,
+                'delete-therapy_service' => true,
+
+                //Therapy Service Location (Branch)
+                'add-therapy_service_location' => false,
+                'browse-therapy_service_location' => false,
+                'edit-therapy_service_location' => false,
+                'delete-therapy_service_location' => false,
             ]),
         ]);
 
@@ -1246,6 +1303,20 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Therapy Service (CSO)
+                'add-therapy_service' => false,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => false,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => false,
+                'delete-therapy_service' => false,
+
+                //Therapy Service Location (CSO)
+                'add-therapy_service_location' => false,
+                'browse-therapy_service_location' => false,
+                'edit-therapy_service_location' => false,
+                'delete-therapy_service_location' => false,
             ]),
         ]);
 
@@ -1490,6 +1561,20 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Therapy Service (CSO)
+                'add-therapy_service' => false,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => false,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => false,
+                'delete-therapy_service' => false,
+
+                //Therapy Service Location (CSO)
+                'add-therapy_service_location' => false,
+                'browse-therapy_service_location' => false,
+                'edit-therapy_service_location' => false,
+                'delete-therapy_service_location' => false,
             ]),
         ]);
 
@@ -1740,6 +1825,20 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Therapy Service (Admin Management)
+                'add-therapy_service' => false,
+                'browse-therapy_service' => false,
+                'check-therapy_service' => false,
+                'detail-therapy_service' => false,
+                'edit-therapy_service' => false,
+                'delete-therapy_service' => false,
+
+                //Therapy Service Location (Admin Management)
+                'add-therapy_service_location' => false,
+                'browse-therapy_service_location' => false,
+                'edit-therapy_service_location' => false,
+                'delete-therapy_service_location' => false,
             ]),
         ]);
     }

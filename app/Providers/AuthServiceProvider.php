@@ -714,5 +714,39 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define("change-status-product-publichomecare", function ($user) {
             return $user->hasAccess(["change-status-product-publichomecare"]);
         });
+
+        //-- Therapy Service --//
+        Gate::define('add-therapy_service', function ($user) {
+            return $user->hasAccess(['add-therapy_service']);
+        });
+        Gate::define('browse-therapy_service', function ($user) {
+            return $user->hasAccess(['browse-therapy_service']);
+        });
+        Gate::define('check-therapy_service', function ($user) {
+            return $user->hasAccess(['check-therapy_service']);
+        });
+        Gate::define('detail-therapy_service', function ($user) {
+            return $user->hasAccess(['detail-therapy_service']);
+        });
+        Gate::define('edit-therapy_service', function ($user) {
+            return $user->hasAccess(['edit-therapy_service']);
+        });
+        Gate::define('delete-therapy_service', function ($user) {
+            return $user->hasAccess(['delete-therapy_service']);
+        });
+
+        //-- Therapy Service Location--//
+        Gate::define('add-therapy_service_location', function ($user) {
+            return $user->hasAccess(['add-therapy_service_location']);
+        });
+        Gate::define('browse-therapy_service_location', function ($user) {
+            return $user->hasAccess(['browse-therapy_service_location']);
+        });
+        Gate::define('edit-therapy_service_location', function ($user) {
+            return $user->hasAccess(['edit-therapy_service_location']);
+        });
+        Gate::define('delete-therapy_service_location', function ($user) {
+            return $user->hasAccess(['delete-therapy_service_location']);
+        });
     }
 }
