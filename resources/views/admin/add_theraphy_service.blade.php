@@ -91,9 +91,7 @@
                                 <label for="">Therapy Location</label>
                                 <select class="form-control" id="therapy_location" name="therapy_location_id" data-msg="Mohon Pilih Therapy Location">
                                     <option value="" selected disabled>Choose Location</option>
-                                    @foreach($therapy_locations as $therapy_location)
-                                        <option value="{{$therapy_location->id}}">{{$therapy_location->name}}</option>
-                                    @endforeach
+
                                 </select>
                                 <div class="validation"></div>
                             </div>
@@ -140,20 +138,7 @@
                                     <option selected disabled value="" hidden>Pilihan Kota</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="subDistrict">Sub District</label>
-                                <select class="form-control" id="subDistrict" name="subdistrict_id" data-msg="Mohon Pilih Kecamatan" required>
-                                    <option selected disabled value="" hidden>Pilihan Kecamatan</option>
-                                </select>
-                            </div>
-	              			<div class="form-group">
-				                <label for="exampleTextarea1">Address</label>
-				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address" required>{{ old('address') }}</textarea>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="">Email/Facebook</label>
-				                <input type="text" class="form-control" id="email_facebook" name="email_facebook" placeholder="Email/Facebook" value="{{ old('email_facebook')  }}">
-	              			</div>
+                            
 	              			<br>
 	              			<div class="form-group">
 	              				<h3>Keterangan Therapy</h3>
@@ -260,6 +245,26 @@
         $("#type").on("change", function(){
             whenTypeChange()
         });
+
+        $('#branch').on('change', function () {
+            $('#therapy_location').html('')
+            var url = '{{ route("get_therapy_location_data_by_branch", ":id") }}'
+            url = url.replace(':id', this.value);
+            $.ajax({
+                type: 'get',
+                url: url,
+                dataType: 'json',
+                success: function(data){
+                    var html = ''
+                    for(var i=0; i<data.length; i++){
+                        html += `<option value="${data[i]['id']}">${data[i]['name']}</option>`
+                    }
+                    $('#therapy_location').html(html)
+                }, error: function(){
+                    alert("there's something wrong, please call IT")
+                }
+            })
+        })
 	});
 
     function whenTypeChange(){

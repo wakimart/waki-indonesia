@@ -21,8 +21,7 @@ class TheraphyServiceController extends Controller
     {
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
     	$meta_default = TheraphyService::$meta_default;
-		$therapy_locations = TherapyLocation::where('status', true)->get();
-        return view('admin.add_theraphy_service', compact('meta_default', 'branches', 'therapy_locations'));
+        return view('admin.add_theraphy_service', compact('meta_default', 'branches'));
     }
 
     public function store(Request $request){
@@ -146,8 +145,7 @@ class TheraphyServiceController extends Controller
         $theraphyService = TheraphyService::find($id);
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
     	$meta_default = TheraphyService::$meta_default;
-		$therapy_locations = TherapyLocation::all();
-        return view('admin.update_theraphy_service', compact('theraphyService', 'meta_default', 'branches', 'therapy_locations'));
+        return view('admin.update_theraphy_service', compact('theraphyService', 'meta_default', 'branches'));
     }
 
     public function update(Request $request, $id){
@@ -270,6 +268,11 @@ class TheraphyServiceController extends Controller
     public function editTherapyLocation($id){
         $therapyLocation = TherapyLocation::find($id);
         return view('admin.update_therapy_location', compact('therapyLocation'));
+    }
+
+    public function getTherapyLocationDataByBranch($branch){
+        $therapyLocations = TherapyLocation::where('status', true)->where('branch_id', $branch)->get();
+        return response()->json($therapyLocations);
     }
 
     public function updateTherapyLocation(Request $request, $id){

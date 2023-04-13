@@ -112,20 +112,8 @@
                                 <td>{{$theraphyService->phone}}</td>
                             </tr>
                             <tr>
-                                <td>Address</td>
-                                <td>{{$theraphyService->address}}</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>{{$theraphyService->subdistrictCityProvince->subdistrict_name}}, {{$theraphyService->subdistrictCityProvince->city}}, {{$theraphyService->subdistrictCityProvince->province}}</td>
-                            </tr>
-                            <tr>
                                 <td>location</td>
                                 <td>{{$theraphyService->therapy_location_id ? $theraphyService->therapyLocation->name : ''}}</td>
-                            </tr>
-                            <tr>
-                                <td>Email/Facebook</td>
-                                <td>{{$theraphyService->email_facebook}}</td>
                             </tr>
                         </tbody>
                     </table>

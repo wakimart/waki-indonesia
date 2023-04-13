@@ -98,11 +98,7 @@
                             </div>
                             <div class="form-group therapy_type {{ $theraphyService->type == 'free' ? 'd-none' : ''}}">
                                 <label for="">Therapy Location</label>
-                                <select class="form-control" id="therapy_location" name="therapy_location_id" data-msg="Mohon Pilih Therapy Location">
-                                    @foreach($therapy_locations as $therapy_location)
-                                        <option {{$theraphyService->therapy_location_id == $therapy_location->id ? 'selected' : ''}} value="{{$therapy_location->id}}">{{$therapy_location->name}}</option>
-                                    @endforeach
-                                </select>
+                                <select class="form-control" id="therapy_location" name="therapy_location_id" data-msg="Mohon Pilih Therapy Location"></select>
                                 <div class="validation"></div>
                             </div>
 	              			<div class="form-group">
@@ -167,33 +163,7 @@
                                     @endphp
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="subDistrict">Sub District</label>
-                                <select class="form-control" id="subDistrict" name="subdistrict_id" data-msg="Mohon Pilih Kecamatan" required>
-                                    @php
-                                        $resultSubDistrict = RajaOngkir::FetchDistrict($theraphyService->city_id);
-                                        $resultSubDistrict = $resultSubDistrict['rajaongkir']['results'];
-                                        if(sizeof($resultSubDistrict) > 0){
-                                            foreach ($resultSubDistrict as $value) {
-                                                $terpilihNya = "";
-                                                if($theraphyService->subdistrict_id == $value['subdistrict_id']){
-                                                    $terpilihNya = "selected";
-                                                }
-
-                                                echo "<option value=\"".$value['subdistrict_id']."\"".$terpilihNya.">".$value['subdistrict_name']."</option>";
-                                            }
-                                        }
-                                    @endphp
-                                </select>
-                            </div>
-	              			<div class="form-group">
-				                <label for="exampleTextarea1">Address</label>
-				                <textarea class="form-control" id="address" name="address" rows="4" placeholder="Address" required>{{ $theraphyService->address }}</textarea>
-	              			</div>
-	              			<div class="form-group">
-				                <label for="">Email/Facebook</label>
-				                <input type="text" class="form-control" id="email_facebook" name="email_facebook" placeholder="Email/Facebook" value="{{ $theraphyService->email_facebook }}">
-	              			</div>
+                            
 	              			<br>
 	              			<div class="form-group">
 	              				<h3>Keterangan Therapy</h3>
@@ -256,7 +226,10 @@
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript">
-	$(document).ready(function(){
+    
+    getTherapyLocationByBranch()
+	
+    $(document).ready(function(){
 		$("#province").on("change", function () {
 	        const id = $(this).val();
 	        $("#city").html("");
@@ -314,7 +287,31 @@
         $("#type").on("change", function(){
             whenTypeChange()
         });
+
+        $('#branch').on('change', function () {
+            getTherapyLocationByBranch()
+        })
 	});
+
+    function getTherapyLocationByBranch() {
+        $('#therapy_location').html('')
+        var url = '{{ route("get_therapy_location_data_by_branch", ":id") }}'
+        url = url.replace(':id', $('#branch').val());
+        $.ajax({
+            type: 'get',
+            url: url,
+            dataType: 'json',
+            success: function(data){
+                var html = ''
+                for(var i=0; i<data.length; i++){
+                    html += `<option value="${data[i]['id']}">${data[i]['name']}</option>`
+                }
+                $('#therapy_location').html(html)
+            }, error: function(){
+                alert("there's something wrong, please call IT")
+            }
+        })
+    }
 
     function whenTypeChange(){
         if($('#type').val() == "free"){
