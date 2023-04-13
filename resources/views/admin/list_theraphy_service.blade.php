@@ -92,15 +92,23 @@
 											<td>{{$theraphyService->branch->name}}</td>
 											<td>{{$theraphyService->status}}</td>
 				                            <td class="text-center">
+				                            	@can("detail-therapy_service")
 												<a href="{{ route('detail_theraphy_service', $theraphyService->id) }}" target="_blank">
 													<i class="mdi mdi-eye mr-3" style="font-size: 24px; color:#636e72;"></i>
 												</a>
-												<a href="{{ route('edit_theraphy_service', $theraphyService->id) }}">
-													<i class="mdi mdi-border-color mr-3" style="font-size: 24px; color:#fed713;"></i>
-												</a>
-												<button onclick="submitDelete(`{{ route('delete_theraphy_service', $theraphyService->id) }}`)" class="btn-delete">
-													<i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
-												</button>
+												@endcan
+												@if($theraphyService->status != "success" || Auth::user()->roles[0]['slug'] == 'head-admin')
+					                            	@can("edit-therapy_service")
+														<a href="{{ route('edit_theraphy_service', $theraphyService->id) }}">
+															<i class="mdi mdi-border-color mr-3" style="font-size: 24px; color:#fed713;"></i>
+														</a>
+													@endcan
+					                            	@can("delete-therapy_service")
+														<button onclick="submitDelete(`{{ route('delete_theraphy_service', $theraphyService->id) }}`)" class="btn-delete">
+															<i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
+														</button>
+													@endcan
+												@endif
 											</td>
 				                        </tr>
 				                    @endforeach
