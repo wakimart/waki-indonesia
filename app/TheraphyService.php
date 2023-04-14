@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TheraphyService extends Model
 {
     protected $fillable = [
-    	'code','registered_date','name','phone','province_id','city_id','subdistrict_id','address','email_facebook','meta_condition','status','active', 'branch_id', 'type', 'expired_date', 'therapy_location_id'
+    	'code','registered_date','name','phone','province_id','city_id','subdistrict_id','address','email_facebook','meta_condition','status','active', 'branch_id', 'type', 'expired_date', 'therapy_location_id', 'request',
     ];
 
     protected $casts = [

@@ -211,31 +211,41 @@
                             $signIn = count($theraphyService->theraphySignIn);
                             $max = round($signIn/3);                            
                         @endphp
-                        @if(count($theraphyService->therapyServiceSouvenir) < $max)
+                        @if(count($theraphyService->therapyServiceSouvenir) < $max && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'branch')
                             <button type="button" class="btn btn-primary mt-5" data-toggle="modal" data-target="#addTherapyServiceSouvenirModal">
                                 Add Souvenir
                             </button>
+                        @elseif(count($theraphyService->therapyServiceSouvenir) < $max && !$theraphyService->request)
+                            <form action="{{route('update_theraphy_service', $theraphyService->id)}}" method="post">
+                                @csrf
+                                @method('PUT')
+                                <button type="submit" class="btn btn-primary mt-5" name="request" value="1">
+                                    Request Souvenir
+                                </button>
+                            </form>
                         @endif
                     </div>
                 </div>
             </div>
         @endif
-        <div class="col-12 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h3>Status : {{ucwords($theraphyService->status)}}</h3>
+        @if(Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'branch')
+            <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3>Status : {{ucwords($theraphyService->status)}}</h3>
 
-                    @if($theraphyService->status == 'process')
-                        <form action="{{route('update_status_theraphy_service', $theraphyService->id)}}" method="post">
-                            @csrf
-                            @method('PUT')
-                            <button class="btn btn-gradient-primary m-3" name="status" value="success">Success</button>
-                            <button class="btn btn-gradient-danger m-3" name="status" value="reject">Reject</button>
-                        </form>
-                    @endif
+                        @if($theraphyService->status == 'process')
+                            <form action="{{route('update_status_theraphy_service', $theraphyService->id)}}" method="post">
+                                @csrf
+                                @method('PUT')
+                                <button class="btn btn-gradient-primary m-3" name="status" value="success">Success</button>
+                                <button class="btn btn-gradient-danger m-3" name="status" value="reject">Reject</button>
+                            </form>
+                        @endif
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 </div>
 <div class="modal fade" id="addTherapyServiceSouvenirModal" tabindex="-1" role="dialog" aria-labelledby="addTherapyServiceSouvenirModalLabel" aria-hidden="true">
