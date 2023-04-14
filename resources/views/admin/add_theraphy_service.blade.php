@@ -65,7 +65,7 @@
                                 <label for="">Therapy Type</label>
                                 <select class="form-control" id="type" name="type" data-msg="Mohon Pilih Type" required >
                                     <option selected="" value="sehat_bersama">Program Happy Sehat Bersama WAKi</option>
-                                    <option value="free">Free Therapy</option>
+                                    <option value="free" disabled="">Free Therapy</option>
                                 </select>
                                 <div class="validation"></div>
                             </div>
