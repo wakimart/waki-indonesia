@@ -92,6 +92,7 @@ class TheraphyServiceController extends Controller
 	public function list(Request $request){
 		$url = $request->all();
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
+        $locations = TherapyLocation::where('status', true)->get();
         $theraphyServices = TheraphyService::where('active', true)->orderBy('created_at', 'desc');
 
         if(Auth::user()->cso){
@@ -102,6 +103,10 @@ class TheraphyServiceController extends Controller
             $theraphyServices = $theraphyServices->where('branch_id', $request->filter_branch);
         }
 
+        if ($request->has('filter_location')) {
+            $theraphyServices = $theraphyServices->where('therapy_location_id', $request->filter_location);
+        }
+
         if ($request->has('search')) {
             $theraphyServices = $theraphyServices->where(function($query) use ($request) {
                 $query->where('name','LIKE', '%'.$request->search.'%')
@@ -109,12 +114,15 @@ class TheraphyServiceController extends Controller
                     ->orWhere('phone','LIKE', '%'.$request->search.'%');
             });
         }
+        $theraphyRequest = clone $theraphyServices;
 
         $countTheraphyService = count($theraphyServices->get());
-
         $theraphyServices = $theraphyServices->paginate(10);
 
-        return view('admin.list_theraphy_service', compact('theraphyServices', 'countTheraphyService', 'branches', 'url'));
+        $countTheraphyRequest = count($theraphyRequest->where('request', true)->get());
+        $theraphyRequest = $theraphyRequest->paginate(10, ['*'], 'request');
+
+        return view('admin.list_theraphy_service', compact('theraphyServices', 'theraphyRequest', 'countTheraphyService', 'countTheraphyRequest', 'branches', 'url', 'locations'));
 	}
 
     public function detail($id){
@@ -133,6 +141,11 @@ class TheraphyServiceController extends Controller
             $theraphyServiceSouvenir->user_id = $request->user_id;
             $theraphyServiceSouvenir->save();
 
+
+            $theraphyService = TheraphyService::find($request->therapy_service_id);
+            $theraphyService->request = false;
+            $theraphyService->save();
+
             DB::commit();
             return redirect()->route("detail_theraphy_service", $request->therapy_service_id)->with('success', 'Data berhasil ditambahkan.');
         } catch (\Exception $ex) {
@@ -149,6 +162,7 @@ class TheraphyServiceController extends Controller
     }
 
     public function update(Request $request, $id){
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'phone' => [
                 Rule::unique('theraphy_services')
@@ -177,7 +191,7 @@ class TheraphyServiceController extends Controller
                 $theraphyService->update($data);
 
                 DB::commit();
-                return redirect()->route("check_theraphy_service", ['code' => $theraphyService['code']])->with('success', 'Data berhasil diperbaharui.');
+                return redirect()->route("detail_theraphy_service", ['id' => $theraphyService['id']])->with('success', 'Data berhasil diperbaharui.');
             } catch (\Exception $ex) {
                 DB::rollback();
                 return redirect()->route("edit_theraphy_service", $id)->with("error", $ex);

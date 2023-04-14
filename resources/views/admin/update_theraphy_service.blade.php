@@ -75,7 +75,7 @@
                                 <label for="">Therapy Type</label>
                                 <select class="form-control" id="type" name="type" data-msg="Mohon Pilih Type" required >
                                     <option value="sehat_bersama" {{$theraphyService->type == 'sehat_bersama' ? 'selected' : ''}}>Program Happy Sehat Bersama WAKi</option>
-                                    <option value="free" {{$theraphyService->type == 'free' ? 'selected' : ''}}>Free Therapy</option>
+                                    <option value="free" {{$theraphyService->type == 'free' ? 'selected' : ''}} disabled="">Free Therapy</option>
                                 </select>
                                 <div class="validation"></div>
                             </div>
