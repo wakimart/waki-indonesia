@@ -224,7 +224,8 @@ class TheraphyServiceController extends Controller
     }
 
     public function createTherapyLocation(){
-        return view('admin.add_therapy_location');
+        $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
+        return view('admin.add_therapy_location', compact('branches'));
     }
 
     public function storeTherapyLocation(Request $request){
@@ -241,7 +242,7 @@ class TheraphyServiceController extends Controller
                 ->withErrors($validator);
         }
 
-        TherapyLocation::create($request->only('name'));
+        TherapyLocation::create($request->only('name', 'branch_id', 'province_id', 'city_id', 'subdistrict_id', 'address'));
 
         return redirect()
             ->route("add_therapy_location")
@@ -267,7 +268,8 @@ class TheraphyServiceController extends Controller
 
     public function editTherapyLocation($id){
         $therapyLocation = TherapyLocation::find($id);
-        return view('admin.update_therapy_location', compact('therapyLocation'));
+        $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
+        return view('admin.update_therapy_location', compact('therapyLocation', 'branches'));
     }
 
     public function getTherapyLocationDataByBranch($branch){
@@ -286,6 +288,11 @@ class TheraphyServiceController extends Controller
             try {
                 $therapyLocation = TherapyLocation::find($id);
                 $therapyLocation->name = $request->name;
+                $therapyLocation->branch_id = $request->branch_id;
+                $therapyLocation->province_id = $request->province_id;
+                $therapyLocation->city_id = $request->city_id;
+                $therapyLocation->subdistrict_id = $request->subdistrict_id;
+                $therapyLocation->address = $request->address;
                 $therapyLocation->save();
 
                 $user = Auth::user();
