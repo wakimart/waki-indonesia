@@ -112,6 +112,22 @@
                                 <td>{{$theraphyService->phone}}</td>
                             </tr>
                             <tr>
+                                <td>Address</td>
+                                <td>{{$theraphyService->therapyLocation ? $theraphyService->therapyLocation->address : ''}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                @if($theraphyService->therapyLocation)
+                                    @if($theraphyService->therapyLocation->subdistrict_id)
+                                        <td>{{$theraphyService->therapyLocation->subdistrictCityProvince->subdistrict_name}}, {{$theraphyService->therapyLocation->subdistrictCityProvince->city}}, {{$theraphyService->therapyLocation->subdistrictCityProvince->province}}</td>
+                                    @else
+                                        <td></td>
+                                    @endif
+                                @else
+                                    <td></td>
+                                @endif
+                            </tr>
+                            <tr>
                                 <td>location</td>
                                 <td>{{$theraphyService->therapy_location_id ? $theraphyService->therapyLocation->name : ''}}</td>
                             </tr>
