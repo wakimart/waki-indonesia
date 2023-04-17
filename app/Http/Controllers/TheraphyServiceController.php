@@ -53,6 +53,12 @@ class TheraphyServiceController extends Controller
 					]);
 				}
 			}
+
+            // province, city and subdistrict from therapy location
+            $location = TherapyLocation::find($request->therapy_location_id);
+            $data['province_id'] = $location->province_id;
+            $data['city_id'] = $location->city_id;
+            $data['subdistrict_id'] = $location->subdistrict_id;
 			$theraphyService = TheraphyService::create($data);
 
 			$therapySignIn = TheraphySignIn::create(['theraphy_service_id' => $theraphyService['id'], 'therapy_date' => $data['registered_date'], 'user_id' => Auth::user()->id]);
@@ -188,6 +194,11 @@ class TheraphyServiceController extends Controller
                     }
                 }
                 $theraphyService = TheraphyService::find($id);
+                // province, city and subdistrict from therapy location
+                $location = TherapyLocation::find($request->therapy_location_id);
+                $data['province_id'] = $location->province_id;
+                $data['city_id'] = $location->city_id;
+                $data['subdistrict_id'] = $location->subdistrict_id;
                 $theraphyService->update($data);
 
                 DB::commit();

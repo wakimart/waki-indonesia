@@ -106,38 +106,6 @@
 					                <div class="validation">{{ $errors->first('phone') }}</div>
 								@endif
 	              			</div>
-	              			<div class="form-group">
-                                <label for="province">Province</label>
-                                <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
-                                    <option {{ old('province_id') == null ? 'selected' : ''}} disabled value="" hidden>Pilihan Provinsi</option>
-                                    <?php
-	                                    $result = RajaOngkir::FetchProvince();
-	                                    $result = $result['rajaongkir']['results'];
-	                                    if (sizeof($result) > 0) {
-	                                        foreach ($result as $value) {
-	                                        	$selected = '';
-	                                        	if(old('province_id') == $value['province_id']){
-	                                        		$selected = 'selected';
-	                                        	}
-
-	                                            echo '<option value="'
-	                                                . $value['province_id']
-	                                                . '" '
-	                                                . $selected
-	                                                .'>'
-	                                                . $value['province']
-	                                                . "</option>";
-	                                        }
-	                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="city">City</label>
-                                <select class="form-control" id="city" name="city_id" data-msg="Mohon Pilih Kota" required>
-                                    <option selected disabled value="" hidden>Pilihan Kota</option>
-                                </select>
-                            </div>
                             
 	              			<br>
 	              			<div class="form-group">

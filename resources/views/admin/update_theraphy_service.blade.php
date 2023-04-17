@@ -109,60 +109,6 @@
 				                <label for="">Phone Number</label>
 				                <input type="number" class="form-control" id="phone" name="phone" placeholder="Phone Number" required value="{{ $theraphyService->phone }}">
 	              			</div>
-	              			<div class="form-group">
-                                <label for="province">Province</label>
-                                <select class="form-control" id="province" name="province_id" data-msg="Mohon Pilih Provinsi" required>
-                                    <option {{ $theraphyService->province_id == null ? 'selected' : ''}} disabled value="" hidden>Pilihan Provinsi</option>
-                                    <?php
-	                                    $resultProvince = RajaOngkir::FetchProvince();
-	                                    $resultProvince = $resultProvince['rajaongkir']['results'];
-	                                    if (sizeof($resultProvince) > 0) {
-	                                        foreach ($resultProvince as $value) {
-	                                        	$selected = '';
-	                                        	if($theraphyService->province_id == $value['province_id']){
-	                                        		$selected = 'selected';
-	                                        	}
-
-	                                            echo '<option value="'
-	                                                . $value['province_id']
-	                                                . '" '
-	                                                . $selected
-	                                                .'>'
-	                                                . $value['province']
-	                                                . "</option>";
-	                                        }
-	                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="city">City</label>
-                                <select class="form-control" id="city" name="city_id" data-msg="Mohon Pilih Kota" required>
-                                    @php
-                                        $resultCity = RajaOngkir::FetchCity($theraphyService->province_id);
-                                        $resultCity = $resultCity['rajaongkir']['results'];
-                                        $arrCity = [];
-                                        $arrCity[0] = "";
-                                        $arrCity[1] = "";
-                                        if (sizeof($resultCity) > 0) {
-                                            foreach ($resultCity as $value) {
-                                                $terpilihNya = "";
-                                                if ($theraphyService->city_id == $value['city_id']) {
-                                                    $terpilihNya = "selected";
-                                                }
-
-                                                if ($value['type'] == "Kabupaten") {
-                                                    $arrCity[0] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
-                                                } else {
-                                                    $arrCity[1] .= "<option value=\"".$value['city_id']."\"".$terpilihNya.">".$value['type']." ".$value['city_name']."</option>";
-                                                }
-                                            }
-                                            echo $arrCity[0];
-                                            echo $arrCity[1];
-                                        }
-                                    @endphp
-                                </select>
-                            </div>
                             
 	              			<br>
 	              			<div class="form-group">
