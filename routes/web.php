@@ -38,6 +38,9 @@ Route::get('/thankyou-personal-homecare/{id}', 'PersonalHomecareController@thank
 Route::get('/public-homecare/{id}', 'PublicHomecareController@puhForm')->name('public_homecare');
 Route::get('/thankyou-public-homecare/{id}', 'PublicHomecareController@thankyouForm')->name('thankyou_puh');
 
+//Therapy Service
+Route::get('/therapy-service/{id}', 'TheraphyServiceController@publicTherapyDetail')->name('therapy_service');
+
 //Service Product
 // Route::get('/service', 'ServiceController@indexUser')->name('service');
 Route::get('/trackservice/{id}', 'ServiceController@trackService')->name('track_service');
@@ -355,7 +358,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::delete('/delete_regispromo/{id}', 'RegistrationPromotionController@admin_DeleteRegistrationPromo')
             ->name('delete_regispromo')
             ->middleware('can:delete-deliveryorder');
-        	    
+
     });
 
     Route::group(['prefix' => 'order', 'middleware' => 'auth'], function() {
@@ -457,7 +460,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/export_order_report_cso', 'OrderController@admin_ExportOrderReportCso')
             ->name('admin_export_order_report_cso')
             ->middleware('can:browse-order_report_cso');
-        
+
         Route::get('/check_order_code', 'OrderController@checkOrderCode')
             ->name('check_order_code');
     });
@@ -553,14 +556,14 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('store_check_in_theraphy_service');
             // ->middleware('can:store_check_in-therapy_service');
         Route::get('/list', 'TheraphyServiceController@list')
-            ->name('list_theraphy_service');            
+            ->name('list_theraphy_service');
         Route::get('/detail/{id}', 'TheraphyServiceController@detail')->name('detail_theraphy_service');
         Route::post('add-therapy-service-souvenir', 'TheraphyServiceController@addTherapyServiceSouvenir')->name('add_therapy_service_souvenir');
         Route::get('/edit/{id}', 'TheraphyServiceController@edit')->name('edit_theraphy_service');
         Route::match(['put', 'patch'],'/update/{id}', 'TheraphyServiceController@update')->name('update_theraphy_service');
         Route::match(['put', 'patch'],'/update-status/{id}', 'TheraphyServiceController@updateStatus')->name('update_status_theraphy_service');
         Route::delete('/delete/{id}', 'TheraphyServiceController@destroy')->name('delete_theraphy_service');
-        
+
         // therapy location
         Route::get('/add-therapy-location', 'TheraphyServiceController@createTherapyLocation')->name('add_therapy_location');
         Route::post('/store-therapy-location', 'TheraphyServiceController@storeTherapyLocation')->name('store_therapy_location');
@@ -632,7 +635,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("update_fail_repair")
             ->middleware("can:edit-service");
     });
-    
+
     Route::group(['prefix' => 'technician_schedule', 'middleware' => 'auth'], function() {
         //Add Technician Schedule
         Route::get('/', 'TechnicianScheduleController@create')
@@ -1033,7 +1036,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/import_data_sourcing', 'DataSourcingController@importDataSourcing')
             ->name('import_data_sourcing')
             ->middleware('can:add-data_sourcing');
-        
+
         // Create Import Data Sourcing
         Route::post('/import_data_sourcing', 'DataSourcingController@storeImportDataSourcing')
             ->name('store_import_data_sourcing')
@@ -1055,7 +1058,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/list', 'DataTherapyController@index')
             ->name('list_data_therapy')
             ->middleware('can:browse-data_therapy');
-        
+
         //Detail Data Therapy
         Route::get('/detail', 'DataTherapyController@show')
             ->name('detail_data_therapy')
@@ -1075,7 +1078,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'DataTherapyController@destroy')
             ->name('delete_data_therapy')
             ->middleware('can:delete-data_therapy');
-        
+
         //Export XLS Data Therapy
         Route::get('/export_to_xls', 'DataTherapyController@export_to_xls')
             ->name('export_data_therapy')
@@ -1189,7 +1192,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/list', 'SubmissionVideoPhotoController@index')
             ->name('list_submission_video_photo')
             ->middleware('can:browse-submission_video_photo');
-        
+
         //Detail Submission Video Photo
         Route::get('/detail', 'SubmissionVideoPhotoController@show')
             ->name('detail_submission_video_photo')

@@ -144,7 +144,7 @@
                             @endphp
                             @foreach($theraphyService->meta_condition as $meta)
                                 @foreach($meta as $key => $val)
-                                    @php 
+                                    @php
                                         if($key == $listMeta){
                                             $checked = $val[0];
                                             $desc = $val[1];
@@ -220,7 +220,7 @@
                         <!-- max souvenir -->
                         @php
                             $signIn = count($theraphyService->theraphySignIn);
-                            $max = round($signIn/3);                            
+                            $max = round($signIn/3);
                         @endphp
                         @if(count($theraphyService->therapyServiceSouvenir) < $max && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'branch')
                             <button type="button" class="btn btn-primary mt-5" data-toggle="modal" data-target="#addTherapyServiceSouvenirModal">

@@ -133,9 +133,17 @@ class TheraphyServiceController extends Controller
 
     public function detail($id){
         $theraphyService = TheraphyService::find($id);
-    	$meta_default = TheraphyService::$meta_default;
+    	  $meta_default = TheraphyService::$meta_default;
         $souvenirs = Souvenir::where('active', true)->get();
         return view('admin.detail_theraphy_service', compact('theraphyService', 'meta_default', 'souvenirs'));
+    }
+
+    public function publicTherapyDetail($id){
+        $theraphyService = TheraphyService::find($id);
+    	  $meta_default = TheraphyService::$meta_default;
+        $souvenirs = Souvenir::where('active', true)->get();
+        return view('therapy_service', compact('theraphyService', 'meta_default', 'souvenirs'));
+
     }
 
     public function addTherapyServiceSouvenir(Request $request){

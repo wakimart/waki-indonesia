@@ -1,5 +1,5 @@
 <?php
-    
+
 ?>
 @extends('layouts.template')
 
@@ -8,11 +8,10 @@
     #intro {
         padding-top: 2em;
     }
-
     .card-shadow {
         box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
         border-style: none;
-        padding:1em; 
+        padding:1em;
     }
 
     #table-mob .table thead{
@@ -20,7 +19,7 @@
         background-image: linear-gradient(315deg, #bbdbbe 0%, #deebdd 74%);
         color: #1c1c1c;
         font-size: 1em;
-        font-weight: 600; 
+        font-weight: 600;
     }
 
     .table-responsive .sk td, .table-responsive .sk th{
@@ -28,7 +27,7 @@
     }
 
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link {
-        color: #737373; 
+        color: #737373;
     }
 
     .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
@@ -59,7 +58,7 @@
         border: 0;
         border-bottom:2px solid transparent;
         margin-right: 0;
-        color: #545454; 
+        color: #545454;
         font-weight: 600;
         padding: 2px 10px;
     }
@@ -105,57 +104,6 @@
         box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
     }
 
-    /* .timeline {
-        width: 98%;
-        height: 15px;
-        text-align: justify;
-        position: relative;
-        left: 49%;
-        top: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        -moz-transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        -o-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-        background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(218, 222, 228) 51%, rgba(255,255,255,0) 57%, rgba(255,255,255,0) 100%);
-        background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(255,255,255,0)), color-stop(45%, rgba(255,255,255,0)), color-stop(51%, rgba(218, 222, 228)), color-stop(57%, rgba(255,255,255,0)), color-stop(100%, rgba(255,255,255,0)));
-        background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(218, 222, 228) 51%, rgba(255,255,255,0) 57%, rgba(255,255,255,0) 100%);
-        background: -o-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(218, 222, 228) 51%, rgba(255,255,255,0) 57%, rgba(255,255,255,0) 100%);
-        background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(218, 222, 228) 51%, rgba(255,255,255,0) 57%, rgba(255,255,255,0) 100%);
-        background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 45%, rgba(218, 222, 228) 51%, rgba(255,255,255,0) 57%, rgba(255,255,255,0) 100%);
-    }
-
-    .timeline:after {
-        display: inline-block; 
-        content: ""; 
-        width: 100%;
-    }
-
-    .timeline li {
-        display: inline-block;
-        width: 15px;
-        height: 15px;
-        background: #bbdbbe;
-        text-align: center;
-        line-height: 1.5;
-        position: sticky;
-        border-radius: 50%;
-    }
-
-    .timeline li p {
-        display: inline-block;
-        font-size: 14px;
-        margin-top: 20px;
-        position: absolute;
-        left: 50%;
-        -webkit-transform: translateX(-50%);
-        -moz-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        -o-transform: translateX(-50%);
-        transform: translateX(-50%);
-    } */
-
-
     .timeline .timeline-item {
         display: inline-block;
         position: relative;
@@ -185,7 +133,7 @@
     }
 
     .timeline .timeline-item .timeline-content {
-        -ms-flex: 1; 
+        -ms-flex: 1;
         flex: 1;
         padding: 0 0 0 1rem;
     }
@@ -218,32 +166,17 @@
         margin-left: 40px;
     }
 
-    #table-mob{
-          display : none;
-    }
+    #table-mob{ display : none; }
+    #table-desk{ display : block; }
 
-      #table-desk{
-          display : block;
-    }
-  
     @media (max-width: 767px) {
-      #table-mob{
-          display : block;
-      }
-
-      #table-desk{
-          display : none;
-      }
-    
+      #table-mob{ display : block; }
+      #table-desk{ display : none; }
     }
 
     @media (max-width: 575px){
-        .container{
-            padding: 2em;
-        }
-        .table-responsive{
-            margin: 1em;
-        }
+        .container{ padding: 2em; }
+        .table-responsive{ margin: 1em; }
     }
 
     @media (min-width: 992px) and (max-width: 1200px) {
@@ -333,13 +266,13 @@
         <div class="row justify-content-center">
             <p class="text-center" style="font-size: 18px; color: #000; font-weight: 500;">
                 telah tergabung dalam program
-                <span style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #002853;"> Pinjamin Produk 5 Hari</span> 
-            </p> 
+                <span style="font-family: 'Poppins', sans-serif; font-weight: 600; color: #002853;"> Pinjamin Produk 5 Hari</span>
+            </p>
         </div>
         <div class="row my-5">
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-6">
                 <div class="d-flex" style="align-items: center;">
-                    <img style="margin-right: 15px; width: 120px;" src="{{asset('sources/ph-desc.png')}}"> 
+                    <img style="margin-right: 15px; width: 120px;" src="{{asset('sources/ph-desc.png')}}">
                     <span>
                         <p style="margin-top: 2em; margin-bottom: 0.7em; font-weight: bold;">APA ITU PROGRAM PINJAMIN PRODUK 5 HARI?</p>
                         <p>Bapak & Ibu bisa mencoba produk WAKi (Electro/Hepa/HPT) di rumah sendiri selama 5 hari, dimana petugas kami akan mendemokan produk tersebut sebelumnya.</p>
@@ -348,7 +281,7 @@
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-6">
                 <div class="d-flex" style="align-items: center;">
-                    <img style="margin-right: 15px; width: 120px;" src="{{asset('sources/ph-form.png')}}"> 
+                    <img style="margin-right: 15px; width: 120px;" src="{{asset('sources/ph-form.png')}}">
                     <span>
                     <p style="margin-top: 2em; margin-bottom: 0.7em; font-weight: bold;">TUJUAN :</p>
                     <p>Visi WAKi adalah Happy With WAKi menuju kehidupan yang lebih baik. Dengan kondisi seperti ini, program ini dibuat khusus untuk meminimalisirkan adanya kontak fisik secara langsung. </p>
@@ -357,7 +290,7 @@
             </div>
         </div>
         <div class="row">
-            
+
         </div>
         <div class="row justify-content-center mt-4">
             <div class="col-md-12">
@@ -365,13 +298,13 @@
                     <div class="card-header" style="background: none;">
                         <ul class="nav nav-tabs card-header-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active" 
-                                    style="font-weight: 600; font-size: 1em;" 
-                                    id="one-tab" 
-                                    data-toggle="tab" 
-                                    href="#one" 
-                                    role="tab" 
-                                    aria-controls="One" 
+                                <a class="nav-link active"
+                                    style="font-weight: 600; font-size: 1em;"
+                                    id="one-tab"
+                                    data-toggle="tab"
+                                    href="#one"
+                                    role="tab"
+                                    aria-controls="One"
                                     aria-selected="true">
                                     Data Instation
                                 </a>
@@ -416,8 +349,8 @@
                                 <div class="col-9">
                                     <label style="color: #737373; font-weight: 600; font-size: 0.9em; ">
                                        : {{ $publichomecare['address'] }},
-                                        {{ $publichomecare->getProvinceName() }}, 
-                                        {{ $publichomecare->getCityFullName() }}, 
+                                        {{ $publichomecare->getProvinceName() }},
+                                        {{ $publichomecare->getCityFullName() }},
                                         {{ $publichomecare->getDistrictName() }}
                                     </label>
                                 </div>
@@ -448,7 +381,7 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>      
+                        </div>
                     </div>
                 </div>
             </div>
@@ -500,7 +433,7 @@
                             </td>
                         </tr>
                         @endforeach
-                    </tbody>    
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -642,7 +575,7 @@
                         <tr>
                             <td>6.</td>
                             <td>Kenyamanan dan keamanan konsumen kami adalah prioritas pertama.
-                            Apabila ada sesuatu atau ada pertanyaan bisa menghubungi melalui facebook page 
+                            Apabila ada sesuatu atau ada pertanyaan bisa menghubungi melalui facebook page
                             WAKi Indonesia atau customer care kami di : +62 815-5467-3357</td>
                         </tr>
                     </tbody>
