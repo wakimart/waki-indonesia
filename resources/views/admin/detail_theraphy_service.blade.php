@@ -257,6 +257,24 @@
                 </div>
             </div>
         @endif
+
+        <div class="col-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <form class="forms-sample"
+                            method="GET"
+                            action="https://api.whatsapp.com/send">
+                            <button id="upgradeProcess"
+                                type="submit"
+                                class="btn btn-gradient-primary mr-2 btn-lg"
+                                name="text"
+                                value="{{ route('therapy_service_share', ['id' => $theraphyService['id']]) }}">
+                                Share Whatsapp
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
     </div>
 </div>
 <div class="modal fade" id="addTherapyServiceSouvenirModal" tabindex="-1" role="dialog" aria-labelledby="addTherapyServiceSouvenirModalLabel" aria-hidden="true">

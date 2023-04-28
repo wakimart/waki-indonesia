@@ -39,7 +39,7 @@ Route::get('/public-homecare/{id}', 'PublicHomecareController@puhForm')->name('p
 Route::get('/thankyou-public-homecare/{id}', 'PublicHomecareController@thankyouForm')->name('thankyou_puh');
 
 //Therapy Service
-Route::get('/therapy-service/{id}', 'TheraphyServiceController@publicTherapyDetail')->name('therapy_service');
+Route::get('/therapy-service/{id}', 'TheraphyServiceController@publicTherapyDetail')->name('therapy_service_share');
 
 //Service Product
 // Route::get('/service', 'ServiceController@indexUser')->name('service');
