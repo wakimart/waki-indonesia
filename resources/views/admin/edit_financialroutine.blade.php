@@ -571,7 +571,7 @@ $(document).ready(function() {
         $("#editFRT-tdetail_date").val($("#editFRT-tdetail_date_" + editfrt_tdetail_idx).val());
         $("#editFRT-tdetail_bank").val($("#editFRT-tdetail_bank_" + editfrt_tdetail_idx).val());
         $("#editFRT-tdetail_nominal").val(numberWithCommas($("#editFRT-tdetail_nominal_" + editfrt_tdetail_idx).val()));
-        $("#editFRT-tdetail_description").text($("#editFRT-tdetail_description_" + editfrt_tdetail_idx).val());
+        $("#editFRT-tdetail_description").val($("#editFRT-tdetail_description_" + editfrt_tdetail_idx).val());
     });
 });
 
