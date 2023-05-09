@@ -19,6 +19,7 @@
     			<div class="card">
       				<div class="card-body">
         					<form id="actionUpdate" class="forms-sample" method="POST" action="{{ route('update_cso', ['id' => $csos['id']])}}">
+                                <input type="hidden" name="user_code" value="{{auth()->user()->code}}">
           						<div class="form-group d-none">
             						<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
               							<div class="col-xs-4 col-sm-4" style="padding-left: 0;">
@@ -81,6 +82,7 @@
           					</div>
           					<div class="form-group">
 					            <label for="">Code</label>
+                                <input type="hidden" name="previous_code" value="{{$csos['code']}}">
 					            <input type="text" class="form-control" name="code" value="{{$csos['code']}}" required>
                       <span class="invalid-feedback">
                           <strong></strong>
@@ -103,14 +105,15 @@
           					</div>
           					<div class="form-group">
 			                	<label for="">Branch</label>
+                                <input type="hidden" name="branch_code" id="branch_code">
 			                    <select class="form-control" id="branch" name="branch_id" data-msg="Mohon Pilih Cabang" required>
 			                        <option selected disabled value="">Choose Cabang</option>
 
 			                        @foreach($branches as $branch)
                                   @if($csos['branch_id'] == $branch['id'])
-			                             <option value="{{ $branch['id'] }}" selected="true">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+			                             <option value="{{ $branch['id'] }}" data-code="{{$branch->code}}" selected="true">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
                                   @else
-                                    <option value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+                                    <option value="{{ $branch['id'] }}" data-code="{{$branch->code}}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
                                   @endif
 			                        @endforeach
 			                    </select>
@@ -148,13 +151,47 @@
 		</div>
 	</div>
 </div>
+<!-- Error modal -->
+<div class="modal fade"
+    id="error-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="error-modal-desc"></div>
+        </div>
+    </div>
+</div>
+<!-- End Modal View -->
 @endsection
 
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript">
+    // callback for find waki-indonesia 0ffline (local or ngrok)
+    var urlOffline = "{{ env('OFFLINE_URL_2') }}"
+    $.ajax({
+        url:'https://waki-indonesia-offline.office/cms-admin/login',
+        error: function(){
+            urlOffline = "{{ env('OFFLINE_URL_2') }}"
+        },
+        success: function(){
+            urlOffline = "{{ env('OFFLINE_URL') }}"
+        }
+    });
+
 	$(document).ready(function() {
         var frmUpdate;
+        var networkValue
 
 	    $("#actionUpdate").on("submit", function (e) {
 	        e.preventDefault();
@@ -208,8 +245,30 @@
               //alert("Input Error!!!");
 	        }
 	        else{
-	            alert("Input Success !!!");
-	            window.location.reload()
+	            testNetwork(networkValue, function(val){
+                    $.ajax({
+                        method: "post",
+                        url: `${urlOffline}/api/update-cso-data`,
+                        data: objectifyForm($('#actionUpdate').serializeArray()),
+                        success: function(res){
+                            alert("Input Success !!!");                            
+	                        window.location.reload()
+                        },
+                        error: function() {
+                            var modal = `
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-center">Error</h5>
+                                    <hr>
+                                    <p class="text-center">something went wrong, please contact IT</p>
+                                </div>
+                            `
+                            $('#error-modal-desc').html(modal)
+                            $('#error-modal').modal("show")
+                        }
+
+                    })
+                })
+                return false
 	        }
 
 	        document.getElementById("updateCso").innerHTML = "SAVE";
@@ -217,7 +276,45 @@
 	    function errorHandler(event){
 	        document.getElementById("updateCso").innerHTML = "SAVE";
 	    }
+
+        function testNetwork(networkValue, response){
+            // response();
+            $.ajax({
+                method: "post",
+                url: `${urlOffline}/api/end-point-for-check-status-network`,
+                dataType: 'json',
+                contentType: 'application/json',
+                processData: false,
+                headers: {
+                    "api-key": "{{ env('API_KEY') }}",
+                },
+                success: response,
+                error: function() {
+                    var modal = `
+                        <div class="modal-body">
+                            <h5 class="modal-title text-center">Error</h5>
+                            <hr>
+                            <p class="text-center">something went wrong, please contact IT</p>
+                        </div>
+                    `
+                    $('#error-modal-desc').html(modal)
+                    $('#error-modal').modal("show")
+                }
+            });
+        };
     });
+    function objectifyForm(formArray) {
+        //serialize data function
+        var returnArray = {};
+        for (var i = 0; i < formArray.length; i++){
+            returnArray[formArray[i]['name']] = formArray[i]['value'];
+        }
+        return returnArray;
+    }
+
+    $('#branch').change(function(){
+        $('#branch_code').val($(this).find(':selected').attr('data-code'))
+    })
 </script>
 <script type="text/javascript">
     //tanggal kabisat
