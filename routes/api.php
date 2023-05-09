@@ -22,4 +22,8 @@ Route::group(['middleware' => 'cors'], function() {
     Route::post('/end-point-for-check-status-network', 'Api\OfflineSideController@networkEndPoint');
     Route::post('/replicate-order-data', 'Api\OfflineSideController@replicateOrderData');
     Route::post('/replicate-order-payment-data', 'Api\OfflineSideController@replicateOrderPaymentData');
+
+    Route::post('/replicate-cso-data', 'Api\OfflineSideController@replicateCSOData');
+    Route::post('/update-cso-data', 'Api\OfflineSideController@updateCSOData');
+    Route::post('/delete-cso-data', 'Api\OfflineSideController@deleteCSOData');
 });

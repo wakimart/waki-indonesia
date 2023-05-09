@@ -11,6 +11,8 @@ use App\OrderPayment;
 use App\HistoryUpdate;
 use App\Http\Controllers\StockOrderRequestController;
 use App\User;
+use App\Cso;
+use App\Branch;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -242,6 +244,138 @@ class OfflineSideController extends Controller
             return $response;
         } else {
             throw new \Exception($error_msg ?? $response['message'] ?? $response ?? 'Network Error!');
+        }
+    }
+
+    /**
+     * replicate cso data from online side
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function replicateCSOData(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $cso = new Cso();
+            $cso->code = strtoupper($request->code);
+            $cso->name = strtoupper($request->name);
+            $branch = Branch::where('code', $request->branch_code)->first();
+            if(!$branch){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'branch not found, please contact IT'
+                ], 500);
+            }
+            $cso->branch_id = $branch->id;
+            $cso->phone = $request->phone;
+            $cso->save();
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'data cso successfully copied'
+            ], 200);
+        }catch(\Exception $ex){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * update cso data from online by previous cso code (post)
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function updateCSOData(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $cso = Cso::where('code', $request->previous_code)->first();
+            if(!$cso){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'cso not found, please contact IT'
+                ], 500);
+            }
+            $cso->code = strtoupper($request->code);
+            $cso->name = strtoupper($request->name);
+            if($request->branch_code){
+                $branch = Branch::where('code', $request->branch_code)->first();    
+                $cso->branch_id = $branch->id;            
+            }
+            $cso->phone = $request->phone;
+            $cso->update();
+
+            $user = User::where('code', $request->user_code)->first();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Cso";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> $cso];
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $cso->id;
+
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'data cso successfully updated'
+            ], 200);
+        }catch(\Exception $ex){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * delete cso data from online by cso code (post)
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function deleteCSOData(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $cso = Cso::where('code', $request->cso_code)->first();
+            $cso->active = false;
+            $cso->save();
+
+            $user = User::where('code', $request->user_code)->first();
+            $historyUpdate= [];
+            $historyUpdate['type_menu'] = "Cso";
+            $historyUpdate['method'] = "Delete";
+            $historyUpdate['meta'] = json_encode(['user'=>$user['id'],'createdAt' => date("Y-m-d h:i:s"), 'dateChange'=> json_encode(array('Active'=>$cso->active))]);
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $cso->id;
+
+            $createData = HistoryUpdate::create($historyUpdate);
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'data cso successfully deleted'
+            ], 200);
+        }catch(\Exception $ex){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ], 500);
         }
     }
 }
