@@ -497,7 +497,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                                         @endphp
                                                                     @endforeach
                                                                     <tr>
-                                                                        <td class="text-right" colspan="5" style="font-weight: 600;">Total : </td>
+                                                                        <td class="text-right" colspan="4" style="font-weight: 600;">Total : </td>
                                                                         <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalBankIn) }}</td>
                                                                         <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalDebit) }}</td>
                                                                         <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalNettoDebit) }}</td>
