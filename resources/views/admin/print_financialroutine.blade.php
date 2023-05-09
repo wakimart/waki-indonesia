@@ -448,7 +448,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                                         <td class="text-center" style="width: 10%;">Order Payment Date</td>
                                                                         <td class="text-center" style="width: 10%;">Estimate Date</td>
                                                                         <td class="text-center" style="width: 15%;">Order Code</td>
-                                                                        <td class="text-center" style="width: 20%;">Cso</td>
+                                                                        {{-- <td class="text-center" style="width: 20%;">Cso</td> --}}
                                                                         <td class="text-center" style="width: 20%;">Bank In</td>
                                                                         <td class="text-center" style="width: 20%;">Debit</td>
                                                                         <td class="text-center" style="width: 20%;">Netto Debit</td>
@@ -476,9 +476,9 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                                             <td class="text-left">
                                                                                 {{ $order['o_code'] }}
                                                                             </td>
-                                                                            <td class="text-left">
+                                                                            {{-- <td class="text-left">
                                                                                 {{ $order['c_name'] }}
-                                                                            </td>
+                                                                            </td> --}}
                                                                             @php $totalSubGross+= $order['ts_bank_in']; @endphp
                                                                             <td class="text-right">{{ number_format($order['ts_bank_in']) }}</td>
                                                                             @php $totalSubGross+= $order['ts_debit']; $totalSubNetto+= $order['ts_netto_debit']; @endphp
@@ -497,7 +497,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                                         @endphp
                                                                     @endforeach
                                                                     <tr>
-                                                                        <td class="text-right" colspan="5" style="font-weight: 600;">Total : </td>
+                                                                        <td class="text-right" colspan="4" style="font-weight: 600;">Total : </td>
                                                                         <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalBankIn) }}</td>
                                                                         <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalDebit) }}</td>
                                                                         <td class="text-right" style="font-weight: 600;">{{ number_format($subtotalNettoDebit) }}</td>
