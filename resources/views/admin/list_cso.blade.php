@@ -92,7 +92,7 @@
 				                            <td>{{$cso['name']}}</td>
 											<td>{{$cso->branch['name']}}</td> 
 				                            <td style="text-align: center;"><a href="{{ route('edit_cso', ['id' => $cso['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
-                          					<td style="text-align: center;"><a href="{{ route('delete_cso', ['id' => $cso['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+                          					<td style="text-align: center;"><a href="{{ route('delete_cso', ['id' => $cso['id']])}}" data-toggle="modal" data-target="#deleteDoModal" data-code="{{$cso->code}}" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
 				                        </tr>
 				                    @endforeach
           						</tbody>
@@ -130,11 +130,44 @@
     </div>
     <!-- End Modal Delete -->
 </div>
+<!-- Error modal -->
+<div class="modal fade"
+    id="error-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="error-modal-desc"></div>
+        </div>
+    </div>
+</div>
+<!-- End Modal View -->
 @endsection
 
 @section('script')
 
 <script>
+	// callback for find waki-indonesia 0ffline (local or ngrok)
+    var urlOffline = "{{ env('OFFLINE_URL_2') }}"
+    $.ajax({
+        url:'https://waki-indonesia-offline.office/cms-admin/login',
+        error: function(){
+            urlOffline = "{{ env('OFFLINE_URL_2') }}"
+        },
+        success: function(){
+            urlOffline = "{{ env('OFFLINE_URL') }}"
+        }
+    });
+
 	$(document).on("click", "#btn-filter", function(e){
 	  var urlParamArray = new Array();
 	  var urlParamStr = "";
@@ -154,8 +187,73 @@
 
 	  window.location.href = "{{route('list_cso')}}" + urlParamStr;
 	});
+
+	var cso_code
+	var networkValue
+
 	$(document).on("click", ".btnDelete", function(e){
 		$("#frmDelete").attr("action", $(this).attr('href'));
+		cso_code = $(this).attr('data-code')
 	});
+
+	$(document).ready(function(){
+		$('#frmDelete button[type=submit]').click(function(){
+			var cso_data = {
+				user_code: '{{auth()->user()->code}}',
+				cso_code: cso_code
+			}
+
+			testNetwork(networkValue, function(val){
+				$.ajax({
+					method: "post",
+					url: `${urlOffline}/api/delete-cso-data`,
+					data: cso_data,
+					success: function(res){
+						alert("Input Success !!!");
+						$("#frmDelete").submit()
+					},
+					error: function() {
+						var modal = `
+							<div class="modal-body">
+								<h5 class="modal-title text-center">Error</h5>
+								<hr>
+								<p class="text-center">something went wrong, please contact IT</p>
+							</div>
+						`
+						$('#error-modal-desc').html(modal)
+						$('#error-modal').modal("show")
+					}
+
+				})
+			})
+			return false
+		})
+
+		function testNetwork(networkValue, response){
+            // response();
+            $.ajax({
+                method: "post",
+                url: `${urlOffline}/api/end-point-for-check-status-network`,
+                dataType: 'json',
+                contentType: 'application/json',
+                processData: false,
+                headers: {
+                    "api-key": "{{ env('API_KEY') }}",
+                },
+                success: response,
+                error: function() {
+                    var modal = `
+                        <div class="modal-body">
+                            <h5 class="modal-title text-center">Error</h5>
+                            <hr>
+                            <p class="text-center">something went wrong, please contact IT</p>
+                        </div>
+                    `
+                    $('#error-modal-desc').html(modal)
+                    $('#error-modal').modal("show")
+                }
+            });
+        };
+	})
 </script>
 @endsection
