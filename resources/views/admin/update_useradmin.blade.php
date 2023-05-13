@@ -293,6 +293,25 @@ $menu_item_page = "user";
                             </fieldset>
                             <br>
 
+                            <h3>List Parent Warehouse Permission</h3>
+                            <fieldset class="border p-2">
+                                @foreach($parentWarehouses as $key => $value)
+                                    <div class="form-check form-check-inline" style="display: inline-block;">
+                                        <label class="form-check-label"
+                                            for="list_parent_warehouse_{{ $key }}">
+                                            <input class=""
+                                                type="checkbox"
+                                                id="list_parent_warehouse_{{ $key }}"
+                                                name="list_parent_warehouses[]" 
+                                                value="{{ $value->id }}" 
+                                                {{ !empty($users->list_warehouse_id) ? (in_array($value->id, json_decode($users->list_warehouse_id, true)) ? "checked=true" : "") : "" }} />
+                                                {{ $value->code }} - {{ $value->name}}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </fieldset>
+                            <br>
+
                             <h3 style="margin-top:10px; margin-bottom:10px; text-decoration: underline;">
                                 PERMISSIONS
                             </h4>

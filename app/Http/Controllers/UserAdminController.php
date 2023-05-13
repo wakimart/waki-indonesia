@@ -8,6 +8,7 @@ use App\Cso;
 use App\HistoryUpdate;
 use App\Role;
 use App\User;
+use App\Warehouse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -185,7 +186,8 @@ class UserAdminController extends Controller
                 ->orWhere('cs.id', $users->cso_id)->get();
             $branches = Branch::all();
             $bankAccounts = BankAccount::where('active', true)->get();
-            return view('admin.update_useradmin', compact('users', 'roles', 'role_users', 'csos', 'branches', 'bankAccounts'));
+            $parentWarehouses = Warehouse::whereNull('parent_warehouse_id')->get();
+            return view('admin.update_useradmin', compact('users', 'roles', 'role_users', 'csos', 'branches', 'bankAccounts', 'parentWarehouses'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -269,6 +271,13 @@ class UserAdminController extends Controller
             }
             else{
                 $user->list_bank_account_id = null;
+            }
+
+            //check parent warehouse list
+            if($request->has('list_parent_warehouses')){
+                $user->list_warehouse_id = json_encode($request->list_parent_warehouses, false);
+            }else{
+                $user->list_warehouse_id = null;
             }
 
             $user->fill($data)->save();
