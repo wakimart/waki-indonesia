@@ -19,6 +19,7 @@ class CreateOrderCsoCommissionsTable extends Migration
             $table->foreign('order_commission_id')->references('id')->on('order_commissions');
             $table->unsignedInteger('cso_commission_id');
             $table->foreign('cso_commission_id')->references('id')->on('cso_commissions');
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

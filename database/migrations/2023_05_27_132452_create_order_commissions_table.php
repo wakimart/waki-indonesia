@@ -23,6 +23,7 @@ class CreateOrderCommissionsTable extends Migration
             $table->decimal('upgrade', 20, 2)->default(0);
             $table->decimal('smgt_nominal', 20, 2)->default(0);
             $table->decimal('excess_price', 20, 2)->default(0);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

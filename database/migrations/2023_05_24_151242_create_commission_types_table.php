@@ -21,6 +21,7 @@ class CreateCommissionTypesTable extends Migration
             $table->boolean('upgrade');
             $table->decimal('nominal', 20, 2)->default(0);
             $table->decimal('smgt_nominal', 20, 2)->default(0);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

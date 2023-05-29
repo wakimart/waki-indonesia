@@ -1694,6 +1694,15 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("reschedule_personal_homecare");
     });
 
+    Route::group(['prefix' => 'commission-type', 'middleware' => 'auth'], function() {
+        Route::get('/create', 'CommissionTypeController@create')->name('add_commission_type');
+        Route::post('/store', 'CommissionTypeController@store')->name('store_commission_type');
+        Route::get('/list', 'CommissionTypeController@index')->name('list_commission_type');
+        Route::get('/edit/{id}', 'CommissionTypeController@edit')->name('edit_commission_type');
+        Route::post('/update/', 'CommissionTypeController@update')->name('update_commission_type');
+        Route::post('/delete', 'CommissionTypeController@destroy')->name('delete_commission_type');
+    });
+
     Route::view('faq_agreement', 'admin.faq_agreement')->name('faq_agreement');
 });
 

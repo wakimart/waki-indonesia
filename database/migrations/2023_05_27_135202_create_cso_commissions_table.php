@@ -19,6 +19,7 @@ class CreateCsoCommissionsTable extends Migration
             $table->foreign('cso_id')->references('id')->on('csos');
             $table->decimal('commission', 20, 2)->default(0);
             $table->decimal('pajak', 20, 2)->default(0);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
