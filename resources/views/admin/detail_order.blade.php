@@ -18,7 +18,8 @@
         transition: 0.3s;
     }
     table{
-        margin: 1em;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
         font-size: 14px;
     }
     table thead{
@@ -59,6 +60,7 @@
         background-color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
     }
+    .div-CheckboxGroup {  padding: 5px;  }
     .black-color { color: black !important; }
     .content-wrapper { background: transparent !important;}
 </style>
@@ -143,7 +145,7 @@
                     @endforeach
                 </table>
                 @php
-                    $checkedOrderPayment = $order['status'] == \App\Order::$status['2'] && $order->orderPayment->where('status', 'unverified')->count() == 0 
+                    $checkedOrderPayment = $order['status'] == \App\Order::$status['2'] && $order->orderPayment->where('status', 'unverified')->count() == 0
                         && $order->orderPayment->where('status', 'verified')->count() > 0;
                     $checkStockInOutODetail = $order['status'] == \App\Order::$status['3'] && $order->orderDetail->where('type', '!=', 'upgrade')->where('stock_id', null)->count() > 0;
                     $totalSales = \App\TotalSale::whereIn('order_payment_id', $order->orderPayment->pluck('id')->toArray())->get();
@@ -259,6 +261,121 @@
                         </td>
                     </tr>
                 </table>
+
+                <div class="w-100" id="addKomisiForm">
+                  <div class="card">
+                    <div class="card-header text-center p-2" style="font-size:14px;">
+                      Commision Add
+                    </div>
+                    <div class="card-body">
+                      <div>
+                        <div class="row no-gutters">
+                          <div class="form-group w-50">
+                            <label for="orderUpgrade" class="w-100">Order Upgrade ?</label>
+                            <div class="form-check-inline">
+                              <input class="form-check-input" type="radio" name="orderUpgradeOptions" id="orderUpgradeYes" value="orderUpgradeYes">
+                              <label class="form-check-label mb-0" for="orderUpgradeYes">Yes</label>
+                            </div>
+                            <div class="form-check-inline">
+                              <input class="form-check-input" type="radio" name="orderUpgradeOptions" id="orderUpgradeNo" value="orderUpgradeNo">
+                              <label class="form-check-label mb-0" for="orderUpgradeNo">No</label>
+                            </div>
+                          </div>
+
+                          <div class="form-group w-50">
+                            <label for="orderTakeaway" class="w-100">Order Takeaway ?</label>
+                            <div class="form-check-inline">
+                              <input class="form-check-input" type="radio" name="orderTakeawayOptions" id="orderTakeawayYes" value="orderTakeawayYes">
+                              <label class="form-check-label mb-0" for="orderTakeawayYes">Yes</label>
+                            </div>
+                            <div class="form-check-inline">
+                              <input class="form-check-input" type="radio" name="orderTakeawayOptions" id="orderTakeawayNo" value="orderTakeawayNo">
+                              <label class="form-check-label mb-0" for="orderTakeawayNo">No</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Payment Method</label>
+                            <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe">
+                                <option selected disabled value="">
+                                    Choose Payment Method
+                                </option>
+                                <option value="1">CASH</option>
+                                <option value="2">CARD</option>
+                            </select>
+                            <div class="validation"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control"
+                                id="description"
+                                name="description"
+                                rows="5"
+                                data-msg="Mohon Isi Description"
+                                placeholder="Description"></textarea>
+                            <div class="validation"></div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-6">
+                              <input type="text"
+                                  class="form-control"
+                                  id="bonus"
+                                  name="bonus"
+                                  placeholder="Bonus" />
+                              <div class="validation"></div>
+                          </div>
+                          <div class="form-group col-6">
+                              <input type="text"
+                                  class="form-control"
+                                  id="bonusSemangat"
+                                  name="bonusSemangat"
+                                  placeholder="Bonus Semangat" />
+                              <div class="validation"></div>
+                          </div>
+
+                          <div class="form-group col-6">
+                              <input type="text"
+                                  class="form-control"
+                                  id="upgrade"
+                                  name="upgrade"
+                                  placeholder="Upgrade" />
+                              <div class="validation"></div>
+                          </div>
+                          <div class="form-group col-6">
+                              <input type="text"
+                                  class="form-control"
+                                  id="lebihHarga"
+                                  name="lebihHarga"
+                                  placeholder="Lebih Harga" />
+                              <div class="validation"></div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="row justify-content-center">
+                        <button type="button" class="btn btn-success mr-2">
+                            Submit
+                        </button>
+                        <button type="button" class="btn btn-danger btn-cancel-comms">
+                            Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <table class="w-100">
+                  <thead>
+                      <td>Commision Detail</td>
+                  </thead>
+                </table>
+                <div class="row justify-content-center">
+                  <button type="button" class="btn btn-gradient-success mdi mdi-cash-multiple btn-add-comms">
+                      Add Commision
+                  </button>
+                </div>
+
                 @if($order['description'] != null)
                     <table class="w-100">
                         <thead>
@@ -392,7 +509,7 @@
                   class="btn btn-gradient-primary mr-2">Share to Whatsapp</a>
                   @if (Gate::check('edit-order'))
                   <button type="button" data-toggle="modal" data-target="#addPaymentModal"
-                      class="btn btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash">
+                      class="btn btn-gradient-success mdi mdi-cash-multiple">
                       Add Payment
                   </button>
                 </div>
@@ -492,7 +609,7 @@
                                 <tr>
                                     <td colspan="3" class="text-center">
                                         <a href="{{ route('pdf_out_from_order', [
-                                                'code' => $order['code'], 
+                                                'code' => $order['code'],
                                                 'stock_in_out' => $oDStockGroupBy[0]->stockInout['id'],
                                                 'upgrade' => ($loop->iteration == 1 && count($orderDetailUpgrades) > 0)
                                             ]) }}" class="btn btn-gradient-info">
@@ -612,7 +729,7 @@
                                     <input type="hidden" name="type" value="out">
                                     <div class="form-group mb-3">
                                         <label>Delivery Date</label>
-                                        <input type="date" id="delivery_date" name="date" class="form-control" value="{{ date('Y-m-d') }}" required> 
+                                        <input type="date" id="delivery_date" name="date" class="form-control" value="{{ date('Y-m-d') }}" required>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label>Select Warehouse From</label>
@@ -659,7 +776,7 @@
                                         <input type="hidden" name="type" value="in">
                                         <div class="form-group mb-3">
                                             <label>Delivery Date</label>
-                                            <input type="date" id="reject_delivery_date" name="date" class="form-control" value="{{ date('Y-m-d') }}" required> 
+                                            <input type="date" id="reject_delivery_date" name="date" class="form-control" value="{{ date('Y-m-d') }}" required>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label>Select Warehouse To</label>
@@ -730,7 +847,7 @@
                                 <div class="form-group mb-1">
                                     <label for="">Payment Date</label>
                                     <input type="date"
-                                        id="add_payment_date" 
+                                        id="add_payment_date"
                                         class="form-control"
                                         name="payment_date"
                                         value="{{ date('Y-m-d') }}"
@@ -975,17 +1092,17 @@
                                     <label for="">Charge (%)</label>
                                     <div class="row">
                                         <div class="col-lg-5">
-                                            <input type="number" step="any" 
+                                            <input type="number" step="any"
                                                 class="form-control"
-                                                id="editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_company" 
+                                                id="editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_company"
                                                 name="charge_percentage_company"
                                                 required>
                                         </div>
                                         <div class="col-lg-2 text-center"><h3>+</h3></div>
                                         <div class="col-lg-5">
-                                            <input type="number" step="any" 
+                                            <input type="number" step="any"
                                                 class="form-control"
-                                                id="editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_bank" 
+                                                id="editPaymentForThoseWhoAreNotHeadAdmin-charge_percentage_bank"
                                                 name="charge_percentage_bank"
                                                 required>
                                         </div>
@@ -1311,7 +1428,7 @@
                 $('#delivered-image').show();
                 $('.addDelivered-productimg').attr('disabled', false);
                 $("#modal-change-status-question").html('Delivered This Order?');
-            } else if (statusOrder == "{{\App\Order::$status['4']}}") { 
+            } else if (statusOrder == "{{\App\Order::$status['4']}}") {
                 $("#modal-change-status-question").html('Success This Order?');
             } else if (statusOrder == "{{\App\Order::$status['5']}}") {
                 $("#reject-stock, #reject_delivery_date, #reject_to_warehouse_id, #reject_delivery_description").show();
@@ -1380,7 +1497,7 @@
             const on_submit_orderDelivery = function(e) {
                 e.preventDefault();
 
-                // Check Min 1 Delivery Product 
+                // Check Min 1 Delivery Product
                 if (statusOrder == "{{\App\Order::$status['3']}}" && $(".orderDetail-product:checked").length < 1) {
                     return alert('Choose min 1 product.');
                 } else {
@@ -1390,7 +1507,7 @@
             };
             $('#actionAdd').on('submit', on_submit_orderDelivery);
 
-            getWarehouse(null, true, '#from_warehouse_id'); 
+            getWarehouse(null, true, '#from_warehouse_id');
         @endif
 
         @if($order['status'] == \App\Order::$status['5'] && $checkTotalSales == true && $orderDetailStock->count() > 0 && Gate::check('change-status_order_reject'))
@@ -1563,6 +1680,17 @@
 
         $(".btn-delete_order_payment").click(function(e) {
             $("#frmDelete").attr("action",  $(this).val());
+        });
+
+        $("#addKomisiForm").slideUp();
+
+        $(".btn-add-comms").click(function(e) {
+            e.preventDefault();
+            $("#addKomisiForm").slideDown();
+        });
+        $(".btn-cancel-comms").click(function(e) {
+            e.preventDefault();
+            $("#addKomisiForm").slideUp();
         });
 
         $(document).on("click", "i.del", function () {
