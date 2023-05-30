@@ -32,6 +32,7 @@ use App\CreditCard;
 use App\BankAccount;
 use App\Http\Controllers\Api\OfflineSideController;
 use App\TotalSale;
+use App\CommissionType;
 
 class OrderController extends Controller
 {
@@ -386,7 +387,21 @@ class OrderController extends Controller
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
         $creditCards = CreditCard::where('active', true)->get();
         $bankAccounts = BankAccount::where('active', true)->get();
-        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts'));
+
+        $isUpgrade = 0;
+        $isTakeAway = 0;
+        foreach($order->orderDetail as $detail){
+            if($detail->type == 'upgrade'){
+                $isUpgrade = 1;
+            }
+
+            if($detail->type == 'prize'){
+                $isTakeAway = 1;
+            }
+        }
+
+        $commissionTypes = CommissionType::where('active', true)->where('upgrade', $isUpgrade)->where('takeaway', $isTakeAway)->get();
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts', 'isUpgrade', 'isTakeAway', 'commissionTypes'));
     }
 
     /**
@@ -2148,5 +2163,19 @@ class OrderController extends Controller
             }
         }
         return response()->json(['error' => 'Invalid Payment ID'], 500);
+    }
+
+    /**
+     * store commission
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function storeCommission(Request $request)
+    {
+        return response()->json($request->all());
     }
 }

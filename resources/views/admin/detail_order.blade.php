@@ -268,100 +268,113 @@
                       Commision Add
                     </div>
                     <div class="card-body">
-                      <div>
-                        <div class="row no-gutters">
-                          <div class="form-group w-50">
-                            <label for="orderUpgrade" class="w-100">Order Upgrade ?</label>
-                            <div class="form-check-inline">
-                              <input class="form-check-input" type="radio" name="orderUpgradeOptions" id="orderUpgradeYes" value="orderUpgradeYes">
-                              <label class="form-check-label mb-0" for="orderUpgradeYes">Yes</label>
+                        <form action="{{route('store_commission')}}" method="post">
+                            @csrf
+                            <div>
+                                <input type="hidden" name="order_id" value="{{$order->id}}">
+                                <div class="row no-gutters">
+                                    <div class="form-group w-50">
+                                        <label for="orderUpgrade" class="w-100">Order Upgrade ?</label>
+                                        <div class="form-check-inline">
+                                            <input class="form-check-input" type="radio" name="" id="orderUpgradeYes" value="" {{$isUpgrade == 1 ? 'checked' : ''}} disabled>
+                                            <label class="form-check-label mb-0" for="orderUpgradeYes">Yes</label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <input class="form-check-input" type="radio" name="" id="orderUpgradeNo" value="" {{$isUpgrade == 0 ? 'checked' : ''}} disabled>
+                                            <label class="form-check-label mb-0" for="orderUpgradeNo">No</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group w-50">
+                                        <label for="orderTakeaway" class="w-100">Order Takeaway ?</label>
+                                        <div class="form-check-inline">
+                                            <input class="form-check-input" type="radio" name="" id="orderTakeawayYes" value="" {{$isTakeAway == 1 ? 'checked' : ''}} disabled>
+                                            <label class="form-check-label mb-0" for="orderTakeawayYes">Yes</label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <input class="form-check-input" type="radio" name="" id="orderTakeawayNo" value="" {{$isTakeAway == 0 ? 'checked' : ''}} disabled>
+                                            <label class="form-check-label mb-0" for="orderTakeawayNo">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Commission Type</label>
+                                    <select class="form-control" id="commission_type_select" name="commission_type_id" data-msg="Mohon Pilih Tipe" required>
+                                        <option selected disabled value="">
+                                            Choose Commission Type
+                                        </option>
+                                        @foreach($commissionTypes as $commType)
+                                            <option value="{{$commType->id}}" data-description="{{$commType->description}}" data-nominal="{{$commType->nominal}}" data-smgt-nominal="{{$commType->smgt_nominal}}">{{$commType->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="validation"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control"
+                                        id="commission_type_description"
+                                        name=""
+                                        rows="5"
+                                        data-msg="Mohon Isi Deskripsi"
+                                        placeholder="" readonly></textarea>
+                                    <div class="validation"></div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-6">
+                                        <input type="text"
+                                            class="form-control"
+                                            id="commission_type_bonus"
+                                            name="commission_type_bonus"
+                                            autocomplete="off"
+                                            data-type="currency"
+                                            placeholder="Bonus" required/>
+                                        <div class="validation"></div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <input type="text"
+                                            class="form-control"
+                                            id="commission_type_smgt_nominal"
+                                            name="commission_type_smgt_nominal"
+                                            autocomplete="off"
+                                            data-type="currency"
+                                            placeholder="Bonus Semangat" required/>
+                                        <div class="validation"></div>
+                                    </div>
+
+                                    <div class="form-group col-6">
+                                        <input type="text"
+                                            class="form-control"
+                                            id="commission_type_upgrade"
+                                            name="commission_type_upgrade"
+                                            autocomplete="off"
+                                            data-type="currency"
+                                            placeholder="Upgrade" required/>
+                                        <div class="validation"></div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <input type="text"
+                                            class="form-control"
+                                            id="commission_type_excess_price"
+                                            name="commission_type_excess_price"
+                                            autocomplete="off"
+                                            data-type="currency"
+                                            placeholder="Lebih Harga" required/>
+                                        <div class="validation"></div>
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="form-check-inline">
-                              <input class="form-check-input" type="radio" name="orderUpgradeOptions" id="orderUpgradeNo" value="orderUpgradeNo">
-                              <label class="form-check-label mb-0" for="orderUpgradeNo">No</label>
+                            <div class="row justify-content-center">
+                                <button type="submit" class="btn btn-success mr-2">
+                                    Submit
+                                </button>
+                                <button type="button" class="btn btn-danger btn-cancel-comms">
+                                    Cancel
+                                </button>
                             </div>
-                          </div>
-
-                          <div class="form-group w-50">
-                            <label for="orderTakeaway" class="w-100">Order Takeaway ?</label>
-                            <div class="form-check-inline">
-                              <input class="form-check-input" type="radio" name="orderTakeawayOptions" id="orderTakeawayYes" value="orderTakeawayYes">
-                              <label class="form-check-label mb-0" for="orderTakeawayYes">Yes</label>
-                            </div>
-                            <div class="form-check-inline">
-                              <input class="form-check-input" type="radio" name="orderTakeawayOptions" id="orderTakeawayNo" value="orderTakeawayNo">
-                              <label class="form-check-label mb-0" for="orderTakeawayNo">No</label>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="">Payment Method</label>
-                            <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe">
-                                <option selected disabled value="">
-                                    Choose Payment Method
-                                </option>
-                                <option value="1">CASH</option>
-                                <option value="2">CARD</option>
-                            </select>
-                            <div class="validation"></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control"
-                                id="description"
-                                name="description"
-                                rows="5"
-                                data-msg="Mohon Isi Description"
-                                placeholder="Description"></textarea>
-                            <div class="validation"></div>
-                        </div>
-
-                        <div class="row">
-                          <div class="form-group col-6">
-                              <input type="text"
-                                  class="form-control"
-                                  id="bonus"
-                                  name="bonus"
-                                  placeholder="Bonus" />
-                              <div class="validation"></div>
-                          </div>
-                          <div class="form-group col-6">
-                              <input type="text"
-                                  class="form-control"
-                                  id="bonusSemangat"
-                                  name="bonusSemangat"
-                                  placeholder="Bonus Semangat" />
-                              <div class="validation"></div>
-                          </div>
-
-                          <div class="form-group col-6">
-                              <input type="text"
-                                  class="form-control"
-                                  id="upgrade"
-                                  name="upgrade"
-                                  placeholder="Upgrade" />
-                              <div class="validation"></div>
-                          </div>
-                          <div class="form-group col-6">
-                              <input type="text"
-                                  class="form-control"
-                                  id="lebihHarga"
-                                  name="lebihHarga"
-                                  placeholder="Lebih Harga" />
-                              <div class="validation"></div>
-                          </div>
-                        </div>
-
-                      </div>
-                      <div class="row justify-content-center">
-                        <button type="button" class="btn btn-success mr-2">
-                            Submit
-                        </button>
-                        <button type="button" class="btn btn-danger btn-cancel-comms">
-                            Cancel
-                        </button>
-                      </div>
+                        </form>
                     </div>
                   </div>
                 </div>
@@ -1964,5 +1977,17 @@
         });
     });
 
+    $('#commission_type_select').on('change', function() {
+        $("#commission_type_description").val($(this).find(':selected').attr('data-description'))
+        if({{$isUpgrade}} == 1){ // upgrade
+            $("#commission_type_upgrade").val($(this).find(':selected').attr('data-nominal'))
+            $("#commission_type_bonus").val(0)
+        }else{ // bonus
+            $("#commission_type_bonus").val($(this).find(':selected').attr('data-nominal'))
+            $("#commission_type_upgrade").val(0)
+        }
+        $("#commission_type_smgt_nominal").val($(this).find(':selected').attr('data-smgt-nominal'))
+        $("#commission_type_excess_price").val(0)
+    });
 </script>
 @endsection
