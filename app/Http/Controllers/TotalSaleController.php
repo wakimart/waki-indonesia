@@ -252,6 +252,7 @@ class TotalSaleController extends Controller
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
             ->whereBetween('op.payment_date', [$startDate, $endDate])
             ->where('o.active', true)
+            ->where('o.status', '!=', 'reject')
             ->groupBy('b.id', 'br.id', 'op.id')
             ->orderBy('b.code', 'asc')
             ->orderBy('br.code', 'asc')
