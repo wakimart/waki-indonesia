@@ -308,7 +308,7 @@
 
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea class="form-control"
+                            <textarea readonly class="form-control"
                                 id="description"
                                 name="description"
                                 rows="5"
@@ -365,11 +365,181 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="w-100" id="editKomisiForm">
+                  <div class="card">
+                    <div class="card-header text-center p-2" style="font-size:14px;">
+                      Edit Commision
+                    </div>
+                    <div class="card-body">
+                      <div>
+                        <div class="row no-gutters">
+                          <div class="form-group w-50">
+                            <label for="orderUpgrade" class="w-100">Order Upgrade ?</label>
+                            <div class="form-check-inline">
+                              <input class="form-check-input" type="radio" name="orderUpgradeOptions" id="orderUpgradeYes" value="orderUpgradeYes">
+                              <label class="form-check-label mb-0" for="orderUpgradeYes">Yes</label>
+                            </div>
+                            <div class="form-check-inline">
+                              <input class="form-check-input" type="radio" name="orderUpgradeOptions" id="orderUpgradeNo" value="orderUpgradeNo">
+                              <label class="form-check-label mb-0" for="orderUpgradeNo">No</label>
+                            </div>
+                          </div>
+
+                          <div class="form-group w-50">
+                            <label for="orderTakeaway" class="w-100">Order Takeaway ?</label>
+                            <div class="form-check-inline">
+                              <input class="form-check-input" type="radio" name="orderTakeawayOptions" id="orderTakeawayYes" value="orderTakeawayYes">
+                              <label class="form-check-label mb-0" for="orderTakeawayYes">Yes</label>
+                            </div>
+                            <div class="form-check-inline">
+                              <input class="form-check-input" type="radio" name="orderTakeawayOptions" id="orderTakeawayNo" value="orderTakeawayNo">
+                              <label class="form-check-label mb-0" for="orderTakeawayNo">No</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Payment Method</label>
+                            <select class="form-control" id="payment_type" name="payment_type" data-msg="Mohon Pilih Tipe">
+                                <option selected disabled value="">
+                                    Choose Payment Method
+                                </option>
+                                <option value="1">CASH</option>
+                                <option value="2">CARD</option>
+                            </select>
+                            <div class="validation"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea readonly class="form-control"
+                                id="description"
+                                name="description"
+                                rows="5"
+                                data-msg="Mohon Isi Description"
+                                placeholder="Description"></textarea>
+                            <div class="validation"></div>
+                        </div>
+
+                        <div class="row">
+                          <div class="form-group col-6">
+                              <input type="text"
+                                  class="form-control"
+                                  id="bonus"
+                                  name="bonus"
+                                  placeholder="Bonus" />
+                              <div class="validation"></div>
+                          </div>
+                          <div class="form-group col-6">
+                              <input type="text"
+                                  class="form-control"
+                                  id="bonusSemangat"
+                                  name="bonusSemangat"
+                                  placeholder="Bonus Semangat" />
+                              <div class="validation"></div>
+                          </div>
+
+                          <div class="form-group col-6">
+                              <input type="text"
+                                  class="form-control"
+                                  id="upgrade"
+                                  name="upgrade"
+                                  placeholder="Upgrade" />
+                              <div class="validation"></div>
+                          </div>
+                          <div class="form-group col-6">
+                              <input type="text"
+                                  class="form-control"
+                                  id="lebihHarga"
+                                  name="lebihHarga"
+                                  placeholder="Lebih Harga" />
+                              <div class="validation"></div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="row justify-content-center">
+                        <button type="button" class="btn btn-warning mr-2">
+                            Edit
+                        </button>
+                        <button type="button" class="btn btn-danger btn-cancel-edit-comms">
+                            Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <table class="w-100">
                   <thead>
                       <td>Commision Detail</td>
                   </thead>
                 </table>
+
+                <div class="w-100" id="commisionDetailTrue" class=""> <!--d-none if no commision detail -->
+                  <h3 class="text-center">Commision Detail</h3>
+                  <table class="w-100">
+                    <thead style="background-color: #80808012 !important">
+                        <td>Komisi</td>
+                        <td>CSO-Name</td>
+                        <td>Bonus</td>
+                        <td>Upgrade</td>
+                        <td>Bonus Semangat</td>
+                        <td>Lebih Harga</td>
+                        <td>Edit</td>
+                    </thead>
+                    <tr align="center"> <!--dummy data -->
+                        <td>70%</td>
+                        <td>WK0000-Budi</td>
+                        <td>Rp. 15.000.000</td>
+                        <td>Rp. 10</td>
+                        <td>Rp. 1.000.000</td>
+                        <td>Rp. 1.500.000</td>
+                        <td></td>
+                    </tr>
+                  </table>
+                  <table class="w-100 my-2">
+                    <thead style="background-color: #80808012 !important">
+                        <td></td>
+                        <td class="text-left">Commision Type</td>
+                    </thead>
+                    <tr> <!--dummy data -->
+                        <td>Name</td>
+                        <td>Nama Komisi Type</td>
+                    </tr>
+                    <tr> <!--dummy data -->
+                        <td>Description</td>
+                        <td>Deskripsi Komisi Type</td>
+                    </tr>
+                    <tr> <!--dummy data -->
+                        <td>Takeaway</td>
+                        <td>Yes/No</td>
+                    </tr>
+                    <tr> <!--dummy data -->
+                        <td>Upgarade</td>
+                        <td>Yes/No</td>
+                    </tr>
+                    <tr> <!--dummy data -->
+                        <td>Nominal</td>
+                        <td>Rp. 15.000.000</td>
+                    </tr>
+                    <tr> <!--dummy data -->
+                        <td>Semangat Nominal</td>
+                        <td>Rp. 1.500.000</td>
+                    </tr>
+                  </table>
+                  <div class="row justify-content-center mb-2">
+                    <button type="button" class="btn btn-warning mr-2 btn-edit-comms">
+                        Edit
+                    </button>
+                    <button type="button" class="btn btn-danger btn-delete-comms"
+                        data-toggle="modal"
+                        data-target="#deleteKomisiConfirm">
+                        Delete
+                    </button>
+                  </div>
+                </div>
+
                 <div class="row justify-content-center">
                   <button type="button" class="btn btn-gradient-success mdi mdi-cash-multiple btn-add-comms">
                       Add Commision
@@ -1332,6 +1502,43 @@
                 </div>
             </div>
             <!-- End Modal Delete -->
+            <!-- Modal Delete Payment -->
+            <div class="modal fade"
+                id="deleteKomisiConfirm"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h5 style="text-align: center;">
+                                Are You Sure to Delete this Commision?
+                            </h5>
+                        </div>
+                        <div class="modal-footer">
+                            <form id="frmDelete" method="post" action="">
+                                {{ csrf_field() }}
+                                <button type="submit"
+                                    class="btn btn-gradient-danger mr-2">
+                                    Yes
+                                </button>
+                            </form>
+                            <button class="btn btn-light" data-dismiss="modal">
+                                No
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Delete -->
             <!-- Error modal -->
             <div class="modal fade"
                 id="error-modal"
@@ -1683,6 +1890,7 @@
         });
 
         $("#addKomisiForm").slideUp();
+        $("#editKomisiForm").slideUp();
 
         $(".btn-add-comms").click(function(e) {
             e.preventDefault();
@@ -1691,6 +1899,16 @@
         $(".btn-cancel-comms").click(function(e) {
             e.preventDefault();
             $("#addKomisiForm").slideUp();
+        });
+        $(".btn-edit-comms").click(function(e) {
+            e.preventDefault();
+            $("#editKomisiForm").slideDown();
+            $("#commisionDetailTrue").slideUp();
+        });
+        $(".btn-cancel-edit-comms").click(function(e) {
+            e.preventDefault();
+            $("#editKomisiForm").slideUp();
+            $("#commisionDetailTrue").slideDown();
         });
 
         $(document).on("click", "i.del", function () {
