@@ -339,13 +339,13 @@
 
 
 @if(Gate::check('add-cso') || Gate::check('browse-cso') || Gate::check('add-branch') || Gate::check('browse-branch'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'cso' || isset($menu_item_page) && $menu_item_page == 'branch' || isset($menu_item_page) && $menu_item_page == 'promo' || isset($menu_item_page) && $menu_item_page == 'type_customer' || isset($menu_item_page) && $menu_item_page == 'bank' || isset($menu_item_page) && $menu_item_page == 'souvenir' || isset($menu_item_page) && $menu_item_page == 'prize' ? 'active': '' }}">
-  <a class="nav-link" data-toggle="collapse" href="#masterAdmin-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'cso' || isset($menu_item_page) && $menu_item_page == 'branch' || isset($menu_item_page) && $menu_item_page == 'promo' || isset($menu_item_page) && $menu_item_page == 'type_customer' || isset($menu_item_page) && $menu_item_page == 'bank' || isset($menu_item_page) && $menu_item_page == 'souvenir' || isset($menu_item_page) && $menu_item_page == 'prize' ? 'true': '' }}" aria-controls="masterAdmin-dd">
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'cso' || isset($menu_item_page) && $menu_item_page == 'branch' || isset($menu_item_page) && $menu_item_page == 'promo' || isset($menu_item_page) && $menu_item_page == 'bank' || isset($menu_item_page) && $menu_item_page == 'commstype' ? 'active': '' }}">
+  <a class="nav-link" data-toggle="collapse" href="#masterAdmin-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'cso' || isset($menu_item_page) && $menu_item_page == 'branch' || isset($menu_item_page) && $menu_item_page == 'promo' || isset($menu_item_page) && $menu_item_page == 'bank' || isset($menu_item_page) && $menu_item_page == 'commstype' ? 'true': '' }}" aria-controls="masterAdmin-dd">
     <span class="menu-title">Master Admin</span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-account-convert menu-icon"></i>
   </a>
-  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'cso' || isset($menu_item_page) && $menu_item_page == 'branch' || isset($menu_item_page) && $menu_item_page == 'promo' || isset($menu_item_page) && $menu_item_page == 'type_customer' || isset($menu_item_page) && $menu_item_page == 'bank' || isset($menu_item_page) && $menu_item_page == 'souvenir' || isset($menu_item_page) && $menu_item_page == 'prize' ? 'show': '' }}" id="masterAdmin-dd">
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'cso' || isset($menu_item_page) && $menu_item_page == 'branch' || isset($menu_item_page) && $menu_item_page == 'promo' || isset($menu_item_page) && $menu_item_page == 'bank' || isset($menu_item_page) && $menu_item_page == 'commstype' ? 'show': '' }}" id="masterAdmin-dd">
     <ul class="nav flex-column">
 
 		@if(Gate::check('add-cso') || Gate::check('browse-cso'))
@@ -427,6 +427,21 @@
 		  </div>
 		</li>
 		@endif
+
+		<!-- if check commision type -->
+		<li class="{{isset($menu_item_page) && $menu_item_page == 'commstype'? 'active': '' }} nav-item">
+		  <a class="nav-link" data-toggle="collapse" href="#commstype-dd" aria-expanded="false" aria-controls="commstype-dd">
+		    <span class="menu-title">Commision Type</span>
+		    <i class="menu-arrow"></i>
+		  </a>
+		  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'commstype'? 'show': '' }}" id="commstype-dd">
+		    <ul class="nav flex-column sub-menu">
+		      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_commstype'? 'active': '' }}" href="{{route('add_commission_type')}}">Add Commision Typ</a></li>
+		      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_commstype'? 'active': '' }}" href="{{route('list_commission_type')}}">List Commision Typ</a></li>
+		    </ul>
+		  </div>
+		</li>
+		<!-- if check commision type -->
 
 	</ul>
 </div>
