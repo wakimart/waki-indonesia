@@ -445,8 +445,8 @@
 		  </a>
 		  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'commstype'? 'show': '' }}" id="commstype-dd">
 		    <ul class="nav flex-column sub-menu">
-		      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_commstype'? 'active': '' }}" href="{{route('add_commission_type')}}">Add Commision Typ</a></li>
-		      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_commstype'? 'active': '' }}" href="{{route('list_commission_type')}}">List Commision Typ</a></li>
+		      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_commstype'? 'active': '' }}" href="{{route('add_commission_type')}}">Add Commision Type</a></li>
+		      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_commstype'? 'active': '' }}" href="{{route('list_commission_type')}}">List Commision Type</a></li>
 		    </ul>
 		  </div>
 		</li>
