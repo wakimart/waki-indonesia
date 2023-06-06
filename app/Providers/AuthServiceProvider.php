@@ -715,5 +715,20 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define("change-status-product-personalhomecare", function ($user) {
             return $user->hasAccess(["change-status-product-personalhomecare"]);
         });
+
+
+        //-- CSO COMMISSION --//
+        Gate::define('browse-cso_commission', function ($user) {
+            return $user->hasAccess(['browse-cso_commission']);
+        });
+        Gate::define('detail-cso_commission', function ($user) {
+            return $user->hasAccess(['detail-cso_commission']);
+        });
+        Gate::define('edit-cso_commission', function ($user) {
+            return $user->hasAccess(['edit-cso_commission']);
+        });
+        Gate::define('delete-cso_commission', function ($user) {
+            return $user->hasAccess(['delete-cso_commission']);
+        });
     }
 }

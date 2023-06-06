@@ -25,6 +25,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        CsoCommissionController::CreateMonthlyCommission();
         try {
             // Update role user yg baru
             $role = Role::where('slug', Auth::user()->roles[0]['slug'])->first();

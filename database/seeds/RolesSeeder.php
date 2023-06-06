@@ -277,6 +277,12 @@ class RolesSeeder extends Seeder
                 'browse-bank' => true,
         		'edit-bank' => true,
                 'delete-bank' => true,
+
+                //Cso Commission
+                'browse-cso_commission' => false,
+                'detail-cso_commission' => false,
+                'edit-cso_commission' => false,
+                'delete-cso_commission' => false,
             ]),
         ]);
 
@@ -540,7 +546,13 @@ class RolesSeeder extends Seeder
                 'add-bank' => false,
                 'browse-bank' => false,
                 'edit-bank' => false,
-                'delete-bank' => false,                
+                'delete-bank' => false,
+
+                //Cso Commission
+                'browse-cso_commission' => false,
+                'detail-cso_commission' => false,
+                'edit-cso_commission' => false,
+                'delete-cso_commission' => false,
         	]),
         ]);
 
@@ -798,7 +810,13 @@ class RolesSeeder extends Seeder
                 'add-bank' => false,
                 'browse-bank' => false,
                 'edit-bank' => false,
-                'delete-bank' => false,                
+                'delete-bank' => false,
+
+                //Cso Commission
+                'browse-cso_commission' => false,
+                'detail-cso_commission' => false,
+                'edit-cso_commission' => false,
+                'delete-cso_commission' => false,
                 
             ]),
         ]);
@@ -1058,6 +1076,12 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Cso Commission
+                'browse-cso_commission' => false,
+                'detail-cso_commission' => false,
+                'edit-cso_commission' => false,
+                'delete-cso_commission' => false,
             ]),
         ]);
 
@@ -1316,6 +1340,12 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Cso Commission
+                'browse-cso_commission' => false,
+                'detail-cso_commission' => false,
+                'edit-cso_commission' => false,
+                'delete-cso_commission' => false,
             ]),
         ]);
 
@@ -1574,6 +1604,12 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Cso Commission
+                'browse-cso_commission' => false,
+                'detail-cso_commission' => false,
+                'edit-cso_commission' => false,
+                'delete-cso_commission' => false,
             ]),
         ]);
 
@@ -1838,6 +1874,12 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Cso Commission
+                'browse-cso_commission' => false,
+                'detail-cso_commission' => false,
+                'edit-cso_commission' => false,
+                'delete-cso_commission' => false,
             ]),
         ]);
     }

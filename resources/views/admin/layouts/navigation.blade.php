@@ -60,6 +60,15 @@
 </li>
 @endif
 
+@if(Gate::check('browse-cso_commission') || true)
+<li class="{{isset($menu_item_page) && $menu_item_page == 'cso_commission'? 'active': '' }} nav-item">
+  <a class="nav-link" href="{{ route('list_cso_commission')}}">
+    <span class="menu-title">Cso Commission</span>
+    <i class="mdi mdi-cash menu-icon"></i>
+  </a>
+</li>
+@endif
+
 @if(Gate::check('add-financial_routine') || Gate::check('browse-financial_routine'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'financial_routine'? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#financial_routine-dd" aria-expanded="false" aria-controls="financial_routine-dd">
