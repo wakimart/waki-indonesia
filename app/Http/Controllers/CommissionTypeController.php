@@ -20,7 +20,7 @@ class CommissionTypeController extends Controller
     public function index(Request $request)
     {
         $url = $request->all();
-        $datas = CommissionType::select('*');
+        $datas = CommissionType::where('active', true);
 
         if ($request->has('search')) {
             $datas->where(function($q) use($request) {

@@ -32,6 +32,9 @@ use App\CreditCard;
 use App\BankAccount;
 use App\Http\Controllers\Api\OfflineSideController;
 use App\TotalSale;
+use App\CommissionType;
+use Illuminate\Support\Facades\Redirect;
+use App\OrderCommission;
 
 class OrderController extends Controller
 {
@@ -386,7 +389,21 @@ class OrderController extends Controller
         ->where('type_menu', 'Order')->where('menu_id', $order->id)->get();
         $creditCards = CreditCard::where('active', true)->get();
         $bankAccounts = BankAccount::where('active', true)->get();
-        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts'));
+
+        $isUpgrade = 0;
+        $isTakeAway = 0;
+        foreach($order->orderDetail as $detail){
+            if($detail->type == 'upgrade'){
+                $isUpgrade = 1;
+            }
+
+            if($detail->type == 'prize'){
+                $isTakeAway = 1;
+            }
+        }
+
+        $commissionTypes = CommissionType::where('active', true)->where('upgrade', $isUpgrade)->where('takeaway', $isTakeAway)->get();
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts', 'isUpgrade', 'isTakeAway', 'commissionTypes'));
     }
 
     /**
@@ -2148,5 +2165,58 @@ class OrderController extends Controller
             }
         }
         return response()->json(['error' => 'Invalid Payment ID'], 500);
+    }
+
+    /**
+     * store commission
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function storeCommission(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required',
+            'cso_id' => 'required',
+            'bonus' => 'required',
+            'upgrade' => 'required',
+            'smgt_nominal' => 'required',
+            'excess_price' => 'required',
+            'commission_type_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput();
+        }else{
+            DB::beginTransaction();
+            try {
+                // order commission
+                $orderCommission = new OrderCommission();
+                $orderCommission->order_id = $request->order_id;
+                $orderCommission->cso_id = $request->cso_id;
+                $orderCommission->bonus = $request->bonus;
+                $orderCommission->upgrade = $request->upgrade;
+                $orderCommission->smgt_nominal = $request->smgt_nominal;
+                $orderCommission->excess_price = $request->excess_price;
+                $orderCommission->save();
+
+                // order
+                $previousOrderData = Order::find($request->order_id);
+                $order = Order::find($request->order_id);
+                $order->commission_type_id = $request->commission_type_id;
+                $order->update();
+
+                // history update
+                
+                // DB::commit();
+                return Redirect::back()->with("success", "Order commission successfully added.");
+            } catch (\Exception $ex) {
+                DB::rollBack();
+                return Redirect::back()->withErrors("Something wrong when add order commission, please call Team IT")->withInput();
+            }
+        }
     }
 }
