@@ -33,6 +33,7 @@ use App\BankAccount;
 use App\Http\Controllers\Api\OfflineSideController;
 use App\TotalSale;
 use App\CommissionType;
+use Illuminate\Support\Facades\Redirect;
 
 class OrderController extends Controller
 {
@@ -2176,6 +2177,29 @@ class OrderController extends Controller
      **/
     public function storeCommission(Request $request)
     {
-        return response()->json($request->all());
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required',
+            'cso_id' => 'required',
+            'bonus' => 'required',
+            'upgrade' => 'required',
+            'smgt_nominal' => 'required',
+            'excess_price' => 'required',
+            'commission_type_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput();
+        }else{
+            DB::beginTransaction();
+            try {
+                // order commission
+                // $orderCommission = OrderCommission
+                // DB::commit();
+                return Redirect::back()->with("success", "Order commission successfully added.");
+            } catch (\Exception $ex) {
+                DB::rollBack();
+                return Redirect::back()->withErrors("Something wrong when add order commission, please call Team IT")->withInput();
+            }
+        }
     }
 }

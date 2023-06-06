@@ -268,10 +268,11 @@
                       Commision Add
                     </div>
                     <div class="card-body">
-                        <form action="{{route('store_commission')}}" method="post">
-                            @csrf
+                        <form action="{{route('store_commission')}}" method="POST">
+                            {{ csrf_field() }}
                             <div>
                                 <input type="hidden" name="order_id" value="{{$order->id}}">
+                                <input type="hidden" name="cso_id" value="{{$order->cso_id}}">
                                 <div class="row no-gutters">
                                     <div class="form-group w-50">
                                         <label for="orderUpgrade" class="w-100">Order Upgrade ?</label>
@@ -326,7 +327,7 @@
                                         <input type="text"
                                             class="form-control"
                                             id="commission_type_bonus"
-                                            name="commission_type_bonus"
+                                            name="bonus"
                                             autocomplete="off"
                                             data-type="currency"
                                             placeholder="Bonus" required/>
@@ -336,7 +337,7 @@
                                         <input type="text"
                                             class="form-control"
                                             id="commission_type_smgt_nominal"
-                                            name="commission_type_smgt_nominal"
+                                            name="smgt_nominal"
                                             autocomplete="off"
                                             data-type="currency"
                                             placeholder="Bonus Semangat" required/>
@@ -347,7 +348,7 @@
                                         <input type="text"
                                             class="form-control"
                                             id="commission_type_upgrade"
-                                            name="commission_type_upgrade"
+                                            name="upgrade"
                                             autocomplete="off"
                                             data-type="currency"
                                             placeholder="Upgrade" required/>
@@ -357,7 +358,7 @@
                                         <input type="text"
                                             class="form-control"
                                             id="commission_type_excess_price"
-                                            name="commission_type_excess_price"
+                                            name="excess_price"
                                             autocomplete="off"
                                             data-type="currency"
                                             placeholder="Lebih Harga" required/>

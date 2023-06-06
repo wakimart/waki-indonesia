@@ -357,7 +357,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         	    
     });
 
-    Route::group(['prefix' => 'order', 'middleware' => 'auth'], function() {
+    Route::group(['prefix' => 'order', 'middleware' => 'auth'], function() {        
         //Add Form Order
         Route::get('/', 'OrderController@admin_AddOrder')
             ->name('admin_add_order')
@@ -406,6 +406,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete_order_payment', 'OrderController@deleteOrderPayment')
             ->name('delete_order_payment')
             ->middleware('can:edit-order');
+        // add commission in order
+        Route::post('/store-commission', 'OrderController@storeCommission')->name('store_commission');    
         //Delete Order
         Route::post('/{OrderNya}', 'OrderController@delete')
             ->name('delete_order');
@@ -450,10 +452,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         //View order payment (detail)
         Route::get('/view_order_payment/{id}', 'OrderController@viewOrderPayment')->name('view_order_payment');
         //Update Order payment for those who are not head admin
-        Route::match(['put', 'patch'], '/update_order_payment_for_those_who_are_not_head_admin/{id}', 'OrderController@updateOrderPaymentForThoseWhoAreNotHeadAdmin')->name('update_order_payment_for_those_who_are_not_head_admin');
-
-        // add commission in order
-        Route::post('/store_commission', 'OrderController@storeCommission')->name('store_commission');
+        Route::match(['put', 'patch'], '/update_order_payment_for_those_who_are_not_head_admin/{id}', 'OrderController@updateOrderPaymentForThoseWhoAreNotHeadAdmin')->name('update_order_payment_for_those_who_are_not_head_admin');        
     });
 
     Route::group(['prefix' => 'total_sale', 'middleware' => 'auth'], function() {
