@@ -34,6 +34,7 @@ use App\Http\Controllers\Api\OfflineSideController;
 use App\TotalSale;
 use App\CommissionType;
 use Illuminate\Support\Facades\Redirect;
+use App\OrderCommission;
 
 class OrderController extends Controller
 {
@@ -2193,7 +2194,23 @@ class OrderController extends Controller
             DB::beginTransaction();
             try {
                 // order commission
-                // $orderCommission = OrderCommission
+                $orderCommission = new OrderCommission();
+                $orderCommission->order_id = $request->order_id;
+                $orderCommission->cso_id = $request->cso_id;
+                $orderCommission->bonus = $request->bonus;
+                $orderCommission->upgrade = $request->upgrade;
+                $orderCommission->smgt_nominal = $request->smgt_nominal;
+                $orderCommission->excess_price = $request->excess_price;
+                $orderCommission->save();
+
+                // order
+                $previousOrderData = Order::find($request->order_id);
+                $order = Order::find($request->order_id);
+                $order->commission_type_id = $request->commission_type_id;
+                $order->update();
+
+                // history update
+                
                 // DB::commit();
                 return Redirect::back()->with("success", "Order commission successfully added.");
             } catch (\Exception $ex) {
