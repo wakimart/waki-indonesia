@@ -35,6 +35,8 @@ use App\TotalSale;
 use App\CommissionType;
 use Illuminate\Support\Facades\Redirect;
 use App\OrderCommission;
+use App\OrderCsoCommission;
+use App\CsoCommission;
 
 class OrderController extends Controller
 {
@@ -2210,11 +2212,36 @@ class OrderController extends Controller
                 $order->update();
 
                 // history update
-                
-                // DB::commit();
+                $user = Auth::user();
+                $historyOrder["type_menu"] = "Order";
+                $historyOrder["method"] = "Update";
+                $historyOrder["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => array_diff(json_decode($order, true), json_decode($previousOrderData,true)),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+
+                $historyOrder["user_id"] = $user["id"];
+                $historyOrder["menu_id"] = $request->order_id;
+                HistoryUpdate::create($historyOrder);
+
+                // order cso commission
+                $orderCsoCommission = new OrderCsoCommission();
+                $orderCsoCommission->order_commission_id = $orderCommission->id;
+                // where cso id & what month is it now
+                $month = date('m');
+                $csoCommission = CsoCommission::where('cso_id', $request->cso_id)->whereMonth('created_at', $month)->first();
+                $orderCsoCommission->cso_commission_id = $csoCommission->id;
+                $orderCsoCommission->save();
+
+                DB::commit();
                 return Redirect::back()->with("success", "Order commission successfully added.");
             } catch (\Exception $ex) {
                 DB::rollBack();
+                return response()->json($ex->getMessage());
                 return Redirect::back()->withErrors("Something wrong when add order commission, please call Team IT")->withInput();
             }
         }
