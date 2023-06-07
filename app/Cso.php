@@ -59,4 +59,14 @@ class Cso extends Model
     {
         return $this->hasMany('App\TechnicianSchedule', 'technician_id');
     }
+
+    public function orderCommission()
+    {
+        return $this->hasMany("App\OrderCommission");
+    }
+
+    public function csoCommission()
+    {
+        return $this->hasMany("App\CsoCommission");
+    }
 }

@@ -71,6 +71,10 @@ class Order extends Model
     {
         return Cso::where('id', $this->cso_id)->first();
     }
+    public function orderCommission()
+    {
+        return $this->hasMany("App\OrderCommission");
+    }
 
     public function getDistrict()
     {

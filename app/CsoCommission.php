@@ -14,4 +14,9 @@ class CsoCommission extends Model
     {
         return $this->belongsTo("App\Cso");
     }
+
+    public function orderCommission()
+    {
+        return $this->belongsToMany(OrderCommission::class, 'order_cso_commissions');
+    }
 }

@@ -41,7 +41,7 @@ class CsoCommissionController extends Controller
 
 	public function index(Request $request){
 		$branches = Branch::where('active', true)->get();
-		$startDate = $request->has('filter_month') ? date('Y-'.$request->input('filter_month').'-01') : date('Y-m-01');
+		$startDate = $request->has('filter_month') ? date($request->input('filter_month').'-01') : date('Y-m-01');
         $endDate = date('Y-m-t', strtotime($startDate));
         $CsoCommissions = null;
 
