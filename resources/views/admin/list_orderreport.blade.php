@@ -1,6 +1,6 @@
 <?php
-$menu_item_page_sub = "order_report";
-$menu_item_second_sub = "list_order_report";
+$menu_item_page = "order_report";
+$menu_item_second = "list_order_report";
 ?>
 @extends('admin.layouts.template')
 
@@ -91,8 +91,8 @@ $menu_item_second_sub = "list_order_report";
                         </a>
                     </div>
                     <div class="form-group">
-                        @php 
-                            $exportParameter = request()->input(); 
+                        @php
+                            $exportParameter = request()->input();
                             $exportParameter['export_type'] = "print";
                         @endphp
                         <a href="{{ route('admin_export_order_report', $exportParameter) }}"
@@ -102,7 +102,7 @@ $menu_item_second_sub = "list_order_report";
                             Print Total Sale
                         </a>
                         @if(Auth::user()->inRole("head-admin"))
-                            @php 
+                            @php
                                 $exportParameter['export_type'] = "xls";
                             @endphp
                             <a href="{{ route('admin_export_order_report', $exportParameter) }}"

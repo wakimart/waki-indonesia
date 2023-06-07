@@ -184,14 +184,14 @@ class CommissionTypeController extends Controller
                 HistoryUpdate::create($historyDeleteCommissionType);
 
                 DB::commit();
-                
+
                 return Redirect::back()->with("success", "Commission type deleted successfully.");
             } catch (Exception $e) {
                 DB::rollback();
                 return Redirect::back()->withErrors("Something wrong when delete commission type, please call Team IT");
             }
         }
-        
+
         return Redirect::back()->withErrors("Data not found");
     }
 }

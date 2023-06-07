@@ -1,6 +1,6 @@
 <?php
-$menu_item_page_sub = "order_report";
-$menu_item_second_sub = "list_total_sale";
+$menu_item_page = "order_report";
+$menu_item_second = "list_total_sale";
 ?>
 @extends('admin.layouts.template')
 
@@ -52,7 +52,7 @@ $menu_item_second_sub = "list_total_sale";
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-xs-12 col-sm-12 row"
                 style="margin: 0; padding: 0;">
                 <div class="col-xs-8 col-sm-8"
@@ -73,8 +73,8 @@ $menu_item_second_sub = "list_total_sale";
                         </a>
                     </div>
                     <div class="form-group">
-                        @php 
-                            $exportParameter = request()->input(); 
+                        @php
+                            $exportParameter = request()->input();
                             if(!Auth::user()->inRole("head-admin")){
                                 $exportParameter['isPrint'] = 1;
                             }
