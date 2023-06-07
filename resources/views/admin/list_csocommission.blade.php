@@ -26,15 +26,15 @@ $menu_item_page_sub = "cso_commission";
         </div>
 
         <div class="col-12 grid-margin" style="padding: 0;">
-            <div class="col-xs-12 col-sm-12 row p-0">
-                <div class="col-xs-6 col-sm-4 mx-2" style="margin-bottom: 0; padding: 0; display: inline-block">
+            <div class="col-xs-12 col-sm-12 row">
+                <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
                     <div class="form-group">
                         <label for="">Month & Year</label>
                         <input type="month"
                             class="form-control"
                             id="filter_month"
                             name="filter_month"
-                            value="{{ isset($_GET['filter_month']) ? $_GET['filter_month'] : '' }}">
+                            value="{{ isset($_GET['filter_month']) ? $_GET['filter_month'] : date('Y-m') }}">
                         <div class="validation"></div>
                     </div>
                 </div>
@@ -83,7 +83,7 @@ $menu_item_page_sub = "cso_commission";
                             value="-">
                             <span class="mdi mdi-filter"></span> Apply Filter
                         </button>
-                        <a href="{{ route('admin_list_order_report_branch') }}"
+                        <a href="{{ route('list_cso_commission') }}"
                             class="btn btn-gradient-danger m-1"
                             value="-">
                             <span class="mdi mdi-filter"></span> Reset Filter
@@ -149,7 +149,22 @@ $menu_item_page_sub = "cso_commission";
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $tot_commission = 0;
+                                        $tot_pajak = 0;
+                                        $tot_result = 0;
+                                    @endphp
+
                                     @foreach ($CsoCommissions as $key => $Cso_Commission)
+                                        @php
+                                            $tot_commission += $Cso_Commission['commission'];
+                                            $tot_pajak += $Cso_Commission['pajak'];
+                                            $tot_result += $Cso_Commission['commission'] - $Cso_Commission['pajak'];
+                                            if(count($Cso_Commission->orderCommission) > 0){
+                                                dd($Cso_Commission->orderCommission);
+                                            }
+                                        @endphp
+
                                         <tr>
                                             <td class="text-center">{{ $key+1 }}</td>
                                             <td>{{ $Cso_Commission->cso['code'] }} - {{ $Cso_Commission->cso['name'] }}</td>
@@ -157,7 +172,7 @@ $menu_item_page_sub = "cso_commission";
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['commission']) }}</td>
                                             <td class="text-right">Rp. </td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['pajak']) }}</td>
-                                            <td class="text-right">Rp. </td>
+                                            <td class="text-right">Rp. {{ number_format($Cso_Commission['commission'] - $Cso_Commission['pajak']) }}</td>
                                             <td class="text-center">
                                                 <a href="" target="_blank">
                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(99, 110, 114);"></i>
@@ -169,10 +184,11 @@ $menu_item_page_sub = "cso_commission";
                                         @endphp
                                     @endforeach
                                     <tr class="text-right">
-                                        <th colspan="2">TOTAL SALES</th>
+                                        <th colspan="3">TOTAL SALES</th>
+                                        <th>Rp. {{ number_format($tot_commission) }}</th>
                                         <th>Rp. {{ number_format(0) }}</th>
-                                        <th>Rp. {{ number_format(0) }}</th>
-                                        <th>Rp. {{ number_format(0) }}</th>
+                                        <th>Rp. {{ number_format($tot_pajak) }}</th>
+                                        <th>Rp. {{ number_format($tot_result) }}</th>
                                         <td></td>
                                     </tr>
                                 </tbody>
@@ -180,7 +196,7 @@ $menu_item_page_sub = "cso_commission";
                             <br/>
                         </div>
                     @else
-                        <h2 class="">Please Select Month & Branch Filter First</h2>
+                        <h2 class="text-info text-center m-0">Please Select Month & Branch Filter First</h2>
                     @endif
                 </div>
             </div>
