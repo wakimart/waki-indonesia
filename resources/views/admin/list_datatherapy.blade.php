@@ -39,7 +39,7 @@ $menu_item_second = "list_data_therapy";
         <div class="row">
 
             <div class="col-12" style="margin-bottom: 0;">
-                    <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                    <div class="col-xs-6 col-sm-4" style="display: inline-block;">
                         <div class="form-group">
                             <label for="">Search By Name, Ktp, Branch, Cso, Phone, Type Customer</label>
                             <input class="form-control" id="search" name="search" placeholder="Search . . ." value="{{ $_GET['search'] ?? '' }}">

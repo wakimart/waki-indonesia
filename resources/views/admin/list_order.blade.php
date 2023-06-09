@@ -29,10 +29,8 @@ $menu_item_second = "list_order";
         <div class="col-12 grid-margin" style="padding: 0;">
             @if (Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
                 @if (Utils::$lang=='id')
-                    <div class="col-xs-12 col-sm-12 row"
-                        style="margin: 0;padding: 0;">
-                        <div class="col-xs-6 col-sm-4"
-                            style="padding: 0;display: inline-block;">
+                    <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+                        <div class="col-xs-6 col-sm-4" style="display: inline-block;">
                             <div class="form-group">
                                 <label for="">Filter By City</label>
                                     <select class="form-control"
@@ -69,7 +67,7 @@ $menu_item_second = "list_order";
                             </div>
                         </div>
                         <div class="col-xs-6 col-sm-4"
-                            style="padding: 0; display: inline-block;">
+                            style="display: inline-block;">
                             <div class="form-group">
                             <label style="opacity: 0;" for=""> s</label>
                                 <select class="form-control"
@@ -125,7 +123,7 @@ $menu_item_second = "list_order";
                             </div>
                         </div>
                         <div class="col-xs-6 col-sm-4"
-                            style="padding: 0; display: inline-block;">
+                            style="display: inline-block;">
                             <div class="form-group">
                             <label style="opacity: 0;" for=""> s</label>
                                 <select class="form-control"
@@ -167,7 +165,7 @@ $menu_item_second = "list_order";
                 <div class="col-xs-12 col-sm-12 row"
                     style="margin: 0;padding: 0;">
                     <div class="col-xs-6 col-sm-4"
-                        style="padding: 0;display: inline-block;">
+                        style="display: inline-block;">
                         <div class="form-group">
                             <label for="">Filter By Type Customer</label>
                             <select class="form-control" id="filter_type" name="filter_type">
@@ -199,7 +197,7 @@ $menu_item_second = "list_order";
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-4"
-                        style="padding: 0; display: inline-block;">
+                        style="display: inline-block;">
                         <div class="form-group">
                             <label for="">Filter By Team</label>
                             <select class="form-control"
@@ -226,7 +224,7 @@ $menu_item_second = "list_order";
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-4"
-                        style="padding: 0; display: inline-block;">
+                        style="display: inline-block;">
                         <div class="form-group">
                             <label for="">Filter By CSO</label>
                             <select class="form-control"
@@ -269,7 +267,7 @@ $menu_item_second = "list_order";
                 <div class="col-xs-12 col-sm-12 row"
                     style="margin: 0;padding: 0;">
                     <div class="col-xs-6 col-sm-4"
-                        style="padding: 0;display: inline-block;">
+                        style="display: inline-block;">
                         <div class="form-group">
                             <label for="filter_string">
                                 Filter by Name, Phone, or Code
@@ -284,7 +282,7 @@ $menu_item_second = "list_order";
                     </div>
 
                     <div class="col-xs-6 col-sm-4"
-                        style="padding: 0; display: inline-block;">
+                        style="display: inline-block;">
                         <div class="form-group">
                             <label for="">Filter By Promo</label>
                             <select class="form-control"
@@ -312,7 +310,7 @@ $menu_item_second = "list_order";
                     </div>
 
                     <div class="col-xs-6 col-sm-4"
-                        style="padding: 0; display: inline-block;">
+                        style="display: inline-block;">
                         <div class="form-group">
                             <label for="">Filter By Status</label>
                             <select class="form-control"
@@ -351,7 +349,7 @@ $menu_item_second = "list_order";
                 <div class="col-xs-12 col-sm-12 row"
                     style="margin: 0; padding: 0;">
                     <div class="col-xs-6 col-sm-6"
-                        style="padding: 0; display: inline-block;">
+                        style="display: inline-block;">
                         <label for=""></label>
                         <div class="form-group">
                             <button id="btn-filter"
@@ -454,11 +452,11 @@ $menu_item_second = "list_order";
                                             @elseif($order['status'] == \App\Order::$status['6'])
                                                 <span class="badge" style="background-color: #FFD495">Request Stock</span>
                                             @elseif($order['status'] == \App\Order::$status['7'])
-                                                <span class="badge text-white" style="background-color: #C147E9">Stock Approved</span>                
+                                                <span class="badge text-white" style="background-color: #C147E9">Stock Approved</span>
                                             @elseif ($order['status'] == \App\Order::$status['3'])
                                                 <span class="badge badge-warning">Delivery</span>
                                             @elseif($order['status'] == \App\Order::$status['8'])
-                                                <span class="badge text-white" style="background-color: #FF6E31">Delivered</span>                
+                                                <span class="badge text-white" style="background-color: #FF6E31">Delivered</span>
                                             @elseif ($order['status'] == \App\Order::$status['4'])
                                                 <span class="badge badge-success">Success</span>
                                             @elseif ($order['status'] == \App\Order::$status['5'])
@@ -600,7 +598,7 @@ $menu_item_second = "list_order";
             </div>
             <div class="modal-body">
                 <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-                    <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+                    <div class="col-xs-6 col-sm-6" style="display: inline-block;">
                         <div class="form-group">
                             <label>Start Date</label>
                             <input type="date"
@@ -613,7 +611,7 @@ $menu_item_second = "list_order";
                             <div class="validation"></div>
                         </div>
                     </div>
-                    <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+                    <div class="col-xs-6 col-sm-6" style="display: inline-block;">
                         <div class="form-group">
                             <label>End Date</label>
                             <input type="date"
@@ -628,7 +626,7 @@ $menu_item_second = "list_order";
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-                    <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+                    <div class="col-xs-6 col-sm-6" style="display: inline-block;">
                         <div class="form-group">
                             <label for="">Province</label>
                             <select class="form-control"
@@ -657,7 +655,7 @@ $menu_item_second = "list_order";
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-6"
-                        style="padding: 0; display: inline-block;">
+                        style="display: inline-block;">
                         <div class="form-group">
                             <label for="">City</label>
                             <select class="form-control"
@@ -675,7 +673,7 @@ $menu_item_second = "list_order";
                 <div class="col-xs-12 col-sm-12 row"
                     style="margin: 0; padding: 0;">
                     <div class="col-xs-6 col-sm-6"
-                        style="padding: 0; display: inline-block;">
+                        style="display: inline-block;">
                         <div class="form-group">
                             <label for="">Filter By Team</label>
                             <select class="form-control"
@@ -703,7 +701,7 @@ $menu_item_second = "list_order";
                             <div class="validation"></div>
                         </div>
                     </div>
-                    <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+                    <div class="col-xs-6 col-sm-6" style="display: inline-block;">
                         <div class="form-group">
                         <label for="">Filter By CSO</label>
                             <select class="form-control" id="report_cso_modal" name="report_cso_modal">
@@ -1013,7 +1011,7 @@ $(document).on("click", "#btn-filter", function (e) {
     if ($('#filter_string').val() != "") {
         urlParamArray.push("filter_string=" + $('#filter_string').val());
     }
-    
+
     if ($('#filter_promo').val() != "") {
         urlParamArray.push("filter_promo=" + $('#filter_promo').val());
     }

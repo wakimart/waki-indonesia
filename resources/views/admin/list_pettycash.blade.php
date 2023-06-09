@@ -8,7 +8,7 @@ $menu_item_second = "list_petty_cash";
 <style type="text/css">
     .table th img, .table td img {
         border-radius: 0% !important;
-    }
+    
     .nav > li > a {
       position: relative;
       display: block;
@@ -94,7 +94,7 @@ $menu_item_second = "list_petty_cash";
             <div class="col-12" style="margin-bottom: 0;">
                 <div class="col-xs-12 col-sm-12 row"
                     style="margin: 0;padding: 0;">
-                    <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                    <div class="col-xs-6 col-sm-4" style="display: inline-block;">
                         <div class="form-group">
                             <label for="">Start Date</label>
                             <input type="date"
@@ -105,7 +105,7 @@ $menu_item_second = "list_petty_cash";
                             <div class="validation"></div>
                         </div>
                     </div>
-                    <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                    <div class="col-xs-6 col-sm-4" style="display: inline-block;">
                         <div class="form-group">
                             <label for="">End Date</label>
                             <input type="date"
@@ -117,7 +117,7 @@ $menu_item_second = "list_petty_cash";
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                <div class="col-xs-6 col-sm-3" style="display: inline-block;">
                     <div class="form-group">
                         <label for="">Filter By Bank Account</label>
                         <select class="form-control"
@@ -136,7 +136,7 @@ $menu_item_second = "list_petty_cash";
                         <div class="validation"></div>
                     </div>
                 </div>
-                <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                <div class="col-xs-6 col-sm-3" style="display: inline-block;">
                     <div class="form-group">
                         <label for="">Filter By Type</label>
                         <select class="form-control"
@@ -179,7 +179,7 @@ $menu_item_second = "list_petty_cash";
                 </div>
             </div>
 
-            
+
             <div class="col-12">
                 @if($currentBank)
                 <h5>Bank : {{ $currentBank->code }} - {{ $currentBank->name }}</h5>
@@ -187,12 +187,12 @@ $menu_item_second = "list_petty_cash";
                 @else
                 <h5>Please Choose Bank Account</h5>
                 @endif
-                
+
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     @php $tabActive = request()->query('tabActive') ?? "statement" @endphp
                     @foreach ($pettyCashTypes as $keyType => $pettyCashes)
                     <li class="nav-item">
-                        <a class="nav-link @if ($tabActive == $keyType) active @endif" 
+                        <a class="nav-link @if ($tabActive == $keyType) active @endif"
                             data-toggle="tab" href="#tab_{{ $keyType }}">
                             {{ ucwords($keyType) }} @if($keyType != "statement") ({{ count($pettyCashes) }}) @endif
                         </a>
@@ -230,7 +230,7 @@ $menu_item_second = "list_petty_cash";
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @php 
+                                                    @php
                                                         $total_nominal_in = 0;
                                                         $total_nominal_out = 0;
                                                         $total_nominal_saldo = 0;
@@ -250,7 +250,7 @@ $menu_item_second = "list_petty_cash";
                                                         @php $total_nominal_saldo += $lastPTCClosedBook->nominal; @endphp
                                                     @endif
                                                     @foreach($pettyCashes as $pettyCash)
-                                                    @php 
+                                                    @php
                                                         $bank_petty_cash_type = $pettyCash->petty_cash_out_bank_account_id ? "bank" : "account";
                                                     @endphp
                                                     <tr>
@@ -261,7 +261,7 @@ $menu_item_second = "list_petty_cash";
                                                             {{ $pettyCash->code }}
                                                         </td>
                                                         @if($pettyCash->type == "out")
-                                                        <td>{{ $bank_petty_cash_type == "bank" 
+                                                        <td>{{ $bank_petty_cash_type == "bank"
                                                             ? $pettyCash->pettyCashOutBankAccount['code'] . ' - ' . $pettyCash->pettyCashOutBankAccount['name']
                                                             : $pettyCash->pettyCashOutType['code'] . ' - ' . $pettyCash->pettyCashOutType['name'] }}
                                                         </td>
@@ -281,7 +281,7 @@ $menu_item_second = "list_petty_cash";
                                                         </td>
                                                         <td class="text-right">
                                                             @if($pettyCash->type == "in")
-                                                                @php 
+                                                                @php
                                                                     $total_nominal_in += $pettyCash->nominal;
                                                                     $total_nominal_saldo += $pettyCash->nominal
                                                                 @endphp
@@ -335,7 +335,7 @@ $menu_item_second = "list_petty_cash";
                                                 <tbody>
                                                     @php $total_nominal = 0; @endphp
                                                     @foreach($pettyCashes as $pettyCash)
-                                                    @php 
+                                                    @php
                                                         $count_ptcd = $pettyCash->pettyCashDetail->count();
                                                         $bank_petty_cash_type = $pettyCash->pettyCashDetail->count() > 0 ? $pettyCash->pettyCashDetail[0]->petty_cash_out_bank_account_id ? "bank" : "account" : "";
                                                         if ($count_ptcd == 0) $count_ptcd = 1;
@@ -349,7 +349,7 @@ $menu_item_second = "list_petty_cash";
                                                         </td>
                                                         @if($bank_petty_cash_type)
                                                         @if($keyType == "out")
-                                                        <td>{{ $bank_petty_cash_type == "bank" 
+                                                        <td>{{ $bank_petty_cash_type == "bank"
                                                             ? $pettyCash->pettyCashDetail[0]->pettyCashOutBankAccount['code'] . ' - ' . $pettyCash->pettyCashDetail[0]->pettyCashOutBankAccount['name']
                                                             : $pettyCash->pettyCashDetail[0]->pettyCashOutType['code'] . ' - ' . $pettyCash->pettyCashDetail[0]->pettyCashOutType['name'] }}
                                                         </td>
@@ -405,7 +405,7 @@ $menu_item_second = "list_petty_cash";
                                                                 @endphp
                                                                 <tr>
                                                                     @if($keyType == "out")
-                                                                    <td>{{ $bank_petty_cash_type == "bank" 
+                                                                    <td>{{ $bank_petty_cash_type == "bank"
                                                                         ? $pettyCash->pettyCashDetail[$i]->pettyCashOutBankAccount['code'] . ' - ' . $pettyCash->pettyCashDetail[$i]->pettyCashOutBankAccount['name']
                                                                         : $pettyCash->pettyCashDetail[$i]->pettyCashOutType['code'] . ' - ' . $pettyCash->pettyCashDetail[$i]->pettyCashOutType['name'] }}
                                                                     </td>

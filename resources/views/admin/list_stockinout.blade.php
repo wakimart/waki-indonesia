@@ -90,7 +90,7 @@ $menu_item_second = "list_stock_in_out";
         <div class="row">
             <div class="col-12" style="margin-bottom: 0;">
                 <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    style="display: inline-block;">
                     <div class="form-group">
                         <label for="filter_parent_warehouse">Filter Parent Warehouse</label>
                         <select id="filter_parent_warehouse" name="filter_parent_warehouse" class="form-control">
@@ -105,7 +105,7 @@ $menu_item_second = "list_stock_in_out";
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    style="display: inline-block;">
                     <div class="form-group">
                         <label for="filter_date">Filter By Date</label>
                         <input class="form-control"
@@ -171,7 +171,7 @@ $menu_item_second = "list_stock_in_out";
                     @php $tabActive = request()->query('tabActive') ?? array_key_first($stockWarehouses) @endphp
                     @foreach ($stockWarehouses as $keyWarehouse => $stockInOuts)
                     <li class="nav-item">
-                        <a class="nav-link @if ($tabActive == $keyWarehouse) active @endif" 
+                        <a class="nav-link @if ($tabActive == $keyWarehouse) active @endif"
                             data-toggle="tab" href="#tab_{{ $keyWarehouse }}">
                             {{ ucwords($keyWarehouse) }}
                         </a>
@@ -204,7 +204,7 @@ $menu_item_second = "list_stock_in_out";
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($stockInOuts as $stockInOut)
-                                                        @php 
+                                                        @php
                                                         @endphp
                                                         <tr>
                                                             <td style="vertical-align: top; text-align: right;">{{ $loop->iteration }}</td>
@@ -212,7 +212,7 @@ $menu_item_second = "list_stock_in_out";
                                                             <td style="vertical-align: top; text-align: left;">{{ $stockInOut->name }}</td>
                                                             <td style="vertical-align: top; text-align: right;">
                                                                 {{ number_format(
-                                                                    $stockInOut->sum_current_quantity 
+                                                                    $stockInOut->sum_current_quantity
                                                                     + $stockInOut->today_out - $stockInOut->today_in
                                                                     + $stockInOut->selectedDate_out - $stockInOut->selectedDate_in) }}
                                                             </td>

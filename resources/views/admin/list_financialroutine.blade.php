@@ -49,7 +49,7 @@ if($menu_item_second === 'list_financial_routine_branch'){
             <div class="col-12">
                 <div class="col-xs-12 col-sm-12 row"
                     style="margin: 0;padding: 0;">
-                    <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                    <div class="col-xs-6 col-sm-4" style="display: inline-block;">
                         <div class="form-group">
                             <label for="">Date</label>
                             <input type="date"
@@ -61,7 +61,7 @@ if($menu_item_second === 'list_financial_routine_branch'){
                         </div>
                     </div>
 
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                    <div class="col-xs-6 col-sm-3" style="display: inline-block;">
                         <div class="form-group">
                             <label for="filter_bank">
                                 Filter By Bank Account
@@ -77,7 +77,7 @@ if($menu_item_second === 'list_financial_routine_branch'){
                             <span class="invalid-feedback">
                                 <strong></strong>
                             </span>
-        
+
                             <datalist id="data_bank">
                                 <select class="form-control">
                                     <option value="All Bank"></option>
@@ -89,12 +89,11 @@ if($menu_item_second === 'list_financial_routine_branch'){
                             <div class="validation"></div>
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
                     <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-                        <label for=""></label>
                         <div class="form-group">
                             <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1"><span class="mdi mdi-filter"></span> Apply Filter</button>
                             <a href="{{ $isBranch ? route("list_financial_routine_branch") : route("list_financial_routine") }}"
