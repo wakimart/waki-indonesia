@@ -39,7 +39,7 @@ $menu_item_second = "list_warehouse";
         <div class="row">
             <div class="col-12" style="margin-bottom: 0;">
                 <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    style="display: inline-block;">
                     <div class="form-group">
                         <label for="">Search By Name</label>
                         <input class="form-control"
@@ -52,7 +52,7 @@ $menu_item_second = "list_warehouse";
                 </div>
 
                 <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    style="display: inline-block;">
                     <div class="form-group">
                         <label for="">Search By Warehouse Code</label>
                         <input class="form-control"
@@ -65,7 +65,7 @@ $menu_item_second = "list_warehouse";
                 </div>
 
                 <div class="col-xs-6 col-sm-3"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    style="display: inline-block;">
                     <div class="form-group">
                         <label for="">Warehouse Type</label>
                         <select class="form-control"

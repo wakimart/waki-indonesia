@@ -29,10 +29,10 @@ $menu_item_second = "list_user";
         <div class="row">
             <div class="col-12 grid-margin stretch-card">
                 <form method="GET"
-                    class="col-12"
+                    class="col-12 p-0"
                     action="{{ route("list_useradmin") }}">
                     <div class="col-xs-6 col-sm-3"
-                        style="padding: 0; display: inline-block;">
+                        style="display: inline-block;">
                         <div class="form-group">
                             <label for="search-name">Search by name</label>
                             <input class="form-control"
@@ -47,7 +47,7 @@ $menu_item_second = "list_user";
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-3"
-                        style="padding: 0; display: inline-block;">
+                        style="display: inline-block;">
                         <div class="form-group">
                             <label for="search-username">
                                 Search by username

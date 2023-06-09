@@ -27,7 +27,7 @@ $menu_item_page_sub = "cso_commission";
 
         <div class="col-12 grid-margin" style="padding: 0;">
             <div class="col-xs-12 col-sm-12 row">
-                <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                <div class="col-xs-6 col-sm-4" style="display: inline-block;">
                     <div class="form-group">
                         <label for="">Month & Year</label>
                         <input type="month"
@@ -38,7 +38,7 @@ $menu_item_page_sub = "cso_commission";
                         <div class="validation"></div>
                     </div>
                 </div>
-                <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                <div class="col-xs-6 col-sm-4" style="display: inline-block;">
                     <div class="form-group">
                         <label for="filter_branch">
                             Filter By Branch
@@ -74,7 +74,6 @@ $menu_item_page_sub = "cso_commission";
                 style="margin: 0; padding: 0;">
                 <div class="col-xs-6 col-sm-6"
                     style="padding: 0; display: inline-block;">
-                    <label for=""></label>
                     <div class="form-group">
                         <button id="btn-filter"
                             type="button"
@@ -90,8 +89,8 @@ $menu_item_page_sub = "cso_commission";
                         </a>
                     </div>
                     <div class="form-group">
-                        @php 
-                            $exportParameter = request()->input(); 
+                        @php
+                            $exportParameter = request()->input();
                             $exportParameter['export_type'] = "print";
                         @endphp
                         <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"
@@ -100,7 +99,7 @@ $menu_item_page_sub = "cso_commission";
                             <span class="mdi mdi-file-document"></span>
                             Print Total Sale
                         </a>
-                        @php 
+                        @php
                             $exportParameter['export_type'] = "xls";
                         @endphp
                         <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"

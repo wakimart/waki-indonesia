@@ -22,7 +22,7 @@
 		<div class="row">
 			<div class="col-12 grid-margin stretch-card">
 				@if(Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                    <div class="col-xs-6 col-sm-3" style="display: inline-block;">
                       <div class="form-group">
                         <label for="">Filter By Team</label>
                           <select class="form-control" id="filter_branch" name="filter_branch">
@@ -43,7 +43,7 @@
                           <div class="validation"></div>
                       </div>
                     </div>
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                    <div class="col-xs-6 col-sm-3" style="display: inline-block;">
                       <div class="form-group">
 						<label for="">Search By Name, Code, and Phone</label>
                         <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
@@ -90,7 +90,7 @@
 				                        	<td>{{$key+1}}</td>
 				                            <td>{{$cso['code']}}</td>
 				                            <td>{{$cso['name']}}</td>
-											<td>{{$cso->branch['name']}}</td> 
+											<td>{{$cso->branch['name']}}</td>
 				                            <td style="text-align: center;"><a href="{{ route('edit_cso', ['id' => $cso['id']])}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
                           					<td style="text-align: center;"><a href="{{ route('delete_cso', ['id' => $cso['id']])}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
 				                        </tr>

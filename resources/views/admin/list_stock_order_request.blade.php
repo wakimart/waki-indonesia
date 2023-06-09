@@ -19,7 +19,7 @@ $menu_item_second = "list_stock_order_request";
 
 		<div class="row">
 			<div class="col-12 grid-margin stretch-card">
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                    <div class="col-xs-6 col-sm-3" style="display: inline-block;">
                       <div class="form-group">
                         <label for="">Filter By Team</label>
                           <select class="form-control" id="filter_branch" name="filter_branch">
@@ -40,7 +40,7 @@ $menu_item_second = "list_stock_order_request";
                           <div class="validation"></div>
                       </div>
                     </div>
-                    <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+                    <div class="col-xs-6 col-sm-3" style="display: inline-block;">
                       <div class="form-group">
 						<label for="">Search By Code, Temp No</label>
                         <input class="form-control" id="search" name="search" placeholder="Search By Code, Temp No" value="{{ request()->input('search') }}">
@@ -79,7 +79,7 @@ $menu_item_second = "list_stock_order_request";
 				                            <td>{{ date("d/m/Y", strtotime($sor->order['orderDate'])) }}</td>
 				                            <td><a href="{{ route('detail_order') }}?code={{ $sor->order['code'] }}">{{$sor->order['code']}}</a></td>
                                             <td>{{$sor->order['temp_no']}}</td>
-											<td>{{$sor->order->branch['code']}} - {{$sor->order->branch['name']}}</td> 
+											<td>{{$sor->order->branch['code']}} - {{$sor->order->branch['name']}}</td>
 											@if($sor['status'] == \App\StockOrderRequest::$status['1']) {{-- Pending --}}
                                             <td>
                                                 <span class="badge badge-warning">{{ucwords($sor['status'])}}</span>

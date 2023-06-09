@@ -90,7 +90,7 @@ $menu_item_second = "list_stock";
         <div class="row">
             <div class="col-12" style="margin-bottom: 0;">
                 <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    style="display: inline-block;">
                     <div class="form-group">
                         <label for="filter_date">Filter By Date</label>
                         <input class="form-control"
@@ -103,7 +103,7 @@ $menu_item_second = "list_stock";
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    style="display: inline-block;">
                     <div class="form-group">
                         <label for="filter_code">Filter By Code</label>
                         <input class="form-control"
@@ -114,7 +114,7 @@ $menu_item_second = "list_stock";
                     </div>
                 </div>
                 <div class="col-xs-6 col-sm-4"
-                    style="margin-bottom: 0; padding: 0; display: inline-block;">
+                    style="display: inline-block;">
                     <div class="form-group">
                         <label for="filter_product_code">
                             Filter By Product Code
@@ -156,7 +156,7 @@ $menu_item_second = "list_stock";
                     @php $tabActive = request()->query('tabActive') ?? "in" @endphp
                     @foreach ($stockTypes as $keyType => $stockInOuts)
                     <li class="nav-item">
-                        <a class="nav-link @if ($tabActive == $keyType) active @endif" 
+                        <a class="nav-link @if ($tabActive == $keyType) active @endif"
                             data-toggle="tab" href="#tab_{{ $keyType }}">
                             {{ ucwords($keyType) }} ({{ $stockInOuts->total() }})
                         </a>
@@ -190,7 +190,7 @@ $menu_item_second = "list_stock";
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($stockInOuts as $stockInOut)
-                                                        @php 
+                                                        @php
                                                             $count_sioProduct = $stockInOut->stockInOutProduct->count();
                                                         @endphp
                                                         <tr>
@@ -248,7 +248,7 @@ $menu_item_second = "list_stock";
                                                                 @endif
                                                             </td>
                                                         </tr>
-        
+
                                                         @if ($count_sioProduct > 1)
                                                             @for ($i = 1; $i < $count_sioProduct; $i++)
                                                                 <tr>

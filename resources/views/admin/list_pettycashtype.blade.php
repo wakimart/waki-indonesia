@@ -43,8 +43,7 @@ $menu_item_second = "list_petty_cash_type";
                 </div>
 
                 <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-                    <div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-                        <label for=""></label>
+                    <div class="col-xs-6 col-sm-6" style="display: inline-block;">
                         <div class="form-group">
                             <button id="btn-filter" type="button" class="btn btn-gradient-primary m-1"><span class="mdi mdi-filter"></span> Apply Filter</button>
                             <a href="{{ route('list_petty_cash_type') }}"

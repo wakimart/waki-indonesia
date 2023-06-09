@@ -29,7 +29,7 @@ $menu_item_second = "list_order_report";
         <div class="col-12 grid-margin" style="padding: 0;">
             <div class="col-xs-12 col-sm-12 row"
                 style="margin: 0;padding: 0;">
-                <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                <div class="col-xs-6 col-sm-4" style="display: inline-block">
                     <div class="form-group">
                         <label for="">Start Date</label>
                         <input type="date"
@@ -40,7 +40,7 @@ $menu_item_second = "list_order_report";
                         <div class="validation"></div>
                     </div>
                 </div>
-                <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                <div class="col-xs-6 col-sm-4" style="display: inline-block">
                     <div class="form-group">
                         <label for="">End Date</label>
                         <input type="date"
