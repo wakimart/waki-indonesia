@@ -350,6 +350,7 @@ class FinancialRoutineController extends Controller
             ->whereBetween('op.payment_date', [$startDate, $endDate])
             ->where('op.bank_account_id', $financialRoutine->bank_account_id)
             ->where('o.active', true)
+            ->where('o.status', '!=', 'reject')
             ->orderBy('op.payment_date')
             ->groupBy('op.id')
             ->get();
