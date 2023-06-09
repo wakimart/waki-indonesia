@@ -145,7 +145,7 @@ $menu_item_page_sub = "cso_commission";
                                         <th>Bonus</th>
                                         <th>Tax</th>
                                         <th>Total Commission</th>
-                                        <th>Detail/Edit</th>
+                                        <th colspan="3">Detail/Edit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -153,16 +153,20 @@ $menu_item_page_sub = "cso_commission";
                                         $tot_commission = 0;
                                         $tot_pajak = 0;
                                         $tot_result = 0;
+                                        $tot_bonus = 0;
                                     @endphp
 
                                     @foreach ($CsoCommissions as $key => $Cso_Commission)
                                         @php
+                                            $bonusPerCso = 0;
+                                            if(count($Cso_Commission->orderCommission) > 0){
+
+                                                $bonusPerCso = $Cso_Commission->orderCommission->sum(function ($row) {return ($row->bonus + $row->upgrade + $row->smgt_nominal + $row->excess_price);});
+                                            }
                                             $tot_commission += $Cso_Commission['commission'];
                                             $tot_pajak += $Cso_Commission['pajak'];
-                                            $tot_result += $Cso_Commission['commission'] - $Cso_Commission['pajak'];
-                                            if(count($Cso_Commission->orderCommission) > 0){
-                                                dd($Cso_Commission->orderCommission);
-                                            }
+                                            $tot_bonus += $bonusPerCso;
+                                            $tot_result += $Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak'];
                                         @endphp
 
                                         <tr>
@@ -170,12 +174,24 @@ $menu_item_page_sub = "cso_commission";
                                             <td>{{ $Cso_Commission->cso['code'] }} - {{ $Cso_Commission->cso['name'] }}</td>
                                             <td>{{ $Cso_Commission->cso['no_rekening'] }}</td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['commission']) }}</td>
-                                            <td class="text-right">Rp. </td>
+                                            <td class="text-right">Rp. {{ number_format($bonusPerCso) }}</td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['pajak']) }}</td>
-                                            <td class="text-right">Rp. {{ number_format($Cso_Commission['commission'] - $Cso_Commission['pajak']) }}</td>
+                                            <td class="text-right">Rp. {{ number_format($Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak']) }}</td>
                                             <td class="text-center">
                                                 <a href="" target="_blank">
-                                                    <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(99, 110, 114);"></i>
+                                                    <i class="mdi mdi-eye text-info" style="font-size: 24px;"></i>
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="" target="_blank"
+                                                    data-toggle="modal"
+                                                    data-target="#editCsoCommision">
+                                                    <i class="mdi mdi-border-color text-warning" style="font-size: 24px;"></i>
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="" target="_blank">
+                                                    <i class="mdi mdi-delete text-danger" style="font-size: 24px;"></i>
                                                 </a>
                                             </td>
                                         </tr>
@@ -186,10 +202,9 @@ $menu_item_page_sub = "cso_commission";
                                     <tr class="text-right">
                                         <th colspan="3">TOTAL SALES</th>
                                         <th>Rp. {{ number_format($tot_commission) }}</th>
-                                        <th>Rp. {{ number_format(0) }}</th>
+                                        <th>Rp. {{ number_format($tot_bonus) }}</th>
                                         <th>Rp. {{ number_format($tot_pajak) }}</th>
                                         <th>Rp. {{ number_format($tot_result) }}</th>
-                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -203,6 +218,53 @@ $menu_item_page_sub = "cso_commission";
         </div>
     </div>
 </div>
+
+<!-- Modal View Payment -->
+<div class="modal fade"
+    id="editCsoCommision"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 style="text-align: center;">
+                    Edit CSO Commission
+                </h5>
+                <br>
+                <form>
+                    <div class="form-group">
+                        <label for="">Nominal Commmission</label>
+                        <input type="text"
+                            name="commission" 
+                            id="editCsoCommision-commission"
+                            class="form-control"
+                            data-type="currency"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Nominal Tax</label>
+                        <input type="text"
+                            name="pajak" 
+                            id="editCsoCommision-pajak"
+                            class="form-control"
+                            data-type="currency"/>
+                    </div>
+                    <div class="clearfix"></div>
+                </form>                
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal View Payment -->
+
 @endsection
 
 @section('script')

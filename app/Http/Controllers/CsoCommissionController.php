@@ -58,4 +58,8 @@ class CsoCommissionController extends Controller
 
         return view('admin.list_csocommission', compact('startDate', 'endDate', 'branches', 'CsoCommissions'));
 	}
+
+	public function show(Request $request){
+		
+	}
 }
