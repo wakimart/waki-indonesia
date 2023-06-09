@@ -162,6 +162,7 @@ class FinancialRoutineBranchController extends Controller
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
             ->leftjoin('csos as c', 'c.id', 'o.cso_id')
             ->whereBetween('op.payment_date', [$startDate, $endDate])
+            ->where('op.status', '!=', 'rejected')
             ->where('o.active', true)
             ->groupBy('br.id', 'b.id', 'op.id')
             ->orderBy('br.code', 'asc')
@@ -243,6 +244,7 @@ class FinancialRoutineBranchController extends Controller
                 ->join('order_payments as op', 'o.id', 'op.order_id')
                 ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
                 ->whereBetween('op.payment_date', [$startDate, $endDate])
+                ->where('op.status', '!=', 'rejected')
                 ->where('o.branch_id', $lastMonthFinancialRoutine->bankAccount->branch['id'])
                 ->where('o.active', true)->first();
             return [
