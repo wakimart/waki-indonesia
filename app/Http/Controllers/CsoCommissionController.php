@@ -100,4 +100,25 @@ class CsoCommissionController extends Controller
         }
         return response()->json(['error' => 'Invalid Payment ID'], 500);
 	}
+
+	public function destroy($id){
+        if($id){
+            $cso_commission = CsoCommission::find($id);
+            if(isset($cso_commission)){
+                DB::beginTransaction();
+                try {
+                    $cso_commission->active = false;
+                    $cso_commission->update();
+
+                    DB::commit();
+                    return redirect()->back()->with('success', 'CSO Commission Berhasil Di Hapus');
+                } catch (\Exception $ex) {
+                    DB::rollback();
+                    return response()->json(['error' =>  $ex->getMessage(), 500]);
+                }
+                
+            }
+        }
+        return response()->json(['error' => 'Invalid Payment ID'], 500);
+	}
 }

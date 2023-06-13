@@ -187,9 +187,9 @@ $menu_item_page_sub = "cso_commission";
                                                 </button>
                                             </td>
                                             <td class="text-center">
-                                                <a href="" target="_blank">
+                                                <button class="btn-delete btn-delete_cso_commission" value="{{ $Cso_Commission['id'] }}">
                                                     <i class="mdi mdi-delete text-danger" style="font-size: 24px;"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                         </tr>
                                         @php
@@ -282,6 +282,44 @@ $menu_item_page_sub = "cso_commission";
 </div>
 <!-- End Modal Edit CSO Commission -->
 
+<!-- Modal Delete Payment -->
+<div class="modal fade"
+    id="deleteDoModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 style="text-align: center;">
+                    Are You Sure to Delete this Payment?
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <form id="frmDelete" method="post" action="">
+                    {{ csrf_field() }}
+                    <button type="submit"
+                        class="btn btn-gradient-danger mr-2">
+                        Yes
+                    </button>
+                </form>
+                <button class="btn btn-light" data-dismiss="modal">
+                    No
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Delete -->
+
 @endsection
 
 @section('script')
@@ -324,6 +362,14 @@ $menu_item_page_sub = "cso_commission";
                 alert(data.responseJSON.error);
             }
         });
+    });
+
+    $(".btn-delete_cso_commission").click(function() {
+        var id = $(this).val();
+        var urlForm = '{{route("delete_cso_commission", ":id")}}';
+        urlForm = urlForm.replace(':id', id)
+        $('#frmDelete').attr('action', urlForm);
+        $('#deleteDoModal').modal('show');
     });
 
     $("#submitFormEditCommission").on("click", function(e) {
