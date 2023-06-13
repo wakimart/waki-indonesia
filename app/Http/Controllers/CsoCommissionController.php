@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use App\Exports\CsoCommissionExport;
 use Illuminate\Http\Request;
 use App\CsoCommission;
 use App\Branch;
@@ -120,5 +121,24 @@ class CsoCommissionController extends Controller
             }
         }
         return response()->json(['error' => 'Invalid Payment ID'], 500);
+	}
+
+	public function exportCsoCommission(Request $request){
+		$startDate = $request->has('filter_month') ? date($request->input('filter_month').'-01') : date('Y-m-01');
+        $endDate = date('Y-m-t', strtotime($startDate));
+        $CsoCommissions = null;
+
+        if($request->has('filter_branch')){
+	        $CsoCommissions = CsoCommission::select('cso_commissions.*')
+	        	->where('cso_commissions.created_at', '>=', $startDate)
+	        	->where('cso_commissions.created_at', '<=', $endDate)
+	        	->where('cso_commissions.active', true)
+	        	->leftJoin('csos', 'csos.id', '=', 'cso_commissions.cso_id')
+	        	->leftJoin('branches', 'branches.id', '=', 'csos.branch_id')
+	        	->where('branches.id', $request->input('filter_branch'))
+	        	->get();
+        }
+
+        return Excel::download(new CsoCommissionExport($CsoCommissions), 'Commission Report.xlsx');
 	}
 }
