@@ -177,16 +177,14 @@ $menu_item_page_sub = "cso_commission";
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['pajak']) }}</td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak']) }}</td>
                                             <td class="text-center">
-                                                <a href="" target="_blank">
+                                                <a href="{{ route('detail_cso_commission', ['id' => $Cso_Commission->id]) }}" target="_blank">
                                                     <i class="mdi mdi-eye text-info" style="font-size: 24px;"></i>
                                                 </a>
                                             </td>
                                             <td class="text-center">
-                                                <a href="" target="_blank"
-                                                    data-toggle="modal"
-                                                    data-target="#editCsoCommision">
+                                                <button class="btn-delete btn-edit_cso_commission" value="{{ $Cso_Commission['id'] }}">
                                                     <i class="mdi mdi-border-color text-warning" style="font-size: 24px;"></i>
-                                                </a>
+                                                </button>
                                             </td>
                                             <td class="text-center">
                                                 <a href="" target="_blank">
@@ -218,7 +216,7 @@ $menu_item_page_sub = "cso_commission";
     </div>
 </div>
 
-<!-- Modal View Payment -->
+<!-- Modal Edit PaymentCSO Commissiont Head Admin -->
 <div class="modal fade"
     id="editCsoCommision"
     tabindex="-1"
@@ -234,12 +232,29 @@ $menu_item_page_sub = "cso_commission";
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <h5 style="text-align: center;">
-                    Edit CSO Commission
-                </h5>
-                <br>
-                <form>
+            <form method="post" id="editFormCsoCommision" action="">
+                @csrf
+                {{ method_field('PUT') }}
+                <div class="modal-body">
+                    <h5 style="text-align: center;">
+                        Edit CSO Commission
+                    </h5>
+                    <br>
+                    <input type="hidden" name="id" value="">
+                    <div class="form-group">
+                        <label for="">Month</label>
+                        <input type="month"
+                            id="editCsoCommision-month"
+                            class="form-control"
+                            readonly="" />
+                    </div>
+                    <div class="form-group">
+                        <label for="">CSO - Name</label>
+                        <input type="text"
+                            id="editCsoCommision-cso"
+                            class="form-control"
+                            readonly="" />
+                    </div>
                     <div class="form-group">
                         <label for="">Nominal Commmission</label>
                         <input type="text"
@@ -257,38 +272,90 @@ $menu_item_page_sub = "cso_commission";
                             data-type="currency"/>
                     </div>
                     <div class="clearfix"></div>
-                </form>                
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="submitFormEditCommission" type="submit" class="btn btn-gradient-success mr-2">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-<!-- End Modal View Payment -->
+<!-- End Modal Edit CSO Commission -->
 
 @endsection
 
 @section('script')
 <script>
-$(document).on("click", "#btn-filter", function (e) {
-    var urlParamArray = new Array();
-    var urlParamStr = "";
+    $(document).on("input", 'input[data-type="currency"]', function() {
+        $(this).val(numberWithCommas($(this).val()));
+    });
 
-    if ($('#filter_month').val() != "") {
-        urlParamArray.push("filter_month=" + $('#filter_month').val());
+    function numberWithCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
     }
 
-    if ($('#filter_branch').val() != "") {
-        urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+    function numberNoCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\D/g, "");
+        return parts.join(".");
     }
 
-    for (var i = 0; i < urlParamArray.length; i++) {
-        if (i === 0) {
-            urlParamStr += "?" + urlParamArray[i]
-        } else {
-            urlParamStr += "&" + urlParamArray[i]
+    $(".btn-edit_cso_commission").click(function() {
+        var id = $(this).val()
+        var url = '{{route("edit_cso_commission", ":id")}}'
+        url = url.replace(':id', id);
+        $.ajax({
+            method: "get",
+            url: url,
+            success: function(data) {
+                $('#editCsoCommision').modal('show');
+                var urlForm = '{{route("update_cso_commission", ":id")}}'
+                urlForm = urlForm.replace(':id', id)
+                $('#editFormCsoCommision').attr('action', urlForm);
+                $('#editCsoCommision-month').val(data['month']);
+                $('#editCsoCommision-cso').val(data['cso']);
+                $('#editCsoCommision-commission').val(numberWithCommas(data['commission']));
+                $('#editCsoCommision-pajak').val(numberWithCommas(data['pajak']));
+            },
+            error: function(data) {
+                $('#editCsoCommision').modal('hide');
+                alert(data.responseJSON.error);
+            }
+        });
+    });
+
+    $("#submitFormEditCommission").on("click", function(e) {
+        $("#editFormCsoCommision").find('input[data-type="currency"]').each(function() {
+            $(this).val(numberNoCommas($(this).val()));
+        });
+        $("#editFormCsoCommision").submit();
+        $("#submitFormEditCommission").html("Loading...");
+        $("#submitFormEditCommission").attr("disabled", true);
+    });
+
+    $(document).on("click", "#btn-filter", function (e) {
+        var urlParamArray = new Array();
+        var urlParamStr = "";
+
+        if ($('#filter_month').val() != "") {
+            urlParamArray.push("filter_month=" + $('#filter_month').val());
         }
-    }
 
-    window.location.href = "{{route('list_cso_commission')}}" + urlParamStr;
-});
+        if ($('#filter_branch').val() != "") {
+            urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+        }
+
+        for (var i = 0; i < urlParamArray.length; i++) {
+            if (i === 0) {
+                urlParamStr += "?" + urlParamArray[i]
+            } else {
+                urlParamStr += "&" + urlParamArray[i]
+            }
+        }
+
+        window.location.href = "{{route('list_cso_commission')}}" + urlParamStr;
+    });
 </script>
 @endsection

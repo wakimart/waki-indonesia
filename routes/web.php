@@ -1707,6 +1707,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
     Route::group(['prefix' => 'cso-commission', 'middleware' => 'auth'], function() {
         Route::get('/list', 'CsoCommissionController@index')->name('list_cso_commission');
+        Route::get('/edit/{id}', 'CsoCommissionController@edit')->name('edit_cso_commission');
+        Route::get('/detail/{id}', 'CsoCommissionController@show')->name('detail_cso_commission');
+        Route::match(['put', 'patch'], '/update/{id}', 'CsoCommissionController@update')->name('update_cso_commission');   
     });
 
     Route::view('faq_agreement', 'admin.faq_agreement')->name('faq_agreement');

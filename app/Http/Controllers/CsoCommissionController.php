@@ -59,7 +59,45 @@ class CsoCommissionController extends Controller
         return view('admin.list_csocommission', compact('startDate', 'endDate', 'branches', 'CsoCommissions'));
 	}
 
-	public function show(Request $request){
-		
+	public function show($id){
+		$cso_commission = CsoCommission::find($id);
+        return view('admin.detail_csocommission', compact('cso_commission'));
+	}
+
+	public function edit($id){
+        if($id){
+			$cso_commission = CsoCommission::find($id);
+            if(isset($cso_commission)){
+                return response()->json([
+                    'month' => date('Y-m', strtotime($cso_commission->created_at)),
+                    'cso' => $cso_commission->cso['code']. '-' .$cso_commission->cso['name'],
+                    'commission' => $cso_commission->commission,
+                    'pajak' => $cso_commission->pajak,
+                ], 200);
+            }
+        }
+        return response()->json(['error' => 'Invalid Payment ID'], 500);
+	}
+
+	public function update(Request $request, $id){
+        if($id){
+            $cso_commission = CsoCommission::find($id);
+            if(isset($cso_commission)){
+                DB::beginTransaction();
+                try {
+                    $cso_commission->commission = $request->commission;
+                    $cso_commission->pajak = $request->pajak;
+                    $cso_commission->update();
+
+                    DB::commit();
+                    return redirect()->back()->with('success', 'CSO Commission Berhasil Di Ubah');
+                } catch (\Exception $ex) {
+                    DB::rollback();
+                    return response()->json(['error' =>  $ex->getMessage(), 500]);
+                }
+                
+            }
+        }
+        return response()->json(['error' => 'Invalid Payment ID'], 500);
 	}
 }
