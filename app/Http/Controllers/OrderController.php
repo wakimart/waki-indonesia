@@ -2178,7 +2178,7 @@ class OrderController extends Controller
      * @return type
      * @throws conditon
      **/
-    public function storeCommission(Request $request)
+    public function storeOrderCommission(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'order_id' => 'required',
@@ -2195,16 +2195,6 @@ class OrderController extends Controller
         }else{
             DB::beginTransaction();
             try {
-                // order commission
-                $orderCommission = new OrderCommission();
-                $orderCommission->order_id = $request->order_id;
-                $orderCommission->cso_id = $request->cso_id;
-                $orderCommission->bonus = $request->bonus;
-                $orderCommission->upgrade = $request->upgrade;
-                $orderCommission->smgt_nominal = $request->smgt_nominal;
-                $orderCommission->excess_price = $request->excess_price;
-                $orderCommission->save();
-
                 // order
                 $previousOrderData = Order::find($request->order_id);
                 $order = Order::find($request->order_id);
@@ -2214,7 +2204,7 @@ class OrderController extends Controller
                 // history update
                 $user = Auth::user();
                 $historyOrder["type_menu"] = "Order";
-                $historyOrder["method"] = "Update";
+                $historyOrder["method"] = "Update Commission Type ID";
                 $historyOrder["meta"] = json_encode(
                     [
                         "user" => $user["id"],
@@ -2228,14 +2218,35 @@ class OrderController extends Controller
                 $historyOrder["menu_id"] = $request->order_id;
                 HistoryUpdate::create($historyOrder);
 
-                // order cso commission
-                $orderCsoCommission = new OrderCsoCommission();
-                $orderCsoCommission->order_commission_id = $orderCommission->id;
-                // where cso id & what month is it now
-                $month = date('m');
-                $csoCommission = CsoCommission::where('cso_id', $request->cso_id)->whereMonth('created_at', $month)->first();
-                $orderCsoCommission->cso_commission_id = $csoCommission->id;
-                $orderCsoCommission->save();
+                // check is 70 n 30 cso are same or not
+                $csoIDandPercentage = [];
+                if($order['70_cso_id'] == $order['30_cso_id']){
+                    $csoIDandPercentage[$order->cso_id] = 100;
+                }else{
+                    $csoIDandPercentage[$order['70_cso_id']] = 70;
+                    $csoIDandPercentage[$order['30_cso_id']] = 30;
+                }
+
+                foreach($csoIDandPercentage as $cso_id => $cso_percentage){
+                    // order commission
+                    $orderCommission = new OrderCommission();
+                    $orderCommission->order_id = $request->order_id;
+                    $orderCommission->cso_id = $cso_id;
+                    $orderCommission->bonus = $cso_percentage / 100 * str_replace(',', '', $request->bonus);
+                    $orderCommission->upgrade = $cso_percentage / 100 * str_replace(',', '', $request->upgrade);
+                    $orderCommission->smgt_nominal = $cso_percentage / 100 * str_replace(',', '', $request->smgt_nominal);
+                    $orderCommission->excess_price = $cso_percentage / 100 * str_replace(',', '', $request->excess_price);
+                    $orderCommission->save();
+
+                    // order cso commission
+                    $orderCsoCommission = new OrderCsoCommission();
+                    $orderCsoCommission->order_commission_id = $orderCommission->id;
+                    // where cso id & what month is it now
+                    $month = date('m');
+                    $csoCommission = CsoCommission::where('cso_id', $cso_id)->whereMonth('created_at', $month)->first();
+                    $orderCsoCommission->cso_commission_id = $csoCommission->id;
+                    $orderCsoCommission->save();
+                }
 
                 DB::commit();
                 return Redirect::back()->with("success", "Order commission successfully added.");
@@ -2243,6 +2254,81 @@ class OrderController extends Controller
                 DB::rollBack();
                 return response()->json($ex->getMessage());
                 return Redirect::back()->withErrors("Something wrong when add order commission, please call Team IT")->withInput();
+            }
+        }
+    }
+
+    /**
+     * get order commission data for edit
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function editOrderCommission($id)
+    {
+        $orderCommission = OrderCommission::find($id);
+        return response()->json($orderCommission);
+    }
+
+    /**
+     * update order commission
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function updateOrderCommission(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'bonus' => 'required',
+            'upgrade' => 'required',
+            'smgt_nominal' => 'required',
+            'excess_price' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput();
+        }else{
+            DB::beginTransaction();
+            try {
+                // update order commission
+                $previousOrderCommissionData = OrderCommission::find($request->id);
+                $orderCommission = OrderCommission::find($request->id);
+                $orderCommission->bonus = str_replace(',', '', $request->bonus);
+                $orderCommission->upgrade = str_replace(',', '', $request->upgrade);
+                $orderCommission->smgt_nominal = str_replace(',', '', $request->smgt_nominal);
+                $orderCommission->excess_price = str_replace(',', '', $request->excess_price);
+                $orderCommission->update();
+
+                // create history update
+                $user = Auth::user();
+                $historyOrderCommission["type_menu"] = "Order Commission";
+                $historyOrderCommission["method"] = "Update";
+                $historyOrderCommission["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => array_diff(json_decode($orderCommission, true), json_decode($previousOrderCommissionData,true)),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+
+                $historyOrderCommission["user_id"] = $user["id"];
+                $historyOrderCommission["menu_id"] = $request->id;
+                HistoryUpdate::create($historyOrderCommission);
+
+                DB::commit();
+                return Redirect::back()->with("success", "Order commission successfully updated.");
+            } catch (\Exception $ex) {
+                DB::rollBack();
+                return response()->json($ex->getMessage());
+                return Redirect::back()->withErrors("Something wrong when update order commission, please call Team IT")->withInput();
             }
         }
     }
