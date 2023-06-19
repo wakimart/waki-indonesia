@@ -65,7 +65,7 @@
 	  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lozad/dist/lozad.min.js"></script>
 
 	  <!-- Main Stylesheet File -->
-	  <link href="{{asset('css/style.css')}}" rel="stylesheet">
+	  <link href="{{asset('css/style.css')}}?v=2.0" rel="stylesheet">
 </head>
 <body>
 	<!-- Google Tag Manager (noscript) -->

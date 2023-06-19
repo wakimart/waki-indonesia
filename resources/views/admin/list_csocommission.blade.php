@@ -27,7 +27,7 @@ $menu_item_page_sub = "cso_commission";
 
         <div class="col-12 grid-margin" style="padding: 0;">
             <div class="col-xs-12 col-sm-12 row">
-                <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                <div class="col-xs-6 col-sm-4" style="display: inline-block;">
                     <div class="form-group">
                         <label for="">Month & Year</label>
                         <input type="month"
@@ -38,7 +38,7 @@ $menu_item_page_sub = "cso_commission";
                         <div class="validation"></div>
                     </div>
                 </div>
-                <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                <div class="col-xs-6 col-sm-4" style="display: inline-block;">
                     <div class="form-group">
                         <label for="filter_branch">
                             Filter By Branch
@@ -74,7 +74,6 @@ $menu_item_page_sub = "cso_commission";
                 style="margin: 0; padding: 0;">
                 <div class="col-xs-6 col-sm-6"
                     style="padding: 0; display: inline-block;">
-                    <label for=""></label>
                     <div class="form-group">
                         <button id="btn-filter"
                             type="button"
@@ -90,8 +89,8 @@ $menu_item_page_sub = "cso_commission";
                         </a>
                     </div>
                     <div class="form-group">
-                        @php 
-                            $exportParameter = request()->input(); 
+                        @php
+                            $exportParameter = request()->input();
                             $exportParameter['export_type'] = "print";
                         @endphp
                         <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"
@@ -100,7 +99,7 @@ $menu_item_page_sub = "cso_commission";
                             <span class="mdi mdi-file-document"></span>
                             Print Total Sale
                         </a>
-                        @php 
+                        @php
                             $exportParameter['export_type'] = "xls";
                         @endphp
                         <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"
@@ -145,7 +144,7 @@ $menu_item_page_sub = "cso_commission";
                                         <th>Bonus</th>
                                         <th>Tax</th>
                                         <th>Total Commission</th>
-                                        <th>Detail/Edit</th>
+                                        <th colspan="3">Detail/Edit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -153,16 +152,20 @@ $menu_item_page_sub = "cso_commission";
                                         $tot_commission = 0;
                                         $tot_pajak = 0;
                                         $tot_result = 0;
+                                        $tot_bonus = 0;
                                     @endphp
 
                                     @foreach ($CsoCommissions as $key => $Cso_Commission)
                                         @php
+                                            $bonusPerCso = 0;
+                                            if(count($Cso_Commission->orderCommission) > 0){
+
+                                                $bonusPerCso = $Cso_Commission->orderCommission->sum(function ($row) {return ($row->bonus + $row->upgrade + $row->smgt_nominal + $row->excess_price);});
+                                            }
                                             $tot_commission += $Cso_Commission['commission'];
                                             $tot_pajak += $Cso_Commission['pajak'];
-                                            $tot_result += $Cso_Commission['commission'] - $Cso_Commission['pajak'];
-                                            if(count($Cso_Commission->orderCommission) > 0){
-                                                dd($Cso_Commission->orderCommission);
-                                            }
+                                            $tot_bonus += $bonusPerCso;
+                                            $tot_result += $Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak'];
                                         @endphp
 
                                         <tr>
@@ -170,13 +173,23 @@ $menu_item_page_sub = "cso_commission";
                                             <td>{{ $Cso_Commission->cso['code'] }} - {{ $Cso_Commission->cso['name'] }}</td>
                                             <td>{{ $Cso_Commission->cso['no_rekening'] }}</td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['commission']) }}</td>
-                                            <td class="text-right">Rp. </td>
+                                            <td class="text-right">Rp. {{ number_format($bonusPerCso) }}</td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['pajak']) }}</td>
-                                            <td class="text-right">Rp. {{ number_format($Cso_Commission['commission'] - $Cso_Commission['pajak']) }}</td>
+                                            <td class="text-right">Rp. {{ number_format($Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak']) }}</td>
                                             <td class="text-center">
-                                                <a href="" target="_blank">
-                                                    <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(99, 110, 114);"></i>
+                                                <a href="{{ route('detail_cso_commission', ['id' => $Cso_Commission->id]) }}" target="_blank">
+                                                    <i class="mdi mdi-eye text-info" style="font-size: 24px;"></i>
                                                 </a>
+                                            </td>
+                                            <td class="text-center">
+                                                <button class="btn-delete btn-edit_cso_commission" value="{{ $Cso_Commission['id'] }}">
+                                                    <i class="mdi mdi-border-color text-warning" style="font-size: 24px;"></i>
+                                                </button>
+                                            </td>
+                                            <td class="text-center">
+                                                <button class="btn-delete btn-delete_cso_commission" value="{{ $Cso_Commission['id'] }}">
+                                                    <i class="mdi mdi-delete text-danger" style="font-size: 24px;"></i>
+                                                </button>
                                             </td>
                                         </tr>
                                         @php
@@ -186,10 +199,9 @@ $menu_item_page_sub = "cso_commission";
                                     <tr class="text-right">
                                         <th colspan="3">TOTAL SALES</th>
                                         <th>Rp. {{ number_format($tot_commission) }}</th>
-                                        <th>Rp. {{ number_format(0) }}</th>
+                                        <th>Rp. {{ number_format($tot_bonus) }}</th>
                                         <th>Rp. {{ number_format($tot_pajak) }}</th>
                                         <th>Rp. {{ number_format($tot_result) }}</th>
-                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -203,31 +215,193 @@ $menu_item_page_sub = "cso_commission";
         </div>
     </div>
 </div>
+
+<!-- Modal Edit PaymentCSO Commissiont Head Admin -->
+<div class="modal fade"
+    id="editCsoCommision"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" id="editFormCsoCommision" action="">
+                @csrf
+                {{ method_field('PUT') }}
+                <div class="modal-body">
+                    <h5 style="text-align: center;">
+                        Edit CSO Commission
+                    </h5>
+                    <br>
+                    <input type="hidden" name="id" value="">
+                    <div class="form-group">
+                        <label for="">Month</label>
+                        <input type="month"
+                            id="editCsoCommision-month"
+                            class="form-control"
+                            readonly="" />
+                    </div>
+                    <div class="form-group">
+                        <label for="">CSO - Name</label>
+                        <input type="text"
+                            id="editCsoCommision-cso"
+                            class="form-control"
+                            readonly="" />
+                    </div>
+                    <div class="form-group">
+                        <label for="">Nominal Commmission</label>
+                        <input type="text"
+                            name="commission"
+                            id="editCsoCommision-commission"
+                            class="form-control"
+                            data-type="currency"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Nominal Tax</label>
+                        <input type="text"
+                            name="pajak"
+                            id="editCsoCommision-pajak"
+                            class="form-control"
+                            data-type="currency"/>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="modal-footer">
+                    <button id="submitFormEditCommission" type="submit" class="btn btn-gradient-success mr-2">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- End Modal Edit CSO Commission -->
+
+<!-- Modal Delete Payment -->
+<div class="modal fade"
+    id="deleteDoModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 style="text-align: center;">
+                    Are You Sure to Delete this Payment?
+                </h5>
+            </div>
+            <div class="modal-footer">
+                <form id="frmDelete" method="post" action="">
+                    {{ csrf_field() }}
+                    <button type="submit"
+                        class="btn btn-gradient-danger mr-2">
+                        Yes
+                    </button>
+                </form>
+                <button class="btn btn-light" data-dismiss="modal">
+                    No
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Delete -->
+
 @endsection
 
 @section('script')
 <script>
-$(document).on("click", "#btn-filter", function (e) {
-    var urlParamArray = new Array();
-    var urlParamStr = "";
+    $(document).on("input", 'input[data-type="currency"]', function() {
+        $(this).val(numberWithCommas($(this).val()));
+    });
 
-    if ($('#filter_month').val() != "") {
-        urlParamArray.push("filter_month=" + $('#filter_month').val());
+    function numberWithCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return parts.join(".");
     }
 
-    if ($('#filter_branch').val() != "") {
-        urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+    function numberNoCommas(x) {
+        var parts = x.toString().split(".");
+        parts[0] = parts[0].replace(/\D/g, "");
+        return parts.join(".");
     }
 
-    for (var i = 0; i < urlParamArray.length; i++) {
-        if (i === 0) {
-            urlParamStr += "?" + urlParamArray[i]
-        } else {
-            urlParamStr += "&" + urlParamArray[i]
+    $(".btn-edit_cso_commission").click(function() {
+        var id = $(this).val()
+        var url = '{{route("edit_cso_commission", ":id")}}'
+        url = url.replace(':id', id);
+        $.ajax({
+            method: "get",
+            url: url,
+            success: function(data) {
+                $('#editCsoCommision').modal('show');
+                var urlForm = '{{route("update_cso_commission", ":id")}}'
+                urlForm = urlForm.replace(':id', id)
+                $('#editFormCsoCommision').attr('action', urlForm);
+                $('#editCsoCommision-month').val(data['month']);
+                $('#editCsoCommision-cso').val(data['cso']);
+                $('#editCsoCommision-commission').val(numberWithCommas(data['commission']));
+                $('#editCsoCommision-pajak').val(numberWithCommas(data['pajak']));
+            },
+            error: function(data) {
+                $('#editCsoCommision').modal('hide');
+                alert(data.responseJSON.error);
+            }
+        });
+    });
+
+    $(".btn-delete_cso_commission").click(function() {
+        var id = $(this).val();
+        var urlForm = '{{route("delete_cso_commission", ":id")}}';
+        urlForm = urlForm.replace(':id', id)
+        $('#frmDelete').attr('action', urlForm);
+        $('#deleteDoModal').modal('show');
+    });
+
+    $("#submitFormEditCommission").on("click", function(e) {
+        $("#editFormCsoCommision").find('input[data-type="currency"]').each(function() {
+            $(this).val(numberNoCommas($(this).val()));
+        });
+        $("#editFormCsoCommision").submit();
+        $("#submitFormEditCommission").html("Loading...");
+        $("#submitFormEditCommission").attr("disabled", true);
+    });
+
+    $(document).on("click", "#btn-filter", function (e) {
+        var urlParamArray = new Array();
+        var urlParamStr = "";
+
+        if ($('#filter_month').val() != "") {
+            urlParamArray.push("filter_month=" + $('#filter_month').val());
         }
-    }
 
-    window.location.href = "{{route('list_cso_commission')}}" + urlParamStr;
-});
+        if ($('#filter_branch').val() != "") {
+            urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+        }
+
+        for (var i = 0; i < urlParamArray.length; i++) {
+            if (i === 0) {
+                urlParamStr += "?" + urlParamArray[i]
+            } else {
+                urlParamStr += "&" + urlParamArray[i]
+            }
+        }
+
+        window.location.href = "{{route('list_cso_commission')}}" + urlParamStr;
+    });
 </script>
 @endsection
