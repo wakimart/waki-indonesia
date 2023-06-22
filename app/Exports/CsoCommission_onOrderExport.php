@@ -2,15 +2,39 @@
 
 namespace App\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class CsoCommission_onOrderExport implements FromCollection
+class CsoCommission_onOrderExport implements FromView, ShouldAutoSize, WithTitle, WithColumnFormatting
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+	public function __construct($CsoCommissions)
     {
-        //
+    	$this->CsoCommissions = $CsoCommissions;
+    }
+
+    public function title(): string
+    {
+        return 'Order Commission';
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'D' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+            'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+            'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+            'H' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+            'I' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+        ];
+    }
+
+    public function view(): View
+    {
+        return view("admin.exports.ordercommission_export", ['CsoCommissions' => $this->CsoCommissions]);
     }
 }
