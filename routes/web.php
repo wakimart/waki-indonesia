@@ -407,7 +407,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('delete_order_payment')
             ->middleware('can:edit-order');
         // add commission in order
-        Route::post('/store-commission', 'OrderController@storeCommission')->name('store_commission');    
+        Route::post('/store-order-commission', 'OrderController@storeOrderCommission')->name('store_order_commission');
+        Route::get('/edit-order-commission/{id}', 'OrderController@editOrderCommission')->name('edit_order_commission');
+        Route::post('/update-order-commission', 'OrderController@updateOrderCommission')->name('update_order_commission');
         //Delete Order
         Route::post('/{OrderNya}', 'OrderController@delete')
             ->name('delete_order');

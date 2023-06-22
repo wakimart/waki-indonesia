@@ -40,26 +40,6 @@
         max-height: 15em;
         overflow-y: auto;
     }
-    .imagePreview {
-        width: 100%;
-        height: 150px;
-        background-position: center center;
-        background-color: #fff;
-        background-size: cover;
-        background-repeat: no-repeat;
-        display: inline-block;
-    }
-    .del {
-        position: absolute;
-        top: 0px;
-        right: 10px;
-        width: 30px;
-        height: 30px;
-        text-align: center;
-        line-height: 30px;
-        background-color: rgba(255, 255, 255, 0.6);
-        cursor: pointer;
-    }
     .div-CheckboxGroup {  padding: 5px;  }
     .black-color { color: black !important; }
     .content-wrapper { background: transparent !important;}
@@ -67,102 +47,102 @@
 @endsection
 
 @section('content')
-    <section id="intro" class="clearfix">
+    <section id="intro" class="clearfix w-100">
         <div class="container-fluid">
+            <div class="text-center">
+                <h2>CSO Commision Detail</h2>
+            </div>
             <div class="col-md-12">
-                <div class="w-100 my-2" id="commisionDetail" class="">
-                    <h3 class="text-center">CSO Commision Detail</h3>
-                    <table class="w-100 table-bordered">
-                        <tr align="left">
-                            <td class="font-weight-bold w-25">Month</td>
-                            <td>{{ date('M Y', strtotime($cso_commission->created_at)) }}</td>
-                        </tr>
-                        <tr align="left"> <!--dummy data -->
-                            <td class="font-weight-bold w-25">Branch</td>
-                            <td>{{ $cso_commission->cso->branch['code'] }} - {{ $cso_commission->cso->branch['name'] }}</td>
-                        </tr>
-                        <tr align="left"> <!--dummy data -->
-                            <td class="font-weight-bold w-25">CSO Code</td>
-                            <td>{{ $cso_commission->cso['code'] }}</td>
-                        </tr>
-                        <tr align="left"> <!--dummy data -->
-                            <td class="font-weight-bold w-25">CSO Name</td>
-                            <td>{{ $cso_commission->cso['name'] }}</td>
-                        </tr>
-                        <tr align="left"> <!--dummy data -->
-                            <td class="font-weight-bold w-25">CSO Account Number</td>
-                            <td>{{ $cso_commission->cso['no_rekening'] }}</td>
-                        </tr>
-                    </table>
-                    <br />
-                    <table class="w-100 table-bordered my-2">
-                        <thead class="font-weight-bold" align="center">
-                            <td>Commision</td>
-                            <td>Bonus</td>
-                            <td>Upgrade</td>
-                            <td>Bonus Semangat</td>
-                            <td>Lebih Harga</td>
-                            <td>Total Commision</td>
-                        </thead>
-                        <tr align="center">
-                            @php
-                                $bonusCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->bonus);});
-                                $upgradeCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->upgrade);});
-                                $smgt_nominalCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->smgt_nominal);});
-                                $excess_priceCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->excess_price);});
-                            @endphp
+                <table class="w-100 table-bordered">
+                    <tr align="left">
+                        <td class="font-weight-bold w-25">Month</td>
+                        <td>{{ date('M Y', strtotime($cso_commission->created_at)) }}</td>
+                    </tr>
+                    <tr align="left"> <!--dummy data -->
+                        <td class="font-weight-bold w-25">Branch</td>
+                        <td>{{ $cso_commission->cso->branch['code'] }} - {{ $cso_commission->cso->branch['name'] }}</td>
+                    </tr>
+                    <tr align="left"> <!--dummy data -->
+                        <td class="font-weight-bold w-25">CSO Code</td>
+                        <td>{{ $cso_commission->cso['code'] }}</td>
+                    </tr>
+                    <tr align="left"> <!--dummy data -->
+                        <td class="font-weight-bold w-25">CSO Name</td>
+                        <td>{{ $cso_commission->cso['name'] }}</td>
+                    </tr>
+                    <tr align="left"> <!--dummy data -->
+                        <td class="font-weight-bold w-25">CSO Account Number</td>
+                        <td>{{ $cso_commission->cso['no_rekening'] }}</td>
+                    </tr>
+                </table>
+                <br />
+                <table class="w-100 table-bordered my-2">
+                    <thead class="font-weight-bold" align="center">
+                        <td>Commision</td>
+                        <td>Bonus</td>
+                        <td>Upgrade</td>
+                        <td>Bonus Semangat</td>
+                        <td>Lebih Harga</td>
+                        <td>Total Commision</td>
+                    </thead>
+                    <tr align="center">
+                        @php
+                            $bonusCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->bonus);});
+                            $upgradeCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->upgrade);});
+                            $smgt_nominalCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->smgt_nominal);});
+                            $excess_priceCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->excess_price);});
+                        @endphp
 
-                            <td>Rp. {{ number_format($cso_commission['commission']) }}</td>
-                            <td>Rp. {{ number_format($bonusCso) }}</td>
-                            <td>Rp. {{ number_format($upgradeCso) }}</td>
-                            <td>Rp. {{ number_format($smgt_nominalCso) }}</td>
-                            <td>Rp. {{ number_format($excess_priceCso) }}</td>
-                            <td>Rp. {{ number_format($cso_commission['commission'] + $bonusCso + $upgradeCso + $smgt_nominalCso + $excess_priceCso) }}</td>
+                        <td>Rp. {{ number_format($cso_commission['commission']) }}</td>
+                        <td>Rp. {{ number_format($bonusCso) }}</td>
+                        <td>Rp. {{ number_format($upgradeCso) }}</td>
+                        <td>Rp. {{ number_format($smgt_nominalCso) }}</td>
+                        <td>Rp. {{ number_format($excess_priceCso) }}</td>
+                        <td>Rp. {{ number_format($cso_commission['commission'] + $bonusCso + $upgradeCso + $smgt_nominalCso + $excess_priceCso) }}</td>
+                    </tr>
+                </table>
+                <br />
+                <table class="w-100 table-bordered my-2">
+                    <thead class="font-weight-bold" align="center">
+                        <td>Order Date</td>
+                        <td>Order DO</td>
+                        <td>Percentage</td>
+                        <td>Bonus</td>
+                        <td>Upgrade</td>
+                        <td>Bonus Semangat</td>
+                        <td>Lebih Harga</td>
+                        <td>Total Bonus</td>
+                        <td>View</td>
+                    </thead>
+                    @foreach($cso_commission->orderCommission as $orderPerCommission)
+                        <tr align="center">
+                            <td>{{ date('d/m/Y', strtotime($orderPerCommission->order['orderDate'])) }}</td>
+                            <td>{{ $orderPerCommission->order['temp_no'] }}</td>
+                            <td>
+                                {{ $orderPerCommission->order['30_cso_id'] == $orderPerCommission->order['70_cso_id'] ? "100%" : ($orderPerCommission->order['30_cso_id'] == $cso_commission->cso['id'] ? "30%" : "70%") }}
+                            </td>
+                            <td>Rp. {{ number_format($orderPerCommission['bonus']) }}</td>
+                            <td>Rp. {{ number_format($orderPerCommission['upgrade']) }}</td>
+                            <td>Rp. {{ number_format($orderPerCommission['smgt_nominal']) }}</td>
+                            <td>Rp. {{ number_format($orderPerCommission['excess_price']) }}</td>
+                            <td>Rp. {{ number_format($orderPerCommission['bonus'] + $orderPerCommission['upgrade'] + $orderPerCommission['smgt_nominal'] + $orderPerCommission['excess_price']) }}</td>
+                            <td>
+                                <a href="{{ route('detail_order') }}?code={{ $orderPerCommission->order['code'] }}" target="_blank">
+                                    <i class="mdi mdi-eye text-info" style="font-size: 24px; color: rgb(99, 110, 114);"></i>
+                                </a>
+                            </td>
                         </tr>
-                    </table>
-                    <br />
-                    <table class="w-100 table-bordered my-2">
-                        <thead class="font-weight-bold" align="center">
-                            <td>Order Date</td>
-                            <td>Order DO</td>
-                            <td>Percentage</td>
-                            <td>Bonus</td>
-                            <td>Upgrade</td>
-                            <td>Bonus Semangat</td>
-                            <td>Lebih Harga</td>
-                            <td>Total Bonus</td>
-                            <td>View</td>
-                        </thead>
-                        @foreach($cso_commission->orderCommission as $orderPerCommission)
-                            <tr align="center">
-                                <td>{{ date('d/m/Y', strtotime($orderPerCommission->order['orderDate'])) }}</td>
-                                <td>{{ $orderPerCommission->order['temp_no'] }}</td>
-                                <td>
-                                    {{ $orderPerCommission->order['30_cso_id'] == $orderPerCommission->order['70_cso_id'] ? "100%" : ($orderPerCommission->order['30_cso_id'] == $cso_commission->cso['id'] ? "30%" : "70%") }}
-                                </td>
-                                <td>Rp. {{ number_format($orderPerCommission['bonus']) }}</td>
-                                <td>Rp. {{ number_format($orderPerCommission['upgrade']) }}</td>
-                                <td>Rp. {{ number_format($orderPerCommission['smgt_nominal']) }}</td>
-                                <td>Rp. {{ number_format($orderPerCommission['excess_price']) }}</td>
-                                <td>Rp. {{ number_format($orderPerCommission['bonus'] + $orderPerCommission['upgrade'] + $orderPerCommission['smgt_nominal'] + $orderPerCommission['excess_price']) }}</td>
-                                <td>
-                                    <a href="{{ route('detail_order') }}?code={{ $orderPerCommission->order['code'] }}" target="_blank">
-                                        <i class="mdi mdi-eye text-info" style="font-size: 24px; color: rgb(99, 110, 114);"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforeach
-                        <tfoot class="font-weight-bold" align="center">
-                            <td colspan="2">Total</td>
-                            <td>Rp. {{ number_format($bonusCso) }}</td>
-                            <td>Rp. {{ number_format($upgradeCso) }}</td>
-                            <td>Rp. {{ number_format($smgt_nominalCso) }}</td>
-                            <td>Rp. {{ number_format($excess_priceCso) }}</td>
-                            <td>Rp. {{ number_format($bonusCso + $upgradeCso + $smgt_nominalCso + $excess_priceCso) }}</td>
-                            <td></td>
-                        </tfoot>
-                    </table>
-                </div>
+                    @endforeach
+                    <tfoot class="font-weight-bold" align="center">
+                        <td colspan="2">Total</td>
+                        <td>Rp. {{ number_format($bonusCso) }}</td>
+                        <td>Rp. {{ number_format($upgradeCso) }}</td>
+                        <td>Rp. {{ number_format($smgt_nominalCso) }}</td>
+                        <td>Rp. {{ number_format($excess_priceCso) }}</td>
+                        <td>Rp. {{ number_format($bonusCso + $upgradeCso + $smgt_nominalCso + $excess_priceCso) }}</td>
+                        <td></td>
+                    </tfoot>
+                </table>
             </div>
 
         </div>

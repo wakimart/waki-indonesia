@@ -109,4 +109,9 @@ class Order extends Model
     //     }
     //     return $result;
     // }
+
+    public function commissionType()
+    {
+        return $this->belongsTo("App\CommissionType");
+    }
 }

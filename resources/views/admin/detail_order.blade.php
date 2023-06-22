@@ -268,7 +268,7 @@
                       Commision Add
                     </div>
                     <div class="card-body">
-                        <form action="{{route('store_commission')}}" method="POST">
+                        <form action="{{route('store_order_commission')}}" method="POST">
                             {{ csrf_field() }}
                             <div>
                                 <input type="hidden" name="order_id" value="{{$order->id}}">
@@ -305,7 +305,7 @@
                                             Choose Commission Type
                                         </option>
                                         @foreach($commissionTypes as $commType)
-                                            <option value="{{$commType->id}}" data-description="{{$commType->description}}" data-nominal="{{$commType->nominal}}" data-smgt-nominal="{{$commType->smgt_nominal}}">{{$commType->name}}</option>
+                                            <option value="{{$commType->id}}" data-description="{{$commType->description}}" data-nominal="{{number_format($commType->nominal)}}" data-smgt-nominal="{{number_format($commType->smgt_nominal)}}">{{$commType->name}}</option>
                                         @endforeach
                                     </select>
                                     <div class="validation"></div>
@@ -490,76 +490,86 @@
                   </thead>
                 </table>
 
-                <div class="w-100" id="commisionDetailTrue" class=""> <!--d-none if no commision detail -->
-                  <h3 class="text-center">Commision Detail</h3>
-                  <table class="w-100">
-                    <thead style="background-color: #80808012 !important">
-                        <td>Komisi</td>
-                        <td>CSO-Name</td>
-                        <td>Bonus</td>
-                        <td>Upgrade</td>
-                        <td>Bonus Semangat</td>
-                        <td>Lebih Harga</td>
-                        <td>Edit</td>
-                    </thead>
-                    <tr align="center"> <!--dummy data -->
-                        <td>70%</td>
-                        <td>WK0000-Budi</td>
-                        <td>Rp. 15.000.000</td>
-                        <td>Rp. 10</td>
-                        <td>Rp. 1.000.000</td>
-                        <td>Rp. 1.500.000</td>
-                        <td></td>
-                    </tr>
-                  </table>
-                  <table class="w-100 my-2">
-                    <thead style="background-color: #80808012 !important">
-                        <td></td>
-                        <td class="text-left">Commision Type</td>
-                    </thead>
-                    <tr> <!--dummy data -->
-                        <td>Name</td>
-                        <td>Nama Komisi Type</td>
-                    </tr>
-                    <tr> <!--dummy data -->
-                        <td>Description</td>
-                        <td>Deskripsi Komisi Type</td>
-                    </tr>
-                    <tr> <!--dummy data -->
-                        <td>Takeaway</td>
-                        <td>Yes/No</td>
-                    </tr>
-                    <tr> <!--dummy data -->
-                        <td>Upgarade</td>
-                        <td>Yes/No</td>
-                    </tr>
-                    <tr> <!--dummy data -->
-                        <td>Nominal</td>
-                        <td>Rp. 15.000.000</td>
-                    </tr>
-                    <tr> <!--dummy data -->
-                        <td>Semangat Nominal</td>
-                        <td>Rp. 1.500.000</td>
-                    </tr>
-                  </table>
-                  <div class="row justify-content-center mb-2">
-                    <button type="button" class="btn btn-warning mr-2 btn-edit-comms">
-                        Edit
+                @if($order->orderCommission->count() > 0)
+                    <div class="w-100" id="commisionDetailTrue"> 
+                        <h3 class="text-center">Commision Detail</h3>
+                            <table class="w-100">
+                            <thead style="background-color: #80808012 !important">
+                                <td>Komisi</td>
+                                <td>CSO-Name</td>
+                                <td>Bonus</td>
+                                <td>Upgrade</td>
+                                <td>Bonus Semangat</td>
+                                <td>Lebih Harga</td>
+                                <td>Edit</td>
+                            </thead>
+                            <!-- maybe this is not a good way but piye neh... -->
+                            @php if($order->orderCommission->count() > 1) { $cso_percentage = [70, 30]; } else { $cso_percentage = [100]; } @endphp
+                            @foreach($order->orderCommission as $indexOrderCommission => $orderCommission)
+                                <tr align="center">
+                                    <td>{{$cso_percentage[$indexOrderCommission]}}%</td>
+                                    <td>{{$orderCommission->cso->code}} - {{$orderCommission->cso->name}}</td>
+                                    <td>Rp. {{number_format($orderCommission->bonus)}}</td>
+                                    <td>Rp. {{number_format($orderCommission->upgrade)}}</td>
+                                    <td>Rp. {{number_format($orderCommission->smgt_nominal)}}</td>
+                                    <td>Rp. {{number_format($orderCommission->excess_price)}}</td>
+                                    <td>
+                                        <button value="{{ $orderCommission->id }}" class="btn-delete btn-edit-order-commission">
+                                            <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>                    
+                        <table class="w-100 my-2">
+                            <thead style="background-color: #80808012 !important">
+                                <td></td>
+                                <td class="text-left">Commision Type</td>
+                            </thead>
+                            <tr>
+                                <td>Name</td>
+                                <td>{{$order->commissionType->name}}</td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <!-- <td>Description</td> -->
+                                <td style="width:50%">{{$order->commissionType->description}}</td>
+                            </tr>
+                            <tr>
+                                <td>Takeaway</td>
+                                <td>{{$order->commissionType->takeaway == 1 ? 'Yes' : 'No'}}</td>
+                            </tr>
+                            <tr>
+                                <td>Upgrade</td>
+                                <td>{{$order->commissionType->upgrade == 1 ? 'Yes' : 'No'}}</td>
+                            </tr>
+                            <tr>
+                                <td>Nominal</td>
+                                <td>Rp. {{number_format($order->commissionType->nominal)}}</td>
+                            </tr>
+                            <tr>
+                                <td>Semangat Nominal</td>
+                                <td>Rp. {{number_format($order->commissionType->smgt_nominal)}}0</td>
+                            </tr>
+                        </table>
+                        <div class="row justify-content-center mb-2">
+                            <button type="button" class="btn btn-warning mr-2 btn-edit-comms">
+                                Edit
+                            </button>
+                            <button type="button" class="btn btn-danger btn-delete-comms"
+                                data-toggle="modal"
+                                data-target="#deleteKomisiConfirm">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                @else
+                    <div class="row justify-content-center">
+                    <button type="button" class="btn btn-gradient-success mdi mdi-cash-multiple btn-add-comms">
+                        Add Commision
                     </button>
-                    <button type="button" class="btn btn-danger btn-delete-comms"
-                        data-toggle="modal"
-                        data-target="#deleteKomisiConfirm">
-                        Delete
-                    </button>
-                  </div>
-                </div>
-
-                <div class="row justify-content-center">
-                  <button type="button" class="btn btn-gradient-success mdi mdi-cash-multiple btn-add-comms">
-                      Add Commision
-                  </button>
-                </div>
-
+                    </div>
+                @endif
                 @if($order['description'] != null)
                     <table class="w-100">
                         <thead>
@@ -1590,6 +1600,89 @@
             </div>
             @endif
 
+            <!-- Modal Edit Order Commission -->
+            <div class="modal fade"
+                id="editOrderCommissionModal"
+                tabindex="-1"
+                role="dialog"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="frmEditOrderCommission"
+                                method="post"
+                                action="{{route('update_order_commission')}}">
+                                @csrf
+                                <h5 style="text-align: center;">
+                                    Edit Order Commission
+                                </h5>
+                                <br>
+                                <input type="hidden" name="id" id="order_commission_id">
+                                <div class="form-group">
+                                    <label for="">Bonus</label>
+                                    <input type="text"
+                                        id="edit_bonus_order_commission"
+                                        class="form-control"
+                                        name="bonus"
+                                        required
+                                        autocomplete="off"
+                                        data-type="currency"
+                                        data-msg="Mohon isi nominal bonus" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Upgrade</label>
+                                    <input type="text"
+                                        id="edit_upgrade_order_commission"
+                                        class="form-control"
+                                        name="upgrade"
+                                        required
+                                        autocomplete="off"
+                                        data-type="currency"
+                                        data-msg="Mohon isi nominal upgrade" />
+                                </div>   
+                                <div class="form-group">
+                                    <label for="">Bonus Semangat</label>
+                                    <input type="text"
+                                        id="edit_smgt_nominal_order_commission"
+                                        class="form-control"
+                                        name="smgt_nominal"
+                                        required
+                                        autocomplete="off"
+                                        data-type="currency"
+                                        data-msg="Mohon isi nominal smgt_nominal" />
+                                </div>   
+                                <div class="form-group">
+                                    <label for="">Lebih Harga</label>
+                                    <input type="text"
+                                        id="edit_excess_price_order_commission"
+                                        class="form-control"
+                                        name="excess_price"
+                                        required
+                                        autocomplete="off"
+                                        data-type="currency"
+                                        data-msg="Mohon isi nominal excess price" />
+                                </div>   
+                            </form>                            
+                        </div>
+                        <div class="modal-footer footer-cash">
+                            <button type="submit" form="frmEditOrderCommission"
+                                id="submitfrmEditOrderCommission"
+                                class="btn btn-gradient-success mr-2">
+                                Update
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Edit Payment -->
     </section>
 
 @endsection
@@ -2208,5 +2301,26 @@
         $("#commission_type_smgt_nominal").val($(this).find(':selected').attr('data-smgt-nominal'))
         $("#commission_type_excess_price").val(0)
     });
+
+    $('.btn-edit-order-commission').on('click', function(e) {
+        var orderCommissionID = $(this).val()
+        var url = '{{ route("edit_order_commission", ":id") }}';
+        url = url.replace(':id', orderCommissionID);
+        $.ajax({
+            method: "get",
+            url: url,
+            success: function(data) {
+                $('#order_commission_id').val(data.id)
+                $('#edit_bonus_order_commission').val(parseInt(data.bonus).toLocaleString("en-US"))
+                $('#edit_upgrade_order_commission').val(parseInt(data.upgrade).toLocaleString("en-US"))
+                $('#edit_smgt_nominal_order_commission').val(parseInt(data.smgt_nominal).toLocaleString("en-US"))
+                $('#edit_excess_price_order_commission').val(parseInt(data.excess_price).toLocaleString("en-US"))
+                $('#editOrderCommissionModal').modal('show');
+            },
+            error: function(data) {
+                alert("Error!!! please call IT");
+            }
+        });
+    })
 </script>
 @endsection
