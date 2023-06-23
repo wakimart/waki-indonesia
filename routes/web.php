@@ -410,6 +410,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/store-order-commission', 'OrderController@storeOrderCommission')->name('store_order_commission');
         Route::get('/edit-order-commission/{id}', 'OrderController@editOrderCommission')->name('edit_order_commission');
         Route::post('/update-order-commission', 'OrderController@updateOrderCommission')->name('update_order_commission');
+        Route::match(['put', 'patch'], '/update-order-commission-type/{order_id}', 'OrderController@updateOrderCommissionType')->name('update_order_commission_type');
+        Route::delete('/delete-order-commission-type/{order_id}', 'OrderController@deleteOrderCommissionType')->name('update_order_commission_type');
         //Delete Order
         Route::post('/{OrderNya}', 'OrderController@delete')
             ->name('delete_order');

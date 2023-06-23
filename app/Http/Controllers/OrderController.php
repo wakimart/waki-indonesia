@@ -2252,7 +2252,6 @@ class OrderController extends Controller
                 return Redirect::back()->with("success", "Order commission successfully added.");
             } catch (\Exception $ex) {
                 DB::rollBack();
-                return response()->json($ex->getMessage());
                 return Redirect::back()->withErrors("Something wrong when add order commission, please call Team IT")->withInput();
             }
         }
@@ -2269,8 +2268,15 @@ class OrderController extends Controller
      **/
     public function editOrderCommission($id)
     {
-        $orderCommission = OrderCommission::find($id);
-        return response()->json($orderCommission);
+        DB::beginTransaction();
+        try {
+            $orderCommission = OrderCommission::find($id);
+            DB::commit();
+            return response()->json($orderCommission);            
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return response()->json($ex->getMessage());
+        }
     }
 
     /**
@@ -2327,9 +2333,189 @@ class OrderController extends Controller
                 return Redirect::back()->with("success", "Order commission successfully updated.");
             } catch (\Exception $ex) {
                 DB::rollBack();
-                return response()->json($ex->getMessage());
                 return Redirect::back()->withErrors("Something wrong when update order commission, please call Team IT")->withInput();
             }
+        }
+    }
+
+    /**
+     * update order commission type (calculate 70 & 30)
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function updateOrderCommissionType(Request $request, $order_id)
+    {
+        $request['order_id'] = $order_id;
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required',
+            'commission_type_id' => 'required',
+            'bonus' => 'required',
+            'upgrade' => 'required',
+            'smgt_nominal' => 'required',
+            'excess_price' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator)->withInput();
+        }else{
+            DB::beginTransaction();
+            try {
+                // update order
+                $previousOrderData = Order::find($order_id);
+                $updateOrder = Order::find($order_id);
+                $updateOrder->commission_type_id = $request->commission_type_id;
+                $updateOrder->update();
+                
+                $user = Auth::user();
+                
+                // history update for order
+                $historyOrder["type_menu"] = "Order";
+                $historyOrder["method"] = "Update Commission Type ID";
+                $historyOrder["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => array_diff(json_decode($updateOrder, true), json_decode($previousOrderData,true)),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+
+                $historyOrder["user_id"] = $user["id"];
+                $historyOrder["menu_id"] = $order_id;
+                HistoryUpdate::create($historyOrder);
+
+                // update order commission (recalculate)
+                // get order commission data
+                $orderCommissions = OrderCommission::where('order_id', $order_id)->where('active', true)->orderBy('id', 'asc')->get();
+                // array for percentage calculation
+                $percentageCalculation = [];
+                if($orderCommissions->count() > 1){
+                    array_push($percentageCalculation, 70, 30);
+                }else{
+                    array_push($percentageCalculation, 100);
+                }
+                foreach($orderCommissions as $index => $value){
+                    // update order commission
+                    $previousOrderCommission = OrderCommission::find($value->id);
+                    $updateOrderCommission = OrderCommission::find($value->id);
+                    $updateOrderCommission->bonus = $percentageCalculation[$index] / 100 * str_replace(',', '', $request->bonus);
+                    $updateOrderCommission->upgrade = $percentageCalculation[$index] / 100 * str_replace(',', '', $request->upgrade);
+                    $updateOrderCommission->smgt_nominal = $percentageCalculation[$index] / 100 * str_replace(',', '', $request->smgt_nominal);
+                    $updateOrderCommission->excess_price = $percentageCalculation[$index] / 100 * str_replace(',', '', $request->excess_price);
+                    $updateOrderCommission->update();
+
+                    // add history update for order commission
+                    $historyOrder["type_menu"] = "Order Commission";
+                    $historyOrder["method"] = "Update";
+                    $historyOrder["meta"] = json_encode(
+                        [
+                            "user" => $user["id"],
+                            "createdAt" => date("Y-m-d H:i:s"),
+                            "dataChange" => array_diff(json_decode($updateOrderCommission, true), json_decode($previousOrderCommission,true)),
+                        ],
+                        JSON_THROW_ON_ERROR
+                    );
+                    $historyOrder["user_id"] = $user["id"];
+                    $historyOrder["menu_id"] = $value->id;
+                    HistoryUpdate::create($historyOrder);
+                }
+
+                DB::commit();
+                return Redirect::back()->with("success", "Order commission successfully updated.");
+            } catch (\Exception $ex) {
+                DB::rollBack();
+                return Redirect::back()->withErrors("Something wrong when update order commission type, please call Team IT")->withInput();
+            }
+        }
+    }
+
+    /**
+     * delete order commission type (soft delete)
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function deleteOrderCommissionType($order_id)
+    {        
+        DB::beginTransaction();
+        try {
+            $user = Auth::user();
+
+            // update orders & create history_updates
+            $previousOrderData = Order::find($order_id);
+            $updateOrder = Order::find($order_id);
+            $updateOrder->commission_type_id = null;
+            $updateOrder->update();
+            
+            $historyOrder["type_menu"] = "Order";
+            $historyOrder["method"] = "Update Commission Type ID";
+            $historyOrder["meta"] = json_encode(
+                [
+                    "user" => $user["id"],
+                    "createdAt" => date("Y-m-d H:i:s"),
+                    "dataChange" => array_diff(json_decode($updateOrder, true), json_decode($previousOrderData,true)),
+                ],
+                JSON_THROW_ON_ERROR
+            );
+            $historyOrder["user_id"] = $user["id"];
+            $historyOrder["menu_id"] = $order_id;
+            HistoryUpdate::create($historyOrder);
+
+            // update order_commissions & create history_updates
+            $orderCommissions = OrderCommission::where('order_id', $order_id)->where('active', true)->get();
+            foreach($orderCommissions as $orderCommission){
+                $previousOrderCommissionData = OrderCommission::find($orderCommission->id);
+                $updateOrderCommission = OrderCommission::find($orderCommission->id);
+                $updateOrderCommission->active = false;
+                $updateOrderCommission->update();
+
+                $historyOrderCommission["type_menu"] = "Order Commission";
+                $historyOrderCommission["method"] = "Update Status";
+                $historyOrderCommission["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => array_diff(json_decode($updateOrderCommission, true), json_decode($previousOrderCommissionData,true)),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $historyOrderCommission["user_id"] = $user["id"];
+                $historyOrderCommission["menu_id"] = $orderCommission->id;
+                HistoryUpdate::create($historyOrderCommission);
+
+                // update order_cso_commissions & create history_updates
+                $previousOrderCsoCommissionData = OrderCsoCommission::where('order_commission_id', $orderCommission->id)->where('active', true)->first();
+                $updateOrderCsoCommission = OrderCsoCommission::where('order_commission_id', $orderCommission->id)->where('active', true)->first();
+                $updateOrderCsoCommission->active = false;
+                $updateOrderCsoCommission->update();
+
+                $historyOrderCsoCommission["type_menu"] = "Order Cso Commission";
+                $historyOrderCsoCommission["method"] = "Update Status";
+                $historyOrderCsoCommission["meta"] = json_encode(
+                    [
+                        "user" => $user["id"],
+                        "createdAt" => date("Y-m-d H:i:s"),
+                        "dataChange" => array_diff(json_decode($updateOrderCsoCommission, true), json_decode($previousOrderCsoCommissionData,true)),
+                    ],
+                    JSON_THROW_ON_ERROR
+                );
+                $historyOrderCsoCommission["user_id"] = $user["id"];
+                $historyOrderCsoCommission["menu_id"] = $updateOrderCsoCommission->id;
+                HistoryUpdate::create($historyOrderCsoCommission);
+            }
+
+            DB::commit();
+            return Redirect::back()->with("success", "Order commission type successfully deleted.");
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return Redirect::back()->withErrors("Something wrong when delete order commission type, please call Team IT")->withInput();
         }
     }
 }

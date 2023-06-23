@@ -73,7 +73,7 @@ class Order extends Model
     }
     public function orderCommission()
     {
-        return $this->hasMany("App\OrderCommission");
+        return $this->hasMany("App\OrderCommission")->where('active', true);
     }
 
     public function getDistrict()
