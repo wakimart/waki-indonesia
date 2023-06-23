@@ -1571,7 +1571,7 @@
                             </h5>
                         </div>
                         <div class="modal-footer">
-                            <form id="" method="post" action="{{route('update_order_commission_type', $order->id)}}">
+                            <form id="" method="post" action="{{route('delete_order_commission_type', $order->id)}}">
                                 {{ method_field('delete') }}
                                 {{ csrf_field() }}
                                 <button type="submit"
