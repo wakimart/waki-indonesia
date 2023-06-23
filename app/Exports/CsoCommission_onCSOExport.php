@@ -6,8 +6,10 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class CsoCommission_onCSOExport implements FromView, ShouldAutoSize, WithTitle
+class CsoCommission_onCSOExport implements FromView, ShouldAutoSize, WithTitle, WithColumnFormatting
 {
 	public function __construct($CsoCommissions)
     {
@@ -19,8 +21,18 @@ class CsoCommission_onCSOExport implements FromView, ShouldAutoSize, WithTitle
         return 'Cso Commission';
     }
 
+    public function columnFormats(): array
+    {
+        return [
+            'D' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+            'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+            'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+        ];
+    }
+
     public function view(): View
     {
-        return view("exports.respondent_export", ['CsoCommissions' => $this->CsoCommissions]);
+        return view("admin.exports.csocommission_export", ['CsoCommissions' => $this->CsoCommissions]);
     }
 }

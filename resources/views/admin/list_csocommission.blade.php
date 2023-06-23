@@ -72,7 +72,7 @@ $menu_item_page_sub = "cso_commission";
 
             <div class="col-xs-12 col-sm-12 row"
                 style="margin: 0; padding: 0;">
-                <div class="col-xs-6 col-sm-6"
+                <div class="col-xs-8 col-sm-8"
                     style="padding: 0; display: inline-block;">
                     <div class="form-group">
                         <button id="btn-filter"
@@ -87,25 +87,13 @@ $menu_item_page_sub = "cso_commission";
                             value="-">
                             <span class="mdi mdi-filter"></span> Reset Filter
                         </a>
-                    </div>
-                    <div class="form-group">
-                        @php
-                            $exportParameter = request()->input();
-                            $exportParameter['export_type'] = "print";
-                        @endphp
-                        <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"
-                            target="_blank"
-                            class="btn btn-gradient-info m-1">
-                            <span class="mdi mdi-file-document"></span>
-                            Print Total Sale
-                        </a>
                         @php
                             $exportParameter['export_type'] = "xls";
                         @endphp
-                        <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"
+                        <a href="{{ route('exportCsoCommission', $exportParameter) }}"
                             class="btn btn-gradient-info m-1">
                             <span class="mdi mdi-file-document"></span>
-                            Export Total Sale
+                            Export Commission
                         </a>
                     </div>
                 </div>
