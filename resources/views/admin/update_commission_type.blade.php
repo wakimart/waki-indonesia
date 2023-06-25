@@ -1,32 +1,12 @@
 <?php
 $menu_item_page = "commstype";
-$menu_item_second = "add_commstype";
+$menu_item_second = "list_commstype";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
 <style type="text/css">
-    .imagePreview {
-        width: 100%;
-        height: 150px;
-        background-position: center center;
-        background-color: #fff;
-        background-size: cover;
-        background-repeat: no-repeat;
-        display: inline-block;
-    }
-
-    .del {
-        position: absolute;
-        top: 0px;
-        right: 10px;
-        width: 30px;
-        height: 30px;
-        text-align: center;
-        line-height: 30px;
-        background-color: rgba(255, 255, 255, 0.6);
-        cursor: pointer;
-    }
+    
 </style>
 @endsection
 
@@ -34,7 +14,7 @@ $menu_item_second = "add_commstype";
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Add Commission Type</h3>
+            <h3 class="page-title">Edit Commission Type</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -46,7 +26,7 @@ $menu_item_second = "add_commstype";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Add Commision Type
+                        Edit Commision Type
                     </li>
                 </ol>
             </nav>
@@ -56,18 +36,19 @@ $menu_item_second = "add_commstype";
             <div class="col-12 grid-margin stretch-card">
                 <div class="card">
                     <div class="card-body">
-                        <form method="POST" action="{{route('store_commission_type')}}">
+                        <form method="POST" action="{{route('update_commission_type', $commissionType->id)}}">
+						    {{ method_field('put') }}
                             {{ csrf_field() }}
                               <div>
                                 <div class="row no-gutters">
                                   <div class="form-group w-50">
                                     <label for="orderUpgrade" class="w-100">Upgrade ?</label>
                                     <div class="form-check-inline">
-                                      <input class="form-check-input" type="radio" name="upgrade" id="orderUpgradeYes" value="1" required>
+                                      <input class="form-check-input" type="radio" name="upgrade" id="orderUpgradeYes" value="1" required {{$commissionType->upgrade ? 'checked' : ''}}>
                                       <label class="form-check-label mb-0" for="orderUpgradeYes">Yes</label>
                                     </div>
                                     <div class="form-check-inline">
-                                      <input class="form-check-input" type="radio" name="upgrade" id="orderUpgradeNo" value="0" required>
+                                      <input class="form-check-input" type="radio" name="upgrade" id="orderUpgradeNo" value="0" required {{$commissionType->upgrade ? '' : 'checked'}}>
                                       <label class="form-check-label mb-0" for="orderUpgradeNo">No</label>
                                     </div>
                                   </div>
@@ -75,11 +56,11 @@ $menu_item_second = "add_commstype";
                                   <div class="form-group w-50">
                                     <label for="orderTakeaway" class="w-100">Takeaway ?</label>
                                     <div class="form-check-inline">
-                                      <input class="form-check-input" type="radio" name="takeaway" id="orderTakeawayYes" value="1" required>
+                                      <input class="form-check-input" type="radio" name="takeaway" id="orderTakeawayYes" value="1" required {{$commissionType->takeaway ? 'checked' : ''}}>
                                       <label class="form-check-label mb-0" for="orderTakeawayYes">Yes</label>
                                     </div>
                                     <div class="form-check-inline">
-                                      <input class="form-check-input" type="radio" name="takeaway" id="orderTakeawayNo" value="0" required>
+                                      <input class="form-check-input" type="radio" name="takeaway" id="orderTakeawayNo" value="0" required {{$commissionType->takeaway ? '' : 'checked'}}>
                                       <label class="form-check-label mb-0" for="orderTakeawayNo">No</label>
                                     </div>
                                   </div>
@@ -90,7 +71,9 @@ $menu_item_second = "add_commstype";
                                         <input type="text"
                                             class="form-control"
                                             name="name"
-                                            placeholder="Commision Type Name" required/>
+                                            placeholder="Commision Type Name" 
+                                            value="{{$commissionType->name}}"
+                                            required/>
                                         <div class="validation"></div>
                                     </div>
                                 </div>
@@ -101,7 +84,9 @@ $menu_item_second = "add_commstype";
                                         name="description"
                                         rows="5"
                                         data-msg="Mohon Isi Description"
-                                        placeholder="Description" required></textarea>
+                                        placeholder="Description" 
+                                        required>{{$commissionType->description}}
+                                    </textarea>
                                     <div class="validation"></div>
                                 </div>
 
@@ -111,7 +96,9 @@ $menu_item_second = "add_commstype";
                                         name="nominal"
                                         autocomplete="off"
                                         data-type="currency"
-                                        placeholder="Nominal" required/>
+                                        placeholder="Nominal"
+                                        value="{{number_format($commissionType->nominal)}}" 
+                                        required/>
                                     <div class="validation"></div>
                                 </div>
 
@@ -121,14 +108,16 @@ $menu_item_second = "add_commstype";
                                         name="smgt_nominal"
                                         autocomplete="off"
                                         data-type="currency"
-                                        placeholder="Semangat Nominal" required/>
+                                        placeholder="Semangat Nominal" 
+                                        value="{{number_format($commissionType->smgt_nominal)}}"
+                                        required/>
                                     <div class="validation"></div>
                                 </div>
 
                               </div>
                               <div class="row justify-content-center">
                                 <button type="submit" class="btn btn-success mr-2">
-                                    Submit
+                                    Update
                                 </button>
                               </div>
                         </form>

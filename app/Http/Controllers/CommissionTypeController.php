@@ -22,11 +22,16 @@ class CommissionTypeController extends Controller
         $url = $request->all();
         $datas = CommissionType::where('active', true);
 
-        if ($request->has('search')) {
-            $datas->where(function($q) use($request) {
-                $q->where('name', 'like', '%'.$request->search.'%')
-                ->orWhere('description', 'like', '%'.$request->search.'%');
-            });
+        if ($request->has('filter_commision_type')) {
+            if($request->filter_commision_type == 'upgrade'){
+                $datas->where(function($q) use($request) {
+                    $q->where('upgrade', true);
+                });
+            }else{
+                $datas->where(function($q) use($request) {
+                    $q->where('takeaway', true);
+                });
+            }
         }
         $datas = $datas->paginate(10);
 
@@ -65,11 +70,19 @@ class CommissionTypeController extends Controller
         }else{
             DB::beginTransaction();
             try {
-                CommissionType::create($request->all());
+                $commissionType = new CommissionType();
+                $commissionType->name = $request->name;
+                $commissionType->description = $request->description;
+                $commissionType->takeaway = $request->takeaway;
+                $commissionType->upgrade = $request->upgrade;
+                $commissionType->nominal = str_replace(',', '', $request->nominal);
+                $commissionType->smgt_nominal = str_replace(',', '', $request->smgt_nominal);
+                $commissionType->save();
                 DB::commit();
                 return Redirect::back()->with("success", "Commission type successfully added.");
             } catch (\Exception $ex) {
                 DB::rollBack();
+                return Redirect::back()->withErrors($ex->getMessage());
                 return Redirect::back()->withErrors("Something wrong when add commission type, please call Team IT")->withInput();
             }
         }
@@ -105,7 +118,7 @@ class CommissionTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -121,10 +134,16 @@ class CommissionTypeController extends Controller
         }else{
             DB::beginTransaction();
             try {
-                $dataBefore = CommissionType::find($request->id);
-                $commissionType = CommissionType::find($request->id);
-                $commissionType->fill($request->all())->save();
-
+                $dataBefore = CommissionType::find($id);
+                $commissionType = CommissionType::find($id);
+                $commissionType->name = $request->name;
+                $commissionType->description = $request->description;
+                $commissionType->takeaway = $request->takeaway;
+                $commissionType->upgrade = $request->upgrade;
+                $commissionType->nominal = str_replace(',', '', $request->nominal);
+                $commissionType->smgt_nominal = str_replace(',', '', $request->smgt_nominal);
+                $commissionType->update();
+                
                 $user = Auth::user();
                 $historyUpdateCommissionType["type_menu"] = "Commission Type";
                 $historyUpdateCommissionType["method"] = "Update";
@@ -138,7 +157,7 @@ class CommissionTypeController extends Controller
                 );
 
                 $historyUpdateCommissionType["user_id"] = $user["id"];
-                $historyUpdateCommissionType["menu_id"] = $request->id;
+                $historyUpdateCommissionType["menu_id"] = $id;
                 HistoryUpdate::create($historyUpdateCommissionType);
 
                 DB::commit();
@@ -157,13 +176,13 @@ class CommissionTypeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy($id)
     {
         DB::beginTransaction();
 
-        if (!empty($request->id)) {
+        if (!empty($id)) {
             try {
-                $commissionType = CommissionType::find($request->id);
+                $commissionType = CommissionType::find($id);
                 $commissionType->active = false;
                 $commissionType->save();
 
@@ -180,7 +199,7 @@ class CommissionTypeController extends Controller
                 );
 
                 $historyDeleteCommissionType["user_id"] = $user["id"];
-                $historyDeleteCommissionType["menu_id"] = $request->id;
+                $historyDeleteCommissionType["menu_id"] = $id;
                 HistoryUpdate::create($historyDeleteCommissionType);
 
                 DB::commit();

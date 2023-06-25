@@ -21,17 +21,17 @@ $menu_item_second = "list_commstype";
 
 		<div class="row">
 			<div class="col-12 grid-margin stretch-card">
-          <div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
-            <div class="form-group">
-              <label for="">Filter By Type</label>
-                <select class="form-control" id="filter_commision_type" name="filter_commision_type">
-                  <option value="" selected="">All Type</option>
-                  <option value="" selected="">Upgrade</option>
-                  <option value="" selected="">Takeaway</option>
-                </select>
-                <div class="validation"></div>
-            </div>
-          </div>
+				<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+					<div class="form-group">
+						<label for="">Filter By Type</label>
+						<select class="form-control" id="filter_commision_type" name="filter_commision_type">
+							<option value="" selected="">All Type</option>
+							<option value="upgrade" {{ isset($_GET['filter_commision_type']) ? $_GET['filter_commision_type'] == 'upgrade' ? 'selected=""' : '' : '' }} >Upgrade</option>
+							<option value="takeaway" {{ isset($_GET['filter_commision_type']) ? $_GET['filter_commision_type'] == 'takeaway' ? 'selected=""' : '' : '' }} >Takeaway</option>
+						</select>
+						<div class="validation"></div>
+					</div>
+				</div>
 
 				  <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
   					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
@@ -58,24 +58,26 @@ $menu_item_second = "list_commstype";
 						            </tr>
           						</thead>
           						<tbody>
-                        <tr>
-                        	<td>1</td>
-                            <td>name</td>
-                            <td>
-                              <div>
-                               <div class="mb-1">Takeaway :</div><br />
-                               <div class="mb-1">Upgrade :</div><br />
-                               <div class="mb-1">Nominal :</div><br />
-                               <div class="mb-1">Semangat Nominal :</div><br />
-                               <div class="mb-1">Desctiption :</div><br />
-                              </div>
-                            </td>
-                            <td style="text-align: center;"><a href="#"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
-                  					<td style="text-align: center;"><a href="#" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
-                        </tr>
+									@foreach($datas as $index => $commtype)
+										<tr>
+											<td>{{$index+1}}</td>
+											<td>{{$commtype->name}}</td>
+											<td>
+												<div>
+													<div class="mb-1">Takeaway : {{$commtype->takeaway ? 'Yes' : 'No'}}</div><br />
+													<div class="mb-1">Upgrade : {{$commtype->upgrade ? 'Yes' : 'No'}}</div><br />
+													<div class="mb-1">Nominal : Rp {{number_format($commtype->nominal)}}</div><br />
+													<div class="mb-1">Semangat Nominal : Rp {{number_format($commtype->smgt_nominal)}}</div><br />
+													<div class="mb-1">Description : {{$commtype->description}}</div><br />
+												</div>
+											</td>
+											<td style="text-align: center;"><a href="{{route('edit_commission_type', $commtype->id)}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+											<td style="text-align: center;"><a href="{{route('delete_commission_type', $commtype->id)}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+										</tr>
+									@endforeach
           						</tbody>
-    							</table>
-    							<br />
+							</table>
+							<br />
 
         				</div>
       				</div>
@@ -98,10 +100,11 @@ $menu_item_second = "list_commstype";
             	</div>
             	<div class="modal-footer">
             		<form id="frmDelete" method="post" action="">
-                    {{csrf_field()}}
+						{{ method_field('delete') }}
+						{{csrf_field()}}
                     	<button type="submit" class="btn btn-gradient-danger mr-2">Yes</button>
                 	</form>
-              		<button class="btn btn-light">No</button>
+              		<button class="btn btn-light" data-dismiss="modal">No</button>
             	</div>
           	</div>
         </div>
@@ -127,7 +130,7 @@ $menu_item_second = "list_commstype";
 		}
 	  }
 
-	  window.location.href = "" + urlParamStr;
+	  window.location.href = "{{route('list_commission_type')}}" + urlParamStr;
 	});
 	$(document).on("click", ".btnDelete", function(e){
 		$("#frmDelete").attr("action", $(this).attr('href'));
