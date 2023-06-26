@@ -106,6 +106,7 @@ $menu_item_second = "add_commstype";
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="">Nominal</label>
                                     <input type="text"
                                         class="form-control"
                                         name="nominal"
@@ -116,6 +117,7 @@ $menu_item_second = "add_commstype";
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="">Nominal Semangat</label>
                                     <input type="text"
                                         class="form-control"
                                         name="smgt_nominal"

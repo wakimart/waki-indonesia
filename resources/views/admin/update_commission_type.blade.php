@@ -6,7 +6,7 @@ $menu_item_second = "list_commstype";
 
 @section('style')
 <style type="text/css">
-    
+
 </style>
 @endsection
 
@@ -71,7 +71,7 @@ $menu_item_second = "list_commstype";
                                         <input type="text"
                                             class="form-control"
                                             name="name"
-                                            placeholder="Commision Type Name" 
+                                            placeholder="Commision Type Name"
                                             value="{{$commissionType->name}}"
                                             required/>
                                         <div class="validation"></div>
@@ -84,31 +84,33 @@ $menu_item_second = "list_commstype";
                                         name="description"
                                         rows="5"
                                         data-msg="Mohon Isi Description"
-                                        placeholder="Description" 
+                                        placeholder="Description"
                                         required>{{$commissionType->description}}
                                     </textarea>
                                     <div class="validation"></div>
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="">Nominal</label>
                                     <input type="text"
                                         class="form-control"
                                         name="nominal"
                                         autocomplete="off"
                                         data-type="currency"
                                         placeholder="Nominal"
-                                        value="{{number_format($commissionType->nominal)}}" 
+                                        value="{{number_format($commissionType->nominal)}}"
                                         required/>
                                     <div class="validation"></div>
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="">Nominal Semangat</label>
                                     <input type="text"
                                         class="form-control"
                                         name="smgt_nominal"
                                         autocomplete="off"
                                         data-type="currency"
-                                        placeholder="Semangat Nominal" 
+                                        placeholder="Semangat Nominal"
                                         value="{{number_format($commissionType->smgt_nominal)}}"
                                         required/>
                                     <div class="validation"></div>

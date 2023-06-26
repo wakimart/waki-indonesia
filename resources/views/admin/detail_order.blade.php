@@ -267,7 +267,7 @@
                     <div class="card-header text-center p-2" style="font-size:14px;">
                       Commision Add
                     </div>
-                    <div class="card-body">
+                    <div class="card-body px-0">
                         <form action="{{route('store_order_commission')}}" method="POST">
                             {{ csrf_field() }}
                             <div>
@@ -322,7 +322,7 @@
                                     <div class="validation"></div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row m-0">
                                     <div class="form-group col-6">
                                         <label for="">Bonus</label>
                                         <input type="text"
@@ -390,7 +390,7 @@
                         <div class="card-header text-center p-2" style="font-size:14px;">
                             Edit Commision
                         </div>
-                        <div class="card-body">
+                        <div class="card-body px-0">
                             <form action="{{route('update_order_commission_type', $order->id)}}" method="post">
                                 {{csrf_field()}}
                                 {{ method_field('PUT') }}
@@ -419,7 +419,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label for="">Commission Type</label>
                                         <select class="form-control" id="edit_commission_type_select" name="commission_type_id" data-msg="Mohon Pilih Tipe" required>
@@ -444,7 +444,7 @@
                                         <div class="validation"></div>
                                     </div>
 
-                                    <div class="row">
+                                    <div class="row m-0">
                                         <div class="form-group col-6">
                                             <label for="">Bonus</label>
                                             <input type="text"
@@ -514,7 +514,7 @@
                 </table>
 
                 @if($order->orderCommission->count() > 0)
-                    <div class="w-100" id="commisionDetailTrue"> 
+                    <div class="w-100" id="commisionDetailTrue">
                         <h3 class="text-center">Commision Detail</h3>
                             <table class="w-100">
                             <thead style="background-color: #80808012 !important">
@@ -543,7 +543,7 @@
                                     </td>
                                 </tr>
                             @endforeach
-                        </table>                    
+                        </table>
                         <table class="w-100 my-2">
                             <thead style="background-color: #80808012 !important">
                                 <td></td>
@@ -1671,7 +1671,7 @@
                                         autocomplete="off"
                                         data-type="currency"
                                         data-msg="Mohon isi nominal upgrade" />
-                                </div>   
+                                </div>
                                 <div class="form-group">
                                     <label for="">Bonus Semangat</label>
                                     <input type="text"
@@ -1682,7 +1682,7 @@
                                         autocomplete="off"
                                         data-type="currency"
                                         data-msg="Mohon isi nominal smgt_nominal" />
-                                </div>   
+                                </div>
                                 <div class="form-group">
                                     <label for="">Lebih Harga</label>
                                     <input type="text"
@@ -1693,8 +1693,8 @@
                                         autocomplete="off"
                                         data-type="currency"
                                         data-msg="Mohon isi nominal excess price" />
-                                </div>   
-                            </form>                            
+                                </div>
+                            </form>
                         </div>
                         <div class="modal-footer footer-cash">
                             <button type="submit" form="frmEditOrderCommission"
