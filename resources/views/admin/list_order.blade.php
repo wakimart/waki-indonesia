@@ -435,7 +435,7 @@ $menu_item_second = "list_order";
                                     $ProductPromos = json_decode($order['product'], true);
                                     // $totalProduct = count($ProductPromos);
                                     @endphp
-                                    <tr style="background-color: {{count($order->orderCommission) == 0 ? '#fed71354' : ''}}">
+                                    <tr style="background-color: {{isset($_GET['filter_view_as']) ? $_GET['filter_view_as'] == 'commission' ? count($order->orderCommission) == 0 ? '#fed71354' : '' : '' : ''}}">
                                         <td {{-- rowspan="{{ $totalProduct }}" --}} >
                                             {{ $key + 1 }}
                                         </td>

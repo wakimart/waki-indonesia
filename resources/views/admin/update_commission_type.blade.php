@@ -116,9 +116,11 @@ $menu_item_second = "list_commstype";
 
                               </div>
                               <div class="row justify-content-center">
+                                @if(Gate::check('edit-commission_type'))
                                 <button type="submit" class="btn btn-success mr-2">
                                     Update
                                 </button>
+                                @endif
                               </div>
                         </form>
                     </div>

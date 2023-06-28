@@ -60,7 +60,7 @@
 </li>
 @endif
 
-@if(Gate::check('browse-cso_commission') || true)
+@if(Gate::check('list-cso_commission'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'cso_commission'? 'active': '' }} nav-item">
   <a class="nav-link" href="{{ route('list_cso_commission')}}">
     <span class="menu-title">Cso Commission</span>
@@ -438,6 +438,7 @@
 		@endif
 
 		<!-- if check commision type -->
+    @if(Gate::check('add-commission_type') || Gate::check('list-commission_type'))
 		<li class="{{isset($menu_item_page) && $menu_item_page == 'commstype'? 'active': '' }} nav-item">
 		  <a class="nav-link" data-toggle="collapse" href="#commstype-dd" aria-expanded="false" aria-controls="commstype-dd">
 		    <span class="menu-title">Commision Type</span>
@@ -445,11 +446,16 @@
 		  </a>
 		  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'commstype'? 'show': '' }}" id="commstype-dd">
 		    <ul class="nav flex-column sub-menu">
+          @if(Gate::check('add-commission_type'))
 		      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_commstype'? 'active': '' }}" href="{{route('add_commission_type')}}">Add Commision Type</a></li>
+          @endif
+          @if(Gate::check('list-commission_type'))
 		      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_commstype'? 'active': '' }}" href="{{route('list_commission_type')}}">List Commision Type</a></li>
+          @endif
 		    </ul>
 		  </div>
 		</li>
+    @endif
 		<!-- if check commision type -->
 
 	</ul>

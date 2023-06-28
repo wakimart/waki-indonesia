@@ -2118,6 +2118,150 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+                            <div class="form-group" id="">
+                                <span style="display:block;">Commission Type</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-commission_type">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-commission_type" />
+                                            Add Commission Type
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="list-commission_type">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="list-commission_type" />
+                                            List Commission Type
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-commission_type">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-commission_type" />
+                                            Detail Commission Type
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-commission_type">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-commission_type" />
+                                            Edit Commission Type
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-commission_type">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-commission_type" />
+                                            Delete Commission Type
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="">
+                                <span style="display:block;">Order Commission</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-order_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-order_commission" />
+                                            Add Order Commission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="list-order_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="list-order_commission" />
+                                            List Order Commission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-order_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-order_commission" />
+                                            Detail Order Commission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-order_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-order_commission" />
+                                            Edit Order Commission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-order_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-order_commission" />
+                                            Delete Order Commission
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="">
+                                <span style="display:block;">Cso Commission</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="list-cso_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="list-cso_commission" />
+                                            List Cso Commission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-cso_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-cso_commission" />
+                                            Detail Cso Commission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-cso_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-cso_commission" />
+                                            Edit Cso Commission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-cso_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-cso_commission" />
+                                            Delete Cso Commission
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <input type="hidden"
                                 name="idUserAdmin"
                                 id="idUserAdmin"

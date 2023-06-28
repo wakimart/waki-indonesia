@@ -407,11 +407,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('delete_order_payment')
             ->middleware('can:edit-order');
         // add commission in order
-        Route::post('/store-order-commission', 'OrderController@storeOrderCommission')->name('store_order_commission');
-        Route::get('/edit-order-commission/{id}', 'OrderController@editOrderCommission')->name('edit_order_commission');
-        Route::post('/update-order-commission', 'OrderController@updateOrderCommission')->name('update_order_commission');
-        Route::match(['put', 'patch'], '/update-order-commission-type/{order_id}', 'OrderController@updateOrderCommissionType')->name('update_order_commission_type');
-        Route::delete('/delete-order-commission-type/{order_id}', 'OrderController@deleteOrderCommissionType')->name('delete_order_commission_type');
+        Route::post('/store-order-commission', 'OrderController@storeOrderCommission')->name('store_order_commission')->middleware('can:add-order_commission');
+        Route::get('/edit-order-commission/{id}', 'OrderController@editOrderCommission')->name('edit_order_commission')->middleware('can:detail-order_commission');
+        Route::post('/update-order-commission', 'OrderController@updateOrderCommission')->name('update_order_commission')->middleware('can:edit-order_commission');
+        Route::match(['put', 'patch'], '/update-order-commission-type/{order_id}', 'OrderController@updateOrderCommissionType')->name('update_order_commission_type')->middleware('can:edit-order_commission');
+        Route::delete('/delete-order-commission-type/{order_id}', 'OrderController@deleteOrderCommissionType')->name('delete_order_commission_type')->middleware('can:delete-order_commission');
         //Delete Order
         Route::post('/{OrderNya}', 'OrderController@delete')
             ->name('delete_order');
@@ -1701,20 +1701,20 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::group(['prefix' => 'commission-type', 'middleware' => 'auth'], function() {
-        Route::get('/create', 'CommissionTypeController@create')->name('add_commission_type');
-        Route::post('/store', 'CommissionTypeController@store')->name('store_commission_type');
-        Route::get('/list', 'CommissionTypeController@index')->name('list_commission_type');
-        Route::get('/edit/{id}', 'CommissionTypeController@edit')->name('edit_commission_type');
-        Route::match(['put', 'patch'], '/update/{id}', 'CommissionTypeController@update')->name('update_commission_type');
-        Route::delete('/delete/{id}', 'CommissionTypeController@destroy')->name('delete_commission_type');
+        Route::get('/create', 'CommissionTypeController@create')->name('add_commission_type')->middleware("can:add-commission_type");
+        Route::post('/store', 'CommissionTypeController@store')->name('store_commission_type')->middleware("can:add-commission_type");
+        Route::get('/list', 'CommissionTypeController@index')->name('list_commission_type')->middleware("can:list-commission_type");
+        Route::get('/edit/{id}', 'CommissionTypeController@edit')->name('edit_commission_type')->middleware("can:detail-commission_type");
+        Route::match(['put', 'patch'], '/update/{id}', 'CommissionTypeController@update')->name('update_commission_type')->middleware("can:edit-commission_type");
+        Route::delete('/delete/{id}', 'CommissionTypeController@destroy')->name('delete_commission_type')->middleware("can:delete-commission_type");
     });
 
     Route::group(['prefix' => 'cso-commission', 'middleware' => 'auth'], function() {
-        Route::get('/list', 'CsoCommissionController@index')->name('list_cso_commission');
-        Route::get('/edit/{id}', 'CsoCommissionController@edit')->name('edit_cso_commission');
-        Route::get('/detail/{id}', 'CsoCommissionController@show')->name('detail_cso_commission');
-        Route::post('/delete/{id}', 'CsoCommissionController@destroy')->name('delete_cso_commission');
-        Route::match(['put', 'patch'], '/update/{id}', 'CsoCommissionController@update')->name('update_cso_commission');
+        Route::get('/list', 'CsoCommissionController@index')->name('list_cso_commission')->middleware('can:list-cso_commission');
+        Route::get('/edit/{id}', 'CsoCommissionController@edit')->name('edit_cso_commission')->middleware('can:edit-cso_commission');
+        Route::get('/detail/{id}', 'CsoCommissionController@show')->name('detail_cso_commission')->middleware('can:detail-cso_commission');
+        Route::post('/delete/{id}', 'CsoCommissionController@destroy')->name('delete_cso_commission')->middleware('can:delete-cso_commission');
+        Route::match(['put', 'patch'], '/update/{id}', 'CsoCommissionController@update')->name('update_cso_commission')->middleware('can:edit-cso_commission');
         Route::get('/export-commission', 'CsoCommissionController@exportCsoCommission')->name('exportCsoCommission');
     });
 

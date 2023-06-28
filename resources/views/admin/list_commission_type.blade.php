@@ -71,8 +71,12 @@ $menu_item_second = "list_commstype";
 													<div class="mb-1">Description : {{$commtype->description}}</div><br />
 												</div>
 											</td>
+          									@if(Gate::check('detail-commission_type') || Gate::check('edit-commission_type'))
 											<td style="text-align: center;"><a href="{{route('edit_commission_type', $commtype->id)}}"><i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i></a></td>
+											@endif
+											@if(Gate::check('delete-commission_type'))
 											<td style="text-align: center;"><a href="{{route('delete_commission_type', $commtype->id)}}" data-toggle="modal" data-target="#deleteDoModal" class="btnDelete"><i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i></a></td>
+											@endif
 										</tr>
 									@endforeach
           						</tbody>
@@ -102,7 +106,9 @@ $menu_item_second = "list_commstype";
             		<form id="frmDelete" method="post" action="">
 						{{ method_field('delete') }}
 						{{csrf_field()}}
+						@if(Gate::check('delete-commission_type'))
                     	<button type="submit" class="btn btn-gradient-danger mr-2">Yes</button>
+						@endif
                 	</form>
               		<button class="btn btn-light" data-dismiss="modal">No</button>
             	</div>

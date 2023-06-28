@@ -278,11 +278,25 @@ class RolesSeeder extends Seeder
         		'edit-bank' => true,
                 'delete-bank' => true,
 
+                // Commission Type
+                'add-commission_type' => true,
+                'list-commission_type' => true,
+                'detail-commission_type' => true,
+                'edit-commission_type' => true,
+                'delete-commission_type' => true,
+                
+                // Order Commission
+                'add-order_commission' => true,
+                'list-order_commission' => true,
+                'detail-order_commission' => true,
+                'edit-order_commission' => true,
+                'delete-order_commission' => true,
+                
                 //Cso Commission
-                'browse-cso_commission' => false,
-                'detail-cso_commission' => false,
-                'edit-cso_commission' => false,
-                'delete-cso_commission' => false,
+                'list-cso_commission' => true,
+                'detail-cso_commission' => true,
+                'edit-cso_commission' => true,
+                'delete-cso_commission' => true,
             ]),
         ]);
 
@@ -548,8 +562,22 @@ class RolesSeeder extends Seeder
                 'edit-bank' => false,
                 'delete-bank' => false,
 
+                // Commission Type
+                'add-commission_type' => false,
+                'list-commission_type' => false,
+                'detail-commission_type' => false,
+                'edit-commission_type' => false,
+                'delete-commission_type' => false,
+                
+                // Order Commission
+                'add-order_commission' => false,
+                'list-order_commission' => false,
+                'detail-order_commission' => false,
+                'edit-order_commission' => false,
+                'delete-order_commission' => false,
+                
                 //Cso Commission
-                'browse-cso_commission' => false,
+                'list-cso_commission' => false,
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
@@ -812,8 +840,22 @@ class RolesSeeder extends Seeder
                 'edit-bank' => false,
                 'delete-bank' => false,
 
+                // Commission Type
+                'add-commission_type' => false,
+                'list-commission_type' => false,
+                'detail-commission_type' => false,
+                'edit-commission_type' => false,
+                'delete-commission_type' => false,
+                
+                // Order Commission
+                'add-order_commission' => false,
+                'list-order_commission' => false,
+                'detail-order_commission' => false,
+                'edit-order_commission' => false,
+                'delete-order_commission' => false,
+                
                 //Cso Commission
-                'browse-cso_commission' => false,
+                'list-cso_commission' => false,                
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
@@ -1077,8 +1119,22 @@ class RolesSeeder extends Seeder
                 'edit-bank' => false,
                 'delete-bank' => false, 
 
+                // Commission Type
+                'add-commission_type' => false,
+                'list-commission_type' => false,
+                'detail-commission_type' => false,
+                'edit-commission_type' => false,
+                'delete-commission_type' => false,
+                
+                // Order Commission
+                'add-order_commission' => false,
+                'list-order_commission' => false,
+                'detail-order_commission' => false,
+                'edit-order_commission' => false,
+                'delete-order_commission' => false,
+                
                 //Cso Commission
-                'browse-cso_commission' => false,
+                'list-cso_commission' => false,                
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
@@ -1341,8 +1397,22 @@ class RolesSeeder extends Seeder
                 'edit-bank' => false,
                 'delete-bank' => false, 
 
+                // Commission Type
+                'add-commission_type' => false,
+                'list-commission_type' => false,
+                'detail-commission_type' => false,
+                'edit-commission_type' => false,
+                'delete-commission_type' => false,
+                
+                // Order Commission
+                'add-order_commission' => false,
+                'list-order_commission' => false,
+                'detail-order_commission' => false,
+                'edit-order_commission' => false,
+                'delete-order_commission' => false,
+                
                 //Cso Commission
-                'browse-cso_commission' => false,
+                'list-cso_commission' => false,                
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
@@ -1605,8 +1675,22 @@ class RolesSeeder extends Seeder
                 'edit-bank' => false,
                 'delete-bank' => false, 
 
+                // Commission Type
+                'add-commission_type' => false,
+                'list-commission_type' => false,
+                'detail-commission_type' => false,
+                'edit-commission_type' => false,
+                'delete-commission_type' => false,
+                
+                // Order Commission
+                'add-order_commission' => false,
+                'list-order_commission' => false,
+                'detail-order_commission' => false,
+                'edit-order_commission' => false,
+                'delete-order_commission' => false,
+                
                 //Cso Commission
-                'browse-cso_commission' => false,
+                'list-cso_commission' => false,               
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
@@ -1875,8 +1959,22 @@ class RolesSeeder extends Seeder
                 'edit-bank' => false,
                 'delete-bank' => false, 
 
+                // Commission Type
+                'add-commission_type' => false,
+                'list-commission_type' => false,
+                'detail-commission_type' => false,
+                'edit-commission_type' => false,
+                'delete-commission_type' => false,
+                
+                // Order Commission
+                'add-order_commission' => false,
+                'list-order_commission' => false,
+                'detail-order_commission' => false,
+                'edit-order_commission' => false,
+                'delete-order_commission' => false,
+                
                 //Cso Commission
-                'browse-cso_commission' => false,
+                'list-cso_commission' => false,
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,

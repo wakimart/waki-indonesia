@@ -165,19 +165,25 @@ $menu_item_page_sub = "cso_commission";
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['pajak']) }}</td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak']) }}</td>
                                             <td class="text-center">
+                                                @if(Gate::check('detail-cso_commission'))
                                                 <a href="{{ route('detail_cso_commission', ['id' => $Cso_Commission->id]) }}" target="_blank">
                                                     <i class="mdi mdi-eye text-info" style="font-size: 24px;"></i>
                                                 </a>
+                                                @endif
                                             </td>
                                             <td class="text-center">
+                                                @if(Gate::check('edit-cso_commission'))
                                                 <button class="btn-delete btn-edit_cso_commission" value="{{ $Cso_Commission['id'] }}">
                                                     <i class="mdi mdi-border-color text-warning" style="font-size: 24px;"></i>
                                                 </button>
+                                                @endif
                                             </td>
                                             <td class="text-center">
+                                                @if(Gate::check('delete-cso_commission'))
                                                 <button class="btn-delete btn-delete_cso_commission" value="{{ $Cso_Commission['id'] }}">
                                                     <i class="mdi mdi-delete text-danger" style="font-size: 24px;"></i>
                                                 </button>
+                                                @endif
                                             </td>
                                         </tr>
                                         @php
@@ -262,7 +268,9 @@ $menu_item_page_sub = "cso_commission";
                     <div class="clearfix"></div>
                 </div>
                 <div class="modal-footer">
+                    @if(Gate::check('edit-cso_commission'))
                     <button id="submitFormEditCommission" type="submit" class="btn btn-gradient-success mr-2">Save</button>
+                    @endif
                 </div>
             </form>
         </div>

@@ -372,9 +372,11 @@
 
                             </div>
                             <div class="row justify-content-center">
+                                @if(Gate::check('add-order_commission'))
                                 <button type="submit" class="btn btn-success mr-2">
                                     Submit
                                 </button>
+                                @endif
                                 <button type="button" class="btn btn-danger btn-cancel-comms">
                                     Cancel
                                 </button>
@@ -494,9 +496,11 @@
 
                                 </div>
                                 <div class="row justify-content-center">
+                                    @if(Gate::check('edit-order_commission'))
                                     <button type="submit" class="btn btn-warning mr-2">
                                         Update
                                     </button>
+                                    @endif
                                     <button type="button" class="btn btn-danger btn-cancel-edit-comms">
                                         Cancel
                                     </button>
@@ -537,9 +541,11 @@
                                     <td>Rp. {{number_format($orderCommission->smgt_nominal)}}</td>
                                     <td>Rp. {{number_format($orderCommission->excess_price)}}</td>
                                     <td>
+                                        @if(Gate::check('detail-order_commission') || Gate::check('edit-order_commission'))
                                         <button value="{{ $orderCommission->id }}" class="btn-delete btn-edit-order-commission">
                                             <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
                                         </button>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -576,21 +582,27 @@
                             </tr>
                         </table>
                         <div class="row justify-content-center mb-2">
+                            @if(Gate::check('edit-order_commission'))
                             <button type="button" class="btn btn-warning mr-2 btn-edit-comms">
                                 Edit
                             </button>
+                            @endif
+                            @if(Gate::check('delete-order_commission'))
                             <button type="button" class="btn btn-danger btn-delete-comms"
                                 data-toggle="modal"
                                 data-target="#deleteKomisiConfirm">
                                 Delete
                             </button>
+                            @endif
                         </div>
                     </div>
                 @else
                     <div class="row justify-content-center">
+                    @if(Gate::check('add-order_commission'))
                     <button type="button" class="btn btn-gradient-success mdi mdi-cash-multiple btn-add-comms">
                         Add Commision
                     </button>
+                    @endif
                     </div>
                 @endif
                 @if($order['description'] != null)
@@ -1574,10 +1586,12 @@
                             <form id="" method="post" action="{{route('delete_order_commission_type', $order->id)}}">
                                 {{ method_field('delete') }}
                                 {{ csrf_field() }}
+                                @if(Gate::check('delete-order_commission'))
                                 <button type="submit"
                                     class="btn btn-gradient-danger mr-2">
                                     Yes
                                 </button>
+                                @endif
                             </form>
                             <button class="btn btn-light" data-dismiss="modal">
                                 No
@@ -1697,11 +1711,13 @@
                             </form>                            
                         </div>
                         <div class="modal-footer footer-cash">
+                            @if(Gate::check('edit-order_commission'))
                             <button type="submit" form="frmEditOrderCommission"
                                 id="submitfrmEditOrderCommission"
                                 class="btn btn-gradient-success mr-2">
                                 Update
                             </button>
+                            @endif
                         </div>
                     </div>
                 </div>

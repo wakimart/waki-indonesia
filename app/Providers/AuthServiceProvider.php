@@ -716,10 +716,44 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(["change-status-product-personalhomecare"]);
         });
 
+        // COMMISSION TYPE
+        Gate::define('add-commission_type', function ($user) {
+            return $user->hasAccess(['add-commission_type']);
+        });
+        Gate::define('list-commission_type', function ($user) {
+            return $user->hasAccess(['list-commission_type']);
+        });
+        Gate::define('detail-commission_type', function ($user) {
+            return $user->hasAccess(['detail-commission_type']);
+        });
+        Gate::define('edit-commission_type', function ($user) {
+            return $user->hasAccess(['edit-commission_type']);
+        });
+        Gate::define('delete-commission_type', function ($user) {
+            return $user->hasAccess(['delete-commission_type']);
+        });
+
+        // ORDER COMMISSION
+        Gate::define('add-order_commission', function ($user) {
+            return $user->hasAccess(['add-order_commission']);
+        });
+        Gate::define('list-order_commission', function ($user) {
+            return $user->hasAccess(['list-order_commission']);
+        });
+        Gate::define('detail-order_commission', function ($user) {
+            return $user->hasAccess(['detail-order_commission']);
+        });
+        Gate::define('edit-order_commission', function ($user) {
+            return $user->hasAccess(['edit-order_commission']);
+        });
+        Gate::define('delete-order_commission', function ($user) {
+            return $user->hasAccess(['delete-order_commission']);
+        });
+
 
         //-- CSO COMMISSION --//
-        Gate::define('browse-cso_commission', function ($user) {
-            return $user->hasAccess(['browse-cso_commission']);
+        Gate::define('list-cso_commission', function ($user) {
+            return $user->hasAccess(['list-cso_commission']);
         });
         Gate::define('detail-cso_commission', function ($user) {
             return $user->hasAccess(['detail-cso_commission']);
